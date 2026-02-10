@@ -35,9 +35,9 @@ const navItems = [
   {
     group: "Resources",
     items: [
-      { href: "/dashboard/police-guide", icon: Shield, label: "Police Guide", tooltip: "Police Guide" },
-      { href: "/dashboard/lawyer-connect", icon: Gavel, label: "Find a Lawyer", tooltip: "Find a Lawyer" },
-      { href: "/dashboard/learn", icon: BookOpen, label: "Learn Law", tooltip: "Learn Law" },
+      { href: "/dashboard/police-guide", icon: Shield, label: "Police & Court Guides", tooltip: "Police & Court Guides" },
+      { href: "/dashboard/lawyer-connect", icon: Gavel, label: "Lawyer Connect", tooltip: "Lawyer Connect" },
+      { href: "/dashboard/learn", icon: BookOpen, label: "Legal Knowledge Hub", tooltip: "Legal Knowledge Hub" },
     ],
   },
   { href: "/dashboard/my-cases", icon: FolderKanban, label: "My Cases", tooltip: "My Cases" },
