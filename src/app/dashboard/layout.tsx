@@ -32,7 +32,6 @@ import {
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { ReactNode } from "react";
-import { usePathname } from "next/navigation";
 import { SidebarNav } from "@/components/sidebar-nav";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
