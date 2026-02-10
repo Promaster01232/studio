@@ -55,16 +55,16 @@ export function SidebarNav() {
             <SidebarMenu>
               {item.items.map((subItem) => (
                 <SidebarMenuItem key={subItem.href}>
-                  <Link href={subItem.href} passHref legacyBehavior>
                     <SidebarMenuButton
-                      as="a"
+                      asChild
                       isActive={pathname === subItem.href}
                       tooltip={{ children: subItem.tooltip }}
                     >
-                      <subItem.icon />
-                      <span>{subItem.label}</span>
+                      <Link href={subItem.href}>
+                        <subItem.icon />
+                        <span>{subItem.label}</span>
+                      </Link>
                     </SidebarMenuButton>
-                  </Link>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -72,16 +72,16 @@ export function SidebarNav() {
         ) : (
           <SidebarMenu key={index}>
             <SidebarMenuItem>
-              <Link href={item.href!} passHref legacyBehavior>
                 <SidebarMenuButton
-                  as="a"
+                  asChild
                   isActive={pathname === item.href}
                   tooltip={{ children: item.tooltip }}
                 >
-                  <item.icon />
-                  <span>{item.label}</span>
+                  <Link href={item.href!}>
+                    <item.icon />
+                    <span>{item.label}</span>
+                  </Link>
                 </SidebarMenuButton>
-              </Link>
             </SidebarMenuItem>
           </SidebarMenu>
         )
