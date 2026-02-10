@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "lawyer1",
+      "description": "A portrait of a male lawyer",
+      "imageUrl": "https://images.unsplash.com/photo-1522556189639-b150ed9c4330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NzA3MzYzMTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "lawyer2",
+      "description": "A portrait of a female lawyer",
+      "imageUrl": "https://images.unsplash.com/photo-1546961329-78bef0414d7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc3MDc1MDkxNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "lawyer3",
+      "description": "A portrait of a lawyer in a library",
+      "imageUrl": "https://images.unsplash.com/photo-1600499563544-da5dc7da8648?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwZXJzb24lMjBsaWJyYXJ5fGVufDB8fHx8MTc3MDc1OTExM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person library"
+    },
+    {
+      "id": "lawyer4",
+      "description": "A portrait of a senior lawyer",
+      "imageUrl": "https://images.unsplash.com/photo-1508028922235-7b9a1b690358?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxvbGQlMjBtYW58ZW58MHx8fHwxNzcwNjY5NDU0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "old man"
+    },
+    {
+      "id": "lawyer5",
+      "description": "A young female lawyer smiling",
+      "imageUrl": "https://images.unsplash.com/photo-1563178406-4cdc2923acbc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzcwNzQyNjA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman smiling"
+    },
+    {
+      "id": "lawyer6",
+      "description": "A lawyer working at a desk",
+      "imageUrl": "https://images.unsplash.com/photo-1651739083958-02dcd72b0179?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cGVyc29uJTIwZGVza3xlbnwwfHx8fDE3NzA3NjY0NjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person desk"
+    }
+  ]
 }
