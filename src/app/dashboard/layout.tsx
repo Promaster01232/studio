@@ -30,8 +30,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <SidebarTrigger />
             <Logo />
           </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="icon" className="rounded-full">
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" size="icon" className="rounded-full">
               <Search className="h-5 w-5 text-muted-foreground" />
               <span className="sr-only">Search</span>
             </Button>
@@ -42,17 +42,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <Button variant="ghost" size="icon" className="rounded-full relative">
               <Bell className="h-5 w-5 text-muted-foreground" />
               <span className="sr-only">Notifications</span>
-              <span className="absolute top-2 right-2 flex h-2 w-2">
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-              </span>
             </Button>
-            <Avatar className="h-9 w-9">
-              <AvatarImage src="https://picsum.photos/seed/user/40/40" data-ai-hint="person face" alt="User" />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
           </div>
         </header>
-        <main className="h-[calc(100vh-4rem)] flex flex-col overflow-y-auto p-4 md:p-6 lg:p-8 bg-muted/30">
+        <main className="h-[calc(100vh-4rem)] flex flex-col overflow-y-auto p-4 md:p-6 lg:p-8 bg-muted">
             {children}
         </main>
       </SidebarInset>
