@@ -20,7 +20,7 @@ export default function GitHubPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-muted-foreground max-w-md">
-            Nyaay Sathi is an open-source project. We welcome contributions from the community.
+            Nyaya Sahayak is an open-source project. We welcome contributions from the community.
           </p>
           <Button asChild>
             <Link href="https://github.com" target="_blank" rel="noopener noreferrer">

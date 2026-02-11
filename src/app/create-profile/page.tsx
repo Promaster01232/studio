@@ -112,7 +112,7 @@ export default function CreateProfilePage() {
 
       toast({
         title: "Profile Created!",
-        description: "Welcome to Nyaay Sathi.",
+        description: "Welcome to Nyaya Sahayak.",
       });
       router.push("/dashboard");
     } catch (error) {

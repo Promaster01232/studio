@@ -7,7 +7,7 @@ import { LanguageProvider } from "@/components/language-provider";
 import { FirebaseClientProvider } from "@/firebase/client-provider";
 
 export const metadata: Metadata = {
-  title: "Nyaay Sathi",
+  title: "Nyaya Sahayak",
   description: "Your AI-powered legal assistant. We're here to help you understand legal documents, assess your case strength, and navigate the legal system with confidence.",
 };
 

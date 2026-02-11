@@ -6,7 +6,7 @@ export function Logo() {
       <div className="bg-primary text-primary-foreground p-2 rounded-lg">
         <BookOpen className="h-5 w-5" />
       </div>
-      <span>Nyaay Sathi</span>
+      <span>Nyaya Sahayak</span>
     </div>
   );
 }

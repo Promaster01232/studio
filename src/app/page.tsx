@@ -16,7 +16,7 @@ export default function WelcomePage() {
           </div>
 
           <h1 className="mb-4 text-4xl font-bold font-headline tracking-tight bg-gradient-to-r from-primary via-accent to-primary bg-[200%_auto] bg-clip-text text-transparent animate-animated-gradient">
-            Welcome to Nyaay Sathi
+            Welcome to Nyaya Sahayak
           </h1>
           <p className="mb-4 text-muted-foreground">
             Your AI-powered legal assistant. We're here to help you understand

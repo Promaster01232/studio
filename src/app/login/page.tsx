@@ -60,21 +60,18 @@ export default function LoginPage() {
     if (!auth) return;
     
     // This check is to prevent re-creating the verifier on every render.
-    if (window.recaptchaVerifier) {
-        return;
+    if (!window.recaptchaVerifier) {
+      const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+        'callback': () => {
+          // reCAPTCHA solved.
+        }
+      });
+      window.recaptchaVerifier = verifier;
     }
     
-    const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-      'size': 'invisible',
-      'callback': () => {
-        // reCAPTCHA solved.
-      }
-    });
-
-    window.recaptchaVerifier = verifier;
-
     return () => {
-      verifier.clear();
+        // window.recaptchaVerifier?.clear();
     };
   }, [auth]);
 
@@ -181,7 +178,7 @@ export default function LoginPage() {
                 <BookOpen className="h-8 w-8 text-primary" />
             </div>
             <h1 className="text-3xl font-bold font-headline tracking-tight">
-                Nyaay Sathi
+                Nyaya Sahayak
             </h1>
             <p className="text-muted-foreground">
                 Your AI Legal Assistant
