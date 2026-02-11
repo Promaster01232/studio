@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, MessageCircle, Share2, Bookmark } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { useToast } from "@/hooks/use-toast";
 
 const newsFeed = [
     {
@@ -57,6 +58,15 @@ const newsFeed = [
 ];
 
 export default function ResearchAnalyticsPage() {
+    const { toast } = useToast();
+
+    const handleAction = (action: string) => {
+        toast({
+            title: `Post ${action.toLowerCase()}ed!`,
+            description: "This is for demonstration purposes.",
+        });
+    };
+
     return (
         <div className="space-y-8">
             <PageHeader
@@ -99,19 +109,19 @@ export default function ResearchAnalyticsPage() {
                         </CardContent>
                         <CardFooter className="p-2 sm:p-3 flex justify-between items-center">
                            <div className="flex gap-1">
-                                <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                                <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={() => handleAction('Like')}>
                                     <Heart className="h-4 w-4" />
                                     <span className="text-xs text-muted-foreground">{item.likes}</span>
                                 </Button>
-                                <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                                <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={() => handleAction('Comment')}>
                                     <MessageCircle className="h-4 w-4" />
                                     <span className="text-xs text-muted-foreground">{item.comments}</span>
                                 </Button>
-                                <Button variant="ghost" size="sm">
+                                <Button variant="ghost" size="sm" onClick={() => handleAction('Share')}>
                                     <Share2 className="h-4 w-4" />
                                 </Button>
                            </div>
-                           <Button variant="ghost" size="sm">
+                           <Button variant="ghost" size="sm" onClick={() => handleAction('Bookmark')}>
                                 <Bookmark className="h-4 w-4" />
                             </Button>
                         </CardFooter>
