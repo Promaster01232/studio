@@ -42,7 +42,7 @@ import { useTheme } from "@/components/theme-provider";
 import { useLanguage, type Language } from "@/components/language-provider";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const languages: { code: Language, name: string }[] = [
     { code: "en", name: "English" },
@@ -71,31 +71,36 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (auth === null || firestore === null) {
-      // Firebase is still initializing
       setProfileLoading(true);
       return;
     }
-    
-    if (!auth.currentUser) {
-      // Not logged in, treat as guest
-      setProfileLoading(false);
-      setUserProfile(null);
-      return;
-    }
 
-    const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-    getDoc(userDocRef).then(userDoc => {
-      if (userDoc.exists()) {
-        setUserProfile(userDoc.data() as {firstName: string; lastName: string; email: string});
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userDocRef = doc(firestore, "users", user.uid);
+        getDoc(userDocRef)
+          .then((userDoc) => {
+            if (userDoc.exists()) {
+              setUserProfile(userDoc.data() as {firstName: string; lastName: string; email: string});
+            } else {
+              if (pathname !== '/create-profile') {
+                router.push('/create-profile');
+              }
+            }
+            setProfileLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching user profile:", error);
+            setProfileLoading(false);
+          });
       } else {
-        // Logged in but no profile, redirect to create one
-        if (pathname !== '/create-profile') {
-            router.push('/create-profile');
-        }
+        // Not logged in, treat as guest
+        setProfileLoading(false);
+        setUserProfile(null);
       }
-      setProfileLoading(false);
     });
 
+    return () => unsubscribe();
   }, [auth, firestore, router, pathname]);
 
   const handleLogout = async () => {
