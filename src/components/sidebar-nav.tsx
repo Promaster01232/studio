@@ -21,7 +21,6 @@ import {
   BarChart2,
   Users,
   HeartHandshake,
-  Github,
   Gavel,
   Landmark,
   Library,
@@ -54,7 +53,6 @@ const navItems = [
       { href: "/dashboard/lawyer-connect", icon: Users, label: "Lawyer Connect", tooltip: "Lawyer Connect" },
       { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "NGO & Legal Aid", tooltip: "NGO & Legal Aid" },
       { href: "/dashboard/support", icon: Accessibility, label: "Support & Accessibility", tooltip: "Support & Accessibility" },
-      { href: "/dashboard/github", icon: Github, label: "GitHub", tooltip: "GitHub" },
     ],
   },
   {
