@@ -102,14 +102,6 @@ export default function NarrateProblemPage() {
     }
   };
 
-  const handleMicClick = () => {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-  };
-
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
     const secs = (seconds % 60).toString().padStart(2, '0');
@@ -128,20 +120,32 @@ export default function NarrateProblemPage() {
       <Card>
         <CardHeader>
           <CardTitle>Voice Recorder</CardTitle>
-          <CardDescription>Click the button to start recording.</CardDescription>
+          <CardDescription>Use the buttons below to record your problem.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center space-y-6 py-10">
-          <Button
-            size="icon"
-            className="h-24 w-24 rounded-full shadow-lg data-[recording=true]:bg-destructive data-[recording=true]:hover:bg-destructive/90 data-[recording=true]:animate-pulse"
-            onClick={handleMicClick}
-            disabled={!hasPermission || isLoading}
-            data-recording={isRecording}
-          >
-            <Mic className="h-10 w-10" />
-          </Button>
+          <div className="flex items-center justify-center gap-4">
+              <Button
+                  onClick={startRecording}
+                  disabled={!hasPermission || isLoading || isRecording}
+                  className="h-24 w-32 rounded-lg shadow-lg flex-col gap-2"
+              >
+                  <Mic className="h-8 w-8" />
+                  <span>Start Recording</span>
+              </Button>
+              <Button
+                  onClick={stopRecording}
+                  disabled={!isRecording}
+                  className="h-24 w-32 rounded-lg shadow-lg flex-col gap-2"
+                  variant="destructive"
+              >
+                  <div className="h-8 w-8 bg-destructive-foreground rounded-sm"></div>
+                  <span>Stop Recording</span>
+              </Button>
+          </div>
           <p className="text-4xl font-mono font-bold tracking-wider">{formatTime(timer)}</p>
-          <p className="text-sm text-muted-foreground">Your session is private and not stored.</p>
+          <p className="text-sm text-muted-foreground">
+              {isRecording ? "Recording in progress..." : "Click 'Start Recording' to begin."}
+          </p>
         </CardContent>
       </Card>
 
