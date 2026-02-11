@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { BookOpen, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
   RecaptchaVerifier, 
@@ -21,6 +21,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Image from "next/image";
 
 // This is to extend the window object for recaptcha
 declare global {
@@ -174,17 +175,12 @@ export default function LoginPage() {
     <div className="flex flex-col items-center justify-center w-full max-w-sm">
         <div id="recaptcha-container"></div>
         <div className="mb-6 flex flex-col items-center text-center">
-            <div className="mb-4 rounded-full bg-white p-3 shadow-sm">
-                <BookOpen className="h-8 w-8 text-primary" />
-            </div>
-            <h1 className="text-3xl font-bold font-headline tracking-tight">
-                Nyaya Sahayak
-            </h1>
+            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-28 w-auto mb-4" />
             <p className="text-muted-foreground">
                 Your AI Legal Assistant
             </p>
         </div>
-        <Card className="w-full shadow-lg">
+        <Card className="w-full shadow-lg bg-card/80 backdrop-blur-sm">
             <CardContent className="p-6 space-y-4">
                 {authError && (
                     <Alert variant="destructive">

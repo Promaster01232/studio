@@ -1,23 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export default function WelcomePage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-indigo-100/20 to-background p-4 dark:via-indigo-900/10">
       <Card className="w-full max-w-md shadow-lg bg-card/80 backdrop-blur-sm border-primary/10">
         <CardContent className="flex flex-col items-center p-8 text-center">
-          <div className="relative mb-8">
-             <div className="absolute -inset-2.5 rounded-full bg-primary/20 animate-ping" />
-             <div className="relative rounded-full bg-primary/10 p-4">
-                <BookOpen className="h-10 w-10 text-primary" />
-             </div>
-          </div>
+          <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-32 w-auto mb-6" />
 
-          <h1 className="mb-4 text-4xl font-bold font-headline tracking-tight bg-gradient-to-r from-primary via-accent to-primary bg-[200%_auto] bg-clip-text text-transparent animate-animated-gradient">
-            Welcome to Nyaya Sahayak
-          </h1>
           <p className="mb-4 text-muted-foreground">
             Your AI-powered legal assistant. We're here to help you understand
             legal documents, assess your case strength, and navigate the legal
