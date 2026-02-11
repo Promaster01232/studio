@@ -10,6 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { LogOut, Trash2, KeyRound, ShieldCheck, Moon } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const user = {
     name: 'Rajesh Kumar',
@@ -67,9 +68,25 @@ export default function ProfilePage() {
                       <Input id="email" type="email" defaultValue={user.email} />
                     </div>
                 </div>
-                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" type="tel" placeholder="+91 98765 43210" />
+                 <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input id="phone" type="tel" placeholder="+91 98765 43210" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="userType">I am a</Label>
+                    <Select name="userType" defaultValue="citizen">
+                        <SelectTrigger id="userType">
+                        <SelectValue placeholder="Select your role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                        <SelectItem value="citizen">Citizen</SelectItem>
+                        <SelectItem value="advocate">Advocate</SelectItem>
+                        <SelectItem value="businessman">Business Person</SelectItem>
+                        <SelectItem value="student">Law Student</SelectItem>
+                        </SelectContent>
+                    </Select>
+                  </div>
                 </div>
                 <div className="flex justify-end">
                     <Button>Save Changes</Button>
