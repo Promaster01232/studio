@@ -12,33 +12,12 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const AnalyzeCaseStrengthInputSchema = z.object({
-  problemNarration: z
-    .string()
-    .describe('A detailed description of the legal problem or case.'),
-  evidenceAvailability: z
-    .string()
-    .describe('Description of available evidence and its quality.'),
-  relevantLaws: z
-    .string()
-    .optional()
-    .describe('List of relevant laws and legal sections, if known.'),
-  pastJudgments: z
-    .string()
-    .optional()
-    .describe('Information about similar past judgments, if known.'),
-  jurisdiction: z
+  caseDescription: z
     .string()
     .describe(
-      'The jurisdiction (e.g., court, police station) where the case is being handled.'
+      'A detailed description of the case, including all relevant information, people involved, dates, and any available evidence.'
     ),
-  timeLimitationRisks: z
-    .string()
-    .optional()
-    .describe('Potential risks related to time limitations or delays.'),
-  legalContradictions: z
-    .string()
-    .optional()
-    .describe('Any known legal contradictions or inconsistencies in the case.'),
+  language: z.string().describe('The language for the response.'),
 });
 export type AnalyzeCaseStrengthInput = z.infer<typeof AnalyzeCaseStrengthInputSchema>;
 
@@ -74,18 +53,13 @@ const analyzeCaseStrengthPrompt = ai.definePrompt({
   output: {schema: AnalyzeCaseStrengthOutputSchema},
   prompt: `You are an AI legal assistant that analyzes the strength of a legal case based on the provided information.
 
-Analyze the following case details and provide a strength score (0-100), identify key risk indicators, recommend actions to improve the case, and provide a summary of your analysis.
+Analyze the following case description and provide a strength score (0-100), identify key risk indicators, recommend actions to improve the case, and provide a summary of your analysis.
 
-Case Details:
-Problem Narration: {{{problemNarration}}}
-Evidence Availability: {{{evidenceAvailability}}}
-Relevant Laws: {{{relevantLaws}}}
-Past Judgments: {{{pastJudgments}}}
-Jurisdiction: {{{jurisdiction}}}
-Time Limitation Risks: {{{timeLimitationRisks}}}
-Legal Contradictions: {{{legalContradictions}}}
+Case Description: {{{caseDescription}}}
 
-Respond in a well structured and complete way, even if some fields are not available.`,
+Provide the response in the following language: {{{language}}}
+
+Respond in a well structured and complete way. Your analysis should be comprehensive based on the details provided in the case description.`,
 });
 
 const analyzeCaseStrengthFlow = ai.defineFlow(

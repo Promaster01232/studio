@@ -10,11 +10,8 @@ export type CaseStrengthState = {
 };
 
 const StrengthSchema = z.object({
-  problemNarration: z.string().min(20, "Please provide a detailed problem narration."),
-  evidenceAvailability: z.string().min(10, "Please describe the available evidence."),
-  jurisdiction: z.string().min(3, "Please specify the jurisdiction."),
-  relevantLaws: z.string().optional(),
-  pastJudgments: z.string().optional(),
+  caseDescription: z.string().min(20, "Please provide a detailed case description."),
+  language: z.string().min(1, "Please select a language."),
 });
 
 export async function analyzeCaseStrengthAction(
@@ -23,11 +20,8 @@ export async function analyzeCaseStrengthAction(
 ): Promise<CaseStrengthState> {
   
   const validatedFields = StrengthSchema.safeParse({
-    problemNarration: formData.get("problemNarration"),
-    evidenceAvailability: formData.get("evidenceAvailability"),
-    jurisdiction: formData.get("jurisdiction"),
-    relevantLaws: formData.get("relevantLaws"),
-    pastJudgments: formData.get("pastJudgments"),
+    caseDescription: formData.get("caseDescription"),
+    language: formData.get("language"),
   });
 
   if (!validatedFields.success) {

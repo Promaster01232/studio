@@ -3,15 +3,15 @@
 import { useFormState } from "react-dom";
 import { analyzeCaseStrengthAction, type CaseStrengthState } from "./actions";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Lightbulb, ListChecks, ShieldAlert } from "lucide-react";
+import { Lightbulb, ShieldAlert, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const initialState: CaseStrengthState = {
   status: "idle",
@@ -46,46 +46,49 @@ export default function StrengthAnalyzerPage() {
     <div>
       <PageHeader
         title="Case Strength Analyzer"
-        description="Fill in the details to get an AI-powered analysis of your case's strength."
+        description="Describe your case to get an AI-powered strength assessment."
       />
       <Card>
         <CardHeader>
           <CardTitle>Case Details</CardTitle>
-          <CardDescription>The more details you provide, the more accurate the analysis will be.</CardDescription>
         </CardHeader>
         <CardContent>
           <form action={formAction} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="problemNarration">Problem Narration</Label>
-              <Textarea id="problemNarration" name="problemNarration" placeholder="Describe the sequence of events in detail." rows={6} required />
+              <Label htmlFor="caseDescription">Case Description</Label>
+              <Textarea id="caseDescription" name="caseDescription" placeholder="Provide a detailed description of your case, including all relevant information, people involved, dates, and any available evidence." rows={8} required />
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="evidenceAvailability">Evidence Availability</Label>
-                <Textarea id="evidenceAvailability" name="evidenceAvailability" placeholder="List all available evidence (e.g., photos, documents, witnesses)." required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="jurisdiction">Jurisdiction</Label>
-                <Input id="jurisdiction" name="jurisdiction" placeholder="e.g., Police Station Name, City Court" required />
-              </div>
+            
+            <div className="space-y-2">
+                <Label htmlFor="language">Response Language</Label>
+                <Select name="language" defaultValue="English" required>
+                <SelectTrigger id="language">
+                    <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="English">English</SelectItem>
+                    <SelectItem value="Simple English">Simple English</SelectItem>
+                    <SelectItem value="Legal English">Legal English</SelectItem>
+                </SelectContent>
+                </Select>
             </div>
-             <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="relevantLaws">Relevant Laws (Optional)</Label>
-                <Input id="relevantLaws" name="relevantLaws" placeholder="e.g., Section 420 IPC" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="pastJudgments">Similar Past Judgments (Optional)</Label>
-                <Input id="pastJudgments" name="pastJudgments" placeholder="If you know of any similar cases." />
-              </div>
-            </div>
+
             <Button type="submit" disabled={state.status === 'loading'} className="w-full md:w-auto">
-              {state.status === 'loading' ? 'Analyzing...' : 'Analyze Case Strength'}
+              <Sparkles className="mr-2 h-4 w-4" />
+              {state.status === 'loading' ? 'Assessing...' : 'Assess Strength'}
             </Button>
           </form>
         </CardContent>
       </Card>
       
+      {state.status === 'loading' && (
+        <Card className="mt-8">
+            <CardContent className="py-20 text-center">
+                <p className="text-muted-foreground">Assessing case strength, please wait...</p>
+            </CardContent>
+        </Card>
+      )}
+
       {state.status === "error" && (
         <Alert variant="destructive" className="mt-8">
           <AlertTitle>Error</AlertTitle>
@@ -133,6 +136,14 @@ export default function StrengthAnalyzerPage() {
                     </div>
                 </div>
 
+            </CardContent>
+        </Card>
+      )}
+
+      {state.status === 'idle' && (
+         <Card className="mt-8">
+            <CardContent className="py-20 text-center">
+                <p className="text-muted-foreground">Your case strength analysis will appear here.</p>
             </CardContent>
         </Card>
       )}
