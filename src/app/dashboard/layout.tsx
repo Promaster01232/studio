@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Search, Bell, ShieldAlert, MessageSquare } from "lucide-react";
+import { Search, Bell, ShieldAlert, MessageSquare, User, LogOut, SunMoon, Languages } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -25,6 +26,21 @@ import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
 import { usePathname } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+} from "@/components/ui/dropdown-menu";
+import { useTheme } from "@/components/theme-provider";
+import { useLanguage, type Language } from "@/components/language-provider";
 
 const recentChats = [
   {
@@ -50,10 +66,27 @@ const recentChats = [
   },
 ];
 
+const user = {
+    name: 'Rajesh Kumar',
+    email: 'rajesh.k@nyaaysathi.com',
+    avatar: PlaceHolderImages.find(img => img.id === 'lawyer1'),
+};
+
+const languages: { code: Language, name: string }[] = [
+    { code: "en", name: "English" },
+    { code: "hi", name: "Hindi" },
+    { code: "mr", name: "Marathi" },
+    { code: "ta", name: "Tamil" },
+    { code: "bn", name: "Bangla" },
+];
+
+
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isChatPage = pathname.includes('/chat');
   const [isMounted, setIsMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const { language, setLanguage } = useLanguage();
 
   useEffect(() => {
     setIsMounted(true);
@@ -156,11 +189,67 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <Bell className="h-5 w-5 text-muted-foreground" />
                     <span className="sr-only">Notifications</span>
                   </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="rounded-full">
+                          <Avatar className="h-8 w-8">
+                              {user.avatar && (
+                                <AvatarImage src={user.avatar.imageUrl} alt={user.name} data-ai-hint={user.avatar.imageHint || ''} />
+                              )}
+                              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuLabel>
+                          <div className="font-semibold">{user.name}</div>
+                          <div className="text-xs text-muted-foreground">{user.email}</div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                          <Link href="/dashboard/profile">
+                              <User className="mr-2 h-4 w-4" />
+                              <span>Profile</span>
+                          </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSub>
+                          <DropdownMenuSubTrigger>
+                              <SunMoon className="mr-2 h-4 w-4" />
+                              <span>Theme</span>
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent>
+                              <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
+                                  <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
+                              </DropdownMenuRadioGroup>
+                          </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                      <DropdownMenuSub>
+                          <DropdownMenuSubTrigger>
+                              <Languages className="mr-2 h-4 w-4" />
+                              <span>Language</span>
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent>
+                              <DropdownMenuRadioGroup value={language} onValueChange={(value) => setLanguage(value as Language)}>
+                                  {languages.map((lang) => (
+                                      <DropdownMenuRadioItem key={lang.code} value={lang.code}>{lang.name}</DropdownMenuRadioItem>
+                                  ))}
+                              </DropdownMenuRadioGroup>
+                          </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                          <LogOut className="mr-2 h-4 w-4" />
+                          <span>Log out</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </>
               ) : (
                 <>
                   <Skeleton className="h-8 w-8 rounded-full" />
                   <Skeleton className="h-10 w-20 rounded-md" />
+                  <Skeleton className="h-8 w-8 rounded-full" />
                   <Skeleton className="h-8 w-8 rounded-full" />
                   <Skeleton className="h-8 w-8 rounded-full" />
                 </>
