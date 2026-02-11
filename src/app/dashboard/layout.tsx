@@ -19,11 +19,6 @@ import {
 } from "@/components/ui/popover";
 import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import {
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { SosDialog } from "@/components/sos-dialog";
 
 const recentChats = [
@@ -59,12 +54,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <SidebarHeader>
           {/* Logo is now in the main header */}
         </SidebarHeader>
-        <SheetHeader className="sr-only">
-          <SheetTitle>Navigation Menu</SheetTitle>
-          <SheetDescription>
-            Contains the main navigation links for the application.
-          </SheetDescription>
-        </SheetHeader>
         <SidebarContent className="pt-10">
           <SidebarNav />
         </SidebarContent>
