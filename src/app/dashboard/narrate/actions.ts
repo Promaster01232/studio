@@ -1,7 +1,6 @@
 "use server";
 
 import { generateCaseSummary, type GenerateCaseSummaryOutput } from "@/ai/flows/generate-case-summary";
-import { z } from "zod";
 
 export type CaseSummaryState = {
   status: "idle" | "loading" | "success" | "error";
@@ -9,29 +8,31 @@ export type CaseSummaryState = {
   error: string | null;
 };
 
-const ProblemSchema = z.object({
-  problemDescription: z.string().min(20, "Please provide a more detailed description."),
-});
+async function fileToDataURI(file: File): Promise<string> {
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const base64 = buffer.toString('base64');
+  return `data:${file.type};base64,${base64}`;
+}
 
 export async function summarizeCaseAction(
   prevState: CaseSummaryState,
   formData: FormData
 ): Promise<CaseSummaryState> {
-  const validatedFields = ProblemSchema.safeParse({
-    problemDescription: formData.get("problemDescription"),
-  });
+  const file = formData.get("problemAudio");
 
-  if (!validatedFields.success) {
+  if (!(file instanceof File) || file.size === 0) {
     return {
       status: "error",
       data: null,
-      error: validatedFields.error.flatten().fieldErrors.problemDescription?.[0] || "Invalid input.",
+      error: "Please record your problem before analyzing.",
     };
   }
   
   try {
+    const audioDataUri = await fileToDataURI(file);
     const result = await generateCaseSummary({
-      problemDescription: validatedFields.data.problemDescription,
+      problemAudio: audioDataUri,
     });
     return { status: "success", data: result, error: null };
   } catch (error) {

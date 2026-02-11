@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview A flow to generate a simplified summary of a legal case.
+ * @fileOverview A flow to generate a simplified summary of a legal case from a voice recording.
  *
  * - generateCaseSummary - A function that generates the case summary.
  * - GenerateCaseSummaryInput - The input type for the generateCaseSummary function.
@@ -12,9 +12,11 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateCaseSummaryInputSchema = z.object({
-  problemDescription: z
+  problemAudio: z
     .string()
-    .describe('A description of the legal problem provided by the user.'),
+    .describe(
+      "A voice recording of the legal problem, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
 });
 export type GenerateCaseSummaryInput = z.infer<typeof GenerateCaseSummaryInputSchema>;
 
@@ -39,9 +41,11 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateCaseSummaryOutputSchema},
   prompt: `You are a legal expert specializing in summarizing legal cases for the common man.
 
-You will use the user's description of their legal problem to generate a simplified summary of their case. Also extract the case type (civil or criminal), relevant laws and sections, and the jurisdiction where the case should be filed.
-\nDescription of the legal problem: {{{problemDescription}}}
-\nOutput the case summary, case type, relevant laws and sections, jurisdiction, and next actions as JSON. Make the case summary as simple as possible for a layman to understand.
+You will use the user's voice recording of their legal problem to generate a simplified summary of their case. First, transcribe the audio. Then, based on the transcription, extract the case type (civil or criminal), relevant laws and sections, and the jurisdiction where the case should be filed.
+
+Voice recording of the legal problem: {{media url=problemAudio}}
+
+Output the case summary, case type, relevant laws and sections, jurisdiction, and next actions as JSON. Make the case summary as simple as possible for a layman to understand.
 `,
 });
 
