@@ -35,14 +35,22 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!auth) return;
-    if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-          'size': 'invisible',
-          'callback': () => {
-            // reCAPTCHA solved
-          }
-        });
-    }
+
+    // Always create a new verifier on mount, and clean it up on unmount.
+    // This helps prevent state issues with the reCAPTCHA.
+    const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+      'size': 'invisible',
+      'callback': () => {
+        // reCAPTCHA solved.
+      }
+    });
+
+    window.recaptchaVerifier = verifier;
+
+    // Cleanup function to clear the verifier when the component unmounts
+    return () => {
+      verifier.clear();
+    };
   }, [auth]);
 
   const handlePhoneLogin = async () => {
