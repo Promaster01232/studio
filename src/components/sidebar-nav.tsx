@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -23,6 +24,7 @@ import {
   Github,
   Gavel,
   Landmark,
+  Library,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -47,6 +49,7 @@ const navItems = [
     items: [
       { href: "/dashboard/police-guide", icon: Shield, label: "Police & Court Guides", tooltip: "Police & Court Guides" },
       { href: "/dashboard/learn", icon: BarChart2, label: "Legal Knowledge Hub", tooltip: "Legal Knowledge Hub" },
+      { href: "/dashboard/research-analytics", icon: Library, label: "Research & Analytics", tooltip: "Research & Analytics" },
       { href: "/dashboard/lawyer-connect", icon: Users, label: "Lawyer Connect", tooltip: "Lawyer Connect" },
       { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "NGO & Legal Aid", tooltip: "NGO & Legal Aid" },
       { href: "/dashboard/github", icon: Github, label: "GitHub", tooltip: "GitHub" },
