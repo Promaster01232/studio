@@ -1,7 +1,7 @@
 
 "use client";
 
-import Image from "next/image";
+import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,7 +15,7 @@ const lawyers = [
     id: 1,
     name: "Anjali Sharma",
     specialty: "Family Law",
-    rating: 4.3,
+    rating: 4.8,
     reviews: 1903,
     image: PlaceHolderImages.find(img => img.id === 'lawyer2')
   },
@@ -101,13 +101,15 @@ export default function LawyerConnectPage() {
                         <p className="font-semibold text-lg">{lawyer.name}</p>
                         <p className="text-sm text-muted-foreground">{lawyer.specialty}</p>
                         <div className="flex items-center gap-1 text-sm mt-1">
-                            <Star className="h-4 w-4 text-accent fill-accent" />
+                            <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                             <span className="font-bold">{lawyer.rating}</span>
                             <span className="text-muted-foreground text-xs">({lawyer.reviews} reviews)</span>
                         </div>
                     </div>
                 </div>
-                <Button>Connect</Button>
+                <Button asChild>
+                  <Link href={`/dashboard/lawyer-connect/${lawyer.id}`}>Connect</Link>
+                </Button>
             </div>
           </Card>
         ))}
