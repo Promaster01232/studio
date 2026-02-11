@@ -83,10 +83,10 @@ export default function NarrateProblemPage() {
                     formAction(formData);
                 });
             } else {
-                toast({
+                 toast({
                     variant: "destructive",
                     title: "Recording Too Short",
-                    description: "Please record for at least a second to analyze.",
+                    description: "Please record for at least a few seconds to analyze.",
                 });
             }
             setIsRecording(false);
@@ -153,7 +153,11 @@ export default function NarrateProblemPage() {
           </div>
           <p className="text-4xl font-mono font-bold tracking-wider">{formatTime(timer)}</p>
           <p className="text-sm text-muted-foreground">
-              {isRecording ? "Recording in progress..." : "Click 'Start Recording' to begin."}
+            {isRecording
+              ? "Recording in progress..."
+              : isLoading
+              ? "Recording submitted. The AI is now analyzing your case..."
+              : "Click 'Start Recording' to begin."}
           </p>
         </CardContent>
       </Card>
