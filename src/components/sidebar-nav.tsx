@@ -22,6 +22,7 @@ import {
   HeartHandshake,
   Github,
   Gavel,
+  Landmark,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -55,6 +56,7 @@ const navItems = [
     group: "Specialized",
     items: [
         { href: "/dashboard/business-msme", icon: Briefcase, label: "Business & MSME Tools", tooltip: "Business & MSME Tools" },
+        { href: "/dashboard/finances-billing", icon: Landmark, label: "Finances & Billing", tooltip: "Finances & Billing" },
     ]
   }
 ];
