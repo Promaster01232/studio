@@ -25,7 +25,7 @@ export default function WelcomePage() {
             privacy is important to us.
           </p>
           <Button asChild size="lg">
-            <Link href="/dashboard">
+            <Link href="/login">
               Get Started <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
