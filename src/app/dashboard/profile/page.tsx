@@ -1,6 +1,8 @@
 "use client";
 
 import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const user = {
@@ -25,6 +27,8 @@ const cases = [
 ]
 
 export default function ProfilePage() {
+  const [userType, setUserType] = useState("citizen");
+
   return (
     <div className="space-y-8">
       <PageHeader
@@ -49,7 +53,7 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2 space-y-8">
             {/* Personal Details Card */}
             <Card>
@@ -75,7 +79,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="userType">I am a</Label>
-                    <Select name="userType" defaultValue="citizen">
+                    <Select name="userType" value={userType} onValueChange={setUserType}>
                         <SelectTrigger id="userType">
                         <SelectValue placeholder="Select your role" />
                         </SelectTrigger>
@@ -93,6 +97,26 @@ export default function ProfilePage() {
                 </div>
               </CardContent>
             </Card>
+
+            {userType === 'advocate' && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Advocate Profile</CardTitle>
+                        <CardDescription>Manage your public-facing advocate profile for the Lawyer Connect directory.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Complete your professional details to get listed and connect with potential clients.
+                        </p>
+                        <Button asChild>
+                            <Link href="/dashboard/advocate-profile">
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit Advocate Profile
+                            </Link>
+                        </Button>
+                    </CardContent>
+                </Card>
+            )}
 
             {/* My Cases */}
             <Card>
