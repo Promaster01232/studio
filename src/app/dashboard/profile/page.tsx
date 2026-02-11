@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -13,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useTheme } from '@/components/theme-provider';
 
 const user = {
     name: 'Rajesh Kumar',
@@ -28,6 +30,7 @@ const cases = [
 
 export default function ProfilePage() {
   const [userType, setUserType] = useState("citizen");
+  const { theme, setTheme } = useTheme();
 
   return (
     <div className="space-y-8">
@@ -154,7 +157,11 @@ export default function ProfilePage() {
                     <Moon className="h-5 w-5 text-muted-foreground" />
                     <span>Dark Mode</span>
                   </Label>
-                  <Switch id="dark-mode" />
+                  <Switch
+                    id="dark-mode"
+                    checked={theme === 'dark'}
+                    onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
                     <Label htmlFor="two-factor" className="flex items-center gap-3 cursor-pointer">

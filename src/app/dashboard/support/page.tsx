@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useActionState } from "react";
+import { useActionState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { simplifyJargonAction, type JargonState } from "./actions";
 import { Loader2, Sparkles } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useLanguage } from "@/components/language-provider";
+import type { Language } from "@/components/language-provider";
 
 const initialState: JargonState = {
     status: 'idle',
@@ -17,9 +20,18 @@ const initialState: JargonState = {
     error: null,
 };
 
+const languages: { code: Language, name: string }[] = [
+    { code: "en", name: "English" },
+    { code: "hi", name: "Hindi" },
+    { code: "mr", name: "Marathi" },
+    { code: "ta", name: "Tamil" },
+    { code: "bn", name: "Bangla" },
+];
+
+
 export default function SupportPage() {
     const [state, formAction] = useActionState(simplifyJargonAction, initialState);
-    const [language, setLanguage] = useState("English");
+    const { language, setLanguage } = useLanguage();
 
     return (
         <div className="space-y-8">
@@ -74,15 +86,15 @@ export default function SupportPage() {
                     <CardDescription>Select your preferred language for the application.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <RadioGroup value={language} onValueChange={setLanguage} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                        {["English", "Hindi", "Marathi", "Tamil", "Bangla"].map((lang) => (
-                             <div key={lang}>
-                                <RadioGroupItem value={lang} id={lang.toLowerCase()} className="peer sr-only" />
+                    <RadioGroup value={language} onValueChange={(value) => setLanguage(value as Language)} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                        {languages.map((lang) => (
+                             <div key={lang.code}>
+                                <RadioGroupItem value={lang.code} id={lang.code} className="peer sr-only" />
                                 <Label 
-                                    htmlFor={lang.toLowerCase()} 
+                                    htmlFor={lang.code} 
                                     className="flex items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                                 >
-                                    {lang}
+                                    {lang.name}
                                 </Label>
                             </div>
                         ))}
