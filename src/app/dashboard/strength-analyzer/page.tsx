@@ -66,8 +66,7 @@ export default function StrengthAnalyzerPage() {
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value="English">English</SelectItem>
-                    <SelectItem value="Simple English">Simple English</SelectItem>
-                    <SelectItem value="Legal English">Legal English</SelectItem>
+                    <SelectItem value="Hindi">Hindi</SelectItem>
                 </SelectContent>
                 </Select>
             </div>
