@@ -51,7 +51,19 @@ export default function LoginPage() {
     setLoading(true);
     try {
         const verifier = window.recaptchaVerifier;
-        const confirmationResult = await signInWithPhoneNumber(auth, `+${phone}`, verifier);
+        
+        let fullPhoneNumber = phone.trim();
+        if (!fullPhoneNumber.startsWith('+')) {
+            if (fullPhoneNumber.length === 10) {
+                // Assume Indian number if 10 digits without +
+                fullPhoneNumber = `+91${fullPhoneNumber}`;
+            } else {
+                // For other cases like '91...' just add '+'
+                fullPhoneNumber = `+${fullPhoneNumber}`;
+            }
+        }
+        
+        const confirmationResult = await signInWithPhoneNumber(auth, fullPhoneNumber, verifier);
         window.confirmationResult = confirmationResult;
         setOtpSent(true);
         toast({ title: "OTP Sent", description: "An OTP has been sent to your phone."});
