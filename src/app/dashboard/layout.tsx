@@ -19,6 +19,12 @@ import {
 } from "@/components/ui/popover";
 import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import {
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { SosDialog } from "@/components/sos-dialog";
 
 const recentChats = [
   {
@@ -53,6 +59,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <SidebarHeader>
           {/* Logo is now in the main header */}
         </SidebarHeader>
+        <SheetHeader className="sr-only">
+          <SheetTitle>Navigation Menu</SheetTitle>
+          <SheetDescription>
+            Contains the main navigation links for the application.
+          </SheetDescription>
+        </SheetHeader>
         <SidebarContent className="pt-10">
           <SidebarNav />
         </SidebarContent>
@@ -61,7 +73,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         {!isChatPage && (
           <header className="flex h-16 shrink-0 items-center justify-between border-b bg-transparent px-4 md:px-6">
             <div className="flex items-center gap-4">
-              <SidebarTrigger />
+              <SidebarTrigger className="h-8 w-8 rounded-md bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80" />
               <Logo />
             </div>
             <div className="flex items-center gap-2">
@@ -69,10 +81,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <Search className="h-5 w-5 text-muted-foreground" />
                 <span className="sr-only">Search</span>
               </Button>
-              <Button variant="destructive">
-                <ShieldAlert className="mr-2 h-4 w-4" />
-                SOS
-              </Button>
+              <SosDialog>
+                <Button variant="destructive">
+                  <ShieldAlert className="mr-2 h-4 w-4" />
+                  SOS
+                </Button>
+              </SosDialog>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
