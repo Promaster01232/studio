@@ -5,7 +5,7 @@ import { ArrowRight, BookOpen } from "lucide-react";
 
 export default function WelcomePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-transparent p-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardContent className="flex flex-col items-center p-8 text-center">
           <div className="mb-6 rounded-full bg-primary/10 p-4">
