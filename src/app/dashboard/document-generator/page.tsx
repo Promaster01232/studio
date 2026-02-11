@@ -11,6 +11,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Download, Share2, Printer, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { jsPDF } from "jspdf";
+import { useToast } from "@/hooks/use-toast";
 
 const initialState: DocumentGeneratorState = {
   status: "idle",
@@ -25,6 +27,102 @@ const FormSectionTitle = ({ children }: { children: React.ReactNode }) => (
 export default function DocumentGeneratorPage() {
   const [state, formAction] = useActionState(generateDocumentAction, initialState);
   const [documentType, setDocumentType] = useState("Legal Notice");
+  const { toast } = useToast();
+
+  const handlePrint = (content: string, title: string) => {
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow?.document;
+    if (!doc) {
+        document.body.removeChild(iframe);
+        return;
+    }
+
+    doc.open();
+    doc.write(`
+        <html>
+            <head>
+                <title>${title}</title>
+                <style>
+                    @media print {
+                        body {
+                            font-family: sans-serif;
+                            color: #000;
+                        }
+                        pre {
+                            white-space: pre-wrap;
+                            font-family: sans-serif;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>${title}</h1>
+                <pre>${content}</pre>
+            </body>
+        </html>
+    `);
+    doc.close();
+    iframe.contentWindow?.focus();
+    iframe.contentWindow?.print();
+    document.body.removeChild(iframe);
+  };
+
+  const handleShare = async (content: string, title: string) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          text: content,
+        });
+      } catch (error) {
+        console.error("Share failed:", error);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(content);
+        toast({
+          title: "Copied to clipboard",
+          description: "The document content has been copied to your clipboard.",
+        });
+      } catch (err) {
+        toast({
+          variant: "destructive",
+          title: "Failed to copy",
+          description: "Could not copy document to clipboard.",
+        });
+      }
+    }
+  };
+
+  const handleDownloadPdf = (content: string, title: string) => {
+    try {
+      const doc = new jsPDF();
+      
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 15;
+      const usableWidth = pageWidth - margin * 2;
+      
+      doc.setFontSize(16);
+      doc.text(title, margin, 20);
+      
+      doc.setFontSize(10);
+      const lines = doc.splitTextToSize(content, usableWidth);
+      doc.text(lines, margin, 30);
+      
+      doc.save(`${title.replace(/[\s/]/g, '-')}.pdf`);
+    } catch (error) {
+       console.error("Failed to generate PDF:", error);
+       toast({
+          variant: "destructive",
+          title: "PDF Generation Failed",
+          description: "There was an error creating the PDF file.",
+       });
+    }
+  };
+
 
   return (
     <div className="space-y-8">
@@ -206,11 +304,11 @@ export default function DocumentGeneratorPage() {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle>Generated Document</CardTitle>
-                {state.status === "success" && (
+                {state.status === "success" && state.data && (
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm"><Download className="mr-2 h-4 w-4" /> PDF</Button>
-                    <Button variant="outline" size="sm"><Share2 className="mr-2 h-4 w-4" /> Share</Button>
-                    <Button variant="outline" size="sm"><Printer className="mr-2 h-4 w-4" /> Print</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleDownloadPdf(state.data!.document, `Generated ${documentType}`)}><Download className="mr-2 h-4 w-4" /> PDF</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleShare(state.data!.document, `Generated ${documentType}`)}><Share2 className="mr-2 h-4 w-4" /> Share</Button>
+                    <Button variant="outline" size="sm" onClick={() => handlePrint(state.data!.document, `Generated ${documentType}`)}><Printer className="mr-2 h-4 w-4" /> Print</Button>
                   </div>
                 )}
               </div>
