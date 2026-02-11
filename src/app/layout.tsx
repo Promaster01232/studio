@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/language-provider";
+import { FirebaseClientProvider } from "@/firebase/client-provider";
 
 export const metadata: Metadata = {
   title: "Nyaay Sathi",
@@ -25,7 +26,9 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <ThemeProvider>
           <LanguageProvider>
-            {children}
+            <FirebaseClientProvider>
+              {children}
+            </FirebaseClientProvider>
             <Toaster />
           </LanguageProvider>
         </ThemeProvider>
@@ -33,3 +36,4 @@ export default function RootLayout({
     </html>
   );
 }
+
