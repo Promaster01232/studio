@@ -165,7 +165,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-indigo-100/20 to-background p-4 dark:via-indigo-900/10">
        <div id="recaptcha-container"></div>
-      <div className="w-full max-w-sm space-y-6">
+      <div className="w-full max-w-sm">
           <div className="flex flex-col items-center text-center">
               <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto mb-2 dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
               <p className="font-semibold text-muted-foreground tracking-widest">
@@ -173,7 +173,7 @@ export default function LoginPage() {
               </p>
           </div>
           
-          <div className="bg-card/60 backdrop-blur-sm border-primary/20 p-6 rounded-lg border">
+          <div className="mt-6 bg-card/60 backdrop-blur-sm border-primary/20 p-6 rounded-lg border">
               {authError && (
                   <Alert variant="destructive" className="mb-4">
                       <AlertTitle>Configuration Required</AlertTitle>
@@ -238,7 +238,7 @@ export default function LoginPage() {
 
               <div className="space-y-2">
                   <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleLogin} disabled={loading}>
-                      <GoogleIcon className="mr-2 h-4 w-4 text-[#EA4335]" />
+                      <GoogleIcon className="mr-2 h-4 w-4" />
                       Continue with Google
                   </Button>
                   <Button variant="outline" className="w-full font-semibold" onClick={handleAppleLogin} disabled={loading}>
@@ -246,6 +246,12 @@ export default function LoginPage() {
                       Continue with Apple
                   </Button>
               </div>
+          </div>
+          
+          <div className="mt-4 text-center">
+            <Button asChild variant="link">
+              <Link href="/dashboard">Skip Login</Link>
+            </Button>
           </div>
 
           <p className="mt-6 text-center text-xs text-muted-foreground px-8">
@@ -263,3 +269,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+    
