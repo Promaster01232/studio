@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Search, Bell, ShieldAlert, MessageSquare, User, LogOut, SunMoon, Languages } from "lucide-react";
+import { Search, Bell, ShieldAlert, MessageSquare, User, LogOut, SunMoon, Languages, Loader2 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -21,10 +21,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Link from "next/link";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   DropdownMenu,
@@ -41,36 +40,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/theme-provider";
 import { useLanguage, type Language } from "@/components/language-provider";
-
-const recentChats = [
-  {
-    id: 1,
-    name: "Anjali Sharma",
-    message: "The yet a free cow thate ham...",
-    image: PlaceHolderImages.find((img) => img.id === "lawyer2"),
-    unread: 2,
-  },
-  {
-    id: 2,
-    name: "Siddharth Rao",
-    message: "You: Youra sharma your ou the...",
-    image: PlaceHolderImages.find((img) => img.id === "lawyer1"),
-    unread: 0,
-  },
-  {
-    id: 3,
-    name: "Priya Singh",
-    message: "Wes sce but he may have the...",
-    image: PlaceHolderImages.find((img) => img.id === "lawyer5"),
-    unread: 1,
-  },
-];
-
-const user = {
-    name: 'Rajesh Kumar',
-    email: 'rajesh.k@nyaaysathi.com',
-    avatar: PlaceHolderImages.find(img => img.id === 'lawyer1'),
-};
+import { useAuth, useFirestore } from "@/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { signOut } from "firebase/auth";
 
 const languages: { code: Language, name: string }[] = [
     { code: "en", name: "English" },
@@ -87,11 +59,61 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [isMounted, setIsMounted] = useState(false);
   const { theme, setTheme } = useTheme();
   const { language, setLanguage } = useLanguage();
+  const auth = useAuth();
+  const firestore = useFirestore();
+  const router = useRouter();
+  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string} | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (auth === null || firestore === null) {
+      // Firebase is still initializing
+      return;
+    }
+    
+    if (!auth.currentUser) {
+      // Not logged in, redirect
+      if(pathname !== '/login' && pathname !== '/create-profile') {
+        router.push('/login');
+      }
+      setProfileLoading(false);
+      return;
+    }
+
+    const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+    getDoc(userDocRef).then(userDoc => {
+      if (userDoc.exists()) {
+        setUserProfile(userDoc.data() as {firstName: string; lastName: string; email: string});
+      } else {
+        // Logged in but no profile, redirect to create one
+        if (pathname !== '/create-profile') {
+            router.push('/create-profile');
+        }
+      }
+      setProfileLoading(false);
+    });
+
+  }, [auth, firestore, router, pathname]);
+
+  const handleLogout = async () => {
+    if (auth) {
+        await signOut(auth);
+        router.push('/login');
+    }
+  };
+
+  const getAvatarFallback = () => {
+      if (!userProfile) return "";
+      const firstNameInitial = userProfile.firstName ? userProfile.firstName.charAt(0) : "";
+      const lastNameInitial = userProfile.lastName ? userProfile.lastName.charAt(0) : "";
+      return `${firstNameInitial}${lastNameInitial}`;
+  }
+  
+  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
 
   return (
     <SidebarProvider>
@@ -111,7 +133,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <Logo />
             </div>
             <div className="flex items-center gap-2">
-              {isMounted ? (
+              {showContent && userProfile ? (
                 <>
                   <SearchDialog>
                     <Button variant="ghost" size="icon" className="rounded-full">
@@ -134,50 +156,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                       >
                         <MessageSquare className="h-5 w-5 text-muted-foreground" />
                         <span className="sr-only">Messages</span>
-                        <span className="absolute top-1 right-1 flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                        </span>
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-80 p-2">
                       <div className="font-semibold p-2">Messages</div>
-                      <div className="space-y-1">
-                        {recentChats.map((chat) => (
-                          <Link
-                            href={`/dashboard/lawyer-connect/${chat.id}/chat`}
-                            key={chat.id}
-                            className="block"
-                          >
-                            <div className="flex items-center gap-3 p-2 rounded-md hover:bg-accent cursor-pointer">
-                              {chat.image && (
-                                <Avatar className="h-10 w-10">
-                                  <AvatarImage
-                                    src={chat.image.imageUrl}
-                                    alt={chat.name}
-                                    data-ai-hint={chat.image.imageHint}
-                                  />
-                                  <AvatarFallback>
-                                    {chat.name.charAt(0)}
-                                  </AvatarFallback>
-                                </Avatar>
-                              )}
-                              <div className="flex-1 overflow-hidden">
-                                <div className="font-medium truncate">
-                                  {chat.name}
-                                </div>
-                                <p className="text-xs text-muted-foreground truncate">
-                                  {chat.message}
-                                </p>
-                              </div>
-                              {chat.unread > 0 && (
-                                <span className="bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                                  {chat.unread}
-                                </span>
-                              )}
-                            </div>
-                          </Link>
-                        ))}
+                      <div className="space-y-1 text-center p-4 text-sm text-muted-foreground">
+                        No recent messages.
                       </div>
                     </PopoverContent>
                   </Popover>
@@ -193,17 +177,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="rounded-full">
                           <Avatar className="h-8 w-8">
-                              {user.avatar && (
-                                <AvatarImage src={user.avatar.imageUrl} alt={user.name} data-ai-hint={user.avatar.imageHint || ''} />
-                              )}
-                              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                              <AvatarFallback>{getAvatarFallback()}</AvatarFallback>
                           </Avatar>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
                       <DropdownMenuLabel>
-                          <div className="font-semibold">{user.name}</div>
-                          <div className="text-xs text-muted-foreground">{user.email}</div>
+                          <div className="font-semibold">{userProfile.firstName} {userProfile.lastName}</div>
+                          <div className="text-xs text-muted-foreground">{userProfile.email}</div>
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
@@ -238,7 +219,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                           </DropdownMenuSubContent>
                       </DropdownMenuSub>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleLogout}>
                           <LogOut className="mr-2 h-4 w-4" />
                           <span>Log out</span>
                       </DropdownMenuItem>
@@ -261,7 +242,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           className="h-[calc(100vh-4rem)] flex flex-col overflow-y-auto bg-transparent data-[chat=true]:h-screen data-[chat=true]:p-0 p-4 md:p-6 lg:p-8"
           data-chat={isChatPage}
         >
-          {children}
+          {showContent ? children : (
+            <div className="flex flex-1 items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          )}
         </main>
       </SidebarInset>
     </SidebarProvider>

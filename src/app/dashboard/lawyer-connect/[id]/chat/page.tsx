@@ -12,14 +12,7 @@ import { Card } from "@/components/ui/card";
 import { getAdvocates, type Lawyer } from "@/lib/advocates-data";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const messages = [
-    { id: 1, sender: 'other', text: 'The yet a free cow thate ham masrie tti' },
-    { id: 2, sender: 'me', text: 'Was anjali sharma on be half the your officew busy' },
-    { id: 3, sender: 'other', text: 'The younahly is per win ael call thweer' },
-    { id: 4, sender: 'me', text: 'Youra sharma your ou the inclohay' },
-    { id: 5, sender: 'other', text: 'Wes sce but he may have the drora yout have liiay' },
-    { id: 6, sender: 'other', text: 'Yousee do woescki ookind for for then you caen dant' },
-];
+const messages: {id: number, sender: string, text: string}[] = [];
 
 
 export default function ChatPage() {
@@ -115,13 +108,17 @@ export default function ChatPage() {
                 </div>
             </Card>
             
-            {messages.map(message => (
+            {messages.length > 0 ? messages.map(message => (
                  <div key={message.id} className={`flex ${message.sender === 'me' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`px-4 py-2 rounded-lg max-w-[80%] ${message.sender === 'me' ? 'bg-primary text-primary-foreground' : 'bg-background'}`}>
                         {message.text}
                     </div>
                 </div>
-            ))}
+            )) : (
+              <div className="text-center text-sm text-muted-foreground py-10">
+                No messages yet. Start the conversation!
+              </div>
+            )}
         </div>
         
         <footer className="p-4 bg-background border-t">

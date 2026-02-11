@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -15,7 +16,6 @@ const newsFeed = [
         id: 1,
         author: "The Legal Times",
         authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer4'),
-        lawyerId: 4,
         date: "2h ago",
         title: "Supreme Court Upholds Environmental Regulations in Landmark Case",
         content: "In a significant ruling, the Supreme Court has upheld stringent environmental regulations, emphasizing the state's duty to protect natural resources over industrial interests. The verdict is expected to have wide-ranging implications for ongoing and future infrastructure projects.",
@@ -27,7 +27,6 @@ const newsFeed = [
         id: 2,
         author: "Indian Law Journal",
         authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer5'),
-        lawyerId: 3,
         date: "1d ago",
         title: "High Court Issues New Guidelines for Digital Evidence",
         content: "The High Court has issued a comprehensive set of guidelines for the collection, preservation, and presentation of digital evidence in court. The move aims to standardize procedures and prevent tampering with electronic records, a growing concern in criminal and civil litigation.",
@@ -39,7 +38,6 @@ const newsFeed = [
         id: 3,
         author: "Bar & Bench",
         authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer1'),
-        lawyerId: 2,
         date: "3d ago",
         title: "Plea Challenging Sedition Law Admitted in Supreme Court",
         content: "The Supreme Court has agreed to hear a fresh plea challenging the constitutional validity of the sedition law. The petitioners argue that the law is a colonial-era relic used to stifle dissent and free speech, and have called for its complete repeal.",
@@ -51,7 +49,6 @@ const newsFeed = [
         id: 4,
         author: "Live Law",
         authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer2'),
-        lawyerId: 1,
         date: "4d ago",
         title: "New Consumer Protection Rules Notified, E-Commerce to be Impacted",
         content: "The government has notified new rules under the Consumer Protection Act, which will significantly impact e-commerce platforms. The rules introduce stricter norms for flash sales, and enhance liability for sellers, aiming to better protect online shoppers.",
@@ -85,19 +82,10 @@ export default function ResearchAnalyticsPage() {
                             <div className="p-4 sm:p-6">
                                 <div className="flex items-center gap-3 mb-4">
                                     {item.authorAvatar && (
-                                        item.lawyerId ? (
-                                        <Link href={`/dashboard/lawyer-connect/${item.lawyerId}`} className="block">
-                                            <Avatar className="h-10 w-10 border hover:ring-2 hover:ring-primary transition-all">
-                                                <AvatarImage src={item.authorAvatar.imageUrl} alt={item.author} data-ai-hint={item.authorAvatar.imageHint || ''}/>
-                                                <AvatarFallback>{item.author.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                        </Link>
-                                        ) : (
-                                            <Avatar className="h-10 w-10 border">
-                                                <AvatarImage src={item.authorAvatar.imageUrl} alt={item.author} data-ai-hint={item.authorAvatar.imageHint || ''}/>
-                                                <AvatarFallback>{item.author.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                        )
+                                        <Avatar className="h-10 w-10 border hover:ring-2 hover:ring-primary transition-all">
+                                            <AvatarImage src={item.authorAvatar.imageUrl} alt={item.author} data-ai-hint={item.authorAvatar.imageHint || ''}/>
+                                            <AvatarFallback>{item.author.charAt(0)}</AvatarFallback>
+                                        </Avatar>
                                     )}
                                     <div>
                                         <p className="font-semibold">{item.author}</p>
