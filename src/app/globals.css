@@ -41,33 +41,33 @@
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 220 14% 81%;
-    --card: 224 71% 8%;
-    --card-foreground: 220 14% 81%;
+    --background: 222 89% 6%;
+    --foreground: 215 20.2% 65.1%;
+    --card: 222 72% 12%;
+    --card-foreground: 215.4 13.9% 68.8%;
     --popover: 224 71% 4%;
     --popover-foreground: 220 14% 81%;
-    --primary: 217 91% 60%;
+    --primary: 288 81% 56%;
     --primary-foreground: 0 0% 100%;
     --secondary: 224 71% 12%;
     --secondary-foreground: 220 14% 81%;
-    --muted: 224 71% 10%;
-    --muted-foreground: 220 10% 55%;
-    --accent: 224 71% 12%;
-    --accent-foreground: 220 14% 81%;
-    --destructive: 0 84% 60%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 215.4 13.9% 68.8%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
-    --border: 224 71% 12%;
-    --input: 224 71% 16%;
-    --ring: 217 91% 60%;
-    --sidebar-background: 224 71% 4%;
-    --sidebar-foreground: 220 14% 71%;
-    --sidebar-primary: 217 91% 60%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 288 81% 56%;
+    --sidebar-background: 225 73% 9%;
+    --sidebar-foreground: 215 20.2% 65.1%;
+    --sidebar-primary: 288 81% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 224 71% 8%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 224 71% 12%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-ring: 288 81% 56%;
   }
 }
 
@@ -78,5 +78,10 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  .dark body {
+    background-image: url('https://firebasestudio.app/assets/images/backgrounds/circuit-board.svg');
+    background-position: center;
+    background-size: cover;
   }
 }

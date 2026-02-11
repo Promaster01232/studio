@@ -28,7 +28,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       </Sidebar>
       <SidebarInset>
         {!isChatPage && (
-          <header className="flex h-16 shrink-0 items-center justify-between border-b bg-background px-4 md:px-6">
+          <header className="flex h-16 shrink-0 items-center justify-between border-b bg-transparent px-4 md:px-6">
             <div className="flex items-center gap-4">
               <SidebarTrigger />
               <Logo />
@@ -49,7 +49,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </div>
           </header>
         )}
-        <main className="h-[calc(100vh-4rem)] flex flex-col overflow-y-auto bg-muted data-[chat=true]:h-screen data-[chat=true]:p-0 p-4 md:p-6 lg:p-8" data-chat={isChatPage}>
+        <main className="h-[calc(100vh-4rem)] flex flex-col overflow-y-auto bg-transparent data-[chat=true]:h-screen data-[chat=true]:p-0 p-4 md:p-6 lg:p-8" data-chat={isChatPage}>
             {children}
         </main>
       </SidebarInset>
