@@ -180,5 +180,197 @@ If you are a victim, you can file a complaint at the National Cyber Crime Report
 **हिन्दी में:**
 
 बौद्धिक संपदा (आईपी) मन की रचनाओं को संदर्भित करती है। आईपीआर इन रचनाओं की रक्षा करता है, जिसमें कॉपीराइट, पेटेंट और ट्रेडमार्क शामिल हैं।`
+  },
+  {
+    slug: "indian-penal-code",
+    title: "Indian Penal Code (IPC)",
+    description: "The official criminal code of India, defining offences and their punishments.",
+    icon: Gavel,
+    content: `The Indian Penal Code, 1860 is the official criminal code of India. It is a comprehensive code intended to cover all substantive aspects of criminal law. The code defines various common crimes like theft, robbery, murder, assault, and provides punishments for them. It is the primary document that a police officer refers to when charging someone with a crime.
+
+---
+**हिन्दी में:**
+
+भारतीय दंड संहिता, 1860 भारत की आधिकारिक आपराधिक संहिता है। यह एक व्यापक संहिता है जिसका उद्देश्य आपराधिक कानून के सभी वास्तविक पहलुओं को शामिल करना है। यह संहिता चोरी, डकैती, हत्या, हमला जैसे विभिन्न सामान्य अपराधों को परिभाषित करती है और उनके लिए दंड प्रदान करती है।`
+  },
+  {
+    slug: "criminal-procedure-code",
+    title: "Criminal Procedure Code (CrPC)",
+    description: "Understand the procedure for investigation, trial, and appeal in criminal cases.",
+    icon: Gavel,
+    content: `The Code of Criminal Procedure, 1973 is the main legislation on procedure for administration of substantive criminal law in India. It provides the machinery for the investigation of crime, apprehension of suspected criminals, collection of evidence, determination of guilt or innocence of the accused person and the determination of punishment of the guilty. It outlines the process from the filing of an FIR to the final appeal.
+
+---
+**हिन्दी में:**
+
+दंड प्रक्रिया संहिता, 1973 भारत में मूल आपराधिक कानून के प्रशासन की प्रक्रिया पर मुख्य कानून है। यह अपराध की जांच, संदिग्ध अपराधियों की गिरफ्तारी, सबूतों का संग्रह, अभियुक्त व्यक्ति के अपराध या निर्दोषता का निर्धारण और दोषी को दंड का निर्धारण करने के लिए तंत्र प्रदान करता है।`
+  },
+  {
+    slug: "civil-procedure-code",
+    title: "Civil Procedure Code (CPC)",
+    description: "The procedural law governing civil court proceedings in India.",
+    icon: Scale,
+    content: `The Code of Civil Procedure, 1908 is a procedural law related to the administration of civil proceedings in India. It consolidates and amends the law relating to the procedure of the Courts of Civil Judicature. It governs how civil suits are filed, the process of summons, pleadings, trial, and appeals.
+
+---
+**हिन्दी में:**
+
+सिविल प्रक्रिया संहिता, 1908 भारत में नागरिक कार्यवाही के प्रशासन से संबंधित एक प्रक्रियात्मक कानून है। यह दीवानी न्यायालयों की प्रक्रिया से संबंधित कानून को समेकित और संशोधित करता है।`
+  },
+  {
+    slug: "indian-evidence-act",
+    title: "Indian Evidence Act",
+    description: "Rules regarding the admissibility of evidence in court.",
+    icon: FileText,
+    content: `The Indian Evidence Act, 1872, originally passed by the British Parliament, contains a set of rules and allied issues governing the admissibility of any evidence in Indian courts of law. It lays down the rules for what kind of evidence is admissible and what is not, in both civil and criminal cases.
+
+---
+**हिन्दी में:**
+
+भारतीय साक्ष्य अधिनियम, 1872 में नियमों का एक समूह है जो भारतीय कानून की अदालतों में किसी भी सबूत की स्वीकार्यता को नियंत्रित करता है। यह निर्धारित करता है कि दीवानी और आपराधिक दोनों मामलों में किस प्रकार के साक्ष्य स्वीकार्य हैं और क्या नहीं।`
+  },
+  {
+    slug: "indian-contract-act",
+    title: "Indian Contract Act",
+    description: "The law governing contracts in India.",
+    icon: FileSignature,
+    content: `The Indian Contract Act, 1872 prescribes the law relating to contracts in India and is the key act regulating Indian contract law. The Act is based on the principles of English Common Law. It determines the circumstances in which promises made by the parties to a contract shall be legally binding.
+
+---
+**हिन्दी में:**
+
+भारतीय अनुबंध अधिनियम, 1872 भारत में अनुबंधों से संबंधित कानून निर्धारित करता है और भारतीय अनुबंध कानून को विनियमित करने वाला प्रमुख अधिनियम है। यह निर्धारित करता है कि अनुबंध के पक्षों द्वारा किए गए वादे किन परिस्थितियों में कानूनी रूप से बाध्यकारी होंगे।`
+  },
+  {
+    slug: "company-law",
+    title: "Company Law",
+    description: "Laws related to the incorporation, functioning, and dissolution of companies.",
+    icon: Building,
+    content: `Company Law in India is primarily governed by the Companies Act, 2013. It regulates the incorporation of a company, responsibilities of a company, directors, and dissolution of a company. It aims to improve corporate governance and protect the interests of investors.
+
+---
+**हिन्दी में:**
+
+भारत में कंपनी कानून मुख्य रूप से कंपनी अधिनियम, 2013 द्वारा शासित होता है। यह एक कंपनी के निगमन, एक कंपनी की जिम्मेदारियों, निदेशकों और एक कंपनी के विघटन को नियंत्रित करता है।`
+  },
+  {
+    slug: "income-tax-law",
+    title: "Income Tax Law",
+    description: "Understand the laws governing income tax in India.",
+    icon: PiggyBank,
+    content: `The Income Tax Act, 1961 is the law that governs the provisions for income tax in India. It provides for the levy, administration, collection and recovery of Income Tax. Understanding its provisions is crucial for every earning individual and business in India.
+
+---
+**हिन्दी में:**
+
+आयकर अधिनियम, 1961 वह कानून है जो भारत में आयकर के प्रावधानों को नियंत्रित करता है। यह आयकर के उदग्रहण, प्रशासन, संग्रह और वसूली का प्रावधान करता है।`
+  },
+  {
+    slug: "environmental-law",
+    title: "Environmental Law",
+    description: "Laws designed to protect the environment and natural resources.",
+    icon: Leaf,
+    content: `Environmental law in India is a collection of laws and regulations aimed at protecting the environment from pollution and degradation. Key acts include the Environment Protection Act, 1986, the Water Act, 1974, and the Air Act, 1981. These laws are enforced by central and state pollution control boards.
+
+---
+**हिन्दी में:**
+
+भारत में पर्यावरण कानून पर्यावरण को प्रदूषण और क्षरण से बचाने के उद्देश्य से कानूनों और विनियमों का एक संग्रह है। मुख्य अधिनियमों में पर्यावरण संरक्षण अधिनियम, 1986, जल अधिनियम, 1974 और वायु अधिनियम, 1981 शामिल हैं।`
+  },
+  {
+    slug: "arbitration-and-conciliation",
+    title: "Arbitration and Conciliation",
+    description: "Understand the process of alternative dispute resolution outside of courts.",
+    icon: HeartHandshake,
+    content: `The Arbitration and Conciliation Act, 1996 is the primary law in India for handling disputes through arbitration and conciliation. This process, known as Alternative Dispute Resolution (ADR), is often faster and less expensive than traditional court litigation.
+
+---
+**हिन्दी में:**
+
+मध्यस्थता और सुलह अधिनियम, 1996 भारत में मध्यस्थता और सुलह के माध्यम से विवादों को संभालने का प्राथमिक कानून है। यह प्रक्रिया, जिसे वैकल्पिक विवाद समाधान (एडीआर) के रूप में जाना जाता है, अक्सर पारंपरिक अदालत मुकदमेबाजी की तुलना में तेज और कम खर्चीली होती है।`
+  },
+  {
+    slug: "insolvency-and-bankruptcy-code",
+    title: "Insolvency and Bankruptcy Code (IBC)",
+    description: "The law for insolvency resolution of companies and individuals.",
+    icon: Building,
+    content: `The Insolvency and Bankruptcy Code, 2016 (IBC) is the bankruptcy law of India which seeks to consolidate the existing framework by creating a single law for insolvency and bankruptcy. The code aims to provide a time-bound process to resolve insolvency.
+
+---
+**हिन्दी में:**
+
+दिवाला और दिवालियापन संहिता, 2016 (आईबीसी) भारत का दिवालियापन कानून है जो दिवाला और दिवालियापन के लिए एक ही कानून बनाकर मौजूदा ढांचे को मजबूत करना चाहता है।`
+  },
+  {
+    slug: "real-estate-rera",
+    title: "Real Estate (RERA)",
+    description: "Laws to protect homebuyers and regulate the real estate sector.",
+    icon: Home,
+    content: `The Real Estate (Regulation and Development) Act, 2016 (RERA) is an Act of the Parliament of India which seeks to protect home-buyers as well as help boost investments in the real estate industry. It establishes a regulatory authority in each state for regulation of the real estate sector and for ensuring speedy dispute resolution.
+
+---
+**हिन्दी में:**
+
+रियल एस्टेट (विनियमन और विकास) अधिनियम, 2016 (रेरा) भारत की संसद का एक अधिनियम है जो घर-खरीदारों की रक्षा करने के साथ-साथ रियल एस्टेट उद्योग में निवेश को बढ़ावा देने में मदद करता है।`
+  },
+  {
+    slug: "law-of-torts",
+    title: "Law of Torts",
+    description: "Understand civil wrongs like negligence, defamation, and trespass.",
+    icon: Shield,
+    content: `A tort is a civil wrong that causes a claimant to suffer loss or harm, resulting in legal liability for the person who commits the tortious act. The Law of Torts covers a wide range of civil wrongs, including negligence, defamation, trespass, and nuisance. Unlike criminal law, the primary purpose is to provide compensation for damages.
+
+---
+**हिन्दी में:**
+
+एक अपकृत्य एक नागरिक गलत है जो एक दावेदार को नुकसान या हानि पहुंचाता है, जिसके परिणामस्वरूप अपकृत्यपूर्ण कार्य करने वाले व्यक्ति के लिए कानूनी दायित्व होता है। अपकृत्य कानून में लापरवाही, मानहानि, अतिचार और उपद्रव सहित नागरिक गलतियों की एक विस्तृत श्रृंखला शामिल है।`
+  },
+  {
+    slug: "administrative-law",
+    title: "Administrative Law",
+    description: "The body of law that governs the activities of government agencies.",
+    icon: Landmark,
+    content: `Administrative law is the body of law that governs the activities of administrative agencies of government. Government agency action can include rulemaking, adjudication, or the enforcement of a specific regulatory agenda. Administrative law is considered a branch of public law.
+
+---
+**हिन्दी में:**
+
+प्रशासनिक कानून कानून का वह निकाय है जो सरकार की प्रशासनिक एजेंसियों की गतिविधियों को नियंत्रित करता है। इसमें नियम बनाना, अधिनिर्णय या एक विशिष्ट नियामक एजेंडे का प्रवर्तन शामिल हो सकता है।`
+  },
+  {
+    slug: "human-rights-law",
+    title: "Human Rights Law",
+    description: "Learn about the basic rights and freedoms to which all humans are entitled.",
+    icon: Globe,
+    content: `Human rights are rights inherent to all human beings, regardless of race, sex, nationality, ethnicity, language, religion, or any other status. Human rights include the right to life and liberty, freedom from slavery and torture, freedom of opinion and expression, the right to work and education, and many more. In India, these are protected by the Constitution and the Protection of Human Rights Act, 1993.
+
+---
+**हिन्दी में:**
+
+मानवाधिकार सभी मनुष्यों में निहित अधिकार हैं, चाहे उनकी जाति, लिंग, राष्ट्रीयता, जातीयता, भाषा, धर्म या कोई अन्य स्थिति कुछ भी हो। भारत में, वे संविधान और मानवाधिकार संरक्षण अधिनियम, 1993 द्वारा संरक्षित हैं।`
+  },
+  {
+    slug: "banking-and-finance-law",
+    title: "Banking & Finance Law",
+    description: "Understand the laws governing banks, financial institutions, and transactions.",
+    icon: Landmark,
+    content: `Banking law in India is governed by a series of acts, including the Banking Regulation Act, 1949, the Reserve Bank of India Act, 1934, and the Negotiable Instruments Act, 1881. These laws regulate the functioning of banks, protect depositors, and govern financial transactions like loans, mortgages, and digital payments.
+
+---
+**हिन्दी में:**
+
+भारत में बैंकिंग कानून बैंकिंग विनियमन अधिनियम, 1949, भारतीय रिजर्व बैंक अधिनियम, 1934, और परक्राम्य लिखत अधिनियम, 1881 सहित कई अधिनियमों द्वारा शासित होता है।`
+  },
+  {
+    slug: "medical-negligence",
+    title: "Medical Negligence",
+    description: "Learn about the legal recourse available in cases of medical malpractice.",
+    icon: Stethoscope,
+    content: `Medical negligence occurs when a medical professional deviates from the accepted standard of care, causing injury or death to a patient. Patients who have suffered harm due to negligence can seek compensation under the Consumer Protection Act or by filing a civil suit under the Law of Torts. Proving negligence requires establishing a duty of care, a breach of that duty, and resulting harm.
+
+---
+**हिन्दी में:**
+
+चिकित्सीय लापरवाही तब होती है जब एक चिकित्सा पेशेवर देखभाल के स्वीकृत मानक से भटक जाता है, जिससे रोगी को चोट या मृत्यु हो जाती है। लापरवाही के कारण नुकसान उठाने वाले मरीज उपभोक्ता संरक्षण अधिनियम के तहत या अपकृत्य कानून के तहत दीवानी मुकदमा दायर करके मुआवजे की मांग कर सकते हैं।`
   }
 ];
