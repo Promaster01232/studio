@@ -25,7 +25,9 @@ import {
   Palette,
   Anchor,
   Plane,
-  Stethoscope
+  Stethoscope,
+  Gavel,
+  FileSignature
 } from "lucide-react";
 
 export const topics = [
