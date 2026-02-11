@@ -74,12 +74,19 @@ export default function NarrateProblemPage() {
             if (timerInterval.current) clearInterval(timerInterval.current);
             const blob = new Blob(chunks, { type: "audio/webm" });
             
-            if (blob.size > 0) {
+            // A small threshold to make sure there's actual audio data
+            if (blob.size > 500) {
                 const formData = new FormData();
                 const audioFile = new File([blob], "recording.webm", { type: "audio/webm" });
                 formData.append("problemAudio", audioFile);
                 startTransition(() => {
                     formAction(formData);
+                });
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Recording Too Short",
+                    description: "Please record for at least a second to analyze.",
                 });
             }
             setIsRecording(false);
