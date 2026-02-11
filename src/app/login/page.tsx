@@ -175,7 +175,7 @@ export default function LoginPage() {
     <div className="flex flex-col items-center justify-center w-full max-w-sm">
         <div id="recaptcha-container"></div>
         <div className="mb-6 flex flex-col items-center text-center">
-            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-32 w-auto mb-4" />
+            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-32 w-auto mb-4 dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
             <p className="text-muted-foreground">
                 Your AI Legal Assistant
             </p>

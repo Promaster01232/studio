@@ -11,7 +11,7 @@ export default function WelcomePage() {
         <CardContent className="flex flex-col items-center p-8 text-center">
           <div className="relative mb-6">
             <div className="absolute -inset-2 rounded-full bg-primary/10 animate-pulse [animation-duration:4s]"></div>
-            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-36 w-auto relative" />
+            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-36 w-auto relative dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
           </div>
 
           <h1 className="text-4xl font-bold font-headline mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
