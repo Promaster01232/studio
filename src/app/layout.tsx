@@ -3,8 +3,8 @@ import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI Nyaya Mitra",
-  description: "Understand Law. Take Action. Get Justice.",
+  title: "Nyaay Sathi",
+  description: "Your AI-powered legal assistant. We're here to help you understand legal documents, assess your case strength, and navigate the legal system with confidence.",
 };
 
 export default function RootLayout({
