@@ -9,38 +9,52 @@ import {
 } from "@/components/ui/sidebar";
 import {
   Home,
-  MessageSquare,
-  BarChart2,
-  FileText,
+  Briefcase,
+  CircleUserRound,
+  Mic,
+  HelpCircle,
   FileSearch,
+  FileText,
+  FileSignature,
   Shield,
-  Gavel,
-  FolderKanban,
-  BookOpen,
+  BarChart2,
+  Users,
+  HeartHandshake,
+  Github,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
-  { href: "/dashboard", icon: Home, label: "Home", tooltip: "Home" },
+  { href: "/dashboard", icon: Home, label: "Dashboard", tooltip: "Dashboard" },
+  { href: "/dashboard/my-cases", icon: Briefcase, label: "Case Tracker", tooltip: "Case Tracker" },
+  { href: "/dashboard/profile", icon: CircleUserRound, label: "My Profile", tooltip: "My Profile" },
   {
-    group: "Case Tools",
+    group: "AI Tools",
     items: [
-      { href: "/dashboard/narrate", icon: MessageSquare, label: "Narrate Problem", tooltip: "Narrate Problem" },
-      { href: "/dashboard/strength-analyzer", icon: BarChart2, label: "Analyze Strength", tooltip: "Analyze Strength" },
-      { href: "/dashboard/document-generator", icon: FileText, label: "Generate Document", tooltip: "Generate Document" },
-      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Understand Document", tooltip: "Understand Document" },
+      { href: "/dashboard/narrate", icon: Mic, label: "Speak Your Problem", tooltip: "Speak Your Problem" },
+      { href: "/dashboard/strength-analyzer", icon: HelpCircle, label: "Case Strength Analyzer", tooltip: "Case Strength Analyzer" },
+      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Document Intelligence", tooltip: "Document Intelligence" },
+      { href: "/dashboard/document-generator", icon: FileText, label: "Complaint Generator", tooltip: "Complaint Generator" },
+      { href: "/dashboard/bond-generator", icon: FileSignature, label: "Bond Generator", tooltip: "Bond Generator" },
     ],
   },
   {
     group: "Resources",
     items: [
       { href: "/dashboard/police-guide", icon: Shield, label: "Police & Court Guides", tooltip: "Police & Court Guides" },
-      { href: "/dashboard/lawyer-connect", icon: Gavel, label: "Lawyer Connect", tooltip: "Lawyer Connect" },
-      { href: "/dashboard/learn", icon: BookOpen, label: "Legal Knowledge Hub", tooltip: "Legal Knowledge Hub" },
+      { href: "/dashboard/learn", icon: BarChart2, label: "Legal Knowledge Hub", tooltip: "Legal Knowledge Hub" },
+      { href: "/dashboard/lawyer-connect", icon: Users, label: "Lawyer Connect", tooltip: "Lawyer Connect" },
+      { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "NGO & Legal Aid", tooltip: "NGO & Legal Aid" },
+      { href: "/dashboard/github", icon: Github, label: "GitHub", tooltip: "GitHub" },
     ],
   },
-  { href: "/dashboard/my-cases", icon: FolderKanban, label: "My Cases", tooltip: "My Cases" },
+  {
+    group: "Specialized",
+    items: [
+        { href: "/dashboard/business-msme", icon: Briefcase, label: "Business & MSME Tools", tooltip: "Business & MSME Tools" },
+    ]
+  }
 ];
 
 export function SidebarNav() {
