@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useRef, useEffect } from "react";
+import { useActionState, useState, useRef, useEffect, startTransition } from "react";
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -78,7 +78,9 @@ export default function NarrateProblemPage() {
                 const formData = new FormData();
                 const audioFile = new File([blob], "recording.webm", { type: "audio/webm" });
                 formData.append("problemAudio", audioFile);
-                formAction(formData);
+                startTransition(() => {
+                    formAction(formData);
+                });
             }
             setIsRecording(false);
         };
