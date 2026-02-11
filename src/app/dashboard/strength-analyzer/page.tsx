@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Lightbulb, ShieldAlert, Sparkles } from "lucide-react";
+import { Lightbulb, Loader2, ShieldAlert, Sparkles } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const initialState: CaseStrengthState = {
@@ -72,8 +72,17 @@ export default function StrengthAnalyzerPage() {
             </div>
 
             <Button type="submit" disabled={state.status === 'loading'} className="w-full md:w-auto">
-              <Sparkles className="mr-2 h-4 w-4" />
-              {state.status === 'loading' ? 'Assessing...' : 'Assess Strength'}
+              {state.status === 'loading' ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Assessing...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Assess Strength
+                </>
+              )}
             </Button>
           </form>
         </CardContent>
