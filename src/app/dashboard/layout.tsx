@@ -72,15 +72,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (auth === null || firestore === null) {
       // Firebase is still initializing
+      setProfileLoading(true);
       return;
     }
     
     if (!auth.currentUser) {
-      // Not logged in, redirect
-      if(pathname !== '/login' && pathname !== '/create-profile') {
-        router.push('/login');
-      }
+      // Not logged in, treat as guest
       setProfileLoading(false);
+      setUserProfile(null);
       return;
     }
 
@@ -133,7 +132,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <Logo />
             </div>
             <div className="flex items-center gap-2">
-              {showContent && userProfile ? (
+              {profileLoading ? (
+                <>
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                  <Skeleton className="h-10 w-20 rounded-md" />
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                </>
+              ) : userProfile ? (
                 <>
                   <SearchDialog>
                     <Button variant="ghost" size="icon" className="rounded-full">
@@ -227,12 +234,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </DropdownMenu>
                 </>
               ) : (
-                <>
-                  <Skeleton className="h-8 w-8 rounded-full" />
-                  <Skeleton className="h-10 w-20 rounded-md" />
-                  <Skeleton className="h-8 w-8 rounded-full" />
-                  <Skeleton className="h-8 w-8 rounded-full" />
-                  <Skeleton className="h-8 w-8 rounded-full" />
+                 <>
+                  <Button asChild>
+                    <Link href="/login">Login</Link>
+                  </Button>
                 </>
               )}
             </div>
