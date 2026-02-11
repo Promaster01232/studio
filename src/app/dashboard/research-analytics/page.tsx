@@ -1,47 +1,58 @@
 
-import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, BarChartHorizontal, FileText } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Progress } from "@/components/ui/progress";
+"use client";
 
-const judge = {
-    name: "Hon. Justice R. Sharma",
-    avatar: PlaceHolderImages.find(img => img.id === 'lawyer4'), // Using a placeholder
-    stats: {
-        civil: 60,
-        criminal: 40,
-        decisionTime: "180 Days",
-        bias: "Pro-Petitioner (Civil)",
-    }
-};
+import Image from "next/image";
+import { PageHeader } from "@/components/page-header";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Heart, MessageCircle, Share2, Bookmark } from "lucide-react";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 const newsFeed = [
     {
         id: 1,
-        title: "Supreme Court Upholds Environmental Regulations in Landmark Case",
-        source: "The Legal Times",
+        author: "The Legal Times",
+        authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer4'),
         date: "2h ago",
+        title: "Supreme Court Upholds Environmental Regulations in Landmark Case",
+        content: "In a significant ruling, the Supreme Court has upheld stringent environmental regulations, emphasizing the state's duty to protect natural resources over industrial interests. The verdict is expected to have wide-ranging implications for ongoing and future infrastructure projects.",
+        image: PlaceHolderImages.find(img => img.id === 'news1'),
+        likes: 125,
+        comments: 12,
     },
     {
         id: 2,
-        title: "High Court Issues New Guidelines for Digital Evidence",
-        source: "Indian Law Journal",
+        author: "Indian Law Journal",
+        authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer5'),
         date: "1d ago",
+        title: "High Court Issues New Guidelines for Digital Evidence",
+        content: "The High Court has issued a comprehensive set of guidelines for the collection, preservation, and presentation of digital evidence in court. The move aims to standardize procedures and prevent tampering with electronic records, a growing concern in criminal and civil litigation.",
+        image: PlaceHolderImages.find(img => img.id === 'news2'),
+        likes: 340,
+        comments: 45,
     },
     {
         id: 3,
-        title: "Plea Challenging Sedition Law Admitted in Supreme Court",
-        source: "Bar & Bench",
+        author: "Bar & Bench",
+        authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer1'),
         date: "3d ago",
+        title: "Plea Challenging Sedition Law Admitted in Supreme Court",
+        content: "The Supreme Court has agreed to hear a fresh plea challenging the constitutional validity of the sedition law. The petitioners argue that the law is a colonial-era relic used to stifle dissent and free speech, and have called for its complete repeal.",
+        image: PlaceHolderImages.find(img => img.id === 'news3'),
+        likes: 890,
+        comments: 152,
     },
     {
         id: 4,
-        title: "New Consumer Protection Rules Notified, E-Commerce to be Impacted",
-        source: "Live Law",
+        author: "Live Law",
+        authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer2'),
         date: "4d ago",
+        title: "New Consumer Protection Rules Notified, E-Commerce to be Impacted",
+        content: "The government has notified new rules under the Consumer Protection Act, which will significantly impact e-commerce platforms. The rules introduce stricter norms for flash sales, and enhance liability for sellers, aiming to better protect online shoppers.",
+        image: PlaceHolderImages.find(img => img.id === 'news4'),
+        likes: 412,
+        comments: 68,
     }
 ];
 
@@ -49,79 +60,63 @@ export default function ResearchAnalyticsPage() {
     return (
         <div className="space-y-8">
             <PageHeader
-                title="Research & Analytics"
-                description="Access judicial analytics and stay updated with legal news."
+                title="Legal News & Updates"
+                description="Stay informed with the latest legal news and notifications."
             />
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Judicial Analytics</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input placeholder="Search Judge by Name or Court" className="pl-10" />
-                        </div>
-                        <Card className="bg-background">
-                            <CardContent className="p-4">
-                                <div className="flex items-center gap-4">
-                                    {judge.avatar && (
-                                        <Avatar className="h-14 w-14 border">
-                                            <AvatarImage src={judge.avatar.imageUrl} alt={judge.name} data-ai-hint={judge.avatar.imageHint || ''}/>
-                                            <AvatarFallback>{judge.name.split(' ').pop()?.charAt(0)}</AvatarFallback>
+            <div className="max-w-3xl mx-auto space-y-6">
+                {newsFeed.map((item) => (
+                    <Card key={item.id} className="overflow-hidden">
+                        <CardContent className="p-0">
+                            <div className="p-4 sm:p-6">
+                                <div className="flex items-center gap-3 mb-4">
+                                    {item.authorAvatar && (
+                                        <Avatar className="h-10 w-10 border">
+                                            <AvatarImage src={item.authorAvatar.imageUrl} alt={item.author} data-ai-hint={item.authorAvatar.imageHint || ''}/>
+                                            <AvatarFallback>{item.author.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                     )}
-                                    <div className="flex-1">
-                                        <p className="font-semibold">{judge.name}</p>
-                                        <p className="text-sm text-muted-foreground">Supreme Court</p>
-                                    </div>
-                                    <BarChartHorizontal className="h-6 w-6 text-primary" />
-                                </div>
-                                <div className="mt-4 space-y-3 text-sm">
                                     <div>
-                                        <div className="flex justify-between mb-1">
-                                            <span className="font-medium text-muted-foreground">Case Type Distribution</span>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <Progress value={judge.stats.civil} className="h-2" />
-                                            <span className="text-xs font-semibold whitespace-nowrap">{judge.stats.civil}% Civil / {judge.stats.criminal}% Criminal</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex justify-between items-center pt-2">
-                                        <span className="text-muted-foreground">Avg. Decision Time:</span>
-                                        <span className="font-semibold">{judge.stats.decisionTime}</span>
-                                    </div>
-                                     <div className="flex justify-between items-center">
-                                        <span className="text-muted-foreground">Identified Bias:</span>
-                                        <span className="font-semibold">{judge.stats.bias}</span>
+                                        <p className="font-semibold">{item.author}</p>
+                                        <p className="text-xs text-muted-foreground">{item.date}</p>
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Legal News Feed</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {newsFeed.map((item) => (
-                                <div key={item.id} className="flex items-start gap-4 border-b pb-4 last:border-b-0 last:pb-0">
-                                    <div className="bg-muted p-3 rounded-lg mt-1">
-                                        <FileText className="h-5 w-5 text-muted-foreground" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="font-semibold leading-snug hover:text-primary cursor-pointer">{item.title}</p>
-                                        <p className="text-xs text-muted-foreground mt-1">{item.source} &bull; {item.date}</p>
-                                    </div>
+                                <h3 className="text-lg font-bold font-headline leading-snug mb-2">{item.title}</h3>
+                                <p className="text-muted-foreground text-sm">{item.content}</p>
+                            </div>
+                            
+                            {item.image && (
+                                <div className="relative aspect-video">
+                                     <Image
+                                        src={item.image.imageUrl}
+                                        alt={item.title}
+                                        fill
+                                        className="object-cover"
+                                        data-ai-hint={item.image.imageHint}
+                                    />
                                 </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
+                            )}
+                        </CardContent>
+                        <CardFooter className="p-2 sm:p-3 flex justify-between items-center">
+                           <div className="flex gap-1">
+                                <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                                    <Heart className="h-4 w-4" />
+                                    <span className="text-xs text-muted-foreground">{item.likes}</span>
+                                </Button>
+                                <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                                    <MessageCircle className="h-4 w-4" />
+                                    <span className="text-xs text-muted-foreground">{item.comments}</span>
+                                </Button>
+                                <Button variant="ghost" size="sm">
+                                    <Share2 className="h-4 w-4" />
+                                </Button>
+                           </div>
+                           <Button variant="ghost" size="sm">
+                                <Bookmark className="h-4 w-4" />
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                ))}
             </div>
         </div>
     );

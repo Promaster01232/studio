@@ -35,6 +35,30 @@
       "description": "A lawyer working at a desk",
       "imageUrl": "https://images.unsplash.com/photo-1651739083958-02dcd72b0179?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cGVyc29uJTIwZGVza3xlbnwwfHx8fDE3NzA3NjY0NjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "person desk"
+    },
+    {
+      "id": "news1",
+      "description": "Image of the Supreme Court of India",
+      "imageUrl": "https://images.unsplash.com/photo-1588612196933-5b8c9a6a8a3c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXByZW1lJTIwY291cnQlMjBpbmRpYXxlbnwwfHx8fDE3NzA3NjY0NjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "supreme court"
+    },
+    {
+      "id": "news2",
+      "description": "Image representing digital data or evidence",
+      "imageUrl": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwZGF0YXxlbnwwfHx8fDE3NzA3NjY0NjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "digital data"
+    },
+    {
+      "id": "news3",
+      "description": "Image representing protest or sedition",
+      "imageUrl": "https://images.unsplash.com/photo-1580554236353-816783907a34?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwcm90ZXN0fGVufDB8fHx8MTc3MDc2NjQ2NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "protest"
+    },
+    {
+      "id": "news4",
+      "description": "Image representing e-commerce or online shopping",
+      "imageUrl": "https://images.unsplash.com/photo-1483985988355-763728e1935b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2V8ZW58MHx8fHwxNzcwNzY2NDY1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ecommerce"
     }
   ]
 }
