@@ -18,7 +18,7 @@ const lawyers = [
     reviews: 1903,
     image: PlaceHolderImages.find(img => img.id === 'lawyer2'),
     about: "Anjali Sharma is a dedicated family law attorney with over 10 years of experience. She specializes in divorce, child custody, and adoption cases, providing compassionate and expert legal counsel to her clients. Anjali is committed to achieving the best possible outcomes for the families she represents.",
-    experience: "Throughout her career, Anjali has successfully handled hundreds of complex family law cases. She is a skilled negotiator and a formidable presence in the courtroom. Her expertise also includes mediation and collaborative law, offering clients alternative dispute resolution options.",
+    experience: "Throughout her career, Anjali has successfully handled hundreds of complex family law cases. She is a skilled negotiator and a formidable presence in the courtroom. Her expertise alsoincludes mediation and collaborative law, offering clients alternative dispute resolution options.",
     contact: {
       phone: "+91 98765 43210",
       email: "anjali.sharma@example.com"
@@ -138,7 +138,9 @@ export default function LawyerProfilePage({ params }: { params: { id: string } }
                 <MessageSquare className="mr-2"/> Message
               </Link>
             </Button>
-            <Button>Book Consultation</Button>
+            <Button asChild>
+              <Link href={`/dashboard/lawyer-connect/${lawyer.id}/book`}>Book Consultation</Link>
+            </Button>
           </div>
         </div>
       </Card>
