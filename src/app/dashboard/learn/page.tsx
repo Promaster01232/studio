@@ -27,8 +27,8 @@ export default function LearnPage() {
               <p className="text-muted-foreground text-sm flex-grow mb-6">{topic.description}</p>
               
               <Button asChild variant="secondary" className="w-full mt-auto">
-                <Link href={`/dashboard/learn/${topic.slug}`} className="justify-between">
-                  <span>Learn More</span>
+                <Link href={topic.pdfUrl} target="_blank" rel="noopener noreferrer" className="justify-between">
+                  <span>View Act/Rule PDF</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
