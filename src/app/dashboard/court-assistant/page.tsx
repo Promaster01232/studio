@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useActionState, useState, useRef, useEffect } from "react";
 import { generateQuestionsAction, type CourtAssistantState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mic, BrainCircuit, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useRef, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const initialState: CourtAssistantState = {
@@ -41,7 +40,7 @@ const Waveform = () => (
   );
 
 export default function CourtAssistantPage() {
-  const [state, formAction] = useFormState(generateQuestionsAction, initialState);
+  const [state, formAction] = useActionState(generateQuestionsAction, initialState);
   const { toast } = useToast();
 
   const [hasPermission, setHasPermission] = useState(false);

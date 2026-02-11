@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useActionState, useRef, useState } from "react";
 import { understandDocumentAction, type DocumentIntelligenceState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,6 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb } from "lucide-react";
-import { useRef, useState } from "react";
 
 const initialState: DocumentIntelligenceState = {
   status: "idle",
@@ -18,7 +17,7 @@ const initialState: DocumentIntelligenceState = {
 };
 
 export default function DocumentIntelligencePage() {
-  const [state, formAction] = useFormState(understandDocumentAction, initialState);
+  const [state, formAction] = useActionState(understandDocumentAction, initialState);
   const [fileName, setFileName] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 

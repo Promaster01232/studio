@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useActionState, useState } from "react";
 import { generateBondAction, type BondGeneratorState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,7 +10,6 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Download, Share2, Printer, Loader2 } from "lucide-react";
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 
 const initialState: BondGeneratorState = {
@@ -24,7 +23,7 @@ const FormSectionTitle = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function BondGeneratorPage() {
-  const [state, formAction] = useFormState(generateBondAction, initialState);
+  const [state, formAction] = useActionState(generateBondAction, initialState);
   const [bondType, setBondType] = useState("Bail Bond");
 
   return (

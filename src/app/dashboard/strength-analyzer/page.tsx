@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useActionState, useEffect, useState } from "react";
 import { analyzeCaseStrengthAction, type CaseStrengthState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,7 +10,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, ShieldAlert, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const initialState: CaseStrengthState = {
@@ -20,7 +19,7 @@ const initialState: CaseStrengthState = {
 };
 
 export default function StrengthAnalyzerPage() {
-  const [state, formAction] = useFormState(analyzeCaseStrengthAction, initialState);
+  const [state, formAction] = useActionState(analyzeCaseStrengthAction, initialState);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {

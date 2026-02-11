@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { useFormState } from "react-dom";
 import { simplifyJargonAction, type JargonState } from "./actions";
 import { Loader2, Sparkles } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -19,7 +18,7 @@ const initialState: JargonState = {
 };
 
 export default function SupportPage() {
-    const [state, formAction] = useFormState(simplifyJargonAction, initialState);
+    const [state, formAction] = useActionState(simplifyJargonAction, initialState);
     const [language, setLanguage] = useState("English");
 
     return (

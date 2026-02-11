@@ -1,13 +1,12 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useActionState, useState, useRef, useEffect } from "react";
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useRef, useEffect } from "react";
 
 const initialState: CaseSummaryState = {
   status: "idle",
@@ -16,7 +15,7 @@ const initialState: CaseSummaryState = {
 };
 
 export default function NarrateProblemPage() {
-  const [state, formAction] = useFormState(summarizeCaseAction, initialState);
+  const [state, formAction] = useActionState(summarizeCaseAction, initialState);
   const { toast } = useToast();
 
   const [hasPermission, setHasPermission] = useState(false);
