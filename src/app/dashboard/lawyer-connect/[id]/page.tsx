@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Mail, MessageSquare, Phone, Star } from "lucide-react";
 import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 
 // Mock data, same as in lawyer-connect/page.tsx
 const lawyers = [
@@ -97,7 +97,8 @@ const lawyers = [
 ];
 
 
-export default function LawyerProfilePage({ params }: { params: { id: string } }) {
+export default function LawyerProfilePage() {
+  const params = useParams<{ id: string }>();
   const lawyer = lawyers.find(l => l.id.toString() === params.id);
   
   if (!lawyer) {

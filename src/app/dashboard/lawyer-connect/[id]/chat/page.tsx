@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Phone, Paperclip, Mic } from "lucide-react";
 import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { Card } from "@/components/ui/card";
 
 // Mock data
@@ -31,7 +31,8 @@ const messages = [
 ];
 
 
-export default function ChatPage({ params }: { params: { id: string } }) {
+export default function ChatPage() {
+  const params = useParams<{ id: string }>();
   const lawyer = lawyers.find(l => l.id.toString() === params.id);
   
   if (!lawyer) {
