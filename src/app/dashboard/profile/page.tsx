@@ -49,7 +49,7 @@ export default function ProfilePage() {
             <h2 className="text-2xl font-bold font-headline">{user.name}</h2>
             <p className="text-muted-foreground">{user.email}</p>
           </div>
-          <Button>Edit Profile</Button>
+          <Button className="w-full sm:w-auto">Edit Profile</Button>
         </CardContent>
       </Card>
 

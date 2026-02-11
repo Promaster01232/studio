@@ -304,8 +304,8 @@ export default function DocumentGeneratorPage() {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle>Generated Document</CardTitle>
-                {state.status === "success" && state.data && (
-                  <div className="flex gap-2">
+                {state.status === 'success' && state.data && (
+                  <div className="flex flex-wrap items-center justify-end gap-2">
                     <Button variant="outline" size="sm" onClick={() => handleDownloadPdf(state.data!.document, `Generated ${documentType}`)}><Download className="mr-2 h-4 w-4" /> PDF</Button>
                     <Button variant="outline" size="sm" onClick={() => handleShare(state.data!.document, `Generated ${documentType}`)}><Share2 className="mr-2 h-4 w-4" /> Share</Button>
                     <Button variant="outline" size="sm" onClick={() => handlePrint(state.data!.document, `Generated ${documentType}`)}><Printer className="mr-2 h-4 w-4" /> Print</Button>

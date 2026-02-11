@@ -180,8 +180,10 @@ export default function AdvocateProfilePage() {
                             <p className="text-xs text-muted-foreground">Upload a copy of your Bar Council ID or other valid legal identification.</p>
                         </div>
 
-                        <div className="flex justify-end">
-                            <Button type="submit">Save Advocate Profile</Button>
+                        <div className="flex justify-center sm:justify-end">
+                            <Button type="submit" className="w-full sm:w-auto">
+                                Save Advocate Profile
+                            </Button>
                         </div>
                     </form>
                 </CardContent>

@@ -132,11 +132,11 @@ export default function NarrateProblemPage() {
           <CardDescription>Use the buttons below to record your problem.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center space-y-6 py-10">
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex w-full max-w-sm flex-col items-center justify-center gap-4 sm:flex-row">
               <Button
                   onClick={startRecording}
                   disabled={!hasPermission || isLoading || isRecording}
-                  className="h-24 w-32 rounded-lg shadow-lg flex-col gap-2"
+                  className="h-24 w-full rounded-lg shadow-lg flex-col gap-2 sm:w-32"
               >
                   <Mic className="h-8 w-8" />
                   <span>Start Recording</span>
@@ -144,7 +144,7 @@ export default function NarrateProblemPage() {
               <Button
                   onClick={stopRecording}
                   disabled={!isRecording}
-                  className="h-24 w-32 rounded-lg shadow-lg flex-col gap-2"
+                  className="h-24 w-full rounded-lg shadow-lg flex-col gap-2 sm:w-32"
                   variant="destructive"
               >
                   <div className="h-8 w-8 bg-destructive-foreground rounded-sm"></div>

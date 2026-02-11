@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Phone, Paperclip, Mic } from "lucide-react";
+import { ArrowLeft, Phone, Paperclip, Mic, Video } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { Card } from "@/components/ui/card";
@@ -105,11 +105,11 @@ export default function ChatPage() {
                         <p className="text-sm font-bold">{lawyer.rating}</p>
                     </div>
                     <div className="flex gap-2">
-                        <Button size="icon" variant="outline" className="bg-green-100 border-green-200 text-green-700">
+                        <Button size="icon" variant="outline">
                             <Phone />
                         </Button>
-                         <Button size="icon" variant="outline" className="bg-green-500 text-white">
-                            <Phone />
+                         <Button size="icon">
+                            <Video />
                         </Button>
                     </div>
                 </div>

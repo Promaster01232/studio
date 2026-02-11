@@ -251,7 +251,7 @@ export default function BondGeneratorPage() {
                         <Input id="suretyName" name="suretyName" placeholder="Full name of the surety" required />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="suretyAddress">Surety Address</Label>
+                        <Label htmlFor="suretyAddress">Address of Surety</Label>
                         <Textarea id="suretyAddress" name="suretyAddress" placeholder="Full address of the surety" required />
                     </div>
                      <FormSectionTitle>Bond Details</FormSectionTitle>
@@ -314,8 +314,8 @@ export default function BondGeneratorPage() {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle>Generated Document</CardTitle>
-                {state.status === "success" && state.data && (
-                  <div className="flex gap-2">
+                {state.status === 'success' && state.data && (
+                  <div className="flex flex-wrap items-center justify-end gap-2">
                     <Button variant="outline" size="sm" onClick={() => handleDownloadPdf(state.data!.document, `Generated ${bondType}`)}><Download className="mr-2 h-4 w-4" /> PDF</Button>
                     <Button variant="outline" size="sm" onClick={() => handleShare(state.data!.document, `Generated ${bondType}`)}><Share2 className="mr-2 h-4 w-4" /> Share</Button>
                     <Button variant="outline" size="sm" onClick={() => handlePrint(state.data!.document, `Generated ${bondType}`)}><Printer className="mr-2 h-4 w-4" /> Print</Button>

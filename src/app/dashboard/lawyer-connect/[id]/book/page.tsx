@@ -100,7 +100,7 @@ export default function BookConsultationPage() {
                 onSelect={setDate}
                 className="p-0 rounded-md"
             />
-            <div className="grid grid-cols-3 gap-2 mt-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
                 {timeSlots.map(time => (
                     <Button key={time} variant={selectedTime === time ? "default" : "outline"} onClick={() => setSelectedTime(time)}>
                         {time}

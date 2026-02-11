@@ -1,3 +1,5 @@
+'use client';
+
 import {
   SidebarProvider,
   Sidebar,
@@ -21,6 +23,7 @@ import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
+import { usePathname } from "next/navigation";
 
 const recentChats = [
   {
@@ -47,7 +50,8 @@ const recentChats = [
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
-  const isChatPage = false; // This will be dynamic in a real app
+  const pathname = usePathname();
+  const isChatPage = pathname.includes('/chat');
 
   return (
     <SidebarProvider>
@@ -75,8 +79,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               </SearchDialog>
               <SosDialog>
                 <Button variant="destructive">
-                  <ShieldAlert className="mr-2 h-4 w-4" />
-                  SOS
+                  <ShieldAlert className="mr-0 h-4 w-4 md:mr-2" />
+                  <span className="hidden md:inline">SOS</span>
                 </Button>
               </SosDialog>
               <Popover>
