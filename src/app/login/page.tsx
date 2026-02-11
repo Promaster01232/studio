@@ -52,16 +52,7 @@ export default function LoginPage() {
     try {
         const verifier = window.recaptchaVerifier;
         
-        let fullPhoneNumber = phone.trim();
-        if (!fullPhoneNumber.startsWith('+')) {
-            if (fullPhoneNumber.length === 10) {
-                // Assume Indian number if 10 digits without +
-                fullPhoneNumber = `+91${fullPhoneNumber}`;
-            } else {
-                // For other cases like '91...' just add '+'
-                fullPhoneNumber = `+${fullPhoneNumber}`;
-            }
-        }
+        const fullPhoneNumber = `+91${phone.trim()}`;
         
         const confirmationResult = await signInWithPhoneNumber(auth, fullPhoneNumber, verifier);
         window.confirmationResult = confirmationResult;
@@ -113,16 +104,21 @@ export default function LoginPage() {
                     <div className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="phone">Phone Number</Label>
-                            <Input 
-                                id="phone" 
-                                type="tel" 
-                                placeholder="91xxxxxxxxxx" 
-                                required 
-                                className="bg-muted/50 border-0"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                disabled={loading}
-                            />
+                            <div className="relative">
+                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span className="text-muted-foreground sm:text-sm">+91</span>
+                                </div>
+                                <Input 
+                                    id="phone" 
+                                    type="tel" 
+                                    placeholder="xxxxxxxxxx" 
+                                    required 
+                                    className="bg-muted/50 border-0 pl-12"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    disabled={loading}
+                                />
+                            </div>
                         </div>
                         <Button className="w-full font-semibold" onClick={handlePhoneLogin} disabled={loading}>
                             {loading ? <Loader2 className="animate-spin"/> : "Send OTP"}
