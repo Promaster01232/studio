@@ -20,6 +20,7 @@ import {
 import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { SosDialog } from "@/components/sos-dialog";
+import { SearchDialog } from "@/components/search-dialog";
 
 const recentChats = [
   {
@@ -66,10 +67,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <Logo />
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="secondary" size="icon" className="rounded-full">
-                <Search className="h-5 w-5 text-muted-foreground" />
-                <span className="sr-only">Search</span>
-              </Button>
+              <SearchDialog>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Search className="h-5 w-5 text-muted-foreground" />
+                  <span className="sr-only">Search</span>
+                </Button>
+              </SearchDialog>
               <SosDialog>
                 <Button variant="destructive">
                   <ShieldAlert className="mr-2 h-4 w-4" />
