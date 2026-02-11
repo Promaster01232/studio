@@ -1,25 +1,16 @@
+
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Phone, Paperclip, Mic } from "lucide-react";
 import Link from "next/link";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { notFound, useParams } from "next/navigation";
 import { Card } from "@/components/ui/card";
-
-// Mock data
-const lawyers = [
-  {
-    id: 1,
-    name: "Anjali Sharma",
-    specialty: "Family Law",
-    rating: 4.8,
-    image: PlaceHolderImages.find(img => img.id === 'lawyer2'),
-  },
-  // Add other lawyers if needed
-];
+import { getAdvocates, type Lawyer } from "@/lib/advocates-data";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const messages = [
     { id: 1, sender: 'other', text: 'The yet a free cow thate ham masrie tti' },
@@ -33,7 +24,38 @@ const messages = [
 
 export default function ChatPage() {
   const params = useParams<{ id: string }>();
-  const lawyer = lawyers.find(l => l.id.toString() === params.id);
+  const [lawyer, setLawyer] = useState<Lawyer | undefined>();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const advocates = getAdvocates();
+    const foundLawyer = advocates.find(l => l.id.toString() === params.id);
+    setLawyer(foundLawyer);
+    setLoading(false);
+  }, [params.id]);
+
+  if (loading) {
+    return (
+        <div className="flex flex-col h-full bg-muted/30">
+            <header className="flex items-center gap-4 p-4 border-b bg-background">
+                <Skeleton className="h-10 w-10" />
+                <div className="space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-3 w-16" />
+                </div>
+                <div className="ml-auto">
+                    <Skeleton className="h-10 w-10" />
+                </div>
+            </header>
+            <div className="flex-1 p-4 space-y-4">
+                <Skeleton className="h-28 w-full max-w-md mx-auto" />
+            </div>
+            <footer className="p-4 bg-background border-t">
+                <Skeleton className="h-12 w-full rounded-full" />
+            </footer>
+        </div>
+    )
+  }
   
   if (!lawyer) {
     notFound();
@@ -80,7 +102,7 @@ export default function ChatPage() {
                     <div className="flex-1">
                         <p className="font-bold">{lawyer.name}</p>
                         <p className="text-sm text-muted-foreground">{lawyer.specialty}</p>
-                        <p className="text-sm font-bold">4.8</p>
+                        <p className="text-sm font-bold">{lawyer.rating}</p>
                     </div>
                     <div className="flex gap-2">
                         <Button size="icon" variant="outline" className="bg-green-100 border-green-200 text-green-700">

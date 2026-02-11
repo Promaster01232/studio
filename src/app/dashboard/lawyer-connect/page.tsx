@@ -2,67 +2,36 @@
 "use client";
 
 import Link from "next/link";
+import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Filter, Search, Star } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-
-const lawyers = [
-  {
-    id: 1,
-    name: "Anjali Sharma",
-    specialty: "Family Law",
-    rating: 4.8,
-    reviews: 1903,
-    image: PlaceHolderImages.find(img => img.id === 'lawyer2')
-  },
-  {
-    id: 2,
-    name: "Siddharth Rao",
-    specialty: "Cyber Law",
-    rating: 4.8,
-    reviews: 1500,
-    image: PlaceHolderImages.find(img => img.id === 'lawyer1')
-  },
-  {
-    id: 3,
-    name: "Priya Singh",
-    specialty: "Civil Law",
-    rating: 5.0,
-    reviews: 893,
-    image: PlaceHolderImages.find(img => img.id === 'lawyer5')
-  },
-  {
-    id: 4,
-    name: "Rajesh Kumar",
-    specialty: "Crypto Law",
-    rating: 4.7,
-    reviews: 1354,
-    image: PlaceHolderImages.find(img => img.id === 'lawyer3')
-  },
-  {
-    id: 5,
-    name: "Sunita Reddy",
-    specialty: "Real Estate",
-    rating: 4.9,
-    reviews: 1101,
-    image: PlaceHolderImages.find(img => img.id === 'lawyer2')
-  },
-  {
-    id: 6,
-    name: "Amit Verma",
-    specialty: "Corporate Law",
-    rating: 4.6,
-    reviews: 750,
-    image: PlaceHolderImages.find(img => img.id === 'lawyer6')
-  },
-];
+import { getAdvocates, type Lawyer } from "@/lib/advocates-data";
 
 
 export default function LawyerConnectPage() {
+  const [allAdvocates, setAllAdvocates] = useState<Lawyer[]>([]);
+  const [filteredAdvocates, setFilteredAdvocates] = useState<Lawyer[]>([]);
+
+  useEffect(() => {
+    const advocates = getAdvocates();
+    setAllAdvocates(advocates);
+    setFilteredAdvocates(advocates);
+  }, []);
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value.toLowerCase();
+    const filtered = allAdvocates.filter(
+      (lawyer) =>
+        lawyer.name.toLowerCase().includes(query) ||
+        lawyer.specialty.toLowerCase().includes(query)
+    );
+    setFilteredAdvocates(filtered);
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -73,7 +42,11 @@ export default function LawyerConnectPage() {
       <div className="flex gap-2">
         <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search Name or Specialization" className="pl-10" />
+            <Input 
+              placeholder="Search Name or Specialization" 
+              className="pl-10" 
+              onChange={handleSearch}
+            />
         </div>
         <Button variant="outline" size="icon">
             <Filter className="h-4 w-4" />
@@ -82,12 +55,12 @@ export default function LawyerConnectPage() {
       </div>
 
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Personal Details</h2>
-        <Button variant="link" className="text-primary">See All</Button>
+        <h2 className="text-lg font-semibold">Found {filteredAdvocates.length} Advocates</h2>
+        {/* <Button variant="link" className="text-primary">See All</Button> */}
       </div>
 
       <div className="space-y-4">
-        {lawyers.map((lawyer) => (
+        {filteredAdvocates.map((lawyer) => (
           <Card key={lawyer.id} className="overflow-hidden hover:shadow-lg transition-shadow">
              <div className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-4">
@@ -103,7 +76,7 @@ export default function LawyerConnectPage() {
                         <div className="flex items-center gap-1 text-sm mt-1">
                             <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                             <span className="font-bold">{lawyer.rating}</span>
-                            <span className="text-muted-foreground text-xs">({lawyer.reviews} reviews)</span>
+                            {lawyer.reviews !== undefined && <span className="text-muted-foreground text-xs">({lawyer.reviews} reviews)</span>}
                         </div>
                     </div>
                 </div>

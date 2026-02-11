@@ -1,5 +1,9 @@
+
 "use client";
 
+import React from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { saveAdvocate } from "@/lib/advocates-data";
 
 const practiceAreas = [
     "Family Law", "Criminal Law", "Civil Law", "Corporate Law", "Cyber Law",
@@ -21,6 +26,66 @@ const courts = [
 ];
 
 export default function AdvocateProfilePage() {
+    const { toast } = useToast();
+    const router = useRouter();
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const courtsOfPractice = formData.getAll('courts');
+
+        // Basic validation
+        const name = formData.get('fullName') as string;
+        const barId = formData.get('barId') as string;
+        const experience = formData.get('experience') as string;
+        const position = formData.get('position') as string;
+        const specialization = formData.get('specialization') as string;
+        const bio = formData.get('bio') as string;
+        
+        if (!name || !barId || !experience || !position || !specialization || !bio || courtsOfPractice.length === 0) {
+             toast({
+                variant: "destructive",
+                title: "Incomplete Profile",
+                description: "Please fill out all required fields, including your name and at least one court of practice.",
+            });
+            return;
+        }
+
+        const newAdvocate = {
+            name: name,
+            specialty: specialization,
+            rating: (Math.random() * (5 - 4) + 4).toFixed(1), // Fake rating
+            reviews: Math.floor(Math.random() * 50),
+            image: { id: `advocate${Date.now()}`, imageUrl: `https://picsum.photos/seed/${Date.now()}/200/200`, imageHint: 'person portrait' },
+            about: bio,
+            experience: `Experience: ${experience} years. Position: ${position}. Practices in: ${courtsOfPractice.join(', ')}.`,
+            contact: {
+                phone: "N/A",
+                email: "N/A"
+            },
+            // Add other form fields
+            barId: barId,
+            courtName: formData.get('courtName') as string,
+            courtAddress: formData.get('courtAddress') as string,
+        };
+
+        try {
+            saveAdvocate(newAdvocate);
+            toast({
+                title: "Profile Saved!",
+                description: "Your advocate profile has been listed on Lawyer Connect.",
+            });
+            router.push('/dashboard/lawyer-connect');
+        } catch (error) {
+            console.error("Failed to save profile:", error);
+            toast({
+                variant: "destructive",
+                title: "Save Failed",
+                description: "Could not save your profile. Please try again.",
+            });
+        }
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex items-center gap-4 mb-4">
@@ -42,7 +107,12 @@ export default function AdvocateProfilePage() {
                     <CardDescription>This information will be displayed on your public profile.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form className="space-y-6">
+                    <form className="space-y-6" onSubmit={handleSubmit}>
+                        <div className="space-y-2">
+                            <Label htmlFor="fullName">Full Name</Label>
+                            <Input id="fullName" name="fullName" placeholder="Your full name as it appears on your Bar ID" required />
+                        </div>
+
                         <div className="space-y-2">
                             <Label htmlFor="barId">Bar Council ID</Label>
                             <Input id="barId" name="barId" placeholder="e.g., MAH/1234/2010" required />
@@ -60,11 +130,11 @@ export default function AdvocateProfilePage() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Courts of Practice</Label>
+                            <Label>Courts of Practice (select at least one)</Label>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
                                 {courts.map(court => (
                                     <div key={court} className="flex items-center space-x-2">
-                                        <Checkbox id={`court-${court}`} />
+                                        <Checkbox id={`court-${court}`} name="courts" value={court} />
                                         <label
                                             htmlFor={`court-${court}`}
                                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
