@@ -25,6 +25,7 @@ import {
   Gavel,
   Landmark,
   Library,
+  Accessibility,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -52,6 +53,7 @@ const navItems = [
       { href: "/dashboard/research-analytics", icon: Library, label: "Research & Analytics", tooltip: "Research & Analytics" },
       { href: "/dashboard/lawyer-connect", icon: Users, label: "Lawyer Connect", tooltip: "Lawyer Connect" },
       { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "NGO & Legal Aid", tooltip: "NGO & Legal Aid" },
+      { href: "/dashboard/support", icon: Accessibility, label: "Support & Accessibility", tooltip: "Support & Accessibility" },
       { href: "/dashboard/github", icon: Github, label: "GitHub", tooltip: "GitHub" },
     ],
   },
