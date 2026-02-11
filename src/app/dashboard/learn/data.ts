@@ -36,363 +36,149 @@ export const topics = [
     title: "Fundamental Rights",
     description: "Understand the basic rights guaranteed to every citizen by the Constitution of India.",
     icon: BookOpen,
-    pdfUrl: "https://cdnbbsr.s3waas.gov.in/s380537a945c7aaa788ccfcdf1b99b5d8f/uploads/2023/05/2023050195.pdf"
+    content: `The Fundamental Rights in India, enshrined in Part III (Articles 12-35) of the Constitution, guarantee civil liberties for all Indians to live in peace and harmony. These rights are essential for the protection of the rights and liberties of the people against the encroachment of the power of the government.
+
+Key Fundamental Rights include:
+1.  **Right to Equality (Articles 14-18):** Ensures equality before the law, prohibits discrimination on grounds of religion, race, caste, sex or place of birth, and guarantees equality of opportunity in matters of public employment.
+2.  **Right to Freedom (Articles 19-22):** Includes freedom of speech and expression, assembly, association, movement, residence, and profession.
+3.  **Right against Exploitation (Articles 23-24):** Prohibits all forms of forced labor, child labor, and trafficking of human beings.
+4.  **Right to Freedom of Religion (Articles 25-28):** Guarantees freedom of conscience and free profession, practice, and propagation of religion.
+5.  **Cultural and Educational Rights (Articles 29-30):** Protects the rights of religious, cultural, and linguistic minorities.
+6.  **Right to Constitutional Remedies (Article 32):** The right to move the Supreme Court for the enforcement of Fundamental Rights.
+
+---
+**हिन्दी में:**
+
+मौलिक अधिकार: भारत के संविधान के भाग III (अनुच्छेद 12-35) में निहित मौलिक अधिकार नागरिक स्वतंत्रता की गारंटी देते हैं ताकि सभी भारतीय भारत के नागरिक के रूप में शांति और सद्भाव से अपना जीवन व्यतीत कर सकें। ये अधिकार सरकार की शक्ति के अतिक्रमण के खिलाफ लोगों के अधिकारों और स्वतंत्रता की सुरक्षा के लिए आवश्यक हैं।`
   },
   {
     slug: "consumer-rights",
     title: "Consumer Rights",
     description: "Learn about your rights as a consumer and how to file complaints against faulty products or services.",
     icon: ShoppingCart,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2019-35.pdf"
+    content: `The Consumer Protection Act, 2019, provides for the protection of the interests of consumers. The act defines six basic rights for consumers:
+1.  **Right to Safety:** The right to be protected against the marketing of goods and services which are hazardous to life and property.
+2.  **Right to be Informed:** The right to be informed about the quality, quantity, potency, purity, standard, and price of goods or services.
+3.  **Right to Choose:** The right to be assured, wherever possible, access to a variety of goods and services at competitive prices.
+4.  **Right to be Heard:** The right to be heard and to be assured that consumer's interests will receive due consideration at appropriate forums.
+5.  **Right to Seek Redressal:** The right to seek redressal against unfair trade practices or restrictive trade practices or unscrupulous exploitation of consumers.
+6.  **Right to Consumer Education:** The right to acquire the knowledge and skill to be an informed consumer.
+
+---
+**हिन्दी में:**
+
+उपभोक्ता संरक्षण अधिनियम, 2019, उपभोक्ताओं के हितों की सुरक्षा का प्रावधान करता है। यह अधिनियम उपभोक्ताओं के लिए छह मूल अधिकारों को परिभाषित करता है: सुरक्षा का अधिकार, सूचित किए जाने का अधिकार, चुनने का अधिकार, सुने जाने का अधिकार, निवारण का अधिकार, और उपभोक्ता शिक्षा का अधिकार।`
   },
   {
     slug: "labour-laws",
     title: "Labour Laws",
     description: "Know your rights as an employee, including wages, working hours, and conditions of service.",
     icon: Factory,
-    pdfUrl: "https://labour.gov.in/sites/default/files/the_code_on_wages_2019_0.pdf"
+    content: `Indian labour law refers to laws regulating labour in India. Traditionally, the Indian government has encouraged protection of workers. Key aspects include:
+-   **Wages:** The Code on Wages, 2019, aims to regulate wage and bonus payments in all employments.
+-   **Working Hours:** The Factories Act, 1948, stipulates regulations for working hours, including a maximum of 48 hours per week and provisions for overtime pay.
+-   **Social Security:** Various laws like the Employees' Provident Funds Act and the Employees' State Insurance Act provide for social security benefits.
+-   **Industrial Relations:** The Industrial Disputes Act, 1947, provides for the investigation and settlement of industrial disputes.
+
+---
+**हिन्दी में:**
+
+भारतीय श्रम कानून भारत में श्रम को विनियमित करने वाले कानूनों को संदर्भित करता है। पारंपरिक रूप से, भारत सरकार ने श्रमिकों की सुरक्षा को प्रोत्साहित किया है। मुख्य पहलुओं में मजदूरी, काम के घंटे, सामाजिक सुरक्षा और औद्योगिक संबंध शामिल हैं।`
   },
   {
     slug: "motor-vehicle-laws",
     title: "Motor Vehicle Laws",
     description: "Understand traffic rules, rights during traffic stops, and procedures for accidents.",
     icon: Car,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1988-59.pdf"
+    content: `The Motor Vehicles Act, 1988, is the principal legislation that regulates most aspects of road transport vehicles. Key provisions include:
+-   **Traffic Rules:** Mandatory use of helmets, seat belts, and adherence to speed limits.
+-   **Documentation:** Requirement to carry a valid driving license, registration certificate, insurance, and pollution under control (PUC) certificate.
+-   **Accidents:** Procedures for reporting accidents, rights of victims, and provisions for third-party insurance claims through the Motor Accident Claims Tribunal (MACT).
+-   **Traffic Stops:** Your right to see the officer's identification, the right not to be harassed, and rules regarding challans (traffic tickets).
+
+---
+**हिन्दी में:**
+
+मोटर वाहन अधिनियम, 1988, मुख्य कानून है जो सड़क परिवहन वाहनों के अधिकांश पहलुओं को नियंत्रित करता है। इसमें यातायात नियम, दस्तावेज़ीकरण, दुर्घटना प्रक्रियाएं और यातायात रुकने के दौरान आपके अधिकार शामिल हैं।`
   },
   {
     slug: "cyber-crime",
     title: "Cyber Crime",
     description: "Learn how to protect yourself from online fraud, harassment, and other cyber crimes.",
     icon: Shield,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2000-21.pdf"
+    content: `Cybercrime encompasses any criminal activity that involves a computer, networked device, or a network. The Information Technology Act, 2000, is the primary law in India dealing with cybercrime and electronic commerce. Common cybercrimes include:
+-   **Hacking:** Unauthorized access to computer systems or networks.
+-   **Phishing:** Fraudulently obtaining sensitive information such as usernames, passwords, and credit card details.
+-   **Cyber Stalking:** Using the internet or other electronic means to stalk or harass an individual.
+-   **Identity Theft:** Stealing someone's personal information to commit fraud.
+If you are a victim, you can file a complaint at the National Cyber Crime Reporting Portal (www.cybercrime.gov.in) or at the nearest police station.
+
+---
+**हिन्दी में:**
+
+साइबर अपराध में कोई भी आपराधिक गतिविधि शामिल है जिसमें कंप्यूटर, नेटवर्क डिवाइस या नेटवर्क शामिल होता है। सूचना प्रौद्योगिकी अधिनियम, 2000, भारत में साइबर अपराध और इलेक्ट्रॉनिक कॉमर्स से संबंधित प्राथमिक कानून है।`
   },
   {
     slug: "family-law",
     title: "Family Law",
     description: "Information on marriage, divorce, child custody, and adoption laws in India.",
     icon: Users,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1955-25.pdf"
+    content: `Family law in India is a complex area governed by the personal laws of different religious communities.
+-   **Marriage:** The Hindu Marriage Act, 1955, governs marriages among Hindus, while the Special Marriage Act, 1954, provides for civil marriages irrespective of religion. Muslim marriage is a contract under their personal law.
+-   **Divorce:** Grounds for divorce vary. Common grounds include cruelty, adultery, and desertion. Mutual consent divorce is also an option.
+-   **Child Custody:** The welfare of the child is the paramount consideration for the court.
+-   **Adoption:** The Hindu Adoptions and Maintenance Act, 1956, and the Juvenile Justice Act, 2015, are the main laws governing adoption.
+
+---
+**हिन्दी में:**
+
+भारत में पारिवारिक कानून एक जटिल क्षेत्र है जो विभिन्न धार्मिक समुदायों के व्यक्तिगत कानूनों द्वारा शासित होता है। इसमें विवाह, तलाक, बच्चे की हिरासत और गोद लेने से संबंधित कानून शामिल हैं।`
   },
   {
     slug: "property-law",
     title: "Property Law",
     description: "Understand the laws related to buying, selling, and owning property in India.",
     icon: Home,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1882-04.pdf"
+    content: `Property law in India is governed by various acts like the Transfer of Property Act, 1882, and the Indian Contract Act, 1872. Key aspects include:
+-   **Title Deed:** The most important document that proves ownership.
+-   **Sale Deed:** A legal document that transfers the ownership of property from the seller to the buyer.
+-   **Registration:** Registration of the sale deed is mandatory under the Registration Act, 1908, to make the sale legally valid.
+-   **Due Diligence:** It is crucial to verify the property's title, check for encumbrances (like mortgages or loans), and ensure all property taxes are paid before purchasing.
+
+---
+**हिन्दी में:**
+
+भारत में संपत्ति कानून संपत्ति हस्तांतरण अधिनियम, 1882 जैसे विभिन्न अधिनियमों द्वारा शासित होता है। मुख्य पहलुओं में शीर्षक विलेख, बिक्री विलेख, और पंजीकरण शामिल हैं।`
   },
   {
     slug: "right-to-information",
     title: "Right to Information (RTI)",
     description: "Learn how to use the RTI Act to obtain information from government departments.",
     icon: FileText,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2005-22.pdf"
-  },
-  {
-    slug: "banking-laws",
-    title: "Banking & Finance Laws",
-    description: "Know your rights related to banking services, loans, and digital transactions.",
-    icon: Landmark,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1949-10.pdf"
-  },
-  {
-    slug: "human-rights",
-    title: "Human Rights",
-    description: "An overview of the universal human rights and how they are protected in India.",
-    icon: Globe,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1994-10.pdf"
-  },
-  {
-    slug: "environmental-law",
-    title: "Environmental Law",
-    description: "Learn about the laws in place to protect the environment and wildlife.",
-    icon: Leaf,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1986-29.pdf"
+    content: `The Right to Information Act, 2005, mandates timely response to citizen requests for government information. Any citizen of India can file an RTI application.
+-   **How to file:** An application can be written on a plain paper and submitted to the Public Information Officer (PIO) of the concerned department. A fee of ₹10 is usually required.
+-   **Time Limit:** The PIO must provide the information within 30 days.
+-   **Exemptions:** Certain information related to national security, personal privacy, and commercial confidence is exempt from disclosure.
+-   **Appeals:** If you do not receive a response or are dissatisfied, you can file a first appeal with the First Appellate Authority and a second appeal with the Information Commission.
+
+---
+**हिन्दी में:**
+
+सूचना का अधिकार अधिनियम, 2005 सरकारी जानकारी के लिए नागरिक अनुरोधों पर समय पर प्रतिक्रिया अनिवार्य करता है। कोई भी भारतीय नागरिक आरटीआई आवेदन दायर कर सकता है।`
   },
   {
     slug: "intellectual-property",
     title: "Intellectual Property Rights",
     description: "Understand copyrights, patents, and trademarks for your creations.",
     icon: BrainCircuit,
-    pdfUrl: "https://copyright.gov.in/Documents/CopyrightRules1957.pdf"
-  },
-  {
-    slug: "taxation-law",
-    title: "Taxation Law",
-    description: "Basics of income tax, GST, and your rights and duties as a taxpayer.",
-    icon: PiggyBank,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1961-43.pdf"
-  },
-  {
-    slug: "health-and-medical-law",
-    title: "Health & Medical Law",
-    description: "Understand patient rights, medical negligence, and healthcare regulations.",
-    icon: HeartPulse,
-    pdfUrl: "https://www.nmc.org.in/wp-content/uploads/2019/09/NMC-ACT-2019.pdf"
-  },
-  {
-    slug: "real-estate-regulation",
-    title: "Real Estate (RERA) Act",
-    description: "Learn about the rules that protect homebuyers and regulate the real estate sector.",
-    icon: Building,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2016-16.pdf"
-  },
-  {
-    slug: "education-law",
-    title: "Education Law",
-    description: "Know the rights of students and regulations governing educational institutions.",
-    icon: University,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2009-35.pdf"
-  },
-  {
-    slug: "contract-law",
-    title: "Contract Law",
-    description: "Understand the essentials of a valid contract and remedies for breach of contract.",
-    icon: CheckSquare,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1872-09.pdf"
-  },
-  {
-    slug: "arbitration-and-conciliation",
-    title: "Arbitration & Conciliation",
-    description: "Learn about alternative dispute resolution mechanisms outside of traditional courts.",
-    icon: Scale,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1996-26.pdf"
-  },
-  {
-    slug: "insolvency-and-bankruptcy",
-    title: "Insolvency & Bankruptcy Code",
-    description: "Understand the process for corporate and individual insolvency resolution.",
-    icon: Landmark,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2016-31.pdf"
-  },
-  {
-    slug: "public-interest-litigation",
-    title: "Public Interest Litigation (PIL)",
-    description: "Learn how to file a PIL for the protection of public interest.",
-    icon: Users,
-    pdfUrl: "https://main.sci.gov.in/pdf/PIL/guidelines_pil.pdf"
-  },
-  {
-    slug: "criminal-procedure",
-    title: "Criminal Procedure Code (CrPC)",
-    description: "Understand the procedure for investigation, trial, and appeal in criminal cases.",
-    icon: Gavel,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1974-02.pdf"
-  },
-  {
-    slug: "evidence-act",
-    title: "The Indian Evidence Act",
-    description: "Learn what constitutes evidence and the rules of admissibility in court.",
-    icon: File,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1872-01.pdf"
-  },
-  {
-    slug: "information-technology-act",
-    title: "Information Technology Act",
-    description: "Understand the laws governing electronic commerce and cybercrime.",
-    icon: Network,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2000-21.pdf"
-  },
-  {
-    slug: "domestic-violence-act",
-    title: "Domestic Violence Act",
-    description: "Protection and remedies available to women from domestic violence.",
-    icon: Home,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2005-43.pdf"
-  },
-  {
-    slug: "juvenile-justice-act",
-    title: "Juvenile Justice Act",
-    description: "Laws related to children in conflict with law and children in need of care.",
-    icon: Users,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2016-2.pdf"
-  },
-  {
-    slug: "prevention-of-corruption-act",
-    title: "Prevention of Corruption Act",
-    description: "Understand the laws aimed at combating corruption in government agencies.",
-    icon: Shield,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1988-49.pdf"
-  },
-  {
-    slug: "food-safety-and-standards",
-    title: "Food Safety (FSSAI) Laws",
-    description: "Regulations for food products to ensure safety and quality for consumers.",
-    icon: ShoppingCart,
-    pdfUrl: "https://www.fssai.gov.in/upload/uploadfiles/files/FOOD-ACT.pdf"
-  },
-  {
-    slug: "street-vendor-rights",
-    title: "Street Vendor Rights",
-    description: "Learn about the rights and protections for street vendors in urban areas.",
-    icon: Bike,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2014-7.pdf"
-  },
-  {
-    slug: "animal-cruelty-laws",
-    title: "Animal Cruelty Laws",
-    description: "Understand the laws for the prevention of cruelty to animals.",
-    icon: HeartHandshake,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1960-59.pdf"
-  },
-  {
-    slug: "disability-rights",
-    title: "Rights of Persons with Disabilities",
-    description: "Laws ensuring equal opportunities and protection of rights for disabled persons.",
-    icon: Users,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2016-49.pdf"
-  },
-  {
-    slug: "copyright-law",
-    title: "Copyright Law",
-    description: "Protection for original literary, dramatic, musical and artistic works.",
-    icon: Palette,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1957-14.pdf"
-  },
-  {
-    slug: "patent-law",
-    title: "Patent Law",
-    description: "How to protect your inventions and the criteria for patentability.",
-    icon: BrainCircuit,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1970-39.pdf"
-  },
-  {
-    slug: "trademark-law",
-    title: "Trademark Law",
-    description: "Protecting brand names, logos, and symbols that distinguish goods or services.",
-    icon: FileSignature,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1999-47.pdf"
-  },
-  {
-    slug: "maritime-law",
-    title: "Maritime Law",
-    description: "Legal rules and regulations governing activities at sea.",
-    icon: Anchor,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2017-22.pdf"
-  },
-  {
-    slug: "aviation-law",
-    title: "Aviation Law",
-    description: "Laws and regulations related to air travel and airport management.",
-    icon: Plane,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1934-22.pdf"
-  },
-  {
-    slug: "hindu-succession-act",
-    title: "Hindu Succession Act",
-    description: "Rules of inheritance and property succession among Hindus.",
-    icon: Users,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1956-30.pdf"
-  },
-  {
-    slug: "muslim-personal-law",
-    title: "Muslim Personal Law",
-    description: "Laws governing marriage, divorce, and inheritance for Muslims in India.",
-    icon: Users,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1937-26.pdf"
-  },
-  {
-    slug: "special-marriage-act",
-    title: "Special Marriage Act",
-    description: "A civil marriage law for people of India irrespective of their religion.",
-    icon: Users,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1954-43.pdf"
-  },
-  {
-    slug: "land-acquisition-act",
-    title: "Land Acquisition Act",
-    description: "Procedure and rules for land acquisition by the government for public purposes.",
-    icon: Home,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2013-30.pdf"
-  },
-  {
-    slug: "minimum-wages-act",
-    title: "Minimum Wages Act",
-    description: "Law ensuring a minimum wage for workers in various scheduled employments.",
-    icon: Factory,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1948-11.pdf"
-  },
-  {
-    slug: "child-labour-act",
-    title: "Child Labour Act",
-    description: "Prohibition and regulation of employment of children in certain occupations.",
-    icon: Users,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1986-61.pdf"
-  },
-  {
-    slug: "sexual-harassment-at-workplace",
-    title: "Sexual Harassment at Workplace Act",
-    description: "Protection against sexual harassment of women at workplace and redressal of complaints.",
-    icon: Shield,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2013-14.pdf"
-  },
-  {
-    slug: "forest-conservation-act",
-    title: "Forest Conservation Act",
-    description: "Laws for the conservation of forests and matters connected therewith.",
-    icon: Leaf,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1980-69.pdf"
-  },
-  {
-    slug: "wildlife-protection-act",
-    title: "Wildlife Protection Act",
-    description: "An Act to provide for the protection of wild animals, birds and plants.",
-    icon: Leaf,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1972-53.pdf"
-  },
-  {
-    slug: "air-pollution-act",
-    title: "Air (Prevention & Control) Act",
-    description: "Laws to prevent, control, and abate air pollution.",
-    icon: Leaf,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1981-14.pdf"
-  },
-  {
-    slug: "water-pollution-act",
-    title: "Water (Prevention & Control) Act",
-    description: "Laws to prevent and control water pollution and maintain water quality.",
-    icon: Leaf,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1974-6.pdf"
-  },
-  {
-    slug: "clinical-establishments-act",
-    title: "Clinical Establishments Act",
-    description: "Regulation and registration of all clinical establishments in the country.",
-    icon: Stethoscope,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2010-23.pdf"
-  },
-  {
-    slug: "transgender-persons-act",
-    title: "Transgender Persons Act",
-    description: "Act to provide for the protection of rights of transgender persons.",
-    icon: Users,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2019-40.pdf"
-  },
-  {
-    slug: "mental-healthcare-act",
-    title: "Mental Healthcare Act",
-    description: "An Act to provide for mental healthcare and services for persons with mental illness.",
-    icon: HeartPulse,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A2017-10.pdf"
-  },
-  {
-    slug: "companies-act",
-    title: "Companies Act, 2013",
-    description: "The primary legislation that governs the incorporation and functioning of companies.",
-    icon: Building,
-    pdfUrl: "https://www.mca.gov.in/Ministry/pdf/CompaniesAct2013.pdf"
-  },
-  {
-    slug: "partnership-act",
-    title: "Indian Partnership Act, 1932",
-    description: "Laws that govern partnership firms in India.",
-    icon: Users,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1932-09.pdf"
-  },
-  {
-    slug: "negotiable-instruments-act",
-    title: "Negotiable Instruments Act",
-    description: "Laws relating to promissory notes, bills of exchange and cheques.",
-    icon: FileText,
-    pdfUrl: "https://legislative.gov.in/sites/default/files/A1881-26.pdf"
+    content: `Intellectual Property (IP) refers to creations of the mind. IPR protects these creations.
+- **Copyright:** Protects original literary, dramatic, musical, and artistic works. Registration is not mandatory but is advisable.
+- **Patent:** An exclusive right granted for an invention. The invention must be new, non-obvious, and useful.
+- **Trademark:** A sign capable of distinguishing the goods or services of one enterprise from those of other enterprises.
+
+---
+**हिन्दी में:**
+
+बौद्धिक संपदा (आईपी) मन की रचनाओं को संदर्भित करती है। आईपीआर इन रचनाओं की रक्षा करता है, जिसमें कॉपीराइट, पेटेंट और ट्रेडमार्क शामिल हैं।`
   }
 ];

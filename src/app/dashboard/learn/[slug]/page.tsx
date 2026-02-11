@@ -36,22 +36,7 @@ export default function LearnTopicDetailPage() {
 
             <Card>
                 <CardContent className="prose dark:prose-invert max-w-none p-6">
-                    <p>{topic.content}</p>
-                    
-                    <h2 className="mt-6">What You Need to Know</h2>
-                    <p>
-                        This section provides a detailed breakdown of {topic.title}. The legal principles are designed to be straightforward, but it's essential to understand the nuances to ensure your rights are protected.
-                    </p>
-                    <ul>
-                        <li>Understand the key definitions and concepts.</li>
-                        <li>Know the relevant laws and acts.</li>
-                        <li>Learn about the procedures for exercising your rights or seeking remedies.</li>
-                        <li>Be aware of common pitfalls and challenges.</li>
-                    </ul>
-                    <h2>Further Steps</h2>
-                    <p>
-                        After understanding the basics, you might want to consult with a legal professional for advice tailored to your specific situation. You can use our Lawyer Connect feature to find a verified lawyer who specializes in this area.
-                    </p>
+                   <div className="whitespace-pre-line">{topic.content}</div>
                 </CardContent>
             </Card>
         </div>
