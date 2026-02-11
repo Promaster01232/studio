@@ -20,6 +20,7 @@ import {
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // This is to extend the window object for recaptcha
 declare global {
@@ -53,12 +54,16 @@ export default function LoginPage() {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!auth) return;
 
-    // Always create a new verifier on mount, and clean it up on unmount.
-    // This helps prevent state issues with the reCAPTCHA.
+    // This check is to prevent re-creating the verifier on every render.
+    if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+    }
+    
     const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
       'size': 'invisible',
       'callback': () => {
@@ -68,7 +73,6 @@ export default function LoginPage() {
 
     window.recaptchaVerifier = verifier;
 
-    // Cleanup function to clear the verifier when the component unmounts
     return () => {
       verifier.clear();
     };
@@ -80,6 +84,7 @@ export default function LoginPage() {
         return;
     }
     setLoading(true);
+    setAuthError(null);
     try {
         const verifier = window.recaptchaVerifier;
         
@@ -103,6 +108,7 @@ export default function LoginPage() {
         return;
     }
     setLoading(true);
+    setAuthError(null);
     try {
         const result = await window.confirmationResult.confirm(otp);
         const user = result.user;
@@ -131,6 +137,7 @@ export default function LoginPage() {
   const handleSocialLogin = async (provider: GoogleAuthProvider | OAuthProvider) => {
     if (!auth || !firestore) return;
     setLoading(true);
+    setAuthError(null);
 
     try {
       const result = await signInWithPopup(auth, provider);
@@ -146,12 +153,19 @@ export default function LoginPage() {
         router.push("/create-profile");
       }
     } catch (error: any) {
-      console.error("Social login error:", error);
-      toast({
-        variant: "destructive",
-        title: "Login Failed",
-        description: "Could not sign in. Please try again.",
-      });
+      if (error.code === 'auth/unauthorized-domain') {
+          const domain = typeof window !== 'undefined' ? window.location.hostname : '';
+          setAuthError(
+              `To enable social sign-in, please add this domain to your Firebase project's authorized domains:\n\n${domain}\n\nYou can do this in the Firebase Console under:\nAuthentication > Settings > Authorized domains.`
+          );
+      } else {
+        console.error("Social login error:", error);
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: "Could not sign in. Please try again.",
+        });
+      }
       setLoading(false);
     }
   };
@@ -175,6 +189,12 @@ export default function LoginPage() {
         </div>
         <Card className="w-full shadow-lg">
             <CardContent className="p-6 space-y-4">
+                {authError && (
+                    <Alert variant="destructive">
+                        <AlertTitle>Configuration Required</AlertTitle>
+                        <AlertDescription className="whitespace-pre-wrap text-xs">{authError}</AlertDescription>
+                    </Alert>
+                )}
                 {!otpSent ? (
                     <div className="space-y-4">
                         <div className="space-y-2">
@@ -196,7 +216,7 @@ export default function LoginPage() {
                             </div>
                         </div>
                         <Button className="w-full font-semibold" onClick={handlePhoneLogin} disabled={loading}>
-                            {loading ? <Loader2 className="animate-spin"/> : "Send OTP"}
+                            {loading && !otpSent ? <Loader2 className="animate-spin"/> : "Send OTP"}
                         </Button>
                     </div>
                 ) : (
@@ -259,3 +279,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+    
