@@ -58,11 +58,6 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!auth) return;
-
-    // This check is to prevent re-creating the verifier on every render.
-    if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.clear();
-    }
     
     const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
       'size': 'invisible',
@@ -277,7 +272,5 @@ export default function LoginPage() {
             .
         </p>
     </div>
-  );
-}
 
     
