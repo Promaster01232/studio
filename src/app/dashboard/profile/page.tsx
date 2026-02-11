@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from '@/components/theme-provider';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const user = {
     name: 'Rajesh Kumar',
@@ -31,6 +32,11 @@ const cases = [
 export default function ProfilePage() {
   const [userType, setUserType] = useState("citizen");
   const { theme, setTheme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -82,17 +88,21 @@ export default function ProfilePage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="userType">I am a</Label>
-                    <Select name="userType" value={userType} onValueChange={setUserType}>
-                        <SelectTrigger id="userType">
-                        <SelectValue placeholder="Select your role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        <SelectItem value="citizen">Citizen</SelectItem>
-                        <SelectItem value="advocate">Advocate</SelectItem>
-                        <SelectItem value="businessman">Business Person</SelectItem>
-                        <SelectItem value="student">Law Student</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    {isMounted ? (
+                      <Select name="userType" value={userType} onValueChange={setUserType}>
+                          <SelectTrigger id="userType">
+                          <SelectValue placeholder="Select your role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                          <SelectItem value="citizen">Citizen</SelectItem>
+                          <SelectItem value="advocate">Advocate</SelectItem>
+                          <SelectItem value="businessman">Business Person</SelectItem>
+                          <SelectItem value="student">Law Student</SelectItem>
+                          </SelectContent>
+                      </Select>
+                    ) : (
+                      <Skeleton className="h-10 w-full" />
+                    )}
                   </div>
                 </div>
                 <div className="flex justify-end">
