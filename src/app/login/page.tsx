@@ -175,12 +175,12 @@ export default function LoginPage() {
     <div className="flex flex-col items-center justify-center w-full max-w-sm">
         <div id="recaptcha-container"></div>
         <div className="mb-6 flex flex-col items-center text-center">
-            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-28 w-auto mb-4" />
+            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-32 w-auto mb-4" />
             <p className="text-muted-foreground">
                 Your AI Legal Assistant
             </p>
         </div>
-        <Card className="w-full shadow-lg bg-card/80 backdrop-blur-sm">
+        <Card className="w-full shadow-lg bg-card/80 backdrop-blur-sm border-primary/10">
             <CardContent className="p-6 space-y-4">
                 {authError && (
                     <Alert variant="destructive">
