@@ -38,7 +38,7 @@ const navItems = [
       { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Document Intelligence", tooltip: "Document Intelligence" },
       { href: "/dashboard/document-generator", icon: FileText, label: "Complaint Generator", tooltip: "Complaint Generator" },
       { href: "/dashboard/bond-generator", icon: FileSignature, label: "Bond Generator", tooltip: "Bond Generator" },
-      { href: "/dashboard/court-assistant", icon: Gavel, label: "Virtual Court Assistant", tooltip: "Virtual Court Assistant" },
+      { href: "/dashboard/court-assistant", icon: Gavel, label: "Court Room Tools", tooltip: "Court Room Tools" },
     ],
   },
   {
