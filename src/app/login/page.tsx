@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -58,13 +57,14 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!auth) return;
-    if (!window.recaptchaVerifier) {
-      const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-        'callback': () => {},
-      });
-      window.recaptchaVerifier = verifier;
+    if (window.recaptchaVerifier) {
+      window.recaptchaVerifier.clear();
     }
+    const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+      'size': 'invisible',
+      'callback': () => {},
+    });
+    window.recaptchaVerifier = verifier;
   }, [auth]);
 
   const handlePhoneLogin = async () => {
@@ -163,11 +163,14 @@ export default function LoginPage() {
   const handleAppleLogin = () => handleSocialLogin(new OAuthProvider('apple.com'));
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-indigo-100/20 to-background p-4 dark:via-indigo-900/10">
+    <div className="flex min-h-screen items-center justify-center p-4" style={{ backgroundImage: "url('https://firebasestudio.app/assets/images/backgrounds/circuit-board.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
        <div id="recaptcha-container"></div>
       <div className="w-full max-w-sm">
           <div className="flex flex-col items-center text-center">
-              <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto mb-2 dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
+              <div className="relative mb-4">
+                  <div className="absolute -inset-2 rounded-full bg-primary/10 animate-pulse [animation-duration:4s]"></div>
+                  <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto relative dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
+              </div>
               <p className="font-semibold text-muted-foreground tracking-widest">
                   YOUR AI LEGAL ASSISTANT
               </p>
@@ -200,7 +203,7 @@ export default function LoginPage() {
                               />
                           </div>
                       </div>
-                      <Button className="w-full font-semibold" onClick={handlePhoneLogin} disabled={loading}>
+                      <Button className="w-full font-semibold transition-transform hover:scale-105" onClick={handlePhoneLogin} disabled={loading}>
                           {loading && !otpSent ? <Loader2 className="animate-spin"/> : "Send OTP"}
                       </Button>
                   </div>
@@ -218,7 +221,7 @@ export default function LoginPage() {
                               disabled={loading}
                           />
                       </div>
-                      <Button className="w-full font-semibold" onClick={handleOtpVerify} disabled={loading}>
+                      <Button className="w-full font-semibold transition-transform hover:scale-105" onClick={handleOtpVerify} disabled={loading}>
                             {loading ? <Loader2 className="animate-spin"/> : "Verify OTP & Continue"}
                       </Button>
                       <Button variant="link" size="sm" onClick={() => setOtpSent(false)} disabled={loading}>Back</Button>
@@ -237,11 +240,11 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                  <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleLogin} disabled={loading}>
+                  <Button variant="outline" className="w-full font-semibold transition-transform hover:scale-105" onClick={handleGoogleLogin} disabled={loading}>
                       <GoogleIcon className="mr-2 h-4 w-4" />
                       Continue with Google
                   </Button>
-                  <Button variant="outline" className="w-full font-semibold" onClick={handleAppleLogin} disabled={loading}>
+                  <Button variant="outline" className="w-full font-semibold transition-transform hover:scale-105" onClick={handleAppleLogin} disabled={loading}>
                       <AppleIcon className="mr-2 h-4 w-4 fill-current" />
                       Continue with Apple
                   </Button>
@@ -269,5 +272,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-    
