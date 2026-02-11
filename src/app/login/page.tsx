@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { BookOpen, Loader2 } from "lucide-react";
-import { useAuth } from "@/firebase";
+import { useAuth, useFirestore } from "@/firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber, type ConfirmationResult } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
@@ -24,6 +25,7 @@ declare global {
 
 export default function LoginPage() {
   const auth = useAuth();
+  const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
   const [phone, setPhone] = useState("");
@@ -73,13 +75,26 @@ export default function LoginPage() {
     }
     setLoading(true);
     try {
-        await window.confirmationResult.confirm(otp);
-        toast({ title: "Login Successful!", description: "You are now logged in."});
-        router.push('/dashboard');
+        const result = await window.confirmationResult.confirm(otp);
+        const user = result.user;
+
+        if (!firestore) {
+            throw new Error("Firestore not available");
+        }
+
+        const userDocRef = doc(firestore, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+            toast({ title: "Login Successful!", description: "Welcome back."});
+            router.push('/dashboard');
+        } else {
+            toast({ title: "Welcome!", description: "Let's create your profile."});
+            router.push('/create-profile');
+        }
     } catch (error: any) {
         console.error("OTP verification error:", error);
         toast({ variant: "destructive", title: "Invalid OTP", description: "The OTP you entered is incorrect. Please try again."});
-    } finally {
         setLoading(false);
     }
   };
@@ -140,7 +155,7 @@ export default function LoginPage() {
                             />
                         </div>
                         <Button className="w-full font-semibold" onClick={handleOtpVerify} disabled={loading}>
-                             {loading ? <Loader2 className="animate-spin"/> : "Verify OTP & Login"}
+                             {loading ? <Loader2 className="animate-spin"/> : "Verify OTP & Continue"}
                         </Button>
                         <Button variant="link" size="sm" onClick={() => setOtpSent(false)} disabled={loading}>Back</Button>
                     </div>
