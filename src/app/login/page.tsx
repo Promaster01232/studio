@@ -60,9 +60,7 @@ export default function LoginPage() {
   const loginHeroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
   useEffect(() => {
-    if (!auth) return;
-    
-    if (!window.recaptchaVerifier) {
+    if (auth && !window.recaptchaVerifier) {
       const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
         'size': 'invisible',
         'callback': () => {
@@ -71,10 +69,6 @@ export default function LoginPage() {
       });
       window.recaptchaVerifier = verifier;
     }
-    
-    return () => {
-        // window.recaptchaVerifier?.clear();
-    };
   }, [auth]);
 
   const handlePhoneLogin = async () => {
@@ -176,11 +170,11 @@ export default function LoginPage() {
     <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
        <div id="recaptcha-container"></div>
       {/* Left side */}
-      <div className="hidden md:flex flex-col justify-center bg-cyan-50 dark:bg-cyan-900/20 p-12 relative overflow-hidden">
+      <div className="hidden md:flex flex-col justify-center bg-muted/30 p-12 relative overflow-hidden">
         <div className="relative z-10">
-          <h1 className="text-4xl lg:text-5xl font-bold font-headline mb-4 text-gray-800 dark:text-gray-200">Simplifying Legal Aid</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold font-headline mb-4 text-foreground">Simplifying Legal Aid</h1>
           <div className="w-24 h-1.5 bg-primary mb-8"></div>
-          <ul className="space-y-4 text-lg text-gray-700 dark:text-gray-300">
+          <ul className="space-y-4 text-lg text-muted-foreground">
             <li className="flex items-center gap-3">
               <CheckCircle className="h-6 w-6 text-primary" />
               <span>AI-Powered Consultations</span>
@@ -213,7 +207,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right side */}
-      <div className="flex items-center justify-center bg-gray-50 dark:bg-background p-4">
+      <div className="flex items-center justify-center bg-background p-4">
         <div className="w-full max-w-sm space-y-6">
             <div className="flex flex-col items-center text-center">
                 <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto mb-2 dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
@@ -222,7 +216,7 @@ export default function LoginPage() {
                 </p>
             </div>
             
-            <div className="bg-card p-6 rounded-lg shadow-lg">
+            <div className="bg-card p-6 rounded-lg border">
                 {authError && (
                     <Alert variant="destructive" className="mb-4">
                         <AlertTitle>Configuration Required</AlertTitle>
@@ -242,14 +236,14 @@ export default function LoginPage() {
                                     type="tel" 
                                     placeholder="xxxxxxxxxx" 
                                     required 
-                                    className="bg-muted/30 pl-12"
+                                    className="pl-12"
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
                                     disabled={loading}
                                 />
                             </div>
                         </div>
-                        <Button className="w-full font-semibold bg-gradient-to-r from-primary to-blue-500 hover:opacity-90 text-white" onClick={handlePhoneLogin} disabled={loading}>
+                        <Button className="w-full font-semibold" onClick={handlePhoneLogin} disabled={loading}>
                             {loading && !otpSent ? <Loader2 className="animate-spin"/> : "Send OTP"}
                         </Button>
                     </div>
@@ -262,13 +256,12 @@ export default function LoginPage() {
                                 type="text" 
                                 placeholder="6-digit code" 
                                 required 
-                                className="bg-muted/30"
                                 value={otp}
                                 onChange={(e) => setOtp(e.target.value)}
                                 disabled={loading}
                             />
                         </div>
-                        <Button className="w-full font-semibold bg-gradient-to-r from-primary to-blue-500 hover:opacity-90 text-white" onClick={handleOtpVerify} disabled={loading}>
+                        <Button className="w-full font-semibold" onClick={handleOtpVerify} disabled={loading}>
                              {loading ? <Loader2 className="animate-spin"/> : "Verify OTP & Continue"}
                         </Button>
                         <Button variant="link" size="sm" onClick={() => setOtpSent(false)} disabled={loading}>Back</Button>
@@ -287,11 +280,11 @@ export default function LoginPage() {
                 </div>
 
                 <div className="space-y-2">
-                    <Button variant="outline" className="w-full font-semibold bg-[#EA4335] hover:bg-[#D93F31] text-white border-none" onClick={handleGoogleLogin} disabled={loading}>
-                        <GoogleIcon className="mr-2 h-4 w-4" />
+                    <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleLogin} disabled={loading}>
+                        <GoogleIcon className="mr-2 h-4 w-4 text-[#EA4335]" />
                         Continue with Google
                     </Button>
-                    <Button variant="outline" className="w-full font-semibold bg-black hover:bg-gray-800 text-white border-none" onClick={handleAppleLogin} disabled={loading}>
+                    <Button variant="outline" className="w-full font-semibold" onClick={handleAppleLogin} disabled={loading}>
                         <AppleIcon className="mr-2 h-4 w-4 fill-current" />
                         Continue with Apple
                     </Button>
