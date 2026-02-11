@@ -9,7 +9,14 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { BookOpen, Loader2 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber, type ConfirmationResult } from "firebase/auth";
+import { 
+  RecaptchaVerifier, 
+  signInWithPhoneNumber, 
+  type ConfirmationResult,
+  GoogleAuthProvider,
+  OAuthProvider,
+  signInWithPopup
+} from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -21,6 +28,20 @@ declare global {
         confirmationResult: ConfirmationResult;
     }
 }
+
+const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <title>Google</title>
+        <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.05 1.05-2.36 1.62-4.38 1.62-3.82 0-6.94-3.1-6.94-6.94s3.12-6.94 6.94-6.94c2.2 0 3.59.88 4.41 1.66l2.32-2.32C17.46 2.76 15.22 1.5 12.48 1.5c-5.73 0-10.44 4.6-10.44 10.44s4.71 10.44 10.44 10.44c5.9 0 10.12-3.97 10.12-10.12 0-.75-.08-1.47-.2-2.18z"/>
+    </svg>
+);
+
+const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <title>Apple</title>
+        <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.048-3.833 1.2-4.822 3.024-2.145 3.934-.623 9.72 1.638 12.96.995 1.39 2.16 3.104 3.766 3.104 1.554 0 2.064-1.025 3.935-1.025s2.31.995 3.88.995c1.638 0 2.722-1.68 3.68-3.05.96-1.343 1.42-2.636 1.45-2.71-.05-.02-3.3-1.22-3.32-5.062-.02-3.41 2.56-4.942 2.71-5.11-.73-.92-1.84-1.45-2.97-1.5-.78-.05-1.53.16-2.21.48-.65.29-1.27.78-1.73.78zM15.42 4.394c.903-1.163 1.5-2.662 1.32-4.394-.02.02-.02.02 0 0-1.554.08-3.23.95-4.22 2.163-.83.996-1.612 2.495-1.4 4.09.02-.02.02-.02 0 0 1.637-.02 3.3-1.01 4.3-1.86z"/>
+    </svg>
+);
 
 
 export default function LoginPage() {
@@ -107,6 +128,37 @@ export default function LoginPage() {
     }
   };
 
+  const handleSocialLogin = async (provider: GoogleAuthProvider | OAuthProvider) => {
+    if (!auth || !firestore) return;
+    setLoading(true);
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const userDocRef = doc(firestore, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        toast({ title: "Login Successful!", description: "Welcome back." });
+        router.push("/dashboard");
+      } else {
+        toast({ title: "Welcome!", description: "Let's create your profile." });
+        router.push("/create-profile");
+      }
+    } catch (error: any) {
+      console.error("Social login error:", error);
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description: "Could not sign in. Please try again.",
+      });
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = () => handleSocialLogin(new GoogleAuthProvider());
+  const handleAppleLogin = () => handleSocialLogin(new OAuthProvider('apple.com'));
+
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-sm">
         <div id="recaptcha-container"></div>
@@ -180,19 +232,29 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <div className="text-center text-sm">
-                    <Link href="/dashboard" className="text-muted-foreground hover:underline text-xs">
-                        Skip for now →
-                    </Link>
+                <div className="space-y-2">
+                    <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleLogin} disabled={loading}>
+                        <GoogleIcon className="mr-2 h-4 w-4" />
+                        Continue with Google
+                    </Button>
+                    <Button variant="outline" className="w-full font-semibold" onClick={handleAppleLogin} disabled={loading}>
+                        <AppleIcon className="mr-2 h-4 w-4 fill-current" />
+                        Continue with Apple
+                    </Button>
                 </div>
 
             </CardContent>
         </Card>
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
-            <Link href="#" className="font-semibold text-primary hover:underline">
-                Sign Up
+        <p className="mt-6 text-center text-xs text-muted-foreground px-8">
+            By continuing, you agree to our{' '}
+            <Link href="#" className="underline underline-offset-4 hover:text-primary">
+                Terms of Service
             </Link>
+            {' '}and{' '}
+            <Link href="#" className="underline underline-offset-4 hover:text-primary">
+                Privacy Policy
+            </Link>
+            .
         </p>
     </div>
   );

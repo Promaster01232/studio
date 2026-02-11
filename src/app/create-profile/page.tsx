@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -40,9 +40,23 @@ export default function CreateProfilePage() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      email: auth?.currentUser?.email || "",
+      email: "",
+      userType: "citizen",
     },
   });
+
+  useEffect(() => {
+    if (auth?.currentUser) {
+      const displayName = auth.currentUser.displayName || "";
+      const email = auth.currentUser.email || "";
+      form.reset({
+        firstName: displayName.split(" ")[0] || "",
+        lastName: displayName.split(" ").slice(1).join(" ") || "",
+        email: email,
+        userType: "citizen",
+      });
+    }
+  }, [auth, form]);
   
   // This is to handle the case where auth is still loading
   if (auth === null) {
