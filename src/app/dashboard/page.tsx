@@ -125,13 +125,6 @@ export default function DashboardHomePage() {
           </Link>
         ))}
       </div>
-
-      <Button variant="destructive" size="icon" className="rounded-full h-16 w-16 fixed bottom-8 right-8 shadow-2xl z-10 flex items-center justify-center">
-        <span className="font-bold text-2xl">N</span>
-        <span className="absolute top-1.5 right-1.5 flex h-3 w-3">
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
-        </span>
-      </Button>
     </div>
   );
 }
