@@ -133,7 +133,11 @@ export default function LawyerProfilePage({ params }: { params: { id: string } }
             </div>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-4">
-            <Button variant="outline"><MessageSquare className="mr-2"/> Message</Button>
+            <Button variant="outline" asChild>
+              <Link href={`/dashboard/lawyer-connect/${lawyer.id}/chat`}>
+                <MessageSquare className="mr-2"/> Message
+              </Link>
+            </Button>
             <Button>Book Consultation</Button>
           </div>
         </div>
