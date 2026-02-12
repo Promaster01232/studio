@@ -58,18 +58,13 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!auth) return;
-    if (window.recaptchaVerifier) {
-      window.recaptchaVerifier.clear();
-      const oldNode = document.getElementById('recaptcha-container');
-      if (oldNode && oldNode.firstChild) {
-          oldNode.removeChild(oldNode.firstChild);
-      }
+    if (document.getElementById('recaptcha-container')?.childElementCount === 0 || !window.recaptchaVerifier) {
+      const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+        'callback': () => {},
+      });
+      window.recaptchaVerifier = verifier;
     }
-    const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-      'size': 'invisible',
-      'callback': () => {},
-    });
-    window.recaptchaVerifier = verifier;
   }, [auth]);
 
   const handlePhoneLogin = async () => {
@@ -166,7 +161,7 @@ export default function LoginPage() {
   const handleAppleLogin = () => handleSocialLogin(new OAuthProvider('apple.com'));
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-background via-indigo-100/20 to-background dark:via-indigo-900/10">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-r from-fuchsia-600 via-violet-800 to-emerald-500 animate-background-pan bg-[length:400%_400%]">
        <div id="recaptcha-container"></div>
       <div className="w-full max-w-sm">
           <div className="flex flex-col items-center text-center mb-6">
@@ -174,12 +169,12 @@ export default function LoginPage() {
                   <div className="absolute -inset-2 rounded-full bg-primary/10 animate-ping [animation-duration:4s]"></div>
                   <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto relative drop-shadow-[0_0_10px_hsl(var(--accent))]" />
               </div>
-              <p className="font-semibold text-muted-foreground tracking-widest">
+              <p className="font-semibold tracking-widest text-white/80">
                   YOUR AI LEGAL ASSISTANT
               </p>
           </div>
           
-          <div className="bg-card/60 backdrop-blur-sm border-primary/20 p-6 rounded-lg border">
+          <div className="bg-card/60 dark:bg-card/40 backdrop-blur-lg border-primary/20 p-6 rounded-lg border">
               {domainError && (
                   <Alert variant="destructive" className="mb-4">
                       <AlertTitle>Configuration Required</AlertTitle>
@@ -242,7 +237,7 @@ export default function LoginPage() {
               
               <div className="relative my-4">
                   <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t" />
+                      <span className="w-full border-t border-border/50" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
                       <span className="bg-card px-2 text-muted-foreground">
@@ -252,11 +247,11 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                  <Button variant="outline" className="w-full font-semibold transition-transform hover:scale-105" onClick={handleGoogleLogin} disabled={loading}>
+                  <Button variant="outline" className="w-full font-semibold transition-transform hover:scale-105 bg-white text-black hover:bg-gray-100" onClick={handleGoogleLogin} disabled={loading}>
                       <GoogleIcon className="mr-2 h-4 w-4" />
                       Continue with Google
                   </Button>
-                  <Button variant="outline" className="w-full font-semibold transition-transform hover:scale-105" onClick={handleAppleLogin} disabled={loading}>
+                  <Button variant="outline" className="w-full font-semibold transition-transform hover:scale-105 bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-100" onClick={handleAppleLogin} disabled={loading}>
                       <AppleIcon className="mr-2 h-4 w-4 fill-current" />
                       Continue with Apple
                   </Button>
@@ -264,18 +259,18 @@ export default function LoginPage() {
           </div>
           
           <div className="mt-4 text-center">
-            <Button asChild variant="link">
+            <Button asChild variant="link" className="text-white/80 hover:text-white">
               <Link href="/dashboard">Skip Login</Link>
             </Button>
           </div>
 
-          <p className="mt-6 text-center text-xs text-muted-foreground px-8">
+          <p className="mt-6 text-center text-xs text-white/70 px-8">
               By continuing, you agree to our{' '}
-              <Link href="#" className="underline underline-offset-4 hover:text-primary">
+              <Link href="#" className="underline underline-offset-4 hover:text-white">
                   Terms of Service
               </Link>
               {' '}and{' '}
-              <Link href="#" className="underline underline-offset-4 hover:text-primary">
+              <Link href="#" className="underline underline-offset-4 hover:text-white">
                   Privacy Policy
               </Link>
               .
