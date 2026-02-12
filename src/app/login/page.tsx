@@ -168,7 +168,7 @@ export default function LoginPage() {
           <div className="flex flex-col items-center text-center">
               <div className="relative mb-4">
                   <div className="absolute -inset-2 rounded-full bg-primary/10 animate-ping [animation-duration:4s]"></div>
-                  <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto relative dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
+                  <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto relative drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
               </div>
               <p className="font-semibold text-muted-foreground tracking-widest">
                   YOUR AI LEGAL ASSISTANT
@@ -280,4 +280,5 @@ export default function LoginPage() {
     </div>
   );
 
+    
     
