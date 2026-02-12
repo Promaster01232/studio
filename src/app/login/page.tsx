@@ -25,8 +25,8 @@ import Image from "next/image";
 // This is to extend the window object for recaptcha
 declare global {
     interface Window {
-        recaptchaVerifier: RecaptchaVerifier;
-        confirmationResult: ConfirmationResult;
+        recaptchaVerifier?: RecaptchaVerifier;
+        confirmationResult?: ConfirmationResult;
     }
 }
 
@@ -60,6 +60,10 @@ export default function LoginPage() {
     if (!auth) return;
     if (window.recaptchaVerifier) {
       window.recaptchaVerifier.clear();
+      const oldNode = document.getElementById('recaptcha-container');
+      if (oldNode && oldNode.firstChild) {
+          oldNode.removeChild(oldNode.firstChild);
+      }
     }
     const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
       'size': 'invisible',
@@ -76,7 +80,7 @@ export default function LoginPage() {
     setLoading(true);
     setDomainError(null);
     try {
-        const verifier = window.recaptchaVerifier;
+        const verifier = window.recaptchaVerifier!;
         
         const fullPhoneNumber = `+91${phone.trim()}`;
         
@@ -93,7 +97,7 @@ export default function LoginPage() {
   };
 
   const handleOtpVerify = async () => {
-    if (!otp) {
+    if (!otp || !window.confirmationResult) {
         toast({ variant: "destructive", title: "Error", description: "Please enter the OTP."});
         return;
     }
@@ -162,20 +166,20 @@ export default function LoginPage() {
   const handleAppleLogin = () => handleSocialLogin(new OAuthProvider('apple.com'));
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4" style={{ backgroundImage: "url('https://firebasestudio.app/assets/images/backgrounds/circuit-board.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-background via-indigo-100/20 to-background dark:via-indigo-900/10">
        <div id="recaptcha-container"></div>
       <div className="w-full max-w-sm">
-          <div className="flex flex-col items-center text-center">
+          <div className="flex flex-col items-center text-center mb-6">
               <div className="relative mb-4">
                   <div className="absolute -inset-2 rounded-full bg-primary/10 animate-ping [animation-duration:4s]"></div>
-                  <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto relative drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
+                  <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto relative drop-shadow-[0_0_10px_hsl(var(--accent))]" />
               </div>
               <p className="font-semibold text-muted-foreground tracking-widest">
                   YOUR AI LEGAL ASSISTANT
               </p>
           </div>
           
-          <div className="mt-6 bg-card/60 backdrop-blur-sm border-primary/20 p-6 rounded-lg border">
+          <div className="bg-card/60 backdrop-blur-sm border-primary/20 p-6 rounded-lg border">
               {domainError && (
                   <Alert variant="destructive" className="mb-4">
                       <AlertTitle>Configuration Required</AlertTitle>
@@ -211,7 +215,7 @@ export default function LoginPage() {
                               />
                           </div>
                       </div>
-                      <Button className="w-full font-semibold transition-transform hover:scale-105" onClick={handlePhoneLogin} disabled={loading}>
+                      <Button className="w-full font-semibold transition-transform hover:scale-105" onClick={handlePhoneLogin} disabled={loading || !phone}>
                           {loading && !otpSent ? <Loader2 className="animate-spin"/> : "Send OTP"}
                       </Button>
                   </div>
@@ -229,7 +233,7 @@ export default function LoginPage() {
                               disabled={loading}
                           />
                       </div>
-                      <Button className="w-full font-semibold transition-transform hover:scale-105" onClick={handleOtpVerify} disabled={loading}>
+                      <Button className="w-full font-semibold transition-transform hover:scale-105" onClick={handleOtpVerify} disabled={loading || !otp}>
                             {loading ? <Loader2 className="animate-spin"/> : "Verify OTP & Continue"}
                       </Button>
                       <Button variant="link" size="sm" onClick={() => setOtpSent(false)} disabled={loading}>Back</Button>
@@ -280,5 +284,8 @@ export default function LoginPage() {
     </div>
   );
 
+}
     
+    
+
     
