@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -53,7 +54,7 @@ export default function LoginPage() {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
+  const [domainError, setDomainError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!auth) return;
@@ -73,7 +74,7 @@ export default function LoginPage() {
         return;
     }
     setLoading(true);
-    setAuthError(null);
+    setDomainError(null);
     try {
         const verifier = window.recaptchaVerifier;
         
@@ -97,7 +98,7 @@ export default function LoginPage() {
         return;
     }
     setLoading(true);
-    setAuthError(null);
+    setDomainError(null);
     try {
         const result = await window.confirmationResult.confirm(otp);
         const user = result.user;
@@ -126,7 +127,7 @@ export default function LoginPage() {
   const handleSocialLogin = async (provider: GoogleAuthProvider | OAuthProvider) => {
     if (!auth || !firestore) return;
     setLoading(true);
-    setAuthError(null);
+    setDomainError(null);
 
     try {
       const result = await signInWithPopup(auth, provider);
@@ -144,9 +145,7 @@ export default function LoginPage() {
     } catch (error: any) {
       if (error.code === 'auth/unauthorized-domain') {
           const domain = typeof window !== 'undefined' ? window.location.hostname : '';
-          setAuthError(
-              `To enable social sign-in, please add this domain to your Firebase project's authorized domains:\n\n${domain}\n\nYou can do this in the Firebase Console under:\nAuthentication > Settings > Authorized domains.`
-          );
+          setDomainError(domain);
       } else {
         console.error("Social login error:", error);
         toast({
@@ -168,7 +167,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
           <div className="flex flex-col items-center text-center">
               <div className="relative mb-4">
-                  <div className="absolute -inset-2 rounded-full bg-primary/10 animate-pulse [animation-duration:4s]"></div>
+                  <div className="absolute -inset-2 rounded-full bg-primary/10 animate-ping [animation-duration:4s]"></div>
                   <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto relative dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
               </div>
               <p className="font-semibold text-muted-foreground tracking-widest">
@@ -177,10 +176,19 @@ export default function LoginPage() {
           </div>
           
           <div className="mt-6 bg-card/60 backdrop-blur-sm border-primary/20 p-6 rounded-lg border">
-              {authError && (
+              {domainError && (
                   <Alert variant="destructive" className="mb-4">
                       <AlertTitle>Configuration Required</AlertTitle>
-                      <AlertDescription className="whitespace-pre-wrap text-xs">{authError}</AlertDescription>
+                      <AlertDescription className="text-xs space-y-2">
+                        <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
+                        <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
+                        <p>Click the button below to go to the Firebase Console and add it.</p>
+                         <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive">
+                            <a href="https://console.firebase.google.com/project/ai-naya-shahayak/authentication/settings" target="_blank" rel="noopener noreferrer">
+                                Open Firebase Auth Settings
+                            </a>
+                        </Button>
+                      </AlertDescription>
                   </Alert>
               )}
               {!otpSent ? (
@@ -271,4 +279,5 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}
+
+    
