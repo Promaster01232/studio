@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldCheck, BrainCircuit, FileText, Briefcase, Users, CheckCircle } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
   RecaptchaVerifier, 
@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 // This is to extend the window object for recaptcha
 declare global {
@@ -44,6 +45,13 @@ const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
+const features = [
+    { icon: BrainCircuit, text: "AI-Powered Consultations" },
+    { icon: FileText, text: "Document Generation" },
+    { icon: Briefcase, text: "Case Tracking" },
+    { icon: Users, text: "Expert Legal Network" },
+];
+
 
 export default function LoginPage() {
   const auth = useAuth();
@@ -55,10 +63,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
+  
+  const loginHeroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
   useEffect(() => {
     if (!auth) return;
-    if (document.getElementById('recaptcha-container')?.childElementCount === 0 || !window.recaptchaVerifier) {
+    if (!window.recaptchaVerifier) {
       const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
         'size': 'invisible',
         'callback': () => {},
@@ -161,28 +171,56 @@ export default function LoginPage() {
   const handleAppleLogin = () => handleSocialLogin(new OAuthProvider('apple.com'));
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-r from-fuchsia-600 via-violet-800 to-emerald-500 animate-background-pan bg-[length:400%_400%]">
-       <div id="recaptcha-container"></div>
-      <div className="w-full max-w-sm">
-          <div className="flex flex-col items-center text-center mb-6">
-              <div className="relative mb-4">
-                  <div className="absolute -inset-2 rounded-full bg-primary/10 animate-ping [animation-duration:4s]"></div>
-                  <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-24 w-auto relative drop-shadow-[0_0_10px_hsl(var(--accent))]" />
-              </div>
-              <p className="font-semibold tracking-widest text-white/80">
-                  YOUR AI LEGAL ASSISTANT
-              </p>
+    <div className="min-h-screen w-full lg:grid lg:grid-cols-2">
+      <div id="recaptcha-container"></div>
+      
+      {/* Left Column (Design) */}
+      <div className="hidden lg:flex flex-col justify-between bg-muted/30 p-8 md:p-12 relative overflow-hidden">
+         <Link href="/" className="flex items-center gap-3 font-bold text-2xl z-10">
+            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-10 w-auto drop-shadow-[0_0_8px_hsl(var(--accent))]" />
+            <span>Nyaya Sahayak</span>
+         </Link>
+
+         <div className="z-10 mt-auto mb-8">
+            <h1 className="text-4xl font-bold font-headline tracking-tight leading-tight">Simplifying Legal Aid for Everyone.</h1>
+             <div className="mt-8 space-y-4">
+                {features.map((feature, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                        <div className="bg-primary/10 text-primary p-2 rounded-full">
+                            <feature.icon className="h-5 w-5" />
+                        </div>
+                        <span className="font-medium text-lg">{feature.text}</span>
+                    </div>
+                ))}
+             </div>
+         </div>
+         {loginHeroImage && (
+            <Image src={loginHeroImage.imageUrl} alt={loginHeroImage.description} layout="fill" className="object-cover object-left-top opacity-10 dark:opacity-5" data-ai-hint={loginHeroImage.imageHint}/>
+         )}
+         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-0"></div>
+      </div>
+      
+      {/* Right Column (Login Form) */}
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-8">
+          <div>
+            <Link href="/" className="flex lg:hidden items-center justify-center gap-3 font-bold text-2xl mb-8">
+                <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-12 w-auto drop-shadow-[0_0_8px_hsl(var(--accent))]" />
+            </Link>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-center">Sign in to your account</h2>
+            <p className="mt-2 text-center text-sm text-muted-foreground">
+              Or, get started with a new account.
+            </p>
           </div>
           
-          <div className="bg-card/60 dark:bg-card/40 backdrop-blur-lg border-primary/20 p-6 rounded-lg border">
+          <div className="bg-card p-6 rounded-lg border">
               {domainError && (
                   <Alert variant="destructive" className="mb-4">
                       <AlertTitle>Configuration Required</AlertTitle>
                       <AlertDescription className="text-xs space-y-2">
                         <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
                         <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
-                        <p>Click the button below to go to the Firebase Console and add it.</p>
-                         <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive">
+                        <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive">
                             <a href="https://console.firebase.google.com/project/ai-naya-shahayak/authentication/settings" target="_blank" rel="noopener noreferrer">
                                 Open Firebase Auth Settings
                             </a>
@@ -210,7 +248,7 @@ export default function LoginPage() {
                               />
                           </div>
                       </div>
-                      <Button className="w-full font-semibold transition-transform hover:scale-105" onClick={handlePhoneLogin} disabled={loading || !phone}>
+                      <Button className="w-full font-semibold" onClick={handlePhoneLogin} disabled={loading || !phone}>
                           {loading && !otpSent ? <Loader2 className="animate-spin"/> : "Send OTP"}
                       </Button>
                   </div>
@@ -228,7 +266,7 @@ export default function LoginPage() {
                               disabled={loading}
                           />
                       </div>
-                      <Button className="w-full font-semibold transition-transform hover:scale-105" onClick={handleOtpVerify} disabled={loading || !otp}>
+                      <Button className="w-full font-semibold" onClick={handleOtpVerify} disabled={loading || !otp}>
                             {loading ? <Loader2 className="animate-spin"/> : "Verify OTP & Continue"}
                       </Button>
                       <Button variant="link" size="sm" onClick={() => setOtpSent(false)} disabled={loading}>Back</Button>
@@ -247,40 +285,36 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                  <Button variant="outline" className="w-full font-semibold transition-transform hover:scale-105 bg-white text-black hover:bg-gray-100" onClick={handleGoogleLogin} disabled={loading}>
+                  <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleLogin} disabled={loading}>
                       <GoogleIcon className="mr-2 h-4 w-4" />
                       Continue with Google
                   </Button>
-                  <Button variant="outline" className="w-full font-semibold transition-transform hover:scale-105 bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-100" onClick={handleAppleLogin} disabled={loading}>
+                  <Button variant="outline" className="w-full font-semibold bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-100" onClick={handleAppleLogin} disabled={loading}>
                       <AppleIcon className="mr-2 h-4 w-4 fill-current" />
                       Continue with Apple
                   </Button>
               </div>
           </div>
           
-          <div className="mt-4 text-center">
-            <Button asChild variant="link" className="text-white/80 hover:text-white">
+          <div className="text-center">
+            <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
               <Link href="/dashboard">Skip Login</Link>
             </Button>
           </div>
 
-          <p className="mt-6 text-center text-xs text-white/70 px-8">
+          <p className="text-center text-xs text-muted-foreground px-8">
               By continuing, you agree to our{' '}
-              <Link href="#" className="underline underline-offset-4 hover:text-white">
+              <Link href="#" className="underline underline-offset-4 hover:text-primary">
                   Terms of Service
               </Link>
               {' '}and{' '}
-              <Link href="#" className="underline underline-offset-4 hover:text-white">
+              <Link href="#" className="underline underline-offset-4 hover:text-primary">
                   Privacy Policy
               </Link>
               .
           </p>
+        </div>
       </div>
     </div>
   );
-
 }
-    
-    
-
-    
