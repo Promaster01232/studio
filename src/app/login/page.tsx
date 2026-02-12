@@ -174,33 +174,7 @@ export default function LoginPage() {
     <div className="min-h-screen w-full lg:grid lg:grid-cols-2">
       <div id="recaptcha-container"></div>
       
-      {/* Left Column (Design) */}
-      <div className="hidden lg:flex flex-col justify-between bg-muted/30 p-8 md:p-12 relative overflow-hidden">
-         <Link href="/" className="flex items-center gap-3 font-bold text-2xl z-10">
-            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-10 w-auto drop-shadow-[0_0_8px_hsl(var(--accent))]" />
-            <span>Nyaya Sahayak</span>
-         </Link>
-
-         <div className="z-10 mt-auto mb-8">
-            <h1 className="text-4xl font-bold font-headline tracking-tight leading-tight">Simplifying Legal Aid for Everyone.</h1>
-             <div className="mt-8 space-y-4">
-                {features.map((feature, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                        <div className="bg-primary/10 text-primary p-2 rounded-full">
-                            <feature.icon className="h-5 w-5" />
-                        </div>
-                        <span className="font-medium text-lg">{feature.text}</span>
-                    </div>
-                ))}
-             </div>
-         </div>
-         {loginHeroImage && (
-            <Image src={loginHeroImage.imageUrl} alt={loginHeroImage.description} layout="fill" className="object-cover object-left-top opacity-10 dark:opacity-5" data-ai-hint={loginHeroImage.imageHint}/>
-         )}
-         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-0"></div>
-      </div>
-      
-      {/* Right Column (Login Form) */}
+      {/* Left Column (Login Form) */}
       <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
           <div>
@@ -314,6 +288,32 @@ export default function LoginPage() {
               .
           </p>
         </div>
+      </div>
+      
+      {/* Right Column (Design) */}
+      <div className="hidden lg:flex flex-col justify-between bg-muted/30 p-8 md:p-12 relative overflow-hidden">
+         <Link href="/" className="flex items-center gap-3 font-bold text-2xl z-10">
+            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-10 w-auto drop-shadow-[0_0_8px_hsl(var(--accent))]" />
+            <span>Nyaya Sahayak</span>
+         </Link>
+
+         <div className="z-10 mt-auto mb-8">
+            <h1 className="text-4xl font-bold font-headline tracking-tight leading-tight">Simplifying Legal Aid for Everyone.</h1>
+             <div className="mt-8 space-y-4">
+                {features.map((feature, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                        <div className="bg-primary/10 text-primary p-2 rounded-full">
+                            <feature.icon className="h-5 w-5" />
+                        </div>
+                        <span className="font-medium text-lg">{feature.text}</span>
+                    </div>
+                ))}
+             </div>
+         </div>
+         {loginHeroImage && (
+            <Image src={loginHeroImage.imageUrl} alt={loginHeroImage.description} layout="fill" className="object-cover object-left-top opacity-10 dark:opacity-5" data-ai-hint={loginHeroImage.imageHint}/>
+         )}
+         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-0"></div>
       </div>
     </div>
   );
