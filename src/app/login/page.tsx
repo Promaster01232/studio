@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Loader2, ShieldCheck, BrainCircuit, FileText, Briefcase, Users, CheckCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
   RecaptchaVerifier, 
@@ -22,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { Card, CardContent } from "@/components/ui/card";
 
 // This is to extend the window object for recaptcha
 declare global {
@@ -45,13 +45,6 @@ const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
-const features = [
-    { icon: BrainCircuit, text: "AI-Powered Consultations" },
-    { icon: FileText, text: "Document Generation" },
-    { icon: Briefcase, text: "Case Tracking" },
-    { icon: Users, text: "Expert Legal Network" },
-];
-
 
 export default function LoginPage() {
   const auth = useAuth();
@@ -64,7 +57,7 @@ export default function LoginPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
   
-  const loginHeroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
+  const bgImage = PlaceHolderImages.find(img => img.id === 'news1');
 
   useEffect(() => {
     if (!auth) return;
@@ -174,20 +167,35 @@ export default function LoginPage() {
     <div className="min-h-screen w-full lg:grid lg:grid-cols-2">
       <div id="recaptcha-container"></div>
       
-      {/* Left Column (Login Form) */}
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-8">
-          <div>
-            <Link href="/" className="flex lg:hidden items-center justify-center gap-3 font-bold text-2xl mb-8">
-                <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-12 w-auto drop-shadow-[0_0_8px_hsl(var(--accent))]" />
-            </Link>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-center">Sign in to your account</h2>
-            <p className="mt-2 text-center text-sm text-muted-foreground">
-              Or, get started with a new account.
-            </p>
-          </div>
-          
-          <div className="bg-card p-6 rounded-lg border">
+      {/* Left Column (Design Panel) */}
+      <div className="hidden lg:flex flex-col items-center justify-center bg-gradient-to-br from-primary to-indigo-700 p-8 text-primary-foreground relative">
+         <div className="text-center">
+            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-40 w-auto drop-shadow-[0_0_12px_rgba(255,255,255,0.3)] mx-auto" />
+            <h1 className="text-4xl font-bold font-headline mt-4">Nyaya Sahayak</h1>
+            <p className="mt-2 text-lg opacity-80">YOUR AI LEGAL ASSISTANT</p>
+         </div>
+         <div className="absolute bottom-8 text-center text-xs opacity-50">
+             &copy; {new Date().getFullYear()} Nyaya Sahayak. All Rights Reserved.
+         </div>
+      </div>
+      
+      {/* Right Column (Login Form) */}
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
+        {bgImage && (
+            <Image src={bgImage.imageUrl} alt={bgImage.description} layout="fill" className="object-cover opacity-10 dark:opacity-5" data-ai-hint={bgImage.imageHint}/>
+         )}
+         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background/80 z-0"></div>
+
+        <div className="w-full max-w-md space-y-8 z-10">
+           <div className="text-center lg:hidden">
+             <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-20 w-auto drop-shadow-[0_0_8px_hsl(var(--accent))] mx-auto" />
+           </div>
+
+          <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+            <CardContent className="p-6 sm:p-8">
+              <div className="text-center mb-6">
+                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight">YOUR AI LEGAL ASSISTANT</h2>
+              </div>
               {domainError && (
                   <Alert variant="destructive" className="mb-4">
                       <AlertTitle>Configuration Required</AlertTitle>
@@ -252,7 +260,7 @@ export default function LoginPage() {
                       <span className="w-full border-t border-border/50" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-card px-2 text-muted-foreground">
+                      <span className="bg-card/80 px-2 text-muted-foreground">
                       OR
                       </span>
                   </div>
@@ -263,12 +271,13 @@ export default function LoginPage() {
                       <GoogleIcon className="mr-2 h-4 w-4" />
                       Continue with Google
                   </Button>
-                  <Button variant="outline" className="w-full font-semibold bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-100" onClick={handleAppleLogin} disabled={loading}>
+                  <Button variant="outline" className="w-full font-semibold" onClick={handleAppleLogin} disabled={loading}>
                       <AppleIcon className="mr-2 h-4 w-4 fill-current" />
                       Continue with Apple
                   </Button>
               </div>
-          </div>
+            </CardContent>
+          </Card>
           
           <div className="text-center">
             <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
@@ -288,32 +297,6 @@ export default function LoginPage() {
               .
           </p>
         </div>
-      </div>
-      
-      {/* Right Column (Design) */}
-      <div className="hidden lg:flex flex-col justify-between bg-muted/30 p-8 md:p-12 relative overflow-hidden">
-         <Link href="/" className="flex items-center gap-3 font-bold text-2xl z-10">
-            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-10 w-auto drop-shadow-[0_0_8px_hsl(var(--accent))]" />
-            <span>Nyaya Sahayak</span>
-         </Link>
-
-         <div className="z-10 mt-auto mb-8">
-            <h1 className="text-4xl font-bold font-headline tracking-tight leading-tight">Simplifying Legal Aid for Everyone.</h1>
-             <div className="mt-8 space-y-4">
-                {features.map((feature, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                        <div className="bg-primary/10 text-primary p-2 rounded-full">
-                            <feature.icon className="h-5 w-5" />
-                        </div>
-                        <span className="font-medium text-lg">{feature.text}</span>
-                    </div>
-                ))}
-             </div>
-         </div>
-         {loginHeroImage && (
-            <Image src={loginHeroImage.imageUrl} alt={loginHeroImage.description} layout="fill" className="object-cover object-left-top opacity-10 dark:opacity-5" data-ai-hint={loginHeroImage.imageHint}/>
-         )}
-         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-0"></div>
       </div>
     </div>
   );
