@@ -8,3 +8,4 @@ import '@/ai/flows/understand-legal-document.ts';
 import '@/ai/flows/generate-bond-document.ts';
 import '@/ai/flows/generate-cross-examination-questions.ts';
 import '@/ai/flows/simplify-jargon.ts';
+import '@/ai/flows/search-ecourts.ts';
