@@ -22,7 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // This is to extend the window object for recaptcha
@@ -47,21 +47,6 @@ const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
-const Sparkle = () => (
-    <div className="absolute bottom-4 right-4">
-        <div className="relative w-8 h-8">
-            <div className="absolute top-0 left-1/2 w-1 h-1 bg-white rounded-full animate-pulse [animation-delay:-0.1s]"></div>
-            <div className="absolute top-1/4 left-1/4 w-1.5 h-1.5 bg-white rounded-full animate-pulse [animation-delay:-0.2s]"></div>
-            <div className="absolute top-1/2 left-0 w-1 h-1 bg-white rounded-full animate-pulse [animation-delay:-0.3s]"></div>
-            <div className="absolute top-3/4 left-1/4 w-0.5 h-0.5 bg-white rounded-full animate-pulse [animation-delay:-0.4s]"></div>
-            <div className="absolute top-full left-1/2 w-1 h-1 bg-white rounded-full animate-pulse [animation-delay:-0.5s]"></div>
-            <div className="absolute top-3/4 left-3/4 w-1.5 h-1.5 bg-white rounded-full animate-pulse [animation-delay:-0.6s]"></div>
-            <div className="absolute top-1/2 left-full w-1 h-1 bg-white rounded-full animate-pulse [animation-delay:-0.7s]"></div>
-            <div className="absolute top-1/4 left-3/4 w-0.5 h-0.5 bg-white rounded-full animate-pulse [animation-delay:-0.8s]"></div>
-        </div>
-    </div>
-)
-
 
 export default function LoginPage() {
   const auth = useAuth();
@@ -77,12 +62,14 @@ export default function LoginPage() {
   const bgImage = PlaceHolderImages.find(img => img.id === 'news1');
 
   useEffect(() => {
-    if (!auth || window.recaptchaVerifier) return;
-    const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-      'size': 'invisible',
-      'callback': () => {},
-    });
-    window.recaptchaVerifier = verifier;
+    if (!auth) return;
+    // Prevent re-initializing the verifier on re-renders
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+        'callback': () => {},
+      });
+    }
   }, [auth]);
 
   const handlePhoneLogin = async () => {
@@ -193,24 +180,18 @@ export default function LoginPage() {
       </div>
       
       {/* Right Column (Login Form) */}
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
-        {bgImage && (
-            <Image src={bgImage.imageUrl} alt={bgImage.description} layout="fill" className="object-cover opacity-10 dark:opacity-5" data-ai-hint={bgImage.imageHint}/>
-         )}
-         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background/80 z-0"></div>
-         <Sparkle />
-
-        <div className="w-full max-w-md space-y-8 z-10">
-           <div className="flex flex-col items-center text-center">
-             <Avatar className="h-20 w-20 border-2 border-primary/50 mb-2">
-                <AvatarImage src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" />
-                <AvatarFallback>NS</AvatarFallback>
-            </Avatar>
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">YOUR AI LEGAL ASSISTANT</h2>
-           </div>
-
-          <Card className="bg-card/80 backdrop-blur-sm border-border/50">
-            <CardContent className="p-6 sm:p-8">
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-6">
+          <Card className="bg-card/95">
+            <CardHeader className="text-center items-center p-6 sm:p-8">
+                <Avatar className="h-20 w-20 border-2 border-primary/50 mb-2">
+                    <AvatarImage src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" />
+                    <AvatarFallback>NS</AvatarFallback>
+                </Avatar>
+                <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight">YOUR AI LEGAL ASSISTANT</CardTitle>
+                <CardDescription>Sign in to continue</CardDescription>
+            </CardHeader>
+            <CardContent className="p-6 sm:p-8 pt-0">
               {domainError && (
                   <Alert variant="destructive" className="mb-4">
                       <AlertTitle>Configuration Required</AlertTitle>
@@ -275,7 +256,7 @@ export default function LoginPage() {
                       <span className="w-full border-t border-border/50" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-card/80 px-2 text-muted-foreground">
+                      <span className="bg-card px-2 text-muted-foreground">
                       OR
                       </span>
                   </div>
