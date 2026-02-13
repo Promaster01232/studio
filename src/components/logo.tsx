@@ -5,11 +5,11 @@ export function Logo({ className }: { className?: string }) {
   return (
     <div className={cn("flex items-center justify-center", className)}>
       <Image 
-        src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" 
+        src="https://assets-global.website-files.com/6047a7b68562483569c73335/64883a45c613993c5240b2b8_gavel.png" 
         alt="Nyaya Sahayak Logo" 
-        width={596} 
-        height={524} 
-        className="h-10 w-auto drop-shadow-[0_0_10px_hsl(var(--primary)_/_0.5)]"
+        width={512} 
+        height={512} 
+        className="h-9 w-9 drop-shadow-[0_0_10px_hsl(var(--primary)_/_0.5)]"
         priority
       />
     </div>
