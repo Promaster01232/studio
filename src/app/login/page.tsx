@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -5,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Loader2, Scale } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
   RecaptchaVerifier, 
@@ -22,6 +23,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // This is to extend the window object for recaptcha
 declare global {
@@ -45,6 +47,21 @@ const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
+const Sparkle = () => (
+    <div className="absolute bottom-4 right-4">
+        <div className="relative w-8 h-8">
+            <div className="absolute top-0 left-1/2 w-1 h-1 bg-white rounded-full animate-pulse [animation-delay:-0.1s]"></div>
+            <div className="absolute top-1/4 left-1/4 w-1.5 h-1.5 bg-white rounded-full animate-pulse [animation-delay:-0.2s]"></div>
+            <div className="absolute top-1/2 left-0 w-1 h-1 bg-white rounded-full animate-pulse [animation-delay:-0.3s]"></div>
+            <div className="absolute top-3/4 left-1/4 w-0.5 h-0.5 bg-white rounded-full animate-pulse [animation-delay:-0.4s]"></div>
+            <div className="absolute top-full left-1/2 w-1 h-1 bg-white rounded-full animate-pulse [animation-delay:-0.5s]"></div>
+            <div className="absolute top-3/4 left-3/4 w-1.5 h-1.5 bg-white rounded-full animate-pulse [animation-delay:-0.6s]"></div>
+            <div className="absolute top-1/2 left-full w-1 h-1 bg-white rounded-full animate-pulse [animation-delay:-0.7s]"></div>
+            <div className="absolute top-1/4 left-3/4 w-0.5 h-0.5 bg-white rounded-full animate-pulse [animation-delay:-0.8s]"></div>
+        </div>
+    </div>
+)
+
 
 export default function LoginPage() {
   const auth = useAuth();
@@ -60,14 +77,12 @@ export default function LoginPage() {
   const bgImage = PlaceHolderImages.find(img => img.id === 'news1');
 
   useEffect(() => {
-    if (!auth) return;
-    if (!window.recaptchaVerifier) {
-      const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-        'callback': () => {},
-      });
-      window.recaptchaVerifier = verifier;
-    }
+    if (!auth || window.recaptchaVerifier) return;
+    const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+      'size': 'invisible',
+      'callback': () => {},
+    });
+    window.recaptchaVerifier = verifier;
   }, [auth]);
 
   const handlePhoneLogin = async () => {
@@ -79,9 +94,7 @@ export default function LoginPage() {
     setDomainError(null);
     try {
         const verifier = window.recaptchaVerifier!;
-        
         const fullPhoneNumber = `+91${phone.trim()}`;
-        
         const confirmationResult = await signInWithPhoneNumber(auth, fullPhoneNumber, verifier);
         window.confirmationResult = confirmationResult;
         setOtpSent(true);
@@ -168,15 +181,15 @@ export default function LoginPage() {
       <div id="recaptcha-container"></div>
       
       {/* Left Column (Design Panel) */}
-      <div className="hidden lg:flex flex-col items-center justify-center bg-gradient-to-br from-primary to-indigo-700 p-8 text-primary-foreground relative">
-         <div className="text-center">
-            <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-40 w-auto drop-shadow-[0_0_12px_rgba(255,255,255,0.3)] mx-auto" />
-            <h1 className="text-4xl font-bold font-headline mt-4">Nyaya Sahayak</h1>
-            <p className="mt-2 text-lg opacity-80">YOUR AI LEGAL ASSISTANT</p>
+      <div className="hidden lg:flex flex-col items-center justify-between bg-gradient-to-br from-indigo-700 to-blue-900 p-8 text-primary-foreground relative">
+         <div className="flex-1 flex flex-col items-center justify-center text-center">
+            <div className="relative">
+                <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-3xl animate-pulse [animation-duration:4s]"></div>
+                <Scale className="relative h-48 w-48 text-yellow-300 drop-shadow-[0_0_20px_rgba(252,211,77,0.6)]" strokeWidth={1.5}/>
+            </div>
+            <h2 className="text-5xl font-bold tracking-widest mt-8 font-headline">FOR JUSTICE</h2>
          </div>
-         <div className="absolute bottom-8 text-center text-xs opacity-50">
-             &copy; {new Date().getFullYear()} Nyaya Sahayak. All Rights Reserved.
-         </div>
+         <p className="text-xs opacity-50">Created by IdeaSpark</p>
       </div>
       
       {/* Right Column (Login Form) */}
@@ -185,17 +198,19 @@ export default function LoginPage() {
             <Image src={bgImage.imageUrl} alt={bgImage.description} layout="fill" className="object-cover opacity-10 dark:opacity-5" data-ai-hint={bgImage.imageHint}/>
          )}
          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background/80 z-0"></div>
+         <Sparkle />
 
         <div className="w-full max-w-md space-y-8 z-10">
-           <div className="text-center lg:hidden">
-             <Image src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" width={596} height={524} className="h-20 w-auto drop-shadow-[0_0_8px_hsl(var(--accent))] mx-auto" />
+           <div className="flex flex-col items-center text-center">
+             <Avatar className="h-20 w-20 border-2 border-primary/50 mb-2">
+                <AvatarImage src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" />
+                <AvatarFallback>NS</AvatarFallback>
+            </Avatar>
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">YOUR AI LEGAL ASSISTANT</h2>
            </div>
 
           <Card className="bg-card/80 backdrop-blur-sm border-border/50">
             <CardContent className="p-6 sm:p-8">
-              <div className="text-center mb-6">
-                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight">YOUR AI LEGAL ASSISTANT</h2>
-              </div>
               {domainError && (
                   <Alert variant="destructive" className="mb-4">
                       <AlertTitle>Configuration Required</AlertTitle>
