@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,8 @@ import {
   FileSignature,
   Users,
   BrainCircuit,
+  Library,
+  HeartHandshake,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -60,7 +63,7 @@ const aiFeatures = [
       title: "Bond Generator",
       description: "Generate various types of legal bonds for your needs.",
     },
-]
+];
 
 const newsItems = [
     {
@@ -78,7 +81,29 @@ const newsItems = [
         title: "Plea Challenging Sedition Law Admitted in Supreme Court",
         image: PlaceHolderImages.find(img => img.id === 'news3'),
     }
-]
+];
+
+const resources = [
+    {
+        href: "/dashboard/lawyer-connect",
+        icon: Users,
+        title: "Lawyer Connect",
+        description: "Find and connect with verified legal professionals.",
+    },
+    {
+        href: "/dashboard/learn",
+        icon: Library,
+        title: "Legal Knowledge Hub",
+        description: "Browse articles and guides to understand your rights.",
+    },
+    {
+        href: "/dashboard/ngo-legal-aid",
+        icon: HeartHandshake,
+        title: "NGO & Legal Aid",
+        description: "Connect with organizations offering legal support.",
+    },
+];
+
 
 const SectionTitle = ({children}: {children: React.ReactNode}) => (
     <h2 className="text-2xl font-bold tracking-tight text-foreground/90">{children}</h2>
@@ -129,12 +154,12 @@ export default function DashboardHomePage() {
               </div>
               <div className="flex items-center gap-2">
                   <Button variant="outline" asChild><Link href="/dashboard/lawyer-connect">Find a Lawyer</Link></Button>
-                   <Button>Ask AI Assistant</Button>
+                   <Button asChild><Link href="/dashboard/support">Ask AI Assistant</Link></Button>
               </div>
           </div>
         </MotionWrapper>
 
-        <div className="space-y-8">
+        <div className="space-y-12">
           {/* Quick Access */}
           <div className="space-y-6">
               <MotionWrapper delay={0.1}>
@@ -159,7 +184,7 @@ export default function DashboardHomePage() {
                   <MotionWrapper delay={0.3}>
                       <Card className="hover:border-primary/50 transition-colors">
                         <CardContent className="p-6">
-                            <Link href="/dashboard/lawyer-connect" className="flex items-center gap-4 group">
+                            <Link href="/dashboard/support" className="flex items-center gap-4 group">
                                 <div className="p-3 rounded-lg bg-primary/10">
                                     <MessageSquare className="h-6 w-6 text-primary" />
                                 </div>
@@ -194,6 +219,66 @@ export default function DashboardHomePage() {
                   ))}
               </div>
           </div>
+
+          {/* Latest News Section */}
+          <div className="space-y-6">
+            <MotionWrapper delay={0.6}>
+              <SectionTitle>Latest Legal News</SectionTitle>
+            </MotionWrapper>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {newsItems.map((item, index) => (
+                <MotionWrapper key={item.id} delay={0.7 + index * 0.1}>
+                  <Link href="/dashboard/research-analytics" className="block group">
+                    <Card className="overflow-hidden h-full flex flex-col">
+                      {item.image && (
+                        <div className="relative aspect-video">
+                          <Image
+                            src={item.image.imageUrl}
+                            alt={item.title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            data-ai-hint={item.image.imageHint}
+                          />
+                        </div>
+                      )}
+                      <div className="p-4 flex-grow">
+                        <h3 className="font-semibold leading-snug">{item.title}</h3>
+                      </div>
+                    </Card>
+                  </Link>
+                </MotionWrapper>
+              ))}
+            </div>
+          </div>
+          
+          {/* Explore Resources Section */}
+          <div className="space-y-6">
+            <MotionWrapper delay={0.8}>
+              <SectionTitle>Explore Resources</SectionTitle>
+            </MotionWrapper>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {resources.map((resource, index) => (
+                <MotionWrapper key={resource.href} delay={0.9 + index * 0.1}>
+                  <Link href={resource.href} className="block group h-full">
+                    <Card className="h-full hover:border-primary/50 transition-colors">
+                      <CardContent className="p-6">
+                        <div className="flex flex-col items-start gap-4">
+                          <div className="p-3 rounded-lg bg-primary/10">
+                            <resource.icon className="h-6 w-6 text-primary" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-lg">{resource.title}</h3>
+                            <p className="text-sm text-muted-foreground mt-1">{resource.description}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </MotionWrapper>
+              ))}
+            </div>
+          </div>
+
         </div>
     </div>
   );
