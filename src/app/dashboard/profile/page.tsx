@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from '@/components/theme-provider';
@@ -25,8 +25,9 @@ type UserProfile = {
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: string;
+  mobileNumber: string;
   userType: string;
+  photoURL?: string;
 }
 
 export default function ProfilePage() {
@@ -46,6 +47,9 @@ export default function ProfilePage() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [userType, setUserType] = useState('citizen');
+  const [photoURL, setPhotoURL] = useState('');
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
 
   useEffect(() => {
@@ -61,6 +65,9 @@ export default function ProfilePage() {
           setLastName(data.lastName);
           setEmail(data.email);
           setUserType(data.userType);
+          if (data.photoURL) {
+            setPhotoURL(data.photoURL);
+          }
         } else {
             router.push('/create-profile');
         }
@@ -73,6 +80,21 @@ export default function ProfilePage() {
     }
   }, [auth, firestore, router]);
 
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoURL(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
   const handleSaveChanges = async () => {
     if (!auth?.currentUser || !firestore || !userProfile) return;
     setSaving(true);
@@ -83,6 +105,7 @@ export default function ProfilePage() {
             lastName,
             email,
             userType,
+            photoURL,
         }, { merge: true });
         toast({ title: 'Profile Updated', description: 'Your changes have been saved.' });
     } catch (e) {
@@ -152,9 +175,17 @@ export default function ProfilePage() {
       {/* User Info Card */}
       <Card>
         <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
-          <Avatar className="h-24 w-24 border-2 border-primary">
-            <AvatarFallback>{`${firstName.charAt(0)}${lastName.charAt(0)}`}</AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <Avatar className="h-24 w-24 border-2 border-primary">
+              <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} />
+              <AvatarFallback>{`${firstName.charAt(0)}${lastName.charAt(0)}`}</AvatarFallback>
+            </Avatar>
+            <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8" onClick={handleAvatarClick}>
+              <Edit className="h-4 w-4" />
+              <span className="sr-only">Change profile picture</span>
+            </Button>
+            <Input type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
+          </div>
           <div className="flex-1 text-center sm:text-left">
             <h2 className="text-2xl font-bold font-headline">{firstName} {lastName}</h2>
             <p className="text-muted-foreground">{email}</p>
@@ -184,7 +215,7 @@ export default function ProfilePage() {
                  <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" type="tel" value={userProfile?.phoneNumber || ''} disabled />
+                    <Input id="phone" type="tel" value={userProfile?.mobileNumber || ''} disabled />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="userType">I am a</Label>
