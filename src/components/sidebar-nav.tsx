@@ -24,8 +24,6 @@ import {
   Newspaper,
   Landmark,
   LifeBuoy,
-  Mail,
-  Github,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -61,8 +59,6 @@ const professionalTools = [
 const general = [
     { href: "/dashboard/profile", icon: CircleUserRound, label: "My Profile", tooltip: "My Profile" },
     { href: "/dashboard/support", icon: LifeBuoy, label: "Support", tooltip: "Support" },
-    { href: "/dashboard/contact", icon: Mail, label: "Contact Us", tooltip: "Contact Us" },
-    { href: "/dashboard/github", icon: Github, label: "GitHub", tooltip: "GitHub" },
 ];
 
 const MenuSection = ({ title, items, checkActive }: { title: string; items: typeof mainItems; checkActive: (href: string) => boolean }) => (
