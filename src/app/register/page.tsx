@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore } from "@/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +28,9 @@ export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
@@ -40,11 +42,20 @@ export default function RegisterPage() {
       });
       return;
     }
-    if (!firstName || !lastName || !email || !password) {
+    if (!firstName || !lastName || !email || !mobileNumber || !password || !confirmPassword) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Please fill in all fields.",
+      });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast({
+        variant: "destructive",
+        title: "Passwords do not match",
+        description: "Please make sure your passwords match.",
       });
       return;
     }
@@ -60,12 +71,16 @@ export default function RegisterPage() {
       );
       const user = userCredential.user;
 
+      // Send verification email
+      await sendEmailVerification(user);
+
       // Create user profile in Firestore
       const userProfile = {
         uid: user.uid,
         firstName,
         lastName,
         email,
+        mobileNumber,
         userType: "citizen", // Default user type
       };
 
@@ -73,9 +88,9 @@ export default function RegisterPage() {
 
       toast({
         title: "Account Created!",
-        description: "Welcome to Nyaya Sahayak.",
+        description: "A verification email has been sent. Please check your inbox and verify your account to log in.",
       });
-      router.push("/dashboard");
+      router.push("/login");
 
     } catch (error: any) {
       console.error("Registration error:", error);
@@ -128,8 +143,24 @@ export default function RegisterPage() {
             />
           </div>
           <div className="grid gap-2">
+            <Label htmlFor="mobile-number">Mobile Number</Label>
+            <Input
+              id="mobile-number"
+              type="tel"
+              placeholder="Your mobile number"
+              required
+              value={mobileNumber}
+              onChange={(e) => setMobileNumber(e.target.value)}
+              disabled={loading}
+            />
+          </div>
+          <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} />
           </div>
           <Button type="submit" className="w-full" onClick={handleRegister} disabled={loading}>
             {loading ? <Loader2 className="animate-spin" /> : "Create an account"}
