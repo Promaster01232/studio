@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -7,11 +6,25 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share2, Bookmark } from "lucide-react";
+import { Heart, MessageCircle, Share2, Bookmark, PlusCircle } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
-const newsFeed = [
+
+const initialNewsFeed = [
     {
         id: 1,
         author: "The Legal Times",
@@ -60,6 +73,8 @@ const newsFeed = [
 
 export default function ResearchAnalyticsPage() {
     const { toast } = useToast();
+    const [feed, setFeed] = useState(initialNewsFeed);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleAction = (action: string) => {
         toast({
@@ -68,15 +83,83 @@ export default function ResearchAnalyticsPage() {
         });
     };
 
+    const handlePostSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const title = formData.get('title') as string;
+        const content = formData.get('content') as string;
+
+        if (!title || !content) {
+            toast({
+                variant: 'destructive',
+                title: 'Missing fields',
+                description: 'Please fill out both title and content.'
+            });
+            return;
+        }
+
+        const newPost = {
+            id: Date.now(),
+            author: "Me", // In a real app, you'd get the current user's name
+            authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer6'), // A generic avatar for the user
+            date: "Just now",
+            title,
+            content,
+            image: PlaceHolderImages.find(img => img.id === 'news4'), // Using a generic placeholder for new posts
+            likes: 0,
+            comments: 0,
+        };
+
+        setFeed(prevFeed => [newPost, ...prevFeed]);
+        setIsDialogOpen(false);
+        toast({
+            title: "Post Published!",
+            description: "Your new post has been added to the feed."
+        });
+    };
+
+
     return (
         <div className="space-y-8">
             <PageHeader
                 title="Legal News & Updates"
                 description="Stay informed with the latest legal news and notifications."
-            />
+            >
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button>
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Create Post
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle>Create a New Post</DialogTitle>
+                            <DialogDescription>
+                                Share a legal news update with the community. Click post when you're done.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <form onSubmit={handlePostSubmit}>
+                          <div className="grid gap-4 py-4">
+                              <div className="space-y-2">
+                                  <Label htmlFor="title">Title</Label>
+                                  <Input id="title" name="title" placeholder="Your post title" required />
+                              </div>
+                              <div className="space-y-2">
+                                  <Label htmlFor="content">Content</Label>
+                                  <Textarea id="content" name="content" placeholder="Write your news update here..." required rows={5}/>
+                              </div>
+                          </div>
+                          <DialogFooter>
+                              <Button type="submit">Post</Button>
+                          </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+            </PageHeader>
 
             <div className="max-w-3xl mx-auto space-y-6">
-                {newsFeed.map((item) => (
+                {feed.map((item) => (
                     <Card key={item.id} className="overflow-hidden">
                         <CardContent className="p-0">
                             <div className="p-4 sm:p-6">
