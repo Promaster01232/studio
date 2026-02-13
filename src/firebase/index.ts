@@ -15,7 +15,19 @@ function initializeFirebase() {
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     firestore = getFirestore(app);
-    enableIndexedDbPersistence(firestore).catch((err) => {});
+    if (typeof window !== 'undefined') {
+        enableIndexedDbPersistence(firestore).catch((err) => {
+            if (err.code == 'failed-precondition') {
+                // Multiple tabs open, persistence can only be enabled
+                // in one tab at a time.
+                console.warn('Firestore persistence failed, multiple tabs may be open.');
+            } else if (err.code == 'unimplemented') {
+                // The current browser does not support all of the
+                // features required to enable persistence
+                console.warn('Firestore persistence is not supported in this browser.');
+            }
+        });
+    }
   } else {
     app = getApp();
     auth = getAuth(app);
