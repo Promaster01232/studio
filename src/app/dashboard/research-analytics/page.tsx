@@ -20,7 +20,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ImagePlus, ListPlus, X } from "lucide-react";
+import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ImagePlus, ListPlus, X, Link as LinkIcon } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
@@ -35,6 +35,7 @@ interface Post {
     title: string;
     content: string;
     image?: string; // data URL
+    link?: string;
     poll?: {
         options: { text: string; votes: number }[];
     };
@@ -80,6 +81,15 @@ function PostCard({ post }: { post: Post }) {
                     <h3 className="text-lg font-bold font-headline leading-snug mb-2">{post.title}</h3>
                     <p className="text-muted-foreground text-sm whitespace-pre-line">{post.content}</p>
                 </div>
+                
+                {post.link && (
+                    <div className="px-4 sm:px-6 pb-4">
+                        <a href={post.link} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-primary hover:underline flex items-center gap-2 break-all">
+                            <LinkIcon className="h-4 w-4 flex-shrink-0" />
+                            <span>{post.link}</span>
+                        </a>
+                    </div>
+                )}
                 
                 {post.image && (
                     <div className="relative aspect-video">
@@ -142,6 +152,7 @@ export default function ResearchAnalyticsPage() {
     // Dialog state
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [link, setLink] = useState('');
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [showPollCreator, setShowPollCreator] = useState(false);
     const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
@@ -191,6 +202,7 @@ export default function ResearchAnalyticsPage() {
     const resetDialog = () => {
         setTitle('');
         setContent('');
+        setLink('');
         setImagePreview(null);
         setShowPollCreator(false);
         setPollOptions(['', '']);
@@ -246,6 +258,7 @@ export default function ResearchAnalyticsPage() {
             authorAvatar: userProfile.photoURL || '',
             title,
             content,
+            link: link || undefined,
             likes: 0,
             comments: 0,
         };
@@ -334,6 +347,10 @@ export default function ResearchAnalyticsPage() {
                               <div className="space-y-2">
                                   <Label htmlFor="content">Content</Label>
                                   <Textarea id="content" name="content" value={content} onChange={e => setContent(e.target.value)} placeholder="Write your news update here..." required rows={5} disabled={isPosting} />
+                              </div>
+                               <div className="space-y-2">
+                                  <Label htmlFor="link">Link (Optional)</Label>
+                                  <Input id="link" name="link" value={link} onChange={e => setLink(e.target.value)} placeholder="https://example.com/news-article" disabled={isPosting} />
                               </div>
 
                                {imagePreview && (

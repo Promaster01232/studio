@@ -6,26 +6,26 @@ import { firebaseConfig } from './config';
 import { FirebaseProvider, useFirebase, useFirebaseApp, useFirestore, useAuth } from './provider';
 import { FirebaseClientProvider } from './client-provider';
 
-// This is a flag to ensure persistence is only enabled once.
-let persistenceEnabled = false;
+// Initialize Firebase and its services once at the module level.
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const firestore = getFirestore(app);
 
-function initializeFirebase() {
-  const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const firestore = getFirestore(app);
-
-  // This should only run on the client, and only once.
-  if (typeof window !== 'undefined' && !persistenceEnabled) {
-    persistenceEnabled = true;
-    enableIndexedDbPersistence(firestore).catch((err) => {
-        if (err.code == 'failed-precondition') {
-            console.warn('Firestore persistence failed, multiple tabs may be open.');
-        } else if (err.code == 'unimplemented') {
-            console.warn('Firestore persistence is not supported in this browser.');
-        }
-    });
+// Enable persistence on the client, handling potential errors.
+if (typeof window !== 'undefined') {
+  try {
+    enableIndexedDbPersistence(firestore);
+  } catch (err: any) {
+    if (err.code === 'failed-precondition') {
+      console.warn('Firestore persistence failed, likely due to multiple tabs being open.');
+    } else if (err.code === 'unimplemented') {
+      console.warn('Firestore persistence is not supported in this browser.');
+    }
   }
+}
 
+// This function now just returns the singleton instances.
+function initializeFirebase() {
   return { app, auth, firestore };
 }
 
