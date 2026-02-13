@@ -1,7 +1,7 @@
-
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -101,6 +101,18 @@ export default function ContactUsPage() {
           </CardContent>
         </Card>
       </div>
+
+       <div className="text-center pt-8">
+        <Link href="https://www.ideasparkweb.com" target="_blank" rel="noopener noreferrer" className="inline-block group">
+            <p className="text-sm text-muted-foreground transition-colors group-hover:text-primary">
+              Designed & Developed by
+            </p>
+            <h2 className="text-2xl font-bold font-headline mt-1 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] transition-transform group-hover:scale-105">
+                IdeaSpark
+            </h2>
+        </Link>
+      </div>
+
     </div>
   );
 }
