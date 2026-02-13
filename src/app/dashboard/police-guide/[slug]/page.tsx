@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useParams, notFound } from "next/navigation";
@@ -9,10 +10,9 @@ import { ArrowLeft } from "lucide-react";
 import { guides } from "../data";
 
 export default function GuideDetailPage() {
-    const params = useParams();
-    const slug = params.slug;
+    const params = useParams<{ slug: string }>();
 
-    const guide = guides.find((g) => g.slug === slug);
+    const guide = guides.find((g) => g.slug === params.slug);
 
     if (!guide) {
         notFound();

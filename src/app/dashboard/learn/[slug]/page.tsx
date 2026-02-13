@@ -12,11 +12,10 @@ import { useLanguage } from "@/components/language-provider";
 import { useMemo } from "react";
 
 export default function LearnTopicDetailPage() {
-    const params = useParams();
-    const slug = params.slug;
+    const params = useParams<{ slug: string }>();
     const { language } = useLanguage();
 
-    const topic = topics.find((t) => t.slug === slug);
+    const topic = topics.find((t) => t.slug === params.slug);
 
     const localizedContent = useMemo(() => {
         if (!topic) return "";
