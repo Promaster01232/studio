@@ -167,22 +167,10 @@ export default function LoginPage() {
     <div className="min-h-screen w-full lg:grid lg:grid-cols-2">
       <div id="recaptcha-container"></div>
       
-      {/* Left Column (Design Panel) */}
-      <div className="hidden lg:flex flex-col items-center justify-between bg-gradient-to-br from-indigo-700 to-blue-900 p-8 text-primary-foreground relative">
-         <div className="flex-1 flex flex-col items-center justify-center text-center">
-            <div className="relative">
-                <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-3xl animate-pulse [animation-duration:4s]"></div>
-                <Scale className="relative h-48 w-48 text-yellow-300 drop-shadow-[0_0_20px_rgba(252,211,77,0.6)]" strokeWidth={1.5}/>
-            </div>
-            <h2 className="text-5xl font-bold tracking-widest mt-8 font-headline">FOR JUSTICE</h2>
-         </div>
-         <p className="text-xs opacity-50">Created by IdeaSpark</p>
-      </div>
-      
-      {/* Right Column (Login Form) */}
+      {/* Left Column (Login Form) */}
       <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-6">
-          <Card className="bg-card/95">
+          <Card>
             <CardHeader className="text-center items-center p-6 sm:p-8">
                 <Avatar className="h-20 w-20 border-2 border-primary/50 mb-2">
                     <AvatarImage src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" />
@@ -293,6 +281,18 @@ export default function LoginPage() {
               .
           </p>
         </div>
+      </div>
+      
+      {/* Right Column (Design Panel) */}
+      <div className="hidden lg:flex flex-col items-center justify-between bg-gradient-to-br from-indigo-700 to-blue-900 p-8 text-primary-foreground relative">
+         <div className="flex-1 flex flex-col items-center justify-center text-center">
+            <div className="relative">
+                <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-3xl animate-pulse [animation-duration:4s]"></div>
+                <Scale className="relative h-48 w-48 text-yellow-300 drop-shadow-[0_0_20px_rgba(252,211,77,0.6)]" strokeWidth={1.5}/>
+            </div>
+            <h2 className="text-5xl font-bold tracking-widest mt-8 font-headline">FOR JUSTICE</h2>
+         </div>
+         <p className="text-xs opacity-50">Created by IdeaSpark</p>
       </div>
     </div>
   );
