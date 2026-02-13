@@ -1,27 +1,105 @@
+
+"use client";
+
+import { useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Briefcase } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Building, FileText, ListChecks } from "lucide-react";
+
+const complianceItems = [
+    { id: "gst", label: "GST Registration & Filing" },
+    { id: "pf", label: "Provident Fund (PF) Registration" },
+    { id: "esi", label: "ESI Registration" },
+    { id: "trade-license", label: "Trade License" },
+    { id: "shops-act", label: "Shops and Establishment Act Registration" },
+    { id: "msme-reg", label: "MSME/Udyam Registration" },
+];
+
 
 export default function BusinessMsmePage() {
-  return (
-    <div>
-      <PageHeader
-        title="Business & MSME Tools"
-        description="Specialized legal tools for businesses and MSMEs."
-      />
-      <Card className="flex flex-col items-center justify-center text-center py-20">
-        <CardHeader>
-            <div className="mx-auto bg-primary/10 p-4 rounded-full">
-                <Briefcase className="h-12 w-12 text-primary" />
+    const [businessType, setBusinessType] = useState("sole-proprietorship");
+    const [ndaParty1, setNdaParty1] = useState("");
+    const [ndaParty2, setNdaParty2] = useState("");
+
+    return (
+        <div className="space-y-8">
+            <PageHeader
+                title="Business & MSME Tools"
+                description="Specialized legal tools for businesses and MSMEs."
+            />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                {/* Column 1: Business Tools */}
+                <div className="space-y-8">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2"><Building className="h-5 w-5"/> Business Registration Assistant</CardTitle>
+                             <CardDescription>Get guidance on registering your business entity.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="business-type">Select Business Type</Label>
+                                <Select value={businessType} onValueChange={setBusinessType}>
+                                    <SelectTrigger id="business-type"><SelectValue/></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="sole-proprietorship">Sole Proprietorship</SelectItem>
+                                        <SelectItem value="partnership">Partnership Firm</SelectItem>
+                                        <SelectItem value="llp">Limited Liability Partnership (LLP)</SelectItem>
+                                        <SelectItem value="pvt-ltd">Private Limited Company</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                             <Button className="w-full">Get Registration Steps</Button>
+                        </CardContent>
+                    </Card>
+
+                     <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5"/> Basic Contract Generator</CardTitle>
+                             <CardDescription>Generate a simple Non-Disclosure Agreement (NDA).</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                             <div className="space-y-2">
+                                <Label htmlFor="nda-party1">Disclosing Party Name</Label>
+                                <Input id="nda-party1" value={ndaParty1} onChange={e => setNdaParty1(e.target.value)} placeholder="e.g., ABC Innovations Pvt. Ltd." />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="nda-party2">Receiving Party Name</Label>
+                                <Input id="nda-party2" value={ndaParty2} onChange={e => setNdaParty2(e.target.value)} placeholder="e.g., John Doe" />
+                            </div>
+                            <Button className="w-full" variant="secondary">Generate NDA</Button>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Column 2: Compliance Checklist */}
+                <Card className="lg:col-span-1">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><ListChecks className="h-5 w-5" /> Annual Compliance Checklist</CardTitle>
+                        <CardDescription>Track mandatory compliances for your business.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-muted-foreground">Select items you have completed:</p>
+                        <div className="space-y-3">
+                            {complianceItems.map(item => (
+                                <div key={item.id} className="flex items-center space-x-3 p-3 rounded-md border bg-background hover:bg-muted/50">
+                                    <Checkbox id={item.id} />
+                                    <Label htmlFor={item.id} className="flex-1 cursor-pointer">
+                                        {item.label}
+                                    </Label>
+                                </div>
+                            ))}
+                        </div>
+                         <Button className="w-full mt-4">Save Checklist Progress</Button>
+                    </CardContent>
+                </Card>
+
             </div>
-            <CardTitle className="mt-4 font-headline">Coming Soon</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground max-w-md">
-            We are developing a suite of tools tailored for business and MSME legal needs. This section will be available soon.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
+        </div>
+    );
 }
