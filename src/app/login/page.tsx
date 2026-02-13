@@ -17,7 +17,11 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Logo } from "@/components/logo";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -35,6 +39,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
+
+  const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
   const handleEmailLogin = async () => {
     if (!auth || !email || !password) {
@@ -104,87 +110,104 @@ export default function LoginPage() {
   const handleGoogleLogin = () => handleSocialLogin(new GoogleAuthProvider());
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4">
-        {domainError && (
-            <Alert variant="destructive" className="mb-4">
-                <AlertTitle>Configuration Required</AlertTitle>
-                <AlertDescription className="text-xs space-y-2">
-                  <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
-                  <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
-                  <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive">
-                      <a href="https://console.firebase.google.com/project/ai-naya-shahayak/authentication/settings" target="_blank" rel="noopener noreferrer">
-                          Open Firebase Auth Settings
-                      </a>
-                  </Button>
-                </AlertDescription>
-            </Alert>
-        )}
-        
-        <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link href="#" className="ml-auto inline-block text-sm underline">
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input 
-                id="password" 
-                type="password" 
-                required 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-            <Button type="submit" className="w-full" onClick={handleEmailLogin} disabled={loading}>
-              {loading ? <Loader2 className="animate-spin" /> : "Login"}
-            </Button>
+    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0">
+      <div className="p-8 flex flex-col justify-center">
+        <div className="flex items-center gap-3 mb-6">
+            <Logo />
+            <h1 className="text-2xl font-bold font-headline">Nyaya Sahayak</h1>
         </div>
-        
-        <div className="relative my-2">
-            <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
-                </span>
-            </div>
-        </div>
+        <h2 className="text-3xl font-bold">Welcome Back</h2>
+        <p className="text-muted-foreground mt-2 mb-8">
+            Enter your email below to login to your account.
+        </p>
 
-        <div className="grid grid-cols-1 gap-2">
-            <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
-                <GoogleIcon className="mr-2 h-4 w-4" />
-                Google
-            </Button>
+        <div className="grid gap-4">
+            {domainError && (
+                <Alert variant="destructive" className="mb-4">
+                    <AlertTitle>Configuration Required</AlertTitle>
+                    <AlertDescription className="text-xs space-y-2">
+                    <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
+                    <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
+                    <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive">
+                        <a href="https://console.firebase.google.com/project/ai-naya-shahayak/authentication/settings" target="_blank" rel="noopener noreferrer">
+                            Open Firebase Auth Settings
+                        </a>
+                    </Button>
+                    </AlertDescription>
+                </Alert>
+            )}
+            
+            <div className="space-y-4">
+                <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={loading}
+                />
+                </div>
+                <div className="space-y-2">
+                <div className="flex items-center">
+                    <Label htmlFor="password">Password</Label>
+                    <Link href="#" className="ml-auto inline-block text-sm underline">
+                    Forgot your password?
+                    </Link>
+                </div>
+                <Input 
+                    id="password" 
+                    type="password" 
+                    required 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={loading}
+                />
+                </div>
+                <Button type="submit" className="w-full" onClick={handleEmailLogin} disabled={loading}>
+                {loading ? <Loader2 className="animate-spin" /> : "Login"}
+                </Button>
+            </div>
+            
+            <div className="relative my-2">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                    Or continue with
+                    </span>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+                <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
+                    <GoogleIcon className="mr-2 h-4 w-4" />
+                    Google
+                </Button>
+            </div>
+            <div className="mt-4 text-center text-sm">
+            Don&apos;t have an account?{" "}
+            <Link href="/register" className="underline">
+                Sign up
+            </Link>
+            </div>
         </div>
-         <div className="mt-4 text-center text-sm">
-          Don&apos;t have an account?{" "}
-          <Link href="/register" className="underline">
-            Sign up
-          </Link>
-        </div>
-      </CardContent>
+      </div>
+      <div className="hidden md:block relative">
+        {heroImage && (
+            <Image 
+                src={heroImage.imageUrl}
+                alt={heroImage.description}
+                fill
+                className="object-cover"
+                data-ai-hint={heroImage.imageHint}
+            />
+        )}
+         <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
+      </div>
     </Card>
   );
 }

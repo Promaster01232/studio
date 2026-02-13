@@ -8,10 +8,12 @@ import {
   SidebarContent,
   SidebarInset,
   SidebarFooter,
+  SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, SunMoon, Languages, Loader2, User } from "lucide-react";
+import { LogOut, SunMoon, Languages, Loader2, User, Search } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -36,6 +38,7 @@ import { useLanguage, type Language } from "@/components/language-provider";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { cn } from "@/lib/utils";
 
 const languages: { code: Language, name: string }[] = [
     { code: "en", name: "English" },
@@ -45,6 +48,34 @@ const languages: { code: Language, name: string }[] = [
     { code: "bn", name: "Bangla" },
 ];
 
+
+function Header() {
+    const { state } = useSidebar();
+    
+    return (
+        <header className={cn(
+            "sticky top-0 z-10 flex h-16 items-center gap-4 border-b px-6 transition-all",
+            "border-black/5 bg-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-xl dark:border-white/10 dark:bg-black/20"
+        )}>
+            <div className="flex items-center gap-2 md:hidden">
+                <SidebarTrigger />
+                <Logo />
+            </div>
+            <div className={cn(
+                "hidden md:flex items-center gap-2 transition-all duration-200 ease-in-out",
+                state === 'expanded' && "opacity-0 -translate-x-4"
+                )}>
+                <SidebarTrigger />
+            </div>
+            <div className="flex-1">
+                <Button variant="outline" className="w-full max-w-xs justify-start gap-2 text-muted-foreground">
+                    <Search className="h-4 w-4" />
+                    Search...
+                </Button>
+            </div>
+        </header>
+    );
+}
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -87,7 +118,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             setProfileLoading(false);
           });
       } else {
-        // Not logged in, treat as guest
         setProfileLoading(false);
         setUserProfile(null);
       }
@@ -115,7 +145,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader className="p-4">
+        <SidebarHeader>
           <Logo />
         </SidebarHeader>
         <SidebarContent className="pt-0">
@@ -133,17 +163,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           ) : userProfile ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left">
+                <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left group data-[state=collapsed]:w-10 data-[state=collapsed]:justify-center">
                   <Avatar className="h-9 w-9">
                       <AvatarFallback>{getAvatarFallback()}</AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 truncate">
+                  <div className="flex-1 truncate group-data-[state=collapsed]:hidden">
                     <div className="font-semibold text-sm truncate">{userProfile.firstName} {userProfile.lastName}</div>
                     <div className="text-xs text-muted-foreground truncate">{userProfile.email}</div>
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" align="start" className="w-56 mb-2 ml-2">
+              <DropdownMenuContent side="right" align="start" className="w-56 mb-2 ml-2">
                 <DropdownMenuLabel>
                     <div className="font-semibold">{userProfile.firstName} {userProfile.lastName}</div>
                     <div className="text-xs text-muted-foreground">{userProfile.email}</div>
@@ -195,16 +225,18 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <main
-          className="h-screen flex flex-col overflow-y-auto bg-transparent data-[chat=true]:h-screen data-[chat=true]:p-0 p-4 md:p-6 lg:p-8"
-          data-chat={isChatPage}
-        >
-          {showContent ? children : (
-            <div className="flex flex-1 items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin" />
-            </div>
-          )}
-        </main>
+        <div className="flex flex-col h-screen">
+          <Header />
+          <main
+            className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8"
+          >
+            {showContent ? children : (
+              <div className="flex flex-1 items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin" />
+              </div>
+            )}
+          </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

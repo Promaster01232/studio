@@ -5,6 +5,9 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/language-provider";
 import { FirebaseClientProvider } from "@/firebase/client-provider";
+import { Inter } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: "Nyaya Sahayak",
@@ -18,12 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
-      <body className="font-body antialiased">
+      <body className={`font-body antialiased has-glassmorphism ${inter.variable}`}>
         <ThemeProvider>
           <LanguageProvider>
             <FirebaseClientProvider>
@@ -36,4 +34,3 @@ export default function RootLayout({
     </html>
   );
 }
-

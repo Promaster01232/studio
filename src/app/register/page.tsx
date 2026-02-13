@@ -10,14 +10,14 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { Logo } from "@/components/logo";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function RegisterPage() {
   const auth = useAuth();
@@ -32,6 +32,8 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
   const handleRegister = async () => {
     if (!auth || !firestore) {
@@ -63,7 +65,6 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -71,17 +72,15 @@ export default function RegisterPage() {
       );
       const user = userCredential.user;
 
-      // Send verification email
       await sendEmailVerification(user);
 
-      // Create user profile in Firestore
       const userProfile = {
         uid: user.uid,
         firstName,
         lastName,
         email,
         mobileNumber,
-        userType: "citizen", // Default user type
+        userType: "citizen",
       };
 
       await setDoc(doc(firestore, "users", user.uid), userProfile);
@@ -111,68 +110,86 @@ export default function RegisterPage() {
   };
 
   return (
-    <Card className="mx-auto max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Sign Up</CardTitle>
-        <CardDescription>
-          Enter your information to create an account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="first-name">First name</Label>
-              <Input id="first-name" placeholder="Max" required value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} />
+    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0">
+      <div className="p-8 flex flex-col justify-center">
+        <div className="flex items-center gap-3 mb-6">
+            <Logo />
+            <h1 className="text-2xl font-bold font-headline">Nyaya Sahayak</h1>
+        </div>
+        <h2 className="text-3xl font-bold">Create an Account</h2>
+        <p className="text-muted-foreground mt-2 mb-8">
+          Enter your information to create an account.
+        </p>
+        <CardContent className="p-0">
+            <div className="grid gap-4">
+            <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                <Label htmlFor="first-name">First name</Label>
+                <Input id="first-name" placeholder="Max" required value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} />
+                </div>
+                <div className="grid gap-2">
+                <Label htmlFor="last-name">Last name</Label>
+                <Input id="last-name" placeholder="Robinson" required value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} />
+                </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="last-name">Last name</Label>
-              <Input id="last-name" placeholder="Robinson" required value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} />
+                <Label htmlFor="email">Email</Label>
+                <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+                />
             </div>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
+            <div className="grid gap-2">
+                <Label htmlFor="mobile-number">Mobile Number</Label>
+                <Input
+                id="mobile-number"
+                type="tel"
+                placeholder="Your mobile number"
+                required
+                value={mobileNumber}
+                onChange={(e) => setMobileNumber(e.target.value)}
+                disabled={loading}
+                />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="confirm-password">Confirm Password</Label>
+                    <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} />
+                </div>
+            </div>
+            <Button type="submit" className="w-full" onClick={handleRegister} disabled={loading}>
+                {loading ? <Loader2 className="animate-spin" /> : "Create an account"}
+            </Button>
+            </div>
+            <div className="mt-4 text-center text-sm">
+            Already have an account?{" "}
+            <Link href="/login" className="underline">
+                Sign in
+            </Link>
+            </div>
+        </CardContent>
+      </div>
+      <div className="hidden md:block relative">
+        {heroImage && (
+            <Image 
+                src={heroImage.imageUrl}
+                alt={heroImage.description}
+                fill
+                className="object-cover"
+                data-ai-hint={heroImage.imageHint}
             />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="mobile-number">Mobile Number</Label>
-            <Input
-              id="mobile-number"
-              type="tel"
-              placeholder="Your mobile number"
-              required
-              value={mobileNumber}
-              onChange={(e) => setMobileNumber(e.target.value)}
-              disabled={loading}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} />
-          </div>
-          <Button type="submit" className="w-full" onClick={handleRegister} disabled={loading}>
-            {loading ? <Loader2 className="animate-spin" /> : "Create an account"}
-          </Button>
-        </div>
-        <div className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link href="/login" className="underline">
-            Sign in
-          </Link>
-        </div>
-      </CardContent>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
+      </div>
     </Card>
   );
 }
