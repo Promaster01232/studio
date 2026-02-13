@@ -73,7 +73,6 @@ export function SidebarNav() {
               tooltip={{ children: item.tooltip }}
             >
               <Link href={item.href}>
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-data-[active=true]:h-6 bg-sidebar-primary rounded-r-full transition-all duration-300"></div>
                 <item.icon />
                 <span>{item.label}</span>
               </Link>
