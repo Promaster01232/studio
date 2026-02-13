@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Sparkles } from "lucide-react";
 
 export default function ContactUsPage() {
   const [name, setName] = useState("");
@@ -107,9 +107,12 @@ export default function ContactUsPage() {
             <p className="text-sm text-muted-foreground transition-colors group-hover:text-primary">
               Designed & Developed by
             </p>
-            <h2 className="text-2xl font-bold font-headline mt-1 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] transition-transform group-hover:scale-105">
-                IdeaSpark
-            </h2>
+            <div className="flex items-center justify-center gap-2 mt-1 transition-transform group-hover:scale-105">
+                <Sparkles className="h-7 w-7 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]" />
+                <h2 className="text-2xl font-bold font-headline bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
+                    IdeaSpark
+                </h2>
+            </div>
         </Link>
       </div>
 
