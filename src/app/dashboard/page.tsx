@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -76,18 +75,25 @@ export default function DashboardHomePage() {
   const TypingCaret = () => <span className="ml-1 animate-pulse text-primary">|</span>;
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
     if (isTyping) {
       if (text.length < fullText.length) {
-        const timeoutId = setTimeout(() => {
+        timeoutId = setTimeout(() => {
           setText(fullText.slice(0, text.length + 1));
         }, 80); // Typing speed
-        return () => clearTimeout(timeoutId);
       } else {
-        // After typing is done, wait a moment before removing the caret
-        const finalPause = setTimeout(() => setIsTyping(false), 1000); 
-        return () => clearTimeout(finalPause);
+        // Finished typing, pause with caret
+        timeoutId = setTimeout(() => setIsTyping(false), 1000);
       }
+    } else {
+      // Animation finished, restart after a delay
+      timeoutId = setTimeout(() => {
+        setText('');
+        setIsTyping(true);
+      }, 3000); // 3-second pause before restart
     }
+    
+    return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
 
 
