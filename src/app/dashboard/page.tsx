@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import {
   Mic,
@@ -16,6 +16,24 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { motion, useInView } from "framer-motion";
+
+const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 
 const aiFeatures = [
     {
@@ -100,59 +118,70 @@ export default function DashboardHomePage() {
   return (
     <div className="flex flex-col h-full relative space-y-8">
         {/* Welcome Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-                <h1 className="text-3xl font-bold font-headline tracking-tight min-h-10 flex items-center">
-                    {text}
-                    {isTyping && <TypingCaret />}
-                </h1>
-                <p className="text-muted-foreground mt-1">Your AI-powered legal co-pilot.</p>
-            </div>
-            <div className="flex items-center gap-2">
-                <Button variant="outline" asChild><Link href="/dashboard/lawyer-connect">Find a Lawyer</Link></Button>
-                 <Button>Ask AI Assistant</Button>
-            </div>
-        </div>
+        <MotionWrapper>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                  <h1 className="text-3xl font-bold font-headline tracking-tight min-h-10 flex items-center">
+                      {text}
+                      {isTyping && <TypingCaret />}
+                  </h1>
+                  <p className="text-muted-foreground mt-1">Your AI-powered legal co-pilot.</p>
+              </div>
+              <div className="flex items-center gap-2">
+                  <Button variant="outline" asChild><Link href="/dashboard/lawyer-connect">Find a Lawyer</Link></Button>
+                   <Button>Ask AI Assistant</Button>
+              </div>
+          </div>
+        </MotionWrapper>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Quick Access */}
           <div className="space-y-6">
-              <SectionTitle>Quick Access</SectionTitle>
+              <MotionWrapper delay={0.1}>
+                <SectionTitle>Quick Access</SectionTitle>
+              </MotionWrapper>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <Card className="hover:border-primary/50 transition-colors">
-                      <CardContent className="p-6">
-                          <Link href="/dashboard/narrate" className="flex items-center gap-4 group">
-                              <div className="p-3 rounded-lg bg-primary/10">
-                                  <Mic className="h-6 w-6 text-primary" />
-                              </div>
-                              <div className="flex-1">
-                                  <h3 className="font-bold text-lg">Speak Your Problem</h3>
-                                  <p className="text-sm text-muted-foreground">Narrate your legal issue for an AI summary.</p>
-                              </div>
-                          </Link>
-                      </CardContent>
-                  </Card>
+                  <MotionWrapper delay={0.2}>
                     <Card className="hover:border-primary/50 transition-colors">
-                      <CardContent className="p-6">
-                          <Link href="/dashboard/lawyer-connect" className="flex items-center gap-4 group">
-                              <div className="p-3 rounded-lg bg-primary/10">
-                                  <MessageSquare className="h-6 w-6 text-primary" />
-                              </div>
-                              <div className="flex-1">
-                                  <h3 className="font-bold text-lg">AI Legal Chat</h3>
-                                  <p className="text-sm text-muted-foreground">Get answers to your legal questions.</p>
-                              </div>
-                          </Link>
-                      </CardContent>
-                  </Card>
+                        <CardContent className="p-6">
+                            <Link href="/dashboard/narrate" className="flex items-center gap-4 group">
+                                <div className="p-3 rounded-lg bg-primary/10">
+                                    <Mic className="h-6 w-6 text-primary" />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-lg">Speak Your Problem</h3>
+                                    <p className="text-sm text-muted-foreground">Narrate your legal issue for an AI summary.</p>
+                                </div>
+                            </Link>
+                        </CardContent>
+                    </Card>
+                  </MotionWrapper>
+                  <MotionWrapper delay={0.3}>
+                      <Card className="hover:border-primary/50 transition-colors">
+                        <CardContent className="p-6">
+                            <Link href="/dashboard/lawyer-connect" className="flex items-center gap-4 group">
+                                <div className="p-3 rounded-lg bg-primary/10">
+                                    <MessageSquare className="h-6 w-6 text-primary" />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-lg">AI Legal Chat</h3>
+                                    <p className="text-sm text-muted-foreground">Get answers to your legal questions.</p>
+                                </div>
+                            </Link>
+                        </CardContent>
+                    </Card>
+                  </MotionWrapper>
               </div>
           </div>
           {/* AI Tools */}
            <div className="space-y-6">
-              <SectionTitle>AI Toolkit</SectionTitle>
+              <MotionWrapper delay={0.4}>
+                <SectionTitle>AI Toolkit</SectionTitle>
+              </MotionWrapper>
               <div className="grid grid-cols-2 gap-4">
-                  {aiFeatures.map(feature => (
-                      <Link key={feature.href} href={feature.href} className="block group">
+                  {aiFeatures.map((feature, index) => (
+                    <MotionWrapper key={feature.href} delay={0.5 + index * 0.1}>
+                      <Link key={feature.href} href={feature.href} className="block group h-full">
                           <Card className="h-full p-4 flex flex-col items-start hover:border-primary/50 transition-colors">
                               <div className="p-2 rounded-lg bg-primary/10 mb-3">
                                 <feature.icon className="h-5 w-5 text-primary" />
@@ -161,6 +190,7 @@ export default function DashboardHomePage() {
                               <p className="text-xs text-muted-foreground mt-1">{feature.description}</p>
                           </Card>
                       </Link>
+                    </MotionWrapper>
                   ))}
               </div>
           </div>
