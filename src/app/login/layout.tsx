@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 export default function LoginLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-background">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
       {children}
     </div>
   );

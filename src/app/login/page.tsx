@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Loader2, Scale } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
   RecaptchaVerifier, 
@@ -20,10 +20,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // This is to extend the window object for recaptcha
 declare global {
@@ -58,8 +55,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
-  
-  const bgImage = PlaceHolderImages.find(img => img.id === 'news1');
 
   useEffect(() => {
     if (!auth) return;
@@ -164,136 +159,103 @@ export default function LoginPage() {
   const handleAppleLogin = () => handleSocialLogin(new OAuthProvider('apple.com'));
 
   return (
-    <div className="min-h-screen w-full lg:grid lg:grid-cols-2">
+    <>
       <div id="recaptcha-container"></div>
-      
-      {/* Left Column (Design Panel) */}
-      <div className="hidden lg:flex flex-col items-center justify-between bg-gradient-to-br from-teal-500 to-cyan-600 p-8 text-primary-foreground relative">
-         <div className="flex-1 flex flex-col items-center justify-center text-center">
-            <div className="relative">
-                <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-3xl animate-pulse [animation-duration:4s]"></div>
-                <Scale className="relative h-48 w-48 text-yellow-300 drop-shadow-[0_0_20px_rgba(252,211,77,0.6)]" strokeWidth={1.5}/>
-            </div>
-            <h2 className="text-5xl font-bold tracking-widest mt-8 font-headline">FOR JUSTICE</h2>
-         </div>
-         <p className="text-xs opacity-50">Created by IdeaSpark</p>
-      </div>
-
-      {/* Right Column (Login Form) */}
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-6">
-          <Card>
-            <CardHeader className="text-center items-center p-6 sm:p-8">
-                <Avatar className="h-20 w-20 border-2 border-primary/50 mb-2">
-                    <AvatarImage src="https://storage.googleapis.com/project-os-screenshot/1770932454559/image.png" alt="Nyaya Sahayak Logo" />
-                    <AvatarFallback>NS</AvatarFallback>
-                </Avatar>
-                <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight">YOUR AI LEGAL ASSISTANT</CardTitle>
-                <CardDescription>Sign in to continue</CardDescription>
-            </CardHeader>
-            <CardContent className="p-6 sm:p-8 pt-0">
-              {domainError && (
-                  <Alert variant="destructive" className="mb-4">
-                      <AlertTitle>Configuration Required</AlertTitle>
-                      <AlertDescription className="text-xs space-y-2">
-                        <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
-                        <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
-                        <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive">
-                            <a href="https://console.firebase.google.com/project/ai-naya-shahayak/authentication/settings" target="_blank" rel="noopener noreferrer">
-                                Open Firebase Auth Settings
-                            </a>
-                        </Button>
-                      </AlertDescription>
-                  </Alert>
-              )}
-              {!otpSent ? (
-                  <div className="space-y-4">
-                      <div className="space-y-2">
-                          <Label htmlFor="phone">Phone Number</Label>
-                          <div className="relative">
-                              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                  <span className="text-muted-foreground sm:text-sm">+91</span>
-                              </div>
-                              <Input 
-                                  id="phone" 
-                                  type="tel" 
-                                  placeholder="xxxxxxxxxx" 
-                                  required 
-                                  className="pl-12"
-                                  value={phone}
-                                  onChange={(e) => setPhone(e.target.value)}
-                                  disabled={loading}
-                              />
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>
+            Enter your phone number to login or create an account.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          {domainError && (
+              <Alert variant="destructive" className="mb-4">
+                  <AlertTitle>Configuration Required</AlertTitle>
+                  <AlertDescription className="text-xs space-y-2">
+                    <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
+                    <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
+                    <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive">
+                        <a href="https://console.firebase.google.com/project/ai-naya-shahayak/authentication/settings" target="_blank" rel="noopener noreferrer">
+                            Open Firebase Auth Settings
+                        </a>
+                    </Button>
+                  </AlertDescription>
+              </Alert>
+          )}
+          {!otpSent ? (
+              <div className="space-y-4">
+                  <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <div className="relative">
+                          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                              <span className="text-muted-foreground sm:text-sm">+91</span>
                           </div>
-                      </div>
-                      <Button className="w-full font-semibold" onClick={handlePhoneLogin} disabled={loading || !phone}>
-                          {loading && !otpSent ? <Loader2 className="animate-spin"/> : "Send OTP"}
-                      </Button>
-                  </div>
-              ) : (
-                  <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="otp">Enter OTP</Label>
                           <Input 
-                              id="otp" 
-                              type="text" 
-                              placeholder="6-digit code" 
+                              id="phone" 
+                              type="tel" 
+                              placeholder="xxxxxxxxxx" 
                               required 
-                              value={otp}
-                              onChange={(e) => setOtp(e.target.value)}
+                              className="pl-12"
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
                               disabled={loading}
                           />
                       </div>
-                      <Button className="w-full font-semibold" onClick={handleOtpVerify} disabled={loading || !otp}>
-                            {loading ? <Loader2 className="animate-spin"/> : "Verify OTP & Continue"}
-                      </Button>
-                      <Button variant="link" size="sm" onClick={() => setOtpSent(false)} disabled={loading}>Back</Button>
                   </div>
-              )}
-              
-              <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t border-border/50" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-card px-2 text-muted-foreground">
-                      OR
-                      </span>
-                  </div>
-              </div>
-
-              <div className="space-y-2">
-                  <Button variant="outline" className="w-full font-semibold" onClick={handleGoogleLogin} disabled={loading}>
-                      <GoogleIcon className="mr-2 h-4 w-4" />
-                      Continue with Google
-                  </Button>
-                  <Button variant="outline" className="w-full font-semibold" onClick={handleAppleLogin} disabled={loading}>
-                      <AppleIcon className="mr-2 h-4 w-4 fill-current" />
-                      Continue with Apple
+                  <Button className="w-full font-semibold" onClick={handlePhoneLogin} disabled={loading || !phone}>
+                      {loading && !otpSent ? <Loader2 className="animate-spin"/> : "Send OTP"}
                   </Button>
               </div>
-            </CardContent>
-          </Card>
+          ) : (
+              <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="otp">Enter OTP</Label>
+                      <Input 
+                          id="otp" 
+                          type="text" 
+                          placeholder="6-digit code" 
+                          required 
+                          value={otp}
+                          onChange={(e) => setOtp(e.target.value)}
+                          disabled={loading}
+                      />
+                  </div>
+                  <Button className="w-full font-semibold" onClick={handleOtpVerify} disabled={loading || !otp}>
+                        {loading ? <Loader2 className="animate-spin"/> : "Verify OTP & Continue"}
+                  </Button>
+                  <Button variant="link" size="sm" onClick={() => setOtpSent(false)} disabled={loading}>Back</Button>
+              </div>
+          )}
           
-          <div className="text-center">
+          <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                  Or continue with
+                  </span>
+              </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+              <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
+                  <GoogleIcon className="mr-2 h-4 w-4" />
+                  Google
+              </Button>
+              <Button variant="outline" className="w-full" onClick={handleAppleLogin} disabled={loading}>
+                  <AppleIcon className="mr-2 h-4 w-4 fill-current" />
+                  Apple
+              </Button>
+          </div>
+           <div className="text-center">
             <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
               <Link href="/dashboard">Skip Login</Link>
             </Button>
           </div>
-
-          <p className="text-center text-xs text-muted-foreground px-8">
-              By continuing, you agree to our{' '}
-              <Link href="#" className="underline underline-offset-4 hover:text-primary">
-                  Terms of Service
-              </Link>
-              {' '}and{' '}
-              <Link href="#" className="underline underline-offset-4 hover:text-primary">
-                  Privacy Policy
-              </Link>
-              .
-          </p>
-        </div>
-      </div>
-    </div>
+        </CardContent>
+      </Card>
+    </>
   );
 }
