@@ -1,4 +1,7 @@
 
+"use client";
+
+import { useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,6 +11,20 @@ import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function ContactUsPage() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSendMessage = () => {
+    const mailtoLink = `mailto:entarspaceindia@gmail.com?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+    )}`;
+    window.location.href = mailtoLink;
+  };
+
   return (
     <div className="space-y-8">
       <PageHeader
@@ -23,27 +40,27 @@ export default function ContactUsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form className="space-y-4">
+            <div className="space-y-4">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
-                  <Input id="name" placeholder="Your Name" />
+                  <Input id="name" placeholder="Your Name" value={name} onChange={(e) => setName(e.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="Your Email" />
+                  <Input id="email" type="email" placeholder="Your Email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="subject">Subject</Label>
-                <Input id="subject" placeholder="Message Subject" />
+                <Input id="subject" placeholder="Message Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="message">Message</Label>
-                <Textarea id="message" placeholder="Your message..." rows={5} />
+                <Textarea id="message" placeholder="Your message..." rows={5} value={message} onChange={(e) => setMessage(e.target.value)} />
               </div>
-              <Button type="submit" className="w-full">Send Message</Button>
-            </form>
+              <Button type="button" className="w-full" onClick={handleSendMessage}>Send Message</Button>
+            </div>
           </CardContent>
         </Card>
         <Card>
@@ -60,7 +77,7 @@ export default function ContactUsPage() {
               </div>
               <div>
                 <h3 className="font-semibold">Email</h3>
-                <p className="text-muted-foreground">support@nyayasahayak.com</p>
+                <p className="text-muted-foreground">entarspaceindia@gmail.com</p>
               </div>
             </div>
              <div className="flex items-start gap-4">
