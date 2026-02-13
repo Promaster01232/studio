@@ -25,7 +25,10 @@ const mockCase = {
     registrationDate: "20-05-2023",
     cnrNumber: "MHHC010012342023",
     petitioner: "Rajesh Sharma",
+    petitionerAdvocate: "Ms. Priya Singh",
     respondent: "State of Maharashtra",
+    respondentAdvocate: "Mr. Sameer Khan (Public Prosecutor)",
+    acts: "Indian Penal Code, 1860: 302",
     status: "Pending",
     history: [
         { date: "01-08-2024", business: "Arguments heard. Adjourned.", nextHearing: "15-09-2024", judge: "Hon'ble Justice S.K. Singh" },
@@ -61,7 +64,7 @@ export default function SearchResultsPage() {
                     <CardDescription>{mockCase.caseType} - {mockCase.filingNumber}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm mb-6">
+                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 text-sm mb-6">
                         <div className="flex items-start gap-3">
                             <FileText className="h-4 w-4 mt-1 text-primary"/>
                             <div>
@@ -86,15 +89,24 @@ export default function SearchResultsPage() {
                          <div className="flex items-start gap-3">
                             <User className="h-4 w-4 mt-1 text-primary"/>
                             <div>
-                                <p className="text-muted-foreground">Petitioner</p>
+                                <p className="text-muted-foreground">Petitioner & Advocate</p>
                                 <p className="font-semibold">{mockCase.petitioner}</p>
+                                <p className="text-xs font-semibold text-muted-foreground">{mockCase.petitionerAdvocate}</p>
                             </div>
                         </div>
                         <div className="flex items-start gap-3">
                             <Users className="h-4 w-4 mt-1 text-primary"/>
                             <div>
-                                <p className="text-muted-foreground">Respondent</p>
+                                <p className="text-muted-foreground">Respondent & Advocate</p>
                                 <p className="font-semibold">{mockCase.respondent}</p>
+                                <p className="text-xs font-semibold text-muted-foreground">{mockCase.respondentAdvocate}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                            <Gavel className="h-4 w-4 mt-1 text-primary"/>
+                            <div>
+                                <p className="text-muted-foreground">Under Section(s)</p>
+                                <p className="font-semibold">{mockCase.acts}</p>
                             </div>
                         </div>
                         <div className="flex items-start gap-3">
@@ -150,3 +162,5 @@ export default function SearchResultsPage() {
         </div>
     )
 }
+
+    
