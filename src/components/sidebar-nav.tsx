@@ -25,15 +25,13 @@ import {
   Landmark,
   Library,
   Accessibility,
-  Search,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
   { href: "/dashboard", icon: Home, label: "Dashboard", tooltip: "Dashboard" },
-  { href: "/dashboard/my-cases", icon: Briefcase, label: "Case Tracker", tooltip: "Case Tracker" },
-  { href: "/dashboard/ecourts-search", icon: Search, label: "eCourts Search", tooltip: "eCourts Search" },
+  { href: "/dashboard/my-cases", icon: Briefcase, label: "Case Management", tooltip: "Case Management" },
   { href: "/dashboard/profile", icon: CircleUserRound, label: "My Profile", tooltip: "My Profile" },
   {
     group: "AI Tools",
@@ -97,7 +95,7 @@ export function SidebarNav() {
             <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === item.href}
+                  isActive={pathname === item.href || (item.href === "/dashboard/my-cases" && pathname.startsWith("/dashboard/my-cases"))}
                   tooltip={{ children: item.tooltip }}
                 >
                   <Link href={item.href!}>
@@ -112,3 +110,5 @@ export function SidebarNav() {
     </>
   );
 }
+
+    
