@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -9,20 +10,42 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Sparkles } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ContactUsPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const { toast } = useToast();
 
   const handleSendMessage = () => {
+    if (!name || !email || !subject || !message) {
+      toast({
+        variant: "destructive",
+        title: "Incomplete Form",
+        description: "Please fill out all the fields before sending.",
+      });
+      return;
+    }
+
     const mailtoLink = `mailto:entarspaceindia@gmail.com?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(
       `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
     )}`;
     window.location.href = mailtoLink;
+
+    toast({
+      title: "Thank You for Your Feedback!",
+      description: "Your message has been prepared in your email client.",
+    });
+
+    // Clear the form
+    setName("");
+    setEmail("");
+    setSubject("");
+    setMessage("");
   };
 
   return (
