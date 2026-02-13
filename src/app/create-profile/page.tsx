@@ -114,7 +114,16 @@ export default function CreateProfilePage() {
         title: "Profile Created!",
         description: "Welcome to Nyaya Sahayak.",
       });
-      router.push("/dashboard");
+      
+      if (data.userType === 'lawyer') {
+          toast({
+              title: "Next Step: Advocate Profile",
+              description: "Please complete your advocate profile to be listed.",
+          });
+          router.push("/dashboard/advocate-profile");
+      } else {
+          router.push("/dashboard");
+      }
     } catch (error) {
       console.error("Failed to create profile:", error);
       toast({

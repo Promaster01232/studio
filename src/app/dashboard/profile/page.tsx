@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -101,16 +100,32 @@ export default function ProfilePage() {
     if (!auth?.currentUser || !firestore || !userProfile) return;
     setSaving(true);
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+    const originalUserType = userProfile.userType;
     try {
-        await setDoc(userDocRef, {
+        const updatedProfile = {
+            ...userProfile,
             firstName,
             lastName,
             email,
             mobileNumber,
             userType,
             photoURL,
-        }, { merge: true });
+        };
+
+        await setDoc(userDocRef, updatedProfile, { merge: true });
+        
+        setUserProfile(updatedProfile);
+
         toast({ title: 'Profile Updated', description: 'Your changes have been saved.' });
+
+        if (userType === 'lawyer' && originalUserType !== 'lawyer') {
+            toast({
+              title: "Next Step: Advocate Profile",
+              description: "Please complete your advocate profile to be listed.",
+            });
+            router.push('/dashboard/advocate-profile');
+        }
+
     } catch (e) {
         toast({ variant: 'destructive', title: 'Error', description: 'Failed to update profile.' });
         console.error(e);
