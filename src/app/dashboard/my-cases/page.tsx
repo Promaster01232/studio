@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { highCourts, indianStates } from "./data";
 
 
 interface Case {
@@ -34,75 +35,6 @@ interface Case {
   nextHearing: string;
   status: 'Pending' | 'Hearing' | 'Dismissed' | 'Won';
 }
-
-const highCourts = [
-  { name: "Supreme Court of India", website: "https://main.sci.gov.in/", jurisdiction: "Nationwide" },
-  { name: "Allahabad High Court", website: "http://www.allahabadhighcourt.in/", jurisdiction: "Uttar Pradesh" },
-  { name: "Andhra Pradesh High Court", website: "https://hc.ap.nic.in/", jurisdiction: "Andhra Pradesh" },
-  { name: "Bombay High Court", website: "https://bombayhighcourt.nic.in/", jurisdiction: "Maharashtra, Goa, Dadra and Nagar Haveli and Daman and Diu" },
-  { name: "Calcutta High Court", website: "https://www.calcuttahighcourt.gov.in/", jurisdiction: "West Bengal, Andaman and Nicobar Islands" },
-  { name: "Chhattisgarh High Court", website: "https://highcourt.cg.gov.in/", jurisdiction: "Chhattisgarh" },
-  { name: "Delhi High Court", website: "https://delhihighcourt.nic.in/", jurisdiction: "Delhi" },
-  { name: "Gauhati High Court", website: "https://ghconline.gov.in/", jurisdiction: "Assam, Nagaland, Mizoram, Arunachal Pradesh" },
-  { name: "Gujarat High Court", website: "https://gujarathighcourt.nic.in/", jurisdiction: "Gujarat" },
-  { name: "Himachal Pradesh High Court", website: "https://hphighcourt.nic.in/", jurisdiction: "Himachal Pradesh" },
-  { name: "Jammu & Kashmir and Ladakh High Court", website: "https://jkhighcourt.nic.in/", jurisdiction: "Jammu & Kashmir, Ladakh" },
-  { name: "Jharkhand High Court", website: "https://jharkhandhighcourt.nic.in/", jurisdiction: "Jharkhand" },
-  { name: "Karnataka High Court", website: "https://karnatakajudiciary.kar.nic.in/", jurisdiction: "Karnataka" },
-  { name: "Kerala High Court", website: "https://highcourtofkerala.nic.in/", jurisdiction: "Kerala, Lakshadweep" },
-  { name: "Madhya Pradesh High Court", website: "https://mphc.gov.in/", jurisdiction: "Madhya Pradesh" },
-  { name: "Madras High Court", website: "https://www.hcmadras.tn.nic.in/", jurisdiction: "Tamil Nadu, Puducherry" },
-  { name: "Manipur High Court", website: "https://hcmimphal.nic.in/", jurisdiction: "Manipur" },
-  { name: "Meghalaya High Court", website: "https://meghalayahighcourt.nic.in/", jurisdiction: "Meghalaya" },
-  { name: "Orissa High Court", website: "https://www.orissahighcourt.nic.in/", jurisdiction: "Odisha" },
-  { name: "Patna High Court", website: "https://patnahighcourt.gov.in/", jurisdiction: "Bihar" },
-  { name: "Punjab and Haryana High Court", website: "https://highcourtchd.gov.in/", jurisdiction: "Punjab, Haryana, Chandigarh" },
-  { name: "Rajasthan High Court", website: "https://hcraj.nic.in/", jurisdiction: "Rajasthan" },
-  { name: "Sikkim High Court", website: "https://hcs.gov.in/", jurisdiction: "Sikkim" },
-  { name: "Telangana High Court", website: "https://tshc.gov.in/", jurisdiction: "Telangana" },
-  { name: "Tripura High Court", website: "https://thc.nic.in/", jurisdiction: "Tripura" },
-  { name: "Uttarakhand High Court", website: "https://highcourtofuttarakhand.gov.in/", jurisdiction: "Uttarakhand" },
-];
-
-const indianStates = [
-    { code: "AN", name: "Andaman and Nicobar Islands" },
-    { code: "AP", name: "Andhra Pradesh" },
-    { code: "AR", name: "Arunachal Pradesh" },
-    { code: "AS", name: "Assam" },
-    { code: "BR", name: "Bihar" },
-    { code: "CH", name: "Chandigarh" },
-    { code: "CG", name: "Chhattisgarh" },
-    { code: "DN", name: "Dadra and Nagar Haveli and Daman and Diu" },
-    { code: "DL", name: "Delhi" },
-    { code: "GA", name: "Goa" },
-    { code: "GJ", name: "Gujarat" },
-    { code: "HR", name: "Haryana" },
-    { code: "HP", name: "Himachal Pradesh" },
-    { code: "JK", name: "Jammu and Kashmir" },
-    { code: "JH", name: "Jharkhand" },
-    { code: "KA", name: "Karnataka" },
-    { code: "KL", name: "Kerala" },
-    { code: "LA", name: "Ladakh" },
-    { code: "LD", name: "Lakshadweep" },
-    { code: "MP", name: "Madhya Pradesh" },
-    { code: "MH", name: "Maharashtra" },
-    { code: "MN", name: "Manipur" },
-    { code: "ML", name: "Meghalaya" },
-    { code: "MZ", name: "Mizoram" },
-    { code: "NL", name: "Nagaland" },
-    { code: "OR", name: "Odisha" },
-    { code: "PY", name: "Puducherry" },
-    { code: "PB", name: "Punjab" },
-    { code: "RJ", name: "Rajasthan" },
-    { code: "SK", name: "Sikkim" },
-    { code: "TN", name: "Tamil Nadu" },
-    { code: "TS", name: "Telangana" },
-    { code: "TR", name: "Tripura" },
-    { code: "UP", name: "Uttar Pradesh" },
-    { code: "UK", name: "Uttarakhand" },
-    { code: "WB", name: "West Bengal" }
-];
-
 
 export default function MyCasesPage() {
   const [cases, setCases] = useState<Case[]>([]);
@@ -390,5 +322,3 @@ export default function MyCasesPage() {
     </div>
   );
 }
-
-    
