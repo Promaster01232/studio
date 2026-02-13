@@ -102,7 +102,7 @@ export default function DashboardHomePage() {
         {/* Welcome Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 className="text-3xl font-bold font-headline tracking-tight h-10 flex items-center">
+                <h1 className="text-3xl font-bold font-headline tracking-tight min-h-10 flex items-center">
                     {text}
                     {isTyping && <TypingCaret />}
                 </h1>
