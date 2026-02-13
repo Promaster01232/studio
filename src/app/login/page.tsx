@@ -26,14 +26,6 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
-const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
-        <title>Apple</title>
-        <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.048-3.833 1.2-4.822 3.024-2.145 3.934-.623 9.72 1.638 12.96.995 1.39 2.16 3.104 3.766 3.104 1.554 0 2.064-1.025 3.935-1.025s2.31.995 3.88.995c1.638 0 2.722-1.68 3.68-3.05.96-1.343 1.42-2.636 1.45-2.71-.05-.02-3.3-1.22-3.32-5.062-.02-3.41 2.56-4.942 2.71-5.11-.73-.92-1.84-1.45-2.97-1.5-.78-.05-1.53.16-2.21.48-.65.29-1.27.78-1.73.78zM15.42 4.394c.903-1.163 1.5-2.662 1.32-4.394-.02.02-.02.02 0 0-1.554.08-3.23.95-4.22 2.163-.83.996-1.612 2.495-1.4 4.09.02-.02.02-.02 0 0 1.637-.02 3.3-1.01 4.3-1.86z"/>
-    </svg>
-);
-
-
 export default function LoginPage() {
   const auth = useAuth();
   const firestore = useFirestore();
@@ -110,7 +102,6 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => handleSocialLogin(new GoogleAuthProvider());
-  const handleAppleLogin = () => handleSocialLogin(new OAuthProvider('apple.com'));
 
   return (
     <Card className="w-full max-w-sm">
@@ -181,14 +172,10 @@ export default function LoginPage() {
             </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2">
             <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
                 <GoogleIcon className="mr-2 h-4 w-4" />
                 Google
-            </Button>
-            <Button variant="outline" className="w-full" onClick={handleAppleLogin} disabled={loading}>
-                <AppleIcon className="mr-2 h-4 w-4 fill-current" />
-                Apple
             </Button>
         </div>
          <div className="mt-4 text-center text-sm">

@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function WelcomePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-indigo-100/20 to-background p-4 dark:via-indigo-900/10">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 p-4 dark:from-indigo-900/30 dark:via-background dark:to-purple-900/30 animate-background-pan bg-[400%_400%]">
       <Card className="w-full max-w-md shadow-lg bg-card/60 backdrop-blur-sm border-primary/20 overflow-hidden">
         <CardContent className="flex flex-col items-center p-8 text-center">
           <div className="relative mb-6">
