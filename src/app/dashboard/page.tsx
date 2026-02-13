@@ -1,8 +1,10 @@
 
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Mic,
@@ -67,12 +69,37 @@ const SectionTitle = ({children}: {children: React.ReactNode}) => (
 
 
 export default function DashboardHomePage() {
+  const [text, setText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
+  const fullText = 'Welcome to Nyaya Sahayak';
+  
+  const TypingCaret = () => <span className="ml-1 animate-pulse text-primary">|</span>;
+
+  useEffect(() => {
+    if (isTyping) {
+      if (text.length < fullText.length) {
+        const timeoutId = setTimeout(() => {
+          setText(fullText.slice(0, text.length + 1));
+        }, 80); // Typing speed
+        return () => clearTimeout(timeoutId);
+      } else {
+        // After typing is done, wait a moment before removing the caret
+        const finalPause = setTimeout(() => setIsTyping(false), 1000); 
+        return () => clearTimeout(finalPause);
+      }
+    }
+  }, [text, isTyping]);
+
+
   return (
     <div className="flex flex-col h-full relative space-y-8">
         {/* Welcome Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 className="text-3xl font-bold font-headline tracking-tight">Welcome to Nyaya Sahayak</h1>
+                <h1 className="text-3xl font-bold font-headline tracking-tight h-10 flex items-center">
+                    {text}
+                    {isTyping && <TypingCaret />}
+                </h1>
                 <p className="text-muted-foreground mt-1">Your AI-powered legal co-pilot.</p>
             </div>
             <div className="flex items-center gap-2">
