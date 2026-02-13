@@ -1,11 +1,12 @@
+
 "use client";
 
 import { useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, Search, FolderSearch, Calendar, Gavel, FileText } from "lucide-react";
+import { PlusCircle, Search, FolderSearch, Calendar, Gavel, FileText, Building } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +19,10 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { highCourts } from "../ecourts/data";
+import Link from "next/link";
+
 
 interface Case {
   id: string;
@@ -126,7 +131,7 @@ export default function MyCasesPage() {
                 </div>
                 <h3 className="mt-6 text-xl font-semibold">No Cases Found</h3>
                 <p className="mt-2 text-muted-foreground max-w-sm">
-                    You haven&apos;t added any cases yet. Click &quot;Add New Case&quot; to get started.
+                    You haven&apos;t added any cases yet. Click &quot;Add New Case&quot; to get started or use the eCourts search below.
                 </p>
             </div>
           ) : (

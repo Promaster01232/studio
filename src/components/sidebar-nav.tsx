@@ -25,6 +25,7 @@ import {
   Landmark,
   Library,
   Accessibility,
+  Search,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -32,6 +33,7 @@ import { usePathname } from "next/navigation";
 const navItems = [
   { href: "/dashboard", icon: Home, label: "Dashboard", tooltip: "Dashboard" },
   { href: "/dashboard/my-cases", icon: Briefcase, label: "Case Tracker", tooltip: "Case Tracker" },
+  { href: "/dashboard/ecourts-search", icon: Search, label: "eCourts Search", tooltip: "eCourts Search" },
   { href: "/dashboard/profile", icon: CircleUserRound, label: "My Profile", tooltip: "My Profile" },
   {
     group: "AI Tools",
@@ -78,7 +80,7 @@ export function SidebarNav() {
                 <SidebarMenuItem key={subItem.href}>
                     <SidebarMenuButton
                       asChild
-                      isActive={pathname === subItem.href}
+                      isActive={pathname.startsWith(subItem.href)}
                       tooltip={{ children: subItem.tooltip }}
                     >
                       <Link href={subItem.href}>
