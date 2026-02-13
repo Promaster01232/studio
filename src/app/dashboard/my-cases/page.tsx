@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -6,7 +7,7 @@ import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, Search, FolderSearch, Calendar, Gavel, FileText, Landmark, ExternalLink } from "lucide-react";
+import { PlusCircle, Search, FolderSearch, Calendar, Gavel, FileText, Landmark, ExternalLink, RefreshCcw } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -62,7 +63,7 @@ export default function MyCasesPage() {
       const formData = new FormData(e.currentTarget);
       const query = new URLSearchParams();
       formData.forEach((value, key) => {
-        if (value) {
+        if (value && key !== 'captcha') { // Don't include captcha in query
             query.append(key, value.toString());
         }
       });
@@ -200,11 +201,30 @@ export default function MyCasesPage() {
                 
                 <form onSubmit={handleSearch}>
                     <TabsContent value="cnr" className="pt-4">
-                        <div className="space-y-4">
-                            <Input name="cnr" placeholder="Enter 16-digit CNR Number" required />
-                            <Button type="submit" className="w-full sm:w-auto">
-                                <Search className="mr-2 h-4 w-4" /> Search by CNR
-                            </Button>
+                       <div className="max-w-xl mx-auto">
+                            <Card className="bg-muted/30">
+                                <CardHeader>
+                                    <CardTitle>Search by CNR number</CardTitle>
+                                    <CardDescription>Enter CNR Number, for example MHHC010012342023</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="cnr">Enter 16 digit CNR number</Label>
+                                        <Input id="cnr" name="cnr" placeholder="Enter 16-digit CNR Number" required />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="captcha">Captcha</Label>
+                                        <div className="flex items-center gap-2">
+                                            <Input value="dmmudd" disabled className="w-32 bg-background font-mono tracking-widest text-lg" />
+                                            <Button variant="outline" size="icon" type="button"><RefreshCcw className="h-4 w-4" /></Button>
+                                            <Input id="captcha" name="captcha" placeholder="Enter Captcha" />
+                                        </div>
+                                    </div>
+                                    <Button type="submit" className="w-full">
+                                        <Search className="mr-2 h-4 w-4" /> Search
+                                    </Button>
+                                </CardContent>
+                            </Card>
                         </div>
                     </TabsContent>
 
@@ -328,3 +348,5 @@ export default function MyCasesPage() {
     </div>
   );
 }
+
+    
