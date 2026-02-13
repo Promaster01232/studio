@@ -46,6 +46,7 @@ export default function ProfilePage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
   const [userType, setUserType] = useState('citizen');
   const [photoURL, setPhotoURL] = useState('');
   
@@ -64,6 +65,7 @@ export default function ProfilePage() {
           setFirstName(data.firstName);
           setLastName(data.lastName);
           setEmail(data.email);
+          setMobileNumber(data.mobileNumber || '');
           setUserType(data.userType);
           if (data.photoURL) {
             setPhotoURL(data.photoURL);
@@ -104,6 +106,7 @@ export default function ProfilePage() {
             firstName,
             lastName,
             email,
+            mobileNumber,
             userType,
             photoURL,
         }, { merge: true });
@@ -215,7 +218,7 @@ export default function ProfilePage() {
                  <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" type="tel" value={userProfile?.mobileNumber || ''} disabled />
+                    <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="userType">I am a</Label>

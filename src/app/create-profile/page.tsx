@@ -20,7 +20,8 @@ const profileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address").min(1, "Email is required"),
-  userType: z.enum(["citizen", "lawyer"], {
+  mobileNumber: z.string().min(10, "A valid mobile number is required."),
+  userType: z.enum(["citizen", "lawyer", "businessman", "student"], {
     required_error: "You need to select a role.",
   }),
 });
@@ -40,6 +41,7 @@ export default function CreateProfilePage() {
       firstName: "",
       lastName: "",
       email: "",
+      mobileNumber: "",
       userType: "citizen",
     },
   });
@@ -52,6 +54,7 @@ export default function CreateProfilePage() {
         firstName: displayName.split(" ")[0] || "",
         lastName: displayName.split(" ").slice(1).join(" ") || "",
         email: email,
+        mobileNumber: auth.currentUser.phoneNumber || "",
         userType: "citizen",
       });
     }
@@ -176,6 +179,20 @@ export default function CreateProfilePage() {
                 </FormItem>
               )}
             />
+            
+            <FormField
+              control={form.control}
+              name="mobileNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mobile Number</FormLabel>
+                  <FormControl>
+                    <Input placeholder="+91 12345 67890" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -191,7 +208,9 @@ export default function CreateProfilePage() {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="citizen">Citizen</SelectItem>
-                      <SelectItem value="lawyer">Lawyer</SelectItem>
+                      <SelectItem value="lawyer">Advocate</SelectItem>
+                      <SelectItem value="businessman">Business Person</SelectItem>
+                      <SelectItem value="student">Law Student</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
