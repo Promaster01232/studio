@@ -76,11 +76,11 @@
   }
 
   body.has-glassmorphism {
-      background-image: linear-gradient(135deg, hsl(230, 70%, 95%), hsl(280, 70%, 95%), hsl(330, 70%, 95%));
+      background-image: linear-gradient(135deg, hsl(var(--primary)/0.4), hsl(var(--accent)/0.4), hsl(200 80% 80%), hsl(30 70% 80%));
       @apply animate-background-pan bg-[length:400%_400%];
   }
 
   .dark body.has-glassmorphism {
-      background-image: linear-gradient(135deg, hsl(230, 20%, 10%), hsl(260, 20%, 12%), hsl(290, 20%, 10%));
+      background-image: linear-gradient(135deg, hsl(var(--primary)/0.5), hsl(var(--accent)/0.5), hsl(220 80% 20%), hsl(260 70% 15%));
   }
 }
