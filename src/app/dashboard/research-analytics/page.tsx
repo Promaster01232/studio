@@ -1,15 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share2, Bookmark, PlusCircle } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -22,59 +15,86 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { PageHeader } from "@/components/page-header";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2 } from "lucide-react";
+import { useAuth, useFirestore } from "@/firebase";
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc } from "firebase/firestore";
+import { formatDistanceToNow } from "date-fns";
+import { Skeleton } from '@/components/ui/skeleton';
 
+interface Post {
+    id: string;
+    authorUid: string;
+    authorName: string;
+    authorAvatar?: string;
+    createdAt: Timestamp;
+    title: string;
+    content: string;
+    image?: {
+        imageUrl: string;
+        imageHint: string;
+    };
+    likes: number;
+    comments: number;
+}
 
-const initialNewsFeed = [
-    {
-        id: 1,
-        author: "The Legal Times",
-        authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer4'),
-        date: "2h ago",
-        title: "Supreme Court Upholds Environmental Regulations in Landmark Case",
-        content: "In a significant ruling, the Supreme Court has upheld stringent environmental regulations, emphasizing the state's duty to protect natural resources over industrial interests. The verdict is expected to have wide-ranging implications for ongoing and future infrastructure projects.",
-        image: PlaceHolderImages.find(img => img.id === 'news1'),
-        likes: 125,
-        comments: 12,
-    },
-    {
-        id: 2,
-        author: "Indian Law Journal",
-        authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer5'),
-        date: "1d ago",
-        title: "High Court Issues New Guidelines for Digital Evidence",
-        content: "The High Court has issued a comprehensive set of guidelines for the collection, preservation, and presentation of digital evidence in court. The move aims to standardize procedures and prevent tampering with electronic records, a growing concern in criminal and civil litigation.",
-        image: PlaceHolderImages.find(img => img.id === 'news2'),
-        likes: 340,
-        comments: 45,
-    },
-    {
-        id: 3,
-        author: "Bar & Bench",
-        authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer1'),
-        date: "3d ago",
-        title: "Plea Challenging Sedition Law Admitted in Supreme Court",
-        content: "The Supreme Court has agreed to hear a fresh plea challenging the constitutional validity of the sedition law. The petitioners argue that the law is a colonial-era relic used to stifle dissent and free speech, and have called for its complete repeal.",
-        image: PlaceHolderImages.find(img => img.id === 'news3'),
-        likes: 890,
-        comments: 152,
-    },
-    {
-        id: 4,
-        author: "Live Law",
-        authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer2'),
-        date: "4d ago",
-        title: "New Consumer Protection Rules Notified, E-Commerce to be Impacted",
-        content: "The government has notified new rules under the Consumer Protection Act, which will significantly impact e-commerce platforms. The rules introduce stricter norms for flash sales, and enhance liability for sellers, aiming to better protect online shoppers.",
-        image: PlaceHolderImages.find(img => img.id === 'news4'),
-        likes: 412,
-        comments: 68,
-    }
-];
+interface UserProfile {
+    firstName: string;
+    lastName: string;
+    photoURL?: string;
+}
 
 export default function ResearchAnalyticsPage() {
     const { toast } = useToast();
-    const [feed, setFeed] = useState(initialNewsFeed);
+    const [feed, setFeed] = useState<Post[]>([]);
+    const [loading, setLoading] = useState(true);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isPosting, setIsPosting] = useState(false);
+    
+    const firestore = useFirestore();
+    const auth = useAuth();
+    const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
+    useEffect(() => {
+        if (!firestore) return;
+        setLoading(true);
+        const postsCollection = collection(firestore, "posts");
+        const q = query(postsCollection, orderBy("createdAt", "desc"));
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const postsData = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            } as Post));
+            setFeed(postsData);
+            setLoading(false);
+        }, (error) => {
+            console.error("Error fetching posts:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Error fetching posts',
+                description: 'Could not load the news feed. Please check your connection or permissions.'
+            });
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, [firestore, toast]);
+    
+    useEffect(() => {
+        if (auth?.currentUser && firestore) {
+          const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+          getDoc(userDocRef).then(userDoc => {
+            if (userDoc.exists()) {
+              setUserProfile(userDoc.data() as UserProfile);
+            }
+          });
+        }
+      }, [auth, firestore]);
+
 
     const handleAction = (action: string) => {
         toast({
@@ -83,8 +103,18 @@ export default function ResearchAnalyticsPage() {
         });
     };
 
-    const handlePostSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handlePostSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        
+        if (!auth?.currentUser || !firestore || !userProfile) {
+            toast({
+                variant: 'destructive',
+                title: 'Authentication Error',
+                description: 'You must be logged in to create a post.'
+            });
+            return;
+        }
+
         const formData = new FormData(event.currentTarget);
         const title = formData.get('title') as string;
         const content = formData.get('content') as string;
@@ -97,27 +127,74 @@ export default function ResearchAnalyticsPage() {
             });
             return;
         }
+        
+        setIsPosting(true);
 
-        const newPost = {
-            id: Date.now(),
-            author: "Me", // In a real app, you'd get the current user's name
-            authorAvatar: PlaceHolderImages.find(img => img.id === 'lawyer6'), // A generic avatar for the user
-            date: "Just now",
-            title,
-            content,
-            image: PlaceHolderImages.find(img => img.id === 'news4'), // Using a generic placeholder for new posts
-            likes: 0,
-            comments: 0,
-        };
-
-        setFeed(prevFeed => [newPost, ...prevFeed]);
-        setIsDialogOpen(false);
-        toast({
-            title: "Post Published!",
-            description: "Your new post has been added to the feed."
-        });
+        try {
+            await addDoc(collection(firestore, "posts"), {
+                authorUid: auth.currentUser.uid,
+                authorName: `${userProfile.firstName} ${userProfile.lastName}`,
+                authorAvatar: userProfile.photoURL || '',
+                title,
+                content,
+                createdAt: serverTimestamp(),
+                likes: 0,
+                comments: 0
+            });
+            setIsDialogOpen(false);
+            toast({
+                title: "Post Published!",
+                description: "Your new post has been added to the feed."
+            });
+        } catch (error) {
+            console.error("Error creating post:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Could not publish your post. Please try again later.'
+            });
+        } finally {
+            setIsPosting(false);
+        }
     };
-
+    
+    // SKELETON LOADER
+    if (loading) {
+        return (
+            <div className="space-y-8">
+                <PageHeader
+                    title="Legal News & Updates"
+                    description="Stay informed with the latest legal news and notifications."
+                >
+                    <Skeleton className="h-10 w-32" />
+                </PageHeader>
+                <div className="max-w-3xl mx-auto space-y-6">
+                    {[...Array(3)].map((_, i) => (
+                        <Card key={i}>
+                            <CardContent className="p-4 sm:p-6">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <Skeleton className="h-10 w-10 rounded-full" />
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-24" />
+                                        <Skeleton className="h-3 w-16" />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Skeleton className="h-5 w-3/4" />
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-5/6" />
+                                </div>
+                            </CardContent>
+                            <Skeleton className="h-48 w-full" />
+                            <CardFooter className="p-2 sm:p-3">
+                                <Skeleton className="h-8 w-full" />
+                            </CardFooter>
+                        </Card>
+                    ))}
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="space-y-8">
@@ -143,15 +220,18 @@ export default function ResearchAnalyticsPage() {
                           <div className="grid gap-4 py-4">
                               <div className="space-y-2">
                                   <Label htmlFor="title">Title</Label>
-                                  <Input id="title" name="title" placeholder="Your post title" required />
+                                  <Input id="title" name="title" placeholder="Your post title" required disabled={isPosting} />
                               </div>
                               <div className="space-y-2">
                                   <Label htmlFor="content">Content</Label>
-                                  <Textarea id="content" name="content" placeholder="Write your news update here..." required rows={5}/>
+                                  <Textarea id="content" name="content" placeholder="Write your news update here..." required rows={5} disabled={isPosting} />
                               </div>
                           </div>
                           <DialogFooter>
-                              <Button type="submit">Post</Button>
+                              <Button type="submit" disabled={isPosting}>
+                                {isPosting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Post
+                              </Button>
                           </DialogFooter>
                         </form>
                     </DialogContent>
@@ -159,20 +239,26 @@ export default function ResearchAnalyticsPage() {
             </PageHeader>
 
             <div className="max-w-3xl mx-auto space-y-6">
-                {feed.map((item) => (
+                {feed.length === 0 ? (
+                    <Card>
+                        <CardContent className="py-20 text-center text-muted-foreground">
+                            No news updates yet. Be the first to post!
+                        </CardContent>
+                    </Card>
+                ) : feed.map((item) => (
                     <Card key={item.id} className="overflow-hidden">
                         <CardContent className="p-0">
                             <div className="p-4 sm:p-6">
                                 <div className="flex items-center gap-3 mb-4">
-                                    {item.authorAvatar && (
-                                        <Avatar className="h-10 w-10 border hover:ring-2 hover:ring-primary transition-all">
-                                            <AvatarImage src={item.authorAvatar.imageUrl} alt={item.author} data-ai-hint={item.authorAvatar.imageHint || ''}/>
-                                            <AvatarFallback>{item.author.charAt(0)}</AvatarFallback>
-                                        </Avatar>
-                                    )}
+                                    <Avatar className="h-10 w-10 border hover:ring-2 hover:ring-primary transition-all">
+                                        {item.authorAvatar && <AvatarImage src={item.authorAvatar} alt={item.authorName}/>}
+                                        <AvatarFallback>{item.authorName?.charAt(0)}</AvatarFallback>
+                                    </Avatar>
                                     <div>
-                                        <p className="font-semibold">{item.author}</p>
-                                        <p className="text-xs text-muted-foreground">{item.date}</p>
+                                        <p className="font-semibold">{item.authorName}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            {item.createdAt ? formatDistanceToNow(item.createdAt.toDate(), { addSuffix: true }) : '...'}
+                                        </p>
                                     </div>
                                 </div>
                                 <h3 className="text-lg font-bold font-headline leading-snug mb-2">{item.title}</h3>
