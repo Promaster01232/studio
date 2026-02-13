@@ -2,8 +2,6 @@
 "use client";
 
 import {
-  SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -12,20 +10,9 @@ import {
   Home,
   Briefcase,
   CircleUserRound,
-  Mic,
-  HelpCircle,
-  FileSearch,
-  FileText,
-  FileSignature,
-  Shield,
-  BarChart2,
-  Users,
-  HeartHandshake,
-  Gavel,
-  Landmark,
   Library,
-  Accessibility,
-  Mail,
+  Users,
+  BrainCircuit,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -34,83 +21,50 @@ const navItems = [
   { href: "/dashboard", icon: Home, label: "Dashboard", tooltip: "Dashboard" },
   { href: "/dashboard/my-cases", icon: Briefcase, label: "Case Management", tooltip: "Case Management" },
   { href: "/dashboard/profile", icon: CircleUserRound, label: "My Profile", tooltip: "My Profile" },
-  {
-    group: "AI Tools",
-    items: [
-      { href: "/dashboard/narrate", icon: Mic, label: "Speak Your Problem", tooltip: "Speak Your Problem" },
-      { href: "/dashboard/strength-analyzer", icon: HelpCircle, label: "Case Strength Analyzer", tooltip: "Case Strength Analyzer" },
-      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Document Intelligence", tooltip: "Document Intelligence" },
-      { href: "/dashboard/document-generator", icon: FileText, label: "Complaint Generator", tooltip: "Complaint Generator" },
-      { href: "/dashboard/bond-generator", icon: FileSignature, label: "Bond Generator", tooltip: "Bond Generator" },
-      { href: "/dashboard/court-assistant", icon: Gavel, label: "Court Room Tools", tooltip: "Court Room Tools" },
-    ],
-  },
-  {
-    group: "Resources",
-    items: [
-      { href: "/dashboard/police-guide", icon: Shield, label: "Police & Court Guides", tooltip: "Police & Court Guides" },
-      { href: "/dashboard/learn", icon: BarChart2, label: "Legal Knowledge Hub", tooltip: "Legal Knowledge Hub" },
-      { href: "/dashboard/research-analytics", icon: Library, label: "Research & Analytics", tooltip: "Research & Analytics" },
-      { href: "/dashboard/lawyer-connect", icon: Users, label: "Lawyer Connect", tooltip: "Lawyer Connect" },
-      { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "NGO & Legal Aid", tooltip: "NGO & Legal Aid" },
-      { href: "/dashboard/support", icon: Accessibility, label: "Support & Accessibility", tooltip: "Support & Accessibility" },
-      { href: "/dashboard/contact", icon: Mail, label: "Contact Us", tooltip: "Contact Us" },
-    ],
-  },
-  {
-    group: "Specialized",
-    items: [
-        { href: "/dashboard/business-msme", icon: Briefcase, label: "Business & MSME Tools", tooltip: "Business & MSME Tools" },
-        { href: "/dashboard/finances-billing", icon: Landmark, label: "Finances & Billing", tooltip: "Finances & Billing" },
-    ]
-  }
+  { href: "/dashboard/learn", icon: Library, label: "Resources", tooltip: "Resources" },
+  { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "AI Tools", tooltip: "AI Tools" },
+  { href: "/dashboard/lawyer-connect", icon: Users, label: "Lawyer Connect", tooltip: "Lawyer Connect" },
 ];
+
 
 export function SidebarNav() {
   const pathname = usePathname();
 
+  const checkActive = (href: string) => {
+    if (href === '/dashboard') {
+        return pathname === href;
+    }
+    if (href === '/dashboard/strength-analyzer') {
+        const aiToolsPaths = [
+            "/dashboard/strength-analyzer",
+            "/dashboard/narrate",
+            "/dashboard/document-intelligence",
+            "/dashboard/document-generator",
+            "/dashboard/bond-generator",
+            "/dashboard/court-assistant",
+        ];
+        return aiToolsPaths.some(p => pathname.startsWith(p));
+    }
+    return pathname.startsWith(href);
+  };
+
   return (
-    <>
-      {navItems.map((item, index) =>
-        item.group ? (
-          <SidebarGroup key={index}>
-            <SidebarGroupLabel>{item.group}</SidebarGroupLabel>
-            <SidebarMenu>
-              {item.items.map((subItem) => (
-                <SidebarMenuItem key={subItem.href}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname.startsWith(subItem.href)}
-                      tooltip={{ children: subItem.tooltip }}
-                    >
-                      <Link href={subItem.href}>
-                        <subItem.icon />
-                        <span>{subItem.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroup>
-        ) : (
-          <SidebarMenu key={index}>
-            <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === item.href || (item.href === "/dashboard/my-cases" && pathname.startsWith("/dashboard/my-cases"))}
-                  tooltip={{ children: item.tooltip }}
-                >
-                  <Link href={item.href!}>
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        )
-      )}
-    </>
+    <SidebarMenu>
+      {navItems.map((item) => (
+        <SidebarMenuItem key={item.href}>
+            <SidebarMenuButton
+              asChild
+              isActive={checkActive(item.href)}
+              tooltip={{ children: item.tooltip }}
+            >
+              <Link href={item.href}>
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-data-[active=true]:h-6 bg-sidebar-primary rounded-r-full transition-all duration-300"></div>
+                <item.icon />
+                <span>{item.label}</span>
+              </Link>
+            </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
   );
 }
-
-    

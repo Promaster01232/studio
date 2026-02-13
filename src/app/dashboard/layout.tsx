@@ -6,23 +6,16 @@ import {
   Sidebar,
   SidebarHeader,
   SidebarContent,
-  SidebarTrigger,
   SidebarInset,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Search, Bell, ShieldAlert, MessageSquare, User, LogOut, SunMoon, Languages, Loader2 } from "lucide-react";
+import { LogOut, SunMoon, Languages, Loader2, User } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import Link from "next/link";
-import { SosDialog } from "@/components/sos-dialog";
-import { SearchDialog } from "@/components/search-dialog";
 import { usePathname, useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -117,139 +110,93 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       return `${firstNameInitial}${lastNameInitial}`;
   }
   
-  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
+  const showContent = isMounted && (!profileLoading || pathname === '/create-profile' || !auth);
 
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader>
-          {/* Logo is now in the main header */}
+        <SidebarHeader className="p-4">
+          <Logo />
         </SidebarHeader>
-        <SidebarContent className="pt-10">
+        <SidebarContent className="pt-0">
           <SidebarNav />
         </SidebarContent>
+        <SidebarFooter>
+           {profileLoading ? (
+            <div className="flex items-center gap-3 p-2">
+              <Skeleton className="h-9 w-9 rounded-full" />
+              <div className="flex-1 space-y-1">
+                 <Skeleton className="h-3 w-20" />
+                 <Skeleton className="h-3 w-24" />
+              </div>
+            </div>
+          ) : userProfile ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left">
+                  <Avatar className="h-9 w-9">
+                      <AvatarFallback>{getAvatarFallback()}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 truncate">
+                    <div className="font-semibold text-sm truncate">{userProfile.firstName} {userProfile.lastName}</div>
+                    <div className="text-xs text-muted-foreground truncate">{userProfile.email}</div>
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="top" align="start" className="w-56 mb-2 ml-2">
+                <DropdownMenuLabel>
+                    <div className="font-semibold">{userProfile.firstName} {userProfile.lastName}</div>
+                    <div className="text-xs text-muted-foreground">{userProfile.email}</div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                    <Link href="/dashboard/profile">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                    </Link>
+                </DropdownMenuItem>
+                 <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                        <SunMoon className="mr-2 h-4 w-4" />
+                        <span>Theme</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                        <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
+                            <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+                    </DropdownMenuSubContent>
+                </DropdownMenuSub>
+                <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                        <Languages className="mr-2 h-4 w-4" />
+                        <span>Language</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                        <DropdownMenuRadioGroup value={language} onValueChange={(value) => setLanguage(value as Language)}>
+                            {languages.map((lang) => (
+                                <DropdownMenuRadioItem key={lang.code} value={lang.code}>{lang.name}</DropdownMenuRadioItem>
+                            ))}
+                        </DropdownMenuRadioGroup>
+                    </DropdownMenuSubContent>
+                </DropdownMenuSub>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+             <Button asChild className="m-2">
+                <Link href="/login">Login / Sign Up</Link>
+              </Button>
+          )}
+        </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        {!isChatPage && (
-          <header className="flex h-16 shrink-0 items-center justify-between border-b bg-transparent px-4 md:px-6">
-            <div className="flex items-center gap-4">
-              <SidebarTrigger className="h-8 w-8 rounded-md bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80" />
-              <Logo />
-            </div>
-            <div className="flex items-center gap-2">
-              {profileLoading ? (
-                <>
-                  <Skeleton className="h-8 w-8 rounded-full" />
-                  <Skeleton className="h-10 w-20 rounded-md" />
-                  <Skeleton className="h-8 w-8 rounded-full" />
-                  <Skeleton className="h-8 w-8 rounded-full" />
-                  <Skeleton className="h-8 w-8 rounded-full" />
-                </>
-              ) : userProfile ? (
-                <>
-                  <SearchDialog>
-                    <Button variant="ghost" size="icon" className="rounded-full">
-                      <Search className="h-5 w-5 text-muted-foreground" />
-                      <span className="sr-only">Search</span>
-                    </Button>
-                  </SearchDialog>
-                  <SosDialog>
-                    <Button variant="destructive">
-                      <ShieldAlert className="mr-0 h-4 w-4 md:mr-2" />
-                      <span className="hidden md:inline">SOS</span>
-                    </Button>
-                  </SosDialog>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="rounded-full relative"
-                      >
-                        <MessageSquare className="h-5 w-5 text-muted-foreground" />
-                        <span className="sr-only">Messages</span>
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-80 p-2">
-                      <div className="font-semibold p-2">Messages</div>
-                      <div className="space-y-1 text-center p-4 text-sm text-muted-foreground">
-                        No recent messages.
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full relative"
-                  >
-                    <Bell className="h-5 w-5 text-muted-foreground" />
-                    <span className="sr-only">Notifications</span>
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="rounded-full">
-                          <Avatar className="h-8 w-8">
-                              <AvatarFallback>{getAvatarFallback()}</AvatarFallback>
-                          </Avatar>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56">
-                      <DropdownMenuLabel>
-                          <div className="font-semibold">{userProfile.firstName} {userProfile.lastName}</div>
-                          <div className="text-xs text-muted-foreground">{userProfile.email}</div>
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
-                          <Link href="/dashboard/profile">
-                              <User className="mr-2 h-4 w-4" />
-                              <span>Profile</span>
-                          </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSub>
-                          <DropdownMenuSubTrigger>
-                              <SunMoon className="mr-2 h-4 w-4" />
-                              <span>Theme</span>
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent>
-                              <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
-                                  <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
-                                  <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
-                              </DropdownMenuRadioGroup>
-                          </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-                      <DropdownMenuSub>
-                          <DropdownMenuSubTrigger>
-                              <Languages className="mr-2 h-4 w-4" />
-                              <span>Language</span>
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent>
-                              <DropdownMenuRadioGroup value={language} onValueChange={(value) => setLanguage(value as Language)}>
-                                  {languages.map((lang) => (
-                                      <DropdownMenuRadioItem key={lang.code} value={lang.code}>{lang.name}</DropdownMenuRadioItem>
-                                  ))}
-                              </DropdownMenuRadioGroup>
-                          </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleLogout}>
-                          <LogOut className="mr-2 h-4 w-4" />
-                          <span>Log out</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </>
-              ) : (
-                 <>
-                  <Button asChild>
-                    <Link href="/login">Login</Link>
-                  </Button>
-                </>
-              )}
-            </div>
-          </header>
-        )}
         <main
-          className="h-[calc(100vh-4rem)] flex flex-col overflow-y-auto bg-transparent data-[chat=true]:h-screen data-[chat=true]:p-0 p-4 md:p-6 lg:p-8"
+          className="h-screen flex flex-col overflow-y-auto bg-transparent data-[chat=true]:h-screen data-[chat=true]:p-0 p-4 md:p-6 lg:p-8"
           data-chat={isChatPage}
         >
           {showContent ? children : (
