@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -60,7 +59,14 @@ export default function MyCasesPage() {
   
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      router.push("/dashboard/my-cases/results");
+      const formData = new FormData(e.currentTarget);
+      const query = new URLSearchParams();
+      formData.forEach((value, key) => {
+        if (value) {
+            query.append(key, value.toString());
+        }
+      });
+      router.push(`/dashboard/my-cases/results?${query.toString()}`);
   };
 
   return (
@@ -195,7 +201,7 @@ export default function MyCasesPage() {
                 <form onSubmit={handleSearch}>
                     <TabsContent value="cnr" className="pt-4">
                         <div className="space-y-4">
-                            <Input placeholder="Enter 16-digit CNR Number" required />
+                            <Input name="cnr" placeholder="Enter 16-digit CNR Number" required />
                             <Button type="submit" className="w-full sm:w-auto">
                                 <Search className="mr-2 h-4 w-4" /> Search by CNR
                             </Button>
