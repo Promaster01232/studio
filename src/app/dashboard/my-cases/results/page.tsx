@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, FileText, Calendar, Gavel, User, Users, Search } from "lucide-react";
+import { ArrowLeft, FileText, Calendar, Gavel, User, Users, Search, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import {
   Table,
@@ -196,9 +196,18 @@ async function SearchResultsComponent({ searchParams }: { searchParams: SearchPa
               <Search className="h-12 w-12 text-muted-foreground" />
             </div>
             <h3 className="mt-6 text-xl font-semibold">No Matching Case Found</h3>
-            <p className="mt-2 text-muted-foreground max-w-sm mx-auto">
-              We couldn't find a case matching your search criteria. Please check the details and try again. For this demo, try CNR <code className="font-mono bg-primary/10 p-1 rounded-sm">MHHC010012342023</code>.
+            <p className="mt-2 text-muted-foreground max-w-md mx-auto">
+              The AI search simulation did not find a match for your query. For this demo, please try CNR number <code className="font-mono bg-primary/10 p-1 rounded-sm">MHHC010012342023</code> to see a sample report.
             </p>
+            <p className="mt-4 text-muted-foreground max-w-md mx-auto">
+              To perform a live search, you can visit the official eCourts services website.
+            </p>
+            <Button asChild className="mt-6">
+                <Link href="https://services.ecourts.gov.in/ecourtindia_v6/" target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Search on eCourts India
+                </Link>
+            </Button>
           </CardContent>
         </Card>
       )}
