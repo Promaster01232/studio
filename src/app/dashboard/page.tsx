@@ -134,7 +134,7 @@ export default function DashboardHomePage() {
           </div>
         </MotionWrapper>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-8">
           {/* Quick Access */}
           <div className="space-y-6">
               <MotionWrapper delay={0.1}>
@@ -178,7 +178,7 @@ export default function DashboardHomePage() {
               <MotionWrapper delay={0.4}>
                 <SectionTitle>AI Toolkit</SectionTitle>
               </MotionWrapper>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {aiFeatures.map((feature, index) => (
                     <MotionWrapper key={feature.href} delay={0.5 + index * 0.1}>
                       <Link key={feature.href} href={feature.href} className="block group h-full">
