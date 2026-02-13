@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,9 +8,7 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
-  RecaptchaVerifier, 
-  signInWithPhoneNumber, 
-  type ConfirmationResult,
+  signInWithEmailAndPassword,
   GoogleAuthProvider,
   OAuthProvider,
   signInWithPopup
@@ -21,14 +18,6 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-// This is to extend the window object for recaptcha
-declare global {
-    interface Window {
-        recaptchaVerifier?: RecaptchaVerifier;
-        confirmationResult?: ConfirmationResult;
-    }
-}
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -50,60 +39,24 @@ export default function LoginPage() {
   const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!auth) return;
-    // Prevent re-initializing the verifier on re-renders
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-        'callback': () => {},
-      });
-    }
-  }, [auth]);
-
-  const handlePhoneLogin = async () => {
-    if (!auth || !phone) {
-        toast({ variant: "destructive", title: "Error", description: "Please enter a phone number."});
+  const handleEmailLogin = async () => {
+    if (!auth || !email || !password) {
+        toast({ variant: "destructive", title: "Error", description: "Please enter both email and password."});
         return;
     }
     setLoading(true);
     setDomainError(null);
     try {
-        const verifier = window.recaptchaVerifier!;
-        const fullPhoneNumber = `+91${phone.trim()}`;
-        const confirmationResult = await signInWithPhoneNumber(auth, fullPhoneNumber, verifier);
-        window.confirmationResult = confirmationResult;
-        setOtpSent(true);
-        toast({ title: "OTP Sent", description: "An OTP has been sent to your phone."});
-    } catch (error: any) {
-        console.error("Phone auth error:", error);
-        toast({ variant: "destructive", title: "Error sending OTP", description: error.message });
-    } finally {
-        setLoading(false);
-    }
-  };
-
-  const handleOtpVerify = async () => {
-    if (!otp || !window.confirmationResult) {
-        toast({ variant: "destructive", title: "Error", description: "Please enter the OTP."});
-        return;
-    }
-    setLoading(true);
-    setDomainError(null);
-    try {
-        const result = await window.confirmationResult.confirm(otp);
+        const result = await signInWithEmailAndPassword(auth, email, password);
         const user = result.user;
 
-        if (!firestore) {
-            throw new Error("Firestore not available");
-        }
-
+        if (!firestore) throw new Error("Firestore not available");
+        
         const userDocRef = doc(firestore, "users", user.uid);
         const userDoc = await getDoc(userDocRef);
 
@@ -115,8 +68,9 @@ export default function LoginPage() {
             router.push('/create-profile');
         }
     } catch (error: any) {
-        console.error("OTP verification error:", error);
-        toast({ variant: "destructive", title: "Invalid OTP", description: "The OTP you entered is incorrect. Please try again."});
+        console.error("Email auth error:", error);
+        toast({ variant: "destructive", title: "Login Failed", description: "Invalid email or password. Please try again." });
+    } finally {
         setLoading(false);
     }
   };
@@ -159,103 +113,91 @@ export default function LoginPage() {
   const handleAppleLogin = () => handleSocialLogin(new OAuthProvider('apple.com'));
 
   return (
-    <>
-      <div id="recaptcha-container"></div>
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your phone number to login or create an account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          {domainError && (
-              <Alert variant="destructive" className="mb-4">
-                  <AlertTitle>Configuration Required</AlertTitle>
-                  <AlertDescription className="text-xs space-y-2">
-                    <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
-                    <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
-                    <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive">
-                        <a href="https://console.firebase.google.com/project/ai-naya-shahayak/authentication/settings" target="_blank" rel="noopener noreferrer">
-                            Open Firebase Auth Settings
-                        </a>
-                    </Button>
-                  </AlertDescription>
-              </Alert>
-          )}
-          {!otpSent ? (
-              <div className="space-y-4">
-                  <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <div className="relative">
-                          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                              <span className="text-muted-foreground sm:text-sm">+91</span>
-                          </div>
-                          <Input 
-                              id="phone" 
-                              type="tel" 
-                              placeholder="xxxxxxxxxx" 
-                              required 
-                              className="pl-12"
-                              value={phone}
-                              onChange={(e) => setPhone(e.target.value)}
-                              disabled={loading}
-                          />
-                      </div>
-                  </div>
-                  <Button className="w-full font-semibold" onClick={handlePhoneLogin} disabled={loading || !phone}>
-                      {loading && !otpSent ? <Loader2 className="animate-spin"/> : "Send OTP"}
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardDescription>
+          Enter your email below to login to your account.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        {domainError && (
+            <Alert variant="destructive" className="mb-4">
+                <AlertTitle>Configuration Required</AlertTitle>
+                <AlertDescription className="text-xs space-y-2">
+                  <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
+                  <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
+                  <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive">
+                      <a href="https://console.firebase.google.com/project/ai-naya-shahayak/authentication/settings" target="_blank" rel="noopener noreferrer">
+                          Open Firebase Auth Settings
+                      </a>
                   </Button>
+                </AlertDescription>
+            </Alert>
+        )}
+        
+        <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center">
+                <Label htmlFor="password">Password</Label>
+                <Link href="#" className="ml-auto inline-block text-sm underline">
+                  Forgot your password?
+                </Link>
               </div>
-          ) : (
-              <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="otp">Enter OTP</Label>
-                      <Input 
-                          id="otp" 
-                          type="text" 
-                          placeholder="6-digit code" 
-                          required 
-                          value={otp}
-                          onChange={(e) => setOtp(e.target.value)}
-                          disabled={loading}
-                      />
-                  </div>
-                  <Button className="w-full font-semibold" onClick={handleOtpVerify} disabled={loading || !otp}>
-                        {loading ? <Loader2 className="animate-spin"/> : "Verify OTP & Continue"}
-                  </Button>
-                  <Button variant="link" size="sm" onClick={() => setOtpSent(false)} disabled={loading}>Back</Button>
-              </div>
-          )}
-          
-          <div className="relative my-2">
-              <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
-                  </span>
-              </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
-                  <GoogleIcon className="mr-2 h-4 w-4" />
-                  Google
-              </Button>
-              <Button variant="outline" className="w-full" onClick={handleAppleLogin} disabled={loading}>
-                  <AppleIcon className="mr-2 h-4 w-4 fill-current" />
-                  Apple
-              </Button>
-          </div>
-           <div className="text-center">
-            <Button asChild variant="link" className="text-muted-foreground hover:text-primary">
-              <Link href="/dashboard">Skip Login</Link>
+              <Input 
+                id="password" 
+                type="password" 
+                required 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+            <Button type="submit" className="w-full" onClick={handleEmailLogin} disabled={loading}>
+              {loading ? <Loader2 className="animate-spin" /> : "Login"}
             </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </>
+        </div>
+        
+        <div className="relative my-2">
+            <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+                </span>
+            </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+            <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
+                <GoogleIcon className="mr-2 h-4 w-4" />
+                Google
+            </Button>
+            <Button variant="outline" className="w-full" onClick={handleAppleLogin} disabled={loading}>
+                <AppleIcon className="mr-2 h-4 w-4 fill-current" />
+                Apple
+            </Button>
+        </div>
+         <div className="mt-4 text-center text-sm">
+          Don&apos;t have an account?{" "}
+          <Link href="/register" className="underline">
+            Sign up
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

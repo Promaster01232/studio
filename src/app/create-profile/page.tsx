@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -73,7 +72,6 @@ export default function CreateProfilePage() {
                 </div>
                 <div className="space-y-2"><Skeleton className="h-6 w-24" /><Skeleton className="h-10 w-full" /></div>
                 <div className="space-y-2"><Skeleton className="h-6 w-24" /><Skeleton className="h-10 w-full" /></div>
-                <div className="space-y-2"><Skeleton className="h-6 w-24" /><Skeleton className="h-10 w-full" /></div>
                 <Skeleton className="h-10 w-full" />
             </CardContent>
         </Card>
@@ -81,7 +79,7 @@ export default function CreateProfilePage() {
   }
 
   // If auth has loaded but there is no user, redirect to login
-  if (!auth) {
+  if (!auth.currentUser) {
       if (typeof window !== 'undefined') {
           router.replace('/login');
       }
@@ -104,7 +102,6 @@ export default function CreateProfilePage() {
     try {
       const userProfile = {
         uid: auth.currentUser.uid,
-        phoneNumber: auth.currentUser.phoneNumber,
         ...data,
       };
 
@@ -179,10 +176,6 @@ export default function CreateProfilePage() {
                 </FormItem>
               )}
             />
-            <div className="space-y-2">
-                <FormLabel>Phone Number</FormLabel>
-                <Input type="tel" value={auth.currentUser?.phoneNumber || ""} disabled />
-            </div>
 
             <FormField
               control={form.control}
