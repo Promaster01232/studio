@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from "next/image";
@@ -18,7 +19,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ImagePlus, ListPlus, X, Edit, Send, Link as LinkIcon } from "lucide-react";
+import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ListPlus, X, Edit, Send, Link as LinkIcon } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
@@ -70,12 +71,12 @@ function PostCard({ post }: { post: Post }) {
     const [isVoting, setIsVoting] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
     
-    // Optimistic state for likes
     const [optimisticLikes, setOptimisticLikes] = useState(post.likes);
     const [optimisticLikedBy, setOptimisticLikedBy] = useState(post.likedBy || []);
+    const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
-
+    
     const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
     const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
     const fallback = post.isAnonymous ? 'A' : (post.authorName?.charAt(0) || '');
@@ -97,7 +98,6 @@ function PostCard({ post }: { post: Post }) {
 
         const postRef = doc(firestore, "posts", post.id);
 
-        // Optimistic UI update
         setOptimisticLikes(prev => userHasLiked ? prev - 1 : prev + 1);
         setOptimisticLikedBy(prev => {
             if (userHasLiked) {
@@ -111,7 +111,6 @@ function PostCard({ post }: { post: Post }) {
             likes: increment(userHasLiked ? -1 : 1),
             likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
         }).catch((serverError) => {
-            // Revert optimistic update on error
             setOptimisticLikes(post.likes);
             setOptimisticLikedBy(post.likedBy || []);
             
@@ -128,9 +127,9 @@ function PostCard({ post }: { post: Post }) {
 
 
     const handleVote = (optionIndex: number) => {
-        if (!currentUser || !post.poll || isVoting) return;
+        if (!currentUser || !optimisticPoll || isVoting) return;
 
-        const userHasVoted = post.poll.voters?.includes(currentUser.uid);
+        const userHasVoted = optimisticPoll.voters?.includes(currentUser.uid);
         if (userHasVoted) {
             toast({ title: "You have already voted on this poll." });
             return;
@@ -139,20 +138,24 @@ function PostCard({ post }: { post: Post }) {
         setIsVoting(true);
 
         const postRef = doc(firestore, "posts", post.id);
-        const newOptions = [...post.poll.options];
-        newOptions[optionIndex].votes += 1;
-
-        const updatedPoll = {
+        const newOptions = [...optimisticPoll.options];
+        newOptions[optionIndex] = { ...newOptions[optionIndex], votes: newOptions[optionIndex].votes + 1 };
+        
+        const newPollState = {
+            ...optimisticPoll,
             options: newOptions,
-            voters: [...(post.poll.voters || []), currentUser.uid]
+            voters: [...(optimisticPoll.voters || []), currentUser.uid]
         };
 
-        updateDoc(postRef, { poll: updatedPoll })
+        setOptimisticPoll(newPollState);
+
+        updateDoc(postRef, { poll: newPollState })
             .catch((serverError) => {
+                setOptimisticPoll(post.poll);
                 const permissionError = new FirestorePermissionError({
                     path: postRef.path,
                     operation: 'update',
-                    requestResourceData: { poll: updatedPoll },
+                    requestResourceData: { poll: newPollState },
                 }, serverError);
                 errorEmitter.emit('permission-error', permissionError);
             })
@@ -161,8 +164,8 @@ function PostCard({ post }: { post: Post }) {
             });
     };
 
-    const totalVotes = post.poll ? post.poll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
-    const userHasVotedOnPoll = post.poll?.voters?.includes(currentUser?.uid ?? '');
+    const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
+    const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     
     return (
         <Card key={post.id} className="overflow-hidden">
@@ -178,7 +181,7 @@ function PostCard({ post }: { post: Post }) {
                             {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
                         </p>
                     </div>
-                     {post.postType && post.postType !== 'Poll' && (
+                     {post.postType && (
                         <Badge variant="outline" className="hidden sm:inline-flex">{post.postType}</Badge>
                     )}
                 </div>
@@ -220,27 +223,30 @@ function PostCard({ post }: { post: Post }) {
                     </div>
                 )}
                 
-                {post.poll && (
-                    <div className="pt-2 space-y-3">
-                       {post.poll.options.map((option, index) => {
+                {optimisticPoll && (
+                    <div className="pt-4 space-y-3">
+                       {optimisticPoll.options.map((option, index) => {
                            const votePercentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
+                           const userVotedForThis = post.poll?.voters?.includes(currentUser?.uid ?? '');
+
                            return (
                             <Button 
                                 key={index} 
-                                variant={userHasVotedOnPoll ? 'secondary' : 'outline'} 
+                                variant={userVotedForThis ? 'secondary' : 'outline'} 
                                 className="w-full justify-start h-auto p-3 flex flex-col items-start relative overflow-hidden"
                                 onClick={() => handleVote(index)}
                                 disabled={userHasVotedOnPoll || isVoting}
                             >
                                 <div className="flex items-center justify-between w-full z-10">
                                     <span className="font-medium text-sm">{option.text}</span>
-                                    {userHasVotedOnPoll && <span className="text-xs font-bold">{votePercentage.toFixed(0)}%</span>}
+                                    {userVotedForThis && <span className="text-xs font-bold">{votePercentage.toFixed(0)}%</span>}
                                 </div>
-                               {userHasVotedOnPoll && (
+                               {userVotedForThis && (
                                    <div className="absolute inset-y-0 left-0 bg-primary/10" style={{width: `${votePercentage}%`}}></div>
                                )}
                            </Button>
                        )})}
+                       {isVoting && <p className="text-xs text-muted-foreground text-center">Voting...</p>}
                     </div>
                 )}
             </div>
@@ -271,6 +277,7 @@ export default function ResearchAnalyticsPage() {
     const { toast } = useToast();
     const [feed, setFeed] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isPosting, setIsPosting] = useState(false);
     
@@ -290,58 +297,69 @@ export default function ResearchAnalyticsPage() {
     const firestore = useFirestore();
     const auth = useAuth();
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-
+    
     useEffect(() => {
         if (!firestore) return;
-        
-        let unsubscribePosts = () => {};
 
-        const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-            unsubscribePosts(); // Clean up previous listener
-
-            if (user) {
-                // Fetch user profile
+        const unsubscribeAuth = onAuthStateChanged(auth, user => {
+            setIsAuthenticated(!!user);
+            if (!user) {
+                setLoading(false);
+                setFeed([]);
+                setUserProfile(null);
+            } else {
                 const userDocRef = doc(firestore, "users", user.uid);
                 getDoc(userDocRef).then(userDoc => {
                     if (userDoc.exists()) {
                         setUserProfile(userDoc.data() as UserProfile);
                     }
                 });
+            }
+        });
 
-                // Fetch posts
-                setLoading(true);
-                const postsCollection = collection(firestore, "posts");
-                const q = query(postsCollection, orderBy("createdAt", "desc"));
+        return () => unsubscribeAuth();
+    }, [auth, firestore]);
 
-                unsubscribePosts = onSnapshot(q,
-                    (querySnapshot) => {
-                        const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post));
-                        setFeed(postsData);
-                        setLoading(false);
-                    },
-                    (serverError) => {
-                        const permissionError = new FirestorePermissionError({
-                            path: postsCollection.path,
-                            operation: 'list',
-                        }, serverError);
-                        errorEmitter.emit('permission-error', permissionError);
-                        setLoading(false);
-                        setFeed([]);
-                    }
-                );
-            } else {
-                // Not authenticated
-                setUserProfile(null);
+    useEffect(() => {
+        if (!firestore || !isAuthenticated) {
+            // If not authenticated, ensure no listener is active and clear feed.
+            if (!isAuthenticated) {
                 setFeed([]);
                 setLoading(false);
             }
-        });
-        
-        return () => {
-            unsubscribeAuth();
-            unsubscribePosts();
-        };
-    }, [firestore, auth]);
+            return;
+        }
+
+        setLoading(true);
+        const postsCollection = collection(firestore, "posts");
+        const q = query(postsCollection, orderBy("createdAt", "desc"));
+
+        const unsubscribePosts = onSnapshot(q,
+            (querySnapshot) => {
+                const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post));
+                setFeed(postsData);
+                setLoading(false);
+            },
+            (serverError) => {
+                // This error handler is now smarter. If there's no authenticated user,
+                // it's likely a race condition on logout, which we can safely ignore.
+                if (!auth.currentUser) {
+                    console.warn("Firestore listener permission error caught during logout. This is expected and can be ignored.", serverError);
+                    return; // Ignore the error
+                }
+
+                const permissionError = new FirestorePermissionError({
+                    path: postsCollection.path,
+                    operation: 'list',
+                }, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+                setLoading(false);
+                setFeed([]);
+            }
+        );
+
+        return () => unsubscribePosts();
+    }, [firestore, isAuthenticated, auth]);
     
     const resetDialog = () => {
         setTitle('');
@@ -498,7 +516,7 @@ export default function ResearchAnalyticsPage() {
             <PageHeader title="Legal News & Updates" description="Stay informed with the latest legal news and notifications.">
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button> <PlusCircle className="mr-2 h-4 w-4" /> Create Post </Button>
+                        <Button disabled={!isAuthenticated}> <PlusCircle className="mr-2 h-4 w-4" /> Create Post </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-lg">
                         <DialogHeader>
@@ -600,7 +618,13 @@ export default function ResearchAnalyticsPage() {
             </PageHeader>
 
             <div className="max-w-3xl mx-auto space-y-6">
-                {feed.length === 0 && !loading ? (
+                {!isAuthenticated && !loading ? (
+                    <Card>
+                        <CardContent className="py-20 text-center">
+                            <p className="text-muted-foreground">Please log in to view and create posts.</p>
+                        </CardContent>
+                    </Card>
+                ) : feed.length === 0 && !loading ? (
                     <Card>
                         <CardContent className="py-20 text-center text-muted-foreground">
                             No news updates yet. Be the first to post!
@@ -611,3 +635,5 @@ export default function ResearchAnalyticsPage() {
         </div>
     );
 }
+
+    
