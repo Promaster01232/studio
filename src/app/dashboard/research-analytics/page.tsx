@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import Image from "next/image";
@@ -20,7 +21,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ImagePlus, ListPlus, X, Link as LinkIcon } from "lucide-react";
+import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ImagePlus, ListPlus, X, Edit, Send } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
@@ -28,6 +29,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError } from "@/firebase/errors";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+
 
 interface Post {
     id: string;
@@ -45,6 +50,9 @@ interface Post {
     };
     likes: number;
     comments: number;
+    postType?: 'Idea' | 'Question' | 'Suggestion' | 'Poll';
+    tags?: string[];
+    isAnonymous?: boolean;
 }
 
 interface UserProfile {
@@ -60,6 +68,10 @@ function PostCard({ post }: { post: Post }) {
     const { currentUser } = auth;
 
     const [isVoting, setIsVoting] = useState(false);
+
+    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
+    const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
+    const fallback = post.isAnonymous ? 'A' : (post.authorName?.charAt(0) || '');
     
     const handleAction = (action: string) => {
         toast({
@@ -111,18 +123,18 @@ function PostCard({ post }: { post: Post }) {
                 <div className="p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-4">
                         <Avatar className="h-10 w-10 border hover:ring-2 hover:ring-primary transition-all">
-                            {post.authorAvatar && <AvatarImage src={post.authorAvatar} alt={post.authorName}/>}
-                            <AvatarFallback>{post.authorName?.charAt(0)}</AvatarFallback>
+                            {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName}/>}
+                            <AvatarFallback>{fallback}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <p className="font-semibold">{post.authorName}</p>
+                            <p className="font-semibold">{authorName}</p>
                             <p className="text-xs text-muted-foreground">
                                 {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
                             </p>
                         </div>
                     </div>
                     <h3 className="text-lg font-bold font-headline leading-snug mb-2">{post.title}</h3>
-                    <p className="text-muted-foreground text-sm whitespace-pre-line">{post.content}</p>
+                    {post.content && <p className="text-muted-foreground text-sm whitespace-pre-line">{post.content}</p>}
                 </div>
                 
                 {post.link && (
@@ -199,12 +211,15 @@ export default function ResearchAnalyticsPage() {
     const [isPosting, setIsPosting] = useState(false);
     
     // Dialog state
+    const [activeTab, setActiveTab] = useState('idea');
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [link, setLink] = useState('');
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [showPollCreator, setShowPollCreator] = useState(false);
+    const [pollQuestion, setPollQuestion] = useState('');
     const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
+    const [postType, setPostType] = useState('Idea');
+    const [tags, setTags] = useState('');
+    const [isAnonymous, setIsAnonymous] = useState(false);
     const imageInputRef = useRef<HTMLInputElement>(null);
 
     const firestore = useFirestore();
@@ -253,11 +268,14 @@ export default function ResearchAnalyticsPage() {
     const resetDialog = () => {
         setTitle('');
         setContent('');
-        setLink('');
         setImagePreview(null);
-        setShowPollCreator(false);
         setPollOptions(['', '']);
         if(imageInputRef.current) imageInputRef.current.value = '';
+        setActiveTab('idea');
+        setPostType('Idea');
+        setTags('');
+        setIsAnonymous(false);
+        setPollQuestion('');
     }
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -296,8 +314,11 @@ export default function ResearchAnalyticsPage() {
             return;
         }
 
-        if (!title || !content) {
-            toast({ variant: 'destructive', title: 'Missing fields', description: 'Please fill out both title and content.' });
+        const isPoll = activeTab === 'poll';
+        const finalTitle = isPoll ? pollQuestion : title;
+
+        if (!finalTitle) {
+            toast({ variant: 'destructive', title: 'Missing fields', description: 'Please fill out all required fields.' });
             return;
         }
         
@@ -305,25 +326,30 @@ export default function ResearchAnalyticsPage() {
 
         const newPostData: Omit<Post, 'id' | 'createdAt'> = {
             authorUid: auth.currentUser.uid,
-            authorName: `${userProfile.firstName} ${userProfile.lastName}`,
-            authorAvatar: userProfile.photoURL || '',
-            title,
-            content,
-            link: link || undefined,
+            authorName: isAnonymous ? 'Anonymous' : `${userProfile.firstName} ${userProfile.lastName}`,
+            authorAvatar: isAnonymous ? undefined : (userProfile.photoURL || ''),
+            title: finalTitle,
+            content: isPoll ? '' : content,
             likes: 0,
             comments: 0,
+            postType: isPoll ? 'Poll' : (postType as any),
+            tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+            isAnonymous: isAnonymous,
         };
 
-        if (imagePreview) {
+        if (!isPoll && imagePreview) {
             newPostData.image = imagePreview;
         }
 
-        if (showPollCreator && pollOptions.some(opt => opt.trim() !== '')) {
+        if (isPoll) {
+            const validPollOptions = pollOptions.map(opt => opt.trim()).filter(Boolean);
+            if (validPollOptions.length < 2) {
+                toast({ variant: 'destructive', title: 'Invalid Poll', description: 'A poll must have at least two options.' });
+                setIsPosting(false);
+                return;
+            }
             newPostData.poll = {
-                options: pollOptions
-                    .map(opt => opt.trim())
-                    .filter(opt => opt !== '')
-                    .map(opt => ({ text: opt, votes: 0 })),
+                options: validPollOptions.map(opt => ({ text: opt, votes: 0 })),
                 voters: []
             };
         }
@@ -376,7 +402,6 @@ export default function ResearchAnalyticsPage() {
                                     <Skeleton className="h-4 w-5/6" />
                                 </div>
                             </CardContent>
-                            <Skeleton className="h-48 w-full" />
                             <CardFooter className="p-2 sm:p-3">
                                 <Skeleton className="h-8 w-full" />
                             </CardFooter>
@@ -396,69 +421,94 @@ export default function ResearchAnalyticsPage() {
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-lg">
                         <DialogHeader>
-                            <DialogTitle>Create a New Post</DialogTitle>
-                            <DialogDescription> Share a legal news update with the community. Click post when you're done. </DialogDescription>
+                            <DialogTitle>Create a contribution</DialogTitle>
                         </DialogHeader>
                         <form onSubmit={handlePostSubmit}>
-                          <div className="grid gap-4 py-4">
-                              <div className="space-y-2">
-                                  <Label htmlFor="title">Title</Label>
-                                  <Input id="title" name="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Your post title" required disabled={isPosting} />
-                              </div>
-                              <div className="space-y-2">
-                                  <Label htmlFor="content">Content</Label>
-                                  <Textarea id="content" name="content" value={content} onChange={e => setContent(e.target.value)} placeholder="Write your news update here..." required rows={5} disabled={isPosting} />
-                              </div>
-                               <div className="space-y-2">
-                                  <Label htmlFor="link">Link (Optional)</Label>
-                                  <Input id="link" name="link" value={link} onChange={e => setLink(e.target.value)} placeholder="https://example.com/news-article" disabled={isPosting} />
-                              </div>
-
-                               {imagePreview && (
-                                   <div className="relative">
-                                       <Image src={imagePreview} alt="Image preview" width={500} height={300} className="rounded-md object-cover w-full aspect-video" />
-                                       <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => { setImagePreview(null); if(imageInputRef.current) imageInputRef.current.value = ''; }}>
-                                           <X className="h-4 w-4" />
-                                       </Button>
-                                   </div>
-                               )}
-                               
-                               {showPollCreator && (
-                                   <div className="space-y-3 p-3 border rounded-md">
+                            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                                <TabsList className="grid w-full grid-cols-2">
+                                    <TabsTrigger value="idea"><Edit className="mr-2 h-4 w-4"/>Share an Idea</TabsTrigger>
+                                    <TabsTrigger value="poll"><ListPlus className="mr-2 h-4 w-4"/>Start a Poll</TabsTrigger>
+                                </TabsList>
+                                <TabsContent value="idea" className="py-4 space-y-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="postType">Post Type</Label>
+                                        <Select value={postType} onValueChange={setPostType}>
+                                            <SelectTrigger id="postType"><SelectValue placeholder="Select a type" /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Idea">Idea</SelectItem>
+                                                <SelectItem value="Question">Question</SelectItem>
+                                                <SelectItem value="Suggestion">Suggestion</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Title & Description</Label>
+                                        <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title on the first line..." required />
+                                        <Textarea value={content} onChange={e => setContent(e.target.value)} placeholder="Then describe your idea, question, or suggestion." rows={4} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="thumbnail">Add a custom thumbnail (Optional)</Label>
+                                        <Input id="thumbnail" type="file" onChange={handleImageChange} ref={imageInputRef} accept="image/*"/>
+                                        {imagePreview && (
+                                            <div className="relative mt-2">
+                                                <Image src={imagePreview} alt="Image preview" width={500} height={300} className="rounded-md object-cover w-full aspect-video" />
+                                                <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => { setImagePreview(null); if(imageInputRef.current) imageInputRef.current.value = ''; }}>
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
+                                     <div className="space-y-2">
+                                        <Label htmlFor="tags">Add Tags (Optional)</Label>
+                                        <Input id="tags" value={tags} onChange={e => setTags(e.target.value)} placeholder="e.g. saas, ai, fintech, healthtech" />
+                                        <p className="text-xs text-muted-foreground">Comma-separated tags to help categorize your idea.</p>
+                                    </div>
+                                     <div className="flex items-center justify-between rounded-lg border p-4 bg-muted/50">
+                                        <div className="space-y-0.5">
+                                            <Label htmlFor="anonymous-idea" className="text-base">Post Anonymously</Label>
+                                            <p className="text-xs text-muted-foreground">Your username and avatar will be hidden from the public.</p>
+                                        </div>
+                                        <Switch id="anonymous-idea" checked={isAnonymous} onCheckedChange={setIsAnonymous} />
+                                    </div>
+                                </TabsContent>
+                                <TabsContent value="poll" className="py-4 space-y-4">
+                                     <div className="space-y-2">
+                                        <Label htmlFor="pollQuestion">Poll Question</Label>
+                                        <Input id="pollQuestion" value={pollQuestion} onChange={e => setPollQuestion(e.target.value)} placeholder="What do you want to ask?" required={activeTab === 'poll'} />
+                                    </div>
+                                    <div className="space-y-3">
                                         <Label>Poll Options</Label>
-                                       {pollOptions.map((option, index) => (
-                                           <div key={index} className="flex items-center gap-2">
-                                               <Input 
-                                                 placeholder={`Option ${index + 1}`}
-                                                 value={option}
-                                                 onChange={(e) => handlePollOptionChange(index, e.target.value)}
-                                                 disabled={isPosting}
-                                               />
-                                               <Button type="button" variant="ghost" size="icon" onClick={() => handleRemovePollOption(index)} disabled={pollOptions.length <= 2}>
-                                                   <X className="h-4 w-4"/>
-                                               </Button>
-                                           </div>
-                                       ))}
-                                       {pollOptions.length < 4 && <Button type="button" size="sm" variant="ghost" onClick={handleAddPollOption}>Add Option</Button>}
-                                   </div>
-                               )}
-
-                          </div>
-                          <DialogFooter className="!justify-between">
-                            <div className="flex items-center gap-1">
-                                <Input type="file" accept="image/*" ref={imageInputRef} onChange={handleImageChange} className="hidden"/>
-                                <Button type="button" variant="ghost" size="icon" onClick={() => imageInputRef.current?.click()} disabled={isPosting || !!imagePreview}>
-                                    <ImagePlus className="text-muted-foreground"/>
+                                        {pollOptions.map((option, index) => (
+                                            <div key={index} className="flex items-center gap-2">
+                                                <Input 
+                                                    placeholder={`Option ${index + 1}`}
+                                                    value={option}
+                                                    onChange={(e) => handlePollOptionChange(index, e.target.value)}
+                                                    required={activeTab === 'poll'}
+                                                />
+                                                <Button type="button" variant="ghost" size="icon" onClick={() => handleRemovePollOption(index)} disabled={pollOptions.length <= 2}>
+                                                    <X className="h-4 w-4"/>
+                                                </Button>
+                                            </div>
+                                        ))}
+                                        {pollOptions.length < 4 && <Button type="button" size="sm" variant="ghost" onClick={handleAddPollOption}>Add Option</Button>}
+                                    </div>
+                                    <div className="flex items-center justify-between rounded-lg border p-4 bg-muted/50">
+                                        <div className="space-y-0.5">
+                                            <Label htmlFor="anonymous-poll" className="text-base">Post Anonymously</Label>
+                                            <p className="text-xs text-muted-foreground">Your username and avatar will be hidden from the public.</p>
+                                        </div>
+                                        <Switch id="anonymous-poll" checked={isAnonymous} onCheckedChange={setIsAnonymous} />
+                                    </div>
+                                </TabsContent>
+                            </Tabs>
+                            <DialogFooter>
+                                <Button type="submit" disabled={isPosting} className="w-full">
+                                    {isPosting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    <Send className="mr-2 h-4 w-4" />
+                                    Publish Post
                                 </Button>
-                                <Button type="button" variant="ghost" size="icon" onClick={() => setShowPollCreator(prev => !prev)} disabled={isPosting}>
-                                    <ListPlus className="text-muted-foreground"/>
-                                </Button>
-                            </div>
-                            <Button type="submit" disabled={isPosting}>
-                                {isPosting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Post
-                            </Button>
-                          </DialogFooter>
+                            </DialogFooter>
                         </form>
                     </DialogContent>
                 </Dialog>
