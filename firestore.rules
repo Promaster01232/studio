@@ -17,17 +17,25 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
 
-    // Posts collection
+    // Grant query (list) access to the posts collection for any authenticated user
+    match /posts {
+      allow list: if request.auth != null;
+    }
+
+    // Grant document-level access for individual posts
     match /posts/{postId} {
-      allow read: if request.auth != null;
+      // Allow reading a single post if authenticated
+      allow get: if request.auth != null;
+
+      // Allow creating a post if authenticated and the author is the current user
       allow create: if request.auth != null && request.resource.data.authorUid == request.auth.uid;
       
-      // Allow author to update their own post.
-      // Allow any authenticated user to update 'likes', 'likedBy', and 'poll' fields.
+      // Allow updates by the author, or for likes/polls by any authenticated user
       allow update: if request.auth != null &&
         (resource.data.authorUid == request.auth.uid ||
          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likedBy', 'poll']));
 
+      // Allow deletion only by the author
       allow delete: if request.auth != null && resource.data.authorUid == request.auth.uid;
     }
   }
