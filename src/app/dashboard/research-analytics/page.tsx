@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from "next/image";
@@ -20,7 +19,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ListPlus, X, Edit, Send, Link as LinkIcon, ImageUp } from "lucide-react";
+import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ListPlus, X, Edit, Send, Link as LinkIcon, ImageUp, ArrowRight } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
@@ -300,7 +299,7 @@ export default function ResearchAnalyticsPage() {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     
     useEffect(() => {
-        if (!firestore) return;
+        if (!firestore || !auth) return;
 
         const unsubscribeAuth = onAuthStateChanged(auth, user => {
             setIsAuthenticated(!!user);
@@ -308,41 +307,42 @@ export default function ResearchAnalyticsPage() {
                 setLoading(false);
                 setFeed([]);
                 setUserProfile(null);
-            } else {
-                setLoading(true);
-                const userDocRef = doc(firestore, "users", user.uid);
-                getDoc(userDocRef).then(userDoc => {
-                    if (userDoc.exists()) {
-                        setUserProfile(userDoc.data() as UserProfile);
-                    }
-                });
-
-                const postsCollection = collection(firestore, "posts");
-                const q = query(postsCollection, orderBy("createdAt", "desc"));
-
-                const unsubscribePosts = onSnapshot(q,
-                    (querySnapshot) => {
-                        const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post));
-                        setFeed(postsData);
-                        setLoading(false);
-                    },
-                    (serverError) => {
-                        if (!auth.currentUser) {
-                            console.warn("Firestore listener permission error caught during logout. This is expected and can be ignored.", serverError);
-                            return;
-                        }
-
-                        const permissionError = new FirestorePermissionError({
-                            path: postsCollection.path,
-                            operation: 'list',
-                        }, serverError);
-                        errorEmitter.emit('permission-error', permissionError);
-                        setLoading(false);
-                        setFeed([]);
-                    }
-                );
-                return () => unsubscribePosts();
+                return;
             }
+
+            setLoading(true);
+            const userDocRef = doc(firestore, "users", user.uid);
+            getDoc(userDocRef).then(userDoc => {
+                if (userDoc.exists()) {
+                    setUserProfile(userDoc.data() as UserProfile);
+                }
+            });
+
+            const postsCollection = collection(firestore, "posts");
+            const q = query(postsCollection, orderBy("createdAt", "desc"));
+
+            const unsubscribePosts = onSnapshot(q,
+                (querySnapshot) => {
+                    const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post));
+                    setFeed(postsData);
+                    setLoading(false);
+                },
+                (serverError) => {
+                    if (!auth.currentUser) {
+                        console.warn("Firestore listener permission error caught during logout. This is expected and can be ignored.", serverError);
+                        return;
+                    }
+
+                    const permissionError = new FirestorePermissionError({
+                        path: postsCollection.path,
+                        operation: 'list',
+                    }, serverError);
+                    errorEmitter.emit('permission-error', permissionError);
+                    setLoading(false);
+                    setFeed([]);
+                }
+            );
+            return () => unsubscribePosts();
         });
 
         return () => unsubscribeAuth();
@@ -468,9 +468,8 @@ export default function ResearchAnalyticsPage() {
     if (loading) {
         return (
             <div className="space-y-8">
-                <PageHeader title="Legal News & Updates" description="Stay informed with the latest legal news and notifications.">
-                    <Skeleton className="h-10 w-32" />
-                </PageHeader>
+                <PageHeader title="Community Feed & News" description="Discuss legal topics and stay informed." />
+                <Skeleton className="h-32 w-full" />
                 <div className="max-w-3xl mx-auto space-y-6">
                     {[...Array(3)].map((_, i) => (
                         <Card key={i}>
@@ -500,132 +499,157 @@ export default function ResearchAnalyticsPage() {
 
     return (
         <div className="space-y-8">
-            <PageHeader title="Legal News & Updates" description="Stay informed with the latest legal news and notifications.">
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button disabled={!isAuthenticated}> <PlusCircle className="mr-2 h-4 w-4" /> Create Post </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-2xl">
-                        <DialogHeader>
-                            <DialogTitle>Create a contribution</DialogTitle>
-                            <DialogDescription>
-                                Share an idea, ask a question, or start a poll to engage with the community.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <form onSubmit={handlePostSubmit}>
-                            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                                <TabsList className="grid w-full grid-cols-2">
-                                    <TabsTrigger value="idea"><Edit className="mr-2 h-4 w-4"/>Share an Idea</TabsTrigger>
-                                    <TabsTrigger value="poll"><ListPlus className="mr-2 h-4 w-4"/>Start a Poll</TabsTrigger>
-                                </TabsList>
-                                
-                                <div className="py-4">
-                                     <div className="flex items-center justify-between rounded-lg border p-4">
-                                        <div className="space-y-0.5">
-                                            <Label htmlFor="anonymous-idea" className="text-base">Post Anonymously</Label>
-                                            <p className="text-xs text-muted-foreground">Your username and avatar will be hidden from the public.</p>
-                                        </div>
-                                        <Switch id="anonymous-idea" checked={isAnonymous} onCheckedChange={setIsAnonymous} />
+            <PageHeader title="Community Feed & News" description="Discuss legal topics and stay informed." />
+            
+            <Dialog open={isDialogOpen} onOpenChange={(open) => {
+                if(!open) resetDialog();
+                setIsDialogOpen(open);
+            }}>
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                            <div className="flex-1">
+                                <h2 className="text-xl font-bold flex items-center gap-2"><Edit className="h-5 w-5 text-primary"/> Share Your Spark</h2>
+                                <p className="text-muted-foreground mt-1 text-sm">Have an idea? Ready to ask a question or start a poll? Let's get started.</p>
+                            </div>
+                            <DialogTrigger asChild>
+                                <Button disabled={!isAuthenticated}>Share Your Spark <ArrowRight className="ml-2 h-4 w-4"/></Button>
+                            </DialogTrigger>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <DialogContent className="sm:max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle>Create a contribution</DialogTitle>
+                        <DialogDescription>
+                            Share an idea, ask a question, or start a poll to engage with the community.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handlePostSubmit}>
+                        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                            <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger value="idea"><Edit className="mr-2 h-4 w-4"/>Share an Idea</TabsTrigger>
+                                <TabsTrigger value="poll"><ListPlus className="mr-2 h-4 w-4"/>Start a Poll</TabsTrigger>
+                            </TabsList>
+                            
+                            <div className="py-4">
+                                    <div className="flex items-center justify-between rounded-lg border p-4">
+                                    <div className="space-y-0.5">
+                                        <Label htmlFor="anonymous-idea" className="text-base">Post Anonymously</Label>
+                                        <p className="text-xs text-muted-foreground">Your username and avatar will be hidden from the public.</p>
                                     </div>
+                                    <Switch id="anonymous-idea" checked={isAnonymous} onCheckedChange={setIsAnonymous} />
+                                </div>
+                            </div>
+
+                            <TabsContent value="idea" className="mt-0 space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="postType">Post Type</Label>
+                                    <Select value={postType} onValueChange={setPostType}>
+                                        <SelectTrigger id="postType"><SelectValue placeholder="Select a type" /></SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Idea">Idea</SelectItem>
+                                            <SelectItem value="Question">Question</SelectItem>
+                                            <SelectItem value="Suggestion">Suggestion</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="title">Title</Label>
+                                    <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="A short, descriptive title" required />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="content">Description (Optional)</Label>
+                                    <Textarea id="content" value={content} onChange={e => setContent(e.target.value)} placeholder="Describe your idea, question, or suggestion in more detail." rows={4} />
+                                </div>
+                                
+                                <div className="p-4 border-dashed border-2 rounded-lg text-center">
+                                    <Label htmlFor="thumbnail" className="cursor-pointer">
+                                        <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
+                                            <ImageUp className="h-8 w-8" />
+                                            <span className="font-medium">Add a thumbnail (Optional)</span>
+                                            <span className="text-xs">Click to upload</span>
+                                        </div>
+                                    </Label>
+                                    <Input id="thumbnail" type="file" onChange={handleImageChange} ref={imageInputRef} accept="image/*" className="hidden"/>
                                 </div>
 
-                                <TabsContent value="idea" className="mt-0 space-y-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="postType">Post Type</Label>
-                                        <Select value={postType} onValueChange={setPostType}>
-                                            <SelectTrigger id="postType"><SelectValue placeholder="Select a type" /></SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="Idea">Idea</SelectItem>
-                                                <SelectItem value="Question">Question</SelectItem>
-                                                <SelectItem value="Suggestion">Suggestion</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                {imagePreview && (
+                                    <div className="relative mt-2">
+                                        <Image src={imagePreview} alt="Image preview" width={500} height={300} className="rounded-md object-cover w-full aspect-video" />
+                                        <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => { setImagePreview(null); if(imageInputRef.current) imageInputRef.current.value = ''; }}>
+                                            <X className="h-4 w-4" />
+                                        </Button>
                                     </div>
+                                )}
                                     <div className="space-y-2">
-                                        <Label htmlFor="title">Title</Label>
-                                        <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="A short, descriptive title" required />
-                                    </div>
+                                    <Label htmlFor="link">Add a link (Optional)</Label>
+                                    <Input id="link" value={link} onChange={e => setLink(e.target.value)} placeholder="https://example.com" />
+                                </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="content">Description (Optional)</Label>
-                                        <Textarea id="content" value={content} onChange={e => setContent(e.target.value)} placeholder="Describe your idea, question, or suggestion in more detail." rows={4} />
-                                    </div>
-                                    
-                                    <div className="p-4 border-dashed border-2 rounded-lg text-center">
-                                        <Label htmlFor="thumbnail" className="cursor-pointer">
-                                            <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-                                                <ImageUp className="h-8 w-8" />
-                                                <span className="font-medium">Add a thumbnail (Optional)</span>
-                                                <span className="text-xs">Click to upload</span>
+                                    <Label htmlFor="tags">Tags (Optional)</Label>
+                                    <Input id="tags" value={tags} onChange={e => setTags(e.target.value)} placeholder="e.g., saas, ai, fintech" />
+                                    <p className="text-xs text-muted-foreground">Comma-separated tags to help categorize your post.</p>
+                                </div>
+                            </TabsContent>
+                            
+                            <TabsContent value="poll" className="mt-0 space-y-4">
+                                    <div className="space-y-2">
+                                    <Label htmlFor="pollQuestion">Poll Question</Label>
+                                    <Input id="pollQuestion" value={pollQuestion} onChange={e => setPollQuestion(e.target.value)} placeholder="What do you want to ask?" required={activeTab === 'poll'} />
+                                </div>
+                                <div className="space-y-3">
+                                    <Label>Poll Options</Label>
+                                    {pollOptions.map((option, index) => (
+                                        <div key={index} className="flex items-center gap-2">
+                                            <div className="flex-1 relative">
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">{index + 1}.</span>
+                                                <Input 
+                                                    placeholder={`Option ${index + 1}`}
+                                                    value={option}
+                                                    onChange={(e) => handlePollOptionChange(index, e.target.value)}
+                                                    required={activeTab === 'poll'}
+                                                    className="pl-8"
+                                                />
                                             </div>
-                                        </Label>
-                                        <Input id="thumbnail" type="file" onChange={handleImageChange} ref={imageInputRef} accept="image/*" className="hidden"/>
-                                    </div>
-
-                                    {imagePreview && (
-                                        <div className="relative mt-2">
-                                            <Image src={imagePreview} alt="Image preview" width={500} height={300} className="rounded-md object-cover w-full aspect-video" />
-                                            <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => { setImagePreview(null); if(imageInputRef.current) imageInputRef.current.value = ''; }}>
-                                                <X className="h-4 w-4" />
+                                            <Button type="button" variant="ghost" size="icon" onClick={() => handleRemovePollOption(index)} disabled={pollOptions.length <= 2}>
+                                                <X className="h-4 w-4 text-muted-foreground"/>
                                             </Button>
                                         </div>
-                                    )}
-                                     <div className="space-y-2">
-                                        <Label htmlFor="link">Add a link (Optional)</Label>
-                                        <Input id="link" value={link} onChange={e => setLink(e.target.value)} placeholder="https://example.com" />
-                                    </div>
-                                     <div className="space-y-2">
-                                        <Label htmlFor="tags">Tags (Optional)</Label>
-                                        <Input id="tags" value={tags} onChange={e => setTags(e.target.value)} placeholder="e.g., saas, ai, fintech" />
-                                        <p className="text-xs text-muted-foreground">Comma-separated tags to help categorize your post.</p>
-                                    </div>
-                                </TabsContent>
-                                
-                                <TabsContent value="poll" className="mt-0 space-y-4">
-                                     <div className="space-y-2">
-                                        <Label htmlFor="pollQuestion">Poll Question</Label>
-                                        <Input id="pollQuestion" value={pollQuestion} onChange={e => setPollQuestion(e.target.value)} placeholder="What do you want to ask?" required={activeTab === 'poll'} />
-                                    </div>
-                                    <div className="space-y-3">
-                                        <Label>Poll Options</Label>
-                                        {pollOptions.map((option, index) => (
-                                            <div key={index} className="flex items-center gap-2">
-                                                <div className="flex-1 relative">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">{index + 1}.</span>
-                                                    <Input 
-                                                        placeholder={`Option ${index + 1}`}
-                                                        value={option}
-                                                        onChange={(e) => handlePollOptionChange(index, e.target.value)}
-                                                        required={activeTab === 'poll'}
-                                                        className="pl-8"
-                                                    />
-                                                </div>
-                                                <Button type="button" variant="ghost" size="icon" onClick={() => handleRemovePollOption(index)} disabled={pollOptions.length <= 2}>
-                                                    <X className="h-4 w-4 text-muted-foreground"/>
-                                                </Button>
-                                            </div>
-                                        ))}
-                                        {pollOptions.length < 4 && <Button type="button" size="sm" variant="outline" onClick={handleAddPollOption} className="w-full border-dashed"><PlusCircle className="mr-2 h-4 w-4"/>Add Option</Button>}
-                                    </div>
-                                     <div className="space-y-2">
-                                        <Label htmlFor="tags-poll">Tags (Optional)</Label>
-                                        <Input id="tags-poll" value={tags} onChange={e => setTags(e.target.value)} placeholder="e.g., policy, reform, technology" />
-                                        <p className="text-xs text-muted-foreground">Comma-separated tags to help categorize your poll.</p>
-                                    </div>
-                                </TabsContent>
-                            </Tabs>
-                            <DialogFooter className="pt-4">
-                                <Button type="submit" disabled={isPosting} className="w-full">
-                                    {isPosting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    <Send className="mr-2 h-4 w-4" />
-                                    Publish Post
-                                </Button>
-                            </DialogFooter>
-                        </form>
-                    </DialogContent>
-                </Dialog>
-            </PageHeader>
+                                    ))}
+                                    {pollOptions.length < 4 && <Button type="button" size="sm" variant="outline" onClick={handleAddPollOption} className="w-full border-dashed"><PlusCircle className="mr-2 h-4 w-4"/>Add Option</Button>}
+                                </div>
+                                    <div className="space-y-2">
+                                    <Label htmlFor="tags-poll">Tags (Optional)</Label>
+                                    <Input id="tags-poll" value={tags} onChange={e => setTags(e.target.value)} placeholder="e.g., policy, reform, technology" />
+                                    <p className="text-xs text-muted-foreground">Comma-separated tags to help categorize your poll.</p>
+                                </div>
+                            </TabsContent>
+                        </Tabs>
+                        <DialogFooter className="pt-4">
+                            <Button type="submit" disabled={isPosting} className="w-full">
+                                {isPosting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                <Send className="mr-2 h-4 w-4" />
+                                Publish Post
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
 
-            <div className="max-w-3xl mx-auto space-y-6">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+                <h2 className="text-xl font-semibold">Community Feed</h2>
+                <div className="flex flex-wrap gap-2">
+                    <Button variant="default" size="sm">All</Button>
+                    <Button variant="outline" size="sm">Idea</Button>
+                    <Button variant="outline" size="sm">Poll</Button>
+                    <Button variant="outline" size="sm">Question</Button>
+                    <Button variant="outline" size="sm">Suggestion</Button>
+                </div>
+            </div>
+
+            <div className="space-y-6">
                 {!isAuthenticated && !loading ? (
                     <Card>
                         <CardContent className="py-20 text-center">
