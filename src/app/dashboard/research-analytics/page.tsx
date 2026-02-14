@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ImagePlus, ListPlus, X, Edit, Send, Link as LinkIcon } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Skeleton } from '@/components/ui/skeleton';
@@ -291,48 +292,57 @@ export default function ResearchAnalyticsPage() {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
     useEffect(() => {
-        if (!firestore || !auth.currentUser) {
-            setLoading(false);
-            setFeed([]); // Clear feed if user is not logged in or firestore is not ready
-            return;
-        }
-        setLoading(true);
-        const postsCollection = collection(firestore, "posts");
-        const q = query(postsCollection, orderBy("createdAt", "desc"));
+        if (!firestore) return;
+        
+        let unsubscribePosts = () => {};
 
-        const unsubscribe = onSnapshot(q, 
-            (querySnapshot) => {
-                const postsData = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                } as Post));
-                setFeed(postsData);
-                setLoading(false);
-            }, 
-            (serverError) => {
-                const permissionError = new FirestorePermissionError({
-                    path: postsCollection.path,
-                    operation: 'list',
-                }, serverError);
-                errorEmitter.emit('permission-error', permissionError);
+        const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+            unsubscribePosts(); // Clean up previous listener
+
+            if (user) {
+                // Fetch user profile
+                const userDocRef = doc(firestore, "users", user.uid);
+                getDoc(userDocRef).then(userDoc => {
+                    if (userDoc.exists()) {
+                        setUserProfile(userDoc.data() as UserProfile);
+                    }
+                });
+
+                // Fetch posts
+                setLoading(true);
+                const postsCollection = collection(firestore, "posts");
+                const q = query(postsCollection, orderBy("createdAt", "desc"));
+
+                unsubscribePosts = onSnapshot(q,
+                    (querySnapshot) => {
+                        const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post));
+                        setFeed(postsData);
+                        setLoading(false);
+                    },
+                    (serverError) => {
+                        const permissionError = new FirestorePermissionError({
+                            path: postsCollection.path,
+                            operation: 'list',
+                        }, serverError);
+                        errorEmitter.emit('permission-error', permissionError);
+                        setLoading(false);
+                        setFeed([]);
+                    }
+                );
+            } else {
+                // Not authenticated
+                setUserProfile(null);
+                setFeed([]);
                 setLoading(false);
             }
-        );
-
-        return () => unsubscribe();
-    }, [firestore, auth, auth.currentUser]);
+        });
+        
+        return () => {
+            unsubscribeAuth();
+            unsubscribePosts();
+        };
+    }, [firestore, auth]);
     
-    useEffect(() => {
-        if (auth.currentUser && firestore) {
-          const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-          getDoc(userDocRef).then(userDoc => {
-            if (userDoc.exists()) {
-              setUserProfile(userDoc.data() as UserProfile);
-            }
-          });
-        }
-      }, [auth.currentUser, firestore]);
-
     const resetDialog = () => {
         setTitle('');
         setContent('');
