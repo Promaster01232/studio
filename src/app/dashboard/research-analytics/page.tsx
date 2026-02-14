@@ -4,11 +4,10 @@
 
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -21,9 +20,9 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ImagePlus, ListPlus, X, Edit, Send } from "lucide-react";
+import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ImagePlus, ListPlus, X, Edit, Send, Link as LinkIcon } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Skeleton } from '@/components/ui/skeleton';
 import { errorEmitter } from "@/firebase/error-emitter";
@@ -42,13 +41,14 @@ interface Post {
     createdAt: Timestamp;
     title: string;
     content: string;
-    image?: string; // data URL
+    image?: string;
     link?: string;
     poll?: {
         options: { text: string; votes: number }[];
         voters?: string[];
     };
     likes: number;
+    likedBy?: string[];
     comments: number;
     postType?: 'Idea' | 'Question' | 'Suggestion' | 'Poll';
     tags?: string[];
@@ -66,8 +66,15 @@ function PostCard({ post }: { post: Post }) {
     const firestore = useFirestore();
     const auth = useAuth();
     const { currentUser } = auth;
-
+    
     const [isVoting, setIsVoting] = useState(false);
+    const [isLiking, setIsLiking] = useState(false);
+    
+    // Optimistic state for likes
+    const [optimisticLikes, setOptimisticLikes] = useState(post.likes);
+    const [optimisticLikedBy, setOptimisticLikedBy] = useState(post.likedBy || []);
+
+    const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
 
     const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
     const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
@@ -75,10 +82,50 @@ function PostCard({ post }: { post: Post }) {
     
     const handleAction = (action: string) => {
         toast({
-            title: `Post ${action.toLowerCase()}ed!`,
-            description: "This is for demonstration purposes.",
+            title: `Action: ${action}`,
+            description: "This feature is for demonstration purposes.",
         });
     };
+
+    const handleLike = () => {
+        if (!currentUser) {
+            toast({ variant: 'destructive', title: 'You must be logged in to like a post.' });
+            return;
+        }
+        if (isLiking) return;
+        setIsLiking(true);
+
+        const postRef = doc(firestore, "posts", post.id);
+
+        // Optimistic UI update
+        setOptimisticLikes(prev => userHasLiked ? prev - 1 : prev + 1);
+        setOptimisticLikedBy(prev => {
+            if (userHasLiked) {
+                return prev.filter(uid => uid !== currentUser.uid);
+            } else {
+                return [...prev, currentUser.uid];
+            }
+        });
+
+        updateDoc(postRef, {
+            likes: increment(userHasLiked ? -1 : 1),
+            likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        }).catch((serverError) => {
+            // Revert optimistic update on error
+            setOptimisticLikes(post.likes);
+            setOptimisticLikedBy(post.likedBy || []);
+            
+            const permissionError = new FirestorePermissionError({
+                path: postRef.path,
+                operation: 'update',
+                requestResourceData: { likes: '...', likedBy: '...' },
+            }, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        }).finally(() => {
+            setIsLiking(false);
+        });
+    };
+
 
     const handleVote = (optionIndex: number) => {
         if (!currentUser || !post.poll || isVoting) return;
@@ -115,7 +162,7 @@ function PostCard({ post }: { post: Post }) {
     };
 
     const totalVotes = post.poll ? post.poll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
-    const userHasVoted = post.poll?.voters?.includes(currentUser?.uid ?? '');
+    const userHasVotedOnPoll = post.poll?.voters?.includes(currentUser?.uid ?? '');
     
     return (
         <Card key={post.id} className="overflow-hidden">
@@ -164,16 +211,16 @@ function PostCard({ post }: { post: Post }) {
                            return (
                             <Button 
                                 key={index} 
-                                variant={userHasVoted ? 'secondary' : 'outline'} 
+                                variant={userHasVotedOnPoll ? 'secondary' : 'outline'} 
                                 className="w-full justify-start h-auto p-3 flex flex-col items-start relative overflow-hidden"
                                 onClick={() => handleVote(index)}
-                                disabled={userHasVoted || isVoting}
+                                disabled={userHasVotedOnPoll || isVoting}
                             >
                                 <div className="flex items-center justify-between w-full">
                                     <span className="font-medium text-sm">{option.text}</span>
-                                    {userHasVoted && <span className="text-xs font-bold">{votePercentage.toFixed(0)}%</span>}
+                                    {userHasVotedOnPoll && <span className="text-xs font-bold">{votePercentage.toFixed(0)}%</span>}
                                 </div>
-                               {userHasVoted && (
+                               {userHasVotedOnPoll && (
                                    <div className="absolute inset-0 bg-primary/20 -z-10" style={{width: `${votePercentage}%`}}></div>
                                )}
                            </Button>
@@ -183,9 +230,9 @@ function PostCard({ post }: { post: Post }) {
             </CardContent>
             <CardFooter className="p-2 sm:p-3 flex justify-between items-center">
                 <div className="flex gap-1">
-                    <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={() => handleAction('Like')}>
-                        <Heart className="h-4 w-4" />
-                        <span className="text-xs text-muted-foreground">{post.likes}</span>
+                    <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={handleLike} disabled={isLiking}>
+                        <Heart className={cn("h-4 w-4", userHasLiked && "fill-red-500 text-red-500")} />
+                        <span className="text-xs text-muted-foreground">{optimisticLikes}</span>
                     </Button>
                     <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={() => handleAction('Comment')}>
                         <MessageCircle className="h-4 w-4" />
@@ -214,6 +261,7 @@ export default function ResearchAnalyticsPage() {
     const [activeTab, setActiveTab] = useState('idea');
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [link, setLink] = useState('');
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [pollQuestion, setPollQuestion] = useState('');
     const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
@@ -241,7 +289,7 @@ export default function ResearchAnalyticsPage() {
                 setFeed(postsData);
                 setLoading(false);
             }, 
-            async (serverError) => {
+            (serverError) => {
                 const permissionError = new FirestorePermissionError({
                     path: postsCollection.path,
                     operation: 'list',
@@ -252,7 +300,7 @@ export default function ResearchAnalyticsPage() {
         );
 
         return () => unsubscribe();
-    }, [firestore, toast]);
+    }, [firestore]);
     
     useEffect(() => {
         if (auth.currentUser && firestore) {
@@ -268,6 +316,7 @@ export default function ResearchAnalyticsPage() {
     const resetDialog = () => {
         setTitle('');
         setContent('');
+        setLink('');
         setImagePreview(null);
         setPollOptions(['', '']);
         if(imageInputRef.current) imageInputRef.current.value = '';
@@ -330,7 +379,9 @@ export default function ResearchAnalyticsPage() {
             authorAvatar: isAnonymous ? undefined : (userProfile.photoURL || ''),
             title: finalTitle,
             content: isPoll ? '' : content,
+            link: isPoll ? '' : link,
             likes: 0,
+            likedBy: [],
             comments: 0,
             postType: isPoll ? 'Poll' : (postType as any),
             tags: tags.split(',').map(t => t.trim()).filter(Boolean),
@@ -447,6 +498,10 @@ export default function ResearchAnalyticsPage() {
                                         <Textarea value={content} onChange={e => setContent(e.target.value)} placeholder="Then describe your idea, question, or suggestion." rows={4} />
                                     </div>
                                     <div className="space-y-2">
+                                        <Label htmlFor="link">Add a link (Optional)</Label>
+                                        <Input id="link" value={link} onChange={e => setLink(e.target.value)} placeholder="https://example.com" />
+                                    </div>
+                                    <div className="space-y-2">
                                         <Label htmlFor="thumbnail">Add a custom thumbnail (Optional)</Label>
                                         <Input id="thumbnail" type="file" onChange={handleImageChange} ref={imageInputRef} accept="image/*"/>
                                         {imagePreview && (
@@ -526,3 +581,4 @@ export default function ResearchAnalyticsPage() {
         </div>
     );
 }
+
