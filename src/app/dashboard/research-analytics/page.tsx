@@ -19,7 +19,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ListPlus, X, Edit, Send, Link as LinkIcon, ImageUp, ArrowRight } from "lucide-react";
+import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ListPlus, X, Edit, Send, Link as LinkIcon, ImageUp, ArrowRight, User } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
@@ -329,7 +329,6 @@ export default function ResearchAnalyticsPage() {
                 },
                 (serverError) => {
                     if (!auth.currentUser) {
-                        console.warn("Firestore listener permission error caught during logout. This is expected and can be ignored.", serverError);
                         return;
                     }
 
@@ -469,7 +468,7 @@ export default function ResearchAnalyticsPage() {
         return (
             <div className="space-y-8">
                 <PageHeader title="Community Feed & News" description="Discuss legal topics and stay informed." />
-                <Skeleton className="h-32 w-full" />
+                <Skeleton className="h-24 w-full" />
                 <div className="max-w-3xl mx-auto space-y-6">
                     {[...Array(3)].map((_, i) => (
                         <Card key={i}>
@@ -506,14 +505,34 @@ export default function ResearchAnalyticsPage() {
                 setIsDialogOpen(open);
             }}>
                 <Card>
-                    <CardContent className="p-6">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                            <div className="flex-1">
-                                <h2 className="text-xl font-bold flex items-center gap-2"><Edit className="h-5 w-5 text-primary"/> Share Your Spark</h2>
-                                <p className="text-muted-foreground mt-1 text-sm">Have an idea? Ready to ask a question or start a poll? Let's get started.</p>
-                            </div>
-                            <DialogTrigger asChild>
-                                <Button disabled={!isAuthenticated}>Share Your Spark <ArrowRight className="ml-2 h-4 w-4"/></Button>
+                    <CardContent className="p-4">
+                        <div className="flex items-center gap-4">
+                            <Avatar className="h-10 w-10 border">
+                                {userProfile?.photoURL ? (
+                                    <AvatarImage src={userProfile.photoURL} alt={userProfile.firstName} />
+                                ) : (
+                                    <AvatarFallback>
+                                        {userProfile ? (
+                                            `${userProfile.firstName?.charAt(0) || ''}${userProfile.lastName?.charAt(0) || ''}`
+                                        ) : (
+                                            <User className="h-5 w-5"/>
+                                        )}
+                                    </AvatarFallback>
+                                )}
+                            </Avatar>
+                             <DialogTrigger asChild>
+                                <button 
+                                    disabled={!isAuthenticated}
+                                    className="w-full text-left bg-muted hover:bg-muted/90 text-muted-foreground rounded-full px-4 py-3 transition-colors text-sm"
+                                >
+                                    What's on your mind? Share news, ideas, or start a poll...
+                                </button>
+                            </DialogTrigger>
+                             <DialogTrigger asChild>
+                                <Button disabled={!isAuthenticated} size="icon" className="rounded-full flex-shrink-0">
+                                    <PlusCircle className="h-5 w-5"/>
+                                    <span className="sr-only">Create Post</span>
+                                </Button>
                             </DialogTrigger>
                         </div>
                     </CardContent>
