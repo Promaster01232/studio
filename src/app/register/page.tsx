@@ -36,14 +36,6 @@ export default function RegisterPage() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
   const handleRegister = async () => {
-    if (!auth || !firestore) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Firebase is not initialized.",
-      });
-      return;
-    }
     if (!firstName || !lastName || !email || !mobileNumber || !password || !confirmPassword) {
       toast({
         variant: "destructive",

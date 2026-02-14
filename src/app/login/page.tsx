@@ -43,7 +43,7 @@ export default function LoginPage() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
   const handleEmailLogin = async () => {
-    if (!auth || !email || !password) {
+    if (!email || !password) {
         toast({ variant: "destructive", title: "Error", description: "Please enter both email and password."});
         return;
     }
@@ -52,8 +52,6 @@ export default function LoginPage() {
     try {
         const result = await signInWithEmailAndPassword(auth, email, password);
         const user = result.user;
-
-        if (!firestore) throw new Error("Firestore not available");
         
         const userDocRef = doc(firestore, "users", user.uid);
         const userDoc = await getDoc(userDocRef);
@@ -74,7 +72,6 @@ export default function LoginPage() {
   };
 
   const handleSocialLogin = async (provider: GoogleAuthProvider | OAuthProvider) => {
-    if (!auth || !firestore) return;
     setLoading(true);
     setDomainError(null);
 

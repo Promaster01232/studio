@@ -94,13 +94,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (auth === null || firestore === null) {
-      setProfileLoading(true);
-      return;
-    }
-
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        setProfileLoading(true);
         const userDocRef = doc(firestore, "users", user.uid);
         getDoc(userDocRef)
           .then((userDoc) => {
@@ -111,10 +107,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 router.push('/create-profile');
               }
             }
-            setProfileLoading(false);
           })
           .catch((error) => {
             console.error("Error fetching user profile:", error);
+          })
+          .finally(() => {
             setProfileLoading(false);
           });
       } else {
@@ -127,10 +124,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, [auth, firestore, router, pathname]);
 
   const handleLogout = async () => {
-    if (auth) {
-        await signOut(auth);
-        router.push('/login');
-    }
+    await signOut(auth);
+    router.push('/login');
   };
 
   const getAvatarFallback = () => {
@@ -140,7 +135,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       return `${firstNameInitial}${lastNameInitial}`;
   }
   
-  const showContent = isMounted && (!profileLoading || pathname === '/create-profile' || !auth);
+  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
 
   return (
     <SidebarProvider>

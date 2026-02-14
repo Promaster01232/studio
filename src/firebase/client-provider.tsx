@@ -13,14 +13,16 @@ interface FirebaseInstances {
   firestore: Firestore;
 }
 
+// Create singleton instances at the module level
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+const auth = getAuth(app);
+const firestore = getFirestore(app);
+const instances = { app, auth, firestore };
+
 export function FirebaseClientProvider({ children }: { children: ReactNode }) {
-  const [instances, setInstances] = useState<FirebaseInstances | null>(null);
+  const [persistenceEnabled, setPersistenceEnabled] = useState(false);
 
   useEffect(() => {
-    const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-    const auth = getAuth(app);
-    const firestore = getFirestore(app);
-
     enableIndexedDbPersistence(firestore)
       .catch((err) => {
         if (err.code === 'failed-precondition') {
@@ -34,11 +36,13 @@ export function FirebaseClientProvider({ children }: { children: ReactNode }) {
         }
       })
       .finally(() => {
-        setInstances({ app, auth, firestore });
+        setPersistenceEnabled(true);
       });
   }, []);
 
-  if (!instances) {
+  // Show a loader until persistence has been configured.
+  // This is crucial to prevent Firestore operations before persistence is ready.
+  if (!persistenceEnabled) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin" />

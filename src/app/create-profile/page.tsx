@@ -34,6 +34,7 @@ export default function CreateProfilePage() {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -47,7 +48,7 @@ export default function CreateProfilePage() {
   });
 
   useEffect(() => {
-    if (auth?.currentUser) {
+    if (auth.currentUser) {
       const displayName = auth.currentUser.displayName || "";
       const email = auth.currentUser.email || "";
       form.reset({
@@ -57,11 +58,16 @@ export default function CreateProfilePage() {
         mobileNumber: auth.currentUser.phoneNumber || "",
         userType: "citizen",
       });
+      setAuthLoading(false);
+    } else {
+        // This handles the case where the provider is ready but there is no user
+        if (typeof window !== 'undefined') {
+            router.replace('/login');
+        }
     }
-  }, [auth, form]);
-  
-  // This is to handle the case where auth is still loading
-  if (auth === null) {
+  }, [auth.currentUser, form, router]);
+
+  if (authLoading) {
       return (
         <Card className="w-full max-w-lg">
             <CardHeader>
@@ -81,16 +87,8 @@ export default function CreateProfilePage() {
       );
   }
 
-  // If auth has loaded but there is no user, redirect to login
-  if (!auth.currentUser) {
-      if (typeof window !== 'undefined') {
-          router.replace('/login');
-      }
-      return null;
-  }
-
   const onSubmit = async (data: ProfileFormValues) => {
-    if (!auth?.currentUser || !firestore) {
+    if (!auth.currentUser) {
       toast({
         variant: "destructive",
         title: "Error",

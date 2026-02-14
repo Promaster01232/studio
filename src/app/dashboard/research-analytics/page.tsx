@@ -163,7 +163,6 @@ export default function ResearchAnalyticsPage() {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
     useEffect(() => {
-        if (!firestore) return;
         setLoading(true);
         const postsCollection = collection(firestore, "posts");
         const q = query(postsCollection, orderBy("createdAt", "desc"));
@@ -189,7 +188,7 @@ export default function ResearchAnalyticsPage() {
     }, [firestore, toast]);
     
     useEffect(() => {
-        if (auth?.currentUser && firestore) {
+        if (auth.currentUser) {
           const userDocRef = doc(firestore, "users", auth.currentUser.uid);
           getDoc(userDocRef).then(userDoc => {
             if (userDoc.exists()) {
@@ -197,7 +196,7 @@ export default function ResearchAnalyticsPage() {
             }
           });
         }
-      }, [auth, firestore]);
+      }, [auth.currentUser, firestore]);
 
     const resetDialog = () => {
         setTitle('');
@@ -240,7 +239,7 @@ export default function ResearchAnalyticsPage() {
     const handlePostSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         
-        if (!auth?.currentUser || !firestore || !userProfile) {
+        if (!auth.currentUser || !userProfile) {
             toast({ variant: 'destructive', title: 'Authentication Error', description: 'You must be logged in to create a post.' });
             return;
         }

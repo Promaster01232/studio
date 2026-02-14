@@ -54,7 +54,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     setIsMounted(true);
-    if (auth?.currentUser && firestore) {
+    if (auth.currentUser) {
       setLoading(true);
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
       getDoc(userDocRef).then(userDoc => {
@@ -74,8 +74,6 @@ export default function ProfilePage() {
         }
         setLoading(false);
       });
-    } else if (auth === null) {
-      // loading
     } else {
       router.push('/login');
     }
@@ -97,7 +95,7 @@ export default function ProfilePage() {
   };
 
   const handleSaveChanges = async () => {
-    if (!auth?.currentUser || !firestore || !userProfile) return;
+    if (!auth.currentUser || !userProfile) return;
     setSaving(true);
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
     const originalUserType = userProfile.userType;
@@ -135,10 +133,8 @@ export default function ProfilePage() {
   };
 
   const handleLogout = async () => {
-    if (auth) {
-        await signOut(auth);
-        router.push('/login');
-    }
+    await signOut(auth);
+    router.push('/login');
   };
 
   if (loading || !isMounted) {
