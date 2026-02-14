@@ -1,6 +1,4 @@
-
-
-"use client";
+'use client';
 
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
@@ -17,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ImagePlus, ListPlus, X, Edit, Send, Link as LinkIcon } from "lucide-react";
@@ -31,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 
 
 interface Post {
@@ -166,36 +165,52 @@ function PostCard({ post }: { post: Post }) {
     
     return (
         <Card key={post.id} className="overflow-hidden">
-            <CardContent className="p-0">
-                <div className="p-4 sm:p-6">
-                    <div className="flex items-center gap-3 mb-4">
-                        <Avatar className="h-10 w-10 border hover:ring-2 hover:ring-primary transition-all">
-                            {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName}/>}
-                            <AvatarFallback>{fallback}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <p className="font-semibold">{authorName}</p>
-                            <p className="text-xs text-muted-foreground">
-                                {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
-                            </p>
-                        </div>
+            <CardContent className="p-4 sm:p-6 pb-0">
+                <div className="flex items-start gap-3 mb-4">
+                    <Avatar className="h-10 w-10 border hover:ring-2 hover:ring-primary transition-all">
+                        {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName}/>}
+                        <AvatarFallback>{fallback}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                        <p className="font-semibold">{authorName}</p>
+                        <p className="text-xs text-muted-foreground">
+                            {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
+                        </p>
                     </div>
-                    <h3 className="text-lg font-bold font-headline leading-snug mb-2">{post.title}</h3>
-                    {post.content && <p className="text-muted-foreground text-sm whitespace-pre-line">{post.content}</p>}
+                     {post.postType && post.postType !== 'Poll' && (
+                        <Badge variant="outline" className="hidden sm:inline-flex">{post.postType}</Badge>
+                    )}
                 </div>
-                
-                {post.link && (
-                    <div className="px-4 sm:px-6 pb-4">
-                        <a href={post.link} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-primary hover:underline flex items-center gap-2 break-all">
-                            <LinkIcon className="h-4 w-4 flex-shrink-0" />
-                            <span>{post.link}</span>
-                        </a>
-                    </div>
+
+                <div className="space-y-3">
+                    <h3 className="text-lg font-bold font-headline leading-snug">{post.title}</h3>
+                    {post.content && <p className="text-muted-foreground text-sm whitespace-pre-line">{post.content}</p>}
+
+                    {post.tags && post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                            {post.tags.map(tag => (
+                                <Badge key={tag} variant="secondary">#{tag}</Badge>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </CardContent>
+
+            <div className="p-4 sm:px-6 sm:pb-0 sm:pt-4">
+                 {post.link && (
+                    <a href={post.link} target="_blank" rel="noopener noreferrer" className="mt-2 block p-3 rounded-lg border bg-muted/30 hover:bg-muted/70 transition-colors group">
+                        <div className="flex items-center gap-3">
+                            <LinkIcon className="h-5 w-5 text-muted-foreground" />
+                            <div className="flex-1 overflow-hidden">
+                                <p className="text-sm font-semibold truncate text-foreground group-hover:text-primary">{post.link}</p>
+                            </div>
+                        </div>
+                    </a>
                 )}
                 
                 {post.image && (
-                    <div className="relative aspect-video">
-                            <Image
+                    <div className="relative aspect-video mt-4 rounded-lg overflow-hidden border">
+                        <Image
                             src={post.image}
                             alt={post.title}
                             fill
@@ -205,7 +220,7 @@ function PostCard({ post }: { post: Post }) {
                 )}
                 
                 {post.poll && (
-                    <div className="p-4 sm:p-6 space-y-3">
+                    <div className="pt-2 space-y-3">
                        {post.poll.options.map((option, index) => {
                            const votePercentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
                            return (
@@ -216,19 +231,20 @@ function PostCard({ post }: { post: Post }) {
                                 onClick={() => handleVote(index)}
                                 disabled={userHasVotedOnPoll || isVoting}
                             >
-                                <div className="flex items-center justify-between w-full">
+                                <div className="flex items-center justify-between w-full z-10">
                                     <span className="font-medium text-sm">{option.text}</span>
                                     {userHasVotedOnPoll && <span className="text-xs font-bold">{votePercentage.toFixed(0)}%</span>}
                                 </div>
                                {userHasVotedOnPoll && (
-                                   <div className="absolute inset-0 bg-primary/20 -z-10" style={{width: `${votePercentage}%`}}></div>
+                                   <div className="absolute inset-y-0 left-0 bg-primary/10" style={{width: `${votePercentage}%`}}></div>
                                )}
                            </Button>
                        )})}
                     </div>
                 )}
-            </CardContent>
-            <CardFooter className="p-2 sm:p-3 flex justify-between items-center">
+            </div>
+
+            <CardFooter className="p-2 sm:p-3 mt-2 flex justify-between items-center">
                 <div className="flex gap-1">
                     <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={handleLike} disabled={isLiking}>
                         <Heart className={cn("h-4 w-4", userHasLiked && "fill-red-500 text-red-500")} />
@@ -275,7 +291,11 @@ export default function ResearchAnalyticsPage() {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
     useEffect(() => {
-        if (!firestore) return;
+        if (!firestore || !auth.currentUser) {
+            setLoading(false);
+            setFeed([]); // Clear feed if user is not logged in or firestore is not ready
+            return;
+        }
         setLoading(true);
         const postsCollection = collection(firestore, "posts");
         const q = query(postsCollection, orderBy("createdAt", "desc"));
@@ -300,7 +320,7 @@ export default function ResearchAnalyticsPage() {
         );
 
         return () => unsubscribe();
-    }, [firestore]);
+    }, [firestore, auth, auth.currentUser]);
     
     useEffect(() => {
         if (auth.currentUser && firestore) {
@@ -557,7 +577,7 @@ export default function ResearchAnalyticsPage() {
                                     </div>
                                 </TabsContent>
                             </Tabs>
-                            <DialogFooter>
+                            <DialogFooter className="pt-4">
                                 <Button type="submit" disabled={isPosting} className="w-full">
                                     {isPosting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     <Send className="mr-2 h-4 w-4" />
@@ -570,7 +590,7 @@ export default function ResearchAnalyticsPage() {
             </PageHeader>
 
             <div className="max-w-3xl mx-auto space-y-6">
-                {feed.length === 0 ? (
+                {feed.length === 0 && !loading ? (
                     <Card>
                         <CardContent className="py-20 text-center text-muted-foreground">
                             No news updates yet. Be the first to post!
@@ -581,4 +601,3 @@ export default function ResearchAnalyticsPage() {
         </div>
     );
 }
-
