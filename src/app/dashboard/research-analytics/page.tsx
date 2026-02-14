@@ -25,6 +25,8 @@ import { useAuth, useFirestore } from "@/firebase";
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Skeleton } from '@/components/ui/skeleton';
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError } from "@/firebase/errors";
 
 interface Post {
     id: string;
@@ -236,7 +238,7 @@ export default function ResearchAnalyticsPage() {
         setPollOptions(newOptions);
     };
 
-    const handlePostSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handlePostSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         
         if (!auth.currentUser || !userProfile) {
@@ -275,20 +277,29 @@ export default function ResearchAnalyticsPage() {
             };
         }
 
-        try {
-            await addDoc(collection(firestore, "posts"), {
-                ...newPost,
-                createdAt: serverTimestamp(),
-            });
+        const postsCollection = collection(firestore, "posts");
+        const postData = {
+          ...newPost,
+          createdAt: serverTimestamp(),
+        };
+
+        addDoc(postsCollection, postData)
+          .then(() => {
             setIsDialogOpen(false);
             resetDialog();
             toast({ title: "Post Published!", description: "Your new post has been added to the feed." });
-        } catch (error) {
-            console.error("Error creating post:", error);
-            toast({ variant: 'destructive', title: 'Error', description: 'Could not publish your post. Please try again later.' });
-        } finally {
+          })
+          .catch((serverError) => {
+            const permissionError = new FirestorePermissionError({
+              path: postsCollection.path,
+              operation: 'create',
+              requestResourceData: postData,
+            }, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+          })
+          .finally(() => {
             setIsPosting(false);
-        }
+          });
     };
     
     if (loading) {

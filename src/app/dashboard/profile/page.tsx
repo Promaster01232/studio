@@ -18,6 +18,8 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { signOut } from 'firebase/auth';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 type UserProfile = {
   uid: string;
@@ -94,24 +96,25 @@ export default function ProfilePage() {
     fileInputRef.current?.click();
   };
 
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = () => {
     if (!auth.currentUser || !userProfile) return;
     setSaving(true);
+    
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
     const originalUserType = userProfile.userType;
-    try {
-        const updatedProfile = {
-            ...userProfile,
-            firstName,
-            lastName,
-            email,
-            mobileNumber,
-            userType,
-            photoURL,
-        };
+    
+    const updatedProfile = {
+        ...userProfile,
+        firstName,
+        lastName,
+        email,
+        mobileNumber,
+        userType,
+        photoURL,
+    };
 
-        await setDoc(userDocRef, updatedProfile, { merge: true });
-        
+    setDoc(userDocRef, updatedProfile, { merge: true })
+      .then(() => {
         setUserProfile(updatedProfile);
 
         toast({ title: 'Profile Updated', description: 'Your changes have been saved.' });
@@ -123,13 +126,18 @@ export default function ProfilePage() {
             });
             router.push('/dashboard/advocate-profile');
         }
-
-    } catch (e) {
-        toast({ variant: 'destructive', title: 'Error', description: 'Failed to update profile.' });
-        console.error(e);
-    } finally {
+      })
+      .catch((serverError) => {
+          const permissionError = new FirestorePermissionError({
+            path: userDocRef.path,
+            operation: 'update',
+            requestResourceData: updatedProfile,
+          }, serverError);
+          errorEmitter.emit('permission-error', permissionError);
+      })
+      .finally(() => {
         setSaving(false);
-    }
+      });
   };
 
   const handleLogout = async () => {

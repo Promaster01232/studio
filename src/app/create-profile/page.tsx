@@ -15,6 +15,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError } from "@/firebase/errors";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -87,7 +89,7 @@ export default function CreateProfilePage() {
       );
   }
 
-  const onSubmit = async (data: ProfileFormValues) => {
+  const onSubmit = (data: ProfileFormValues) => {
     if (!auth.currentUser) {
       toast({
         variant: "destructive",
@@ -100,38 +102,42 @@ export default function CreateProfilePage() {
 
     setLoading(true);
 
-    try {
-      const userProfile = {
-        uid: auth.currentUser.uid,
-        ...data,
-      };
+    const userProfile = {
+      uid: auth.currentUser.uid,
+      photoURL: auth.currentUser.photoURL || '',
+      ...data,
+    };
+    
+    const userDocRef = doc(firestore, "users", auth.currentUser.uid);
 
-      await setDoc(doc(firestore, "users", auth.currentUser.uid), userProfile);
-
-      toast({
-        title: "Profile Created!",
-        description: "Welcome to Nyaya Sahayak.",
+    setDoc(userDocRef, userProfile)
+      .then(() => {
+        toast({
+          title: "Profile Created!",
+          description: "Welcome to Nyaya Sahayak.",
+        });
+        
+        if (data.userType === 'lawyer') {
+            toast({
+                title: "Next Step: Advocate Profile",
+                description: "Please complete your advocate profile to be listed.",
+            });
+            router.push("/dashboard/advocate-profile");
+        } else {
+            router.push("/dashboard");
+        }
+      })
+      .catch((serverError) => {
+        const permissionError = new FirestorePermissionError({
+          path: userDocRef.path,
+          operation: 'create',
+          requestResourceData: userProfile,
+        }, serverError);
+        errorEmitter.emit('permission-error', permissionError);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      
-      if (data.userType === 'lawyer') {
-          toast({
-              title: "Next Step: Advocate Profile",
-              description: "Please complete your advocate profile to be listed.",
-          });
-          router.push("/dashboard/advocate-profile");
-      } else {
-          router.push("/dashboard");
-      }
-    } catch (error) {
-      console.error("Failed to create profile:", error);
-      toast({
-        variant: "destructive",
-        title: "Profile Creation Failed",
-        description: "Could not save your profile. Please try again.",
-      });
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
