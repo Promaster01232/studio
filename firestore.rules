@@ -20,8 +20,18 @@ service cloud.firestore {
     match /posts/{postId} {
       allow read;
       allow create: if request.auth != null && request.resource.data.authorUid == request.auth.uid;
-      allow update: if request.auth != null && resource.data.authorUid == request.auth.uid;
-      allow delete: if request.auth != null && resource.data.authorUid == request.auth.uid;
+      
+      // Allow author to update their own post
+      // Allow any authenticated user to update 'likes' and 'poll' fields
+      allow update: if request.auth != null && (
+                      (resource.data.authorUid == request.auth.uid) ||
+                      (
+                        // Ensure no other fields are being changed by non-authors
+                        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['title', 'content', 'link', 'image', 'authorUid', 'createdAt'])
+                      )
+                    );
+
+      allow delete: if isOwner(resource.data.authorUid);
     }
   }
 }

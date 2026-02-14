@@ -22,11 +22,12 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ImagePlus, ListPlus, X, Link as LinkIcon } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Skeleton } from '@/components/ui/skeleton';
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError } from "@/firebase/errors";
+import { cn } from "@/lib/utils";
 
 interface Post {
     id: string;
@@ -40,6 +41,7 @@ interface Post {
     link?: string;
     poll?: {
         options: { text: string; votes: number }[];
+        voters?: string[];
     };
     likes: number;
     comments: number;
@@ -53,6 +55,11 @@ interface UserProfile {
 
 function PostCard({ post }: { post: Post }) {
     const { toast } = useToast();
+    const firestore = useFirestore();
+    const auth = useAuth();
+    const { currentUser } = auth;
+
+    const [isVoting, setIsVoting] = useState(false);
     
     const handleAction = (action: string) => {
         toast({
@@ -61,9 +68,43 @@ function PostCard({ post }: { post: Post }) {
         });
     };
 
+    const handleVote = (optionIndex: number) => {
+        if (!currentUser || !post.poll || isVoting) return;
+
+        const userHasVoted = post.poll.voters?.includes(currentUser.uid);
+        if (userHasVoted) {
+            toast({ title: "You have already voted on this poll." });
+            return;
+        }
+
+        setIsVoting(true);
+
+        const postRef = doc(firestore, "posts", post.id);
+        const newOptions = [...post.poll.options];
+        newOptions[optionIndex].votes += 1;
+
+        const updatedPoll = {
+            options: newOptions,
+            voters: [...(post.poll.voters || []), currentUser.uid]
+        };
+
+        updateDoc(postRef, { poll: updatedPoll })
+            .catch((serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: postRef.path,
+                    operation: 'update',
+                    requestResourceData: { poll: updatedPoll },
+                }, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+            })
+            .finally(() => {
+                setIsVoting(false);
+            });
+    };
+
     const totalVotes = post.poll ? post.poll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
-
-
+    const userHasVoted = post.poll?.voters?.includes(currentUser?.uid ?? '');
+    
     return (
         <Card key={post.id} className="overflow-hidden">
             <CardContent className="p-0">
@@ -106,19 +147,25 @@ function PostCard({ post }: { post: Post }) {
                 
                 {post.poll && (
                     <div className="p-4 sm:p-6 space-y-3">
-                       {post.poll.options.map((option, index) => (
-                           <Button key={index} variant="outline" className="w-full justify-start h-auto p-3">
+                       {post.poll.options.map((option, index) => {
+                           const votePercentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
+                           return (
+                            <Button 
+                                key={index} 
+                                variant={userHasVoted ? 'secondary' : 'outline'} 
+                                className="w-full justify-start h-auto p-3 flex flex-col items-start relative overflow-hidden"
+                                onClick={() => handleVote(index)}
+                                disabled={userHasVoted || isVoting}
+                            >
                                 <div className="flex items-center justify-between w-full">
                                     <span className="font-medium text-sm">{option.text}</span>
-                                    {totalVotes > 0 && <span className="text-xs text-muted-foreground">{((option.votes / totalVotes) * 100).toFixed(0)}%</span>}
+                                    {userHasVoted && <span className="text-xs font-bold">{votePercentage.toFixed(0)}%</span>}
                                 </div>
-                               {totalVotes > 0 && (
-                                   <div className="relative h-1 w-full bg-muted rounded-full mt-2">
-                                       <div className="absolute h-1 bg-primary rounded-full" style={{width: `${(option.votes / totalVotes) * 100}%`}}></div>
-                                   </div>
+                               {userHasVoted && (
+                                   <div className="absolute inset-0 bg-primary/20 -z-10" style={{width: `${votePercentage}%`}}></div>
                                )}
                            </Button>
-                       ))}
+                       )})}
                     </div>
                 )}
             </CardContent>
@@ -165,32 +212,35 @@ export default function ResearchAnalyticsPage() {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
     useEffect(() => {
+        if (!firestore) return;
         setLoading(true);
         const postsCollection = collection(firestore, "posts");
         const q = query(postsCollection, orderBy("createdAt", "desc"));
 
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const postsData = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            } as Post));
-            setFeed(postsData);
-            setLoading(false);
-        }, (error) => {
-            console.error("Error fetching posts:", error);
-            toast({
-                variant: 'destructive',
-                title: 'Error fetching posts',
-                description: 'Could not load the news feed. Please check your connection or permissions.'
-            });
-            setLoading(false);
-        });
+        const unsubscribe = onSnapshot(q, 
+            (querySnapshot) => {
+                const postsData = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                } as Post));
+                setFeed(postsData);
+                setLoading(false);
+            }, 
+            async (serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: postsCollection.path,
+                    operation: 'list',
+                }, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+                setLoading(false);
+            }
+        );
 
         return () => unsubscribe();
     }, [firestore, toast]);
     
     useEffect(() => {
-        if (auth.currentUser) {
+        if (auth.currentUser && firestore) {
           const userDocRef = doc(firestore, "users", auth.currentUser.uid);
           getDoc(userDocRef).then(userDoc => {
             if (userDoc.exists()) {
@@ -253,7 +303,7 @@ export default function ResearchAnalyticsPage() {
         
         setIsPosting(true);
 
-        const newPost: Omit<Post, 'id' | 'createdAt'> = {
+        const newPostData: Omit<Post, 'id' | 'createdAt'> = {
             authorUid: auth.currentUser.uid,
             authorName: `${userProfile.firstName} ${userProfile.lastName}`,
             authorAvatar: userProfile.photoURL || '',
@@ -265,25 +315,26 @@ export default function ResearchAnalyticsPage() {
         };
 
         if (imagePreview) {
-            newPost.image = imagePreview;
+            newPostData.image = imagePreview;
         }
 
         if (showPollCreator && pollOptions.some(opt => opt.trim() !== '')) {
-            newPost.poll = {
+            newPostData.poll = {
                 options: pollOptions
                     .map(opt => opt.trim())
                     .filter(opt => opt !== '')
-                    .map(opt => ({ text: opt, votes: 0 }))
+                    .map(opt => ({ text: opt, votes: 0 })),
+                voters: []
             };
         }
 
         const postsCollection = collection(firestore, "posts");
-        const postData = {
-          ...newPost,
+        const postToSave = {
+          ...newPostData,
           createdAt: serverTimestamp(),
         };
 
-        addDoc(postsCollection, postData)
+        addDoc(postsCollection, postToSave)
           .then(() => {
             setIsDialogOpen(false);
             resetDialog();
@@ -293,7 +344,7 @@ export default function ResearchAnalyticsPage() {
             const permissionError = new FirestorePermissionError({
               path: postsCollection.path,
               operation: 'create',
-              requestResourceData: postData,
+              requestResourceData: postToSave,
             }, serverError);
             errorEmitter.emit('permission-error', permissionError);
           })
