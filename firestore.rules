@@ -19,7 +19,7 @@ service cloud.firestore {
 
     // Posts collection
     match /posts/{postId} {
-      allow read;
+      allow read: if request.auth != null;
       allow create: if request.auth != null && request.resource.data.authorUid == request.auth.uid;
       
       // Allow author to update their own post.
