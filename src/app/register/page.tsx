@@ -34,7 +34,7 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const heroImage = PlaceHolderImages.find(img => img.id === 'news1');
+  const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
   const handleRegister = async () => {
     if (!firstName || !lastName || !email || !mobileNumber || !password || !confirmPassword) {
@@ -210,24 +210,6 @@ export default function RegisterPage() {
             />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 p-12 text-white">
-             <motion.h3 
-                className="text-4xl font-bold leading-tight"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-             >
-                यतो धर्मस्ततो जयः
-             </motion.h3>
-             <motion.p 
-                className="text-lg text-white/80 mt-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
-             >
-                (Where there is righteousness, there is victory)
-             </motion.p>
-         </div>
       </div>
     </Card>
   );
