@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -18,7 +17,7 @@ import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError } from "@/firebase/errors";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { AdvocateProfileForm } from "@/components/advocate-profile-form";
 
 const profileSchema = z.object({
@@ -249,6 +248,10 @@ export default function CreateProfilePage() {
 
       <Dialog open={showAdvocateDialog} onOpenChange={setShowAdvocateDialog}>
           <DialogContent className="sm:max-w-2xl">
+              <DialogHeader>
+                    <DialogTitle>Advocate Profile</DialogTitle>
+                    <DialogDescription>Complete your details to be listed on Lawyer Connect.</DialogDescription>
+              </DialogHeader>
               <AdvocateProfileForm 
                 onSave={handleAdvocateProfileSaved}
                 userProfile={{

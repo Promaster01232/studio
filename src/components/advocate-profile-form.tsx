@@ -1,10 +1,8 @@
-
 "use client";
 
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -98,92 +96,84 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
     };
 
     return (
-        <Card className="border-none shadow-none">
-            <CardHeader>
-                <CardTitle>Advocate Profile</CardTitle>
-                <CardDescription>Complete your details to be listed on Lawyer Connect.</CardDescription>
-            </CardHeader>
-            <CardContent className="max-h-[60vh] overflow-y-auto pr-3">
-                <form className="space-y-6" onSubmit={handleSubmit}>
-                    <div className="space-y-2">
-                        <Label htmlFor="fullName">Full Name</Label>
-                        <Input id="fullName" name="fullName" placeholder="Your full name as it appears on your Bar ID" required defaultValue={`${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`} />
-                    </div>
+        <form className="space-y-6 max-h-[60vh] overflow-y-auto p-1" onSubmit={handleSubmit}>
+            <div className="space-y-2">
+                <Label htmlFor="fullName">Full Name</Label>
+                <Input id="fullName" name="fullName" placeholder="Your full name as it appears on your Bar ID" required defaultValue={`${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`} />
+            </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="barId">Bar Council ID</Label>
-                        <Input id="barId" name="barId" placeholder="e.g., MAH/1234/2010" required />
-                    </div>
+            <div className="space-y-2">
+                <Label htmlFor="barId">Bar Council ID</Label>
+                <Input id="barId" name="barId" placeholder="e.g., MAH/1234/2010" required />
+            </div>
 
-                    <div className="grid sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="experience">Years of Experience</Label>
-                            <Input id="experience" name="experience" type="number" placeholder="e.g., 10" required />
+            <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="experience">Years of Experience</Label>
+                    <Input id="experience" name="experience" type="number" placeholder="e.g., 10" required />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="position">Position / Title</Label>
+                    <Input id="position" name="position" placeholder="e.g., Senior Advocate" required />
+                </div>
+            </div>
+
+            <div className="space-y-2">
+                <Label>Courts of Practice (select at least one)</Label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+                    {courts.map(court => (
+                        <div key={court} className="flex items-center space-x-2">
+                            <Checkbox id={`court-${court}`} name="courts" value={court} />
+                            <label
+                                htmlFor={`court-${court}`}
+                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                                {court}
+                            </label>
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="position">Position / Title</Label>
-                            <Input id="position" name="position" placeholder="e.g., Senior Advocate" required />
-                        </div>
-                    </div>
+                    ))}
+                </div>
+            </div>
 
-                    <div className="space-y-2">
-                        <Label>Courts of Practice (select at least one)</Label>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
-                            {courts.map(court => (
-                                <div key={court} className="flex items-center space-x-2">
-                                    <Checkbox id={`court-${court}`} name="courts" value={court} />
-                                    <label
-                                        htmlFor={`court-${court}`}
-                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                    >
-                                        {court}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+            <div className="space-y-2">
+                <Label htmlFor="specialization">Primary Specialization</Label>
+                 <Select name="specialization" required>
+                    <SelectTrigger id="specialization">
+                        <SelectValue placeholder="Select your main practice area" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {practiceAreas.map(area => <SelectItem key={area} value={area}>{area}</SelectItem>)}
+                    </SelectContent>
+                </Select>
+            </div>
+            
+            <div className="space-y-2">
+                <Label htmlFor="bio">Professional Bio</Label>
+                <Textarea id="bio" name="bio" placeholder="Write a short summary about your experience, expertise, and approach..." rows={6} required />
+            </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="specialization">Primary Specialization</Label>
-                         <Select name="specialization" required>
-                            <SelectTrigger id="specialization">
-                                <SelectValue placeholder="Select your main practice area" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {practiceAreas.map(area => <SelectItem key={area} value={area}>{area}</SelectItem>)}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                        <Label htmlFor="bio">Professional Bio</Label>
-                        <Textarea id="bio" name="bio" placeholder="Write a short summary about your experience, expertise, and approach..." rows={6} required />
-                    </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="courtName">Court Name</Label>
+                    <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" />
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="courtAddress">Court Address</Label>
+                    <Input id="courtAddress" name="courtAddress" placeholder="Full address of the primary court" />
+                </div>
+            </div>
 
-                    <div className="grid sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="courtName">Court Name</Label>
-                            <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" />
-                        </div>
-                         <div className="space-y-2">
-                            <Label htmlFor="courtAddress">Court Address</Label>
-                            <Input id="courtAddress" name="courtAddress" placeholder="Full address of the primary court" />
-                        </div>
-                    </div>
+            <div className="space-y-2">
+                <Label htmlFor="idProof">ID Proof</Label>
+                <Input id="idProof" name="idProof" type="file" />
+                <p className="text-xs text-muted-foreground">Upload a copy of your Bar Council ID or other valid legal identification.</p>
+            </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="idProof">ID Proof</Label>
-                        <Input id="idProof" name="idProof" type="file" />
-                        <p className="text-xs text-muted-foreground">Upload a copy of your Bar Council ID or other valid legal identification.</p>
-                    </div>
-
-                    <div className="flex justify-end pt-4">
-                        <Button type="submit" className="w-full sm:w-auto">
-                            Save Advocate Profile
-                        </Button>
-                    </div>
-                </form>
-            </CardContent>
-        </Card>
+            <div className="flex justify-end pt-4">
+                <Button type="submit" className="w-full sm:w-auto">
+                    Save Advocate Profile
+                </Button>
+            </div>
+        </form>
     );
 }

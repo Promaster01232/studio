@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -21,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { signOut } from 'firebase/auth';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AdvocateProfileForm } from '@/components/advocate-profile-form';
 
 type UserProfile = {
@@ -345,6 +344,10 @@ export default function ProfilePage() {
         </div>
         <Dialog open={showAdvocateDialog} onOpenChange={setShowAdvocateDialog}>
             <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle>Advocate Profile</DialogTitle>
+                    <DialogDescription>Complete your details to be listed on Lawyer Connect.</DialogDescription>
+                </DialogHeader>
                 <AdvocateProfileForm 
                     onSave={handleAdvocateProfileSaved}
                     userProfile={userProfile}
