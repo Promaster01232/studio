@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -18,6 +19,7 @@ import { Loader2 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { motion } from "framer-motion";
 
 export default function RegisterPage() {
   const auth = useAuth();
@@ -100,20 +102,47 @@ export default function RegisterPage() {
       setLoading(false);
     }
   };
+  
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+      },
+    },
+  };
 
   return (
-    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0">
-      <div className="p-8 flex flex-col justify-center">
-        <div className="flex items-center gap-3 mb-6">
+    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl">
+      <motion.div 
+        className="p-8 sm:p-12 flex flex-col justify-center"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={itemVariants} className="flex items-center gap-3 mb-6">
             <Logo />
-            <h1 className="text-2xl font-bold font-headline">Nyaya Sahayak</h1>
-        </div>
-        <h2 className="text-3xl font-bold">Create an Account</h2>
-        <p className="text-muted-foreground mt-2 mb-8">
+        </motion.div>
+        <motion.h2 variants={itemVariants} className="text-3xl font-bold tracking-tight">Create an Account</motion.h2>
+        <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8">
           Enter your information to create an account.
-        </p>
+        </motion.p>
         <CardContent className="p-0">
-            <div className="grid gap-4">
+            <motion.div variants={itemVariants} className="grid gap-4">
             <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
                 <Label htmlFor="first-name">First name</Label>
@@ -161,15 +190,15 @@ export default function RegisterPage() {
             <Button type="submit" className="w-full" onClick={handleRegister} disabled={loading}>
                 {loading ? <Loader2 className="animate-spin" /> : "Create an account"}
             </Button>
-            </div>
-            <div className="mt-4 text-center text-sm">
+            </motion.div>
+            <motion.div variants={itemVariants} className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link href="/login" className="underline">
+            <Link href="/login" className="font-semibold text-primary hover:underline">
                 Sign in
             </Link>
-            </div>
+            </motion.div>
         </CardContent>
-      </div>
+      </motion.div>
       <div className="hidden md:block relative">
         {heroImage && (
             <Image 
@@ -178,9 +207,28 @@ export default function RegisterPage() {
                 fill
                 className="object-cover"
                 data-ai-hint={heroImage.imageHint}
+                priority
             />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 p-12 text-white">
+             <motion.h3 
+                className="text-4xl font-bold leading-tight"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+             >
+                &ldquo;Truth never damages a cause that is just.&rdquo;
+             </motion.h3>
+             <motion.p 
+                className="text-lg text-white/80 mt-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.7 }}
+             >
+                - Mahatma Gandhi
+             </motion.p>
+         </div>
       </div>
     </Card>
   );

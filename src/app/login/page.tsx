@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -17,11 +18,11 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Logo } from "@/components/logo";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-
+import { motion } from "framer-motion";
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -106,19 +107,46 @@ export default function LoginPage() {
 
   const handleGoogleLogin = () => handleSocialLogin(new GoogleAuthProvider());
 
-  return (
-    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0">
-      <div className="p-8 flex flex-col justify-center">
-        <div className="flex items-center gap-3 mb-6">
-            <Logo />
-            <h1 className="text-2xl font-bold font-headline">Nyaya Sahayak</h1>
-        </div>
-        <h2 className="text-3xl font-bold">Welcome Back</h2>
-        <p className="text-muted-foreground mt-2 mb-8">
-            Enter your email below to login to your account.
-        </p>
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
 
-        <div className="grid gap-4">
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+      },
+    },
+  };
+
+  return (
+    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl">
+      <motion.div 
+        className="p-8 sm:p-12 flex flex-col justify-center"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={itemVariants} className="flex items-center gap-3 mb-6">
+            <Logo />
+        </motion.div>
+        <motion.h2 variants={itemVariants} className="text-3xl font-bold tracking-tight">Welcome Back</motion.h2>
+        <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8">
+            Login to access your dashboard.
+        </motion.p>
+
+        <motion.div variants={itemVariants} className="grid gap-4">
             {domainError && (
                 <Alert variant="destructive" className="mb-4">
                     <AlertTitle>Configuration Required</AlertTitle>
@@ -150,8 +178,8 @@ export default function LoginPage() {
                 <div className="space-y-2">
                 <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                    <Link href="#" className="ml-auto inline-block text-sm underline">
-                    Forgot your password?
+                    <Link href="#" className="ml-auto inline-block text-sm text-primary hover:underline">
+                    Forgot password?
                     </Link>
                 </div>
                 <Input 
@@ -185,14 +213,15 @@ export default function LoginPage() {
                     Google
                 </Button>
             </div>
-            <div className="mt-4 text-center text-sm">
+            
+        </motion.div>
+        <motion.div variants={itemVariants} className="mt-6 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="underline">
+            <Link href="/register" className="font-semibold text-primary hover:underline">
                 Sign up
             </Link>
-            </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
       <div className="hidden md:block relative">
         {heroImage && (
             <Image 
@@ -201,9 +230,28 @@ export default function LoginPage() {
                 fill
                 className="object-cover"
                 data-ai-hint={heroImage.imageHint}
+                priority
             />
         )}
          <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
+         <div className="absolute bottom-0 left-0 p-12 text-white">
+             <motion.h3 
+                className="text-4xl font-bold leading-tight"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+             >
+                &ldquo;Justice delayed is justice denied.&rdquo;
+             </motion.h3>
+             <motion.p 
+                className="text-lg text-white/80 mt-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.7 }}
+             >
+                - William E. Gladstone
+             </motion.p>
+         </div>
       </div>
     </Card>
   );
