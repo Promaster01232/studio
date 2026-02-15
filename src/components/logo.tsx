@@ -1,15 +1,15 @@
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
-export function Logo({ className }: { className?: string }) {
+export function Logo({ className, imageClassName }: { className?: string, imageClassName?: string }) {
   return (
     <div className={cn("flex items-center justify-center", className)}>
       <Image 
-        src="https://assets-global.website-files.com/6047a7b68562483569c73335/64883a45c613993c5240b2b8_gavel.png" 
+        src="https://storage.googleapis.com/studio-hosting-storage/2024-07-31-05-24-52-965Z-asgw/form-submission/form-submission/d507b1a2-e6a3-49a3-a79d-3382f71887e5.png" 
         alt="Nyaya Sahayak Logo" 
         width={512} 
         height={512} 
-        className="h-9 w-9 drop-shadow-[0_0_10px_hsl(var(--primary)_/_0.5)]"
+        className={cn("h-10 w-auto", imageClassName)}
         priority
       />
     </div>
