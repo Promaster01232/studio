@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -20,6 +21,8 @@ import { useToast } from '@/hooks/use-toast';
 import { signOut } from 'firebase/auth';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { AdvocateProfileForm } from '@/components/advocate-profile-form';
 
 type UserProfile = {
   uid: string;
@@ -42,6 +45,7 @@ export default function ProfilePage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showAdvocateDialog, setShowAdvocateDialog] = useState(false);
 
   // Form state
   const [firstName, setFirstName] = useState('');
@@ -96,6 +100,15 @@ export default function ProfilePage() {
     fileInputRef.current?.click();
   };
 
+  const handleAdvocateProfileSaved = () => {
+    setShowAdvocateDialog(false);
+    toast({
+        title: "Advocate Profile Complete",
+        description: "You are now listed in the Lawyer Connect directory.",
+    });
+    router.push('/dashboard/lawyer-connect');
+  };
+
   const handleSaveChanges = () => {
     if (!auth.currentUser || !userProfile) return;
     setSaving(true);
@@ -103,7 +116,7 @@ export default function ProfilePage() {
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
     const originalUserType = userProfile.userType;
     
-    const updatedProfile = {
+    const updatedProfile: UserProfile = {
         ...userProfile,
         firstName,
         lastName,
@@ -120,11 +133,7 @@ export default function ProfilePage() {
         toast({ title: 'Profile Updated', description: 'Your changes have been saved.' });
 
         if (userType === 'lawyer' && originalUserType !== 'lawyer') {
-            toast({
-              title: "Next Step: Advocate Profile",
-              description: "Please complete your advocate profile to be listed.",
-            });
-            router.push('/dashboard/advocate-profile');
+            setShowAdvocateDialog(true);
         }
       })
       .catch((serverError) => {
@@ -188,152 +197,160 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="space-y-8">
-      <PageHeader
-        title="My Profile"
-        description="Manage your account settings and personal information."
-      />
+    <>
+        <div className="space-y-8">
+        <PageHeader
+            title="My Profile"
+            description="Manage your account settings and personal information."
+        />
 
-      {/* User Info Card */}
-      <Card>
-        <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
-          <div className="relative">
-            <Avatar className="h-24 w-24 border-2 border-primary">
-              <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} />
-              <AvatarFallback>{`${firstName.charAt(0)}${lastName.charAt(0)}`}</AvatarFallback>
-            </Avatar>
-            <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8" onClick={handleAvatarClick}>
-              <Edit className="h-4 w-4" />
-              <span className="sr-only">Change profile picture</span>
-            </Button>
-            <Input type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
-          </div>
-          <div className="flex-1 text-center sm:text-left">
-            <h2 className="text-2xl font-bold font-headline">{firstName} {lastName}</h2>
-            <p className="text-muted-foreground">{email}</p>
-          </div>
-        </CardContent>
-      </Card>
+        {/* User Info Card */}
+        <Card>
+            <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
+            <div className="relative">
+                <Avatar className="h-24 w-24 border-2 border-primary">
+                <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} />
+                <AvatarFallback>{`${firstName.charAt(0)}${lastName.charAt(0)}`}</AvatarFallback>
+                </Avatar>
+                <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8" onClick={handleAvatarClick}>
+                <Edit className="h-4 w-4" />
+                <span className="sr-only">Change profile picture</span>
+                </Button>
+                <Input type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
+            </div>
+            <div className="flex-1 text-center sm:text-left">
+                <h2 className="text-2xl font-bold font-headline">{firstName} {lastName}</h2>
+                <p className="text-muted-foreground">{email}</p>
+            </div>
+            </CardContent>
+        </Card>
 
-      <div className="grid lg:grid-cols-3 gap-8 items-start">
-        <div className="lg:col-span-2 space-y-8">
-            {/* Personal Details Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Personal Details</CardTitle>
-                <CardDescription>Update your personal information here.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                    </div>
-                </div>
-                 <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="userType">I am a</Label>
-                    <Select name="userType" value={userType} onValueChange={setUserType}>
-                        <SelectTrigger id="userType">
-                        <SelectValue placeholder="Select your role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        <SelectItem value="citizen">Citizen</SelectItem>
-                        <SelectItem value="lawyer">Advocate</SelectItem>
-                        <SelectItem value="businessman">Business Person</SelectItem>
-                        <SelectItem value="student">Law Student</SelectItem>
-                        </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                    <Button onClick={handleSaveChanges} disabled={saving}>
-                        {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
-                        Save Changes
-                    </Button>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {userType === 'lawyer' && (
+        <div className="grid lg:grid-cols-3 gap-8 items-start">
+            <div className="lg:col-span-2 space-y-8">
+                {/* Personal Details Card */}
                 <Card>
-                    <CardHeader>
-                        <CardTitle>Advocate Profile</CardTitle>
-                        <CardDescription>Manage your public-facing advocate profile for the Lawyer Connect directory.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-sm text-muted-foreground mb-4">
-                            Complete your professional details to get listed and connect with potential clients.
-                        </p>
-                        <Button asChild>
-                            <Link href="/dashboard/advocate-profile">
+                <CardHeader>
+                    <CardTitle>Personal Details</CardTitle>
+                    <CardDescription>Update your personal information here.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                        <Label htmlFor="firstName">First Name</Label>
+                        <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                        <Label htmlFor="lastName">Last Name</Label>
+                        <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                        </div>
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="userType">I am a</Label>
+                        <Select name="userType" value={userType} onValueChange={setUserType}>
+                            <SelectTrigger id="userType">
+                            <SelectValue placeholder="Select your role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                            <SelectItem value="citizen">Citizen</SelectItem>
+                            <SelectItem value="lawyer">Advocate</SelectItem>
+                            <SelectItem value="businessman">Business Person</SelectItem>
+                            <SelectItem value="student">Law Student</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    </div>
+                    <div className="flex justify-end">
+                        <Button onClick={handleSaveChanges} disabled={saving}>
+                            {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+                            Save Changes
+                        </Button>
+                    </div>
+                </CardContent>
+                </Card>
+                
+                {userType === 'lawyer' && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Advocate Profile</CardTitle>
+                            <CardDescription>Manage your public-facing advocate profile for the Lawyer Connect directory.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground mb-4">
+                                Complete your professional details to get listed and connect with potential clients.
+                            </p>
+                            <Button onClick={() => setShowAdvocateDialog(true)}>
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit Advocate Profile
-                            </Link>
+                            </Button>
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
+
+            <div className="space-y-8">
+                {/* Account Settings Card */}
+                <Card>
+                <CardHeader>
+                    <CardTitle>Account Settings</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="flex items-center justify-between">
+                    <Label htmlFor="dark-mode" className="flex items-center gap-3 cursor-pointer">
+                        <Moon className="h-5 w-5 text-muted-foreground" />
+                        <span>Dark Mode</span>
+                    </Label>
+                    <Switch
+                        id="dark-mode"
+                        checked={theme === 'dark'}
+                        onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                    />
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <Label htmlFor="two-factor" className="flex items-center gap-3 cursor-pointer">
+                            <ShieldCheck className="h-5 w-5 text-muted-foreground" />
+                            <span>Two-Factor Auth</span>
+                        </Label>
+                    <Switch id="two-factor" />
+                    </div>
+                    <Button variant="outline" className="w-full justify-start">
+                        <KeyRound className="mr-3 h-5 w-5 text-muted-foreground" />
+                        <span>Change Password</span>
+                    </Button>
+                </CardContent>
+                </Card>
+
+                {/* Danger Zone */}
+                <Card className="border-destructive bg-destructive/5">
+                    <CardHeader>
+                        <CardTitle className="text-destructive">Danger Zone</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <Button variant="outline" className="w-full justify-start" onClick={handleLogout}>
+                            <LogOut className="mr-3 h-5 w-5 text-muted-foreground" /> 
+                            <span>Logout</span>
+                        </Button>
+                        <Button variant="destructive" className="w-full justify-start">
+                            <Trash2 className="mr-3 h-5 w-5" />
+                            <span>Delete Account</span>
                         </Button>
                     </CardContent>
                 </Card>
-            )}
+            </div>
         </div>
-
-        <div className="space-y-8">
-            {/* Account Settings Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Account Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="dark-mode" className="flex items-center gap-3 cursor-pointer">
-                    <Moon className="h-5 w-5 text-muted-foreground" />
-                    <span>Dark Mode</span>
-                  </Label>
-                  <Switch
-                    id="dark-mode"
-                    checked={theme === 'dark'}
-                    onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                    <Label htmlFor="two-factor" className="flex items-center gap-3 cursor-pointer">
-                        <ShieldCheck className="h-5 w-5 text-muted-foreground" />
-                        <span>Two-Factor Auth</span>
-                    </Label>
-                  <Switch id="two-factor" />
-                </div>
-                 <Button variant="outline" className="w-full justify-start">
-                    <KeyRound className="mr-3 h-5 w-5 text-muted-foreground" />
-                    <span>Change Password</span>
-                 </Button>
-              </CardContent>
-            </Card>
-
-             {/* Danger Zone */}
-            <Card className="border-destructive bg-destructive/5">
-                <CardHeader>
-                    <CardTitle className="text-destructive">Danger Zone</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                     <Button variant="outline" className="w-full justify-start" onClick={handleLogout}>
-                        <LogOut className="mr-3 h-5 w-5 text-muted-foreground" /> 
-                        <span>Logout</span>
-                    </Button>
-                    <Button variant="destructive" className="w-full justify-start">
-                        <Trash2 className="mr-3 h-5 w-5" />
-                        <span>Delete Account</span>
-                    </Button>
-                </CardContent>
-            </Card>
         </div>
-      </div>
-    </div>
+        <Dialog open={showAdvocateDialog} onOpenChange={setShowAdvocateDialog}>
+            <DialogContent className="sm:max-w-2xl">
+                <AdvocateProfileForm 
+                    onSave={handleAdvocateProfileSaved}
+                    userProfile={userProfile}
+                />
+            </DialogContent>
+      </Dialog>
+    </>
   );
 }
