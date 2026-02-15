@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -41,7 +40,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
 
-  const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
+  const heroImage = PlaceHolderImages.find(img => img.id === 'news1');
 
   const handleEmailLogin = async () => {
     if (!email || !password) {
@@ -241,7 +240,7 @@ export default function LoginPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
              >
-                &ldquo;Justice delayed is justice denied.&rdquo;
+                यतो धर्मस्ततो जयः
              </motion.h3>
              <motion.p 
                 className="text-lg text-white/80 mt-4"
@@ -249,7 +248,7 @@ export default function LoginPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.7 }}
              >
-                - William E. Gladstone
+                (Where there is righteousness, there is victory)
              </motion.p>
          </div>
       </div>

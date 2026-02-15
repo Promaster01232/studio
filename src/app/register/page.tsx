@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -35,7 +34,7 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
+  const heroImage = PlaceHolderImages.find(img => img.id === 'news1');
 
   const handleRegister = async () => {
     if (!firstName || !lastName || !email || !mobileNumber || !password || !confirmPassword) {
@@ -218,7 +217,7 @@ export default function RegisterPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
              >
-                &ldquo;Truth never damages a cause that is just.&rdquo;
+                यतो धर्मस्ततो जयः
              </motion.h3>
              <motion.p 
                 className="text-lg text-white/80 mt-4"
@@ -226,7 +225,7 @@ export default function RegisterPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.7 }}
              >
-                - Mahatma Gandhi
+                (Where there is righteousness, there is victory)
              </motion.p>
          </div>
       </div>
