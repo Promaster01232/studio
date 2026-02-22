@@ -1,10 +1,11 @@
+
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore } from "@/firebase";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,9 @@ import { Logo } from "@/components/logo";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { motion } from "framer-motion";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AdvocateProfileForm } from '@/components/advocate-profile-form';
 
 export default function RegisterPage() {
   const auth = useAuth();
@@ -32,7 +36,9 @@ export default function RegisterPage() {
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [userType, setUserType] = useState("citizen");
   const [loading, setLoading] = useState(false);
+  const [showAdvocateDialog, setShowAdvocateDialog] = useState(false);
 
   const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
@@ -65,24 +71,27 @@ export default function RegisterPage() {
       );
       const user = userCredential.user;
 
-      await sendEmailVerification(user);
-
       const userProfile = {
         uid: user.uid,
         firstName,
         lastName,
         email,
         mobileNumber,
-        userType: "citizen",
+        userType,
+        photoURL: user.photoURL || '',
       };
 
       await setDoc(doc(firestore, "users", user.uid), userProfile);
 
-      toast({
-        title: "Account Created!",
-        description: "A verification email has been sent. Please check your inbox and verify your account to log in.",
-      });
-      router.push("/login");
+      if (userType === 'lawyer') {
+          setShowAdvocateDialog(true);
+      } else {
+        toast({
+            title: "Account Created!",
+            description: "Welcome to Nyaya Sahayak. You are now logged in.",
+        });
+        router.push("/dashboard");
+      }
 
     } catch (error: any) {
       console.error("Registration error:", error);
@@ -97,11 +106,20 @@ export default function RegisterPage() {
         title: "Registration Failed",
         description: errorMessage,
       });
-    } finally {
       setLoading(false);
     }
   };
   
+  const handleAdvocateProfileSaved = () => {
+    setShowAdvocateDialog(false);
+    setLoading(false);
+    toast({
+        title: "Registration Complete!",
+        description: "Your advocate profile has been created. Welcome aboard!",
+    });
+    router.push('/dashboard/lawyer-connect');
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -126,91 +144,127 @@ export default function RegisterPage() {
   };
 
   return (
-    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl">
-      <motion.div 
-        className="p-8 sm:p-12 flex flex-col justify-center"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.div variants={itemVariants} className="flex items-center gap-3 mb-6">
-            <Logo />
+    <>
+        <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl">
+        <motion.div 
+            className="p-8 sm:p-12 flex flex-col justify-center"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+        >
+            <motion.div variants={itemVariants} className="flex items-center gap-3 mb-6">
+                <Logo />
+            </motion.div>
+            <motion.h2 variants={itemVariants} className="text-3xl font-bold tracking-tight">Create an Account</motion.h2>
+            <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8">
+            Enter your information to create an account.
+            </motion.p>
+            <CardContent className="p-0">
+                <motion.div variants={itemVariants} className="grid gap-4">
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                    <Label htmlFor="first-name">First name</Label>
+                    <Input id="first-name" placeholder="Max" required value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} />
+                    </div>
+                    <div className="grid gap-2">
+                    <Label htmlFor="last-name">Last name</Label>
+                    <Input id="last-name" placeholder="Robinson" required value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} />
+                    </div>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={loading}
+                    />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="mobile-number">Mobile Number</Label>
+                    <Input
+                    id="mobile-number"
+                    type="tel"
+                    placeholder="Your mobile number"
+                    required
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
+                    disabled={loading}
+                    />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="userType">I am a...</Label>
+                    <Select value={userType} onValueChange={setUserType} disabled={loading}>
+                        <SelectTrigger id="userType">
+                            <SelectValue placeholder="Select your role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="citizen">Citizen</SelectItem>
+                            <SelectItem value="lawyer">Advocate</SelectItem>
+                            <SelectItem value="businessman">Business Person</SelectItem>
+                            <SelectItem value="student">Law Student</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="password">Password</Label>
+                        <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="confirm-password">Confirm Password</Label>
+                        <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} />
+                    </div>
+                </div>
+                <Button type="submit" className="w-full" onClick={handleRegister} disabled={loading}>
+                    {loading ? <Loader2 className="animate-spin" /> : "Create an account"}
+                </Button>
+                </motion.div>
+                <motion.div variants={itemVariants} className="mt-4 text-center text-sm">
+                Already have an account?{" "}
+                <Link href="/login" className="font-semibold text-primary hover:underline">
+                    Sign in
+                </Link>
+                </motion.div>
+            </CardContent>
         </motion.div>
-        <motion.h2 variants={itemVariants} className="text-3xl font-bold tracking-tight">Create an Account</motion.h2>
-        <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8">
-          Enter your information to create an account.
-        </motion.p>
-        <CardContent className="p-0">
-            <motion.div variants={itemVariants} className="grid gap-4">
-            <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                <Label htmlFor="first-name">First name</Label>
-                <Input id="first-name" placeholder="Max" required value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} />
-                </div>
-                <div className="grid gap-2">
-                <Label htmlFor="last-name">Last name</Label>
-                <Input id="last-name" placeholder="Robinson" required value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} />
-                </div>
-            </div>
-            <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
+        <div className="hidden md:block relative">
+            <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
+            {heroImage && (
+                <Image 
+                    src={heroImage.imageUrl}
+                    alt={heroImage.description}
+                    fill
+                    className="object-cover"
+                    data-ai-hint={heroImage.imageHint}
+                    priority
                 />
-            </div>
-            <div className="grid gap-2">
-                <Label htmlFor="mobile-number">Mobile Number</Label>
-                <Input
-                id="mobile-number"
-                type="tel"
-                placeholder="Your mobile number"
-                required
-                value={mobileNumber}
-                onChange={(e) => setMobileNumber(e.target.value)}
-                disabled={loading}
+            )}
+        </div>
+        </Card>
+
+        <Dialog open={showAdvocateDialog} onOpenChange={setShowAdvocateDialog}>
+            <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle>Advocate Profile</DialogTitle>
+                    <DialogDescription>
+                        Complete your professional details to finish setting up your account. This information will be visible on Lawyer Connect.
+                    </DialogDescription>
+                </DialogHeader>
+                <AdvocateProfileForm 
+                    onSave={handleAdvocateProfileSaved}
+                    userProfile={{
+                        firstName,
+                        lastName,
+                        email,
+                        photoURL: auth.currentUser?.photoURL || ''
+                    }}
                 />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} />
-                </div>
-            </div>
-            <Button type="submit" className="w-full" onClick={handleRegister} disabled={loading}>
-                {loading ? <Loader2 className="animate-spin" /> : "Create an account"}
-            </Button>
-            </motion.div>
-            <motion.div variants={itemVariants} className="mt-4 text-center text-sm">
-            Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-primary hover:underline">
-                Sign in
-            </Link>
-            </motion.div>
-        </CardContent>
-      </motion.div>
-      <div className="hidden md:block relative">
-        {heroImage && (
-            <Image 
-                src={heroImage.imageUrl}
-                alt={heroImage.description}
-                fill
-                className="object-cover"
-                data-ai-hint={heroImage.imageHint}
-                priority
-            />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
-      </div>
-    </Card>
+            </DialogContent>
+        </Dialog>
+    </>
   );
 }
