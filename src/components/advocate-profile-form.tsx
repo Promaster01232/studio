@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { saveAdvocate } from "@/lib/advocates-data";
 import { useAuth } from "@/firebase";
+import { Loader2 } from "lucide-react";
 
 const practiceAreas = [
     "Family Law", "Criminal Law", "Civil Law", "Corporate Law", "Cyber Law",
@@ -33,8 +34,9 @@ interface AdvocateProfileFormProps {
 export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileFormProps) {
     const { toast } = useToast();
     const auth = useAuth();
+    const [isSaving, setIsSaving] = useState(false);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const courtsOfPractice = formData.getAll('courts');
@@ -55,6 +57,8 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
             return;
         }
         
+        setIsSaving(true);
+
         const advocateName = name || `${userProfile?.firstName} ${userProfile?.lastName}`;
         const advocateImage = userProfile?.photoURL ? 
             { id: `advocate${auth.currentUser?.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } :
@@ -64,8 +68,8 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
         const newAdvocate = {
             name: advocateName,
             specialty: specialization,
-            rating: (Math.random() * (5 - 4) + 4).toFixed(1), // Fake rating
-            reviews: Math.floor(Math.random() * 50),
+            rating: (Math.random() * (5 - 4) + 4).toFixed(1),
+            reviews: 0,
             image: advocateImage,
             about: bio,
             experience: `Experience: ${experience} years. Position: ${position}. Practices in: ${courtsOfPractice.join(', ')}.`,
@@ -79,10 +83,12 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
         };
 
         try {
+            // Simulate a brief delay for a better UX
+            await new Promise(resolve => setTimeout(resolve, 800));
             saveAdvocate(newAdvocate);
             toast({
                 title: "Profile Saved!",
-                description: "Your advocate profile has been listed on Lawyer Connect.",
+                description: "You are now listed in the Lawyer Connect directory.",
             });
             onSave();
         } catch (error) {
@@ -92,11 +98,13 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
                 title: "Save Failed",
                 description: "Could not save your profile. Please try again.",
             });
+        } finally {
+            setIsSaving(false);
         }
     };
 
     return (
-        <form className="space-y-6 max-h-[60vh] overflow-y-auto p-1" onSubmit={handleSubmit}>
+        <form className="space-y-6 max-h-[70vh] overflow-y-auto p-1" onSubmit={handleSubmit}>
             <div className="space-y-2">
                 <Label htmlFor="fullName">Full Name</Label>
                 <Input id="fullName" name="fullName" placeholder="Your full name as it appears on your Bar ID" required defaultValue={`${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`} />
@@ -126,7 +134,7 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
                             <Checkbox id={`court-${court}`} name="courts" value={court} />
                             <label
                                 htmlFor={`court-${court}`}
-                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                             >
                                 {court}
                             </label>
@@ -154,24 +162,29 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
 
             <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="courtName">Court Name</Label>
-                    <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" />
+                    <Label htmlFor="courtName">Main Court Name</Label>
+                    <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" required />
                 </div>
                  <div className="space-y-2">
-                    <Label htmlFor="courtAddress">Court Address</Label>
-                    <Input id="courtAddress" name="courtAddress" placeholder="Full address of the primary court" />
+                    <Label htmlFor="courtAddress">Court City/Address</Label>
+                    <Input id="courtAddress" name="courtAddress" placeholder="e.g., Mumbai, Maharashtra" required />
                 </div>
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="idProof">ID Proof</Label>
-                <Input id="idProof" name="idProof" type="file" />
-                <p className="text-xs text-muted-foreground">Upload a copy of your Bar Council ID or other valid legal identification.</p>
+                <Label htmlFor="idProof">ID Proof (Optional)</Label>
+                <Input id="idProof" name="idProof" type="file" className="cursor-pointer" />
+                <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Verification helps build trust with clients.</p>
             </div>
 
             <div className="flex justify-end pt-4">
-                <Button type="submit" className="w-full sm:w-auto">
-                    Save Advocate Profile
+                <Button type="submit" disabled={isSaving} className="w-full sm:w-auto min-w-[200px]">
+                    {isSaving ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Saving Profile...
+                        </>
+                    ) : "Complete Registration"}
                 </Button>
             </div>
         </form>

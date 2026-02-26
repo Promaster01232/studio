@@ -1,4 +1,3 @@
-
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export interface Lawyer {
@@ -18,7 +17,10 @@ export interface Lawyer {
         phone: string;
         email: string;
     };
-    [key: string]: any; // for other properties from the form
+    barId?: string;
+    courtName?: string;
+    courtAddress?: string;
+    [key: string]: any;
 }
 
 
@@ -42,11 +44,8 @@ export const getAdvocates = (): Lawyer[] => {
     const combined = [...initialLawyers, ...storedAdvocates];
     const uniqueLawyersMap = new Map<string | number, Lawyer>();
     
-    // Process in reverse to prioritize newly added (or updated) advocates if IDs were to clash
-    combined.reverse().forEach(advocate => {
-        if (!uniqueLawyersMap.has(advocate.id)) {
-            uniqueLawyersMap.set(advocate.id, advocate);
-        }
+    combined.forEach(advocate => {
+        uniqueLawyersMap.set(advocate.id, advocate);
     });
 
     return Array.from(uniqueLawyersMap.values()).reverse();

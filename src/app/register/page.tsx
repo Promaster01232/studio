@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -115,7 +114,7 @@ export default function RegisterPage() {
     setLoading(false);
     toast({
         title: "Registration Complete!",
-        description: "Your advocate profile has been created. Welcome aboard!",
+        description: "Your advocate profile has been created and listed. Welcome aboard!",
     });
     router.push('/dashboard/lawyer-connect');
   };
@@ -157,7 +156,7 @@ export default function RegisterPage() {
             </motion.div>
             <motion.h2 variants={itemVariants} className="text-3xl font-bold tracking-tight">Create an Account</motion.h2>
             <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8">
-            Enter your information to create an account.
+            Join the Nyaya Sahayak community today.
             </motion.p>
             <CardContent className="p-0">
                 <motion.div variants={itemVariants} className="grid gap-4">
@@ -219,7 +218,7 @@ export default function RegisterPage() {
                         <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} />
                     </div>
                 </div>
-                <Button type="submit" className="w-full" onClick={handleRegister} disabled={loading}>
+                <Button type="submit" className="w-full h-11" onClick={handleRegister} disabled={loading}>
                     {loading ? <Loader2 className="animate-spin" /> : "Create an account"}
                 </Button>
                 </motion.div>
@@ -246,12 +245,17 @@ export default function RegisterPage() {
         </div>
         </Card>
 
-        <Dialog open={showAdvocateDialog} onOpenChange={setShowAdvocateDialog}>
-            <DialogContent className="sm:max-w-2xl">
+        <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
+            // Only allow closing if they've saved, as requested
+            if (!open) {
+                toast({ title: "Incomplete Profile", description: "Advocates must complete their profile to proceed." });
+            }
+        }}>
+            <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
                 <DialogHeader>
-                    <DialogTitle>Advocate Profile</DialogTitle>
+                    <DialogTitle>Complete Advocate Profile</DialogTitle>
                     <DialogDescription>
-                        Complete your professional details to finish setting up your account. This information will be visible on Lawyer Connect.
+                        As an Advocate, you must provide your professional details to be listed in our verified directory.
                     </DialogDescription>
                 </DialogHeader>
                 <AdvocateProfileForm 
