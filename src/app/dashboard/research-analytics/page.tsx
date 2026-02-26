@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from "next/image";
@@ -301,8 +302,17 @@ export default function ResearchAnalyticsPage() {
     useEffect(() => {
         if (!firestore || !auth) return;
 
+        let unsubscribePosts: (() => void) | undefined;
+
         const unsubscribeAuth = onAuthStateChanged(auth, user => {
             setIsAuthenticated(!!user);
+
+            // Clean up existing posts listener if any when auth state changes
+            if (unsubscribePosts) {
+                unsubscribePosts();
+                unsubscribePosts = undefined;
+            }
+
             if (!user) {
                 setLoading(false);
                 setFeed([]);
@@ -321,13 +331,14 @@ export default function ResearchAnalyticsPage() {
             const postsCollection = collection(firestore, "posts");
             const q = query(postsCollection, orderBy("createdAt", "desc"));
 
-            const unsubscribePosts = onSnapshot(q,
+            unsubscribePosts = onSnapshot(q,
                 (querySnapshot) => {
                     const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post));
                     setFeed(postsData);
                     setLoading(false);
                 },
                 (serverError) => {
+                    // Suppress permission errors if the user is logging out or session is ending
                     if (!auth.currentUser) {
                         return;
                     }
@@ -341,10 +352,14 @@ export default function ResearchAnalyticsPage() {
                     setFeed([]);
                 }
             );
-            return () => unsubscribePosts();
         });
 
-        return () => unsubscribeAuth();
+        return () => {
+            unsubscribeAuth();
+            if (unsubscribePosts) {
+                unsubscribePosts();
+            }
+        };
     }, [auth, firestore]);
     
     const resetDialog = () => {
