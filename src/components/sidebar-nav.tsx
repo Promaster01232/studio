@@ -1,10 +1,10 @@
-
 "use client";
 
 import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import {
   Home,
@@ -63,9 +63,7 @@ const general = [
 
 const MenuSection = ({ title, items, checkActive }: { title: string; items: typeof mainItems; checkActive: (href: string) => boolean }) => (
     <React.Fragment>
-        <li className="px-4 mt-4 mb-2 text-xs font-semibold uppercase text-sidebar-foreground/50 tracking-wider group-data-[collapsible=icon]:hidden">
-            {title}
-        </li>
+        <SidebarGroupLabel className="mt-6 mb-2">{title}</SidebarGroupLabel>
         {items.map(item => (
             <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
