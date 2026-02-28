@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -40,6 +41,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
 import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
+import { ChatListDialog } from "@/components/chat-list-dialog";
 import { useToast } from "@/hooks/use-toast";
 
 const languages: { code: Language, name: string }[] = [
@@ -96,11 +98,11 @@ function Header() {
                         <Bell className="h-5 w-5" />
                     </Button>
 
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary" asChild>
-                        <Link href="/dashboard/support">
+                    <ChatListDialog>
+                        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
                             <MessageSquare className="h-5 w-5" />
-                        </Link>
-                    </Button>
+                        </Button>
+                    </ChatListDialog>
                 </div>
             </div>
         </header>
@@ -132,7 +134,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             if (userDoc.exists()) {
               setUserProfile(userDoc.data() as {firstName: string; lastName: string; email: string});
             } else {
-              if (pathname !== '/create-profile') {
+              if (pathname !== '/create-profile' && pathname !== '/login' && pathname !== '/register') {
                 router.push('/create-profile');
               }
             }
