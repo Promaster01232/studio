@@ -1,11 +1,10 @@
-
 "use client";
 
 import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Mail, MessageSquare, Phone, Star, Gavel, Scale, MapPin, BadgeCheck, Briefcase, GraduationCap, Globe, User } from "lucide-react";
+import { ArrowLeft, MessageSquare, Star, MapPin, BadgeCheck, Briefcase, GraduationCap, Globe, User, Scale, Phone, Mail } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { getAdvocates, type Lawyer } from '@/lib/advocates-data';
@@ -54,17 +53,13 @@ export default function LawyerProfilePage() {
       <Card className="overflow-hidden border-primary/10 shadow-2xl shadow-primary/5">
         <div className="bg-muted/5 p-8 md:p-12 relative">
           <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-8">
-            {lawyer.image ? (
+            {lawyer.image?.imageUrl && (
               <Avatar className="h-40 w-32 md:h-48 md:w-40 border-4 border-white dark:border-zinc-900 rounded-3xl shadow-2xl transition-transform hover:scale-[1.02]">
                 <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image.imageHint} className="object-cover" />
                 <AvatarFallback className="rounded-3xl bg-primary/5 text-primary text-4xl font-black font-headline border-2 border-primary/10 shadow-inner flex items-center justify-center">
                     <User className="h-16 w-16 opacity-20" />
                 </AvatarFallback>
               </Avatar>
-            ) : (
-                <div className="h-40 w-32 md:h-48 md:w-40 bg-primary/5 rounded-3xl flex items-center justify-center border-4 border-white dark:border-zinc-900 shadow-2xl">
-                    <User className="h-16 w-16 text-primary opacity-20" />
-                </div>
             )}
             
             <div className="flex-1 space-y-4">

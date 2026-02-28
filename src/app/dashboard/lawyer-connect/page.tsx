@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -8,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Filter, Search, Star, MapPin, Gavel, Briefcase, BadgeCheck, MessageSquare, ArrowRight, Scale, User } from "lucide-react";
+import { Filter, Search, Star, MapPin, Briefcase, BadgeCheck, MessageSquare, ArrowRight, Scale, User } from "lucide-react";
 import { getAdvocates, type Lawyer } from "@/lib/advocates-data";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -75,23 +74,28 @@ export default function LawyerConnectPage() {
             >
                 <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-primary/5 hover:border-primary/20 group bg-card/40 backdrop-blur-md rounded-2xl">
                     <div className="flex flex-col sm:flex-row items-center p-4 gap-4 sm:gap-6">
-                        <div className="relative shrink-0">
-                            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-2 border-white dark:border-zinc-900 rounded-2xl shadow-md group-hover:scale-105 transition-transform duration-500">
-                                <AvatarImage src={lawyer.image?.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image?.imageHint} className="object-cover" />
-                                <AvatarFallback className="rounded-2xl bg-primary/5 text-primary border-2 border-primary/10 shadow-inner flex items-center justify-center">
-                                    <User className="h-8 w-8 opacity-40" />
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="absolute -bottom-1 -right-1 bg-green-500 border-2 border-white dark:border-zinc-900 h-5 w-5 rounded-full shadow-md flex items-center justify-center" title="Available">
-                                <div className="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></div>
+                        {lawyer.image?.imageUrl && (
+                            <div className="relative shrink-0">
+                                <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-2 border-white dark:border-zinc-900 rounded-2xl shadow-md group-hover:scale-105 transition-transform duration-500">
+                                    <AvatarImage src={lawyer.image?.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image?.imageHint} className="object-cover" />
+                                    <AvatarFallback className="rounded-2xl bg-primary/5 text-primary border-2 border-primary/10 shadow-inner flex items-center justify-center">
+                                        <User className="h-8 w-8 opacity-40" />
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div className="absolute -bottom-1 -right-1 bg-green-500 border-2 border-white dark:border-zinc-900 h-5 w-5 rounded-full shadow-md flex items-center justify-center" title="Available">
+                                    <div className="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></div>
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         <div className="flex-1 min-w-0 text-center sm:text-left space-y-1">
                             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                                 <p className="font-bold text-xl leading-tight font-headline group-hover:text-primary transition-colors truncate tracking-tight">
                                     {lawyer.name}
                                 </p>
+                                {!lawyer.image?.imageUrl && (
+                                    <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse mr-1" title="Available"></div>
+                                )}
                                 <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 py-0 px-2 rounded-full text-[9px] font-black tracking-widest uppercase">
                                     <BadgeCheck className="h-3 w-3 mr-1" /> Verified
                                 </Badge>
