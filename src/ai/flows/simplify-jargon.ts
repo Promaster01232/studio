@@ -13,6 +13,7 @@ import {z} from 'genkit';
 
 const SimplifyJargonInputSchema = z.object({
   term: z.string().describe('The legal term to be simplified.'),
+  language: z.string().describe('The language for the response.'),
 });
 export type SimplifyJargonInput = z.infer<typeof SimplifyJargonInputSchema>;
 
@@ -32,11 +33,13 @@ const simplifyJargonPrompt = ai.definePrompt({
   name: 'simplifyJargonPrompt',
   input: {schema: SimplifyJargonInputSchema},
   output: {schema: SimplifyJargonOutputSchema},
-  prompt: `You are an AI legal assistant. Your task is to explain a complex legal term in simple, easy-to-understand English, as if explaining to a person with no legal background.
+  prompt: `You are an AI legal assistant. Your task is to explain a complex legal term in simple, easy-to-understand language, as if explaining to a person with no legal background.
 
 Legal Term: {{{term}}}
 
-Provide a concise, one-sentence explanation. Respond with the original term and the simplified explanation.`,
+Provide a concise, one-sentence explanation in the following language: {{{language}}}.
+
+Respond with the original term and the simplified explanation.`,
 });
 
 const simplifyJargonFlow = ai.defineFlow(

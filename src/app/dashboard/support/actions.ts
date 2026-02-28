@@ -11,6 +11,7 @@ export type JargonState = {
 
 const JargonSchema = z.object({
   term: z.string().min(1, "Please enter a legal term."),
+  language: z.string().min(1, "Please select a language."),
 });
 
 export async function simplifyJargonAction(
@@ -20,13 +21,14 @@ export async function simplifyJargonAction(
   
   const validatedFields = JargonSchema.safeParse({
     term: formData.get("term"),
+    language: formData.get("language"),
   });
 
   if (!validatedFields.success) {
     return {
       status: "error",
       data: null,
-      error: "Please enter a legal term to simplify.",
+      error: "Please enter a legal term and select a language.",
     };
   }
 

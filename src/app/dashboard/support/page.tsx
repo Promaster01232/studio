@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,10 +8,11 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { simplifyJargonAction, type JargonState } from "./actions";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles, Languages } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useLanguage } from "@/components/language-provider";
 import type { Language } from "@/components/language-provider";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const initialState: JargonState = {
     status: 'idle',
@@ -32,6 +32,7 @@ const languages: { code: Language, name: string }[] = [
 export default function SupportPage() {
     const [state, formAction] = useActionState(simplifyJargonAction, initialState);
     const { language, setLanguage } = useLanguage();
+    const [aiLanguage, setAiLanguage] = useState("English");
 
     return (
         <div className="space-y-8">
@@ -47,13 +48,28 @@ export default function SupportPage() {
                 </CardHeader>
                 <CardContent>
                     <form action={formAction} className="space-y-4">
-                        <div className="flex gap-2">
-                            <Input name="term" placeholder="e.g., Subpoena" required className="flex-1" />
-                            <Button type="submit" disabled={state.status === 'loading'}>
-                                {state.status === 'loading' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                                <span className="ml-2 hidden sm:inline">Simplify</span>
-                            </Button>
+                        <div className="grid sm:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="term">Legal Term</Label>
+                            <Input id="term" name="term" placeholder="e.g., Subpoena" required />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="language" className="flex items-center gap-2"><Languages className="h-4 w-4" /> Response Language</Label>
+                            <Select name="language" value={aiLanguage} onValueChange={setAiLanguage} required>
+                              <SelectTrigger id="language">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="English">English</SelectItem>
+                                <SelectItem value="Hindi">Hindi</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
+                        <Button type="submit" disabled={state.status === 'loading'} className="w-full sm:w-auto">
+                            {state.status === 'loading' ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
+                            Simplify Term
+                        </Button>
                     </form>
                     
                     {state.status === 'loading' && <p className="mt-4 text-sm text-muted-foreground">Simplifying...</p>}
@@ -83,7 +99,7 @@ export default function SupportPage() {
             <Card>
                 <CardHeader>
                     <CardTitle>Multi-Lingual Support</CardTitle>
-                    <CardDescription>Select your preferred language for the application.</CardDescription>
+                    <CardDescription>Select your preferred language for the application interface.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <RadioGroup value={language} onValueChange={(value) => setLanguage(value as Language)} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">

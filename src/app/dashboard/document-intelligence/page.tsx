@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb } from "lucide-react";
+import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb, Languages } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const initialState: DocumentIntelligenceState = {
   status: "idle",
@@ -57,6 +58,20 @@ export default function DocumentIntelligencePage() {
                   />
                   {fileName && <p className="text-sm text-muted-foreground">Selected file: {fileName}</p>}
                 </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="language" className="flex items-center gap-2"><Languages className="h-4 w-4" /> Response Language</Label>
+                  <Select name="language" defaultValue="English" required>
+                    <SelectTrigger id="language">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="English">English</SelectItem>
+                      <SelectItem value="Hindi">Hindi</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <Button type="submit" disabled={state.status === "loading"} className="w-full">
                    <FileUp className="mr-2 h-4 w-4" />
                   {state.status === "loading" ? "Analyzing Document..." : "Upload and Analyze"}

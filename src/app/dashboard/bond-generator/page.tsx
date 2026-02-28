@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Download, Share2, Printer, Loader2 } from "lucide-react";
+import { Download, Share2, Printer, Loader2, Languages } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
 import { useToast } from "@/hooks/use-toast";
@@ -137,19 +137,34 @@ export default function BondGeneratorPage() {
         </CardHeader>
         <CardContent>
           <form action={formAction} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="bondType">Bond Type</Label>
-              <Select name="bondType" required value={bondType} onValueChange={setBondType}>
-                <SelectTrigger id="bondType">
-                  <SelectValue placeholder="Select a bond type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Bail Bond">Bail Bond</SelectItem>
-                  <SelectItem value="Indemnity Bond">Indemnity Bond</SelectItem>
-                  <SelectItem value="Surety Bond">Surety Bond</SelectItem>
-                  <SelectItem value="Affidavit">Affidavit</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="bondType">Bond Type</Label>
+                <Select name="bondType" required value={bondType} onValueChange={setBondType}>
+                  <SelectTrigger id="bondType">
+                    <SelectValue placeholder="Select a bond type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Bail Bond">Bail Bond</SelectItem>
+                    <SelectItem value="Indemnity Bond">Indemnity Bond</SelectItem>
+                    <SelectItem value="Surety Bond">Surety Bond</SelectItem>
+                    <SelectItem value="Affidavit">Affidavit</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="language" className="flex items-center gap-2"><Languages className="h-4 w-4" /> Document Language</Label>
+                <Select name="language" defaultValue="Simple English" required>
+                  <SelectTrigger id="language">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Simple English">Simple English</SelectItem>
+                    <SelectItem value="Legal English">Legal English</SelectItem>
+                    <SelectItem value="Hindi">Hindi</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Conditional Fields */}

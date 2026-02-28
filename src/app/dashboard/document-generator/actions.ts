@@ -17,6 +17,8 @@ export async function generateDocumentAction(
 ): Promise<DocumentGeneratorState> {
 
   const documentType = get(formData, 'documentType');
+  const language = get(formData, 'language') || 'Simple English';
+
   if (!documentType) {
     return { status: 'error', data: null, error: 'Please select a document type.' };
   }
@@ -154,7 +156,7 @@ export async function generateDocumentAction(
   try {
     const result = await generateLegalDocument({
       documentType,
-      language: "Simple English", // Hardcoded for a cleaner UI
+      language,
       details,
     });
     return { status: "success", data: result, error: null };

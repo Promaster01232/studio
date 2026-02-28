@@ -16,6 +16,7 @@ const UnderstandLegalDocumentInputSchema = z.object({
     .string()
     .describe(
       'A legal document, as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.'    ),
+  language: z.string().describe('The language for the response.'),
 });
 export type UnderstandLegalDocumentInput = z.infer<typeof UnderstandLegalDocumentInputSchema>;
 
@@ -40,13 +41,15 @@ const prompt = ai.definePrompt({
   output: {schema: UnderstandLegalDocumentOutputSchema},
   prompt: `You are an AI legal assistant that helps people understand legal documents.
 
-You will receive a legal document, and you will explain it in simple English, highlighting legal risks, deadlines, required actions, and consequences of ignoring the document.
+You will receive a legal document, and you will explain it in simple terms, highlighting legal risks, deadlines, required actions, and consequences of ignoring the document.
 
 Use the following as the primary source of information about the legal document.
 
 Document: {{media url=documentDataUri}}
 
-Summary in simple English: 
+Provide the response in the following language: {{{language}}}.
+
+Summary: 
 Legal Risks:
 Deadlines:
 Required Actions:

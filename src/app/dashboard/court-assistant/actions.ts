@@ -12,6 +12,7 @@ export type CourtAssistantState = {
 const QuestionSchema = z.object({
   witnessName: z.string().min(1, "Witness name is required."),
   topic: z.string().min(1, "Topic is required."),
+  language: z.string().min(1, "Language is required."),
 });
 
 export async function generateQuestionsAction(
@@ -22,6 +23,7 @@ export async function generateQuestionsAction(
   const validatedFields = QuestionSchema.safeParse({
     witnessName: formData.get("witnessName"),
     topic: formData.get("topic"),
+    language: formData.get("language"),
   });
 
   if (!validatedFields.success) {

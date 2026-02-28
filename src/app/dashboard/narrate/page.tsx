@@ -4,9 +4,11 @@ import { useActionState, useState, useRef, useEffect, startTransition } from "re
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2 } from "lucide-react";
+import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2, Languages } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 const initialState: CaseSummaryState = {
   status: "idle",
@@ -21,6 +23,7 @@ export default function NarrateProblemPage() {
   const [hasPermission, setHasPermission] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [timer, setTimer] = useState(0);
+  const [language, setLanguage] = useState("English");
 
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
@@ -79,6 +82,7 @@ export default function NarrateProblemPage() {
                 const formData = new FormData();
                 const audioFile = new File([blob], "recording.webm", { type: "audio/webm" });
                 formData.append("problemAudio", audioFile);
+                formData.append("language", language);
                 startTransition(() => {
                     formAction(formData);
                 });
@@ -129,9 +133,24 @@ export default function NarrateProblemPage() {
       <Card>
         <CardHeader>
           <CardTitle>Voice Recorder</CardTitle>
-          <CardDescription>Use the buttons below to record your problem.</CardDescription>
+          <CardDescription>Select your language and record your problem.</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center space-y-6 py-10">
+        <CardContent className="flex flex-col items-center justify-center space-y-6 py-6">
+          <div className="w-full max-w-sm space-y-4 mb-4">
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2"><Languages className="h-4 w-4" /> Response Language</Label>
+              <Select value={language} onValueChange={setLanguage} disabled={isRecording || isLoading}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="English">English</SelectItem>
+                  <SelectItem value="Hindi">Hindi</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <div className="flex w-full max-w-sm flex-col items-center justify-center gap-4 sm:flex-row">
               <Button
                   onClick={startRecording}

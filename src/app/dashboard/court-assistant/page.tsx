@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mic, BrainCircuit, Loader2 } from "lucide-react";
+import { Mic, BrainCircuit, Loader2, Languages } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const initialState: CourtAssistantState = {
   status: "idle",
@@ -156,7 +157,19 @@ export default function CourtAssistantPage() {
                             <Label htmlFor="topic" className="text-cyan-200">Topic</Label>
                             <Input id="topic" name="topic" placeholder="e.g., Alibi for October 31st" className="bg-[#0D1B2A] border-cyan-500/30 text-white placeholder:text-gray-500" />
                         </div>
-                        <Button type="submit" disabled={isLoading} className="w-full bg-cyan-500 hover:bg-cyan-600 text-black font-bold">
+                        <div className="space-y-2">
+                            <Label htmlFor="language" className="text-cyan-200 flex items-center gap-2"><Languages className="h-4 w-4" /> AI Response Language</Label>
+                            <Select name="language" defaultValue="English" required>
+                              <SelectTrigger className="bg-[#0D1B2A] border-cyan-500/30 text-white">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-[#1B263B] border-cyan-500/30 text-white">
+                                <SelectItem value="English">English</SelectItem>
+                                <SelectItem value="Hindi">Hindi</SelectItem>
+                              </SelectContent>
+                            </Select>
+                        </div>
+                        <Button type="submit" disabled={isLoading} className="w-full bg-cyan-500 hover:bg-cyan-600 text-black font-bold mt-2">
                             {isLoading ? <Loader2 className="animate-spin" /> : "Generate Questions"}
                         </Button>
                     </form>

@@ -14,6 +14,7 @@ import {z} from 'genkit';
 const GenerateCrossExaminationQuestionsInputSchema = z.object({
   witnessName: z.string().describe('The name of the witness.'),
   topic: z.string().describe('The topic of the cross-examination.'),
+  language: z.string().describe('The language for the response.'),
 });
 export type GenerateCrossExaminationQuestionsInput = z.infer<typeof GenerateCrossExaminationQuestionsInputSchema>;
 
@@ -32,7 +33,9 @@ const generateCrossExaminationQuestionsPrompt = ai.definePrompt({
   name: 'generateCrossExaminationQuestionsPrompt',
   input: {schema: GenerateCrossExaminationQuestionsInputSchema},
   output: {schema: GenerateCrossExaminationQuestionsOutputSchema},
-  prompt: `You are an expert lawyer. Generate a list of 5 insightful cross-examination questions for a witness named {{{witnessName}}} regarding the topic of {{{topic}}}. The questions should be probing and designed to test the witness's testimony.`,
+  prompt: `You are an expert lawyer. Generate a list of 5 insightful cross-examination questions for a witness named {{{witnessName}}} regarding the topic of {{{topic}}}. The questions should be probing and designed to test the witness's testimony.
+
+Provide the response in the following language: {{{language}}}.`,
 });
 
 const generateCrossExaminationQuestionsFlow = ai.defineFlow(

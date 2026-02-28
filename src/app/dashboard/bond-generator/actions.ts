@@ -17,6 +17,8 @@ export async function generateBondAction(
 ): Promise<BondGeneratorState> {
 
   const bondType = get(formData, 'bondType');
+  const language = get(formData, 'language') || 'Simple English';
+
   if (!bondType) {
     return { status: 'error', data: null, error: 'Please select a bond type.' };
   }
@@ -161,7 +163,7 @@ export async function generateBondAction(
   try {
     const result = await generateBondDocument({
       bondType,
-      language: "Simple English", // Hardcoded for a cleaner UI
+      language,
       details,
     });
     return { status: "success", data: result, error: null };

@@ -17,6 +17,7 @@ const GenerateCaseSummaryInputSchema = z.object({
     .describe(
       "A voice recording of the legal problem, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  language: z.string().describe('The language for the response.'),
 });
 export type GenerateCaseSummaryInput = z.infer<typeof GenerateCaseSummaryInputSchema>;
 
@@ -44,6 +45,8 @@ const prompt = ai.definePrompt({
 You will use the user's voice recording of their legal problem to generate a simplified summary of their case. First, transcribe the audio. Then, based on the transcription, extract the case type (civil or criminal), relevant laws and sections, and the jurisdiction where the case should be filed.
 
 Voice recording of the legal problem: {{media url=problemAudio}}
+
+Output the response in the following language: {{{language}}}.
 
 Output the case summary, case type, relevant laws and sections, jurisdiction, and next actions as JSON. Make the case summary as simple as possible for a layman to understand.
 `,

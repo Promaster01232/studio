@@ -20,6 +20,7 @@ export async function summarizeCaseAction(
   formData: FormData
 ): Promise<CaseSummaryState> {
   const file = formData.get("problemAudio");
+  const language = formData.get("language")?.toString() || "English";
 
   if (!(file instanceof File) || file.size === 0) {
     return {
@@ -33,6 +34,7 @@ export async function summarizeCaseAction(
     const audioDataUri = await fileToDataURI(file);
     const result = await generateCaseSummary({
       problemAudio: audioDataUri,
+      language,
     });
     return { status: "success", data: result, error: null };
   } catch (error) {

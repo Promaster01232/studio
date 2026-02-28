@@ -20,6 +20,7 @@ export async function understandDocumentAction(
   formData: FormData
 ): Promise<DocumentIntelligenceState> {
   const file = formData.get("document");
+  const language = formData.get("language")?.toString() || "English";
 
   if (!(file instanceof File) || file.size === 0) {
     return {
@@ -34,6 +35,7 @@ export async function understandDocumentAction(
     
     const result = await understandLegalDocument({
       documentDataUri,
+      language,
     });
     return { status: "success", data: result, error: null };
   } catch (error) {
