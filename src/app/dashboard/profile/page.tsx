@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2 } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,6 +23,7 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AdvocateProfileForm } from '@/components/advocate-profile-form';
+import { getAdvocates, type Lawyer } from '@/lib/advocates-data';
 
 type UserProfile = {
   uid: string;
@@ -43,6 +44,7 @@ export default function ProfilePage() {
   const { toast } = useToast();
   
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [advocateDetails, setAdvocateDetails] = useState<Lawyer | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showAdvocateDialog, setShowAdvocateDialog] = useState(false);
@@ -75,6 +77,13 @@ export default function ProfilePage() {
           if (data.photoURL) {
             setPhotoURL(data.photoURL);
           }
+
+          // Fetch professional details if user is a lawyer
+          if (data.userType === 'lawyer') {
+              const allAdvocates = getAdvocates();
+              const found = allAdvocates.find(a => a.contact?.email === data.email);
+              if (found) setAdvocateDetails(found);
+          }
         } else {
             router.push('/create-profile');
         }
@@ -102,18 +111,21 @@ export default function ProfilePage() {
 
   const handleAdvocateProfileSaved = () => {
     setShowAdvocateDialog(false);
-    // After advocate details are saved to directory, save the main profile to persist userType
+    // Refresh local details
+    const allAdvocates = getAdvocates();
+    const found = allAdvocates.find(a => a.contact?.email === email);
+    if (found) setAdvocateDetails(found);
+    
     handleSaveChanges(true);
     toast({
-        title: "Advocate Profile Complete",
-        description: "Your professional details have been updated and listed.",
+        title: "Advocate Profile Updated",
+        description: "Your professional details have been synchronized.",
     });
   };
 
   const handleSaveChanges = (fromAdvocateFlow = false) => {
     if (!auth.currentUser || !userProfile) return;
 
-    // If they switched to lawyer but haven't filled the profile, force it
     if (userType === 'lawyer' && !fromAdvocateFlow && userProfile.userType !== 'lawyer') {
         setShowAdvocateDialog(true);
         return;
@@ -208,23 +220,30 @@ export default function ProfilePage() {
             description="Manage your account settings and personal information."
         />
 
-        {/* User Info Card */}
-        <Card>
+        <Card className="border-primary/10 overflow-hidden">
             <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
-            <div className="relative">
-                <Avatar className="h-24 w-24 border-2 border-primary">
+            <div className="relative group">
+                <Avatar className="h-24 w-24 border-2 border-primary shadow-lg transition-transform group-hover:scale-105">
                 <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} />
-                <AvatarFallback>{`${firstName.charAt(0)}${lastName.charAt(0)}`}</AvatarFallback>
+                <AvatarFallback className="bg-primary/5 text-primary text-xl font-bold">{`${firstName.charAt(0)}${lastName.charAt(0)}`}</AvatarFallback>
                 </Avatar>
-                <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8" onClick={handleAvatarClick}>
+                <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8 shadow-md border" onClick={handleAvatarClick}>
                 <Edit className="h-4 w-4" />
                 <span className="sr-only">Change profile picture</span>
                 </Button>
                 <input type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
             </div>
             <div className="flex-1 text-center sm:text-left">
-                <h2 className="text-2xl font-bold font-headline">{firstName} {lastName}</h2>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <h2 className="text-2xl font-bold font-headline">{firstName} {lastName}</h2>
+                    {userType === 'lawyer' && <BadgeCheck className="h-5 w-5 text-primary hidden sm:block" />}
+                </div>
                 <p className="text-muted-foreground">{email}</p>
+                <div className="mt-2 flex flex-wrap justify-center sm:justify-start gap-2">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary capitalize">
+                        {userType}
+                    </span>
+                </div>
             </div>
             </CardContent>
         </Card>
@@ -274,7 +293,7 @@ export default function ProfilePage() {
                     </div>
                     </div>
                     <div className="flex justify-end">
-                        <Button onClick={() => handleSaveChanges()} disabled={saving}>
+                        <Button onClick={() => handleSaveChanges()} disabled={saving} className="shadow-lg shadow-primary/20">
                             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
                             {userType === 'lawyer' && userProfile?.userType !== 'lawyer' ? "Setup Advocate Profile" : "Save Changes"}
                         </Button>
@@ -283,19 +302,65 @@ export default function ProfilePage() {
                 </Card>
                 
                 {userType === 'lawyer' && (
-                    <Card>
+                    <Card className="border-primary/20 bg-primary/5">
                         <CardHeader>
-                            <CardTitle>Advocate Profile</CardTitle>
-                            <CardDescription>Manage your public-facing advocate profile for the Lawyer Connect directory.</CardDescription>
+                            <CardTitle className="flex items-center gap-2">
+                                <Gavel className="h-5 w-5 text-primary" />
+                                Advocate Status & Credentials
+                            </CardTitle>
+                            <CardDescription>Professional information listed in the Lawyer Connect directory.</CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-muted-foreground mb-4">
-                                Complete your professional details to get listed and connect with potential clients.
-                            </p>
-                            <Button onClick={() => setShowAdvocateDialog(true)}>
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit Advocate Profile
-                            </Button>
+                        <CardContent className="space-y-6">
+                            {advocateDetails ? (
+                                <div className="grid sm:grid-cols-2 gap-6">
+                                    <div className="space-y-4">
+                                        <div className="flex items-start gap-3">
+                                            <BadgeCheck className="h-5 w-5 text-primary mt-0.5" />
+                                            <div>
+                                                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Bar Council ID</p>
+                                                <p className="font-mono font-bold text-sm">{advocateDetails.barId}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <Briefcase className="h-5 w-5 text-primary mt-0.5" />
+                                            <div>
+                                                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Experience</p>
+                                                <p className="font-semibold text-sm">{advocateDetails.experience}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <div className="flex items-start gap-3">
+                                            <MapPin className="h-5 w-5 text-primary mt-0.5" />
+                                            <div>
+                                                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Primary Court</p>
+                                                <p className="font-semibold text-sm">{advocateDetails.courtName}</p>
+                                                <p className="text-xs text-muted-foreground">{advocateDetails.courtAddress}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <Gavel className="h-5 w-5 text-primary mt-0.5" />
+                                            <div>
+                                                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Specialization</p>
+                                                <p className="font-semibold text-sm">{advocateDetails.specialty}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-2 pt-4 border-t">
+                                        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">Professional Bio</p>
+                                        <p className="text-sm text-muted-foreground leading-relaxed italic">&ldquo;{advocateDetails.about}&rdquo;</p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <p className="text-sm text-muted-foreground italic">You haven't completed your professional profile yet. Clients won't be able to find you in the directory.</p>
+                            )}
+                            
+                            <div className="pt-2">
+                                <Button onClick={() => setShowAdvocateDialog(true)} variant={advocateDetails ? "outline" : "default"} className="w-full sm:w-auto">
+                                    <Edit className="mr-2 h-4 w-4" />
+                                    {advocateDetails ? "Edit Professional Details" : "Complete Advocate Setup"}
+                                </Button>
+                            </div>
                         </CardContent>
                     </Card>
                 )}
@@ -305,7 +370,7 @@ export default function ProfilePage() {
                 {/* Account Settings Card */}
                 <Card>
                 <CardHeader>
-                    <CardTitle>Account Settings</CardTitle>
+                    <CardTitle>Preferences</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="flex items-center justify-between">
@@ -334,12 +399,12 @@ export default function ProfilePage() {
                 </Card>
 
                 {/* Danger Zone */}
-                <Card className="border-destructive bg-destructive/5">
+                <Card className="border-destructive/20 bg-destructive/5">
                     <CardHeader>
-                        <CardTitle className="text-destructive">Danger Zone</CardTitle>
+                        <CardTitle className="text-destructive">Account Management</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <Button variant="outline" className="w-full justify-start" onClick={handleLogout}>
+                        <Button variant="outline" className="w-full justify-start hover:bg-destructive/10" onClick={handleLogout}>
                             <LogOut className="mr-3 h-5 w-5 text-muted-foreground" /> 
                             <span>Logout</span>
                         </Button>
@@ -353,19 +418,18 @@ export default function ProfilePage() {
         </div>
         </div>
         <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
-            // Only allow closing if it's not a new selection
-            if (!open && userType === 'lawyer' && userProfile?.userType !== 'lawyer') {
+            if (!open && userType === 'lawyer' && userProfile?.userType !== 'lawyer' && !advocateDetails) {
                 toast({ title: "Profile Required", description: "You must complete your advocate details to use this role." });
                 return;
             }
             setShowAdvocateDialog(open);
         }}>
             <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => {
-                if (userType === 'lawyer' && userProfile?.userType !== 'lawyer') e.preventDefault();
+                if (userType === 'lawyer' && userProfile?.userType !== 'lawyer' && !advocateDetails) e.preventDefault();
             }}>
                 <DialogHeader>
-                    <DialogTitle>Complete Advocate Profile</DialogTitle>
-                    <DialogDescription>As an Advocate, you must provide your professional details to be listed in our verified directory.</DialogDescription>
+                    <DialogTitle>Update Professional Credentials</DialogTitle>
+                    <DialogDescription>Your details are verified against Bar Council records to ensure trust in our directory.</DialogDescription>
                 </DialogHeader>
                 <AdvocateProfileForm 
                     onSave={handleAdvocateProfileSaved}

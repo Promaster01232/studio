@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Mail, MessageSquare, Phone, Star, Gavel, Scale, MapPin, BadgeCheck } from "lucide-react";
+import { ArrowLeft, Mail, MessageSquare, Phone, Star, Gavel, Scale, MapPin, BadgeCheck, Briefcase, GraduationCap, Globe } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { getAdvocates, type Lawyer } from '@/lib/advocates-data';
@@ -41,138 +41,175 @@ export default function LawyerProfilePage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-6xl mx-auto">
        <div className="flex items-center gap-4">
-        <Button variant="outline" size="icon" asChild>
+        <Button variant="ghost" size="sm" className="hover:bg-primary/5 text-primary font-bold" asChild>
             <Link href="/dashboard/lawyer-connect">
-                <ArrowLeft />
-                <span className="sr-only">Back</span>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Directory
             </Link>
         </Button>
-        <h1 className="text-xl font-semibold">Advocate Profile</h1>
       </div>
       
-      <Card className="overflow-hidden border-primary/20">
-        <div className="bg-card p-6 relative">
-          <div className="flex flex-col items-center text-center">
-            {lawyer.image && (
-              <Avatar className="h-28 w-24 border-4 border-primary/50 mb-4 rounded-xl shadow-xl">
-                <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image.imageHint} />
-                <AvatarFallback className="rounded-xl">{lawyer.name.charAt(0)}</AvatarFallback>
+      <Card className="overflow-hidden border-primary/10 shadow-2xl shadow-primary/5">
+        <div className="bg-gradient-to-r from-primary/5 to-transparent p-8 md:p-12 relative">
+          <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-8">
+            {lawyer.image ? (
+              <Avatar className="h-40 w-32 md:h-48 md:w-40 border-4 border-white dark:border-zinc-900 rounded-3xl shadow-2xl transition-transform hover:scale-[1.02]">
+                <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image.imageHint} className="object-cover" />
+                <AvatarFallback className="rounded-3xl bg-primary/10 text-primary text-4xl font-bold">{lawyer.name.charAt(0)}</AvatarFallback>
               </Avatar>
-            )}
-            <h2 className="text-3xl font-bold font-headline flex items-center gap-2">
-                {lawyer.name}
-                <BadgeCheck className="h-6 w-6 text-primary fill-primary/10" />
-            </h2>
-            <p className="text-primary font-semibold mt-1">{lawyer.specialty}</p>
-            
-            <div className="flex items-center gap-4 mt-4">
-                <div className="flex items-center gap-1 text-lg">
-                    <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
-                    <span className="font-bold">{lawyer.rating}</span>
-                    <span className="text-muted-foreground text-sm">({lawyer.reviews} reviews)</span>
+            ) : (
+                <div className="h-40 w-32 md:h-48 md:w-40 bg-primary/10 rounded-3xl flex items-center justify-center border-4 border-white dark:border-zinc-900 shadow-2xl">
+                    <Gavel className="h-16 w-16 text-primary opacity-30" />
                 </div>
-                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                    <Gavel className="h-3 w-3 mr-1" /> Verified Advocate
-                </Badge>
+            )}
+            
+            <div className="flex-1 space-y-4">
+                <div className="space-y-1">
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
+                        <h2 className="text-4xl md:text-5xl font-black font-headline tracking-tighter">
+                            {lawyer.name}
+                        </h2>
+                        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 py-1 px-3">
+                            <BadgeCheck className="h-4 w-4 mr-1.5" /> Verified Advocate
+                        </Badge>
+                    </div>
+                    <p className="text-xl text-primary font-bold tracking-tight uppercase">{lawyer.specialty}</p>
+                </div>
+                
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-6 pt-2">
+                    <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
+                            {[...Array(5)].map((_, i) => (
+                                <Star key={i} className={`h-5 w-5 ${i < Math.floor(Number(lawyer.rating)) ? 'text-yellow-400 fill-yellow-400' : 'text-muted opacity-30'}`} />
+                            ))}
+                        </div>
+                        <span className="font-black text-lg">{lawyer.rating}</span>
+                        <span className="text-muted-foreground text-sm font-medium">({lawyer.reviews} Reviews)</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground">
+                        <MapPin className="h-4 w-4 text-primary" />
+                        {lawyer.courtName}
+                    </div>
+                </div>
+
+                <div className="mt-8 flex flex-col sm:flex-row gap-4 max-w-md">
+                    <Button variant="outline" size="lg" className="flex-1 h-14 text-lg border-primary/20 hover:bg-primary/5 font-bold" asChild>
+                    <Link href={`/dashboard/lawyer-connect/${lawyer.id}/chat`}>
+                        <MessageSquare className="mr-2 h-5 w-5"/> Message
+                    </Link>
+                    </Button>
+                    <Button size="lg" className="flex-1 h-14 text-lg shadow-xl shadow-primary/20 font-bold hover:scale-[1.02] active:scale-[0.98] transition-all" asChild>
+                    <Link href={`/dashboard/lawyer-connect/${lawyer.id}/book`}>Book Consultation</Link>
+                    </Button>
+                </div>
             </div>
-          </div>
-          
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Button variant="outline" size="lg" className="w-full" asChild>
-              <Link href={`/dashboard/lawyer-connect/${lawyer.id}/chat`}>
-                <MessageSquare className="mr-2 h-5 w-5"/> Message Advocate
-              </Link>
-            </Button>
-            <Button size="lg" className="w-full shadow-lg shadow-primary/20" asChild>
-              <Link href={`/dashboard/lawyer-connect/${lawyer.id}/book`}>Book Consultation</Link>
-            </Button>
           </div>
         </div>
       </Card>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Scale className="h-5 w-5 text-primary" /> About Me
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="md:col-span-2 space-y-8">
+            <Card className="border-primary/10">
+                <CardHeader className="border-b bg-muted/30">
+                    <CardTitle className="flex items-center gap-3 text-xl font-bold font-headline">
+                        <Scale className="h-6 w-6 text-primary" /> Professional Bio
                     </CardTitle>
                 </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">{lawyer.about}</p>
+                <CardContent className="p-8">
+                    <p className="text-muted-foreground leading-relaxed text-lg whitespace-pre-line">{lawyer.about}</p>
                 </CardContent>
             </Card>
             
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <BadgeCheck className="h-5 w-5 text-primary" /> Professional Credentials
+            <Card className="border-primary/10 overflow-hidden">
+                <CardHeader className="border-b bg-primary/5">
+                    <CardTitle className="flex items-center gap-3 text-xl font-bold font-headline">
+                        <BadgeCheck className="h-6 w-6 text-primary" /> Verified Credentials
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="p-3 rounded-lg bg-muted/50 border">
-                            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Bar Council ID</p>
-                            <p className="font-mono font-semibold">{lawyer.barId || 'Verified'}</p>
+                <CardContent className="p-0">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x border-b">
+                        <div className="p-6 space-y-1">
+                            <p className="text-xs text-muted-foreground uppercase font-black tracking-widest flex items-center gap-2">
+                                <GraduationCap className="h-3.5 w-3.5 text-primary" /> Bar Council ID
+                            </p>
+                            <p className="font-mono text-lg font-black text-foreground">{lawyer.barId || 'ID-VERIFIED-BCI'}</p>
                         </div>
-                        <div className="p-3 rounded-lg bg-muted/50 border">
-                            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Primary Specialization</p>
-                            <p className="font-semibold">{lawyer.specialty}</p>
+                        <div className="p-6 space-y-1">
+                            <p className="text-xs text-muted-foreground uppercase font-black tracking-widest flex items-center gap-2">
+                                <Scale className="h-3.5 w-3.5 text-primary" /> Core Practice
+                            </p>
+                            <p className="font-bold text-lg text-foreground">{lawyer.specialty}</p>
                         </div>
                     </div>
-                    <div>
-                        <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-2">Experience & Practice</p>
-                        <p className="text-sm text-foreground bg-primary/5 p-3 rounded-md border border-primary/10">{lawyer.experience}</p>
+                    <div className="p-8 space-y-4">
+                        <div className="space-y-2">
+                            <p className="text-xs text-muted-foreground uppercase font-black tracking-widest flex items-center gap-2">
+                                <Briefcase className="h-3.5 w-3.5 text-primary" /> Experience & Achievements
+                            </p>
+                            <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10">
+                                <p className="text-foreground font-medium leading-relaxed">{lawyer.experience}</p>
+                            </div>
+                        </div>
+                        {lawyer.courts && lawyer.courts.length > 0 && (
+                            <div className="space-y-2">
+                                <p className="text-xs text-muted-foreground uppercase font-black tracking-widest">Authorized Courts</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {lawyer.courts.map((c: string) => (
+                                        <Badge key={c} variant="outline" className="bg-background font-bold border-primary/20 text-primary">{c}</Badge>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </CardContent>
             </Card>
         </div>
 
-        <div className="space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+        <div className="space-y-8">
+            <Card className="border-primary/10 overflow-hidden">
+                <CardHeader className="border-b bg-muted/30">
+                    <CardTitle className="flex items-center gap-3 text-lg font-bold font-headline">
                         <MapPin className="h-5 w-5 text-primary" /> Practice Location
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    <div>
-                        <p className="text-sm font-bold text-foreground">{lawyer.courtName || 'Primary Court'}</p>
-                        <p className="text-sm text-muted-foreground mt-1">{lawyer.courtAddress || 'Location details verified by Bar Council'}</p>
+                <CardContent className="p-6 space-y-6">
+                    <div className="space-y-2">
+                        <p className="font-black text-foreground text-xl leading-tight">{lawyer.courtName || 'District Court Chamber'}</p>
+                        <p className="text-sm text-muted-foreground font-medium leading-relaxed">{lawyer.courtAddress || 'Authorized practice area within state jurisdiction.'}</p>
                     </div>
-                    <Button variant="outline" className="w-full" asChild>
+                    <Button variant="outline" className="w-full h-12 border-primary/20 hover:bg-primary/5 font-bold" asChild>
                         <Link href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lawyer.courtName + ' ' + (lawyer.courtAddress || ''))}`} target="_blank">
-                            <MapPin className="mr-2 h-4 w-4" /> View on Map
+                            <Globe className="mr-2 h-4 w-4" /> View Office Map
                         </Link>
                     </Button>
                 </CardContent>
             </Card>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Phone className="h-5 w-5 text-primary" /> Contact Information
+            <Card className="border-primary/10 overflow-hidden">
+                <CardHeader className="border-b bg-muted/30">
+                    <CardTitle className="flex items-center gap-3 text-lg font-bold font-headline">
+                        <Phone className="h-5 w-5 text-primary" /> Verified Contact
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex items-center">
-                        <div className="bg-primary/10 p-2 rounded-md mr-4">
-                            <Phone className="h-4 w-4 text-primary" />
+                <CardContent className="p-6 space-y-4">
+                    <div className="flex items-center p-3 rounded-2xl bg-primary/5 border border-primary/10 transition-colors hover:bg-primary/10">
+                        <div className="bg-primary text-white p-2.5 rounded-xl mr-4 shadow-lg shadow-primary/20">
+                            <Phone className="h-4 w-4" />
                         </div>
                         <div className="flex-1">
-                            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">Phone</p>
-                            <a href={`tel:${lawyer.contact?.phone}`} className="font-semibold hover:underline text-sm">{lawyer.contact?.phone}</a>
+                            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Phone</p>
+                            <a href={`tel:${lawyer.contact?.phone}`} className="font-black text-foreground hover:text-primary transition-colors">{lawyer.contact?.phone}</a>
                         </div>
                     </div>
-                    <div className="flex items-center">
-                        <div className="bg-primary/10 p-2 rounded-md mr-4">
-                            <Mail className="h-4 w-4 text-primary" />
+                    <div className="flex items-center p-3 rounded-2xl bg-primary/5 border border-primary/10 transition-colors hover:bg-primary/10">
+                        <div className="bg-primary text-white p-2.5 rounded-xl mr-4 shadow-lg shadow-primary/20">
+                            <Mail className="h-4 w-4" />
                         </div>
-                        <div className="flex-1">
-                            <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">Email</p>
-                            <a href={`mailto:${lawyer.contact?.email}`} className="font-semibold hover:underline text-sm truncate block max-w-[180px]">{lawyer.contact?.email}</a>
+                        <div className="flex-1 min-w-0">
+                            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Official Email</p>
+                            <a href={`mailto:${lawyer.contact?.email}`} className="font-black text-foreground hover:text-primary transition-colors truncate block">{lawyer.contact?.email}</a>
                         </div>
                     </div>
                 </CardContent>
