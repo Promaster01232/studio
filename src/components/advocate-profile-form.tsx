@@ -11,14 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { saveAdvocate } from "@/lib/advocates-data";
 import { useAuth } from "@/firebase";
-import { Loader2, ShieldCheck } from "lucide-react";
+import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap } from "lucide-react";
 
 const practiceAreas = [
     "Family Law", "Criminal Law", "Civil Law", "Corporate Law", "Cyber Law",
     "Real Estate", "Intellectual Property", "Tax Law", "Immigration Law"
 ];
 
-const courts = [
+const courtsList = [
     "Supreme Court", "High Court", "District Court", "Tribunals"
 ];
 
@@ -86,7 +86,7 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
         };
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 1500));
             saveAdvocate(newAdvocate);
             onSave();
         } catch (error) {
@@ -102,81 +102,97 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
     };
 
     return (
-        <form className="space-y-6 max-h-[75vh] overflow-y-auto p-1 pr-2" onSubmit={handleSubmit}>
-            <div className="bg-primary/5 p-4 rounded-lg border border-primary/10 flex items-start gap-3 mb-4">
-                <ShieldCheck className="h-5 w-5 text-primary mt-0.5" />
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                    Complete these professional details to be listed in our directory. Verified advocates receive 3x more consultation requests.
-                </p>
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name (as on Bar ID)</Label>
-                <Input id="fullName" name="fullName" placeholder="e.g., Rajesh Kumar" required defaultValue={`${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`} />
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="barId">Bar Council ID</Label>
-                    <Input id="barId" name="barId" placeholder="MAH/1234/2010" required />
+        <form className="space-y-8 max-h-[70vh] overflow-y-auto p-1 pr-4 custom-scrollbar" onSubmit={handleSubmit}>
+            <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 flex items-start gap-4">
+                <div className="bg-primary/10 p-2 rounded-lg">
+                    <ShieldCheck className="h-5 w-5 text-primary" />
                 </div>
-                <div className="space-y-2">
-                    <Label htmlFor="experience">Years of Experience</Label>
-                    <Input id="experience" name="experience" type="number" placeholder="10" required />
+                <div className="space-y-1">
+                    <p className="text-sm font-bold text-primary">Professional Verification</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                        Your credentials will be verified against Bar Council records. Verified advocates appear at the top of search results.
+                    </p>
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <Label htmlFor="specialization">Primary Specialization</Label>
-                 <Select name="specialization" required>
-                    <SelectTrigger id="specialization">
-                        <SelectValue placeholder="Select your practice area" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {practiceAreas.map(area => <SelectItem key={area} value={area}>{area}</SelectItem>)}
-                    </SelectContent>
-                </Select>
-            </div>
+            <div className="grid gap-6">
+                <div className="space-y-3">
+                    <Label htmlFor="fullName" className="text-sm font-bold flex items-center gap-2">
+                        <Gavel className="h-4 w-4 text-primary" /> Full Name (as on Bar ID)
+                    </Label>
+                    <Input id="fullName" name="fullName" placeholder="e.g., Rajesh Kumar" required defaultValue={`${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`} className="h-11 border-primary/10 focus:border-primary" />
+                </div>
 
-            <div className="space-y-2">
-                <Label htmlFor="position">Current Position / Title</Label>
-                <Input id="position" name="position" placeholder="e.g., Senior Partner or Independent Practitioner" required />
-            </div>
+                <div className="grid sm:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                        <Label htmlFor="barId" className="text-sm font-bold flex items-center gap-2">
+                            <GraduationCap className="h-4 w-4 text-primary" /> Bar Council ID
+                        </Label>
+                        <Input id="barId" name="barId" placeholder="MAH/1234/2010" required className="h-11 border-primary/10" />
+                    </div>
+                    <div className="space-y-3">
+                        <Label htmlFor="experience" className="text-sm font-bold flex items-center gap-2">
+                            <Briefcase className="h-4 w-4 text-primary" /> Years of Experience
+                        </Label>
+                        <Input id="experience" name="experience" type="number" placeholder="10" required className="h-11 border-primary/10" />
+                    </div>
+                </div>
 
-            <div className="space-y-2">
-                <Label>Courts of Practice</Label>
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                    {courts.map(court => (
-                        <div key={court} className="flex items-center space-x-2 border p-2 rounded-md hover:bg-muted/50 transition-colors">
-                            <Checkbox id={`court-${court}`} name="courts" value={court} />
-                            <label htmlFor={`court-${court}`} className="text-sm font-medium cursor-pointer flex-1">{court}</label>
-                        </div>
-                    ))}
+                <div className="grid sm:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                        <Label htmlFor="specialization" className="text-sm font-bold">Primary Specialization</Label>
+                        <Select name="specialization" required>
+                            <SelectTrigger id="specialization" className="h-11 border-primary/10">
+                                <SelectValue placeholder="Select practice area" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {practiceAreas.map(area => <SelectItem key={area} value={area}>{area}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-3">
+                        <Label htmlFor="position" className="text-sm font-bold">Current Position / Title</Label>
+                        <Input id="position" name="position" placeholder="e.g., Senior Partner" required className="h-11 border-primary/10" />
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    <Label className="text-sm font-bold">Courts of Practice</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                        {courtsList.map(court => (
+                            <div key={court} className="flex items-center space-x-3 border rounded-xl p-3 hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer group">
+                                <Checkbox id={`court-${court}`} name="courts" value={court} className="border-primary/30 data-[state=checked]:bg-primary" />
+                                <label htmlFor={`court-${court}`} className="text-xs font-semibold cursor-pointer flex-1 group-hover:text-primary transition-colors">{court}</label>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                
+                <div className="space-y-3">
+                    <Label htmlFor="bio" className="text-sm font-bold">Professional Bio</Label>
+                    <Textarea id="bio" name="bio" placeholder="Describe your legal expertise, notable cases, and consultation approach..." rows={4} required className="resize-none border-primary/10 focus:border-primary" />
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                        <Label htmlFor="courtName" className="text-sm font-bold flex items-center gap-2">
+                            <MapPin className="h-4 w-4 text-primary" /> Primary Court Location
+                        </Label>
+                        <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" required className="h-11 border-primary/10" />
+                    </div>
+                    <div className="space-y-3">
+                        <Label htmlFor="courtAddress" className="text-sm font-bold">City / Address</Label>
+                        <Input id="courtAddress" name="courtAddress" placeholder="e.g., Mumbai, Maharashtra" required className="h-11 border-primary/10" />
+                    </div>
                 </div>
             </div>
-            
-            <div className="space-y-2">
-                <Label htmlFor="bio">Professional Bio</Label>
-                <Textarea id="bio" name="bio" placeholder="Describe your legal expertise, notable cases, and consultation approach..." rows={5} required />
-            </div>
 
-            <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="courtName">Primary Court Location</Label>
-                    <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" required />
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="courtAddress">City / Address</Label>
-                    <Input id="courtAddress" name="courtAddress" placeholder="e.g., Mumbai, Maharashtra" required />
-                </div>
-            </div>
-
-            <div className="pt-4 sticky bottom-0 bg-background pb-2">
-                <Button type="submit" disabled={isSaving} className="w-full shadow-lg shadow-primary/20">
+            <div className="pt-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-2 mt-4">
+                <Button type="submit" disabled={isSaving} className="w-full h-12 text-lg font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
                     {isSaving ? (
                         <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Verifying & Saving...
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            Verifying Credentials...
                         </>
                     ) : "Save & Complete Setup"}
                 </Button>
