@@ -63,7 +63,7 @@ function Header() {
         )}>
             <div className="flex items-center gap-2 md:hidden">
                 <SidebarTrigger />
-                <Logo className="h-8 w-8" />
+                <Logo className="h-11 w-11" />
             </div>
             <div className={cn(
                 "hidden md:flex items-center gap-2 transition-all duration-200 ease-in-out",
@@ -165,7 +165,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader>
+        <SidebarHeader className="p-4">
           <Logo />
         </SidebarHeader>
         <SidebarContent className="pt-0">
@@ -188,7 +188,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <Avatar className="h-9 w-9 border border-primary/10 shadow-sm transition-transform group-hover:scale-105">
                         <AvatarImage src={userProfile.photoURL} alt={userProfile.firstName} className="object-cover" />
                     </Avatar>
-                  ) : null}
+                  ) : (
+                    <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                        <User className="h-4 w-4" />
+                    </div>
+                  )}
                   <div className="flex-1 truncate group-data-[state=collapsed]:hidden">
                     <div className="font-bold text-sm truncate tracking-tight text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
                     <div className="text-[10px] text-muted-foreground truncate uppercase font-black tracking-widest">{userProfile.email}</div>
