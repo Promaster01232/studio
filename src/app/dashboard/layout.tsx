@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -212,7 +211,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         <span>My Profile</span>
                     </Link>
                 </DropdownMenuItem>
-                 <DropdownMenuOr appearanceAppearanceAppearance appearanceAppearance appearanceAppearance appearanceAppearance appearance appearanceAppearance appearance appearanceSub>
+                <DropdownMenuSub>
                     <DropdownMenuSubTrigger className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
                         <SunMoon className="mr-3 h-4 w-4" />
                         <span>Appearance</span>
