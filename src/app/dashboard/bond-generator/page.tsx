@@ -305,7 +305,7 @@ export default function BondGeneratorPage() {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="verificationDate">Date of Verification</Label>
-                            <Input id="verificationDate" name="verificationDate" placeholder="e.g., 25th July 2024" required />
+                            <Input id="verificationDate" name="verificationDate" type="date" required />
                         </div>
                     </div>
                  </>

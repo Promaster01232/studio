@@ -220,7 +220,7 @@ export default function DocumentGeneratorPage() {
                      <FormSectionTitle>Incident Details</FormSectionTitle>
                      <div className="space-y-2">
                         <Label htmlFor="incidentDate">Date & Time of Incident</Label>
-                        <Input id="incidentDate" name="incidentDate" placeholder="e.g., 24th July 2024, around 10:00 PM" required />
+                        <Input id="incidentDate" name="incidentDate" type="datetime-local" required />
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="incidentPlace">Place of Incident</Label>
