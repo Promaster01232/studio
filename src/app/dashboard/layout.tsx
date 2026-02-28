@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -55,7 +54,7 @@ function Header() {
     return (
         <header className={cn(
             "sticky top-0 z-10 flex h-16 items-center gap-4 border-b px-6 transition-all",
-            "border-black/5 bg-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-xl dark:border-white/10 dark:bg-black/20"
+            "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
         )}>
             <div className="flex items-center gap-2 md:hidden">
                 <SidebarTrigger />
@@ -79,7 +78,6 @@ function Header() {
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isChatPage = pathname.includes('/chat');
   const [isMounted, setIsMounted] = useState(false);
   const { theme, setTheme } = useTheme();
   const { language, setLanguage } = useLanguage();

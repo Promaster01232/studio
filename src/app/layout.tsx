@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
@@ -21,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`font-body antialiased has-glassmorphism ${inter.variable}`}>
+      <body className={`font-body antialiased ${inter.variable}`}>
         <ThemeProvider>
           <LanguageProvider>
             <FirebaseClientProvider>
