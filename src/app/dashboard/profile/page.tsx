@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, Upload, X, RefreshCw } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, Upload, X } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -24,7 +24,6 @@ import { FirestorePermissionError } from '@/firebase/errors';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { AdvocateProfileForm } from '@/components/advocate-profile-form';
 import { getAdvocates, type Lawyer } from '@/lib/advocates-data';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 type UserProfile = {
   uid: string;
@@ -106,7 +105,6 @@ export default function ProfilePage() {
       reader.onloadend = () => {
         const result = reader.result as string;
         setPhotoURL(result);
-        // Automatically save if photo URL changes
         if (userProfile) {
             updateUserPhoto(result);
         }
@@ -175,7 +173,6 @@ export default function ProfilePage() {
 
   const handleAdvocateProfileSaved = () => {
     setShowAdvocateDialog(false);
-    // Refresh local details
     const allAdvocates = getAdvocates();
     const found = allAdvocates.find(a => a.contact?.email === email);
     if (found) setAdvocateDetails(found);
@@ -284,32 +281,39 @@ export default function ProfilePage() {
             description="Manage your account settings and personal information."
         />
 
-        <Card className="border-primary/10 overflow-hidden">
-            <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
+        <Card className="border-primary/10 overflow-hidden bg-card/50 backdrop-blur-sm">
+            <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-8">
             <div className="relative group">
-                <Avatar className="h-28 w-28 border-4 border-white dark:border-zinc-900 shadow-xl transition-transform group-hover:scale-[1.02]">
+                <Avatar className="h-32 w-32 border-4 border-white dark:border-zinc-900 shadow-2xl transition-transform group-hover:scale-[1.02] duration-500">
                 <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} className="object-cover" />
-                <AvatarFallback className="bg-primary/5 text-primary text-2xl font-bold">{`${firstName.charAt(0)}${lastName.charAt(0)}`}</AvatarFallback>
+                <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-4xl font-black font-headline border-2 border-primary/10 shadow-inner flex items-center justify-center">
+                    {`${firstName.charAt(0)}${lastName.charAt(0)}`}
+                </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-2 -right-2 flex gap-1">
-                    <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-lg border border-primary/10 hover:bg-primary hover:text-white transition-colors" onClick={handleAvatarClick} title="Upload Photo">
+                <div className="absolute -bottom-2 -right-2 flex gap-2">
+                    <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-xl border border-primary/10 hover:bg-primary hover:text-white transition-all scale-100 hover:scale-110 active:scale-95" onClick={handleAvatarClick} title="Upload Photo">
                         <Upload className="h-4 w-4" />
                     </Button>
-                    <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-lg border border-primary/10 hover:bg-primary hover:text-white transition-colors" onClick={startCamera} title="Take Photo">
+                    <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-xl border border-primary/10 hover:bg-primary hover:text-white transition-all scale-100 hover:scale-110 active:scale-95" onClick={startCamera} title="Take Photo">
                         <Camera className="h-4 w-4" />
                     </Button>
                 </div>
                 <input type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
             </div>
-            <div className="flex-1 text-center sm:text-left">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <h2 className="text-3xl font-black font-headline tracking-tight">{firstName} {lastName}</h2>
-                    {userType === 'lawyer' && <BadgeCheck className="h-6 w-6 text-primary hidden sm:block" />}
+            <div className="flex-1 text-center sm:text-left space-y-2">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <h2 className="text-4xl font-black font-headline tracking-tighter text-foreground">{firstName} {lastName}</h2>
+                    {userType === 'lawyer' && (
+                        <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 rounded-full border border-primary/20 w-fit mx-auto sm:mx-0">
+                            <BadgeCheck className="h-4 w-4 text-primary" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Verified Advocate</span>
+                        </div>
+                    )}
                 </div>
-                <p className="text-muted-foreground font-medium">{email}</p>
-                <div className="mt-2 flex flex-wrap justify-center sm:justify-start gap-2">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase bg-primary/10 text-primary">
-                        {userType}
+                <p className="text-muted-foreground font-medium text-lg">{email}</p>
+                <div className="mt-4 flex flex-wrap justify-center sm:justify-start gap-2">
+                    <span className="inline-flex items-center px-4 py-1.5 rounded-xl text-[10px] font-black tracking-widest uppercase bg-muted text-muted-foreground border">
+                        {userType} account
                     </span>
                 </div>
             </div>
@@ -318,27 +322,26 @@ export default function ProfilePage() {
 
         <div className="grid lg:grid-cols-3 gap-8 items-start">
             <div className="lg:col-span-2 space-y-8">
-                {/* Personal Details Card */}
-                <Card>
+                <Card className="shadow-lg border-primary/5">
                 <CardHeader>
-                    <CardTitle>Personal Details</CardTitle>
+                    <CardTitle className="font-headline font-bold">Personal Details</CardTitle>
                     <CardDescription>Update your personal information here.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="grid sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                         <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                        <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-background" />
                         </div>
                         <div className="space-y-2">
                         <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                        <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-background" />
                         </div>
                     </div>
                     <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label htmlFor="phone">Phone Number</Label>
-                        <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
+                        <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="bg-background" />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="userType">I am a</Label>
@@ -348,7 +351,7 @@ export default function ProfilePage() {
                                 setShowAdvocateDialog(true);
                             }
                         }}>
-                            <SelectTrigger id="userType">
+                            <SelectTrigger id="userType" className="bg-background">
                             <SelectValue placeholder="Select your role" />
                             </SelectTrigger>
                             <SelectContent>
@@ -361,7 +364,7 @@ export default function ProfilePage() {
                     </div>
                     </div>
                     <div className="flex justify-end pt-4">
-                        <Button onClick={() => handleSaveChanges()} disabled={saving} className="shadow-lg shadow-primary/20 h-11 px-8 font-bold">
+                        <Button onClick={() => handleSaveChanges()} disabled={saving} className="shadow-xl shadow-primary/20 h-12 px-10 font-bold hover:scale-[1.02] active:scale-95 transition-all">
                             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
                             {userType === 'lawyer' && userProfile?.userType !== 'lawyer' ? "Setup Advocate Profile" : "Save Changes"}
                         </Button>
@@ -370,9 +373,9 @@ export default function ProfilePage() {
                 </Card>
                 
                 {userType === 'lawyer' && (
-                    <Card className="border-primary/20 bg-primary/5">
+                    <Card className="border-primary/20 bg-primary/5 shadow-inner">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
+                            <CardTitle className="flex items-center gap-2 font-headline font-bold">
                                 <Gavel className="h-5 w-5 text-primary" />
                                 Advocate Status & Credentials
                             </CardTitle>
@@ -383,39 +386,39 @@ export default function ProfilePage() {
                                 <div className="grid sm:grid-cols-2 gap-6">
                                     <div className="space-y-4">
                                         <div className="flex items-start gap-3">
-                                            <BadgeCheck className="h-5 w-5 text-primary mt-0.5" />
+                                            <div className="bg-primary/10 p-2 rounded-lg"><BadgeCheck className="h-4 w-4 text-primary" /></div>
                                             <div>
-                                                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Bar Council ID</p>
-                                                <p className="font-mono font-bold text-sm">{advocateDetails.barId}</p>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Bar Council ID</p>
+                                                <p className="font-mono font-bold text-sm text-foreground">{advocateDetails.barId}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-start gap-3">
-                                            <Briefcase className="h-5 w-5 text-primary mt-0.5" />
+                                            <div className="bg-primary/10 p-2 rounded-lg"><Briefcase className="h-4 w-4 text-primary" /></div>
                                             <div>
-                                                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Experience</p>
-                                                <p className="font-semibold text-sm">{advocateDetails.experience}</p>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Experience</p>
+                                                <p className="font-bold text-sm text-foreground">{advocateDetails.experience}</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="space-y-4">
                                         <div className="flex items-start gap-3">
-                                            <MapPin className="h-5 w-5 text-primary mt-0.5" />
+                                            <div className="bg-primary/10 p-2 rounded-lg"><MapPin className="h-4 w-4 text-primary" /></div>
                                             <div>
-                                                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Primary Court</p>
-                                                <p className="font-semibold text-sm">{advocateDetails.courtName}</p>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Primary Court</p>
+                                                <p className="font-bold text-sm text-foreground">{advocateDetails.courtName}</p>
                                                 <p className="text-xs text-muted-foreground">{advocateDetails.courtAddress}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-start gap-3">
-                                            <Gavel className="h-5 w-5 text-primary mt-0.5" />
+                                            <div className="bg-primary/10 p-2 rounded-lg"><Gavel className="h-4 w-4 text-primary" /></div>
                                             <div>
-                                                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Specialization</p>
-                                                <p className="font-semibold text-sm">{advocateDetails.specialty}</p>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Specialization</p>
+                                                <p className="font-bold text-sm text-foreground">{advocateDetails.specialty}</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="sm:col-span-2 pt-4 border-t border-primary/10">
-                                        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">Professional Bio</p>
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">Professional Bio</p>
                                         <p className="text-sm text-muted-foreground leading-relaxed italic">&ldquo;{advocateDetails.about}&rdquo;</p>
                                     </div>
                                 </div>
@@ -424,7 +427,7 @@ export default function ProfilePage() {
                             )}
                             
                             <div className="pt-2">
-                                <Button onClick={() => setShowAdvocateDialog(true)} variant={advocateDetails ? "outline" : "default"} className="w-full sm:w-auto font-bold border-primary/20">
+                                <Button onClick={() => setShowAdvocateDialog(true)} variant={advocateDetails ? "outline" : "default"} className="w-full sm:w-auto font-bold border-primary/20 h-11 px-6 shadow-lg shadow-primary/5">
                                     <Edit className="mr-2 h-4 w-4" />
                                     {advocateDetails ? "Edit Professional Details" : "Complete Advocate Setup"}
                                 </Button>
@@ -435,16 +438,15 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-8">
-                {/* Account Settings Card */}
-                <Card>
+                <Card className="shadow-lg border-primary/5">
                 <CardHeader>
-                    <CardTitle>Preferences</CardTitle>
+                    <CardTitle className="font-headline font-bold">Preferences</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <div className="flex items-center justify-between">
-                    <Label htmlFor="dark-mode" className="flex items-center gap-3 cursor-pointer">
-                        <Moon className="h-5 w-5 text-muted-foreground" />
-                        <span>Dark Mode</span>
+                    <div className="flex items-center justify-between p-2 rounded-xl hover:bg-muted/50 transition-colors">
+                    <Label htmlFor="dark-mode" className="flex items-center gap-3 cursor-pointer flex-1 py-1">
+                        <div className="bg-muted p-2 rounded-lg"><Moon className="h-4 w-4 text-muted-foreground" /></div>
+                        <span className="font-medium">Dark Mode</span>
                     </Label>
                     <Switch
                         id="dark-mode"
@@ -452,33 +454,32 @@ export default function ProfilePage() {
                         onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
                     />
                     </div>
-                    <div className="flex items-center justify-between">
-                        <Label htmlFor="two-factor" className="flex items-center gap-3 cursor-pointer">
-                            <ShieldCheck className="h-5 w-5 text-muted-foreground" />
-                            <span>Two-Factor Auth</span>
+                    <div className="flex items-center justify-between p-2 rounded-xl hover:bg-muted/50 transition-colors">
+                        <Label htmlFor="two-factor" className="flex items-center gap-3 cursor-pointer flex-1 py-1">
+                            <div className="bg-muted p-2 rounded-lg"><ShieldCheck className="h-4 w-4 text-muted-foreground" /></div>
+                            <span className="font-medium">Two-Factor Auth</span>
                         </Label>
                     <Switch id="two-factor" />
                     </div>
-                    <Button variant="outline" className="w-full justify-start font-medium border-primary/10">
-                        <KeyRound className="mr-3 h-5 w-5 text-muted-foreground" />
+                    <Button variant="outline" className="w-full justify-start font-bold border-primary/10 h-11 px-4 hover:bg-primary/5 hover:text-primary transition-all">
+                        <KeyRound className="mr-3 h-4 w-4 text-muted-foreground" />
                         <span>Change Password</span>
                     </Button>
                 </CardContent>
                 </Card>
 
-                {/* Danger Zone */}
-                <Card className="border-destructive/20 bg-destructive/5">
+                <Card className="border-destructive/20 bg-destructive/5 shadow-lg">
                     <CardHeader>
-                        <CardTitle className="text-destructive">Account Management</CardTitle>
+                        <CardTitle className="text-destructive font-headline font-bold">Account Management</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <Button variant="outline" className="w-full justify-start hover:bg-destructive/10 text-foreground border-destructive/10" onClick={handleLogout}>
-                            <LogOut className="mr-3 h-5 w-5 text-muted-foreground" /> 
+                        <Button variant="outline" className="w-full justify-start hover:bg-destructive/10 text-foreground border-destructive/10 h-11 px-4 font-bold" onClick={handleLogout}>
+                            <LogOut className="mr-3 h-4 w-4 text-muted-foreground" /> 
                             <span>Logout</span>
                         </Button>
-                        <Button variant="destructive" className="w-full justify-start font-bold">
-                            <Trash2 className="mr-3 h-5 w-5" />
-                            <span>Delete Account</span>
+                        <Button variant="destructive" className="w-full justify-start font-black h-11 px-4 tracking-tight uppercase text-xs">
+                            <Trash2 className="mr-3 h-4 w-4" />
+                            <span>Delete My Account</span>
                         </Button>
                     </CardContent>
                 </Card>
@@ -486,7 +487,6 @@ export default function ProfilePage() {
         </div>
         </div>
 
-        {/* Advocate Edit Dialog */}
         <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
             if (!open && userType === 'lawyer' && userProfile?.userType !== 'lawyer' && !advocateDetails) {
                 toast({ title: "Profile Required", description: "You must complete your advocate details to use this role." });
@@ -514,37 +514,38 @@ export default function ProfilePage() {
             </DialogContent>
       </Dialog>
 
-      {/* Camera Capture Dialog */}
       <Dialog open={isCameraOpen} onOpenChange={(open) => !open && stopCamera()}>
-          <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                  <DialogTitle>Take Profile Picture</DialogTitle>
-                  <DialogDescription>Position yourself in the center of the frame.</DialogDescription>
-              </DialogHeader>
-              <div className="relative aspect-square overflow-hidden rounded-2xl bg-black">
+          <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-2xl border-none shadow-2xl">
+              <div className="relative aspect-square bg-black group">
                   <video 
                     ref={videoRef} 
-                    className="h-full w-full object-cover" 
+                    className="h-full w-full object-cover transition-opacity" 
                     autoPlay 
                     muted 
                     playsInline
                   />
-                  { !hasCameraPermission && (
-                    <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
+                  {!hasCameraPermission && (
+                    <div className="absolute inset-0 flex items-center justify-center p-8 text-center bg-zinc-900">
                         <div className="space-y-4">
-                            <Camera className="h-12 w-12 text-muted-foreground mx-auto" />
-                            <p className="text-sm text-white">Camera access is required to take a photo.</p>
+                            <div className="bg-white/10 p-4 rounded-full w-fit mx-auto"><Camera className="h-12 w-12 text-white/50" /></div>
+                            <p className="text-sm font-bold text-white tracking-tight">Camera Access Required</p>
+                            <p className="text-xs text-white/60 max-w-[200px]">Please allow camera permissions in your browser settings.</p>
                         </div>
                     </div>
                   )}
+                  <div className="absolute inset-0 pointer-events-none border-[40px] border-black/20 group-hover:border-black/10 transition-all duration-500">
+                      <div className="h-full w-full border-2 border-white/30 rounded-full"></div>
+                  </div>
                   <canvas ref={canvasRef} className="hidden" />
               </div>
-              <DialogFooter className="flex-row sm:justify-center gap-2">
-                  <Button variant="outline" onClick={stopCamera} className="flex-1">Cancel</Button>
-                  <Button onClick={capturePhoto} className="flex-1" disabled={!hasCameraPermission}>
-                      <Camera className="mr-2 h-4 w-4" /> Capture
-                  </Button>
-              </DialogFooter>
+              <div className="p-6 bg-background">
+                  <div className="flex gap-3">
+                      <Button variant="ghost" onClick={stopCamera} className="flex-1 font-bold text-muted-foreground">Cancel</Button>
+                      <Button onClick={capturePhoto} className="flex-1 h-12 text-lg font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all" disabled={!hasCameraPermission}>
+                          <Camera className="mr-2 h-5 w-5" /> CAPTURE
+                      </Button>
+                  </div>
+              </div>
           </DialogContent>
       </Dialog>
     </>

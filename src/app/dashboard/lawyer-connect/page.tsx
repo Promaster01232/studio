@@ -75,12 +75,13 @@ export default function LawyerConnectPage() {
             >
                 <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-primary/5 hover:border-primary/20 group bg-card/40 backdrop-blur-md rounded-2xl">
                     <div className="flex flex-col sm:flex-row items-center p-4 gap-4 sm:gap-6">
-                        {/* Compact Avatar Section */}
                         <div className="relative shrink-0">
                             {lawyer.image ? (
                                 <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-2 border-white dark:border-zinc-900 rounded-2xl shadow-md group-hover:scale-105 transition-transform duration-500">
                                     <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image.imageHint} className="object-cover" />
-                                    <AvatarFallback className="rounded-2xl bg-primary/5 text-primary font-black text-xl">{lawyer.name.charAt(0)}</AvatarFallback>
+                                    <AvatarFallback className="rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary font-black text-2xl font-headline border-2 border-primary/10 shadow-inner flex items-center justify-center">
+                                        {lawyer.name.charAt(0)}
+                                    </AvatarFallback>
                                 </Avatar>
                             ) : (
                                 <div className="h-16 w-16 sm:h-20 sm:w-20 bg-primary/5 rounded-2xl flex items-center justify-center border-2 border-white dark:border-zinc-900 shadow-md">
@@ -92,7 +93,6 @@ export default function LawyerConnectPage() {
                             </div>
                         </div>
 
-                        {/* List Information Section */}
                         <div className="flex-1 min-w-0 text-center sm:text-left space-y-1">
                             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                                 <p className="font-bold text-xl leading-tight font-headline group-hover:text-primary transition-colors truncate tracking-tight">
@@ -134,7 +134,6 @@ export default function LawyerConnectPage() {
                             )}
                         </div>
                         
-                        {/* List Actions Section */}
                         <div className="flex gap-2 sm:flex-col lg:flex-row shrink-0 mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-primary/5 w-full sm:w-auto">
                             <Button variant="outline" size="sm" className="flex-1 sm:w-32 h-10 rounded-xl border-primary/20 hover:bg-primary/5 font-black text-xs transition-all" asChild>
                                 <Link href={`/dashboard/lawyer-connect/${lawyer.id}/chat`}>

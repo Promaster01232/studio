@@ -57,7 +57,9 @@ export default function LawyerProfilePage() {
             {lawyer.image ? (
               <Avatar className="h-40 w-32 md:h-48 md:w-40 border-4 border-white dark:border-zinc-900 rounded-3xl shadow-2xl transition-transform hover:scale-[1.02]">
                 <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image.imageHint} className="object-cover" />
-                <AvatarFallback className="rounded-3xl bg-primary/10 text-primary text-4xl font-bold">{lawyer.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-4xl font-black font-headline border-2 border-primary/10 shadow-inner flex items-center justify-center">
+                    {lawyer.name.charAt(0)}
+                </AvatarFallback>
               </Avatar>
             ) : (
                 <div className="h-40 w-32 md:h-48 md:w-40 bg-primary/10 rounded-3xl flex items-center justify-center border-4 border-white dark:border-zinc-900 shadow-2xl">

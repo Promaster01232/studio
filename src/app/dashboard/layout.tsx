@@ -11,7 +11,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, MessageSquare, ShieldAlert } from "lucide-react";
 import { Logo } from "@/components/logo";
@@ -117,7 +117,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
-  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string} | null>(null);
+  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string, photoURL?: string} | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
@@ -132,7 +132,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         getDoc(userDocRef)
           .then((userDoc) => {
             if (userDoc.exists()) {
-              setUserProfile(userDoc.data() as {firstName: string; lastName: string; email: string});
+              setUserProfile(userDoc.data() as {firstName: string; lastName: string; email: string; photoURL?: string});
             } else {
               if (pathname !== '/create-profile' && pathname !== '/login' && pathname !== '/register') {
                 router.push('/create-profile');
@@ -189,63 +189,66 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           ) : userProfile ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left group data-[state=collapsed]:w-10 data-[state=collapsed]:justify-center">
-                  <Avatar className="h-9 w-9">
-                      <AvatarFallback>{getAvatarFallback()}</AvatarFallback>
+                <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left group data-[state=collapsed]:w-10 data-[state=collapsed]:justify-center hover:bg-primary/5 rounded-xl transition-all">
+                  <Avatar className="h-9 w-9 border border-primary/10 shadow-sm transition-transform group-hover:scale-105">
+                      <AvatarImage src={userProfile.photoURL} alt={userProfile.firstName} className="object-cover" />
+                      <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-xs font-black font-headline">
+                          {getAvatarFallback()}
+                      </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 truncate group-data-[state=collapsed]:hidden">
-                    <div className="font-semibold text-sm truncate">{userProfile.firstName} {userProfile.lastName}</div>
-                    <div className="text-xs text-muted-foreground truncate">{userProfile.email}</div>
+                    <div className="font-bold text-sm truncate tracking-tight text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
+                    <div className="text-[10px] text-muted-foreground truncate uppercase font-black tracking-widest">{userProfile.email}</div>
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="right" align="start" className="w-56 mb-2 ml-2">
-                <DropdownMenuLabel>
-                    <div className="font-semibold">{userProfile.firstName} {userProfile.lastName}</div>
-                    <div className="text-xs text-muted-foreground">{userProfile.email}</div>
+              <DropdownMenuContent side="right" align="start" className="w-56 mb-2 ml-2 p-2 rounded-2xl shadow-2xl border-primary/5">
+                <DropdownMenuLabel className="pb-3 pt-2">
+                    <div className="font-black text-base font-headline tracking-tighter text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
+                    <div className="text-[10px] text-muted-foreground uppercase font-black tracking-widest truncate">{userProfile.email}</div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
+                <DropdownMenuSeparator className="mb-2" />
+                <DropdownMenuItem asChild className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
                     <Link href="/dashboard/profile">
-                        <User className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
+                        <User className="mr-3 h-4 w-4" />
+                        <span>My Profile</span>
                     </Link>
                 </DropdownMenuItem>
                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                        <SunMoon className="mr-2 h-4 w-4" />
-                        <span>Theme</span>
+                    <DropdownMenuSubTrigger className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
+                        <SunMoon className="mr-3 h-4 w-4" />
+                        <span>Appearance</span>
                     </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
+                    <DropdownMenuSubContent className="rounded-xl p-1 shadow-2xl border-primary/5">
                         <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
-                            <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="light" className="rounded-lg h-9 font-bold">Light</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="dark" className="rounded-lg h-9 font-bold">Dark</DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
                 </DropdownMenuSub>
                 <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                        <Languages className="mr-2 h-4 w-4" />
+                    <DropdownMenuSubTrigger className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
+                        <Languages className="mr-3 h-4 w-4" />
                         <span>Language</span>
                     </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
+                    <DropdownMenuSubContent className="rounded-xl p-1 shadow-2xl border-primary/5 max-h-[300px] overflow-y-auto">
                         <DropdownMenuRadioGroup value={language} onValueChange={(value) => setLanguage(value as Language)}>
                             {languages.map((lang) => (
-                                <DropdownMenuRadioItem key={lang.code} value={lang.code}>{lang.name}</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem key={lang.code} value={lang.code} className="rounded-lg h-9 font-bold">{lang.name}</DropdownMenuRadioItem>
                             ))}
                         </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
                 </DropdownMenuSub>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
+                <DropdownMenuSeparator className="my-2" />
+                <DropdownMenuItem onClick={handleLogout} className="rounded-xl h-10 font-bold text-destructive focus:bg-destructive/5 focus:text-destructive">
+                    <LogOut className="mr-3 h-4 w-4" />
                     <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-             <Button asChild className="m-2">
-                <Link href="/login">Login / Sign Up</Link>
+             <Button asChild className="m-2 rounded-xl h-11 font-black uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20">
+                <Link href="/login">Sign In / Register</Link>
               </Button>
           )}
         </SidebarFooter>
