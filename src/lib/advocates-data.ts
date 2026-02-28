@@ -20,6 +20,9 @@ export interface Lawyer {
     barId?: string;
     courtName?: string;
     courtAddress?: string;
+    courts?: string[];
+    rawExperience?: string;
+    position?: string;
     [key: string]: any;
 }
 
@@ -55,8 +58,19 @@ export const saveAdvocate = (newAdvocate: Omit<Lawyer, 'id'>): void => {
     if (typeof window === 'undefined') return;
     
     const storedAdvocates = getStoredAdvocates();
-    const advocateWithId = { ...newAdvocate, id: Date.now() };
-    const updatedAdvocates = [...storedAdvocates, advocateWithId];
+    
+    // Check if an advocate with this email already exists to update instead of add
+    const existingIndex = storedAdvocates.findIndex(a => a.contact?.email === newAdvocate.contact?.email);
+    
+    let updatedAdvocates;
+    if (existingIndex > -1) {
+        const existing = storedAdvocates[existingIndex];
+        updatedAdvocates = [...storedAdvocates];
+        updatedAdvocates[existingIndex] = { ...newAdvocate, id: existing.id };
+    } else {
+        const advocateWithId = { ...newAdvocate, id: Date.now() };
+        updatedAdvocates = [...storedAdvocates, advocateWithId];
+    }
     
     localStorage.setItem('advocates', JSON.stringify(updatedAdvocates));
 }

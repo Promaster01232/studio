@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -439,6 +438,7 @@ export default function ProfilePage() {
                         email,
                         photoURL
                     }}
+                    initialData={advocateDetails}
                 />
             </DialogContent>
       </Dialog>
