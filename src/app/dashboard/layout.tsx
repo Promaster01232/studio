@@ -58,48 +58,50 @@ function Header() {
     
     return (
         <header className={cn(
-            "sticky top-0 z-10 flex h-16 items-center gap-4 border-b px-6 transition-all",
+            "sticky top-0 z-10 flex h-16 items-center gap-2 border-b px-4 md:px-6 transition-all",
             "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
         )}>
             <div className="flex items-center gap-2 md:hidden">
                 <SidebarTrigger />
-                <Logo />
+                <Logo className="h-8 w-8" />
             </div>
             <div className={cn(
                 "hidden md:flex items-center gap-2 transition-all duration-200 ease-in-out",
-                state === 'expanded' && "opacity-0 -translate-x-4"
+                state === 'expanded' && "opacity-0 -translate-x-4 pointer-events-none"
                 )}>
                 <SidebarTrigger />
             </div>
-            <div className="flex-1">
+            
+            <div className="flex-1 flex items-center justify-end md:justify-start">
                 <SearchDialog>
-                    <Button variant="outline" className="w-full max-w-xs justify-start gap-2 text-muted-foreground">
+                    <Button variant="outline" className="w-10 h-10 p-0 md:w-full md:max-w-xs md:px-3 md:justify-start gap-2 text-muted-foreground rounded-full md:rounded-md">
                         <Search className="h-4 w-4" />
-                        Search...
+                        <span className="hidden md:inline">Search...</span>
                     </Button>
                 </SearchDialog>
             </div>
-            <div className="flex items-center gap-3">
+
+            <div className="flex items-center gap-1 sm:gap-2">
                 <SosDialog>
-                    <Button variant="destructive" size="sm" className="font-bold gap-2 animate-pulse hidden sm:flex">
+                    <Button variant="destructive" size="sm" className="font-bold gap-1 animate-pulse px-2 sm:px-3 h-9">
                         <ShieldAlert className="h-4 w-4" />
-                        SOS
+                        <span className="text-[10px] sm:text-xs">SOS</span>
                     </Button>
                 </SosDialog>
                 
-                <div className="flex items-center gap-1 border-l pl-3 ml-1">
+                <div className="flex items-center gap-0.5 sm:gap-1 border-l pl-1 sm:pl-3 ml-1">
                     <Button 
                         variant="ghost" 
                         size="icon" 
-                        className="text-muted-foreground hover:text-primary"
+                        className="h-9 w-9 text-muted-foreground hover:text-primary"
                         onClick={() => toast({ title: "Notifications", description: "You have no new notifications." })}
                     >
-                        <Bell className="h-5 w-5" />
+                        <Bell className="h-4 w-4" />
                     </Button>
 
                     <ChatListDialog>
-                        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
-                            <MessageSquare className="h-5 w-5" />
+                        <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-primary">
+                            <MessageSquare className="h-4 w-4" />
                         </Button>
                     </ChatListDialog>
                 </div>
@@ -182,11 +184,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left group data-[state=collapsed]:w-10 data-[state=collapsed]:justify-center hover:bg-primary/5 rounded-xl transition-all">
-                  {userProfile.photoURL && (
+                  {userProfile.photoURL ? (
                     <Avatar className="h-9 w-9 border border-primary/10 shadow-sm transition-transform group-hover:scale-105">
                         <AvatarImage src={userProfile.photoURL} alt={userProfile.firstName} className="object-cover" />
                     </Avatar>
-                  )}
+                  ) : null}
                   <div className="flex-1 truncate group-data-[state=collapsed]:hidden">
                     <div className="font-bold text-sm truncate tracking-tight text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
                     <div className="text-[10px] text-muted-foreground truncate uppercase font-black tracking-widest">{userProfile.email}</div>
