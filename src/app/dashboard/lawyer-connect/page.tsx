@@ -78,7 +78,7 @@ export default function LawyerConnectPage() {
                         <div className="relative shrink-0">
                             <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-2 border-white dark:border-zinc-900 rounded-2xl shadow-md group-hover:scale-105 transition-transform duration-500">
                                 <AvatarImage src={lawyer.image?.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image?.imageHint} className="object-cover" />
-                                <AvatarFallback className="rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary border-2 border-primary/10 shadow-inner flex items-center justify-center">
+                                <AvatarFallback className="rounded-2xl bg-primary/5 text-primary border-2 border-primary/10 shadow-inner flex items-center justify-center">
                                     <User className="h-8 w-8 opacity-40" />
                                 </AvatarFallback>
                             </Avatar>

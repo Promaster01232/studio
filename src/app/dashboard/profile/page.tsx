@@ -258,9 +258,8 @@ export default function ProfilePage() {
             <div className="relative group">
                 <Avatar className="h-32 w-32 border-4 border-white dark:border-zinc-900 shadow-2xl transition-transform group-hover:scale-[1.02] duration-500">
                 <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} className="object-cover" />
-                <AvatarFallback className="bg-muted border-2 border-dashed border-primary/20 flex flex-col items-center justify-center text-primary/40">
-                    <Camera className="h-10 w-10 mb-1" />
-                    <span className="text-[10px] font-black uppercase tracking-tight">Add Photo</span>
+                <AvatarFallback className="bg-muted border-2 border-dashed border-primary/20 flex items-center justify-center text-primary/40">
+                    <Camera className="h-12 w-12" />
                 </AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-2 -right-2">
@@ -272,12 +271,9 @@ export default function ProfilePage() {
             <div className="flex-1 text-center sm:text-left space-y-2">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                     <h2 className="text-4xl font-black font-headline tracking-tighter text-foreground">{firstName} {lastName}</h2>
-                    {userType === 'lawyer' && (
-                        <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 rounded-full border border-primary/20 w-fit mx-auto sm:mx-0">
-                            <BadgeCheck className="h-4 w-4 text-primary" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Verified Advocate</span>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 rounded-full border border-primary/20 w-fit mx-auto sm:mx-0">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-primary">{userType}</span>
+                    </div>
                 </div>
                 <p className="text-muted-foreground font-medium text-lg">{email}</p>
             </div>

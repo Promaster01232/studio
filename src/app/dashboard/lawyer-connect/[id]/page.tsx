@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Mail, MessageSquare, Phone, Star, Gavel, Scale, MapPin, BadgeCheck, Briefcase, GraduationCap, Globe } from "lucide-react";
+import { ArrowLeft, Mail, MessageSquare, Phone, Star, Gavel, Scale, MapPin, BadgeCheck, Briefcase, GraduationCap, Globe, User } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { getAdvocates, type Lawyer } from '@/lib/advocates-data';
@@ -52,18 +52,18 @@ export default function LawyerProfilePage() {
       </div>
       
       <Card className="overflow-hidden border-primary/10 shadow-2xl shadow-primary/5">
-        <div className="bg-gradient-to-r from-primary/5 to-transparent p-8 md:p-12 relative">
+        <div className="bg-muted/5 p-8 md:p-12 relative">
           <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-8">
             {lawyer.image ? (
               <Avatar className="h-40 w-32 md:h-48 md:w-40 border-4 border-white dark:border-zinc-900 rounded-3xl shadow-2xl transition-transform hover:scale-[1.02]">
                 <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image.imageHint} className="object-cover" />
-                <AvatarFallback className="rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-4xl font-black font-headline border-2 border-primary/10 shadow-inner flex items-center justify-center">
-                    {lawyer.name.charAt(0)}
+                <AvatarFallback className="rounded-3xl bg-primary/5 text-primary text-4xl font-black font-headline border-2 border-primary/10 shadow-inner flex items-center justify-center">
+                    <User className="h-16 w-16 opacity-20" />
                 </AvatarFallback>
               </Avatar>
             ) : (
-                <div className="h-40 w-32 md:h-48 md:w-40 bg-primary/10 rounded-3xl flex items-center justify-center border-4 border-white dark:border-zinc-900 shadow-2xl">
-                    <Gavel className="h-16 w-16 text-primary opacity-30" />
+                <div className="h-40 w-32 md:h-48 md:w-40 bg-primary/5 rounded-3xl flex items-center justify-center border-4 border-white dark:border-zinc-900 shadow-2xl">
+                    <User className="h-16 w-16 text-primary opacity-20" />
                 </div>
             )}
             
@@ -102,7 +102,7 @@ export default function LawyerProfilePage() {
                         <MessageSquare className="mr-2 h-5 w-5"/> Message
                     </Link>
                     </Button>
-                    <Button size="lg" className="flex-1 h-14 text-lg shadow-xl shadow-primary/20 font-bold hover:scale-[1.02] active:scale-[0.98] transition-all" asChild>
+                    <Button size="lg" className="flex-1 h-14 text-lg shadow-xl shadow-primary/20 font-bold hover:scale-[1.02] active:scale-95 transition-all" asChild>
                     <Link href={`/dashboard/lawyer-connect/${lawyer.id}/book`}>Book Consultation</Link>
                     </Button>
                 </div>
