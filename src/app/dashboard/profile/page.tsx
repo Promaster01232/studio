@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -9,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, Upload, X, RefreshCw } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -20,9 +21,10 @@ import { useToast } from '@/hooks/use-toast';
 import { signOut } from 'firebase/auth';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { AdvocateProfileForm } from '@/components/advocate-profile-form';
 import { getAdvocates, type Lawyer } from '@/lib/advocates-data';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 type UserProfile = {
   uid: string;
@@ -47,6 +49,8 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showAdvocateDialog, setShowAdvocateDialog] = useState(false);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState(false);
 
   // Form state
   const [firstName, setFirstName] = useState('');
@@ -57,6 +61,8 @@ export default function ProfilePage() {
   const [photoURL, setPhotoURL] = useState('');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
 
   useEffect(() => {
@@ -98,14 +104,73 @@ export default function ProfilePage() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPhotoURL(reader.result as string);
+        const result = reader.result as string;
+        setPhotoURL(result);
+        // Automatically save if photo URL changes
+        if (userProfile) {
+            updateUserPhoto(result);
+        }
       };
       reader.readAsDataURL(file);
     }
   };
 
+  const updateUserPhoto = (newPhotoURL: string) => {
+      if (!auth.currentUser || !userProfile) return;
+      const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+      setDoc(userDocRef, { photoURL: newPhotoURL }, { merge: true })
+        .then(() => {
+            toast({ title: "Photo Updated", description: "Your profile picture has been saved." });
+        })
+        .catch(err => console.error("Failed to sync photo:", err));
+  };
+
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const startCamera = async () => {
+    setIsCameraOpen(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setHasCameraPermission(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      setHasCameraPermission(false);
+      toast({
+        variant: 'destructive',
+        title: 'Camera Access Denied',
+        description: 'Please enable camera permissions in your browser settings to use this feature.',
+      });
+    }
+  };
+
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+    }
+    setIsCameraOpen(false);
+  };
+
+  const capturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/png');
+        setPhotoURL(dataUrl);
+        updateUserPhoto(dataUrl);
+        stopCamera();
+      }
+    }
   };
 
   const handleAdvocateProfileSaved = () => {
@@ -222,24 +287,28 @@ export default function ProfilePage() {
         <Card className="border-primary/10 overflow-hidden">
             <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
             <div className="relative group">
-                <Avatar className="h-24 w-24 border-2 border-primary shadow-lg transition-transform group-hover:scale-105">
-                <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} />
-                <AvatarFallback className="bg-primary/5 text-primary text-xl font-bold">{`${firstName.charAt(0)}${lastName.charAt(0)}`}</AvatarFallback>
+                <Avatar className="h-28 w-28 border-4 border-white dark:border-zinc-900 shadow-xl transition-transform group-hover:scale-[1.02]">
+                <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} className="object-cover" />
+                <AvatarFallback className="bg-primary/5 text-primary text-2xl font-bold">{`${firstName.charAt(0)}${lastName.charAt(0)}`}</AvatarFallback>
                 </Avatar>
-                <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8 shadow-md border" onClick={handleAvatarClick}>
-                <Edit className="h-4 w-4" />
-                <span className="sr-only">Change profile picture</span>
-                </Button>
+                <div className="absolute -bottom-2 -right-2 flex gap-1">
+                    <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-lg border border-primary/10 hover:bg-primary hover:text-white transition-colors" onClick={handleAvatarClick} title="Upload Photo">
+                        <Upload className="h-4 w-4" />
+                    </Button>
+                    <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-lg border border-primary/10 hover:bg-primary hover:text-white transition-colors" onClick={startCamera} title="Take Photo">
+                        <Camera className="h-4 w-4" />
+                    </Button>
+                </div>
                 <input type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
             </div>
             <div className="flex-1 text-center sm:text-left">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <h2 className="text-2xl font-bold font-headline">{firstName} {lastName}</h2>
-                    {userType === 'lawyer' && <BadgeCheck className="h-5 w-5 text-primary hidden sm:block" />}
+                    <h2 className="text-3xl font-black font-headline tracking-tight">{firstName} {lastName}</h2>
+                    {userType === 'lawyer' && <BadgeCheck className="h-6 w-6 text-primary hidden sm:block" />}
                 </div>
-                <p className="text-muted-foreground">{email}</p>
+                <p className="text-muted-foreground font-medium">{email}</p>
                 <div className="mt-2 flex flex-wrap justify-center sm:justify-start gap-2">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary capitalize">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase bg-primary/10 text-primary">
                         {userType}
                     </span>
                 </div>
@@ -291,8 +360,8 @@ export default function ProfilePage() {
                         </Select>
                     </div>
                     </div>
-                    <div className="flex justify-end">
-                        <Button onClick={() => handleSaveChanges()} disabled={saving} className="shadow-lg shadow-primary/20">
+                    <div className="flex justify-end pt-4">
+                        <Button onClick={() => handleSaveChanges()} disabled={saving} className="shadow-lg shadow-primary/20 h-11 px-8 font-bold">
                             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
                             {userType === 'lawyer' && userProfile?.userType !== 'lawyer' ? "Setup Advocate Profile" : "Save Changes"}
                         </Button>
@@ -345,7 +414,7 @@ export default function ProfilePage() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="sm:col-span-2 pt-4 border-t">
+                                    <div className="sm:col-span-2 pt-4 border-t border-primary/10">
                                         <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">Professional Bio</p>
                                         <p className="text-sm text-muted-foreground leading-relaxed italic">&ldquo;{advocateDetails.about}&rdquo;</p>
                                     </div>
@@ -355,7 +424,7 @@ export default function ProfilePage() {
                             )}
                             
                             <div className="pt-2">
-                                <Button onClick={() => setShowAdvocateDialog(true)} variant={advocateDetails ? "outline" : "default"} className="w-full sm:w-auto">
+                                <Button onClick={() => setShowAdvocateDialog(true)} variant={advocateDetails ? "outline" : "default"} className="w-full sm:w-auto font-bold border-primary/20">
                                     <Edit className="mr-2 h-4 w-4" />
                                     {advocateDetails ? "Edit Professional Details" : "Complete Advocate Setup"}
                                 </Button>
@@ -390,7 +459,7 @@ export default function ProfilePage() {
                         </Label>
                     <Switch id="two-factor" />
                     </div>
-                    <Button variant="outline" className="w-full justify-start">
+                    <Button variant="outline" className="w-full justify-start font-medium border-primary/10">
                         <KeyRound className="mr-3 h-5 w-5 text-muted-foreground" />
                         <span>Change Password</span>
                     </Button>
@@ -403,11 +472,11 @@ export default function ProfilePage() {
                         <CardTitle className="text-destructive">Account Management</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <Button variant="outline" className="w-full justify-start hover:bg-destructive/10" onClick={handleLogout}>
+                        <Button variant="outline" className="w-full justify-start hover:bg-destructive/10 text-foreground border-destructive/10" onClick={handleLogout}>
                             <LogOut className="mr-3 h-5 w-5 text-muted-foreground" /> 
                             <span>Logout</span>
                         </Button>
-                        <Button variant="destructive" className="w-full justify-start">
+                        <Button variant="destructive" className="w-full justify-start font-bold">
                             <Trash2 className="mr-3 h-5 w-5" />
                             <span>Delete Account</span>
                         </Button>
@@ -416,6 +485,8 @@ export default function ProfilePage() {
             </div>
         </div>
         </div>
+
+        {/* Advocate Edit Dialog */}
         <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
             if (!open && userType === 'lawyer' && userProfile?.userType !== 'lawyer' && !advocateDetails) {
                 toast({ title: "Profile Required", description: "You must complete your advocate details to use this role." });
@@ -441,6 +512,40 @@ export default function ProfilePage() {
                     initialData={advocateDetails}
                 />
             </DialogContent>
+      </Dialog>
+
+      {/* Camera Capture Dialog */}
+      <Dialog open={isCameraOpen} onOpenChange={(open) => !open && stopCamera()}>
+          <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                  <DialogTitle>Take Profile Picture</DialogTitle>
+                  <DialogDescription>Position yourself in the center of the frame.</DialogDescription>
+              </DialogHeader>
+              <div className="relative aspect-square overflow-hidden rounded-2xl bg-black">
+                  <video 
+                    ref={videoRef} 
+                    className="h-full w-full object-cover" 
+                    autoPlay 
+                    muted 
+                    playsInline
+                  />
+                  { !hasCameraPermission && (
+                    <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
+                        <div className="space-y-4">
+                            <Camera className="h-12 w-12 text-muted-foreground mx-auto" />
+                            <p className="text-sm text-white">Camera access is required to take a photo.</p>
+                        </div>
+                    </div>
+                  )}
+                  <canvas ref={canvasRef} className="hidden" />
+              </div>
+              <DialogFooter className="flex-row sm:justify-center gap-2">
+                  <Button variant="outline" onClick={stopCamera} className="flex-1">Cancel</Button>
+                  <Button onClick={capturePhoto} className="flex-1" disabled={!hasCameraPermission}>
+                      <Camera className="mr-2 h-4 w-4" /> Capture
+                  </Button>
+              </DialogFooter>
+          </DialogContent>
       </Dialog>
     </>
   );
