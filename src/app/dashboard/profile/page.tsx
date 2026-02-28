@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -255,19 +254,25 @@ export default function ProfilePage() {
 
         <Card className="border-primary/10 overflow-hidden bg-card/50 backdrop-blur-sm">
             <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-8">
-            <div className="relative group">
-                <Avatar className="h-32 w-32 border-4 border-white dark:border-zinc-900 shadow-2xl transition-transform group-hover:scale-[1.02] duration-500">
-                <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} className="object-cover" />
-                <AvatarFallback className="bg-muted border-2 border-dashed border-primary/20 flex items-center justify-center text-primary/40">
-                    <Camera className="h-12 w-12" />
-                </AvatarFallback>
-                </Avatar>
-                <div className="absolute -bottom-2 -right-2">
-                    <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-xl border border-primary/10 hover:bg-primary hover:text-white transition-all scale-100 hover:scale-110 active:scale-95" onClick={startCamera} title="Take Live Photo">
-                        <Camera className="h-4 w-4" />
+            {photoURL ? (
+                <div className="relative group">
+                    <Avatar className="h-32 w-32 border-4 border-white dark:border-zinc-900 shadow-2xl transition-transform group-hover:scale-[1.02] duration-500">
+                        <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} className="object-cover" />
+                    </Avatar>
+                    <div className="absolute -bottom-2 -right-2">
+                        <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-xl border border-primary/10 hover:bg-primary hover:text-white transition-all scale-100 hover:scale-110 active:scale-95" onClick={startCamera} title="Retake Photo">
+                            <Camera className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
+            ) : (
+                <div className="flex flex-col items-center gap-4">
+                    <Button variant="outline" className="h-24 w-24 rounded-full border-2 border-dashed border-primary/20 flex flex-col gap-2 items-center justify-center text-muted-foreground hover:bg-primary/5 transition-all" onClick={startCamera}>
+                        <Camera className="h-8 w-8" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Add Photo</span>
                     </Button>
                 </div>
-            </div>
+            )}
             <div className="flex-1 text-center sm:text-left space-y-2">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                     <h2 className="text-4xl font-black font-headline tracking-tighter text-foreground">{firstName} {lastName}</h2>

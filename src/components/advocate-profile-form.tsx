@@ -55,7 +55,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
              toast({
                 variant: "destructive",
                 title: "Information Required",
-                description: "Bina pura detail fill kiye save nahin hoga. Please fill all fields.",
+                description: "Please fill all fields to complete your professional listing.",
             });
             return;
         }
@@ -63,9 +63,11 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
         setIsSaving(true);
 
         const advocateName = name || `${userProfile?.firstName} ${userProfile?.lastName}`;
+        
+        // Only use image if photoURL exists, never generate placeholder seeds
         const advocateImage = userProfile?.photoURL ? 
             { id: `advocate${auth.currentUser?.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } :
-            (initialData?.image || { id: `advocate${Date.now()}`, imageUrl: `https://picsum.photos/seed/${Date.now()}/200/200`, imageHint: 'person portrait' });
+            (initialData?.image || undefined);
 
 
         const newAdvocate = {
@@ -89,7 +91,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
         };
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await new Promise(resolve => setTimeout(resolve, 1000));
             saveAdvocate(newAdvocate);
             onSave();
         } catch (error) {
