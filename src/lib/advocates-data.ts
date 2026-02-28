@@ -23,6 +23,7 @@ export interface Lawyer {
     courts?: string[];
     rawExperience?: string;
     position?: string;
+    certificateName?: string;
     [key: string]: any;
 }
 

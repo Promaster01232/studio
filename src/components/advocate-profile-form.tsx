@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { saveAdvocate, type Lawyer } from "@/lib/advocates-data";
 import { useAuth } from "@/firebase";
-import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap } from "lucide-react";
+import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2 } from "lucide-react";
 
 const practiceAreas = [
     "Family Law", "Criminal Law", "Civil Law", "Corporate Law", "Cyber Law",
@@ -36,6 +36,20 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
     const { toast } = useToast();
     const auth = useAuth();
     const [isSaving, setIsSaving] = useState(false);
+    const [certificateName, setCertificateName] = useState<string>(initialData?.certificateName || "");
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setCertificateName(file.name);
+        }
+    };
+
+    const removeFile = () => {
+        setCertificateName("");
+        if (fileInputRef.current) fileInputRef.current.value = "";
+    };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -64,7 +78,6 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
 
         const advocateName = name || `${userProfile?.firstName} ${userProfile?.lastName}`;
         
-        // Only use image if photoURL exists, never generate placeholder seeds
         const advocateImage = userProfile?.photoURL ? 
             { id: `advocate${auth.currentUser?.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } :
             (initialData?.image || undefined);
@@ -88,10 +101,11 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
             barId: barId,
             courtName: courtName,
             courtAddress: courtAddress,
+            certificateName: certificateName,
         };
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 1500));
             saveAdvocate(newAdvocate);
             onSave();
         } catch (error) {
@@ -158,6 +172,53 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                             <Briefcase className="h-4 w-4 text-primary" /> Years of Experience
                         </Label>
                         <Input id="experience" name="experience" type="number" placeholder="10" required defaultValue={getExperienceValue()} className="h-11 border-primary/10" />
+                    </div>
+                </div>
+
+                <div className="space-y-3">
+                    <Label className="text-sm font-bold flex items-center gap-2">
+                        <FileUp className="h-4 w-4 text-primary" /> Court Certificate / Bar Enrollment
+                    </Label>
+                    <div className={`relative border-2 border-dashed rounded-xl p-6 transition-all ${certificateName ? 'bg-primary/5 border-primary/40' : 'hover:border-primary/30 bg-muted/20'}`}>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            accept=".pdf,image/*"
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                        />
+                        {!certificateName ? (
+                            <div className="flex flex-col items-center justify-center text-center gap-2">
+                                <div className="p-3 rounded-full bg-background shadow-sm border">
+                                    <FileUp className="h-6 w-6 text-muted-foreground" />
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-xs font-bold uppercase tracking-widest text-foreground">Upload Certificate</p>
+                                    <p className="text-[10px] text-muted-foreground">PDF or Image (Max 5MB)</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 rounded-lg bg-primary text-primary-foreground">
+                                        <CheckCircle2 className="h-5 w-5" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-xs font-bold truncate max-w-[200px]">{certificateName}</p>
+                                        <p className="text-[10px] text-primary font-medium">File ready for verification</p>
+                                    </div>
+                                </div>
+                                <Button 
+                                    type="button" 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-8 w-8 text-destructive hover:bg-destructive/10 z-20"
+                                    onClick={removeFile}
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </div>
 
