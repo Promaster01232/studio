@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,8 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, Upload, X } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore } from '@/firebase';
@@ -21,7 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { signOut } from 'firebase/auth';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AdvocateProfileForm } from '@/components/advocate-profile-form';
 import { getAdvocates, type Lawyer } from '@/lib/advocates-data';
 
@@ -59,7 +57,6 @@ export default function ProfilePage() {
   const [userType, setUserType] = useState('citizen');
   const [photoURL, setPhotoURL] = useState('');
   
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -98,21 +95,6 @@ export default function ProfilePage() {
     }
   }, [auth, firestore, router]);
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setPhotoURL(result);
-        if (userProfile) {
-            updateUserPhoto(result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const updateUserPhoto = (newPhotoURL: string) => {
       if (!auth.currentUser || !userProfile) return;
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
@@ -121,10 +103,6 @@ export default function ProfilePage() {
             toast({ title: "Photo Updated", description: "Your profile picture has been saved." });
         })
         .catch(err => console.error("Failed to sync photo:", err));
-  };
-
-  const handleAvatarClick = () => {
-    fileInputRef.current?.click();
   };
 
   const startCamera = async () => {
@@ -187,11 +165,6 @@ export default function ProfilePage() {
   const handleSaveChanges = (fromAdvocateFlow = false) => {
     if (!auth.currentUser || !userProfile) return;
 
-    if (userType === 'lawyer' && !fromAdvocateFlow && userProfile.userType !== 'lawyer') {
-        setShowAdvocateDialog(true);
-        return;
-    }
-
     setSaving(true);
     
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
@@ -202,7 +175,6 @@ export default function ProfilePage() {
         lastName,
         email,
         mobileNumber,
-        userType,
         photoURL,
     };
 
@@ -287,18 +259,14 @@ export default function ProfilePage() {
                 <Avatar className="h-32 w-32 border-4 border-white dark:border-zinc-900 shadow-2xl transition-transform group-hover:scale-[1.02] duration-500">
                 <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} className="object-cover" />
                 <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-4xl font-black font-headline border-2 border-primary/10 shadow-inner flex items-center justify-center">
-                    {`${firstName.charAt(0)}${lastName.charAt(0)}`}
+                    {firstName.charAt(0)}
                 </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-2 -right-2 flex gap-2">
-                    <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-xl border border-primary/10 hover:bg-primary hover:text-white transition-all scale-100 hover:scale-110 active:scale-95" onClick={handleAvatarClick} title="Upload Photo">
-                        <Upload className="h-4 w-4" />
-                    </Button>
-                    <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-xl border border-primary/10 hover:bg-primary hover:text-white transition-all scale-100 hover:scale-110 active:scale-95" onClick={startCamera} title="Take Photo">
+                <div className="absolute -bottom-2 -right-2">
+                    <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 shadow-xl border border-primary/10 hover:bg-primary hover:text-white transition-all scale-100 hover:scale-110 active:scale-95" onClick={startCamera} title="Take Live Photo">
                         <Camera className="h-4 w-4" />
                     </Button>
                 </div>
-                <input type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
             </div>
             <div className="flex-1 text-center sm:text-left space-y-2">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -311,11 +279,6 @@ export default function ProfilePage() {
                     )}
                 </div>
                 <p className="text-muted-foreground font-medium text-lg">{email}</p>
-                <div className="mt-4 flex flex-wrap justify-center sm:justify-start gap-2">
-                    <span className="inline-flex items-center px-4 py-1.5 rounded-xl text-[10px] font-black tracking-widest uppercase bg-muted text-muted-foreground border">
-                        {userType} account
-                    </span>
-                </div>
             </div>
             </CardContent>
         </Card>
@@ -338,35 +301,14 @@ export default function ProfilePage() {
                         <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-background" />
                         </div>
                     </div>
-                    <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label htmlFor="phone">Phone Number</Label>
                         <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="bg-background" />
                     </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="userType">I am a</Label>
-                        <Select name="userType" value={userType} onValueChange={(val) => {
-                            setUserType(val);
-                            if (val === 'lawyer' && userProfile?.userType !== 'lawyer') {
-                                setShowAdvocateDialog(true);
-                            }
-                        }}>
-                            <SelectTrigger id="userType" className="bg-background">
-                            <SelectValue placeholder="Select your role" />
-                            </SelectTrigger>
-                            <SelectContent>
-                            <SelectItem value="citizen">Citizen</SelectItem>
-                            <SelectItem value="lawyer">Advocate</SelectItem>
-                            <SelectItem value="businessman">Business Person</SelectItem>
-                            <SelectItem value="student">Law Student</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    </div>
                     <div className="flex justify-end pt-4">
                         <Button onClick={() => handleSaveChanges()} disabled={saving} className="shadow-xl shadow-primary/20 h-12 px-10 font-bold hover:scale-[1.02] active:scale-95 transition-all">
                             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
-                            {userType === 'lawyer' && userProfile?.userType !== 'lawyer' ? "Setup Advocate Profile" : "Save Changes"}
+                            Save Changes
                         </Button>
                     </div>
                 </CardContent>

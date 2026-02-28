@@ -161,9 +161,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   const getAvatarFallback = () => {
       if (!userProfile) return "";
-      const firstNameInitial = userProfile.firstName ? userProfile.firstName.charAt(0) : "";
-      const lastNameInitial = userProfile.lastName ? userProfile.lastName.charAt(0) : "";
-      return `${firstNameInitial}${lastNameInitial}`;
+      return userProfile.firstName ? userProfile.firstName.charAt(0) : "";
   }
   
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
@@ -214,7 +212,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         <span>My Profile</span>
                     </Link>
                 </DropdownMenuItem>
-                 <DropdownMenuSub>
+                 <DropdownMenuOr appearanceAppearanceAppearance appearanceAppearance appearanceAppearance appearanceAppearance appearance appearanceAppearance appearance appearanceSub>
                     <DropdownMenuSubTrigger className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
                         <SunMoon className="mr-3 h-4 w-4" />
                         <span>Appearance</span>
