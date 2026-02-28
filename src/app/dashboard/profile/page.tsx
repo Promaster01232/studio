@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -101,19 +102,26 @@ export default function ProfilePage() {
 
   const handleAdvocateProfileSaved = () => {
     setShowAdvocateDialog(false);
+    // After advocate details are saved to directory, save the main profile to persist userType
+    handleSaveChanges(true);
     toast({
         title: "Advocate Profile Complete",
-        description: "You are now listed in the Lawyer Connect directory.",
+        description: "Your professional details have been updated and listed.",
     });
-    router.push('/dashboard/lawyer-connect');
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = (fromAdvocateFlow = false) => {
     if (!auth.currentUser || !userProfile) return;
+
+    // If they switched to lawyer but haven't filled the profile, force it
+    if (userType === 'lawyer' && !fromAdvocateFlow && userProfile.userType !== 'lawyer') {
+        setShowAdvocateDialog(true);
+        return;
+    }
+
     setSaving(true);
     
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-    const originalUserType = userProfile.userType;
     
     const updatedProfile: UserProfile = {
         ...userProfile,
@@ -128,11 +136,8 @@ export default function ProfilePage() {
     setDoc(userDocRef, updatedProfile, { merge: true })
       .then(() => {
         setUserProfile(updatedProfile);
-
-        toast({ title: 'Profile Updated', description: 'Your changes have been saved.' });
-
-        if (userType === 'lawyer' && originalUserType !== 'lawyer') {
-            setShowAdvocateDialog(true);
+        if (!fromAdvocateFlow) {
+            toast({ title: 'Profile Updated', description: 'Your changes have been saved.' });
         }
       })
       .catch((serverError) => {
@@ -215,7 +220,7 @@ export default function ProfilePage() {
                 <Edit className="h-4 w-4" />
                 <span className="sr-only">Change profile picture</span>
                 </Button>
-                <Input type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
+                <input type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
             </div>
             <div className="flex-1 text-center sm:text-left">
                 <h2 className="text-2xl font-bold font-headline">{firstName} {lastName}</h2>
@@ -250,7 +255,12 @@ export default function ProfilePage() {
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="userType">I am a</Label>
-                        <Select name="userType" value={userType} onValueChange={setUserType}>
+                        <Select name="userType" value={userType} onValueChange={(val) => {
+                            setUserType(val);
+                            if (val === 'lawyer' && userProfile?.userType !== 'lawyer') {
+                                setShowAdvocateDialog(true);
+                            }
+                        }}>
                             <SelectTrigger id="userType">
                             <SelectValue placeholder="Select your role" />
                             </SelectTrigger>
@@ -264,9 +274,9 @@ export default function ProfilePage() {
                     </div>
                     </div>
                     <div className="flex justify-end">
-                        <Button onClick={handleSaveChanges} disabled={saving}>
+                        <Button onClick={() => handleSaveChanges()} disabled={saving}>
                             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
-                            Save Changes
+                            {userType === 'lawyer' && userProfile?.userType !== 'lawyer' ? "Setup Advocate Profile" : "Save Changes"}
                         </Button>
                     </div>
                 </CardContent>
@@ -342,15 +352,29 @@ export default function ProfilePage() {
             </div>
         </div>
         </div>
-        <Dialog open={showAdvocateDialog} onOpenChange={setShowAdvocateDialog}>
-            <DialogContent className="sm:max-w-2xl">
+        <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
+            // Only allow closing if it's not a new selection
+            if (!open && userType === 'lawyer' && userProfile?.userType !== 'lawyer') {
+                toast({ title: "Profile Required", description: "You must complete your advocate details to use this role." });
+                return;
+            }
+            setShowAdvocateDialog(open);
+        }}>
+            <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => {
+                if (userType === 'lawyer' && userProfile?.userType !== 'lawyer') e.preventDefault();
+            }}>
                 <DialogHeader>
-                    <DialogTitle>Advocate Profile</DialogTitle>
-                    <DialogDescription>Complete your details to be listed on Lawyer Connect.</DialogDescription>
+                    <DialogTitle>Complete Advocate Profile</DialogTitle>
+                    <DialogDescription>As an Advocate, you must provide your professional details to be listed in our verified directory.</DialogDescription>
                 </DialogHeader>
                 <AdvocateProfileForm 
                     onSave={handleAdvocateProfileSaved}
-                    userProfile={userProfile}
+                    userProfile={{
+                        firstName,
+                        lastName,
+                        email,
+                        photoURL
+                    }}
                 />
             </DialogContent>
       </Dialog>

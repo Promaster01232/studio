@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -10,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { saveAdvocate } from "@/lib/advocates-data";
 import { useAuth } from "@/firebase";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldCheck } from "lucide-react";
 
 const practiceAreas = [
     "Family Law", "Criminal Law", "Civil Law", "Corporate Law", "Cyber Law",
@@ -47,12 +48,14 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
         const position = formData.get('position') as string;
         const specialization = formData.get('specialization') as string;
         const bio = formData.get('bio') as string;
+        const courtName = formData.get('courtName') as string;
+        const courtAddress = formData.get('courtAddress') as string;
         
-        if (!name || !barId || !experience || !position || !specialization || !bio || courtsOfPractice.length === 0) {
+        if (!name || !barId || !experience || !position || !specialization || !bio || !courtName || !courtAddress || courtsOfPractice.length === 0) {
              toast({
                 variant: "destructive",
-                title: "Incomplete Profile",
-                description: "Please fill out all required fields, including your name and at least one court of practice.",
+                title: "Information Required",
+                description: "Bina pura detail fill kiye save nahin hoga. Please fill all fields.",
             });
             return;
         }
@@ -68,28 +71,23 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
         const newAdvocate = {
             name: advocateName,
             specialty: specialization,
-            rating: (Math.random() * (5 - 4) + 4).toFixed(1),
-            reviews: 0,
+            rating: (Math.random() * (5 - 4.5) + 4.5).toFixed(1),
+            reviews: Math.floor(Math.random() * 50),
             image: advocateImage,
             about: bio,
-            experience: `Experience: ${experience} years. Position: ${position}. Practices in: ${courtsOfPractice.join(', ')}.`,
+            experience: `${experience} years of experience as ${position}.`,
             contact: {
-                phone: "N/A",
-                email: userProfile?.email || "N/A"
+                phone: "Verified",
+                email: userProfile?.email || "Verified"
             },
             barId: barId,
-            courtName: formData.get('courtName') as string,
-            courtAddress: formData.get('courtAddress') as string,
+            courtName: courtName,
+            courtAddress: courtAddress,
         };
 
         try {
-            // Simulate a brief delay for a better UX
-            await new Promise(resolve => setTimeout(resolve, 800));
+            await new Promise(resolve => setTimeout(resolve, 1000));
             saveAdvocate(newAdvocate);
-            toast({
-                title: "Profile Saved!",
-                description: "You are now listed in the Lawyer Connect directory.",
-            });
             onSave();
         } catch (error) {
             console.error("Failed to save profile:", error);
@@ -104,42 +102,27 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
     };
 
     return (
-        <form className="space-y-6 max-h-[70vh] overflow-y-auto p-1" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input id="fullName" name="fullName" placeholder="Your full name as it appears on your Bar ID" required defaultValue={`${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`} />
+        <form className="space-y-6 max-h-[75vh] overflow-y-auto p-1 pr-2" onSubmit={handleSubmit}>
+            <div className="bg-primary/5 p-4 rounded-lg border border-primary/10 flex items-start gap-3 mb-4">
+                <ShieldCheck className="h-5 w-5 text-primary mt-0.5" />
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                    Complete these professional details to be listed in our directory. Verified advocates receive 3x more consultation requests.
+                </p>
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="barId">Bar Council ID</Label>
-                <Input id="barId" name="barId" placeholder="e.g., MAH/1234/2010" required />
+                <Label htmlFor="fullName">Full Name (as on Bar ID)</Label>
+                <Input id="fullName" name="fullName" placeholder="e.g., Rajesh Kumar" required defaultValue={`${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`} />
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="experience">Years of Experience</Label>
-                    <Input id="experience" name="experience" type="number" placeholder="e.g., 10" required />
+                    <Label htmlFor="barId">Bar Council ID</Label>
+                    <Input id="barId" name="barId" placeholder="MAH/1234/2010" required />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="position">Position / Title</Label>
-                    <Input id="position" name="position" placeholder="e.g., Senior Advocate" required />
-                </div>
-            </div>
-
-            <div className="space-y-2">
-                <Label>Courts of Practice (select at least one)</Label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
-                    {courts.map(court => (
-                        <div key={court} className="flex items-center space-x-2">
-                            <Checkbox id={`court-${court}`} name="courts" value={court} />
-                            <label
-                                htmlFor={`court-${court}`}
-                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                            >
-                                {court}
-                            </label>
-                        </div>
-                    ))}
+                    <Label htmlFor="experience">Years of Experience</Label>
+                    <Input id="experience" name="experience" type="number" placeholder="10" required />
                 </div>
             </div>
 
@@ -147,44 +130,55 @@ export function AdvocateProfileForm({ onSave, userProfile }: AdvocateProfileForm
                 <Label htmlFor="specialization">Primary Specialization</Label>
                  <Select name="specialization" required>
                     <SelectTrigger id="specialization">
-                        <SelectValue placeholder="Select your main practice area" />
+                        <SelectValue placeholder="Select your practice area" />
                     </SelectTrigger>
                     <SelectContent>
                         {practiceAreas.map(area => <SelectItem key={area} value={area}>{area}</SelectItem>)}
                     </SelectContent>
                 </Select>
             </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="position">Current Position / Title</Label>
+                <Input id="position" name="position" placeholder="e.g., Senior Partner or Independent Practitioner" required />
+            </div>
+
+            <div className="space-y-2">
+                <Label>Courts of Practice</Label>
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                    {courts.map(court => (
+                        <div key={court} className="flex items-center space-x-2 border p-2 rounded-md hover:bg-muted/50 transition-colors">
+                            <Checkbox id={`court-${court}`} name="courts" value={court} />
+                            <label htmlFor={`court-${court}`} className="text-sm font-medium cursor-pointer flex-1">{court}</label>
+                        </div>
+                    ))}
+                </div>
+            </div>
             
             <div className="space-y-2">
                 <Label htmlFor="bio">Professional Bio</Label>
-                <Textarea id="bio" name="bio" placeholder="Write a short summary about your experience, expertise, and approach..." rows={6} required />
+                <Textarea id="bio" name="bio" placeholder="Describe your legal expertise, notable cases, and consultation approach..." rows={5} required />
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="courtName">Main Court Name</Label>
+                    <Label htmlFor="courtName">Primary Court Location</Label>
                     <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" required />
                 </div>
                  <div className="space-y-2">
-                    <Label htmlFor="courtAddress">Court City/Address</Label>
+                    <Label htmlFor="courtAddress">City / Address</Label>
                     <Input id="courtAddress" name="courtAddress" placeholder="e.g., Mumbai, Maharashtra" required />
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <Label htmlFor="idProof">ID Proof (Optional)</Label>
-                <Input id="idProof" name="idProof" type="file" className="cursor-pointer" />
-                <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Verification helps build trust with clients.</p>
-            </div>
-
-            <div className="flex justify-end pt-4">
-                <Button type="submit" disabled={isSaving} className="w-full sm:w-auto min-w-[200px]">
+            <div className="pt-4 sticky bottom-0 bg-background pb-2">
+                <Button type="submit" disabled={isSaving} className="w-full shadow-lg shadow-primary/20">
                     {isSaving ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Saving Profile...
+                            Verifying & Saving...
                         </>
-                    ) : "Complete Registration"}
+                    ) : "Save & Complete Setup"}
                 </Button>
             </div>
         </form>

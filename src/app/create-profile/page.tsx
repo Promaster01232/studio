@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -40,7 +41,7 @@ export default function CreateProfilePage() {
   const [loading, setLoading] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [showAdvocateDialog, setShowAdvocateDialog] = useState(false);
-  const [savedUserProfile, setSavedUserProfile] = useState<ProfileFormValues | null>(null);
+  const [pendingUserData, setPendingUserData] = useState<ProfileFormValues | null>(null);
 
 
   const form = useForm<ProfileFormValues>({
@@ -73,9 +74,36 @@ export default function CreateProfilePage() {
     }
   }, [auth.currentUser, form, router]);
 
-  const handleAdvocateProfileSaved = () => {
-    setShowAdvocateDialog(false);
-    router.push("/dashboard/lawyer-connect");
+  const handleAdvocateProfileSaved = async () => {
+    if (!pendingUserData || !auth.currentUser) return;
+    
+    setLoading(true);
+    const userProfile = {
+      uid: auth.currentUser.uid,
+      photoURL: auth.currentUser.photoURL || '',
+      ...pendingUserData,
+    };
+    
+    const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+
+    try {
+        await setDoc(userDocRef, userProfile);
+        setShowAdvocateDialog(false);
+        toast({
+          title: "Registration Complete!",
+          description: "Welcome to the Nyaya Sahayak community.",
+        });
+        router.push("/dashboard/lawyer-connect");
+    } catch (serverError: any) {
+        const permissionError = new FirestorePermissionError({
+          path: userDocRef.path,
+          operation: 'create',
+          requestResourceData: userProfile,
+        }, serverError);
+        errorEmitter.emit('permission-error', permissionError);
+    } finally {
+        setLoading(false);
+    }
   };
 
   const onSubmit = (data: ProfileFormValues) => {
@@ -87,6 +115,12 @@ export default function CreateProfilePage() {
       });
       router.push("/login");
       return;
+    }
+
+    if (data.userType === 'lawyer') {
+        setPendingUserData(data);
+        setShowAdvocateDialog(true);
+        return;
     }
 
     setLoading(true);
@@ -105,13 +139,7 @@ export default function CreateProfilePage() {
           title: "Profile Created!",
           description: "Welcome to Nyaya Sahayak.",
         });
-        
-        if (data.userType === 'lawyer') {
-            setSavedUserProfile(data);
-            setShowAdvocateDialog(true);
-        } else {
-            router.push("/dashboard");
-        }
+        router.push("/dashboard");
       })
       .catch((serverError) => {
         const permissionError = new FirestorePermissionError({
@@ -220,7 +248,13 @@ export default function CreateProfilePage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>I am a...</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={(val) => {
+                        field.onChange(val);
+                        if (val === 'lawyer') {
+                            setPendingUserData(form.getValues());
+                            setShowAdvocateDialog(true);
+                        }
+                    }} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select your role" />
@@ -239,25 +273,33 @@ export default function CreateProfilePage() {
               />
 
               <Button type="submit" disabled={loading} className="w-full">
-                {loading ? <Loader2 className="animate-spin" /> : "Save Profile & Continue"}
+                {loading ? <Loader2 className="animate-spin" /> : (form.watch('userType') === 'lawyer' ? "Complete Advocate Setup" : "Save Profile & Continue")}
               </Button>
             </form>
           </Form>
         </CardContent>
       </Card>
 
-      <Dialog open={showAdvocateDialog} onOpenChange={setShowAdvocateDialog}>
-          <DialogContent className="sm:max-w-2xl">
+      <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
+          if (!open && form.getValues('userType') === 'lawyer') {
+              toast({ title: "Setup Required", description: "Advocates must complete their profile to proceed." });
+              return;
+          }
+          setShowAdvocateDialog(open);
+      }}>
+          <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => {
+              if (form.getValues('userType') === 'lawyer') e.preventDefault();
+          }}>
               <DialogHeader>
-                    <DialogTitle>Advocate Profile</DialogTitle>
-                    <DialogDescription>Complete your details to be listed on Lawyer Connect.</DialogDescription>
+                    <DialogTitle>Complete Advocate Profile</DialogTitle>
+                    <DialogDescription>Provide your professional details to be listed on Lawyer Connect.</DialogDescription>
               </DialogHeader>
               <AdvocateProfileForm 
                 onSave={handleAdvocateProfileSaved}
                 userProfile={{
-                    firstName: savedUserProfile?.firstName || '',
-                    lastName: savedUserProfile?.lastName || '',
-                    email: savedUserProfile?.email || '',
+                    firstName: pendingUserData?.firstName || form.getValues('firstName'),
+                    lastName: pendingUserData?.lastName || form.getValues('lastName'),
+                    email: pendingUserData?.email || form.getValues('email'),
                     photoURL: auth.currentUser?.photoURL || ''
                 }}
               />
