@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, SunMoon, Languages, Loader2, User, Search } from "lucide-react";
+import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, MessageSquare, ShieldAlert } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -38,6 +38,9 @@ import { useAuth, useFirestore } from "@/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
+import { SosDialog } from "@/components/sos-dialog";
+import { SearchDialog } from "@/components/search-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const languages: { code: Language, name: string }[] = [
     { code: "en", name: "English" },
@@ -50,6 +53,7 @@ const languages: { code: Language, name: string }[] = [
 
 function Header() {
     const { state } = useSidebar();
+    const { toast } = useToast();
     
     return (
         <header className={cn(
@@ -67,10 +71,37 @@ function Header() {
                 <SidebarTrigger />
             </div>
             <div className="flex-1">
-                <Button variant="outline" className="w-full max-w-xs justify-start gap-2 text-muted-foreground">
-                    <Search className="h-4 w-4" />
-                    Search...
-                </Button>
+                <SearchDialog>
+                    <Button variant="outline" className="w-full max-w-xs justify-start gap-2 text-muted-foreground">
+                        <Search className="h-4 w-4" />
+                        Search...
+                    </Button>
+                </SearchDialog>
+            </div>
+            <div className="flex items-center gap-3">
+                <SosDialog>
+                    <Button variant="destructive" size="sm" className="font-bold gap-2 animate-pulse hidden sm:flex">
+                        <ShieldAlert className="h-4 w-4" />
+                        SOS
+                    </Button>
+                </SosDialog>
+                
+                <div className="flex items-center gap-1 border-l pl-3 ml-1">
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="text-muted-foreground hover:text-primary"
+                        onClick={() => toast({ title: "Notifications", description: "You have no new notifications." })}
+                    >
+                        <Bell className="h-5 w-5" />
+                    </Button>
+
+                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary" asChild>
+                        <Link href="/dashboard/support">
+                            <MessageSquare className="h-5 w-5" />
+                        </Link>
+                    </Button>
+                </div>
             </div>
         </header>
     );
