@@ -8,29 +8,29 @@ import { Logo } from "@/components/logo";
 export default function WelcomePage() {
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md overflow-hidden">
-        <CardContent className="flex flex-col items-center p-8 text-center">
-          <div className="relative mb-8 flex h-36 w-36 items-center justify-center">
-            <div className="absolute -inset-2 rounded-full bg-primary/10 animate-pulse [animation-duration:4s] [animation-delay:1s]"></div>
-             <div className="absolute -inset-4 rounded-full bg-primary/10 animate-pulse [animation-duration:4s]"></div>
-            <Logo className="h-full w-full" imageClassName="h-32 w-auto" />
+      <Card className="w-full max-w-md overflow-hidden border-none shadow-2xl">
+        <CardContent className="flex flex-col items-center p-10 text-center">
+          <div className="relative mb-10 flex h-40 w-40 items-center justify-center">
+            <div className="absolute -inset-3 rounded-full bg-primary/10 animate-pulse [animation-duration:4s] [animation-delay:1s]"></div>
+             <div className="absolute -inset-6 rounded-full bg-primary/10 animate-pulse [animation-duration:4s]"></div>
+            <Logo className="h-full w-full shadow-2xl" imageClassName="h-32 w-auto" />
           </div>
 
-          <h1 className="text-4xl font-bold font-headline mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
+          <h1 className="text-4xl font-black font-headline mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] tracking-tighter">
             Nyaya Sahayak
           </h1>
 
-          <p className="mb-8 text-muted-foreground">
+          <p className="mb-10 text-sm font-medium text-muted-foreground leading-relaxed">
             Your AI-powered legal assistant for a modern world. Clarity and confidence in navigating the legal system.
           </p>
           
-          <Button asChild size="lg" className="group w-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
+          <Button asChild size="lg" className="group w-full h-12 font-black uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 active:scale-95">
             <Link href="/login">
-              Get Started <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              Get Started <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>
-           <p className="mt-8 text-xs text-muted-foreground">
-            To provide the best experience, some features may request browser permissions, such as microphone access for voice-based input.
+           <p className="mt-10 text-[10px] font-bold text-muted-foreground uppercase tracking-wider opacity-60">
+            Secure • Private • Professional
           </p>
         </CardContent>
       </Card>
