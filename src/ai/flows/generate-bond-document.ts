@@ -12,9 +12,9 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateBondDocumentInputSchema = z.object({
-  bondType: z.string().describe('The type of legal bond to generate (e.g., Bail Bond, Indemnity Bond, Surety Bond, Affidavit).'),
-  language: z.string().describe('The desired language for the document (Simple English, Legal English, Regional Language).'),
-  details: z.string().describe('The details of the case or situation for which the bond is being generated.'),
+  bondType: z.string().describe('The type of legal bond to generate (e.g., Bail Bond, Personal Bond, Indemnity Bond, Surety Bond, Performance Bond, Mortgage Bond, Employment Bond, Affidavit).'),
+  language: z.string().describe('The desired language for the document (Simple English, Legal English, Hindi, etc.).'),
+  details: z.string().describe('The details of the case, parties, or situation for which the bond is being generated.'),
 });
 export type GenerateBondDocumentInput = z.infer<typeof GenerateBondDocumentInputSchema>;
 

@@ -171,8 +171,12 @@ export default function BondGeneratorPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Bail Bond">Bail Bond</SelectItem>
+                    <SelectItem value="Personal Bond">Personal Bond</SelectItem>
                     <SelectItem value="Indemnity Bond">Indemnity Bond</SelectItem>
                     <SelectItem value="Surety Bond">Surety Bond</SelectItem>
+                    <SelectItem value="Performance Bond">Performance Bond</SelectItem>
+                    <SelectItem value="Mortgage Bond">Mortgage Bond</SelectItem>
+                    <SelectItem value="Employment Bond">Employment Bond</SelectItem>
                     <SelectItem value="Affidavit">Affidavit</SelectItem>
                   </SelectContent>
                 </Select>
@@ -193,7 +197,7 @@ export default function BondGeneratorPage() {
             </div>
 
             {/* Conditional Fields */}
-            {bondType === 'Bail Bond' && (
+            {(bondType === 'Bail Bond' || bondType === 'Personal Bond') && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                     <FormSectionTitle>Case &amp; Court Details</FormSectionTitle>
                     <div className="grid md:grid-cols-2 gap-4">
@@ -221,15 +225,26 @@ export default function BondGeneratorPage() {
                         <Textarea id="accusedAddress" name="accusedAddress" placeholder="Full address of the accused" required />
                     </div>
 
-                    <FormSectionTitle>Surety&apos;s Details</FormSectionTitle>
-                     <div className="space-y-2">
-                        <Label htmlFor="suretyName">Name of Surety</Label>
-                        <Input id="suretyName" name="suretyName" placeholder="Full name of the surety" required />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="suretyAddress">Address of Surety</Label>
-                        <Textarea id="suretyAddress" name="suretyAddress" placeholder="Full address of the surety" required />
-                    </div>
+                    {bondType === 'Bail Bond' && (
+                        <>
+                            <FormSectionTitle>Surety&apos;s Details</FormSectionTitle>
+                            <div className="space-y-2">
+                                <Label htmlFor="suretyName">Name of Surety</Label>
+                                <Input id="suretyName" name="suretyName" placeholder="Full name of the surety" required />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="suretyAddress">Address of Surety</Label>
+                                <Textarea id="suretyAddress" name="suretyAddress" placeholder="Full address of the surety" required />
+                            </div>
+                        </>
+                    )}
+
+                    {bondType === 'Personal Bond' && (
+                        <div className="space-y-2">
+                            <Label htmlFor="conditions">Additional Conditions (Optional)</Label>
+                            <Textarea id="conditions" name="conditions" placeholder="Any specific conditions imposed by the court..." />
+                        </div>
+                    )}
                 </motion.div>
             )}
 
@@ -304,6 +319,120 @@ export default function BondGeneratorPage() {
                         <Input id="bondAmount" name="bondAmount" placeholder="e.g., Rs. 5,00,000/- (Rupees Five Lakh Only)" required />
                     </div>
                  </motion.div>
+            )}
+
+            {bondType === 'Performance Bond' && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                    <FormSectionTitle>Obligor&apos;s Details (Contractor)</FormSectionTitle>
+                    <div className="space-y-2">
+                        <Label htmlFor="obligorName">Obligor Name</Label>
+                        <Input id="obligorName" name="obligorName" placeholder="Name of the party performing the work" required />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="obligorAddress">Obligor Address</Label>
+                        <Textarea id="obligorAddress" name="obligorAddress" placeholder="Full address of the obligor" required />
+                    </div>
+                    <FormSectionTitle>Obligee&apos;s Details (Client)</FormSectionTitle>
+                    <div className="space-y-2">
+                        <Label htmlFor="obligeeName">Obligee Name</Label>
+                        <Input id="obligeeName" name="obligeeName" placeholder="Name of the party being protected" required />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="obligeeAddress">Obligee Address</Label>
+                        <Textarea id="obligeeAddress" name="obligeeAddress" placeholder="Full address of the obligee" required />
+                    </div>
+                    <FormSectionTitle>Bond Details</FormSectionTitle>
+                    <div className="space-y-2">
+                        <Label htmlFor="projectDetails">Project/Contract Details</Label>
+                        <Textarea id="projectDetails" name="projectDetails" placeholder="Describe the work or project being guaranteed." required />
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="bondAmount">Bond Amount</Label>
+                            <Input id="bondAmount" name="bondAmount" placeholder="Amount being guaranteed" required />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="expiryDate">Expiry Date</Label>
+                            <Input id="expiryDate" name="expiryDate" type="date" />
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+
+            {bondType === 'Mortgage Bond' && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                    <FormSectionTitle>Mortgagor&apos;s Details (Borrower)</FormSectionTitle>
+                    <div className="space-y-2">
+                        <Label htmlFor="mortgagorName">Mortgagor Name</Label>
+                        <Input id="mortgagorName" name="mortgagorName" placeholder="Full name of the borrower" required />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="mortgagorAddress">Mortgagor Address</Label>
+                        <Textarea id="mortgagorAddress" name="mortgagorAddress" placeholder="Full address of the mortgagor" required />
+                    </div>
+                    <FormSectionTitle>Mortgagee&apos;s Details (Lender)</FormSectionTitle>
+                    <div className="space-y-2">
+                        <Label htmlFor="mortgageeName">Mortgagee Name</Label>
+                        <Input id="mortgageeName" name="mortgageeName" placeholder="Name of the lender (bank or person)" required />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="mortgageeAddress">Mortgagee Address</Label>
+                        <Textarea id="mortgageeAddress" name="mortgageeAddress" placeholder="Full address of the mortgagee" required />
+                    </div>
+                    <FormSectionTitle>Property & Loan Details</FormSectionTitle>
+                    <div className="space-y-2">
+                        <Label htmlFor="propertyDetails">Property Description</Label>
+                        <Textarea id="propertyDetails" name="propertyDetails" placeholder="Detailed description of the property being mortgaged." required />
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="loanAmount">Loan Amount</Label>
+                            <Input id="loanAmount" name="loanAmount" placeholder="e.g., Rs. 20,00,000/-" required />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="interestRate">Interest Rate (Optional)</Label>
+                            <Input id="interestRate" name="interestRate" placeholder="e.g., 8.5% p.a." />
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+
+            {bondType === 'Employment Bond' && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                    <FormSectionTitle>Employee&apos;s Details</FormSectionTitle>
+                    <div className="space-y-2">
+                        <Label htmlFor="employeeName">Employee Name</Label>
+                        <Input id="employeeName" name="employeeName" placeholder="Full name of the employee" required />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="employeeAddress">Employee Address</Label>
+                        <Textarea id="employeeAddress" name="employeeAddress" placeholder="Full address of the employee" required />
+                    </div>
+                    <FormSectionTitle>Employer&apos;s Details</FormSectionTitle>
+                    <div className="space-y-2">
+                        <Label htmlFor="employerName">Employer Name</Label>
+                        <Input id="employerName" name="employerName" placeholder="Name of the company or employer" required />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="employerAddress">Employer Address</Label>
+                        <Textarea id="employerAddress" name="employerAddress" placeholder="Full office address" required />
+                    </div>
+                    <FormSectionTitle>Bond Terms</FormSectionTitle>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="bondDuration">Bond Duration</Label>
+                            <Input id="bondDuration" name="bondDuration" placeholder="e.g., 2 Years" required />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="bondAmount">Penalty Amount</Label>
+                            <Input id="bondAmount" name="bondAmount" placeholder="Amount payable on breach" required />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="position">Job Position/Title</Label>
+                        <Input id="position" name="position" placeholder="e.g., Software Engineer" />
+                    </div>
+                </motion.div>
             )}
 
             { bondType === 'Affidavit' && (

@@ -59,6 +59,36 @@ export async function generateBondAction(
       `;
       break;
     }
+    case 'Personal Bond': {
+        const caseNumber = get(formData, 'caseNumber');
+        const courtName = get(formData, 'courtName');
+        const accusedName = get(formData, 'accusedName');
+        const accusedAddress = get(formData, 'accusedAddress');
+        const bondAmount = get(formData, 'bondAmount');
+        const conditions = get(formData, 'conditions');
+  
+        if (!caseNumber || !courtName || !accusedName || !accusedAddress || !bondAmount) {
+          validationError = "Please fill all required fields for the Personal Bond.";
+          break;
+        }
+  
+        details = `
+          Bond Type: Personal Bond (Self-Surety)
+          ---
+          CASE & COURT DETAILS:
+          Case / FIR No.: ${caseNumber}
+          Court Name: ${courtName}
+          ---
+          ACCUSED PERSON'S DETAILS:
+          Name: ${accusedName}
+          Address: ${accusedAddress}
+          ---
+          BOND DETAILS:
+          Bond Amount: ${bondAmount}
+          Conditions: ${conditions || 'Standard bail conditions apply.'}
+        `;
+        break;
+      }
     case 'Indemnity Bond': {
         const indemnifierName = get(formData, 'indemnifierName');
         const indemnifierAddress = get(formData, 'indemnifierAddress');
@@ -124,6 +154,100 @@ export async function generateBondAction(
         `;
         break;
     }
+    case 'Performance Bond': {
+        const obligorName = get(formData, 'obligorName');
+        const obligorAddress = get(formData, 'obligorAddress');
+        const obligeeName = get(formData, 'obligeeName');
+        const obligeeAddress = get(formData, 'obligeeAddress');
+        const projectDetails = get(formData, 'projectDetails');
+        const bondAmount = get(formData, 'bondAmount');
+        const expiryDate = get(formData, 'expiryDate');
+  
+        if (!obligorName || !obligorAddress || !obligeeName || !obligeeAddress || !projectDetails || !bondAmount) {
+          validationError = "Please fill all required fields for the Performance Bond.";
+          break;
+        }
+  
+        details = `
+          Bond Type: Performance Bond
+          ---
+          OBLIGOR'S DETAILS (Contractor):
+          Name: ${obligorName}
+          Address: ${obligorAddress}
+          ---
+          OBLIGEE'S DETAILS (Client):
+          Name: ${obligeeName}
+          Address: ${obligeeAddress}
+          ---
+          BOND DETAILS:
+          Project/Contract: ${projectDetails}
+          Bond Amount: ${bondAmount}
+          Expiry Date: ${expiryDate || 'N/A'}
+        `;
+        break;
+      }
+      case 'Mortgage Bond': {
+        const mortgagorName = get(formData, 'mortgagorName');
+        const mortgagorAddress = get(formData, 'mortgagorAddress');
+        const mortgageeName = get(formData, 'mortgageeName');
+        const mortgageeAddress = get(formData, 'mortgageeAddress');
+        const propertyDetails = get(formData, 'propertyDetails');
+        const loanAmount = get(formData, 'loanAmount');
+  
+        if (!mortgagorName || !mortgagorAddress || !mortgageeName || !mortgageeAddress || !propertyDetails || !loanAmount) {
+          validationError = "Please fill all required fields for the Mortgage Bond.";
+          break;
+        }
+  
+        details = `
+          Bond Type: Mortgage Bond
+          ---
+          MORTGAGOR'S DETAILS (Borrower):
+          Name: ${mortgagorName}
+          Address: ${mortgagorAddress}
+          ---
+          MORTGAGEE'S DETAILS (Lender):
+          Name: ${mortgageeName}
+          Address: ${mortgageeAddress}
+          ---
+          BOND DETAILS:
+          Property Description: ${propertyDetails}
+          Loan Amount: ${loanAmount}
+          Interest Rate: ${get(formData, 'interestRate') || 'As per agreement'}
+        `;
+        break;
+      }
+      case 'Employment Bond': {
+        const employeeName = get(formData, 'employeeName');
+        const employeeAddress = get(formData, 'employeeAddress');
+        const employerName = get(formData, 'employerName');
+        const employerAddress = get(formData, 'employerAddress');
+        const bondDuration = get(formData, 'bondDuration');
+        const penaltyAmount = get(formData, 'bondAmount');
+  
+        if (!employeeName || !employeeAddress || !employerName || !employerAddress || !bondDuration || !penaltyAmount) {
+          validationError = "Please fill all required fields for the Employment Bond.";
+          break;
+        }
+  
+        details = `
+          Bond Type: Employment Bond
+          ---
+          EMPLOYEE'S DETAILS:
+          Name: ${employeeName}
+          Address: ${employeeAddress}
+          ---
+          EMPLOYER'S DETAILS:
+          Name: ${employerName}
+          Address: ${employerAddress}
+          ---
+          BOND DETAILS:
+          Position/Role: ${get(formData, 'position') || 'Employee'}
+          Bond Duration (Years/Months): ${bondDuration}
+          Penalty Amount: ${penaltyAmount}
+        `;
+        break;
+      }
     case 'Affidavit': {
         const deponentName = get(formData, 'deponentName');
         const deponentAddress = get(formData, 'deponentAddress');
