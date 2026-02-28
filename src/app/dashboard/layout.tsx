@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -158,11 +159,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     router.push('/login');
   };
 
-  const getAvatarFallback = () => {
-      if (!userProfile) return "";
-      return userProfile.firstName ? userProfile.firstName.charAt(0) : "";
-  }
-  
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
 
   return (
@@ -189,8 +185,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left group data-[state=collapsed]:w-10 data-[state=collapsed]:justify-center hover:bg-primary/5 rounded-xl transition-all">
                   <Avatar className="h-9 w-9 border border-primary/10 shadow-sm transition-transform group-hover:scale-105">
                       <AvatarImage src={userProfile.photoURL} alt={userProfile.firstName} className="object-cover" />
-                      <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-xs font-black font-headline">
-                          {getAvatarFallback()}
+                      <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/5 text-primary flex items-center justify-center">
+                          <User className="h-4 w-4" />
                       </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 truncate group-data-[state=collapsed]:hidden">

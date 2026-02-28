@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore } from '@/firebase';
@@ -258,8 +258,9 @@ export default function ProfilePage() {
             <div className="relative group">
                 <Avatar className="h-32 w-32 border-4 border-white dark:border-zinc-900 shadow-2xl transition-transform group-hover:scale-[1.02] duration-500">
                 <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} className="object-cover" />
-                <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-4xl font-black font-headline border-2 border-primary/10 shadow-inner flex items-center justify-center">
-                    {firstName.charAt(0)}
+                <AvatarFallback className="bg-muted border-2 border-dashed border-primary/20 flex flex-col items-center justify-center text-primary/40">
+                    <Camera className="h-10 w-10 mb-1" />
+                    <span className="text-[10px] font-black uppercase tracking-tight">Add Photo</span>
                 </AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-2 -right-2">

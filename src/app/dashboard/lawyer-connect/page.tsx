@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Filter, Search, Star, MapPin, Gavel, Briefcase, BadgeCheck, MessageSquare, ArrowRight, Scale } from "lucide-react";
+import { Filter, Search, Star, MapPin, Gavel, Briefcase, BadgeCheck, MessageSquare, ArrowRight, Scale, User } from "lucide-react";
 import { getAdvocates, type Lawyer } from "@/lib/advocates-data";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -76,18 +76,12 @@ export default function LawyerConnectPage() {
                 <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-primary/5 hover:border-primary/20 group bg-card/40 backdrop-blur-md rounded-2xl">
                     <div className="flex flex-col sm:flex-row items-center p-4 gap-4 sm:gap-6">
                         <div className="relative shrink-0">
-                            {lawyer.image ? (
-                                <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-2 border-white dark:border-zinc-900 rounded-2xl shadow-md group-hover:scale-105 transition-transform duration-500">
-                                    <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image.imageHint} className="object-cover" />
-                                    <AvatarFallback className="rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary font-black text-2xl font-headline border-2 border-primary/10 shadow-inner flex items-center justify-center">
-                                        {lawyer.name.charAt(0)}
-                                    </AvatarFallback>
-                                </Avatar>
-                            ) : (
-                                <div className="h-16 w-16 sm:h-20 sm:w-20 bg-primary/5 rounded-2xl flex items-center justify-center border-2 border-white dark:border-zinc-900 shadow-md">
-                                    <Gavel className="h-8 w-8 text-primary opacity-30" />
-                                </div>
-                            )}
+                            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-2 border-white dark:border-zinc-900 rounded-2xl shadow-md group-hover:scale-105 transition-transform duration-500">
+                                <AvatarImage src={lawyer.image?.imageUrl} alt={lawyer.name} data-ai-hint={lawyer.image?.imageHint} className="object-cover" />
+                                <AvatarFallback className="rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary border-2 border-primary/10 shadow-inner flex items-center justify-center">
+                                    <User className="h-8 w-8 opacity-40" />
+                                </AvatarFallback>
+                            </Avatar>
                             <div className="absolute -bottom-1 -right-1 bg-green-500 border-2 border-white dark:border-zinc-900 h-5 w-5 rounded-full shadow-md flex items-center justify-center" title="Available">
                                 <div className="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></div>
                             </div>
