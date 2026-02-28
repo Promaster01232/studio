@@ -10,10 +10,10 @@ export default function WelcomePage() {
     <div className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md overflow-hidden border-none shadow-2xl">
         <CardContent className="flex flex-col items-center p-10 text-center">
-          <div className="relative mb-10 flex h-40 w-40 items-center justify-center">
+          <div className="relative mb-10 flex h-32 w-32 items-center justify-center">
             <div className="absolute -inset-3 rounded-full bg-primary/10 animate-pulse [animation-duration:4s] [animation-delay:1s]"></div>
              <div className="absolute -inset-6 rounded-full bg-primary/10 animate-pulse [animation-duration:4s]"></div>
-            <Logo className="h-full w-full shadow-2xl" imageClassName="h-32 w-auto" />
+            <Logo className="h-28 w-28 shadow-2xl" imageClassName="h-20 w-auto" />
           </div>
 
           <h1 className="text-4xl font-black font-headline mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] tracking-tighter">
