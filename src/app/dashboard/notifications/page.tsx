@@ -6,46 +6,8 @@ import { Bell, Newspaper, Info, CheckCircle2, Clock, ArrowRight } from "lucide-r
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
-const notifications = [
-  {
-    id: 1,
-    title: "New Legal Guide Available",
-    description: "A comprehensive guide on 'Cyber Crime Protection' has been added to the Learning Hub.",
-    time: "2 hours ago",
-    type: "news",
-    icon: Newspaper,
-    link: "/dashboard/learn/cyber-crime",
-    isNew: true,
-  },
-  {
-    id: 2,
-    title: "App Update: Version 2.1.0",
-    description: "We've improved the AI Case Strength Analyzer with faster processing and better accuracy.",
-    time: "5 hours ago",
-    type: "update",
-    icon: Info,
-    isNew: true,
-  },
-  {
-    id: 3,
-    title: "Advocate Profile Verified",
-    description: "Your professional credentials have been successfully verified. You are now visible in the directory.",
-    time: "1 day ago",
-    type: "update",
-    icon: CheckCircle2,
-    isNew: false,
-  },
-  {
-    id: 4,
-    title: "Supreme Court Hearing Update",
-    description: "Landmark judgement on digital privacy rights delivered this morning. Read the full summary.",
-    time: "2 days ago",
-    type: "news",
-    icon: Newspaper,
-    link: "/dashboard/research-analytics",
-    isNew: false,
-  }
-];
+// Hardcoded notifications cleared as per user request
+const notifications: any[] = [];
 
 export default function NotificationsPage() {
   return (
