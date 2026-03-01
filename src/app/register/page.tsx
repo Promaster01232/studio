@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AdvocateProfileForm } from '@/components/advocate-profile-form';
+import { validateUserDetails } from "@/ai/flows/validate-user-details";
 
 export default function RegisterPage() {
   const auth = useAuth();
@@ -65,6 +66,25 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
+      // AI Validation of details
+      const validation = await validateUserDetails({
+        firstName,
+        lastName,
+        email,
+        mobileNumber,
+        userType
+      });
+
+      if (!validation.isValid) {
+        toast({
+          variant: "destructive",
+          title: "Account validation failed",
+          description: validation.reason || "The details provided appear to be invalid. Please provide genuine information.",
+        });
+        setLoading(false);
+        return;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,

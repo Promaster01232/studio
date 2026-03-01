@@ -20,6 +20,7 @@ import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError } from "@/firebase/errors";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { AdvocateProfileForm } from "@/components/advocate-profile-form";
+import { validateUserDetails } from "@/ai/flows/validate-user-details";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -113,7 +114,7 @@ export default function CreateProfilePage() {
     }
   };
 
-  const onSubmit = (data: ProfileFormValues) => {
+  const onSubmit = async (data: ProfileFormValues) => {
     if (!auth.currentUser) {
       toast({
         variant: "destructive",
@@ -124,65 +125,79 @@ export default function CreateProfilePage() {
       return;
     }
 
-    if (data.userType === 'lawyer') {
-        setPendingUserData(data);
-        setShowAdvocateDialog(true);
-        return;
-    }
-
     setLoading(true);
 
-    const userProfile = {
-      uid: auth.currentUser.uid,
-      photoURL: auth.currentUser.photoURL || '',
-      ...data,
-    };
-    
-    const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-
-    setDoc(userDocRef, userProfile)
-      .then(() => {
-        // Parallel sync to RTDB with silent error handling
-        set(ref(rtdb, `users/${auth.currentUser.uid}`), userProfile).catch(err => {
-            console.warn("RTDB sync issue:", err.message);
-        });
-
-        toast({
-          title: "Profile created",
-          description: "Welcome to Nyaya Sahayak.",
-        });
-        router.push("/dashboard");
-      })
-      .catch((serverError) => {
-        const permissionError = new FirestorePermissionError({
-          path: userDocRef.path,
-          operation: 'create',
-          requestResourceData: userProfile,
-        }, serverError);
-        errorEmitter.emit('permission-error', permissionError);
-      })
-      .finally(() => {
-        setLoading(false);
+    try {
+      // AI Validation
+      const validation = await validateUserDetails({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        mobileNumber: data.mobileNumber,
+        userType: data.userType,
       });
+
+      if (!validation.isValid) {
+        toast({
+          variant: "destructive",
+          title: "Validation failed",
+          description: validation.reason || "The provided details appear to be invalid. Please provide genuine information.",
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (data.userType === 'lawyer') {
+          setPendingUserData(data);
+          setShowAdvocateDialog(true);
+          setLoading(false);
+          return;
+      }
+
+      const userProfile = {
+        uid: auth.currentUser.uid,
+        photoURL: auth.currentUser.photoURL || '',
+        ...data,
+      };
+      
+      const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+
+      await setDoc(userDocRef, userProfile);
+      
+      // Parallel sync to RTDB with silent error handling
+      set(ref(rtdb, `users/${auth.currentUser.uid}`), userProfile).catch(err => {
+          console.warn("RTDB sync issue:", err.message);
+      });
+
+      toast({
+        title: "Profile created",
+        description: "Welcome to Nyaya Sahayak.",
+      });
+      router.push("/dashboard");
+    } catch (serverError: any) {
+        if (serverError instanceof Error && !('context' in serverError)) {
+            // Not a FirestorePermissionError, handle normally
+            console.error("Profile creation error:", serverError);
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Failed to create profile. Please try again.",
+            });
+        } else {
+            // Standard error handled by emitter elsewhere if needed, 
+            // but for simplicity here we just re-emit if it's our specific error
+            errorEmitter.emit('permission-error', serverError);
+        }
+    } finally {
+        setLoading(false);
+    }
   };
   
   if (authLoading) {
       return (
-        <Card className="w-full max-w-lg">
-            <CardHeader>
-                <Skeleton className="h-8 w-48" />
-                <Skeleton className="h-4 w-64" />
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="space-y-2"><Skeleton className="h-6 w-24" /><Skeleton className="h-10 w-full" /></div>
-                    <div className="space-y-2"><Skeleton className="h-6 w-24" /><Skeleton className="h-10 w-full" /></div>
-                </div>
-                <div className="space-y-2"><Skeleton className="h-6 w-24" /><Skeleton className="h-10 w-full" /></div>
-                <div className="space-y-2"><Skeleton className="h-6 w-24" /><Skeleton className="h-10 w-full" /></div>
-                <Skeleton className="h-10 w-full" />
-            </CardContent>
-        </Card>
+        <div className="flex h-screen w-full items-center justify-center bg-background">
+            <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
       );
   }
 
@@ -262,10 +277,6 @@ export default function CreateProfilePage() {
                     <FormLabel>I am a...</FormLabel>
                     <Select onValueChange={(val) => {
                         field.onChange(val);
-                        if (val === 'lawyer') {
-                            setPendingUserData(form.getValues());
-                            setShowAdvocateDialog(true);
-                        }
                     }} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
