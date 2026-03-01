@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
-import Image from "next/image";
 import { Logo } from "@/components/logo";
 
 export default function WelcomePage() {
@@ -29,9 +28,18 @@ export default function WelcomePage() {
               Get Started <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>
-           <p className="mt-10 text-[10px] font-bold text-muted-foreground uppercase tracking-wider opacity-60">
-            Secure • Private • Professional
-          </p>
+
+          <div className="mt-12 group flex flex-col items-center gap-1">
+            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] opacity-60">
+              Developed by
+            </p>
+            <div className="flex items-center gap-1.5 transition-transform group-hover:scale-105 duration-300">
+              <Sparkles className="h-4 w-4 text-primary fill-primary/20" />
+              <span className="text-base font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
+                IdeaSpark
+              </span>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
