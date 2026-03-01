@@ -365,7 +365,7 @@ export default function ProfilePage() {
                 <div className="flex-1 text-center sm:text-left space-y-1 min-w-0">
                     <div className="flex items-center justify-center sm:justify-start gap-2">
                         <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter text-foreground truncate">{firstName} {lastName}</h2>
-                        <BadgeCheck className="h-4 w-4 text-primary shrink-0" />
+                        {advocateDetails?.isVerified && <BadgeCheck className="h-4 w-4 text-primary shrink-0" />}
                     </div>
                     <div className="flex items-center gap-1.5 px-3 py-0.5 bg-primary/5 rounded-full border border-primary/10 w-fit mx-auto sm:mx-0">
                         <span className="text-[10px] font-bold text-primary">{userProfile?.userType}</span>
