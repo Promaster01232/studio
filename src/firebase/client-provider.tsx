@@ -4,6 +4,7 @@ import { FirebaseProvider } from './provider';
 import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 import { getFirestore, enableIndexedDbPersistence, type Firestore } from 'firebase/firestore';
+import { getDatabase, type Database } from 'firebase/database';
 import { firebaseConfig } from './config';
 import { Loader2 } from 'lucide-react';
 
@@ -11,13 +12,15 @@ interface FirebaseInstances {
   app: FirebaseApp;
   auth: Auth;
   firestore: Firestore;
+  rtdb: Database;
 }
 
 // Create singleton instances at the module level
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 const firestore = getFirestore(app);
-const instances = { app, auth, firestore };
+const rtdb = getDatabase(app);
+const instances = { app, auth, firestore, rtdb };
 
 export function FirebaseClientProvider({ children }: { children: ReactNode }) {
   const [persistenceEnabled, setPersistenceEnabled] = useState(false);

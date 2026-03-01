@@ -1,10 +1,10 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth, useFirestore } from "@/firebase";
+import { useAuth, useFirestore, useDatabase } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { ref, set } from "firebase/database";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,6 +36,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 export default function CreateProfilePage() {
   const auth = useAuth();
   const firestore = useFirestore();
+  const rtdb = useDatabase();
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -88,6 +89,8 @@ export default function CreateProfilePage() {
 
     try {
         await setDoc(userDocRef, userProfile);
+        await set(ref(rtdb, `users/${auth.currentUser.uid}`), userProfile);
+        
         setShowAdvocateDialog(false);
         toast({
           title: "Registration Complete!",
@@ -133,7 +136,10 @@ export default function CreateProfilePage() {
     
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
 
-    setDoc(userDocRef, userProfile)
+    Promise.all([
+        setDoc(userDocRef, userProfile),
+        set(ref(rtdb, `users/${auth.currentUser.uid}`), userProfile)
+    ])
       .then(() => {
         toast({
           title: "Profile Created!",

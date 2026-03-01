@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth, useFirestore } from "@/firebase";
+import { useAuth, useFirestore, useDatabase } from "@/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import { ref, set } from "firebase/database";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,6 +27,7 @@ import { AdvocateProfileForm } from '@/components/advocate-profile-form';
 export default function RegisterPage() {
   const auth = useAuth();
   const firestore = useFirestore();
+  const rtdb = useDatabase();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -80,7 +82,11 @@ export default function RegisterPage() {
         photoURL: user.photoURL || '',
       };
 
+      // Save to Firestore
       await setDoc(doc(firestore, "users", user.uid), userProfile);
+      
+      // Save to RTDB
+      await set(ref(rtdb, `users/${user.uid}`), userProfile);
 
       if (userType === 'lawyer') {
           setShowAdvocateDialog(true);

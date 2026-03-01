@@ -11,8 +11,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User, Sparkles, UserMinus, ImageUp } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAuth, useFirestore } from '@/firebase';
+import { useAuth, useFirestore, useDatabase } from '@/firebase';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { ref, set, update, remove } from 'firebase/database';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { signOut, deleteUser } from 'firebase/auth';
@@ -49,6 +50,7 @@ export default function ProfilePage() {
   const [isMounted, setIsMounted] = useState(false);
   const auth = useAuth();
   const firestore = useFirestore();
+  const rtdb = useDatabase();
   const router = useRouter();
   const { toast } = useToast();
   
@@ -115,13 +117,21 @@ export default function ProfilePage() {
 
   const updateUserPhoto = (newPhotoURL: string) => {
       if (!auth.currentUser || !userProfile) return;
+      
+      const updateData = { photoURL: newPhotoURL };
+      
+      // Update Firestore
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-      setDoc(userDocRef, { photoURL: newPhotoURL }, { merge: true })
+      setDoc(userDocRef, updateData, { merge: true })
         .then(() => {
             toast({ title: "Photo Updated", description: "Your profile picture has been saved." });
             setUserProfile(prev => prev ? { ...prev, photoURL: newPhotoURL } : null);
         })
-        .catch(err => console.error("Failed to sync photo:", err));
+        .catch(err => console.error("Failed to sync photo to Firestore:", err));
+
+      // Update RTDB
+      update(ref(rtdb, `users/${auth.currentUser.uid}`), updateData)
+        .catch(err => console.error("Failed to sync photo to RTDB:", err));
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -207,9 +217,14 @@ export default function ProfilePage() {
   };
 
   const handleRemoveAdvocateListing = () => {
-    if (email) {
+    if (email && auth.currentUser) {
         deleteAdvocate(email);
         setAdvocateDetails(null);
+        
+        // Also remove from RTDB
+        remove(ref(rtdb, `advocates/${auth.currentUser.uid}`))
+            .catch(err => console.error("Failed to remove RTDB listing:", err));
+
         toast({
             title: "Listing Removed",
             description: "Your professional profile has been removed from the directory.",
@@ -222,8 +237,6 @@ export default function ProfilePage() {
 
     setSaving(true);
     
-    const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-    
     const updatedProfile: UserProfile = {
         ...userProfile,
         firstName,
@@ -233,7 +246,12 @@ export default function ProfilePage() {
         photoURL,
     };
 
-    setDoc(userDocRef, updatedProfile, { merge: true })
+    const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+
+    Promise.all([
+        setDoc(userDocRef, updatedProfile, { merge: true }),
+        set(ref(rtdb, `users/${auth.currentUser.uid}`), updatedProfile)
+    ])
       .then(() => {
         setUserProfile(updatedProfile);
         if (!fromAdvocateFlow) {
@@ -267,7 +285,15 @@ export default function ProfilePage() {
 
     try {
       if (email) deleteAdvocate(email);
+      
+      // Delete from Firestore
       await deleteDoc(userDocRef);
+      
+      // Delete from RTDB
+      await remove(ref(rtdb, `users/${user.uid}`));
+      await remove(ref(rtdb, `advocates/${user.uid}`));
+      
+      // Delete Auth user
       await deleteUser(user);
       
       toast({

@@ -9,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { saveAdvocate, type Lawyer } from "@/lib/advocates-data";
-import { useAuth } from "@/firebase";
+import { useAuth, useDatabase } from "@/firebase";
+import { ref, set } from "firebase/database";
 import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2 } from "lucide-react";
 
 const practiceAreas = [
@@ -35,6 +36,7 @@ interface AdvocateProfileFormProps {
 export function AdvocateProfileForm({ onSave, userProfile, initialData }: AdvocateProfileFormProps) {
     const { toast } = useToast();
     const auth = useAuth();
+    const rtdb = useDatabase();
     const [isSaving, setIsSaving] = useState(false);
     const [certificateName, setCertificateName] = useState<string>(initialData?.certificateName || "");
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -107,7 +109,19 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
 
         try {
             await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Save to localStorage (directory)
             saveAdvocate(newAdvocate);
+            
+            // Save to RTDB (centralized profile)
+            if (auth.currentUser) {
+                await set(ref(rtdb, `advocates/${auth.currentUser.uid}`), {
+                    ...newAdvocate,
+                    uid: auth.currentUser.uid,
+                    updatedAt: Date.now()
+                });
+            }
+
             onSave();
         } catch (error) {
             console.error("Failed to save profile:", error);
