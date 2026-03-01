@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore, useDatabase } from "@/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { ref, set } from "firebase/database";
 import { Button } from "@/components/ui/button";
 import {
@@ -102,13 +102,17 @@ export default function RegisterPage() {
         mobileNumber,
         userType,
         photoURL: user.photoURL || '',
+        createdAt: serverTimestamp(),
       };
 
       // Save to Firestore
       await setDoc(doc(firestore, "users", user.uid), userProfile);
       
       // Save to RTDB with error handling to prevent PERMISSION_DENIED crash
-      set(ref(rtdb, `users/${user.uid}`), userProfile).catch(err => {
+      set(ref(rtdb, `users/${user.uid}`), {
+          ...userProfile,
+          createdAt: Date.now() // RTDB uses number timestamps
+      }).catch(err => {
           console.warn("RTDB sync skipped due to permissions. Profile saved to Firestore successfully.", err);
       });
 

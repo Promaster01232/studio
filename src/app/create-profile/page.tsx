@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore, useDatabase } from "@/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { ref, set } from "firebase/database";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -84,6 +84,7 @@ export default function CreateProfilePage() {
       uid: auth.currentUser.uid,
       photoURL: auth.currentUser.photoURL || '',
       ...pendingUserData,
+      createdAt: serverTimestamp(),
     };
     
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
@@ -92,7 +93,10 @@ export default function CreateProfilePage() {
         await setDoc(userDocRef, userProfile);
         
         // Save to RTDB with error handling to prevent PERMISSION_DENIED crash
-        set(ref(rtdb, `users/${auth.currentUser.uid}`), userProfile).catch(err => {
+        set(ref(rtdb, `users/${auth.currentUser.uid}`), {
+            ...userProfile,
+            createdAt: Date.now()
+        }).catch(err => {
             console.warn("RTDB sync skipped. Profile saved to Firestore successfully.", err);
         });
         
@@ -158,6 +162,7 @@ export default function CreateProfilePage() {
         uid: auth.currentUser.uid,
         photoURL: auth.currentUser.photoURL || '',
         ...data,
+        createdAt: serverTimestamp(),
       };
       
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
@@ -165,7 +170,10 @@ export default function CreateProfilePage() {
       await setDoc(userDocRef, userProfile);
       
       // Parallel sync to RTDB with silent error handling
-      set(ref(rtdb, `users/${auth.currentUser.uid}`), userProfile).catch(err => {
+      set(ref(rtdb, `users/${auth.currentUser.uid}`), {
+          ...userProfile,
+          createdAt: Date.now()
+      }).catch(err => {
           console.warn("RTDB sync issue:", err.message);
       });
 
