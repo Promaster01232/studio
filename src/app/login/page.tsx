@@ -44,7 +44,7 @@ export default function LoginPage() {
 
   const handleEmailLogin = async () => {
     if (!email || !password) {
-        toast({ variant: "destructive", title: "Error", description: "Please enter both email and password."});
+        toast({ variant: "destructive", title: "Information missing", description: "Please enter both email and password."});
         return;
     }
     setLoading(true);
@@ -57,20 +57,29 @@ export default function LoginPage() {
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {
-            toast({ title: "Login Successful!", description: "Welcome back to Nyaya Sahayak."});
+            toast({ title: "Login successful", description: "Welcome back to Nyaya Sahayak."});
             router.push('/dashboard');
         } else {
-            toast({ title: "Welcome!", description: "Let's complete your profile setup."});
+            toast({ title: "Welcome", description: "Let's complete your profile setup."});
             router.push('/create-profile');
         }
     } catch (error: any) {
+        // Handle known auth errors gracefully
+        const knownErrors = ['auth/invalid-credential', 'auth/user-not-found', 'auth/wrong-password', 'auth/invalid-email'];
+        if (!knownErrors.includes(error.code)) {
+            console.error("Login error:", error);
+        }
+
         let message = "Invalid email or password. Please try again.";
         if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
             message = "The credentials you entered are incorrect. Please check your email and password.";
+        } else if (error.code === 'auth/invalid-email') {
+            message = "The email address provided is invalid.";
         }
+
         toast({ 
             variant: "destructive", 
-            title: "Login Failed", 
+            title: "Login failed", 
             description: message 
         });
     } finally {
@@ -89,10 +98,10 @@ export default function LoginPage() {
       const userDoc = await getDoc(userDocRef);
 
       if (userDoc.exists()) {
-        toast({ title: "Login Successful!", description: "Welcome back." });
+        toast({ title: "Login successful", description: "Welcome back." });
         router.push("/dashboard");
       } else {
-        toast({ title: "Welcome!", description: "Let's create your profile." });
+        toast({ title: "Welcome", description: "Let's create your profile." });
         router.push("/create-profile");
       }
     } catch (error: any) {
@@ -102,7 +111,7 @@ export default function LoginPage() {
       } else {
         toast({
           variant: "destructive",
-          title: "Login Failed",
+          title: "Login failed",
           description: "Could not sign in with Google. Please try again.",
         });
       }
@@ -149,7 +158,7 @@ export default function LoginPage() {
                 Nyaya Sahayak
             </h1>
         </motion.div>
-        <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Welcome Back</motion.h2>
+        <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Welcome back</motion.h2>
         <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
             Login to access your legal dashboard.
         </motion.p>
@@ -157,7 +166,7 @@ export default function LoginPage() {
         <motion.div variants={itemVariants} className="grid gap-4">
             {domainError && (
                 <Alert variant="destructive" className="mb-4">
-                    <AlertTitle className="font-bold text-xs">Configuration Required</AlertTitle>
+                    <AlertTitle className="font-bold text-xs">Configuration required</AlertTitle>
                     <AlertDescription className="text-xs space-y-2 font-medium">
                     <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
                     <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
@@ -172,7 +181,7 @@ export default function LoginPage() {
             
             <div className="space-y-4">
                 <div className="space-y-2">
-                <Label htmlFor="email" className="font-bold opacity-70">Email Address</Label>
+                <Label htmlFor="email" className="font-bold opacity-70">Email address</Label>
                 <Input
                     id="email"
                     type="email"

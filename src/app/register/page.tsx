@@ -47,7 +47,7 @@ export default function RegisterPage() {
     if (!firstName || !lastName || !email || !mobileNumber || !password || !confirmPassword) {
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "Information missing",
         description: "Please fill in all required fields to create your account.",
       });
       return;
@@ -56,7 +56,7 @@ export default function RegisterPage() {
     if (password !== confirmPassword) {
       toast({
         variant: "destructive",
-        title: "Passwords do not match",
+        title: "Passwords mismatch",
         description: "Please ensure your passwords are identical.",
       });
       return;
@@ -92,23 +92,31 @@ export default function RegisterPage() {
           setShowAdvocateDialog(true);
       } else {
         toast({
-            title: "Account Created!",
+            title: "Account created",
             description: "Welcome to Nyaya Sahayak. Your legal journey starts here.",
         });
         router.push("/dashboard");
       }
 
     } catch (error: any) {
-      console.error("Registration error:", error);
+      // Handle known auth errors gracefully without scaring dev overlay
+      const knownErrors = ['auth/email-already-in-use', 'auth/weak-password', 'auth/invalid-email'];
+      if (!knownErrors.includes(error.code)) {
+          console.error("Registration error:", error);
+      }
+
       let errorMessage = "An unknown error occurred. Please try again.";
       if (error.code === 'auth/email-already-in-use') {
           errorMessage = "This email address is already registered. Please login instead.";
       } else if (error.code === 'auth/weak-password') {
           errorMessage = "The password is too weak. Please use at least 6 characters.";
+      } else if (error.code === 'auth/invalid-email') {
+          errorMessage = "The email address provided is invalid.";
       }
+
       toast({
         variant: "destructive",
-        title: "Registration Failed",
+        title: "Registration failed",
         description: errorMessage,
       });
       setLoading(false);
@@ -119,7 +127,7 @@ export default function RegisterPage() {
     setShowAdvocateDialog(false);
     setLoading(false);
     toast({
-        title: "Registration Complete!",
+        title: "Registration complete",
         description: "Your advocate profile has been created and verified. Welcome aboard!",
     });
     router.push('/dashboard/lawyer-connect');
@@ -259,7 +267,7 @@ export default function RegisterPage() {
         <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
             setShowAdvocateDialog(open);
             if (!open) {
-                toast({ title: "Profile incomplete", description: "Advocates must provide professional details to proceed." });
+                toast({ title: "Profile required", description: "Advocates must provide professional details to proceed." });
             }
         }}>
             <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
