@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -377,25 +376,25 @@ export default function ProfilePage() {
                 <motion.div variants={itemVariants}>
                     <Card className="shadow-lg border-primary/5 rounded-2xl overflow-hidden">
                         <CardHeader className="pb-4 bg-muted/30">
-                            <CardTitle className="font-headline font-bold text-lg flex items-center gap-2">
+                            <CardTitle className="font-headline font-black text-lg flex items-center gap-2 uppercase tracking-tight">
                                 <User className="h-4 w-4 text-primary" /> Personal Details
                             </CardTitle>
-                            <CardDescription className="text-xs">Your verified account information.</CardDescription>
+                            <CardDescription className="text-xs font-medium">Your verified account information.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4 pt-6">
                             <div className="grid sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                <Label htmlFor="firstName" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">First Name</Label>
-                                <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-background/50 h-10 text-sm" />
+                                <Label htmlFor="firstName" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">First Name</Label>
+                                <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-background/50 h-10 text-sm font-semibold" />
                                 </div>
                                 <div className="space-y-2">
-                                <Label htmlFor="lastName" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Last Name</Label>
-                                <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-background/50 h-10 text-sm" />
+                                <Label htmlFor="lastName" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Last Name</Label>
+                                <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-background/50 h-10 text-sm font-semibold" />
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="phone" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Mobile Number</Label>
-                                <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="bg-background/50 h-10 text-sm" />
+                                <Label htmlFor="phone" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Mobile Number</Label>
+                                <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="bg-background/50 h-10 text-sm font-semibold" />
                             </div>
                             <div className="flex justify-end pt-2">
                                 <Button onClick={() => handleSaveChanges()} disabled={saving} size="sm" className="w-full sm:w-auto shadow-lg shadow-primary/10 h-10 px-8 font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">
@@ -411,11 +410,11 @@ export default function ProfilePage() {
                     <motion.div variants={itemVariants}>
                         <Card className="border-primary/10 bg-primary/5 shadow-inner overflow-hidden rounded-2xl">
                             <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2 font-headline font-bold text-lg">
+                                <CardTitle className="flex items-center gap-2 font-headline font-black text-lg uppercase tracking-tight">
                                     <Gavel className="h-4 w-4 text-primary" />
                                     Advocate Credentials
                                 </CardTitle>
-                                <CardDescription className="text-xs">Professional listing details.</CardDescription>
+                                <CardDescription className="text-xs font-medium">Professional listing details.</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 {advocateDetails ? (
@@ -456,7 +455,7 @@ export default function ProfilePage() {
                                 ) : (
                                     <div className="flex flex-col items-center py-4 text-center">
                                         <Sparkles className="h-8 w-8 text-primary/20 mb-2" />
-                                        <p className="text-xs text-muted-foreground font-medium max-w-[200px]">Complete your professional profile to be listed in the directory.</p>
+                                        <p className="text-xs text-muted-foreground font-bold max-w-[200px]">Complete your professional profile to be listed in the directory.</p>
                                     </div>
                                 )}
                                 
@@ -476,15 +475,15 @@ export default function ProfilePage() {
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
-                                                    <AlertDialogTitle>Unlist from Directory?</AlertDialogTitle>
-                                                    <AlertDialogDescription>
+                                                    <AlertDialogTitle className="font-black tracking-tight">Unlist from Directory?</AlertDialogTitle>
+                                                    <AlertDialogDescription className="font-medium">
                                                         This will remove your professional profile from the lawyer directory. 
                                                         Your main account and access to legal tools will not be affected.
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={handleRemoveAdvocateListing} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                                    <AlertDialogCancel className="font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={handleRemoveAdvocateListing} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-black uppercase text-[10px] tracking-widest">
                                                         Confirm Removal
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>
@@ -502,22 +501,22 @@ export default function ProfilePage() {
                 <motion.div variants={itemVariants}>
                     <Card className="shadow-lg border-primary/5 rounded-2xl">
                         <CardHeader className="pb-4">
-                            <CardTitle className="font-headline font-bold text-lg">Preferences</CardTitle>
+                            <CardTitle className="font-headline font-black text-lg uppercase tracking-tight">Preferences</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
                             <div className="flex items-center justify-between p-2.5 rounded-xl hover:bg-muted/50 transition-colors border border-transparent hover:border-primary/10 cursor-pointer" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
                                 <div className="flex items-center gap-3">
                                     <div className="bg-muted p-2 rounded-lg"><Moon className="h-3.5 w-3.5 text-muted-foreground" /></div>
-                                    <span className="font-bold text-xs">Dark Mode</span>
+                                    <span className="font-black text-[11px] uppercase tracking-wider">Dark Mode</span>
                                 </div>
                                 <Switch
                                     checked={theme === 'dark'}
                                     onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
                                 />
                             </div>
-                            <Button variant="outline" size="sm" className="w-full justify-start font-bold border-primary/5 h-10 px-3 hover:bg-primary/5 hover:text-primary transition-all rounded-xl">
+                            <Button variant="outline" size="sm" className="w-full justify-start font-black border-primary/5 h-10 px-3 hover:bg-primary/5 hover:text-primary transition-all rounded-xl uppercase text-[10px] tracking-widest">
                                 <KeyRound className="mr-3 h-3.5 w-3.5 text-muted-foreground" />
-                                <span className="text-xs">Security & Privacy</span>
+                                <span>Security & Privacy</span>
                             </Button>
                         </CardContent>
                     </Card>
@@ -526,32 +525,32 @@ export default function ProfilePage() {
                 <motion.div variants={itemVariants}>
                     <Card className="border-destructive/10 bg-destructive/5 shadow-lg rounded-2xl">
                         <CardHeader className="pb-4">
-                            <CardTitle className="text-destructive font-headline font-bold text-lg">Account</CardTitle>
+                            <CardTitle className="text-destructive font-headline font-black text-lg uppercase tracking-tight">Account</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
-                            <Button variant="outline" size="sm" className="w-full justify-start hover:bg-destructive/10 text-foreground border-destructive/5 h-10 px-3 font-bold rounded-xl" onClick={handleLogout}>
+                            <Button variant="outline" size="sm" className="w-full justify-start hover:bg-destructive/10 text-foreground border-destructive/5 h-10 px-3 font-black rounded-xl uppercase text-[10px] tracking-widest" onClick={handleLogout}>
                                 <LogOut className="mr-3 h-3.5 w-3.5 text-muted-foreground" /> 
-                                <span className="text-xs">Logout</span>
+                                <span>Logout</span>
                             </Button>
                             
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button variant="destructive" size="sm" className="w-full justify-start font-black h-10 px-3 tracking-widest uppercase text-[9px] rounded-xl active:scale-95 transition-all">
+                                <Button variant="destructive" size="sm" className="w-full justify-start font-black h-10 px-3 tracking-widest uppercase text-[10px] rounded-xl active:scale-95 transition-all">
                                     <Trash2 className="mr-3 h-3.5 w-3.5" />
                                     <span>Delete Account</span>
                                 </Button>
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                  <AlertDialogDescription>
+                                  <AlertDialogTitle className="font-black tracking-tight">Are you absolutely sure?</AlertDialogTitle>
+                                  <AlertDialogDescription className="font-medium">
                                     This action cannot be undone. This will permanently delete your account
                                     and remove your data from our servers. You will not be able to log in again.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                  <AlertDialogCancel className="font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-black uppercase text-[10px] tracking-widest">
                                     {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                                     Delete Permanently
                                   </AlertDialogAction>
@@ -576,8 +575,8 @@ export default function ProfilePage() {
             }}>
                 <div className="p-6 sm:p-8">
                     <DialogHeader className="mb-6">
-                        <DialogTitle className="text-xl sm:text-2xl">Professional Credentials</DialogTitle>
-                        <DialogDescription className="text-xs sm:text-sm">Your details are verified against Bar Council records.</DialogDescription>
+                        <DialogTitle className="text-xl sm:text-2xl font-black uppercase tracking-tight">Professional Credentials</DialogTitle>
+                        <DialogDescription className="text-xs sm:text-sm font-medium">Your details are verified against Bar Council records.</DialogDescription>
                     </DialogHeader>
                     <AdvocateProfileForm 
                         onSave={handleAdvocateProfileSaved}
@@ -595,12 +594,10 @@ export default function ProfilePage() {
 
       <Dialog open={isCameraOpen} onOpenChange={(open) => !open && stopCamera()}>
           <DialogContent className="sm:max-w-md p-0 overflow-hidden sm:rounded-2xl border-none shadow-2xl h-[100dvh] sm:h-auto bg-black">
-              <div className="sr-only">
-                  <DialogHeader>
-                      <DialogTitle>Capture Profile Photo</DialogTitle>
-                      <DialogDescription>Use your camera to take a profile picture.</DialogDescription>
-                  </DialogHeader>
-              </div>
+              <DialogHeader className="sr-only">
+                  <DialogTitle>Capture Profile Photo</DialogTitle>
+                  <DialogDescription>Use your camera to take a profile picture.</DialogDescription>
+              </DialogHeader>
               <div className="relative h-full sm:aspect-square group">
                   <video 
                     ref={videoRef} 
@@ -613,8 +610,8 @@ export default function ProfilePage() {
                     <div className="absolute inset-0 flex items-center justify-center p-8 text-center bg-zinc-900">
                         <div className="space-y-4">
                             <div className="bg-white/10 p-4 rounded-full w-fit mx-auto"><Camera className="h-12 w-12 text-white/50" /></div>
-                            <p className="text-sm font-bold text-white tracking-tight">Camera Access Required</p>
-                            <p className="text-xs text-white/60 max-w-[200px] mx-auto">Please allow camera permissions in your browser settings.</p>
+                            <p className="text-sm font-black text-white tracking-tight uppercase">Camera Access Required</p>
+                            <p className="text-xs text-white/60 max-w-[200px] mx-auto font-medium">Please allow camera permissions in your browser settings.</p>
                         </div>
                     </div>
                   )}
@@ -631,7 +628,7 @@ export default function ProfilePage() {
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent sm:relative sm:bg-background sm:from-transparent">
                   <div className="flex gap-3 max-w-sm mx-auto sm:max-w-none">
-                      <Button variant="secondary" onClick={stopCamera} className="flex-1 font-bold text-xs h-11 hidden sm:flex">Cancel</Button>
+                      <Button variant="secondary" onClick={stopCamera} className="flex-1 font-black text-[10px] uppercase tracking-widest h-11 hidden sm:flex">Cancel</Button>
                       <Button onClick={capturePhoto} className="flex-1 h-12 text-[10px] font-black tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all bg-primary text-white" disabled={!hasCameraPermission}>
                           <Camera className="mr-2 h-4 w-4" /> CAPTURE PHOTO
                       </Button>

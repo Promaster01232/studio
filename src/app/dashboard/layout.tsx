@@ -76,16 +76,16 @@ function Header() {
                 <SearchDialog>
                     <Button variant="outline" className="w-10 h-10 p-0 md:w-full md:max-w-xs md:px-3 md:justify-start gap-2 text-muted-foreground rounded-full md:rounded-md">
                         <Search className="h-4 w-4" />
-                        <span className="hidden md:inline">Search...</span>
+                        <span className="hidden md:inline font-bold uppercase tracking-widest text-[10px]">Search...</span>
                     </Button>
                 </SearchDialog>
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
                 <SosDialog>
-                    <Button variant="destructive" size="sm" className="font-bold gap-1 animate-pulse px-2 sm:px-3 h-9">
+                    <Button variant="destructive" size="sm" className="font-black gap-1 animate-pulse px-2 sm:px-3 h-9 uppercase tracking-widest text-[10px]">
                         <ShieldAlert className="h-4 w-4" />
-                        <span className="text-[10px] sm:text-xs">SOS</span>
+                        <span className="hidden sm:inline">SOS</span>
                     </Button>
                 </SosDialog>
                 
@@ -168,7 +168,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <SidebarHeader className="p-4 overflow-hidden">
           <Link href="/dashboard" className="flex items-center gap-3 transition-opacity hover:opacity-80 group-data-[collapsible=icon]:justify-center">
             <Logo className="h-10 w-10" />
-            <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] truncate group-data-[collapsible=icon]:hidden">
+            <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] truncate group-data-[collapsible=icon]:hidden uppercase">
                 Nyaya Sahayak
             </span>
           </Link>
@@ -199,50 +199,50 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     </div>
                   )}
                   <div className="flex-1 truncate group-data-[state=collapsed]:hidden">
-                    <div className="font-bold text-sm truncate tracking-tight text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
-                    <div className="text-[10px] text-muted-foreground truncate uppercase font-black tracking-widest">{userProfile.email}</div>
+                    <div className="font-black text-sm truncate tracking-tighter text-foreground uppercase">{userProfile.firstName} {userProfile.lastName}</div>
+                    <div className="text-[9px] text-muted-foreground truncate uppercase font-black tracking-widest opacity-60">{userProfile.email}</div>
                   </div>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" align="start" className="w-56 mb-2 ml-2 p-2 rounded-2xl shadow-2xl border-primary/5">
                 <DropdownMenuLabel className="pb-3 pt-2">
-                    <div className="font-black text-base font-headline tracking-tighter text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
-                    <div className="text-[10px] text-muted-foreground uppercase font-black tracking-widest truncate">{userProfile.email}</div>
+                    <div className="font-black text-base font-headline tracking-tighter text-foreground uppercase">{userProfile.firstName} {userProfile.lastName}</div>
+                    <div className="text-[9px] text-muted-foreground uppercase font-black tracking-widest truncate opacity-60">{userProfile.email}</div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="mb-2" />
-                <DropdownMenuItem asChild className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
+                <DropdownMenuItem asChild className="rounded-xl h-10 font-black uppercase text-[10px] tracking-widest focus:bg-primary/5 focus:text-primary mb-1">
                     <Link href="/dashboard/profile">
                         <User className="mr-3 h-4 w-4" />
                         <span>My Profile</span>
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
+                    <DropdownMenuSubTrigger className="rounded-xl h-10 font-black uppercase text-[10px] tracking-widest focus:bg-primary/5 focus:text-primary mb-1">
                         <SunMoon className="mr-3 h-4 w-4" />
                         <span>Appearance</span>
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent className="rounded-xl p-1 shadow-2xl border-primary/5">
                         <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
-                            <DropdownMenuRadioItem value="light" className="rounded-lg h-9 font-bold">Light</DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="dark" className="rounded-lg h-9 font-bold">Dark</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="light" className="rounded-lg h-9 font-black uppercase text-[10px] tracking-widest">Light</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="dark" className="rounded-lg h-9 font-black uppercase text-[10px] tracking-widest">Dark</DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
                 </DropdownMenuSub>
                 <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
+                    <DropdownMenuSubTrigger className="rounded-xl h-10 font-black uppercase text-[10px] tracking-widest focus:bg-primary/5 focus:text-primary mb-1">
                         <Languages className="mr-3 h-4 w-4" />
                         <span>Language</span>
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent className="rounded-xl p-1 shadow-2xl border-primary/5 max-h-[300px] overflow-y-auto">
                         <DropdownMenuRadioGroup value={language} onValueChange={(value) => setLanguage(value as Language)}>
                             {languages.map((lang) => (
-                                <DropdownMenuRadioItem key={lang.code} value={lang.code} className="rounded-lg h-9 font-bold">{lang.name}</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem key={lang.code} value={lang.code} className="rounded-lg h-9 font-black uppercase text-[10px] tracking-widest">{lang.name}</DropdownMenuRadioItem>
                             ))}
                         </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
                 </DropdownMenuSub>
                 <DropdownMenuSeparator className="my-2" />
-                <DropdownMenuItem onClick={handleLogout} className="rounded-xl h-10 font-bold text-destructive focus:bg-destructive/5 focus:text-destructive">
+                <DropdownMenuItem onClick={handleLogout} className="rounded-xl h-10 font-black uppercase text-[10px] tracking-widest text-destructive focus:bg-destructive/5 focus:text-destructive">
                     <LogOut className="mr-3 h-4 w-4" />
                     <span>Log out</span>
                 </DropdownMenuItem>
