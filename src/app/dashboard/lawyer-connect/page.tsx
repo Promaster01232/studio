@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -7,10 +8,11 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Filter, Search, Star, MapPin, Briefcase, BadgeCheck, MessageSquare, Scale, User, ChevronRight } from "lucide-react";
+import { Filter, Search, Star, MapPin, Briefcase, BadgeCheck, MessageSquare, Scale, User, Globe, Phone, Mail, ChevronRight } from "lucide-react";
 import { getAdvocates, type Lawyer } from "@/lib/advocates-data";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 export default function LawyerConnectPage() {
   const [allAdvocates, setAllAdvocates] = useState<Lawyer[]>([]);
@@ -62,100 +64,130 @@ export default function LawyerConnectPage() {
         </h2>
       </div>
 
-      <div className="grid gap-2">
+      <div className="grid gap-6">
         <AnimatePresence mode="popLayout">
             {filteredAdvocates.length > 0 ? filteredAdvocates.map((lawyer, index) => (
             <motion.div
                 key={lawyer.id}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ delay: index * 0.03 }}
-                whileHover={{ x: 4 }}
                 className="group"
             >
-                <Card className="overflow-hidden border-primary/5 hover:border-primary/20 bg-card/40 backdrop-blur-md rounded-xl transition-all duration-300 hover:shadow-md">
-                    <div className="flex flex-col sm:flex-row items-center p-3 sm:p-4 gap-4">
-                        {/* Avatar Section */}
-                        <div className="relative shrink-0">
-                            {lawyer.image?.imageUrl ? (
-                                <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-white dark:border-zinc-900 rounded-full shadow-sm">
-                                    <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} className="object-cover" />
-                                </Avatar>
-                            ) : (
-                                <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-inner">
-                                    <User className="h-6 w-6 opacity-40" />
-                                </div>
-                            )}
-                            <div className="absolute -bottom-0.5 -right-0.5 bg-green-500 border-2 border-background h-3.5 w-3.5 rounded-full shadow-sm"></div>
+                <Card className="overflow-hidden border-primary/10 bg-card/40 backdrop-blur-md rounded-2xl transition-all duration-300 hover:shadow-xl hover:border-primary/30 flex flex-col h-full">
+                    {/* Business Card Layout */}
+                    <div className="flex flex-col sm:flex-row flex-1 min-h-[220px]">
+                        {/* Left Section: Logo & Identity */}
+                        <div className="w-full sm:w-[200px] md:w-[240px] flex flex-col items-center justify-center p-6 bg-muted/20 border-b sm:border-b-0 sm:border-r border-primary/5 relative">
+                            <div className="relative group/avatar">
+                                {lawyer.image?.imageUrl ? (
+                                    <Avatar className="h-24 w-24 border-4 border-background shadow-2xl rounded-full transition-transform group-hover/avatar:scale-105 duration-500">
+                                        <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} className="object-cover" />
+                                        <AvatarFallback className="text-2xl font-black">{lawyer.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                ) : (
+                                    <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center text-primary border-4 border-background shadow-xl">
+                                        <Scale className="h-10 w-10 opacity-40" />
+                                    </div>
+                                )}
+                                <div className="absolute -bottom-1 -right-1 bg-green-500 border-4 border-background h-6 w-6 rounded-full shadow-lg"></div>
+                            </div>
+                            <div className="mt-4 text-center">
+                                <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest leading-none">Your Logo</p>
+                                <p className="text-[9px] font-bold text-muted-foreground mt-1 opacity-60">Verified Member</p>
+                            </div>
                         </div>
 
-                        {/* Content Section */}
-                        <div className="flex-1 min-w-0 text-center sm:text-left">
-                            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                                <p className="font-bold text-base sm:text-lg leading-tight group-hover:text-primary transition-colors truncate tracking-tight">
-                                    {lawyer.name}
-                                </p>
-                                {lawyer.isVerified && (
-                                    <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 py-0 px-1.5 rounded text-[8px] sm:text-[9px] font-bold shrink-0">
-                                        <BadgeCheck className="h-3 w-3 mr-1 text-blue-500" /> Verified
-                                    </Badge>
-                                )}
-                            </div>
-                            
-                            <p className="text-[10px] sm:text-[11px] text-muted-foreground font-bold tracking-tight mt-0.5">
-                                {lawyer.specialty}
-                            </p>
-                            
-                            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 mt-1.5">
-                                <div className="flex items-center gap-1 text-[10px] sm:text-xs">
-                                    <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                                    <span className="font-bold">{lawyer.rating}</span>
+                        {/* Right Section: Contact & Professional Info */}
+                        <div className="flex-1 p-6 md:p-8 flex flex-col justify-center">
+                            <div className="mb-6 space-y-1">
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <h3 className="text-2xl font-black tracking-tighter leading-none group-hover:text-primary transition-colors">
+                                        {lawyer.name}
+                                    </h3>
+                                    {lawyer.isVerified && (
+                                        <BadgeCheck className="h-5 w-5 text-blue-500" />
+                                    )}
                                 </div>
-                                {lawyer.courtName && (
-                                    <div className="flex items-center gap-1 text-muted-foreground/60 text-[10px] sm:text-xs font-medium truncate max-w-[120px] sm:max-w-none">
-                                        <MapPin className="h-3 w-3" />
-                                        <span>{lawyer.courtName}</span>
-                                    </div>
-                                )}
-                                {lawyer.experience && (
-                                    <div className="flex items-center gap-1 text-muted-foreground/60 text-[10px] sm:text-xs font-medium">
-                                        <Briefcase className="h-3 w-3" />
-                                        <span>{lawyer.experience.split(' ')[0]}Y Exp.</span>
-                                    </div>
-                                )}
+                                <p className="text-sm font-bold text-primary tracking-tight">
+                                    {lawyer.specialty}
+                                </p>
                             </div>
-                        </div>
-                        
-                        {/* Actions Section */}
-                        <div className="flex gap-2 shrink-0 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 mt-1 sm:mt-0">
-                            <Button variant="ghost" size="sm" className="flex-1 sm:w-auto h-9 rounded-lg hover:bg-primary/10 font-bold text-[10px] sm:text-xs" asChild>
-                                <Link href={`/dashboard/lawyer-connect/${lawyer.id}/chat`}>
-                                    <MessageSquare className="mr-1.5 h-3.5 w-3.5"/> Chat
-                                </Link>
-                            </Button>
-                            <Button size="sm" className="flex-1 sm:w-auto h-9 px-4 rounded-lg shadow-md font-bold text-[10px] sm:text-xs group/btn" asChild>
-                                <Link href={`/dashboard/lawyer-connect/${lawyer.id}`}>
-                                    View Profile
-                                    <ChevronRight className="ml-1 h-3 w-3 transition-transform group-hover/btn:translate-x-0.5" />
-                                </Link>
-                            </Button>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 text-[11px] font-bold text-muted-foreground">
+                                <div className="flex items-center gap-3 group/item">
+                                    <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
+                                        <Globe className="h-3 w-3" />
+                                    </div>
+                                    <span className="truncate uppercase tracking-wider">NyayaSahayak.com</span>
+                                </div>
+                                <div className="flex items-center gap-3 group/item">
+                                    <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
+                                        <Phone className="h-3 w-3" />
+                                    </div>
+                                    <span>{lawyer.contact?.phone || 'Verified'}</span>
+                                </div>
+                                <div className="flex items-center gap-3 group/item">
+                                    <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
+                                        <Mail className="h-3 w-3" />
+                                    </div>
+                                    <span className="truncate lowercase">{lawyer.contact?.email}</span>
+                                </div>
+                                <div className="flex items-center gap-3 group/item">
+                                    <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
+                                        <MapPin className="h-3 w-3" />
+                                    </div>
+                                    <span className="truncate">{lawyer.courtName || 'District Court Chamber'}</span>
+                                </div>
+                            </div>
+                            
+                            {/* Stats */}
+                            <div className="mt-6 pt-6 border-t border-primary/5 flex items-center gap-6">
+                                <div className="flex items-center gap-1.5">
+                                    <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
+                                    <span className="text-sm font-black tracking-tighter">{lawyer.rating}</span>
+                                    <span className="text-[10px] opacity-40">({lawyer.reviews} Reviews)</span>
+                                </div>
+                                <div className="flex items-center gap-1.5 text-muted-foreground">
+                                    <Briefcase className="h-3.5 w-3.5" />
+                                    <span className="text-sm font-black tracking-tighter">{lawyer.experience?.split(' ')[0]}Y Exp.</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    {/* Action Footer */}
+                    <div className="border-t border-primary/10 flex divide-x divide-primary/10 bg-muted/5 group-hover:bg-muted/10 transition-colors">
+                        <Button variant="ghost" className="flex-1 h-12 rounded-none font-bold text-xs hover:bg-primary/5 active:bg-primary/10 transition-all" asChild>
+                            <Link href={`/dashboard/lawyer-connect/${lawyer.id}/chat`}>
+                                <MessageSquare className="mr-2 h-4 w-4" />
+                                Chat Now
+                            </Link>
+                        </Button>
+                        <Button variant="ghost" className="flex-1 h-12 rounded-none font-bold text-xs hover:bg-primary/5 active:bg-primary/10 transition-all" asChild>
+                            <Link href={`/dashboard/lawyer-connect/${lawyer.id}`}>
+                                View Profile
+                                <ChevronRight className="ml-1 h-4 w-4" />
+                            </Link>
+                        </Button>
+                    </div>
+                    {/* Decorative Bottom Bar (matching image reference) */}
+                    <div className="h-1 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20"></div>
                 </Card>
             </motion.div>
             )) : (
                 <motion.div 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center py-16 bg-muted/5 rounded-2xl border-2 border-dashed border-primary/10"
+                    className="text-center py-20 bg-muted/5 rounded-3xl border-2 border-dashed border-primary/10"
                 >
-                    <div className="bg-primary/5 p-5 rounded-full w-fit mx-auto mb-4">
-                        <Search className="h-10 w-10 text-muted-foreground opacity-20" />
+                    <div className="bg-primary/5 p-6 rounded-full w-fit mx-auto mb-4">
+                        <Search className="h-12 w-12 text-muted-foreground opacity-20" />
                     </div>
-                    <h3 className="text-lg font-bold font-headline tracking-tighter">No results found</h3>
-                    <p className="text-muted-foreground max-w-[200px] mx-auto mt-1 text-[10px] font-medium">Try searching for a different name or court location.</p>
-                    <Button variant="link" size="sm" className="mt-2 text-primary font-bold" onClick={() => setFilteredAdvocates(allAdvocates)}>
+                    <h3 className="text-xl font-black font-headline tracking-tighter">No professionals found</h3>
+                    <p className="text-muted-foreground max-w-[250px] mx-auto mt-2 text-xs font-medium">Try searching for a different name, court complex, or specialty.</p>
+                    <Button variant="link" size="sm" className="mt-4 text-primary font-bold" onClick={() => setFilteredAdvocates(allAdvocates)}>
                         Show all professionals
                     </Button>
                 </motion.div>
