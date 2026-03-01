@@ -125,13 +125,13 @@ export default function ContactUsPage() {
       </div>
 
        <div className="text-center pt-8">
-        <Link href="https://www.ideasparkweb.com" target="_blank" rel="noopener noreferrer" className="inline-block group">
+        <Link href="https://ideasparkweb.com" target="_blank" rel="noopener noreferrer" className="inline-block group">
             <p className="text-sm text-muted-foreground transition-colors group-hover:text-primary">
               Designed & Developed by
             </p>
             <div className="flex items-center justify-center gap-2 mt-1 transition-transform group-hover:scale-105">
                 <Lightbulb className="h-7 w-7 text-primary" />
-                <h2 className="text-2xl font-bold font-headline bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
+                <h2 className="text-2xl font-bold font-headline text-primary">
                     IdeaSpark
                 </h2>
             </div>

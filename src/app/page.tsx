@@ -29,17 +29,22 @@ export default function WelcomePage() {
             </Link>
           </Button>
 
-          <div className="mt-12 group flex flex-col items-center gap-1">
+          <Link 
+            href="https://ideasparkweb.com" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="mt-12 group flex flex-col items-center gap-1 hover:opacity-80 transition-opacity"
+          >
             <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] opacity-60">
               Developed by
             </p>
             <div className="flex items-center gap-1.5 transition-transform group-hover:scale-105 duration-300">
               <Lightbulb className="h-4 w-4 text-primary fill-primary/20" />
-              <span className="text-base font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
+              <span className="text-base font-black font-headline tracking-tighter text-primary">
                 IdeaSpark
               </span>
             </div>
-          </div>
+          </Link>
         </CardContent>
       </Card>
     </div>
