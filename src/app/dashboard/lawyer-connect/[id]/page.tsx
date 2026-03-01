@@ -64,7 +64,7 @@ export default function LawyerProfilePage() {
                 <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} className="object-cover" />
               </Avatar>
             ) : (
-                <div className="h-32 w-32 md:h-40 md:w-40 rounded-2xl bg-primary/10 flex items-center justify-center border-4 border-background shadow-xl shrink-0">
+                <div className="h-32 w-32 md:h-40 md:w-40 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border-4 border-background shadow-xl shrink-0">
                     <User className="h-16 w-16 text-primary/30" />
                 </div>
             )}
@@ -72,24 +72,26 @@ export default function LawyerProfilePage() {
             <div className="flex-1 space-y-3 min-w-0">
                 <div className="space-y-1">
                     <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                        <h2 className="text-2xl md:text-4xl font-black font-headline tracking-tighter truncate">
+                        <h2 className="text-2xl md:text-4xl font-bold font-headline tracking-tighter truncate">
                             {lawyer.name}
                         </h2>
-                        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 py-0.5 px-2 text-[9px] uppercase font-black tracking-widest shrink-0">
-                            <BadgeCheck className="h-3 w-3 mr-1" /> Verified
-                        </Badge>
+                        {lawyer.isVerified && (
+                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 py-0.5 px-2 text-[9px] font-bold shrink-0">
+                                <BadgeCheck className="h-3 w-3 mr-1 text-blue-500" /> Verified
+                            </Badge>
+                        )}
                     </div>
-                    <p className="text-sm md:text-lg text-primary font-bold tracking-widest uppercase">{lawyer.specialty}</p>
+                    <p className="text-sm md:text-lg text-primary font-bold tracking-tight">{lawyer.specialty}</p>
                 </div>
                 
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-5">
                     <div className="flex items-center gap-1.5">
                         <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                        <span className="font-black text-sm">{lawyer.rating}</span>
+                        <span className="font-bold text-sm">{lawyer.rating}</span>
                         <span className="text-muted-foreground text-[10px] font-bold">({lawyer.reviews} Reviews)</span>
                     </div>
                     {lawyer.courtName && (
-                        <div className="flex items-center gap-1.5 text-[11px] font-black text-muted-foreground/80 uppercase tracking-tight">
+                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 tracking-tight">
                             <MapPin className="h-3.5 w-3.5 text-primary" />
                             {lawyer.courtName}
                         </div>
@@ -102,7 +104,7 @@ export default function LawyerProfilePage() {
                             <MessageSquare className="mr-2 h-4 w-4"/> Chat
                         </Link>
                     </Button>
-                    <Button size="sm" className="flex-1 h-11 font-black shadow-xl shadow-primary/20 tracking-tighter uppercase text-[11px] rounded-xl" asChild>
+                    <Button size="sm" className="flex-1 h-11 font-bold shadow-xl shadow-primary/20 tracking-tighter rounded-xl" asChild>
                         <Link href={`/dashboard/lawyer-connect/${lawyer.id}/book`}>Book Consult</Link>
                     </Button>
                 </div>
@@ -115,7 +117,7 @@ export default function LawyerProfilePage() {
         <div className="md:col-span-2 space-y-6">
             <Card className="border-primary/5 shadow-xl bg-card/30 backdrop-blur-sm rounded-2xl">
                 <CardHeader className="p-5 border-b border-primary/5 bg-primary/5">
-                    <CardTitle className="flex items-center gap-2 text-sm font-black uppercase tracking-widest">
+                    <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-tight">
                         <Scale className="h-4 w-4 text-primary" /> Professional Bio
                     </CardTitle>
                 </CardHeader>
@@ -126,20 +128,20 @@ export default function LawyerProfilePage() {
             
             <Card className="border-primary/5 shadow-xl bg-card/30 backdrop-blur-sm rounded-2xl overflow-hidden">
                 <CardHeader className="p-5 border-b border-primary/5 bg-primary/5">
-                    <CardTitle className="flex items-center gap-2 text-sm font-black uppercase tracking-widest">
+                    <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-tight">
                         <BadgeCheck className="h-4 w-4 text-primary" /> Core Credentials
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="space-y-1.5">
-                            <p className="text-[9px] text-muted-foreground uppercase font-black tracking-widest flex items-center gap-2">
+                            <p className="text-[9px] text-muted-foreground font-bold tracking-tight flex items-center gap-2">
                                 <Briefcase className="h-3 w-3 text-primary" /> Core Practice
                             </p>
                             <p className="font-bold text-sm text-foreground">{lawyer.specialty}</p>
                         </div>
                         <div className="space-y-1.5">
-                            <p className="text-[9px] text-muted-foreground uppercase font-black tracking-widest flex items-center gap-2">
+                            <p className="text-[9px] text-muted-foreground font-bold tracking-tight flex items-center gap-2">
                                 <Scale className="h-3 w-3 text-primary" /> Total Experience
                             </p>
                             <p className="font-bold text-sm text-foreground">{lawyer.experience}</p>
@@ -148,10 +150,10 @@ export default function LawyerProfilePage() {
                     
                     {lawyer.courts && lawyer.courts.length > 0 && (
                         <div className="pt-5 border-t border-primary/5">
-                            <p className="text-[9px] text-muted-foreground uppercase font-black tracking-widest mb-3">Authorized Jurisdictions</p>
+                            <p className="text-[9px] text-muted-foreground font-bold tracking-tight mb-3">Authorized Jurisdictions</p>
                             <div className="flex flex-wrap gap-2">
                                 {lawyer.courts.map((c: string) => (
-                                    <Badge key={c} variant="outline" className="bg-primary/5 font-black border-primary/10 text-primary text-[10px] rounded-lg py-1 px-3 uppercase tracking-tighter">{c}</Badge>
+                                    <Badge key={c} variant="outline" className="bg-primary/5 font-bold border-primary/10 text-primary text-[10px] rounded-lg py-1 px-3 tracking-tighter">{c}</Badge>
                                 ))}
                             </div>
                         </div>
@@ -163,7 +165,7 @@ export default function LawyerProfilePage() {
         <div className="space-y-6">
             <Card className="border-primary/5 shadow-xl bg-card/30 backdrop-blur-sm rounded-2xl overflow-hidden">
                 <CardHeader className="p-5 border-b border-primary/5 bg-primary/5">
-                    <CardTitle className="flex items-center gap-2 text-sm font-black uppercase tracking-widest">
+                    <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-tight">
                         <MapPin className="h-4 w-4 text-primary" /> Practice Location
                     </CardTitle>
                 </CardHeader>
@@ -172,7 +174,7 @@ export default function LawyerProfilePage() {
                         <p className="font-bold text-foreground text-lg tracking-tighter leading-tight">{lawyer.courtName || 'District Court Chamber'}</p>
                         <p className="text-xs text-muted-foreground font-medium leading-relaxed">{lawyer.courtAddress || 'Authorized practice area within state jurisdiction.'}</p>
                     </div>
-                    <Button variant="outline" size="sm" className="w-full font-black border-primary/10 h-10 text-[10px] uppercase tracking-widest rounded-xl hover:bg-primary/5" asChild>
+                    <Button variant="outline" size="sm" className="w-full font-bold border-primary/10 h-10 text-[10px] tracking-tight rounded-xl hover:bg-primary/5" asChild>
                         <Link href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lawyer.courtName + ' ' + (lawyer.courtAddress || ''))}`} target="_blank">
                             <Globe className="mr-2 h-3.5 w-3.5" /> Open Maps
                         </Link>
@@ -182,7 +184,7 @@ export default function LawyerProfilePage() {
 
             <Card className="border-primary/5 shadow-xl bg-card/30 backdrop-blur-sm rounded-2xl overflow-hidden">
                 <CardHeader className="p-5 border-b border-primary/5 bg-primary/5">
-                    <CardTitle className="flex items-center gap-2 text-sm font-black uppercase tracking-widest">
+                    <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-tight">
                         <Phone className="h-4 w-4 text-primary" /> Contact Details
                     </CardTitle>
                 </CardHeader>
@@ -192,7 +194,7 @@ export default function LawyerProfilePage() {
                             <Phone className="h-3.5 w-3.5" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-[8px] text-muted-foreground uppercase font-black tracking-widest">Mobile Number</p>
+                            <p className="text-[8px] text-muted-foreground font-bold tracking-tight">Mobile Number</p>
                             <span className="font-bold text-xs text-foreground truncate block">Verified</span>
                         </div>
                     </div>
@@ -201,7 +203,7 @@ export default function LawyerProfilePage() {
                             <Mail className="h-3.5 w-3.5" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-[8px] text-muted-foreground uppercase font-black tracking-widest">Official Email</p>
+                            <p className="text-[8px] text-muted-foreground font-bold tracking-tight">Official Email</p>
                             <span className="font-bold text-xs text-foreground truncate block lowercase">{lawyer.contact?.email}</span>
                         </div>
                     </div>

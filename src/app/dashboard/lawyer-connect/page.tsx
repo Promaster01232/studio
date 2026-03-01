@@ -45,7 +45,7 @@ export default function LawyerConnectPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input 
               placeholder="Search by name, court or specialty..." 
-              className="pl-9 h-11 border-primary/10 focus:border-primary bg-background/50 backdrop-blur-sm rounded-xl" 
+              className="pl-9 h-11 border-primary/10 focus:border-primary bg-background/50 backdrop-blur-sm rounded-xl font-medium" 
               onChange={handleSearch}
             />
         </div>
@@ -96,19 +96,21 @@ export default function LawyerConnectPage() {
                                 <p className="font-bold text-base sm:text-lg leading-tight group-hover:text-primary transition-colors truncate tracking-tight">
                                     {lawyer.name}
                                 </p>
-                                <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 py-0 px-1.5 rounded text-[8px] sm:text-[9px] font-black tracking-widest uppercase shrink-0">
-                                    <BadgeCheck className="h-3 w-3 mr-1" /> Verified
-                                </Badge>
+                                {lawyer.isVerified && (
+                                    <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 py-0 px-1.5 rounded text-[8px] sm:text-[9px] font-bold shrink-0">
+                                        <BadgeCheck className="h-3 w-3 mr-1 text-blue-500" /> Verified
+                                    </Badge>
+                                )}
                             </div>
                             
-                            <p className="text-[10px] sm:text-[11px] text-muted-foreground font-bold tracking-tight uppercase mt-0.5">
+                            <p className="text-[10px] sm:text-[11px] text-muted-foreground font-bold tracking-tight mt-0.5">
                                 {lawyer.specialty}
                             </p>
                             
                             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 mt-1.5">
                                 <div className="flex items-center gap-1 text-[10px] sm:text-xs">
                                     <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                                    <span className="font-black">{lawyer.rating}</span>
+                                    <span className="font-bold">{lawyer.rating}</span>
                                 </div>
                                 {lawyer.courtName && (
                                     <div className="flex items-center gap-1 text-muted-foreground/60 text-[10px] sm:text-xs font-medium truncate max-w-[120px] sm:max-w-none">
@@ -132,7 +134,7 @@ export default function LawyerConnectPage() {
                                     <MessageSquare className="mr-1.5 h-3.5 w-3.5"/> Chat
                                 </Link>
                             </Button>
-                            <Button size="sm" className="flex-1 sm:w-auto h-9 px-4 rounded-lg shadow-md font-black text-[10px] sm:text-xs group/btn" asChild>
+                            <Button size="sm" className="flex-1 sm:w-auto h-9 px-4 rounded-lg shadow-md font-bold text-[10px] sm:text-xs group/btn" asChild>
                                 <Link href={`/dashboard/lawyer-connect/${lawyer.id}`}>
                                     View Profile
                                     <ChevronRight className="ml-1 h-3 w-3 transition-transform group-hover/btn:translate-x-0.5" />
@@ -151,9 +153,9 @@ export default function LawyerConnectPage() {
                     <div className="bg-primary/5 p-5 rounded-full w-fit mx-auto mb-4">
                         <Search className="h-10 w-10 text-muted-foreground opacity-20" />
                     </div>
-                    <h3 className="text-lg font-black font-headline tracking-tighter">No results found</h3>
+                    <h3 className="text-lg font-bold font-headline tracking-tighter">No results found</h3>
                     <p className="text-muted-foreground max-w-[200px] mx-auto mt-1 text-[10px] font-medium">Try searching for a different name or court location.</p>
-                    <Button variant="link" size="sm" className="mt-2 text-primary font-black" onClick={() => setFilteredAdvocates(allAdvocates)}>
+                    <Button variant="link" size="sm" className="mt-2 text-primary font-bold" onClick={() => setFilteredAdvocates(allAdvocates)}>
                         Show all professionals
                     </Button>
                 </motion.div>

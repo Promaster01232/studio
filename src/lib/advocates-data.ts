@@ -24,6 +24,7 @@ export interface Lawyer {
     rawExperience?: string;
     position?: string;
     certificateName?: string;
+    isVerified?: boolean;
     [key: string]: any;
 }
 

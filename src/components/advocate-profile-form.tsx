@@ -83,7 +83,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
             (initialData?.image || undefined);
 
 
-        const newAdvocate = {
+        const newAdvocate: Omit<Lawyer, 'id'> = {
             name: advocateName,
             specialty: specialization,
             rating: initialData?.rating || (Math.random() * (5 - 4.5) + 4.5).toFixed(1),
@@ -102,6 +102,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
             courtName: courtName,
             courtAddress: courtAddress,
             certificateName: certificateName,
+            isVerified: true, // Mark as verified once the form is saved
         };
 
         try {
@@ -145,7 +146,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                     <ShieldCheck className="h-5 w-5 text-primary" />
                 </div>
                 <div className="space-y-1">
-                    <p className="text-xs font-black text-primary">Professional Verification</p>
+                    <p className="text-xs font-bold text-primary">Professional Verification</p>
                     <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
                         Your credentials will be verified against Bar Council records. Verified advocates appear at the top of search results.
                     </p>
@@ -208,15 +209,13 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                                         <p className="text-[10px] text-primary font-bold">File ready for verification</p>
                                     </div>
                                 </div>
-                                <Button 
+                                <button 
                                     type="button" 
-                                    variant="ghost" 
-                                    size="icon" 
-                                    className="h-9 w-9 text-destructive hover:bg-destructive/10 z-20 active:scale-90"
+                                    className="h-9 w-9 flex items-center justify-center rounded-full text-destructive hover:bg-destructive/10 z-20 active:scale-90"
                                     onClick={removeFile}
                                 >
                                     <X className="h-4 w-4" />
-                                </Button>
+                                </button>
                             </div>
                         )}
                     </div>
