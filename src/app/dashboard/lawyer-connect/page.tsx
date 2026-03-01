@@ -94,7 +94,6 @@ export default function LawyerConnectPage() {
                                 <div className="absolute -bottom-1 -right-1 bg-green-500 border-4 border-background h-6 w-6 rounded-full shadow-lg"></div>
                             </div>
                             <div className="mt-4 text-center">
-                                <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest leading-none">Your Logo</p>
                                 <p className="text-[9px] font-bold text-muted-foreground mt-1 opacity-60">Verified Member</p>
                             </div>
                         </div>
