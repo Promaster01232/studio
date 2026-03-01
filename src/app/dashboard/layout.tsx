@@ -119,7 +119,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
-  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string, photoURL?: string} | null>(null);
+  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string, photoURL?: string, isAdmin?: boolean} | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
@@ -134,7 +134,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         getDoc(userDocRef)
           .then((userDoc) => {
             if (userDoc.exists()) {
-              setUserProfile(userDoc.data() as {firstName: string; lastName: string; email: string; photoURL?: string});
+              setUserProfile(userDoc.data() as any);
             } else {
               if (pathname !== '/create-profile' && pathname !== '/login' && pathname !== '/register') {
                 router.push('/create-profile');
@@ -175,7 +175,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </Link>
         </SidebarHeader>
         <SidebarContent className="pt-0">
-          <SidebarNav />
+          <SidebarNav isAdmin={!!userProfile?.isAdmin} />
         </SidebarContent>
         <SidebarFooter>
            {profileLoading ? (
@@ -225,7 +225,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <DropdownMenuSubContent className="rounded-xl p-1 shadow-2xl border-primary/5">
                         <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
                             <DropdownMenuRadioItem value="light" className="rounded-lg h-9 font-bold">Light</DropdownMenuRadioItem>
-                            <DropdownMenuRadioGroup value="dark" className="rounded-lg h-9 font-bold">Dark</DropdownMenuRadioGroup>
+                            <DropdownMenuRadioItem value="dark" className="rounded-lg h-9 font-bold">Dark</DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
                     </DropdownMenuSubContent>
                 </DropdownMenuSub>

@@ -80,6 +80,7 @@ const navigationItems = [
   {
     title: "System",
     icon: Settings,
+    isAdminOnly: true,
     items: [
       { href: "/dashboard/management-console", icon: Shield, label: "Management Console" },
     ],
@@ -94,7 +95,7 @@ const navigationItems = [
   },
 ];
 
-export function SidebarNav() {
+export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
 
   const isSubItemActive = (href: string) => {
@@ -105,9 +106,11 @@ export function SidebarNav() {
     return items.some((item) => isSubItemActive(item.href));
   };
 
+  const filteredItems = navigationItems.filter(item => !item.isAdminOnly || isAdmin);
+
   return (
     <SidebarMenu className="gap-2 px-2 py-4">
-      {navigationItems.map((item) => {
+      {filteredItems.map((item) => {
         const hasSubItems = item.items.length > 0;
         const isActive = item.href ? pathname === item.href : isGroupActive(item.items);
 

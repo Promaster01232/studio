@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { useFirestore, useDatabase } from "@/firebase";
-import { collection, query, getDocs } from "firebase/firestore";
+import { useFirestore, useDatabase, useAuth } from "@/firebase";
+import { collection, query, getDocs, doc, getDoc } from "firebase/firestore";
 import { ref, get } from "firebase/database";
 import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useToast } from "@/hooks/use-toast";
 
 interface UserRecord {
   uid: string;
@@ -20,6 +22,7 @@ interface UserRecord {
   email: string;
   userType: string;
   photoURL?: string;
+  isAdmin?: boolean;
 }
 
 interface AdvocateRecord {
@@ -34,6 +37,9 @@ interface AdvocateRecord {
 export default function ManagementConsolePage() {
   const firestore = useFirestore();
   const rtdb = useDatabase();
+  const auth = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
   const [users, setUsers] = useState<UserRecord[]>([]);
   const [advocates, setAdvocates] = useState<Record<string, AdvocateRecord>>({});
   const [loading, setLoading] = useState(true);
@@ -41,8 +47,27 @@ export default function ManagementConsolePage() {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!auth.currentUser) {
+          router.push('/login');
+          return;
+      }
+
       setLoading(true);
       try {
+        // Verify Admin Status
+        const adminDoc = await getDoc(doc(firestore, "users", auth.currentUser.uid));
+        const adminData = adminDoc.data() as UserRecord;
+        
+        if (!adminData?.isAdmin) {
+            toast({
+                variant: "destructive",
+                title: "Access Denied",
+                description: "You do not have permission to view the Management Console."
+            });
+            router.push('/dashboard');
+            return;
+        }
+
         // Fetch Users from Firestore
         const usersCol = collection(firestore, "users");
         const usersSnapshot = await getDocs(query(usersCol));
@@ -63,7 +88,7 @@ export default function ManagementConsolePage() {
     };
 
     fetchData();
-  }, [firestore, rtdb]);
+  }, [firestore, rtdb, auth, router, toast]);
 
   const filteredUsers = users.filter(user => 
     `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
