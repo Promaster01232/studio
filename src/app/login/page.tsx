@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
   signInWithEmailAndPassword,
@@ -37,6 +37,7 @@ export default function LoginPage() {
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
 
@@ -64,12 +65,6 @@ export default function LoginPage() {
             router.push('/create-profile');
         }
     } catch (error: any) {
-        // Handle known auth errors gracefully
-        const knownErrors = ['auth/invalid-credential', 'auth/user-not-found', 'auth/wrong-password', 'auth/invalid-email'];
-        if (!knownErrors.includes(error.code)) {
-            console.error("Login error:", error);
-        }
-
         let message = "Invalid email or password. Please try again.";
         if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
             message = "The credentials you entered are incorrect. Please check your email and password.";
@@ -200,15 +195,24 @@ export default function LoginPage() {
                     Forgot password?
                     </Link>
                 </div>
-                <Input 
-                    id="password" 
-                    type="password" 
-                    required 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    disabled={loading}
-                    className="font-bold h-11"
-                />
+                <div className="relative">
+                    <Input 
+                        id="password" 
+                        type={showPassword ? "text" : "password"} 
+                        required 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        disabled={loading}
+                        className="font-bold h-11 pr-10"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                </div>
                 </div>
                 <Button type="submit" className="w-full font-bold h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all mt-2" onClick={handleEmailLogin} disabled={loading}>
                 {loading ? <Loader2 className="animate-spin" /> : "Login"}
