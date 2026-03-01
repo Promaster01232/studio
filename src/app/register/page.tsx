@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -251,6 +252,7 @@ export default function RegisterPage() {
         </Card>
 
         <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
+            setShowAdvocateDialog(open);
             if (!open) {
                 toast({ title: "Incomplete Profile", description: "Advocates must complete their profile to proceed." });
             }

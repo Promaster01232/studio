@@ -281,11 +281,10 @@ export default function CreateProfilePage() {
       </Card>
 
       <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
+          setShowAdvocateDialog(open);
           if (!open && form.getValues('userType') === 'lawyer') {
               toast({ title: "Setup Required", description: "Advocates must complete their profile to proceed." });
-              return;
           }
-          setShowAdvocateDialog(open);
       }}>
           <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => {
               if (form.getValues('userType') === 'lawyer') e.preventDefault();

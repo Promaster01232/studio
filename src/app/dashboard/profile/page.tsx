@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -270,7 +271,8 @@ export default function ProfilePage() {
         });
       }
     } finally {
-      setSaving(false);
+      // Since deleteUser might redirect, only set saving to false if we stay on page
+      if (auth.currentUser) setSaving(false);
     }
   };
 
@@ -578,11 +580,10 @@ export default function ProfilePage() {
         </div>
 
         <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
+            setShowAdvocateDialog(open);
             if (!open && userProfile?.userType === 'lawyer' && !advocateDetails) {
                 toast({ title: "Profile Required", description: "You must complete your advocate details to use this role." });
-                return;
             }
-            setShowAdvocateDialog(open);
         }}>
             <DialogContent className="sm:max-w-2xl p-0 overflow-hidden sm:rounded-2xl" onPointerDownOutside={(e) => {
                 if (userProfile?.userType === 'lawyer' && !advocateDetails) e.preventDefault();
