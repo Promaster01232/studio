@@ -54,7 +54,6 @@ const languages: { code: Language, name: string }[] = [
 
 function Header() {
     const { state } = useSidebar();
-    const { toast } = useToast();
     
     return (
         <header className={cn(
@@ -83,7 +82,7 @@ function Header() {
 
             <div className="flex items-center gap-1 sm:gap-2">
                 <SosDialog>
-                    <Button variant="destructive" size="sm" className="font-black gap-1 animate-pulse px-2 sm:px-3 h-9 text-[11px]">
+                    <Button variant="destructive" size="sm" className="font-bold gap-1 animate-pulse px-2 sm:px-3 h-9 text-[11px]">
                         <ShieldAlert className="h-4 w-4" />
                         <span className="hidden sm:inline">SOS</span>
                     </Button>
@@ -94,9 +93,11 @@ function Header() {
                         variant="ghost" 
                         size="icon" 
                         className="h-9 w-9 text-muted-foreground hover:text-primary"
-                        onClick={() => toast({ title: "Notifications", description: "You have no new notifications." })}
+                        asChild
                     >
-                        <Bell className="h-4 w-4" />
+                        <Link href="/dashboard/notifications">
+                            <Bell className="h-4 w-4" />
+                        </Link>
                     </Button>
 
                     <ChatListDialog>
@@ -199,14 +200,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     </div>
                   )}
                   <div className="flex-1 truncate group-data-[state=collapsed]:hidden">
-                    <div className="font-black text-sm truncate tracking-tighter text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
+                    <div className="font-bold text-sm truncate tracking-tighter text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
                     <div className="text-[10px] text-muted-foreground truncate font-bold opacity-60">{userProfile.email}</div>
                   </div>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" align="start" className="w-56 mb-2 ml-2 p-2 rounded-2xl shadow-2xl border-primary/5">
                 <DropdownMenuLabel className="pb-3 pt-2">
-                    <div className="font-black text-base font-headline tracking-tighter text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
+                    <div className="font-bold text-base font-headline tracking-tighter text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
                     <div className="text-[10px] text-muted-foreground font-bold truncate opacity-60">{userProfile.email}</div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="mb-2" />
