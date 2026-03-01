@@ -339,8 +339,8 @@ export default function ProfilePage() {
                             <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} className="object-cover" />
                         </Avatar>
                         <div className="absolute -bottom-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <Button size="icon" variant="secondary" className="rounded-full h-8 w-8 shadow-xl border border-primary/10 hover:bg-primary hover:text-white" onClick={startCamera}>
-                                <Camera className="h-3.5 w-3.5" />
+                            <Button size="icon" variant="secondary" className="rounded-full h-9 w-9 shadow-xl border border-primary/10 hover:bg-primary hover:text-white" onClick={startCamera}>
+                                <Camera className="h-4 w-4" />
                             </Button>
                         </div>
                     </div>
@@ -363,8 +363,8 @@ export default function ProfilePage() {
                     <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate opacity-80">{email}</p>
                 </div>
                 {photoURL && (
-                    <Button variant="ghost" size="sm" className="hidden sm:flex text-[10px] font-black uppercase tracking-widest opacity-50 hover:opacity-100" onClick={startCamera}>
-                        <Camera className="mr-2 h-3.5 w-3.5" /> Change Photo
+                    <Button variant="ghost" size="sm" className="hidden sm:flex h-11 text-[10px] font-black uppercase tracking-widest opacity-50 hover:opacity-100 active:scale-95" onClick={startCamera}>
+                        <Camera className="mr-2 h-4 w-4" /> Change Photo
                     </Button>
                 )}
                 </CardContent>
@@ -385,20 +385,20 @@ export default function ProfilePage() {
                             <div className="grid sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                 <Label htmlFor="firstName" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">First Name</Label>
-                                <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-background/50 h-10 text-sm font-semibold" />
+                                <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-background/50 h-11 text-sm font-semibold" />
                                 </div>
                                 <div className="space-y-2">
                                 <Label htmlFor="lastName" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Last Name</Label>
-                                <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-background/50 h-10 text-sm font-semibold" />
+                                <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-background/50 h-11 text-sm font-semibold" />
                                 </div>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="phone" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Mobile Number</Label>
-                                <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="bg-background/50 h-10 text-sm font-semibold" />
+                                <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="bg-background/50 h-11 text-sm font-semibold" />
                             </div>
                             <div className="flex justify-end pt-2">
-                                <Button onClick={() => handleSaveChanges()} disabled={saving} size="sm" className="w-full sm:w-auto shadow-lg shadow-primary/10 h-10 px-8 font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">
-                                    {saving && <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin"/>}
+                                <Button onClick={() => handleSaveChanges()} disabled={saving} size="sm" className="w-full sm:w-auto shadow-lg shadow-primary/10 h-11 px-10 font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">
+                                    {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
                                     Update Details
                                 </Button>
                             </div>
@@ -460,30 +460,30 @@ export default function ProfilePage() {
                                 )}
                                 
                                 <div className="pt-2 flex flex-col sm:flex-row gap-3">
-                                    <Button onClick={() => setShowAdvocateDialog(true)} variant={advocateDetails ? "outline" : "default"} size="sm" className="flex-1 font-black uppercase text-[10px] tracking-widest h-10 px-6 shadow-md border-primary/20 active:scale-95 transition-all">
-                                        <Edit className="mr-2 h-3.5 w-3.5" />
+                                    <Button onClick={() => setShowAdvocateDialog(true)} variant={advocateDetails ? "outline" : "default"} size="sm" className="flex-1 font-black uppercase text-[10px] tracking-widest h-11 px-8 shadow-md border-primary/20 active:scale-95 transition-all">
+                                        <Edit className="mr-2 h-4 w-4" />
                                         {advocateDetails ? "Edit Profile" : "Complete Setup"}
                                     </Button>
                                     
                                     {advocateDetails && (
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="sm" className="flex-1 text-destructive hover:bg-destructive/10 font-black uppercase text-[10px] tracking-widest h-10">
-                                                    <UserMinus className="mr-2 h-3.5 w-3.5" />
+                                                <Button variant="ghost" size="sm" className="flex-1 text-destructive hover:bg-destructive/10 font-black uppercase text-[10px] tracking-widest h-11 active:scale-95 transition-all">
+                                                    <UserMinus className="mr-2 h-4 w-4" />
                                                     Remove Listing
                                                 </Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
-                                                    <AlertDialogTitle className="font-black tracking-tight">Unlist from Directory?</AlertDialogTitle>
+                                                    <AlertDialogTitle className="font-black tracking-tight uppercase">Unlist from Directory?</AlertDialogTitle>
                                                     <AlertDialogDescription className="font-medium">
                                                         This will remove your professional profile from the lawyer directory. 
                                                         Your main account and access to legal tools will not be affected.
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
-                                                    <AlertDialogCancel className="font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={handleRemoveAdvocateListing} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-black uppercase text-[10px] tracking-widest">
+                                                    <AlertDialogCancel className="font-black uppercase text-[10px] tracking-widest h-11 px-6">Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={handleRemoveAdvocateListing} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-black uppercase text-[10px] tracking-widest h-11 px-6">
                                                         Confirm Removal
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>
@@ -504,18 +504,18 @@ export default function ProfilePage() {
                             <CardTitle className="font-headline font-black text-lg uppercase tracking-tight">Preferences</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
-                            <div className="flex items-center justify-between p-2.5 rounded-xl hover:bg-muted/50 transition-colors border border-transparent hover:border-primary/10 cursor-pointer" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+                            <div className="flex items-center justify-between p-3 rounded-xl hover:bg-muted/50 transition-colors border border-transparent hover:border-primary/10 cursor-pointer" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-muted p-2 rounded-lg"><Moon className="h-3.5 w-3.5 text-muted-foreground" /></div>
-                                    <span className="font-black text-[11px] uppercase tracking-wider">Dark Mode</span>
+                                    <div className="bg-muted p-2 rounded-lg"><Moon className="h-4 w-4 text-muted-foreground" /></div>
+                                    <span className="font-black text-[11px] uppercase tracking-widest">Dark Mode</span>
                                 </div>
                                 <Switch
                                     checked={theme === 'dark'}
                                     onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
                                 />
                             </div>
-                            <Button variant="outline" size="sm" className="w-full justify-start font-black border-primary/5 h-10 px-3 hover:bg-primary/5 hover:text-primary transition-all rounded-xl uppercase text-[10px] tracking-widest">
-                                <KeyRound className="mr-3 h-3.5 w-3.5 text-muted-foreground" />
+                            <Button variant="outline" size="sm" className="w-full justify-start font-black border-primary/5 h-11 px-4 hover:bg-primary/5 hover:text-primary transition-all rounded-xl uppercase text-[10px] tracking-widest active:scale-95">
+                                <KeyRound className="mr-3 h-4 w-4 text-muted-foreground" />
                                 <span>Security & Privacy</span>
                             </Button>
                         </CardContent>
@@ -528,29 +528,29 @@ export default function ProfilePage() {
                             <CardTitle className="text-destructive font-headline font-black text-lg uppercase tracking-tight">Account</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
-                            <Button variant="outline" size="sm" className="w-full justify-start hover:bg-destructive/10 text-foreground border-destructive/5 h-10 px-3 font-black rounded-xl uppercase text-[10px] tracking-widest" onClick={handleLogout}>
-                                <LogOut className="mr-3 h-3.5 w-3.5 text-muted-foreground" /> 
+                            <Button variant="outline" size="sm" className="w-full justify-start hover:bg-destructive/10 text-foreground border-destructive/5 h-11 px-4 font-black rounded-xl uppercase text-[10px] tracking-widest active:scale-95 transition-all" onClick={handleLogout}>
+                                <LogOut className="mr-3 h-4 w-4 text-muted-foreground" /> 
                                 <span>Logout</span>
                             </Button>
                             
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button variant="destructive" size="sm" className="w-full justify-start font-black h-10 px-3 tracking-widest uppercase text-[10px] rounded-xl active:scale-95 transition-all">
-                                    <Trash2 className="mr-3 h-3.5 w-3.5" />
+                                <Button variant="destructive" size="sm" className="w-full justify-start font-black h-11 px-4 tracking-widest uppercase text-[10px] rounded-xl active:scale-95 transition-all">
+                                    <Trash2 className="mr-3 h-4 w-4" />
                                     <span>Delete Account</span>
                                 </Button>
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle className="font-black tracking-tight">Are you absolutely sure?</AlertDialogTitle>
+                                  <AlertDialogTitle className="font-black tracking-tight uppercase text-destructive">Are you absolutely sure?</AlertDialogTitle>
                                   <AlertDialogDescription className="font-medium">
                                     This action cannot be undone. This will permanently delete your account
                                     and remove your data from our servers. You will not be able to log in again.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel className="font-bold uppercase text-[10px] tracking-widest">Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-black uppercase text-[10px] tracking-widest">
+                                  <AlertDialogCancel className="font-black uppercase text-[10px] tracking-widest h-11 px-6">Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-black uppercase text-[10px] tracking-widest h-11 px-6">
                                     {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                                     Delete Permanently
                                   </AlertDialogAction>
@@ -628,9 +628,9 @@ export default function ProfilePage() {
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent sm:relative sm:bg-background sm:from-transparent">
                   <div className="flex gap-3 max-w-sm mx-auto sm:max-w-none">
-                      <Button variant="secondary" onClick={stopCamera} className="flex-1 font-black text-[10px] uppercase tracking-widest h-11 hidden sm:flex">Cancel</Button>
+                      <Button variant="secondary" onClick={stopCamera} className="flex-1 font-black text-[10px] uppercase tracking-widest h-12 hidden sm:flex active:scale-95 transition-all">Cancel</Button>
                       <Button onClick={capturePhoto} className="flex-1 h-12 text-[10px] font-black tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all bg-primary text-white" disabled={!hasCameraPermission}>
-                          <Camera className="mr-2 h-4 w-4" /> CAPTURE PHOTO
+                          <Camera className="mr-2 h-5 w-5" /> CAPTURE PHOTO
                       </Button>
                   </div>
               </div>

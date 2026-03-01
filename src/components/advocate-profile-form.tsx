@@ -212,7 +212,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                                     type="button" 
                                     variant="ghost" 
                                     size="icon" 
-                                    className="h-8 w-8 text-destructive hover:bg-destructive/10 z-20"
+                                    className="h-9 w-9 text-destructive hover:bg-destructive/10 z-20 active:scale-90"
                                     onClick={removeFile}
                                 >
                                     <X className="h-4 w-4" />

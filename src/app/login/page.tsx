@@ -130,7 +130,7 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl">
+    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl rounded-2xl">
       <motion.div 
         className="p-8 sm:p-12 flex flex-col justify-center"
         variants={containerVariants}
@@ -155,7 +155,7 @@ export default function LoginPage() {
                     <AlertDescription className="text-xs space-y-2 font-medium">
                     <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
                     <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
-                    <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive font-black uppercase text-[10px] tracking-widest">
+                    <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive font-black uppercase text-[10px] tracking-widest h-11 active:scale-95">
                         <a href="https://console.firebase.google.com/project/ai-naya-shahayak/authentication/settings" target="_blank" rel="noopener noreferrer">
                             Open Firebase Auth Settings
                         </a>
@@ -175,7 +175,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={loading}
-                    className="font-bold"
+                    className="font-bold h-11"
                 />
                 </div>
                 <div className="space-y-2">
@@ -192,10 +192,10 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={loading}
-                    className="font-bold"
+                    className="font-bold h-11"
                 />
                 </div>
-                <Button type="submit" className="w-full font-black uppercase tracking-widest text-[10px] h-11" onClick={handleEmailLogin} disabled={loading}>
+                <Button type="submit" className="w-full font-black uppercase tracking-widest text-[10px] h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all mt-2" onClick={handleEmailLogin} disabled={loading}>
                 {loading ? <Loader2 className="animate-spin" /> : "Login"}
                 </Button>
             </div>
@@ -212,7 +212,7 @@ export default function LoginPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-2">
-                <Button variant="outline" className="w-full font-black uppercase tracking-widest text-[10px] h-11" onClick={handleGoogleLogin} disabled={loading}>
+                <Button variant="outline" className="w-full font-black uppercase tracking-widest text-[10px] h-12 active:scale-95 transition-all border-primary/10 hover:border-primary/30" onClick={handleGoogleLogin} disabled={loading}>
                     <GoogleIcon className="mr-2 h-4 w-4" />
                     Google
                 </Button>
