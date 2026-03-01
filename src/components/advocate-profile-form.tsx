@@ -80,9 +80,10 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
 
         const advocateName = name || `${userProfile?.firstName} ${userProfile?.lastName}`;
         
+        // Ensure image is null instead of undefined for RTDB compatibility
         const advocateImage = userProfile?.photoURL ? 
             { id: `advocate${auth.currentUser?.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } :
-            (initialData?.image || undefined);
+            (initialData?.image || null);
 
 
         const newAdvocate: Omit<Lawyer, 'id'> = {
@@ -115,11 +116,14 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
             
             // Save to RTDB (centralized profile) with graceful error handling
             if (auth.currentUser) {
-                set(ref(rtdb, `advocates/${auth.currentUser.uid}`), {
+                // Ensure the payload doesn't contain undefined for RTDB
+                const rtdbPayload = JSON.parse(JSON.stringify({
                     ...newAdvocate,
                     uid: auth.currentUser.uid,
                     updatedAt: Date.now()
-                }).catch(err => {
+                }));
+
+                set(ref(rtdb, `advocates/${auth.currentUser.uid}`), rtdbPayload).catch(err => {
                     console.warn("RTDB professional sync skipped:", err.message);
                 });
             }
