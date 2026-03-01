@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -9,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, Sparkles } from "lucide-react";
+import { Mail, Phone, MapPin, Lightbulb } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ContactUsPage() {
@@ -131,7 +130,7 @@ export default function ContactUsPage() {
               Designed & Developed by
             </p>
             <div className="flex items-center justify-center gap-2 mt-1 transition-transform group-hover:scale-105">
-                <Sparkles className="h-7 w-7 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]" />
+                <Lightbulb className="h-7 w-7 text-primary" />
                 <h2 className="text-2xl font-bold font-headline bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
                     IdeaSpark
                 </h2>

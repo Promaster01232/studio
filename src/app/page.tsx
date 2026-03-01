@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Lightbulb } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 export default function WelcomePage() {
@@ -34,7 +34,7 @@ export default function WelcomePage() {
               Developed by
             </p>
             <div className="flex items-center gap-1.5 transition-transform group-hover:scale-105 duration-300">
-              <Sparkles className="h-4 w-4 text-primary fill-primary/20" />
+              <Lightbulb className="h-4 w-4 text-primary fill-primary/20" />
               <span className="text-base font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
                 IdeaSpark
               </span>
