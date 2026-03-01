@@ -76,14 +76,24 @@ export default function ManagementConsolePage() {
         const usersList = usersSnapshot.docs.map(doc => doc.data() as UserRecord);
         setUsers(usersList);
 
-        // Fetch Advocate verification details from RTDB
-        const advocatesRef = ref(rtdb, "advocates");
-        const advocatesSnapshot = await get(advocatesRef);
-        if (advocatesSnapshot.exists()) {
-          setAdvocates(advocatesSnapshot.val());
+        // Fetch Advocate verification details from RTDB with error handling
+        try {
+            const advocatesRef = ref(rtdb, "advocates");
+            const advocatesSnapshot = await get(advocatesRef);
+            if (advocatesSnapshot.exists()) {
+              setAdvocates(advocatesSnapshot.val());
+            }
+        } catch (rtdbError: any) {
+            console.warn("RTDB fetch skipped: Check your Realtime Database Security Rules.", rtdbError.message);
+            // We don't toast here to avoid bothering the user if Firestore data loaded fine.
         }
       } catch (error) {
         console.error("Management Console fetch error:", error);
+        toast({
+            variant: "destructive",
+            title: "Fetch Error",
+            description: "Failed to load management data. Please refresh and try again."
+        });
       } finally {
         setLoading(false);
       }
