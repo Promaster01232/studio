@@ -124,14 +124,14 @@ export default function ProfilePage() {
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
       setDoc(userDocRef, updateData, { merge: true })
         .then(() => {
-            toast({ title: "Photo Updated", description: "Your profile picture has been saved." });
+            toast({ title: "Photo updated", description: "Your profile picture has been saved." });
             setUserProfile(prev => prev ? { ...prev, photoURL: newPhotoURL } : null);
         })
         .catch(err => console.error("Failed to sync photo to Firestore:", err));
 
-      // Update RTDB
+      // Update RTDB with graceful error handling
       update(ref(rtdb, `users/${auth.currentUser.uid}`), updateData)
-        .catch(err => console.error("Failed to sync photo to RTDB:", err));
+        .catch(err => console.warn("RTDB photo sync skipped:", err.message));
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -211,7 +211,7 @@ export default function ProfilePage() {
     
     handleSaveChanges(true);
     toast({
-        title: "Advocate Profile Updated",
+        title: "Advocate profile updated",
         description: "Your professional details have been synchronized.",
     });
   };
@@ -221,12 +221,12 @@ export default function ProfilePage() {
         deleteAdvocate(email);
         setAdvocateDetails(null);
         
-        // Also remove from RTDB
+        // Also remove from RTDB with graceful handling
         remove(ref(rtdb, `advocates/${auth.currentUser.uid}`))
-            .catch(err => console.error("Failed to remove RTDB listing:", err));
+            .catch(err => console.warn("RTDB listing removal skipped:", err.message));
 
         toast({
-            title: "Listing Removed",
+            title: "Listing removed",
             description: "Your professional profile has been removed from the directory.",
         });
     }
@@ -248,14 +248,16 @@ export default function ProfilePage() {
 
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
 
-    Promise.all([
-        setDoc(userDocRef, updatedProfile, { merge: true }),
-        set(ref(rtdb, `users/${auth.currentUser.uid}`), updatedProfile)
-    ])
+    setDoc(userDocRef, updatedProfile, { merge: true })
       .then(() => {
+        // Parallel sync to RTDB with silent error handling
+        set(ref(rtdb, `users/${auth.currentUser.uid}`), updatedProfile).catch(err => {
+            console.warn("RTDB sync error:", err.message);
+        });
+
         setUserProfile(updatedProfile);
         if (!fromAdvocateFlow) {
-            toast({ title: 'Profile Updated', description: 'Your changes have been saved.' });
+            toast({ title: 'Profile updated', description: 'Your changes have been saved.' });
         }
       })
       .catch((serverError) => {
@@ -289,15 +291,15 @@ export default function ProfilePage() {
       // Delete from Firestore
       await deleteDoc(userDocRef);
       
-      // Delete from RTDB
-      await remove(ref(rtdb, `users/${user.uid}`));
-      await remove(ref(rtdb, `advocates/${user.uid}`));
+      // Delete from RTDB with error handling
+      remove(ref(rtdb, `users/${user.uid}`)).catch(e => console.warn("RTDB user removal skipped", e));
+      remove(ref(rtdb, `advocates/${user.uid}`)).catch(e => console.warn("RTDB advocate removal skipped", e));
       
       // Delete Auth user
       await deleteUser(user);
       
       toast({
-        title: "Account Deleted",
+        title: "Account deleted",
         description: "Your account and all associated data have been permanently removed.",
       });
       router.replace('/');

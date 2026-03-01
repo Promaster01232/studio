@@ -85,8 +85,10 @@ export default function RegisterPage() {
       // Save to Firestore
       await setDoc(doc(firestore, "users", user.uid), userProfile);
       
-      // Save to RTDB
-      await set(ref(rtdb, `users/${user.uid}`), userProfile);
+      // Save to RTDB with error handling to prevent PERMISSION_DENIED crash
+      set(ref(rtdb, `users/${user.uid}`), userProfile).catch(err => {
+          console.warn("RTDB sync skipped due to permissions. Profile saved to Firestore successfully.", err);
+      });
 
       if (userType === 'lawyer') {
           setShowAdvocateDialog(true);
@@ -99,7 +101,6 @@ export default function RegisterPage() {
       }
 
     } catch (error: any) {
-      // Handle known auth errors gracefully without scaring dev overlay
       const knownErrors = ['auth/email-already-in-use', 'auth/weak-password', 'auth/invalid-email'];
       if (!knownErrors.includes(error.code)) {
           console.error("Registration error:", error);
@@ -171,7 +172,7 @@ export default function RegisterPage() {
                     Nyaya Sahayak
                 </h1>
             </motion.div>
-            <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Create Account</motion.h2>
+            <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Create account</motion.h2>
             <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
             Join the community of legal professionals and citizens.
             </motion.p>

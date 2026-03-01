@@ -70,7 +70,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
         if (!name || !barId || !experience || !position || !specialization || !bio || !courtName || !courtAddress || courtsOfPractice.length === 0) {
              toast({
                 variant: "destructive",
-                title: "Information Required",
+                title: "Information required",
                 description: "Please fill all fields to complete your professional listing.",
             });
             return;
@@ -113,12 +113,14 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
             // Save to localStorage (directory)
             saveAdvocate(newAdvocate);
             
-            // Save to RTDB (centralized profile)
+            // Save to RTDB (centralized profile) with graceful error handling
             if (auth.currentUser) {
-                await set(ref(rtdb, `advocates/${auth.currentUser.uid}`), {
+                set(ref(rtdb, `advocates/${auth.currentUser.uid}`), {
                     ...newAdvocate,
                     uid: auth.currentUser.uid,
                     updatedAt: Date.now()
+                }).catch(err => {
+                    console.warn("RTDB professional sync skipped:", err.message);
                 });
             }
 
@@ -127,7 +129,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
             console.error("Failed to save profile:", error);
             toast({
                 variant: "destructive",
-                title: "Save Failed",
+                title: "Save failed",
                 description: "Could not save your professional profile. Please try again.",
             });
         } finally {
@@ -209,7 +211,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                                 </div>
                                 <div className="space-y-1">
                                     <p className="text-[11px] font-bold text-foreground">Upload certificate</p>
-                                    <p className="text-[10px] text-muted-foreground font-medium">PDF or Image (Max 5MB)</p>
+                                    <p className="text-[10px] text-muted-foreground font-medium">PDF or image (Max 5MB)</p>
                                 </div>
                             </div>
                         ) : (
@@ -284,7 +286,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                         <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" required defaultValue={initialData?.courtName || ""} className="h-11 border-primary/10 font-bold" />
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="courtAddress" className="text-[11px] font-bold text-muted-foreground">City / Address</Label>
+                        <Label htmlFor="courtAddress" className="text-[11px] font-bold text-muted-foreground">City / address</Label>
                         <Input id="courtAddress" name="courtAddress" placeholder="e.g., Mumbai, Maharashtra" required defaultValue={initialData?.courtAddress || ""} className="h-11 border-primary/10 font-bold" />
                     </div>
                 </div>

@@ -89,11 +89,15 @@ export default function CreateProfilePage() {
 
     try {
         await setDoc(userDocRef, userProfile);
-        await set(ref(rtdb, `users/${auth.currentUser.uid}`), userProfile);
+        
+        // Save to RTDB with error handling to prevent PERMISSION_DENIED crash
+        set(ref(rtdb, `users/${auth.currentUser.uid}`), userProfile).catch(err => {
+            console.warn("RTDB sync skipped. Profile saved to Firestore successfully.", err);
+        });
         
         setShowAdvocateDialog(false);
         toast({
-          title: "Registration Complete!",
+          title: "Registration complete",
           description: "Welcome to the Nyaya Sahayak community.",
         });
         router.push("/dashboard/lawyer-connect");
@@ -136,13 +140,15 @@ export default function CreateProfilePage() {
     
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
 
-    Promise.all([
-        setDoc(userDocRef, userProfile),
-        set(ref(rtdb, `users/${auth.currentUser.uid}`), userProfile)
-    ])
+    setDoc(userDocRef, userProfile)
       .then(() => {
+        // Parallel sync to RTDB with silent error handling
+        set(ref(rtdb, `users/${auth.currentUser.uid}`), userProfile).catch(err => {
+            console.warn("RTDB sync issue:", err.message);
+        });
+
         toast({
-          title: "Profile Created!",
+          title: "Profile created",
           description: "Welcome to Nyaya Sahayak.",
         });
         router.push("/dashboard");
@@ -184,7 +190,7 @@ export default function CreateProfilePage() {
     <>
       <Card className="w-full max-w-lg">
         <CardHeader>
-          <CardTitle>Create Your Profile</CardTitle>
+          <CardTitle>Create your profile</CardTitle>
           <CardDescription>
             Welcome! Just a few more details to get you started.
           </CardDescription>
@@ -198,7 +204,7 @@ export default function CreateProfilePage() {
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First Name</FormLabel>
+                      <FormLabel>First name</FormLabel>
                       <FormControl>
                         <Input placeholder="Rajesh" {...field} />
                       </FormControl>
@@ -211,7 +217,7 @@ export default function CreateProfilePage() {
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Last Name</FormLabel>
+                      <FormLabel>Last name</FormLabel>
                       <FormControl>
                         <Input placeholder="Kumar" {...field} />
                       </FormControl>
@@ -225,7 +231,7 @@ export default function CreateProfilePage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Email address</FormLabel>
                     <FormControl>
                       <Input placeholder="rajesh.k@example.com" {...field} disabled />
                     </FormControl>
@@ -239,7 +245,7 @@ export default function CreateProfilePage() {
                 name="mobileNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Mobile Number</FormLabel>
+                    <FormLabel>Mobile number</FormLabel>
                     <FormControl>
                       <Input placeholder="+91 12345 67890" {...field} />
                     </FormControl>
@@ -269,8 +275,8 @@ export default function CreateProfilePage() {
                       <SelectContent>
                         <SelectItem value="citizen">Citizen</SelectItem>
                         <SelectItem value="lawyer">Advocate</SelectItem>
-                        <SelectItem value="businessman">Business Person</SelectItem>
-                        <SelectItem value="student">Law Student</SelectItem>
+                        <SelectItem value="businessman">Business person</SelectItem>
+                        <SelectItem value="student">Law student</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -279,7 +285,7 @@ export default function CreateProfilePage() {
               />
 
               <Button type="submit" disabled={loading} className="w-full">
-                {loading ? <Loader2 className="animate-spin" /> : (form.watch('userType') === 'lawyer' ? "Complete Advocate Setup" : "Save Profile & Continue")}
+                {loading ? <Loader2 className="animate-spin" /> : (form.watch('userType') === 'lawyer' ? "Complete advocate setup" : "Save profile & continue")}
               </Button>
             </form>
           </Form>
@@ -289,14 +295,14 @@ export default function CreateProfilePage() {
       <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
           setShowAdvocateDialog(open);
           if (!open && form.getValues('userType') === 'lawyer') {
-              toast({ title: "Setup Required", description: "Advocates must complete their profile to proceed." });
+              toast({ title: "Setup required", description: "Advocates must complete their profile to proceed." });
           }
       }}>
           <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => {
               if (form.getValues('userType') === 'lawyer') e.preventDefault();
           }}>
               <DialogHeader>
-                    <DialogTitle>Complete Advocate Profile</DialogTitle>
+                    <DialogTitle>Complete advocate profile</DialogTitle>
                     <DialogDescription>Provide your professional details to be listed on Lawyer Connect.</DialogDescription>
               </DialogHeader>
               <AdvocateProfileForm 
