@@ -54,11 +54,13 @@ export default function ManagementConsolePage() {
 
       setLoading(true);
       try {
-        // Verify Admin Status
+        // Verify Admin Status by checking the Firestore document OR the specific hardcoded email
         const adminDoc = await getDoc(doc(firestore, "users", auth.currentUser.uid));
         const adminData = adminDoc.data() as UserRecord;
         
-        if (!adminData?.isAdmin) {
+        const isSuperAdmin = adminData?.email === 'enterspaceindia@gmail.com' || !!adminData?.isAdmin;
+
+        if (!isSuperAdmin) {
             toast({
                 variant: "destructive",
                 title: "Access Denied",

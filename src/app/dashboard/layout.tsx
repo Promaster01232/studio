@@ -162,6 +162,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   };
 
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
+  const isAdmin = userProfile?.email === 'enterspaceindia@gmail.com' || !!userProfile?.isAdmin;
 
   return (
     <SidebarProvider>
@@ -175,7 +176,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </Link>
         </SidebarHeader>
         <SidebarContent className="pt-0">
-          <SidebarNav isAdmin={!!userProfile?.isAdmin} />
+          <SidebarNav isAdmin={isAdmin} />
         </SidebarContent>
         <SidebarFooter>
            {profileLoading ? (
