@@ -15,7 +15,7 @@ export default function WelcomePage() {
             <Logo className="h-28 w-28 shadow-2xl" imageClassName="h-20 w-auto" />
           </div>
 
-          <h1 className="text-4xl font-black font-headline mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] tracking-tighter uppercase">
+          <h1 className="text-4xl font-black font-headline mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] tracking-tighter">
             Nyaya Sahayak
           </h1>
 
@@ -23,7 +23,7 @@ export default function WelcomePage() {
             Your AI-powered legal assistant for a modern world. Clarity and confidence in navigating the legal system.
           </p>
           
-          <Button asChild size="lg" className="group w-full h-12 font-black uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 active:scale-95 rounded-xl">
+          <Button asChild size="lg" className="group w-full h-12 font-bold shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 active:scale-95 rounded-xl">
             <Link href="/login">
               Get Started <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
@@ -35,12 +35,12 @@ export default function WelcomePage() {
             rel="noopener noreferrer" 
             className="mt-12 group flex flex-col items-center gap-1 hover:opacity-80 transition-opacity"
           >
-            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] opacity-60">
+            <p className="text-[10px] font-bold text-muted-foreground opacity-60">
               Developed by
             </p>
             <div className="flex items-center gap-1.5 transition-transform group-hover:scale-105 duration-300">
               <Lightbulb className="h-4 w-4 text-primary fill-primary/20" />
-              <span className="text-base font-black font-headline tracking-tighter text-primary uppercase">
+              <span className="text-base font-black font-headline tracking-tighter text-primary">
                 IdeaSpark
               </span>
             </div>

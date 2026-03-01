@@ -153,11 +153,11 @@ export default function RegisterPage() {
         >
             <motion.div variants={itemVariants} className="flex items-center gap-3 mb-6">
                 <Logo className="h-12 w-12" />
-                <h1 className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] uppercase">
+                <h1 className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
                     Nyaya Sahayak
                 </h1>
             </motion.div>
-            <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter uppercase">Create an Account</motion.h2>
+            <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Create an Account</motion.h2>
             <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
             Join the Nyaya Sahayak community today.
             </motion.p>
@@ -165,16 +165,16 @@ export default function RegisterPage() {
                 <motion.div variants={itemVariants} className="grid gap-4">
                 <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                    <Label htmlFor="first-name" className="font-black uppercase text-[10px] tracking-widest opacity-70">First name</Label>
+                    <Label htmlFor="first-name" className="font-bold opacity-70">First name</Label>
                     <Input id="first-name" placeholder="Max" required value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} className="font-bold" />
                     </div>
                     <div className="grid gap-2">
-                    <Label htmlFor="last-name" className="font-black uppercase text-[10px] tracking-widest opacity-70">Last name</Label>
+                    <Label htmlFor="last-name" className="font-bold opacity-70">Last name</Label>
                     <Input id="last-name" placeholder="Robinson" required value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} className="font-bold" />
                     </div>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="email" className="font-black uppercase text-[10px] tracking-widest opacity-70">Email</Label>
+                    <Label htmlFor="email" className="font-bold opacity-70">Email</Label>
                     <Input
                     id="email"
                     type="email"
@@ -187,7 +187,7 @@ export default function RegisterPage() {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="mobile-number" className="font-black uppercase text-[10px] tracking-widest opacity-70">Mobile Number</Label>
+                    <Label htmlFor="mobile-number" className="font-bold opacity-70">Mobile Number</Label>
                     <Input
                     id="mobile-number"
                     type="tel"
@@ -200,36 +200,36 @@ export default function RegisterPage() {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="userType" className="font-black uppercase text-[10px] tracking-widest opacity-70">I am a...</Label>
+                    <Label htmlFor="userType" className="font-bold opacity-70">I am a...</Label>
                     <Select value={userType} onValueChange={setUserType} disabled={loading}>
                         <SelectTrigger id="userType" className="font-bold">
                             <SelectValue placeholder="Select your role" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="citizen" className="font-bold uppercase text-[10px] tracking-widest">Citizen</SelectItem>
-                            <SelectItem value="lawyer" className="font-bold uppercase text-[10px] tracking-widest">Advocate</SelectItem>
-                            <SelectItem value="businessman" className="font-bold uppercase text-[10px] tracking-widest">Business Person</SelectItem>
-                            <SelectItem value="student" className="font-bold uppercase text-[10px] tracking-widest">Law Student</SelectItem>
+                            <SelectItem value="citizen" className="font-bold">Citizen</SelectItem>
+                            <SelectItem value="lawyer" className="font-bold">Advocate</SelectItem>
+                            <SelectItem value="businessman" className="font-bold">Business Person</SelectItem>
+                            <SelectItem value="student" className="font-bold">Law Student</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                        <Label htmlFor="password" title="password" className="font-black uppercase text-[10px] tracking-widest opacity-70">Password</Label>
+                        <Label htmlFor="password" title="password" className="font-bold opacity-70">Password</Label>
                         <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} className="font-bold" />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="confirm-password" title="confirm-password" className="font-black uppercase text-[10px] tracking-widest opacity-70">Confirm</Label>
+                        <Label htmlFor="confirm-password" title="confirm-password" className="font-bold opacity-70">Confirm</Label>
                         <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} className="font-bold" />
                     </div>
                 </div>
-                <Button type="submit" className="w-full h-11 font-black uppercase tracking-widest text-[10px]" onClick={handleRegister} disabled={loading}>
+                <Button type="submit" className="w-full h-11 font-bold" onClick={handleRegister} disabled={loading}>
                     {loading ? <Loader2 className="animate-spin" /> : "Create account"}
                 </Button>
                 </motion.div>
                 <motion.div variants={itemVariants} className="mt-4 text-center text-sm font-medium">
                 Already have an account?{" "}
-                <Link href="/login" className="font-black uppercase text-[10px] tracking-widest text-primary hover:underline">
+                <Link href="/login" className="font-bold text-primary hover:underline">
                     Sign in
                 </Link>
                 </motion.div>
@@ -257,7 +257,7 @@ export default function RegisterPage() {
         }}>
             <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
                 <DialogHeader>
-                    <DialogTitle className="font-black tracking-tight uppercase">Complete Advocate Profile</DialogTitle>
+                    <DialogTitle className="font-black tracking-tight">Complete Advocate Profile</DialogTitle>
                     <DialogDescription className="font-medium">
                         As an Advocate, you must provide your professional details to be listed in our verified directory.
                     </DialogDescription>

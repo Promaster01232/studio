@@ -145,8 +145,8 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                     <ShieldCheck className="h-5 w-5 text-primary" />
                 </div>
                 <div className="space-y-1">
-                    <p className="text-xs font-black uppercase tracking-widest text-primary">Professional Verification</p>
-                    <p className="text-[10px] text-muted-foreground leading-relaxed font-medium">
+                    <p className="text-xs font-black text-primary">Professional Verification</p>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
                         Your credentials will be verified against Bar Council records. Verified advocates appear at the top of search results.
                     </p>
                 </div>
@@ -154,7 +154,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
 
             <div className="grid gap-6">
                 <div className="space-y-3">
-                    <Label htmlFor="fullName" className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                    <Label htmlFor="fullName" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
                         <Gavel className="h-4 w-4 text-primary" /> Full Name (as on Bar ID)
                     </Label>
                     <Input id="fullName" name="fullName" placeholder="e.g., Rajesh Kumar" required defaultValue={initialData?.name || `${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`} className="h-11 border-primary/10 focus:border-primary font-bold" />
@@ -162,13 +162,13 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
 
                 <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <Label htmlFor="barId" className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                        <Label htmlFor="barId" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
                             <GraduationCap className="h-4 w-4 text-primary" /> Bar Council ID
                         </Label>
                         <Input id="barId" name="barId" placeholder="MAH/1234/2010" required defaultValue={initialData?.barId || ""} className="h-11 border-primary/10 font-bold" />
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="experience" className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                        <Label htmlFor="experience" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
                             <Briefcase className="h-4 w-4 text-primary" /> Years of Experience
                         </Label>
                         <Input id="experience" name="experience" type="number" placeholder="10" required defaultValue={getExperienceValue()} className="h-11 border-primary/10 font-bold" />
@@ -176,7 +176,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                 </div>
 
                 <div className="space-y-3">
-                    <Label className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                    <Label className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
                         <FileUp className="h-4 w-4 text-primary" /> Court Certificate / Bar Enrollment
                     </Label>
                     <div className={`relative border-2 border-dashed rounded-xl p-6 transition-all ${certificateName ? 'bg-primary/5 border-primary/40' : 'hover:border-primary/30 bg-muted/20'}`}>
@@ -193,8 +193,8 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                                     <FileUp className="h-6 w-6 text-muted-foreground" />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-foreground">Upload Certificate</p>
-                                    <p className="text-[9px] text-muted-foreground font-medium">PDF or Image (Max 5MB)</p>
+                                    <p className="text-[11px] font-bold text-foreground">Upload Certificate</p>
+                                    <p className="text-[10px] text-muted-foreground font-medium">PDF or Image (Max 5MB)</p>
                                 </div>
                             </div>
                         ) : (
@@ -204,8 +204,8 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                                         <CheckCircle2 className="h-5 w-5" />
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="text-[10px] font-black uppercase tracking-tight truncate max-w-[200px]">{certificateName}</p>
-                                        <p className="text-[9px] text-primary font-black uppercase tracking-widest">File ready for verification</p>
+                                        <p className="text-[11px] font-bold truncate max-w-[200px]">{certificateName}</p>
+                                        <p className="text-[10px] text-primary font-bold">File ready for verification</p>
                                     </div>
                                 </div>
                                 <Button 
@@ -224,24 +224,24 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
 
                 <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <Label htmlFor="specialization" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Primary Specialization</Label>
+                        <Label htmlFor="specialization" className="text-[11px] font-bold text-muted-foreground">Primary Specialization</Label>
                         <Select name="specialization" required defaultValue={initialData?.specialty || ""}>
                             <SelectTrigger id="specialization" className="h-11 border-primary/10 font-bold">
                                 <SelectValue placeholder="Select practice area" />
                             </SelectTrigger>
                             <SelectContent>
-                                {practiceAreas.map(area => <SelectItem key={area} value={area} className="font-bold uppercase text-[10px] tracking-widest">{area}</SelectItem>)}
+                                {practiceAreas.map(area => <SelectItem key={area} value={area} className="font-bold">{area}</SelectItem>)}
                             </SelectContent>
                         </Select>
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="position" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Current Position / Title</Label>
+                        <Label htmlFor="position" className="text-[11px] font-bold text-muted-foreground">Current Position / Title</Label>
                         <Input id="position" name="position" placeholder="e.g., Senior Partner" required defaultValue={getPositionValue()} className="h-11 border-primary/10 font-bold" />
                     </div>
                 </div>
 
                 <div className="space-y-4">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Courts of Practice</Label>
+                    <Label className="text-[11px] font-bold text-muted-foreground">Courts of Practice</Label>
                     <div className="grid grid-cols-2 gap-3">
                         {courtsList.map(court => (
                             <div key={court} className="flex items-center space-x-3 border rounded-xl p-3 hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer group shadow-sm bg-card/50">
@@ -252,33 +252,33 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                                     defaultChecked={initialData?.courts?.includes(court)}
                                     className="border-primary/30 data-[state=checked]:bg-primary" 
                                 />
-                                <label htmlFor={`court-${court}`} className="text-[10px] font-black uppercase tracking-tight cursor-pointer flex-1 group-hover:text-primary transition-colors">{court}</label>
+                                <label htmlFor={`court-${court}`} className="text-[11px] font-bold cursor-pointer flex-1 group-hover:text-primary transition-colors">{court}</label>
                             </div>
                         ))}
                     </div>
                 </div>
                 
                 <div className="space-y-3">
-                    <Label htmlFor="bio" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Professional Bio</Label>
+                    <Label htmlFor="bio" className="text-[11px] font-bold text-muted-foreground">Professional Bio</Label>
                     <Textarea id="bio" name="bio" placeholder="Describe your legal expertise, notable cases, and consultation approach..." rows={4} required defaultValue={initialData?.about || ""} className="resize-none border-primary/10 focus:border-primary font-medium text-sm" />
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <Label htmlFor="courtName" className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 text-muted-foreground">
+                        <Label htmlFor="courtName" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
                             <MapPin className="h-4 w-4 text-primary" /> Primary Court Location
                         </Label>
                         <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" required defaultValue={initialData?.courtName || ""} className="h-11 border-primary/10 font-bold" />
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="courtAddress" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">City / Address</Label>
+                        <Label htmlFor="courtAddress" className="text-[11px] font-bold text-muted-foreground">City / Address</Label>
                         <Input id="courtAddress" name="courtAddress" placeholder="e.g., Mumbai, Maharashtra" required defaultValue={initialData?.courtAddress || ""} className="h-11 border-primary/10 font-bold" />
                     </div>
                 </div>
             </div>
 
             <div className="pt-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-2 mt-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
-                <Button type="submit" disabled={isSaving} className="w-full h-12 text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                <Button type="submit" disabled={isSaving} className="w-full h-12 font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
                     {isSaving ? (
                         <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />

@@ -105,7 +105,7 @@ const resources = [
 
 
 const SectionTitle = ({children}: {children: React.ReactNode}) => (
-    <h2 className="text-xl sm:text-2xl font-black tracking-tighter text-foreground/90 uppercase">{children}</h2>
+    <h2 className="text-xl sm:text-2xl font-black tracking-tighter text-foreground/90">{children}</h2>
 )
 
 
@@ -152,8 +152,8 @@ export default function DashboardHomePage() {
                   <p className="text-sm sm:text-base text-muted-foreground mt-2 font-medium">Your AI-powered legal co-pilot.</p>
               </div>
               <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none h-10 font-black uppercase tracking-widest text-[10px]" asChild><Link href="/dashboard/lawyer-connect">Find a Lawyer</Link></Button>
-                   <Button size="sm" className="flex-1 sm:flex-none h-10 font-black uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20" asChild><Link href="/dashboard/support">Ask AI</Link></Button>
+                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none h-10 font-bold" asChild><Link href="/dashboard/lawyer-connect">Find a Lawyer</Link></Button>
+                   <Button size="sm" className="flex-1 sm:flex-none h-10 font-bold shadow-lg shadow-primary/20" asChild><Link href="/dashboard/support">Ask AI</Link></Button>
               </div>
           </div>
         </MotionWrapper>
@@ -173,7 +173,7 @@ export default function DashboardHomePage() {
                                     <Mic className="h-6 w-6 text-primary" />
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="font-black text-base sm:text-lg tracking-tight uppercase">Speak Your Problem</h3>
+                                    <h3 className="font-black text-base sm:text-lg tracking-tight">Speak Your Problem</h3>
                                     <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 font-medium">Narrate your issue for an AI summary.</p>
                                 </div>
                             </Link>
@@ -188,7 +188,7 @@ export default function DashboardHomePage() {
                                     <MessageSquare className="h-6 w-6 text-primary" />
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="font-black text-base sm:text-lg tracking-tight uppercase">AI Legal Chat</h3>
+                                    <h3 className="font-black text-base sm:text-lg tracking-tight">AI Legal Chat</h3>
                                     <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 font-medium">Get answers to legal questions.</p>
                                 </div>
                             </Link>
@@ -210,7 +210,7 @@ export default function DashboardHomePage() {
                               <div className="p-2 rounded-lg bg-primary/10 mb-3 group-hover:bg-primary/20 transition-colors">
                                 <feature.icon className="h-5 w-5 text-primary" />
                               </div>
-                              <h3 className="font-black text-xs sm:text-sm leading-tight uppercase tracking-tight">{feature.title}</h3>
+                              <h3 className="font-black text-xs sm:text-sm leading-tight tracking-tight">{feature.title}</h3>
                               <p className="hidden sm:block text-xs text-muted-foreground mt-1.5 line-clamp-2 font-medium">{feature.description}</p>
                           </Card>
                       </Link>
@@ -266,7 +266,7 @@ export default function DashboardHomePage() {
                             <resource.icon className="h-6 w-6 text-primary" />
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-black text-base sm:text-lg tracking-tight uppercase">{resource.title}</h3>
+                            <h3 className="font-black text-base sm:text-lg tracking-tight">{resource.title}</h3>
                             <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-1 md:line-clamp-none font-medium">{resource.description}</p>
                           </div>
                         </div>

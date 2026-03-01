@@ -139,11 +139,11 @@ export default function LoginPage() {
       >
         <motion.div variants={itemVariants} className="flex items-center gap-3 mb-6">
             <Logo className="h-12 w-12" />
-            <h1 className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] uppercase">
+            <h1 className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
                 Nyaya Sahayak
             </h1>
         </motion.div>
-        <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter uppercase">Welcome Back</motion.h2>
+        <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Welcome Back</motion.h2>
         <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
             Login to access your dashboard.
         </motion.p>
@@ -151,11 +151,11 @@ export default function LoginPage() {
         <motion.div variants={itemVariants} className="grid gap-4">
             {domainError && (
                 <Alert variant="destructive" className="mb-4">
-                    <AlertTitle className="font-black uppercase text-xs tracking-widest">Configuration Required</AlertTitle>
+                    <AlertTitle className="font-bold text-xs">Configuration Required</AlertTitle>
                     <AlertDescription className="text-xs space-y-2 font-medium">
                     <p>To enable social sign-in, please add this domain to your Firebase project's authorized domains:</p>
                     <p className="font-mono bg-black/20 p-2 rounded-md text-destructive-foreground break-all">{domainError}</p>
-                    <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive font-black uppercase text-[10px] tracking-widest h-11 active:scale-95">
+                    <Button asChild size="sm" className="mt-2 w-full !bg-destructive-foreground !text-destructive font-bold h-11 active:scale-95">
                         <a href="https://console.firebase.google.com/project/ai-naya-shahayak/authentication/settings" target="_blank" rel="noopener noreferrer">
                             Open Firebase Auth Settings
                         </a>
@@ -166,7 +166,7 @@ export default function LoginPage() {
             
             <div className="space-y-4">
                 <div className="space-y-2">
-                <Label htmlFor="email" className="font-black uppercase text-[10px] tracking-widest opacity-70">Email</Label>
+                <Label htmlFor="email" className="font-bold opacity-70">Email</Label>
                 <Input
                     id="email"
                     type="email"
@@ -180,8 +180,8 @@ export default function LoginPage() {
                 </div>
                 <div className="space-y-2">
                 <div className="flex items-center">
-                    <Label htmlFor="password" title="password" className="font-black uppercase text-[10px] tracking-widest opacity-70">Password</Label>
-                    <Link href="#" className="ml-auto inline-block text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+                    <Label htmlFor="password" title="password" className="font-bold opacity-70">Password</Label>
+                    <Link href="#" className="ml-auto inline-block text-[11px] font-bold text-primary hover:underline">
                     Forgot password?
                     </Link>
                 </div>
@@ -195,7 +195,7 @@ export default function LoginPage() {
                     className="font-bold h-11"
                 />
                 </div>
-                <Button type="submit" className="w-full font-black uppercase tracking-widest text-[10px] h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all mt-2" onClick={handleEmailLogin} disabled={loading}>
+                <Button type="submit" className="w-full font-bold h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all mt-2" onClick={handleEmailLogin} disabled={loading}>
                 {loading ? <Loader2 className="animate-spin" /> : "Login"}
                 </Button>
             </div>
@@ -204,7 +204,7 @@ export default function LoginPage() {
                 <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
                 </div>
-                <div className="relative flex justify-center text-[10px] uppercase font-black tracking-widest">
+                <div className="relative flex justify-center text-[11px] font-bold">
                     <span className="bg-background px-2 text-muted-foreground">
                     Or continue with
                     </span>
@@ -212,7 +212,7 @@ export default function LoginPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-2">
-                <Button variant="outline" className="w-full font-black uppercase tracking-widest text-[10px] h-12 active:scale-95 transition-all border-primary/10 hover:border-primary/30" onClick={handleGoogleLogin} disabled={loading}>
+                <Button variant="outline" className="w-full font-bold h-12 active:scale-95 transition-all border-primary/10 hover:border-primary/30" onClick={handleGoogleLogin} disabled={loading}>
                     <GoogleIcon className="mr-2 h-4 w-4" />
                     Google
                 </Button>
@@ -221,7 +221,7 @@ export default function LoginPage() {
         </motion.div>
         <motion.div variants={itemVariants} className="mt-6 text-center text-sm font-medium">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="font-black uppercase text-[10px] tracking-widest text-primary hover:underline">
+            <Link href="/register" className="font-bold text-primary hover:underline">
                 Sign up
             </Link>
         </motion.div>
