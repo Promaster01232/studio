@@ -42,7 +42,7 @@ export default function DocumentIntelligencePage() {
           <Card className="border-primary/10 shadow-xl overflow-hidden rounded-2xl">
             <CardHeader className="bg-primary/5 border-b border-primary/5">
               <CardTitle className="text-xl font-bold tracking-tight">Upload Your Document</CardTitle>
-              <CardDescription className="font-medium">Supports PDF, Word, and clear images of documents.</CardDescription>
+              <CardDescription className="font-medium">Supports PDF, DOCX, and image files.</CardDescription>
             </CardHeader>
             <CardContent className="p-6">
               <form action={formAction} className="space-y-6">
@@ -141,7 +141,7 @@ export default function DocumentIntelligencePage() {
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
                         <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-xl">
                             <AlertTriangle className="h-4 w-4" />
-                            <AlertTitle className="font-bold">Analysis Failed</AlertTitle>
+                            <AlertTitle className="font-bold">Analysis failed</AlertTitle>
                             <AlertDescription className="text-xs font-medium">{state.error}</AlertDescription>
                         </Alert>
                     </motion.div>
@@ -151,7 +151,7 @@ export default function DocumentIntelligencePage() {
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
                         <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 group transition-all hover:bg-primary/10">
                             <h3 className="text-xs font-bold text-primary uppercase tracking-widest mb-2 flex items-center gap-2">
-                                <FileText className="h-3.5 w-3.5" /> Simple Summary
+                                <FileText className="h-3.5 w-3.5" /> Simple summary
                             </h3>
                             <p className="text-sm text-foreground font-medium leading-relaxed">{state.data.summary}</p>
                         </div>
@@ -159,7 +159,7 @@ export default function DocumentIntelligencePage() {
                         <div className="grid sm:grid-cols-2 gap-4">
                             <div className="p-4 bg-red-500/5 rounded-xl border border-red-500/10 transition-all hover:bg-red-500/10">
                                 <h3 className="text-[10px] font-black text-red-600 uppercase tracking-widest mb-2 flex items-center gap-2">
-                                    <AlertTriangle className="h-3.5 w-3.5" /> Legal Risks
+                                    <AlertTriangle className="h-3.5 w-3.5" /> Legal risks
                                 </h3>
                                 <p className="text-xs text-muted-foreground font-bold leading-tight">{state.data.legalRisks}</p>
                             </div>
@@ -173,14 +173,14 @@ export default function DocumentIntelligencePage() {
 
                         <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 transition-all hover:bg-primary/10">
                             <h3 className="text-[10px] font-black text-primary uppercase tracking-widest mb-2 flex items-center gap-2">
-                                <ListChecks className="h-3.5 w-3.5" /> Required Actions
+                                <ListChecks className="h-3.5 w-3.5" /> Required actions
                             </h3>
                             <p className="text-xs text-muted-foreground font-bold leading-tight">{state.data.requiredActions}</p>
                         </div>
 
                         <div className="p-4 bg-destructive/5 rounded-xl border border-destructive/10 transition-all hover:bg-destructive/10">
                             <h3 className="text-[10px] font-black text-destructive uppercase tracking-widest mb-2 flex items-center gap-2">
-                                <Bomb className="h-3.5 w-3.5" /> Consequences of Ignoring
+                                <Bomb className="h-3.5 w-3.5" /> Consequences of ignoring
                             </h3>
                             <p className="text-xs text-muted-foreground font-bold leading-tight">{state.data.consequences}</p>
                         </div>
@@ -193,7 +193,7 @@ export default function DocumentIntelligencePage() {
                             <FileUp className="h-12 w-12 text-muted-foreground opacity-20" />
                         </div>
                         <div className="space-y-1">
-                            <p className="font-bold text-lg tracking-tight opacity-40">Ready for Analysis</p>
+                            <p className="font-bold text-lg tracking-tight opacity-40">Ready for analysis</p>
                             <p className="text-sm text-muted-foreground font-medium max-w-[250px] mx-auto">Upload a document on the left to see the AI analysis results here.</p>
                         </div>
                     </motion.div>

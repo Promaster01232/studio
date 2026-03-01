@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User, Sparkles, UserMinus } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User, Sparkles, UserMinus, ImageUp } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore } from '@/firebase';
@@ -69,6 +69,7 @@ export default function ProfilePage() {
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Computed state for changes
   const hasChanges = userProfile ? (
@@ -123,21 +124,46 @@ export default function ProfilePage() {
         .catch(err => console.error("Failed to sync photo:", err));
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit
+        toast({
+          variant: "destructive",
+          title: "File too large",
+          description: "Please select an image smaller than 2MB.",
+        });
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUrl = reader.result as string;
+        setPhotoURL(dataUrl);
+        updateUserPhoto(dataUrl);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const startCamera = async () => {
-    setIsCameraOpen(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       setHasCameraPermission(true);
+      setIsCameraOpen(true);
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error accessing camera:', error);
       setHasCameraPermission(false);
+      let msg = 'Please enable camera permissions in your browser settings to use this feature.';
+      if (error.name === 'NotFoundError') {
+          msg = 'No camera device found on this machine. Please select "Choose from device" to upload a photo.';
+      }
       toast({
         variant: 'destructive',
-        title: 'Camera Access Denied',
-        description: 'Please enable camera permissions in your browser settings to use this feature.',
+        title: error.name === 'NotFoundError' ? 'Camera not found' : 'Camera access denied',
+        description: msg,
       });
     }
   };
@@ -240,13 +266,8 @@ export default function ProfilePage() {
     const userDocRef = doc(firestore, "users", user.uid);
 
     try {
-      // 1. Delete Directory Listing if any
       if (email) deleteAdvocate(email);
-      
-      // 2. Delete Firestore Data
       await deleteDoc(userDocRef);
-      
-      // 3. Delete Auth User
       await deleteUser(user);
       
       toast({
@@ -259,7 +280,7 @@ export default function ProfilePage() {
       if (error.code === 'auth/requires-recent-login') {
         toast({
           variant: "destructive",
-          title: "Security Action Required",
+          title: "Security action required",
           description: "For security reasons, please log out and sign back in before deleting your account.",
         });
       } else {
@@ -270,7 +291,6 @@ export default function ProfilePage() {
         });
       }
     } finally {
-      // Since deleteUser might redirect, only set saving to false if we stay on page
       if (auth.currentUser) setSaving(false);
     }
   };
@@ -348,37 +368,40 @@ export default function ProfilePage() {
                         <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-background shadow-2xl transition-transform active:scale-95 group-hover:scale-105 duration-300">
                             <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} className="object-cover" />
                         </Avatar>
-                        <div className="absolute -bottom-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <Button size="icon" variant="secondary" className="rounded-full h-9 w-9 shadow-xl border border-primary/10 hover:bg-primary hover:text-white" onClick={startCamera}>
-                                <Camera className="h-4 w-4" />
+                        <div className="absolute -bottom-1 -right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <Button size="icon" variant="secondary" className="rounded-full h-8 w-8 shadow-xl border border-primary/10 hover:bg-primary hover:text-white" onClick={startCamera}>
+                                <Camera className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button size="icon" variant="secondary" className="rounded-full h-8 w-8 shadow-xl border border-primary/10 hover:bg-primary hover:text-white" onClick={() => fileInputRef.current?.click()}>
+                                <ImageUp className="h-3.5 w-3.5" />
                             </Button>
                         </div>
                     </div>
                 ) : (
-                    <div className="shrink-0">
+                    <div className="shrink-0 flex flex-col sm:flex-row gap-3">
                         <Button variant="outline" className="h-20 w-20 rounded-full border-2 border-dashed border-primary/20 flex flex-col gap-1 items-center justify-center text-muted-foreground hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 shadow-inner group" onClick={startCamera}>
                             <Camera className="h-6 w-6 group-hover:scale-110 transition-transform" />
-                            <span className="text-[10px] font-bold opacity-60">Set Photo</span>
+                            <span className="text-[9px] font-bold opacity-60 leading-none">Camera</span>
+                        </Button>
+                        <Button variant="outline" className="h-20 w-20 rounded-full border-2 border-dashed border-primary/20 flex flex-col gap-1 items-center justify-center text-muted-foreground hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 shadow-inner group" onClick={() => fileInputRef.current?.click()}>
+                            <ImageUp className="h-6 w-6 group-hover:scale-110 transition-transform" />
+                            <span className="text-[9px] font-bold opacity-60 leading-none">Device</span>
                         </Button>
                     </div>
                 )}
+                <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
                 <div className="flex-1 text-center sm:text-left space-y-1 min-w-0">
                     <div className="flex items-center justify-center sm:justify-start gap-2">
                         <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter text-foreground truncate">{firstName} {lastName}</h2>
                         {advocateDetails?.isVerified && <BadgeCheck className="h-4 w-4 text-primary shrink-0" />}
                     </div>
-                    {((userProfile?.userType === 'lawyer' && advocateDetails) || userProfile?.userType !== 'lawyer') && (
+                    {advocateDetails && (
                         <div className="flex items-center gap-1.5 px-3 py-0.5 bg-primary/5 rounded-full border border-primary/10 w-fit mx-auto sm:mx-0">
                             <span className="text-[10px] font-bold text-primary capitalize">{userProfile?.userType}</span>
                         </div>
                     )}
                     <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate opacity-80">{email}</p>
                 </div>
-                {photoURL && (
-                    <Button variant="ghost" size="sm" className="hidden sm:flex h-11 font-bold opacity-50 hover:opacity-100 active:scale-95" onClick={startCamera}>
-                        <Camera className="mr-2 h-4 w-4" /> Change photo
-                    </Button>
-                )}
                 </CardContent>
             </Card>
         </motion.div>
