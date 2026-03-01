@@ -139,6 +139,9 @@ export default function LoginPage() {
       >
         <motion.div variants={itemVariants} className="flex items-center gap-3 mb-6">
             <Logo />
+            <h1 className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
+                Nyaya Sahayak
+            </h1>
         </motion.div>
         <motion.h2 variants={itemVariants} className="text-3xl font-bold tracking-tight">Welcome Back</motion.h2>
         <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8">
