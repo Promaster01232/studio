@@ -46,7 +46,7 @@ export default function RegisterPage() {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Please fill in all fields.",
+        description: "Please fill in all required fields to create your account.",
       });
       return;
     }
@@ -55,7 +55,7 @@ export default function RegisterPage() {
       toast({
         variant: "destructive",
         title: "Passwords do not match",
-        description: "Please make sure your passwords match.",
+        description: "Please ensure your passwords are identical.",
       });
       return;
     }
@@ -87,7 +87,7 @@ export default function RegisterPage() {
       } else {
         toast({
             title: "Account Created!",
-            description: "Welcome to Nyaya Sahayak. You are now logged in.",
+            description: "Welcome to Nyaya Sahayak. Your legal journey starts here.",
         });
         router.push("/dashboard");
       }
@@ -96,7 +96,7 @@ export default function RegisterPage() {
       console.error("Registration error:", error);
       let errorMessage = "An unknown error occurred. Please try again.";
       if (error.code === 'auth/email-already-in-use') {
-          errorMessage = "This email is already in use. Please login instead.";
+          errorMessage = "This email address is already registered. Please login instead.";
       } else if (error.code === 'auth/weak-password') {
           errorMessage = "The password is too weak. Please use at least 6 characters.";
       }
@@ -114,7 +114,7 @@ export default function RegisterPage() {
     setLoading(false);
     toast({
         title: "Registration Complete!",
-        description: "Your advocate profile has been created and listed. Welcome aboard!",
+        description: "Your advocate profile has been created and verified. Welcome aboard!",
     });
     router.push('/dashboard/lawyer-connect');
   };
@@ -157,9 +157,9 @@ export default function RegisterPage() {
                     Nyaya Sahayak
                 </h1>
             </motion.div>
-            <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Create an Account</motion.h2>
+            <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Create Account</motion.h2>
             <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
-            Join the Nyaya Sahayak community today.
+            Join the community of legal professionals and citizens.
             </motion.p>
             <CardContent className="p-0">
                 <motion.div variants={itemVariants} className="grid gap-4">
@@ -174,7 +174,7 @@ export default function RegisterPage() {
                     </div>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="email" className="font-bold opacity-70">Email</Label>
+                    <Label htmlFor="email" className="font-bold opacity-70">Email address</Label>
                     <Input
                     id="email"
                     type="email"
@@ -187,7 +187,7 @@ export default function RegisterPage() {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="mobile-number" className="font-bold opacity-70">Mobile Number</Label>
+                    <Label htmlFor="mobile-number" className="font-bold opacity-70">Mobile number</Label>
                     <Input
                     id="mobile-number"
                     type="tel"
@@ -208,8 +208,8 @@ export default function RegisterPage() {
                         <SelectContent>
                             <SelectItem value="citizen" className="font-bold">Citizen</SelectItem>
                             <SelectItem value="lawyer" className="font-bold">Advocate</SelectItem>
-                            <SelectItem value="businessman" className="font-bold">Business Person</SelectItem>
-                            <SelectItem value="student" className="font-bold">Law Student</SelectItem>
+                            <SelectItem value="businessman" className="font-bold">Business person</SelectItem>
+                            <SelectItem value="student" className="font-bold">Law student</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -223,7 +223,7 @@ export default function RegisterPage() {
                         <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} className="font-bold" />
                     </div>
                 </div>
-                <Button type="submit" className="w-full h-11 font-bold" onClick={handleRegister} disabled={loading}>
+                <Button type="submit" className="w-full h-11 font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all" onClick={handleRegister} disabled={loading}>
                     {loading ? <Loader2 className="animate-spin" /> : "Create account"}
                 </Button>
                 </motion.div>
@@ -253,12 +253,12 @@ export default function RegisterPage() {
         <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
             setShowAdvocateDialog(open);
             if (!open) {
-                toast({ title: "Incomplete Profile", description: "Advocates must complete their profile to proceed." });
+                toast({ title: "Profile incomplete", description: "Advocates must provide professional details to proceed." });
             }
         }}>
             <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
                 <DialogHeader>
-                    <DialogTitle className="font-black tracking-tight">Complete Advocate Profile</DialogTitle>
+                    <DialogTitle className="font-black tracking-tight">Complete advocate profile</DialogTitle>
                     <DialogDescription className="font-medium">
                         As an Advocate, you must provide your professional details to be listed in our verified directory.
                     </DialogDescription>

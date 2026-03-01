@@ -57,15 +57,22 @@ export default function LoginPage() {
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {
-            toast({ title: "Login Successful!", description: "Welcome back."});
+            toast({ title: "Login Successful!", description: "Welcome back to Nyaya Sahayak."});
             router.push('/dashboard');
         } else {
-            toast({ title: "Welcome!", description: "Let's create your profile."});
+            toast({ title: "Welcome!", description: "Let's complete your profile setup."});
             router.push('/create-profile');
         }
     } catch (error: any) {
-        console.error("Email auth error:", error);
-        toast({ variant: "destructive", title: "Login Failed", description: "Invalid email or password. Please try again." });
+        let message = "Invalid email or password. Please try again.";
+        if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+            message = "The credentials you entered are incorrect. Please check your email and password.";
+        }
+        toast({ 
+            variant: "destructive", 
+            title: "Login Failed", 
+            description: message 
+        });
     } finally {
         setLoading(false);
     }
@@ -93,11 +100,10 @@ export default function LoginPage() {
           const domain = typeof window !== 'undefined' ? window.location.hostname : '';
           setDomainError(domain);
       } else {
-        console.error("Social login error:", error);
         toast({
           variant: "destructive",
           title: "Login Failed",
-          description: "Could not sign in. Please try again.",
+          description: "Could not sign in with Google. Please try again.",
         });
       }
       setLoading(false);
@@ -145,7 +151,7 @@ export default function LoginPage() {
         </motion.div>
         <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Welcome Back</motion.h2>
         <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
-            Login to access your dashboard.
+            Login to access your legal dashboard.
         </motion.p>
 
         <motion.div variants={itemVariants} className="grid gap-4">
@@ -166,7 +172,7 @@ export default function LoginPage() {
             
             <div className="space-y-4">
                 <div className="space-y-2">
-                <Label htmlFor="email" className="font-bold opacity-70">Email</Label>
+                <Label htmlFor="email" className="font-bold opacity-70">Email Address</Label>
                 <Input
                     id="email"
                     type="email"
@@ -220,7 +226,7 @@ export default function LoginPage() {
             
         </motion.div>
         <motion.div variants={itemVariants} className="mt-6 text-center text-sm font-medium">
-            Don&apos;t have an account?{" "}
+            Don't have an account?{" "}
             <Link href="/register" className="font-bold text-primary hover:underline">
                 Sign up
             </Link>

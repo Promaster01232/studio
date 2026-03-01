@@ -7,11 +7,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Filter, Search, Star, MapPin, Briefcase, BadgeCheck, MessageSquare, Scale, User, Globe, Phone, Mail, ChevronRight } from "lucide-react";
+import { Filter, Search, Star, MapPin, Briefcase, BadgeCheck, MessageSquare, Scale, Globe, Phone, Mail, ChevronRight } from "lucide-react";
 import { getAdvocates, type Lawyer } from "@/lib/advocates-data";
-import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
 
 export default function LawyerConnectPage() {
   const [allAdvocates, setAllAdvocates] = useState<Lawyer[]>([]);
@@ -59,7 +57,7 @@ export default function LawyerConnectPage() {
       <div className="flex justify-between items-center border-b border-primary/5 pb-2">
         <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
             <Scale className="h-3.5 w-3.5 text-primary" />
-            Active Professionals ({filteredAdvocates.length})
+            Active professionals ({filteredAdvocates.length})
         </h2>
       </div>
 
@@ -75,10 +73,10 @@ export default function LawyerConnectPage() {
                 className="group"
             >
                 <Card className="overflow-hidden border-primary/10 bg-card/40 backdrop-blur-md rounded-2xl transition-all duration-300 hover:shadow-xl hover:border-primary/30 flex flex-col h-full">
-                    {/* Business Card Layout */}
                     <div className="flex flex-col sm:flex-row flex-1 min-h-[220px]">
-                        {/* Left Section: Logo & Identity */}
-                        <div className="w-full sm:w-[200px] md:w-[240px] flex flex-col items-center justify-center p-6 bg-muted/20 border-b sm:border-b-0 sm:border-r border-primary/5 relative">
+                        {/* Digital ID Section */}
+                        <div className="w-full sm:w-[200px] md:w-[240px] flex flex-col items-center justify-center p-6 bg-muted/20 border-b sm:border-b-0 sm:border-r border-primary/5 relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent"></div>
                             <div className="relative group/avatar">
                                 {lawyer.image?.imageUrl ? (
                                     <Avatar className="h-24 w-24 border-4 border-background shadow-2xl rounded-full transition-transform group-hover/avatar:scale-105 duration-500">
@@ -90,14 +88,14 @@ export default function LawyerConnectPage() {
                                         <Scale className="h-10 w-10 opacity-40" />
                                     </div>
                                 )}
-                                <div className="absolute -bottom-1 -right-1 bg-green-500 border-4 border-background h-6 w-6 rounded-full shadow-lg"></div>
+                                <div className="absolute -bottom-1 -right-1 bg-green-500 border-4 border-background h-6 w-6 rounded-full shadow-lg animate-pulse"></div>
                             </div>
-                            <div className="mt-4 text-center">
-                                <p className="text-[9px] font-bold text-muted-foreground mt-1 opacity-60">Verified Member</p>
+                            <div className="mt-4 text-center z-10">
+                                <p className="text-[9px] font-bold text-primary/60 mt-1 uppercase tracking-tighter">Verified Member</p>
                             </div>
                         </div>
 
-                        {/* Right Section: Contact & Professional Info */}
+                        {/* Professional Info Section */}
                         <div className="flex-1 p-6 md:p-8 flex flex-col justify-center">
                             <div className="mb-6 space-y-1">
                                 <div className="flex flex-wrap items-center gap-2">
@@ -118,7 +116,7 @@ export default function LawyerConnectPage() {
                                     <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
                                         <Globe className="h-3 w-3" />
                                     </div>
-                                    <span className="truncate uppercase tracking-wider">NyayaSahayak.com</span>
+                                    <span className="truncate tracking-tight">Nyaya Sahayak</span>
                                 </div>
                                 <div className="flex items-center gap-3 group/item">
                                     <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
@@ -140,37 +138,34 @@ export default function LawyerConnectPage() {
                                 </div>
                             </div>
                             
-                            {/* Stats */}
                             <div className="mt-6 pt-6 border-t border-primary/5 flex items-center gap-6">
                                 <div className="flex items-center gap-1.5">
                                     <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
                                     <span className="text-sm font-black tracking-tighter">{lawyer.rating}</span>
-                                    <span className="text-[10px] opacity-40">({lawyer.reviews} Reviews)</span>
+                                    <span className="text-[10px] opacity-40">({lawyer.reviews} reviews)</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-muted-foreground">
                                     <Briefcase className="h-3.5 w-3.5" />
-                                    <span className="text-sm font-black tracking-tighter">{lawyer.experience?.split(' ')[0]}Y Exp.</span>
+                                    <span className="text-sm font-black tracking-tighter">{lawyer.experience?.split(' ')[0]}Y exp.</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Action Footer */}
                     <div className="border-t border-primary/10 flex divide-x divide-primary/10 bg-muted/5 group-hover:bg-muted/10 transition-colors">
                         <Button variant="ghost" className="flex-1 h-12 rounded-none font-bold text-xs hover:bg-primary/5 active:bg-primary/10 transition-all" asChild>
                             <Link href={`/dashboard/lawyer-connect/${lawyer.id}/chat`}>
                                 <MessageSquare className="mr-2 h-4 w-4" />
-                                Chat Now
+                                Chat now
                             </Link>
                         </Button>
                         <Button variant="ghost" className="flex-1 h-12 rounded-none font-bold text-xs hover:bg-primary/5 active:bg-primary/10 transition-all" asChild>
                             <Link href={`/dashboard/lawyer-connect/${lawyer.id}`}>
-                                View Profile
+                                View profile
                                 <ChevronRight className="ml-1 h-4 w-4" />
                             </Link>
                         </Button>
                     </div>
-                    {/* Decorative Bottom Bar (matching image reference) */}
                     <div className="h-1 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20"></div>
                 </Card>
             </motion.div>
