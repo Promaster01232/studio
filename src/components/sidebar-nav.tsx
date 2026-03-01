@@ -27,6 +27,7 @@ import {
   Landmark,
   LifeBuoy,
   ChevronRight,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -74,6 +75,13 @@ const navigationItems = [
     items: [
       { href: "/dashboard/business-msme", icon: Briefcase, label: "Business & MSME" },
       { href: "/dashboard/finances-billing", icon: Landmark, label: "Finances & Billing" },
+    ],
+  },
+  {
+    title: "System",
+    icon: Settings,
+    items: [
+      { href: "/dashboard/management-console", icon: Shield, label: "Management Console" },
     ],
   },
   {
