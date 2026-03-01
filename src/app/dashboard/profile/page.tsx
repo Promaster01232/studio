@@ -70,6 +70,14 @@ export default function ProfilePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Computed state for changes
+  const hasChanges = userProfile ? (
+    firstName !== userProfile.firstName ||
+    lastName !== userProfile.lastName ||
+    mobileNumber !== (userProfile.mobileNumber || '') ||
+    photoURL !== (userProfile.photoURL || '')
+  ) : false;
+
 
   useEffect(() => {
     setIsMounted(true);
@@ -110,6 +118,7 @@ export default function ProfilePage() {
       setDoc(userDocRef, { photoURL: newPhotoURL }, { merge: true })
         .then(() => {
             toast({ title: "Photo Updated", description: "Your profile picture has been saved." });
+            setUserProfile(prev => prev ? { ...prev, photoURL: newPhotoURL } : null);
         })
         .catch(err => console.error("Failed to sync photo:", err));
   };
@@ -397,7 +406,12 @@ export default function ProfilePage() {
                                 <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="bg-background/50 h-11 text-sm font-semibold" />
                             </div>
                             <div className="flex justify-end pt-2">
-                                <Button onClick={() => handleSaveChanges()} disabled={saving} size="sm" className="w-full sm:w-auto shadow-lg shadow-primary/10 h-11 px-10 font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">
+                                <Button 
+                                    onClick={() => handleSaveChanges()} 
+                                    disabled={saving || !hasChanges} 
+                                    size="sm" 
+                                    className="w-full sm:w-auto shadow-lg shadow-primary/10 h-11 px-10 font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all disabled:opacity-50 disabled:grayscale"
+                                >
                                     {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
                                     Update Details
                                 </Button>
