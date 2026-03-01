@@ -483,6 +483,13 @@ export default function ProfilePage() {
 
       <Dialog open={isCameraOpen} onOpenChange={(open) => !open && stopCamera()}>
           <DialogContent className="sm:max-w-md p-0 overflow-hidden sm:rounded-2xl border-none shadow-2xl h-[100dvh] sm:h-auto bg-black">
+              {/* Screen reader content for accessibility */}
+              <div className="sr-only">
+                  <DialogHeader>
+                      <DialogTitle>Capture Profile Photo</DialogTitle>
+                      <DialogDescription>Use your camera to take a profile picture.</DialogDescription>
+                  </DialogHeader>
+              </div>
               <div className="relative h-full sm:aspect-square group">
                   <video 
                     ref={videoRef} 
