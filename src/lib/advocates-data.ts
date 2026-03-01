@@ -75,3 +75,10 @@ export const saveAdvocate = (newAdvocate: Omit<Lawyer, 'id'>): void => {
     
     localStorage.setItem('advocates', JSON.stringify(updatedAdvocates));
 }
+
+export const deleteAdvocate = (email: string): void => {
+    if (typeof window === 'undefined') return;
+    const storedAdvocates = getStoredAdvocates();
+    const filtered = storedAdvocates.filter(a => a.contact?.email !== email);
+    localStorage.setItem('advocates', JSON.stringify(filtered));
+}

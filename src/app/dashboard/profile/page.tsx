@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User, Sparkles } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User, Sparkles, UserMinus } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore } from '@/firebase';
@@ -32,7 +32,7 @@ import {
   AlertDialogTrigger 
 } from '@/components/ui/alert-dialog';
 import { AdvocateProfileForm } from '@/components/advocate-profile-form';
-import { getAdvocates, type Lawyer } from '@/lib/advocates-data';
+import { getAdvocates, type Lawyer, deleteAdvocate } from '@/lib/advocates-data';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type UserProfile = {
@@ -172,6 +172,17 @@ export default function ProfilePage() {
     });
   };
 
+  const handleRemoveAdvocateListing = () => {
+    if (email) {
+        deleteAdvocate(email);
+        setAdvocateDetails(null);
+        toast({
+            title: "Listing Removed",
+            description: "Your professional profile has been removed from the directory.",
+        });
+    }
+  };
+
   const handleSaveChanges = (fromAdvocateFlow = false) => {
     if (!auth.currentUser || !userProfile) return;
 
@@ -221,10 +232,13 @@ export default function ProfilePage() {
     const userDocRef = doc(firestore, "users", user.uid);
 
     try {
-      // 1. Delete Firestore Data first
+      // 1. Delete Directory Listing if any
+      if (email) deleteAdvocate(email);
+      
+      // 2. Delete Firestore Data
       await deleteDoc(userDocRef);
       
-      // 2. Delete Auth User
+      // 3. Delete Auth User
       await deleteUser(user);
       
       toast({
@@ -446,11 +460,37 @@ export default function ProfilePage() {
                                     </div>
                                 )}
                                 
-                                <div className="pt-2">
-                                    <Button onClick={() => setShowAdvocateDialog(true)} variant={advocateDetails ? "outline" : "default"} size="sm" className="w-full sm:w-auto font-black uppercase text-[10px] tracking-widest h-10 px-6 shadow-md border-primary/20 active:scale-95 transition-all">
+                                <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                                    <Button onClick={() => setShowAdvocateDialog(true)} variant={advocateDetails ? "outline" : "default"} size="sm" className="flex-1 font-black uppercase text-[10px] tracking-widest h-10 px-6 shadow-md border-primary/20 active:scale-95 transition-all">
                                         <Edit className="mr-2 h-3.5 w-3.5" />
-                                        {advocateDetails ? "Edit Professional Profile" : "Complete Advocate Setup"}
+                                        {advocateDetails ? "Edit Profile" : "Complete Setup"}
                                     </Button>
+                                    
+                                    {advocateDetails && (
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="ghost" size="sm" className="flex-1 text-destructive hover:bg-destructive/10 font-black uppercase text-[10px] tracking-widest h-10">
+                                                    <UserMinus className="mr-2 h-3.5 w-3.5" />
+                                                    Remove Listing
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Unlist from Directory?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This will remove your professional profile from the lawyer directory. 
+                                                        Your main account and access to legal tools will not be affected.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={handleRemoveAdvocateListing} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                                        Confirm Removal
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>
@@ -555,7 +595,6 @@ export default function ProfilePage() {
 
       <Dialog open={isCameraOpen} onOpenChange={(open) => !open && stopCamera()}>
           <DialogContent className="sm:max-w-md p-0 overflow-hidden sm:rounded-2xl border-none shadow-2xl h-[100dvh] sm:h-auto bg-black">
-              {/* Screen reader content for accessibility */}
               <div className="sr-only">
                   <DialogHeader>
                       <DialogTitle>Capture Profile Photo</DialogTitle>
@@ -579,7 +618,6 @@ export default function ProfilePage() {
                         </div>
                     </div>
                   )}
-                  {/* Perfect Lens Border */}
                   <div className="absolute inset-0 pointer-events-none border-[30px] sm:border-[50px] border-black/40 group-hover:border-black/20 transition-all duration-700">
                       <div className="h-full w-full border-2 border-white/20 rounded-full shadow-[0_0_0_9999px_rgba(0,0,0,0.4)]"></div>
                   </div>
