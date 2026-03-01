@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -414,7 +413,7 @@ export default function ProfilePage() {
                                     size="sm" 
                                     className="w-full sm:w-auto shadow-lg shadow-primary/10 h-11 px-10 font-bold active:scale-95 transition-all disabled:opacity-50 disabled:grayscale"
                                 >
-                                    {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+                                    {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     Update Details
                                 </Button>
                             </div>
