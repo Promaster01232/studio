@@ -152,8 +152,8 @@ export default function RegisterPage() {
             animate="visible"
         >
             <motion.div variants={itemVariants} className="flex items-center gap-3 mb-6">
-                <Logo />
-                <h1 className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
+                <Logo className="h-12 w-12" />
+                <h1 className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
                     Nyaya Sahayak
                 </h1>
             </motion.div>

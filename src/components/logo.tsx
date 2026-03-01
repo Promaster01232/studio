@@ -12,7 +12,7 @@ export function Logo({ className, imageClassName }: { className?: string, imageC
         alt="Nyaya Sahayak Logo" 
         width={512} 
         height={512} 
-        className={cn("h-10 w-auto object-contain", imageClassName)}
+        className={cn("h-full w-auto object-contain", imageClassName)}
       />
     </div>
   );

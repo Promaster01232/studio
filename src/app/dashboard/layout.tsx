@@ -164,9 +164,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <SidebarProvider>
-      <Sidebar>
-        <SidebarHeader className="p-4">
-          <Logo />
+      <Sidebar collapsible="icon">
+        <SidebarHeader className="p-4 overflow-hidden">
+          <Link href="/dashboard" className="flex items-center gap-3 transition-opacity hover:opacity-80 group-data-[collapsible=icon]:justify-center">
+            <Logo className="h-10 w-10" />
+            <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] truncate group-data-[collapsible=icon]:hidden">
+                Nyaya Sahayak
+            </span>
+          </Link>
         </SidebarHeader>
         <SidebarContent className="pt-0">
           <SidebarNav />
