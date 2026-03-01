@@ -367,9 +367,11 @@ export default function ProfilePage() {
                         <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter text-foreground truncate">{firstName} {lastName}</h2>
                         {advocateDetails?.isVerified && <BadgeCheck className="h-4 w-4 text-primary shrink-0" />}
                     </div>
-                    <div className="flex items-center gap-1.5 px-3 py-0.5 bg-primary/5 rounded-full border border-primary/10 w-fit mx-auto sm:mx-0">
-                        <span className="text-[10px] font-bold text-primary">{userProfile?.userType}</span>
-                    </div>
+                    {((userProfile?.userType === 'lawyer' && advocateDetails) || userProfile?.userType !== 'lawyer') && (
+                        <div className="flex items-center gap-1.5 px-3 py-0.5 bg-primary/5 rounded-full border border-primary/10 w-fit mx-auto sm:mx-0">
+                            <span className="text-[10px] font-bold text-primary capitalize">{userProfile?.userType}</span>
+                        </div>
+                    )}
                     <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate opacity-80">{email}</p>
                 </div>
                 {photoURL && (
