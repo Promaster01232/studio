@@ -11,7 +11,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { saveAdvocate, type Lawyer } from "@/lib/advocates-data";
 import { useAuth, useDatabase } from "@/firebase";
 import { ref, set } from "firebase/database";
-import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2 } from "lucide-react";
+import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2, AlertTriangle } from "lucide-react";
+import { verifyAdvocateCertificate } from "@/ai/flows/verify-advocate-certificate";
 
 const practiceAreas = [
     "Family Law", "Criminal Law", "Civil Law", "Corporate Law", "Cyber Law",
@@ -39,17 +40,24 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
     const rtdb = useDatabase();
     const [isSaving, setIsSaving] = useState(false);
     const [certificateName, setCertificateName] = useState<string>(initialData?.certificateName || "");
+    const [certificateDataUri, setCertificateDataUri] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             setCertificateName(file.name);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setCertificateDataUri(reader.result as string);
+            };
+            reader.readAsDataURL(file);
         }
     };
 
     const removeFile = () => {
         setCertificateName("");
+        setCertificateDataUri(null);
         if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
@@ -75,55 +83,80 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
             });
             return;
         }
+
+        if (!certificateDataUri && !initialData?.certificateName) {
+            toast({
+                variant: "destructive",
+                title: "Certificate required",
+                description: "Please upload your Bar Council certificate for AI authentication.",
+            });
+            return;
+        }
         
         setIsSaving(true);
 
-        const advocateName = name || `${userProfile?.firstName} ${userProfile?.lastName}`;
-        
-        // Ensure image is null instead of undefined for RTDB compatibility
-        const advocateImage = userProfile?.photoURL ? 
-            { id: `advocate${auth.currentUser?.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } :
-            (initialData?.image || null);
-
-
-        const newAdvocate: Omit<Lawyer, 'id'> = {
-            name: advocateName,
-            specialty: specialization,
-            rating: initialData?.rating || (Math.random() * (5 - 4.5) + 4.5).toFixed(1),
-            reviews: initialData?.reviews || Math.floor(Math.random() * 50),
-            image: advocateImage,
-            about: bio,
-            experience: `${experience} years of experience as ${position}.`,
-            rawExperience: experience,
-            position: position,
-            courts: courtsOfPractice,
-            contact: {
-                phone: "Verified",
-                email: userProfile?.email || initialData?.contact?.email || "Verified"
-            },
-            barId: barId,
-            courtName: courtName,
-            courtAddress: courtAddress,
-            certificateName: certificateName,
-            isVerified: true,
-        };
-
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // AI Verification of Certificate
+            if (certificateDataUri) {
+                const verification = await verifyAdvocateCertificate({
+                    certificateDataUri,
+                    fullName: name,
+                    barId: barId
+                });
+
+                if (!verification.isAuthentic || !verification.matchesUser) {
+                    toast({
+                        variant: "destructive",
+                        title: "Authentication failed",
+                        description: verification.reason || "The uploaded document does not match your professional details. Please provide a clear copy of your Bar ID.",
+                    });
+                    setIsSaving(false);
+                    return;
+                }
+            }
+
+            const advocateName = name || `${userProfile?.firstName} ${userProfile?.lastName}`;
             
+            // Ensure image is null instead of undefined for RTDB compatibility
+            const advocateImage = userProfile?.photoURL ? 
+                { id: `advocate${auth.currentUser?.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } :
+                (initialData?.image || null);
+
+
+            const newAdvocate: Omit<Lawyer, 'id'> = {
+                name: advocateName,
+                specialty: specialization,
+                rating: initialData?.rating || (Math.random() * (5 - 4.5) + 4.5).toFixed(1),
+                reviews: initialData?.reviews || Math.floor(Math.random() * 50),
+                image: advocateImage,
+                about: bio,
+                experience: `${experience} years of experience as ${position}.`,
+                rawExperience: experience,
+                position: position,
+                courts: courtsOfPractice,
+                contact: {
+                    phone: "Verified",
+                    email: userProfile?.email || initialData?.contact?.email || "Verified"
+                },
+                barId: barId,
+                courtName: courtName,
+                courtAddress: courtAddress,
+                certificateName: certificateName,
+                isVerified: true,
+            };
+
             // Save to localStorage (directory)
             saveAdvocate(newAdvocate);
             
             // Save to RTDB (centralized profile) with graceful error handling
             if (auth.currentUser) {
-                // Ensure the payload doesn't contain undefined for RTDB
                 const rtdbPayload = JSON.parse(JSON.stringify({
                     ...newAdvocate,
                     uid: auth.currentUser.uid,
                     updatedAt: Date.now()
                 }));
 
-                set(ref(rtdb, `advocates/${auth.currentUser.uid}`), rtdbPayload).catch(err => {
+                await set(ref(rtdb, `advocates/${auth.currentUser.uid}`), rtdbPayload).catch(err => {
                     console.warn("RTDB professional sync skipped:", err.message);
                 });
             }
@@ -166,9 +199,9 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                     <ShieldCheck className="h-5 w-5 text-primary" />
                 </div>
                 <div className="space-y-1">
-                    <p className="text-xs font-bold text-primary">Professional verification</p>
+                    <p className="text-xs font-bold text-primary">Professional Verification</p>
                     <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                        Your credentials will be verified against Bar Council records. Verified advocates appear at the top of search results.
+                        Our AI system will authenticate your certificate against Bar Council records. Verified advocates appear at the top of search results.
                     </p>
                 </div>
             </div>
@@ -176,7 +209,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
             <div className="grid gap-6">
                 <div className="space-y-3">
                     <Label htmlFor="fullName" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
-                        <Gavel className="h-4 w-4 text-primary" /> Full name (as on Bar ID)
+                        <Gavel className="h-4 w-4 text-primary" /> Full Name (as on Bar ID)
                     </Label>
                     <Input id="fullName" name="fullName" placeholder="e.g., Rajesh Kumar" required defaultValue={initialData?.name || `${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`} className="h-11 border-primary/10 focus:border-primary font-bold" />
                 </div>
@@ -190,7 +223,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                     </div>
                     <div className="space-y-3">
                         <Label htmlFor="experience" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
-                            <Briefcase className="h-4 w-4 text-primary" /> Years of experience
+                            <Briefcase className="h-4 w-4 text-primary" /> Years of Experience
                         </Label>
                         <Input id="experience" name="experience" type="number" placeholder="10" required defaultValue={getExperienceValue()} className="h-11 border-primary/10 font-bold" />
                     </div>
@@ -198,7 +231,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
 
                 <div className="space-y-3">
                     <Label className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
-                        <FileUp className="h-4 w-4 text-primary" /> Court certificate / Bar enrollment
+                        <FileUp className="h-4 w-4 text-primary" /> Court Certificate / Bar Enrollment
                     </Label>
                     <div className={`relative border-2 border-dashed rounded-xl p-6 transition-all ${certificateName ? 'bg-primary/5 border-primary/40' : 'hover:border-primary/30 bg-muted/20'}`}>
                         <input
@@ -207,6 +240,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                             onChange={handleFileChange}
                             accept=".pdf,image/*"
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                            disabled={isSaving}
                         />
                         {!certificateName ? (
                             <div className="flex flex-col items-center justify-center text-center gap-2">
@@ -214,8 +248,8 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                                     <FileUp className="h-6 w-6 text-muted-foreground" />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-[11px] font-bold text-foreground">Upload certificate</p>
-                                    <p className="text-[10px] text-muted-foreground font-medium">PDF or image (Max 5MB)</p>
+                                    <p className="text-[11px] font-bold text-foreground">Upload Certificate</p>
+                                    <p className="text-[10px] text-muted-foreground font-medium">PDF or Image (Max 5MB)</p>
                                 </div>
                             </div>
                         ) : (
@@ -226,13 +260,14 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                                     </div>
                                     <div className="min-w-0">
                                         <p className="text-[11px] font-bold truncate max-w-[200px]">{certificateName}</p>
-                                        <p className="text-[10px] text-primary font-bold">File ready for verification</p>
+                                        <p className="text-[10px] text-primary font-bold">Document Ready for AI Verification</p>
                                     </div>
                                 </div>
                                 <button 
                                     type="button" 
                                     className="h-9 w-9 flex items-center justify-center rounded-full text-destructive hover:bg-destructive/10 z-20 active:scale-90"
                                     onClick={removeFile}
+                                    disabled={isSaving}
                                 >
                                     <X className="h-4 w-4" />
                                 </button>
@@ -243,7 +278,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
 
                 <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <Label htmlFor="specialization" className="text-[11px] font-bold text-muted-foreground">Primary specialization</Label>
+                        <Label htmlFor="specialization" className="text-[11px] font-bold text-muted-foreground">Primary Specialization</Label>
                         <Select name="specialization" required defaultValue={initialData?.specialty || ""}>
                             <SelectTrigger id="specialization" className="h-11 border-primary/10 font-bold">
                                 <SelectValue placeholder="Select practice area" />
@@ -254,13 +289,13 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                         </Select>
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="position" className="text-[11px] font-bold text-muted-foreground">Current position / Title</Label>
+                        <Label htmlFor="position" className="text-[11px] font-bold text-muted-foreground">Current Position / Title</Label>
                         <Input id="position" name="position" placeholder="e.g., Senior Partner" required defaultValue={getPositionValue()} className="h-11 border-primary/10 font-bold" />
                     </div>
                 </div>
 
                 <div className="space-y-4">
-                    <Label className="text-[11px] font-bold text-muted-foreground">Courts of practice</Label>
+                    <Label className="text-[11px] font-bold text-muted-foreground">Courts of Practice</Label>
                     <div className="grid grid-cols-2 gap-3">
                         {courtsList.map(court => (
                             <div key={court} className="flex items-center space-x-3 border rounded-xl p-3 hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer group shadow-sm bg-card/50">
@@ -278,19 +313,19 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                 </div>
                 
                 <div className="space-y-3">
-                    <Label htmlFor="bio" className="text-[11px] font-bold text-muted-foreground">Professional bio</Label>
+                    <Label htmlFor="bio" className="text-[11px] font-bold text-muted-foreground">Professional Bio</Label>
                     <Textarea id="bio" name="bio" placeholder="Describe your legal expertise, notable cases, and consultation approach..." rows={4} required defaultValue={initialData?.about || ""} className="resize-none border-primary/10 focus:border-primary font-medium text-sm" />
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
                         <Label htmlFor="courtName" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
-                            <MapPin className="h-4 w-4 text-primary" /> Primary court location
+                            <MapPin className="h-4 w-4 text-primary" /> Primary Court Location
                         </Label>
                         <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" required defaultValue={initialData?.courtName || ""} className="h-11 border-primary/10 font-bold" />
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="courtAddress" className="text-[11px] font-bold text-muted-foreground">City / address</Label>
+                        <Label htmlFor="courtAddress" className="text-[11px] font-bold text-muted-foreground">City / Address</Label>
                         <Input id="courtAddress" name="courtAddress" placeholder="e.g., Mumbai, Maharashtra" required defaultValue={initialData?.courtAddress || ""} className="h-11 border-primary/10 font-bold" />
                     </div>
                 </div>
@@ -301,9 +336,9 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                     {isSaving ? (
                         <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Verifying credentials...
+                            AI Authenticating Certificate...
                         </>
-                    ) : (initialData ? "Update professional profile" : "Save & complete setup")}
+                    ) : (initialData ? "Update Professional Profile" : "Authenticate & Save")}
                 </Button>
             </div>
         </form>

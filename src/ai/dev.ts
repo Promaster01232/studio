@@ -10,3 +10,4 @@ import '@/ai/flows/generate-cross-examination-questions.ts';
 import '@/ai/flows/simplify-jargon.ts';
 import '@/ai/flows/search-ecourts.ts';
 import '@/ai/flows/validate-user-details.ts';
+import '@/ai/flows/verify-advocate-certificate.ts';
