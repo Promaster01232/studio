@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -12,13 +13,24 @@ import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapP
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore } from '@/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import { signOut } from 'firebase/auth';
+import { signOut, deleteUser } from 'firebase/auth';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle, 
+  AlertDialogTrigger 
+} from '@/components/ui/alert-dialog';
 import { AdvocateProfileForm } from '@/components/advocate-profile-form';
 import { getAdvocates, type Lawyer } from '@/lib/advocates-data';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -199,6 +211,45 @@ export default function ProfilePage() {
   const handleLogout = async () => {
     await signOut(auth);
     router.push('/login');
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!auth.currentUser) return;
+    
+    setSaving(true);
+    const user = auth.currentUser;
+    const userDocRef = doc(firestore, "users", user.uid);
+
+    try {
+      // 1. Delete Firestore Data first
+      await deleteDoc(userDocRef);
+      
+      // 2. Delete Auth User
+      await deleteUser(user);
+      
+      toast({
+        title: "Account Deleted",
+        description: "Your account and all associated data have been permanently removed.",
+      });
+      router.replace('/');
+    } catch (error: any) {
+      console.error("Deletion error:", error);
+      if (error.code === 'auth/requires-recent-login') {
+        toast({
+          variant: "destructive",
+          title: "Security Action Required",
+          description: "For security reasons, please log out and sign back in before deleting your account.",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to delete account. Please try again later.",
+        });
+      }
+    } finally {
+      setSaving(false);
+    }
   };
 
   const containerVariants = {
@@ -442,10 +493,31 @@ export default function ProfilePage() {
                                 <LogOut className="mr-3 h-3.5 w-3.5 text-muted-foreground" /> 
                                 <span className="text-xs">Logout</span>
                             </Button>
-                            <Button variant="destructive" size="sm" className="w-full justify-start font-black h-10 px-3 tracking-widest uppercase text-[9px] rounded-xl active:scale-95 transition-all">
-                                <Trash2 className="mr-3 h-3.5 w-3.5" />
-                                <span>Delete Account</span>
-                            </Button>
+                            
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="destructive" size="sm" className="w-full justify-start font-black h-10 px-3 tracking-widest uppercase text-[9px] rounded-xl active:scale-95 transition-all">
+                                    <Trash2 className="mr-3 h-3.5 w-3.5" />
+                                    <span>Delete Account</span>
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete your account
+                                    and remove your data from our servers. You will not be able to log in again.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                    {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                                    Delete Permanently
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                         </CardContent>
                     </Card>
                 </motion.div>
