@@ -12,34 +12,35 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
     
-    // Designated system administrator with full oversight powers
-    // Rule prioritized: checks email first, then doc-level flag
+    // Robust admin check: priority email check followed by document flag check
     function isAdmin() {
-      return isAuthenticated() && 
-             (request.auth.token.email == 'enterspaceindia@gmail.com' || 
-              (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
-               get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true));
+      return isAuthenticated() && (
+        request.auth.token.email == 'enterspaceindia@gmail.com' || 
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true)
+      );
     }
 
-    // Users collection: Stores primary identity and access control metadata
+    // Users collection: Central identity registry
     match /users/{userId} {
-      // Profiles must be readable for directory discovery and identity verification
+      // All authenticated users can look up profiles for verification
       allow get: if isAuthenticated();
       
-      // Only administrators can list the entire member registry
+      // Only system administrators can list the entire member registry
       allow list: if isAdmin();
       
-      // Users can create their own profile once during onboarding
+      // Users can create their own profile during onboarding
       allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
       
-      // Users can update their own info; Admins can update ANY profile (crucial for Blocking/Approving)
-      allow update: if isOwner(userId) || isAdmin();
+      // Users can update their own data; Admins have full update authority for all profiles
+      // This is critical for the "Suspend/Block" and "Approve" features
+      allow update: if isAuthenticated() && (isOwner(userId) || isAdmin());
       
-      // Deletion restricted to the account owner or a system administrator
+      // Deletion allowed by owner or administrator
       allow delete: if isOwner(userId) || isAdmin();
     }
 
-    // Posts collection: Community feed and discussion
+    // Posts collection: Community feed
     match /posts {
       allow list: if isAuthenticated();
     }
@@ -48,12 +49,13 @@ service cloud.firestore {
       allow get: if isAuthenticated();
       allow create: if isAuthenticated() && request.resource.data.authorUid == request.auth.uid;
       
-      // Allow author updates, or specific field reactions (likes/polls) by any authenticated user
+      // Allow author updates or public reactions (likes/polls)
       allow update: if isAuthenticated() && (
         resource.data.authorUid == request.auth.uid ||
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likedBy', 'poll'])
       );
 
+      // Deletion restricted to author or admin
       allow delete: if isAuthenticated() && (resource.data.authorUid == request.auth.uid || isAdmin());
     }
   }

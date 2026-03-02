@@ -28,7 +28,7 @@ export default function ContactUsPage() {
       return;
     }
 
-    const mailtoLink = `mailto:entarspaceindia@gmail.com?subject=${encodeURIComponent(
+    const mailtoLink = `mailto:enterspaceindia@gmail.com?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(
       `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
@@ -99,7 +99,7 @@ export default function ContactUsPage() {
               </div>
               <div>
                 <h3 className="font-semibold">Email</h3>
-                <p className="text-muted-foreground">entarspaceindia@gmail.com</p>
+                <p className="text-muted-foreground">enterspaceindia@gmail.com</p>
               </div>
             </div>
              <div className="flex items-start gap-4">
