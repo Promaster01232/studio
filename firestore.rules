@@ -19,6 +19,8 @@ service cloud.firestore {
     // Users collection
     match /users/{userId} {
       allow get: if isAuthenticated();
+      // Allow the designated admin to list all users for the Management Console
+      allow list: if isAdmin();
       allow create: if isAuthenticated();
       // Allow user to update their own profile, or admin to update any profile (e.g. for blocking)
       allow update: if isOwner(userId) || isAdmin();
