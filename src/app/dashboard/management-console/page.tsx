@@ -252,6 +252,7 @@ function ManagementConsoleContent() {
     const userRef = doc(firestore, "users", user.uid);
     
     // 1. Update Firestore (Primary Source of Truth for Blocking)
+    // Non-blocking mutation with re-emitted contextual error
     updateDoc(userRef, { isBlocked: newBlockedStatus })
         .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -454,7 +455,7 @@ function ManagementConsoleContent() {
         </Card>
         <Card className="border-primary/5 bg-primary/5 shadow-sm overflow-hidden relative">
           <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Gavel className="h-20 w-20" />
+            <Gavel className="h-20 w-20 " />
           </div>
           <CardHeader className="pb-2 relative z-10">
             <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Professionals</CardDescription>

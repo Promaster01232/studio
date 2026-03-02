@@ -13,6 +13,7 @@ service cloud.firestore {
     }
     
     // Designated system administrator with full oversight powers
+    // Rule prioritized: checks email first, then doc-level flag
     function isAdmin() {
       return isAuthenticated() && 
              (request.auth.token.email == 'enterspaceindia@gmail.com' || 
