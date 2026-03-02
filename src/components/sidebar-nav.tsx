@@ -156,7 +156,7 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
               <CollapsibleContent>
                 <SidebarMenuSub className="ml-4 mt-1 border-l-2 border-primary/10 gap-1 pl-2">
                   {item.items.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.href}>
+                    <SidebarMenuSubItem key={subItem.label}>
                       <SidebarMenuSubButton
                         asChild
                         isActive={isSubItemActive(subItem.href)}
