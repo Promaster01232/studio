@@ -359,8 +359,7 @@ export default function ManagementConsolePage() {
             </TableBody>
           </Table>
         </CardContent>
-      </Table>
-    </Card>
-  </div>
+      </Card>
+    </div>
   );
 }
