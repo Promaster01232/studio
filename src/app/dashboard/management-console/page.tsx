@@ -9,14 +9,15 @@ import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { ref, onValue, update } from "firebase/database";
-import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays, Ban, CheckCircle, Clock } from "lucide-react";
+import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays, Ban, CheckCircle, Clock, Eye, Info, Briefcase, MapPin, GraduationCap } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface UserRecord {
   uid: string;
@@ -38,6 +39,104 @@ interface AdvocateRecord {
   isVerified: boolean;
   isApproved: boolean;
   courtName: string;
+  about?: string;
+  experience?: string;
+  position?: string;
+  courts?: string[];
+  certificateName?: string;
+}
+
+function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateRecord, onApprove: (adv: AdvocateRecord) => void, isProcessing: boolean }) {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:bg-primary/10">
+                    <Eye className="h-4 w-4" />
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                        <Gavel className="h-5 w-5 text-primary" />
+                        Professional Credentials: {adv.name}
+                    </DialogTitle>
+                    <DialogDescription>Review full professional details submitted for verification.</DialogDescription>
+                </DialogHeader>
+                <ScrollArea className="max-h-[60vh] pr-4">
+                    <div className="space-y-6 py-4">
+                        <div className="grid sm:grid-cols-2 gap-4">
+                            <div className="p-3 rounded-xl bg-muted/30 border space-y-1">
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                                    <GraduationCap className="h-3 w-3" /> Bar Council ID
+                                </p>
+                                <p className="font-bold text-sm">{adv.barId}</p>
+                            </div>
+                            <div className="p-3 rounded-xl bg-muted/30 border space-y-1">
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                                    <Briefcase className="h-3 w-3" /> Practice Area
+                                </p>
+                                <p className="font-bold text-sm">{adv.specialty}</p>
+                            </div>
+                            <div className="p-3 rounded-xl bg-muted/30 border space-y-1">
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                                    <MapPin className="h-3 w-3" /> Primary Court
+                                </p>
+                                <p className="font-bold text-sm">{adv.courtName}</p>
+                            </div>
+                            <div className="p-3 rounded-xl bg-muted/30 border space-y-1">
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                                    <Clock className="h-3 w-3" /> Total Experience
+                                </p>
+                                <p className="font-bold text-sm">{adv.experience || 'Not specified'}</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <h4 className="text-xs font-bold text-primary uppercase tracking-widest px-1">Professional Bio</h4>
+                            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
+                                <p className="text-sm leading-relaxed whitespace-pre-line font-medium text-foreground/80">
+                                    {adv.about || "No bio provided."}
+                                </p>
+                            </div>
+                        </div>
+
+                        {adv.courts && adv.courts.length > 0 && (
+                            <div className="space-y-2">
+                                <h4 className="text-xs font-bold text-primary uppercase tracking-widest px-1">Authorized Courts</h4>
+                                <div className="flex flex-wrap gap-2">
+                                    {adv.courts.map(c => (
+                                        <Badge key={c} variant="secondary" className="bg-background border font-bold text-[10px] py-1">{c}</Badge>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {adv.certificateName && (
+                            <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/5 border border-green-500/10">
+                                <ShieldCheck className="h-5 w-5 text-green-600" />
+                                <div className="flex-1">
+                                    <p className="text-[10px] font-bold text-green-600 uppercase tracking-tight">AI-Authenticated Attachment</p>
+                                    <p className="text-xs font-medium truncate">{adv.certificateName}</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </ScrollArea>
+                <div className="flex justify-end gap-3 pt-4 border-t">
+                    {!adv.isApproved && (
+                        <Button 
+                            className="bg-primary text-white font-bold h-11 px-8 active:scale-95 transition-all shadow-lg shadow-primary/20"
+                            onClick={() => onApprove(adv)}
+                            disabled={isProcessing}
+                        >
+                            {isProcessing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle className="h-4 w-4 mr-2" />}
+                            Approve Listing
+                        </Button>
+                    )}
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
 }
 
 function ManagementConsoleContent() {
@@ -55,6 +154,12 @@ function ManagementConsoleContent() {
   const [processingUid, setProcessingUid] = useState<string | null>(null);
 
   const activeTab = searchParams.get("tab") || "users";
+
+  const handleTabChange = (val: string) => {
+      const params = new URLSearchParams(searchParams);
+      params.set("tab", val);
+      router.push(`?${params.toString()}`);
+  };
 
   useEffect(() => {
     if (!auth.currentUser) {
@@ -162,7 +267,6 @@ function ManagementConsoleContent() {
   const approveAdvocate = async (adv: AdvocateRecord) => {
       setProcessingUid(adv.uid);
       try {
-          // Manual Approval happens in RTDB where the public directory is powered from
           await update(ref(rtdb, `advocates/${adv.uid}`), { isApproved: true });
           toast({
               title: "Advocate Approved",
@@ -200,11 +304,11 @@ function ManagementConsoleContent() {
     <Table>
         <TableHeader className="bg-muted/20">
             <TableRow>
-            <TableHead className="font-bold text-[11px] text-muted-foreground pl-6">User Identity</TableHead>
-            <TableHead className="font-bold text-[11px] text-muted-foreground">Type</TableHead>
-            <TableHead className="font-bold text-[11px] text-muted-foreground">Professional Status</TableHead>
-            <TableHead className="font-bold text-[11px] text-muted-foreground">Approval</TableHead>
-            <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6">Management</TableHead>
+            <TableHead className="font-bold text-[11px] text-muted-foreground pl-6 uppercase tracking-wider">User Identity</TableHead>
+            <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider text-center">Role</TableHead>
+            <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider">Professional Status</TableHead>
+            <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider text-center">Approval</TableHead>
+            <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6 uppercase tracking-wider">Actions</TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>
@@ -214,7 +318,7 @@ function ManagementConsoleContent() {
             
             const isProcessing = processingUid === user.uid;
             return (
-                <TableRow key={user.uid} className={cn("hover:bg-muted/10 transition-colors", user.isBlocked && "bg-destructive/5 opacity-80")}>
+                <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors", user.isBlocked && "bg-destructive/5 opacity-80")}>
                 <TableCell className="pl-6">
                     <div className="flex items-center gap-3 py-1">
                     <Avatar className="h-9 w-9 border border-primary/10">
@@ -227,30 +331,35 @@ function ManagementConsoleContent() {
                     </div>
                     </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                     <Badge variant="outline" className="capitalize text-[10px] font-bold border-primary/10 bg-primary/5 text-primary px-3 rounded-lg">
                     {user.userType}
                     </Badge>
                 </TableCell>
                 <TableCell>
                     {adv ? (
-                    <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-bold text-foreground truncate max-w-[150px]">{adv.specialty}</span>
-                        {adv.isVerified && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
+                    <div className="flex items-center gap-3">
+                        <div className="flex flex-col gap-0.5">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-bold text-foreground truncate max-w-[120px]">{adv.specialty}</span>
+                                {adv.isVerified && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
+                            </div>
+                            <span className="text-[9px] font-bold text-muted-foreground opacity-60">Bar ID: {adv.barId}</span>
                         </div>
-                        <span className="text-[9px] font-bold text-muted-foreground opacity-60">Verified Bar ID: {adv.barId}</span>
+                        <AdvocateDetailsModal adv={adv} onApprove={approveAdvocate} isProcessing={isProcessing} />
                     </div>
                     ) : user.userType === 'lawyer' ? (
-                    <div className="flex flex-col gap-1">
-                        <span className="text-[10px] font-bold text-amber-600">Pending Setup</span>
-                        <span className="text-[9px] text-muted-foreground font-medium italic">Profile not yet configured</span>
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] font-bold text-amber-600 flex items-center gap-1">
+                            <Clock className="h-3 w-3" /> Detail Pending
+                        </span>
+                        <span className="text-[9px] text-muted-foreground font-medium italic">Incomplete profile</span>
                     </div>
                     ) : (
-                    <span className="text-[10px] font-bold text-muted-foreground/40 italic">Not Listed</span>
+                    <span className="text-[10px] font-bold text-muted-foreground/40 italic">Citizen Profile</span>
                     )}
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                     {adv ? (
                         adv.isApproved ? (
                             <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Approved</Badge>
@@ -262,11 +371,11 @@ function ManagementConsoleContent() {
                                 onClick={() => approveAdvocate(adv)}
                                 disabled={isProcessing}
                             >
-                                {isProcessing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Approve Listing"}
+                                {isProcessing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Verify & Approve"}
                             </Button>
                         )
                     ) : (
-                        <span className="text-[9px] font-bold text-muted-foreground/40">N/A</span>
+                        <span className="text-[9px] font-bold text-muted-foreground/40">—</span>
                     )}
                 </TableCell>
                 <TableCell className="text-right pr-6">
@@ -280,9 +389,9 @@ function ManagementConsoleContent() {
                     {isProcessing ? (
                         <Loader2 className="h-3 w-3 animate-spin" />
                     ) : user.isBlocked ? (
-                        <><CheckCircle className="mr-2 h-3 w-3" /> Unblock</>
+                        <><CheckCircle className="mr-2 h-3 w-3" /> Restore</>
                     ) : (
-                        <><Ban className="mr-2 h-3 w-3" /> Block</>
+                        <><Ban className="mr-2 h-3 w-3" /> Suspend</>
                     )}
                     </Button>
                 </TableCell>
@@ -291,7 +400,7 @@ function ManagementConsoleContent() {
             }) : (
             <TableRow>
                 <TableCell colSpan={5} className="h-32 text-center text-muted-foreground font-medium">
-                No users found matching your criteria.
+                No matching members found in registry.
                 </TableCell>
             </TableRow>
             )}
@@ -303,44 +412,44 @@ function ManagementConsoleContent() {
     <div className="space-y-8 max-w-7xl mx-auto">
       <PageHeader
         title="Management Console"
-        description="Unified interface for system oversight and professional verification management."
+        description="Unified interface for system oversight and manual professional verification."
       />
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card className="border-primary/5 bg-primary/5 shadow-sm">
           <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Active Base</CardDescription>
+            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Active Members</CardDescription>
             <CardTitle className="text-3xl font-black font-headline flex items-center justify-between">
               {stats.totalUsers}
               <Users className="h-5 w-5 text-primary/40" />
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground font-medium">Total registered citizens & professionals</p>
+            <p className="text-xs text-muted-foreground font-medium">Total registered citizens & advocates</p>
           </CardContent>
         </Card>
         <Card className="border-primary/5 bg-primary/5 shadow-sm">
           <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Total Directory</CardDescription>
+            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Listed Professionals</CardDescription>
             <CardTitle className="text-3xl font-black font-headline flex items-center justify-between">
               {stats.totalAdvocates}
               <Gavel className="h-5 w-5 text-primary/40" />
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground font-medium">Total advocates registered on platform</p>
+            <p className="text-xs text-muted-foreground font-medium">Advocates with professional entries</p>
           </CardContent>
         </Card>
         <Card className={cn("border-primary/5 shadow-sm", stats.pendingApprovals > 0 ? "bg-amber-500/5" : "bg-primary/5")}>
           <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Pending Approvals</CardDescription>
+            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Vetting Queue</CardDescription>
             <CardTitle className={cn("text-3xl font-black font-headline flex items-center justify-between", stats.pendingApprovals > 0 ? "text-amber-600" : "")}>
               {stats.pendingApprovals}
               <Clock className={cn("h-5 w-5", stats.pendingApprovals > 0 ? "text-amber-500/40" : "text-primary/40")} />
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground font-medium">Advocates awaiting manual verification</p>
+            <p className="text-xs text-muted-foreground font-medium">Awaiting manual administrative review</p>
           </CardContent>
         </Card>
       </div>
@@ -349,14 +458,14 @@ function ManagementConsoleContent() {
         <CardHeader className="border-b bg-muted/30">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">System Oversight</CardTitle>
+              <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Platform Oversight</CardTitle>
               <CardDescription className="font-medium text-xs">Manage user access and verify professional credentials.</CardDescription>
             </div>
             <div className="flex gap-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
-                  placeholder="Search members..." 
+                  placeholder="Search name or email..." 
                   className="pl-9 h-10 w-full md:w-64 bg-background/50 font-medium text-sm border-primary/10" 
                   value={searchQuery}
                   onChange={(e) => setSearchSearchQuery(e.target.value)}
@@ -369,9 +478,9 @@ function ManagementConsoleContent() {
           </div>
         </CardHeader>
         <CardContent className="p-6">
-          <Tabs defaultValue={activeTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid w-full grid-cols-2 max-w-md mb-6">
-                <TabsTrigger value="users" className="font-bold text-xs uppercase tracking-tight">User Registry</TabsTrigger>
+                <TabsTrigger value="users" className="font-bold text-xs uppercase tracking-tight">Full User Registry</TabsTrigger>
                 <TabsTrigger value="verification" className="font-bold text-xs uppercase tracking-tight flex items-center gap-2">
                     Verification Queue
                     {stats.pendingApprovals > 0 && <Badge variant="destructive" className="h-4 w-4 p-0 flex items-center justify-center text-[8px] animate-pulse">{stats.pendingApprovals}</Badge>}
