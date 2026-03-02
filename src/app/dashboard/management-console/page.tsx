@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { ref, onValue, update } from "firebase/database";
-import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays, Ban, CheckCircle, Clock, Eye, Info, Briefcase, MapPin, GraduationCap, UserCheck } from "lucide-react";
+import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays, Ban, CheckCircle, Clock, Eye, Info, Briefcase, MapPin, GraduationCap, UserCheck, ShieldAlert } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -39,6 +39,7 @@ interface AdvocateRecord {
   specialty: string;
   isVerified: boolean;
   isApproved: boolean;
+  isBlocked?: boolean;
   courtName: string;
   about?: string;
   experience?: string;
@@ -313,177 +314,191 @@ function ManagementConsoleContent() {
   }
 
   const renderTable = (userList: UserRecord[], showOnlyPending: boolean = false) => (
-    <Table>
-        <TableHeader className="bg-muted/20">
-            <TableRow>
-            <TableHead className="font-bold text-[11px] text-muted-foreground pl-6 uppercase tracking-wider">User Identity</TableHead>
-            <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider text-center">Role</TableHead>
-            <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider">Professional Status</TableHead>
-            <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider text-center">Approval</TableHead>
-            <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6 uppercase tracking-wider">Management</TableHead>
-            </TableRow>
-        </TableHeader>
-        <TableBody>
-            {userList.length > 0 ? userList.map((user) => {
-            const adv = advocates[user.uid];
-            if (showOnlyPending && (!adv || adv.isApproved)) return null;
-            
-            const isProcessing = processingUid === user.uid;
-            return (
-                <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors", user.isBlocked && "bg-destructive/5 opacity-80")}>
-                <TableCell className="pl-6">
-                    <div className="flex items-center gap-3 py-1">
-                    <Avatar className="h-9 w-9 border border-primary/10">
-                        <AvatarImage src={user.photoURL} className="object-cover" />
-                        <AvatarFallback className="font-bold">{user.firstName.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                        <span className="font-bold text-sm tracking-tight">{user.firstName} {user.lastName}</span>
-                        <span className="text-[10px] text-muted-foreground font-medium">{user.email}</span>
-                    </div>
-                    </div>
-                </TableCell>
-                <TableCell className="text-center">
-                    <Badge variant="outline" className="capitalize text-[10px] font-bold border-primary/10 bg-primary/5 text-primary px-3 rounded-lg">
-                    {user.userType}
-                    </Badge>
-                </TableCell>
-                <TableCell>
-                    {adv ? (
-                    <div className="flex items-center gap-3">
-                        <div className="flex flex-col gap-0.5">
-                            <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-bold text-foreground truncate max-w-[120px]">{adv.specialty}</span>
-                                {adv.isVerified && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
-                            </div>
-                            <span className="text-[9px] font-bold text-muted-foreground opacity-60">Bar ID: {adv.barId}</span>
-                        </div>
-                        <AdvocateDetailsModal adv={adv} onApprove={approveAdvocate} isProcessing={isProcessing} />
-                    </div>
-                    ) : user.userType === 'lawyer' ? (
-                    <div className="flex flex-col gap-0.5">
-                        <span className="text-[10px] font-bold text-amber-600 flex items-center gap-1">
-                            <Clock className="h-3 w-3" /> Detail Pending
-                        </span>
-                        <span className="text-[9px] text-muted-foreground font-medium italic">Incomplete profile</span>
-                    </div>
-                    ) : (
-                    <span className="text-[10px] font-bold text-muted-foreground/40 italic">Citizen Profile</span>
-                    )}
-                </TableCell>
-                <TableCell className="text-center">
-                    {adv ? (
-                        adv.isApproved ? (
-                            <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Approved</Badge>
-                        ) : (
-                            <Button 
-                                size="sm" 
-                                variant="outline" 
-                                className="h-7 px-3 bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase hover:bg-amber-500 hover:text-white"
-                                onClick={() => approveAdvocate(adv)}
-                                disabled={isProcessing}
-                            >
-                                {isProcessing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Verify & Approve"}
-                            </Button>
-                        )
-                    ) : (
-                        <span className="text-[9px] font-bold text-muted-foreground/40">—</span>
-                    )}
-                </TableCell>
-                <TableCell className="text-right pr-6">
-                    <Button 
-                    variant={user.isBlocked ? "outline" : "destructive"} 
-                    size="sm" 
-                    className="h-8 px-4 font-bold text-[10px] rounded-lg active:scale-95 transition-all shadow-sm"
-                    onClick={() => toggleUserBlock(user)}
-                    disabled={isProcessing || user.email === 'enterspaceindia@gmail.com'}
-                    >
-                    {isProcessing ? (
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                    ) : user.isBlocked ? (
-                        <><UserCheck className="mr-2 h-3 w-3" /> Restore access</>
-                    ) : (
-                        <><Ban className="mr-2 h-3 w-3" /> Suspend account</>
-                    )}
-                    </Button>
-                </TableCell>
+    <div className="rounded-xl border border-primary/5 overflow-hidden">
+        <Table>
+            <TableHeader className="bg-muted/20">
+                <TableRow>
+                <TableHead className="font-bold text-[11px] text-muted-foreground pl-6 uppercase tracking-wider h-12">User Identity</TableHead>
+                <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider text-center h-12">Role</TableHead>
+                <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider h-12">Professional Status</TableHead>
+                <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider text-center h-12">Approval</TableHead>
+                <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6 uppercase tracking-wider h-12">Account Access</TableHead>
                 </TableRow>
-            );
-            }) : (
-            <TableRow>
-                <TableCell colSpan={5} className="h-32 text-center text-muted-foreground font-medium">
-                No matching members found in registry.
-                </TableCell>
-            </TableRow>
-            )}
-        </TableBody>
-    </Table>
+            </TableHeader>
+            <TableBody>
+                {userList.length > 0 ? userList.map((user) => {
+                const adv = advocates[user.uid];
+                if (showOnlyPending && (!adv || adv.isApproved)) return null;
+                
+                const isProcessing = processingUid === user.uid;
+                return (
+                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.isBlocked && "bg-destructive/5 opacity-80")}>
+                    <TableCell className="pl-6 py-4">
+                        <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10 border border-primary/10 shadow-sm">
+                            <AvatarImage src={user.photoURL} className="object-cover" />
+                            <AvatarFallback className="font-bold text-primary bg-primary/5">{user.firstName.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col">
+                            <span className={cn("font-bold text-sm tracking-tight", user.isBlocked && "line-through text-muted-foreground")}>{user.firstName} {user.lastName}</span>
+                            <span className="text-[10px] text-muted-foreground font-medium">{user.email}</span>
+                        </div>
+                        </div>
+                    </TableCell>
+                    <TableCell className="text-center py-4">
+                        <Badge variant="outline" className="capitalize text-[10px] font-bold border-primary/10 bg-primary/5 text-primary px-3 rounded-lg">
+                        {user.userType}
+                        </Badge>
+                    </TableCell>
+                    <TableCell className="py-4">
+                        {adv ? (
+                        <div className="flex items-center gap-3">
+                            <div className="flex flex-col gap-0.5">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[11px] font-bold text-foreground truncate max-w-[120px]">{adv.specialty}</span>
+                                    {adv.isVerified && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
+                                </div>
+                                <span className="text-[9px] font-bold text-muted-foreground opacity-60">Bar ID: {adv.barId}</span>
+                            </div>
+                            <AdvocateDetailsModal adv={adv} onApprove={approveAdvocate} isProcessing={isProcessing} />
+                        </div>
+                        ) : user.userType === 'lawyer' ? (
+                        <div className="flex flex-col gap-0.5">
+                            <span className="text-[10px] font-bold text-amber-600 flex items-center gap-1">
+                                <Clock className="h-3 w-3" /> Detail Pending
+                            </span>
+                            <span className="text-[9px] text-muted-foreground font-medium italic">Incomplete profile</span>
+                        </div>
+                        ) : (
+                        <span className="text-[10px] font-bold text-muted-foreground/40 italic">Citizen Profile</span>
+                        )}
+                    </TableCell>
+                    <TableCell className="text-center py-4">
+                        {adv ? (
+                            adv.isApproved ? (
+                                <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase tracking-tighter">Approved</Badge>
+                            ) : (
+                                <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    className="h-7 px-3 bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-tighter hover:bg-amber-500 hover:text-white transition-all"
+                                    onClick={() => approveAdvocate(adv)}
+                                    disabled={isProcessing}
+                                >
+                                    {isProcessing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Verify & Approve"}
+                                </Button>
+                            )
+                        ) : (
+                            <span className="text-[9px] font-bold text-muted-foreground/40">—</span>
+                        )}
+                    </TableCell>
+                    <TableCell className="text-right pr-6 py-4">
+                        <Button 
+                        variant={user.isBlocked ? "outline" : "destructive"} 
+                        size="sm" 
+                        className={cn(
+                            "h-9 px-4 font-bold text-[10px] rounded-xl active:scale-95 transition-all shadow-sm",
+                            !user.isBlocked && "bg-destructive hover:bg-destructive/90 shadow-destructive/20"
+                        )}
+                        onClick={() => toggleUserBlock(user)}
+                        disabled={isProcessing || user.email === 'enterspaceindia@gmail.com'}
+                        >
+                        {isProcessing ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : user.isBlocked ? (
+                            <><UserCheck className="mr-2 h-3.5 w-3.5" /> Restore Account</>
+                        ) : (
+                            <><Ban className="mr-2 h-3.5 w-3.5" /> Suspend Account</>
+                        )}
+                        </Button>
+                    </TableCell>
+                    </TableRow>
+                );
+                }) : (
+                <TableRow>
+                    <TableCell colSpan={5} className="h-32 text-center text-muted-foreground font-medium">
+                    No matching members found in registry.
+                    </TableCell>
+                </TableRow>
+                )}
+            </TableBody>
+        </Table>
+    </div>
   );
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       <PageHeader
         title="Management Console"
-        description="Unified interface for system oversight, user suspension, and manual professional verification."
+        description="Unified interface for system oversight, professional verification, and real-time account access control."
       />
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-primary/5 bg-primary/5 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Active Members</CardDescription>
+        <Card className="border-primary/5 bg-primary/5 shadow-sm overflow-hidden relative">
+          <div className="absolute top-0 right-0 p-4 opacity-5">
+            <Users className="h-20 w-20" />
+          </div>
+          <CardHeader className="pb-2 relative z-10">
+            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Active Base</CardDescription>
             <CardTitle className="text-3xl font-black font-headline flex items-center justify-between">
               {stats.totalUsers}
               <Users className="h-5 w-5 text-primary/40" />
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground font-medium">Total registered citizens & advocates</p>
+          <CardContent className="relative z-10">
+            <p className="text-xs text-muted-foreground font-medium">Total registered citizens & professionals</p>
           </CardContent>
         </Card>
-        <Card className="border-primary/5 bg-primary/5 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Listed Professionals</CardDescription>
+        <Card className="border-primary/5 bg-primary/5 shadow-sm overflow-hidden relative">
+          <div className="absolute top-0 right-0 p-4 opacity-5">
+            <Gavel className="h-20 w-20" />
+          </div>
+          <CardHeader className="pb-2 relative z-10">
+            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Professionals</CardDescription>
             <CardTitle className="text-3xl font-black font-headline flex items-center justify-between">
               {stats.totalAdvocates}
               <Gavel className="h-5 w-5 text-primary/40" />
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground font-medium">Advocates with professional entries</p>
+          <CardContent className="relative z-10">
+            <p className="text-xs text-muted-foreground font-medium">Advocates with configured profiles</p>
           </CardContent>
         </Card>
-        <Card className={cn("border-primary/5 shadow-sm", stats.pendingApprovals > 0 ? "bg-amber-500/5" : "bg-primary/5")}>
-          <CardHeader className="pb-2">
+        <Card className={cn("border-primary/5 shadow-sm overflow-hidden relative transition-colors duration-500", stats.pendingApprovals > 0 ? "bg-amber-500/10" : "bg-primary/5")}>
+          <div className="absolute top-0 right-0 p-4 opacity-5">
+            <ShieldAlert className="h-20 w-20" />
+          </div>
+          <CardHeader className="pb-2 relative z-10">
             <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Vetting Queue</CardDescription>
             <CardTitle className={cn("text-3xl font-black font-headline flex items-center justify-between", stats.pendingApprovals > 0 ? "text-amber-600" : "")}>
               {stats.pendingApprovals}
-              <Clock className={cn("h-5 w-5", stats.pendingApprovals > 0 ? "text-amber-500/40" : "text-primary/40")} />
+              <Clock className={cn("h-5 w-5", stats.pendingApprovals > 0 ? "text-amber-500/40 animate-pulse" : "text-primary/40")} />
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground font-medium">Awaiting manual administrative review</p>
+          <CardContent className="relative z-10">
+            <p className="text-xs text-muted-foreground font-medium">Applications awaiting manual approval</p>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="border-primary/5 shadow-xl rounded-2xl overflow-hidden">
-        <CardHeader className="border-b bg-muted/30">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Platform Oversight</CardTitle>
-              <CardDescription className="font-medium text-xs">Manage user access and verify professional credentials.</CardDescription>
+      <Card className="border-primary/5 shadow-2xl rounded-2xl overflow-hidden bg-card/40 backdrop-blur-md">
+        <CardHeader className="border-b border-primary/5 bg-muted/30 p-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-1">
+              <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Platform Control Hub</CardTitle>
+              <CardDescription className="font-medium text-xs">Manage individual account access and verify professional credentials.</CardDescription>
             </div>
-            <div className="flex gap-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <div className="flex flex-wrap gap-2">
+              <div className="relative group">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 <Input 
-                  placeholder="Search name or email..." 
-                  className="pl-9 h-10 w-full md:w-64 bg-background/50 font-medium text-sm border-primary/10" 
+                  placeholder="Filter name or email..." 
+                  className="pl-9 h-11 w-full md:w-72 bg-background/50 font-bold text-sm border-primary/10 focus:border-primary rounded-xl" 
                   value={searchQuery}
                   onChange={(e) => setSearchSearchQuery(e.target.value)}
                 />
               </div>
-              <Button variant="outline" size="icon" className="h-10 w-10 border-primary/10">
+              <Button variant="outline" size="icon" className="h-11 w-11 border-primary/10 rounded-xl bg-background/50">
                 <Filter className="h-4 w-4" />
               </Button>
             </div>
@@ -491,19 +506,19 @@ function ManagementConsoleContent() {
         </CardHeader>
         <CardContent className="p-6">
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 max-w-md mb-6">
-                <TabsTrigger value="users" className="font-bold text-xs uppercase tracking-tight">Full User Registry</TabsTrigger>
-                <TabsTrigger value="verification" className="font-bold text-xs uppercase tracking-tight flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-2 max-w-md mb-8 bg-muted/50 p-1 rounded-xl">
+                <TabsTrigger value="users" className="font-black text-xs uppercase tracking-widest rounded-lg data-[state=active]:shadow-lg">Full User Registry</TabsTrigger>
+                <TabsTrigger value="verification" className="font-black text-xs uppercase tracking-widest rounded-lg flex items-center gap-2 data-[state=active]:shadow-lg">
                     Verification Queue
-                    {stats.pendingApprovals > 0 && <Badge variant="destructive" className="h-4 w-4 p-0 flex items-center justify-center text-[8px] animate-pulse">{stats.pendingApprovals}</Badge>}
+                    {stats.pendingApprovals > 0 && <Badge variant="destructive" className="h-5 min-w-5 p-0 flex items-center justify-center text-[9px] font-black animate-pulse rounded-full">{stats.pendingApprovals}</Badge>}
                 </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="users" className="mt-0">
+            <TabsContent value="users" className="mt-0 outline-none">
                 {renderTable(filteredUsers)}
             </TabsContent>
             
-            <TabsContent value="verification" className="mt-0">
+            <TabsContent value="verification" className="mt-0 outline-none">
                 {renderTable(filteredUsers.filter(u => u.userType === 'lawyer'), true)}
             </TabsContent>
           </Tabs>

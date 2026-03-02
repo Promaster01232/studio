@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -22,14 +23,17 @@ export default function LawyerConnectPage() {
   useEffect(() => {
     const advocatesRef = ref(rtdb, "advocates");
     
-    // Fetch live from RTDB to respect Admin Approvals
+    // Fetch live from RTDB to respect Admin Approvals and Blocks
     const unsubscribe = onValue(advocatesRef, (snapshot) => {
         if (snapshot.exists()) {
             const data = snapshot.val();
             const list = Object.values(data) as Lawyer[];
             
-            // CRITICAL: Only show advocates who have been manually approved by the admin
-            const approvedList = list.filter(adv => adv.isApproved === true);
+            // CRITICAL: Filter for Approved AND Not Blocked professionals
+            const approvedList = list.filter(adv => 
+                adv.isApproved === true && 
+                adv.isBlocked !== true
+            );
             
             setAllAdvocates(approvedList);
             setFilteredAdvocates(approvedList);
