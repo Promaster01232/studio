@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore, useDatabase } from "@/firebase";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { ref, set } from "firebase/database";
+import { doc, setDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { ref, set, update } from "firebase/database";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -113,6 +113,43 @@ export default function CreateProfilePage() {
           requestResourceData: userProfile,
         }, serverError);
         errorEmitter.emit('permission-error', permissionError);
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  const handleSkipAdvocate = async () => {
+    if (!pendingUserData || !auth.currentUser) return;
+    
+    setLoading(true);
+    // Mandatory categorization: Skip means Citizen
+    const userProfile = {
+      uid: auth.currentUser.uid,
+      photoURL: auth.currentUser.photoURL || '',
+      ...pendingUserData,
+      userType: 'citizen' as const, // Force to citizen as they skipped documentation
+      createdAt: serverTimestamp(),
+    };
+    
+    const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+
+    try {
+        await setDoc(userDocRef, userProfile);
+        
+        // Parallel sync to RTDB
+        set(ref(rtdb, `users/${auth.currentUser.uid}`), {
+            ...userProfile,
+            createdAt: Date.now()
+        }).catch(e => {});
+
+        setShowAdvocateDialog(false);
+        toast({
+          title: "Profile created",
+          description: "Registered as Citizen. You can complete advocate verification later.",
+        });
+        router.push("/dashboard");
+    } catch (err) {
+        console.error("Failed to save skipped profile:", err);
     } finally {
         setLoading(false);
     }
@@ -313,19 +350,18 @@ export default function CreateProfilePage() {
 
       <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
           setShowAdvocateDialog(open);
-          if (!open && form.getValues('userType') === 'lawyer') {
-              toast({ title: "Setup required", description: "Advocates must complete their profile to proceed." });
+          if (!open && pendingUserData) {
+              handleSkipAdvocate();
           }
       }}>
-          <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => {
-              if (form.getValues('userType') === 'lawyer') e.preventDefault();
-          }}>
+          <DialogContent className="sm:max-w-2xl">
               <DialogHeader>
                     <DialogTitle>Complete advocate profile</DialogTitle>
-                    <DialogDescription>Provide your professional details to be listed on Lawyer Connect.</DialogDescription>
+                    <DialogDescription>Provide your professional details to be listed on Lawyer Connect. If you skip, you will be categorized as a Citizen.</DialogDescription>
               </DialogHeader>
               <AdvocateProfileForm 
                 onSave={handleAdvocateProfileSaved}
+                onSkip={handleSkipAdvocate}
                 userProfile={{
                     firstName: pendingUserData?.firstName || form.getValues('firstName'),
                     lastName: pendingUserData?.lastName || form.getValues('lastName'),

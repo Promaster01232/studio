@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { saveAdvocate, type Lawyer } from "@/lib/advocates-data";
 import { useAuth, useDatabase } from "@/firebase";
 import { ref, set } from "firebase/database";
-import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2, Info } from "lucide-react";
+import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2, Info, UserMinus } from "lucide-react";
 import { verifyAdvocateCertificate } from "@/ai/flows/verify-advocate-certificate";
 
 const practiceAreas = [
@@ -25,6 +25,7 @@ const courtsList = [
 
 interface AdvocateProfileFormProps {
     onSave: () => void;
+    onSkip?: () => void;
     userProfile: {
         firstName: string;
         lastName: string;
@@ -34,7 +35,7 @@ interface AdvocateProfileFormProps {
     initialData?: Lawyer | null;
 }
 
-export function AdvocateProfileForm({ onSave, userProfile, initialData }: AdvocateProfileFormProps) {
+export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }: AdvocateProfileFormProps) {
     const { toast } = useToast();
     const auth = useAuth();
     const rtdb = useDatabase();
@@ -348,7 +349,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                 </div>
             </div>
 
-            <div className="pt-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-2 mt-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+            <div className="pt-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-2 mt-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] space-y-3">
                 <Button type="submit" disabled={isSaving} className="w-full h-12 font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-0.98 transition-all">
                     {isSaving ? (
                         <>
@@ -357,6 +358,19 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                         </>
                     ) : (initialData ? "Update Professional Profile" : "Submit for Approval")}
                 </Button>
+                
+                {onSkip && !initialData && (
+                    <Button 
+                        type="button" 
+                        variant="ghost" 
+                        onClick={onSkip} 
+                        disabled={isSaving} 
+                        className="w-full h-10 font-bold text-muted-foreground hover:text-foreground text-xs"
+                    >
+                        <UserMinus className="mr-2 h-3.5 w-3.5" />
+                        Skip & continue as General Citizen
+                    </Button>
+                )}
             </div>
         </form>
     );

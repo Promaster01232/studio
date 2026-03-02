@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore, useDatabase } from "@/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { ref, set } from "firebase/database";
+import { doc, setDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { ref, set, update } from "firebase/database";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -153,6 +153,29 @@ export default function RegisterPage() {
         description: "Your advocate profile has been created and verified. Welcome aboard!",
     });
     router.push('/dashboard/lawyer-connect');
+  };
+
+  const handleSkipAdvocate = async () => {
+    if (!auth.currentUser) return;
+    
+    setLoading(true);
+    const user = auth.currentUser;
+    // Downgrade to citizen if documentation is skipped
+    try {
+        await updateDoc(doc(firestore, "users", user.uid), { userType: 'citizen' });
+        await update(ref(rtdb, `users/${user.uid}`), { userType: 'citizen' }).catch(e => {});
+        
+        setShowAdvocateDialog(false);
+        setLoading(false);
+        toast({
+            title: "Account configured",
+            description: "You have been registered as a Citizen. Complete your advocate setup later in Profile.",
+        });
+        router.push("/dashboard");
+    } catch (err) {
+        console.error("Failed to skip advocate setup:", err);
+        setLoading(false);
+    }
   };
 
   const containerVariants = {
@@ -323,18 +346,19 @@ export default function RegisterPage() {
         <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
             setShowAdvocateDialog(open);
             if (!open) {
-                toast({ title: "Profile required", description: "Advocates must provide professional details to proceed." });
+                handleSkipAdvocate();
             }
         }}>
             <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle className="font-black tracking-tight">Complete advocate profile</DialogTitle>
                     <DialogDescription className="font-medium">
-                        As an Advocate, you must provide your professional details to be listed in our verified directory.
+                        As an Advocate, you must provide your professional details to be listed. If you skip, you will be registered as a Citizen.
                     </DialogDescription>
                 </DialogHeader>
                 <AdvocateProfileForm 
                     onSave={handleAdvocateProfileSaved}
+                    onSkip={handleSkipAdvocate}
                     userProfile={{
                         firstName,
                         lastName,
