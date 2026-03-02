@@ -80,9 +80,10 @@ export default function ManagementConsolePage() {
     };
 
     const setupListeners = async () => {
-        const isAdmin = await checkAdmin();
-        if (!isAdmin || !isSubscribed) return;
+        const isAdminUser = await checkAdmin();
+        if (!isAdminUser || !isSubscribed) return;
 
+        // Fetch Users from Firestore with real-time updates
         const usersCol = collection(firestore, "users");
         const unsubscribeUsers = onSnapshot(usersCol, (snapshot) => {
             const usersList = snapshot.docs.map(doc => ({
@@ -90,6 +91,7 @@ export default function ManagementConsolePage() {
                 uid: doc.id
             } as UserRecord));
             
+            // Sort by join date (most recent first)
             const sorted = usersList.sort((a, b) => {
                 const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
                 const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
@@ -102,16 +104,24 @@ export default function ManagementConsolePage() {
             }
         }, (error) => {
             console.error("Users listener error:", error);
-            if (isSubscribed) setLoading(false);
+            if (isSubscribed) {
+                toast({
+                    variant: "destructive",
+                    title: "Permission Error",
+                    description: "You do not have permission to list all users."
+                });
+                setLoading(false);
+            }
         });
 
+        // Fetch Advocate verification details from RTDB
         const advocatesRef = ref(rtdb, "advocates");
         const unsubscribeAdvocates = onValue(advocatesRef, (snapshot) => {
             if (snapshot.exists() && isSubscribed) {
                 setAdvocates(snapshot.val());
             }
         }, (error) => {
-            console.warn("RTDB listener skipped:", error.message);
+            console.warn("RTDB listener skipped due to permissions:", error.message);
         });
 
         return () => {
@@ -133,23 +143,27 @@ export default function ManagementConsolePage() {
     const newBlockedStatus = !user.isBlocked;
     
     try {
-        // Update Firestore
+        // 1. Update Firestore (Primary Source of Truth)
         const userRef = doc(firestore, "users", user.uid);
         await updateDoc(userRef, { isBlocked: newBlockedStatus });
 
-        // Update RTDB for immediate enforcement
-        await update(ref(rtdb, `users/${user.uid}`), { isBlocked: newBlockedStatus });
+        // 2. Update RTDB for immediate enforcement (Graceful failure)
+        try {
+            await update(ref(rtdb, `users/${user.uid}`), { isBlocked: newBlockedStatus });
+        } catch (rtdbError) {
+            console.warn("RTDB sync failed during block action. User is blocked in Firestore.", rtdbError);
+        }
 
         toast({
-            title: newBlockedStatus ? "User Blocked" : "User Restored",
-            description: `${user.firstName} ${user.lastName}'s access has been updated.`
+            title: newBlockedStatus ? "User Suspended" : "User Restored",
+            description: `${user.firstName} ${user.lastName}'s access has been ${newBlockedStatus ? 'restricted' : 'granted'}.`
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error("Failed to update user status:", error);
         toast({
             variant: "destructive",
             title: "Action Failed",
-            description: "Could not update user status. Check your permissions."
+            description: error.message || "Could not update user status. Check your permissions."
         });
     } finally {
         setProcessingUid(null);
@@ -235,7 +249,7 @@ export default function ManagementConsolePage() {
         <CardHeader className="border-b bg-muted/30">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <CardTitle className="font-headline font-black text-xl tracking-tight">Verification Dashboard</CardTitle>
+              <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Verification Dashboard</CardTitle>
               <CardDescription className="font-medium text-xs">Review user status and professional credentials.</CardDescription>
             </div>
             <div className="flex gap-2">
@@ -345,7 +359,8 @@ export default function ManagementConsolePage() {
             </TableBody>
           </Table>
         </CardContent>
-      </Card>
-    </div>
+      </Table>
+    </Card>
+  </div>
   );
 }

@@ -13,17 +13,26 @@ service cloud.firestore {
     }
     
     function isAdmin() {
-      return isAuthenticated() && request.auth.token.email == 'enterspaceindia@gmail.com';
+      return isAuthenticated() && 
+             (request.auth.token.email == 'enterspaceindia@gmail.com' || 
+              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true);
     }
 
     // Users collection
     match /users/{userId} {
+      // Any authenticated user can read profiles (required for search/connect)
       allow get: if isAuthenticated();
-      // Allow the designated admin to list all users for the Management Console
+      
+      // Only designated admins can list all users
       allow list: if isAdmin();
-      allow create: if isAuthenticated();
-      // Allow user to update their own profile, or admin to update any profile (e.g. for blocking)
+      
+      // Users can create their own profile
+      allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      
+      // Users can update their own profile, or admins can update ANY profile (for blocking)
       allow update: if isOwner(userId) || isAdmin();
+      
+      // Only admin or owner can delete
       allow delete: if isOwner(userId) || isAdmin();
     }
 
