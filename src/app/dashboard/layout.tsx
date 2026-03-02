@@ -8,11 +8,10 @@ import {
   SidebarInset,
   SidebarFooter,
   SidebarTrigger,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, MessageSquare, ShieldAlert } from "lucide-react";
+import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, MessageSquare, ShieldAlert, Ban, AlertTriangle } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -35,13 +34,13 @@ import {
 import { useTheme } from "@/components/theme-provider";
 import { useLanguage, type Language } from "@/components/language-provider";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
 import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
 import { ChatListDialog } from "@/components/chat-list-dialog";
-import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const languages: { code: Language, name: string }[] = [
     { code: "en", name: "English" },
@@ -52,9 +51,7 @@ const languages: { code: Language, name: string }[] = [
 ];
 
 
-function Header() {
-    const { state } = useSidebar();
-    
+function Header({ userProfile }: { userProfile: any }) {
     return (
         <header className={cn(
             "sticky top-0 z-10 flex h-16 items-center gap-2 border-b px-4 md:px-6 transition-all",
@@ -64,48 +61,48 @@ function Header() {
                 <SidebarTrigger />
                 <Logo className="h-11 w-11" />
             </div>
-            <div className={cn(
-                "hidden md:flex items-center gap-2 transition-all duration-200 ease-in-out",
-                state === 'expanded' && "opacity-0 -translate-x-4 pointer-events-none"
-                )}>
-                <SidebarTrigger />
-            </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
-                <SearchDialog>
-                    <Button variant="outline" className="w-10 h-10 p-0 md:w-full md:max-w-xs md:px-3 md:justify-start gap-2 text-muted-foreground rounded-full md:rounded-md">
-                        <Search className="h-4 w-4" />
-                        <span className="hidden md:inline font-bold text-[11px]">Search...</span>
-                    </Button>
-                </SearchDialog>
+                {!userProfile?.isBlocked && (
+                    <SearchDialog>
+                        <Button variant="outline" className="w-10 h-10 p-0 md:w-full md:max-w-xs md:px-3 md:justify-start gap-2 text-muted-foreground rounded-full md:rounded-md">
+                            <Search className="h-4 w-4" />
+                            <span className="hidden md:inline font-bold text-[11px]">Search...</span>
+                        </Button>
+                    </SearchDialog>
+                )}
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
-                <SosDialog>
-                    <Button variant="destructive" size="sm" className="font-bold gap-1 animate-pulse px-2 sm:px-3 h-9 text-[11px]">
-                        <ShieldAlert className="h-4 w-4" />
-                        <span className="hidden sm:inline">SOS</span>
-                    </Button>
-                </SosDialog>
-                
-                <div className="flex items-center gap-0.5 sm:gap-1 border-l pl-1 sm:pl-3 ml-1">
-                    <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-9 w-9 text-muted-foreground hover:text-primary"
-                        asChild
-                    >
-                        <Link href="/dashboard/notifications">
-                            <Bell className="h-4 w-4" />
-                        </Link>
-                    </Button>
+                {!userProfile?.isBlocked && (
+                    <>
+                        <SosDialog>
+                            <Button variant="destructive" size="sm" className="font-bold gap-1 animate-pulse px-2 sm:px-3 h-9 text-[11px]">
+                                <ShieldAlert className="h-4 w-4" />
+                                <span className="hidden sm:inline">SOS</span>
+                            </Button>
+                        </SosDialog>
+                        
+                        <div className="flex items-center gap-0.5 sm:gap-1 border-l pl-1 sm:pl-3 ml-1">
+                            <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-9 w-9 text-muted-foreground hover:text-primary"
+                                asChild
+                            >
+                                <Link href="/dashboard/notifications">
+                                    <Bell className="h-4 w-4" />
+                                </Link>
+                            </Button>
 
-                    <ChatListDialog>
-                        <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-primary">
-                            <MessageSquare className="h-4 w-4" />
-                        </Button>
-                    </ChatListDialog>
-                </div>
+                            <ChatListDialog>
+                                <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-primary">
+                                    <MessageSquare className="h-4 w-4" />
+                                </Button>
+                            </ChatListDialog>
+                        </div>
+                    </>
+                )}
             </div>
         </header>
     );
@@ -119,7 +116,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
-  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string, photoURL?: string, isAdmin?: boolean} | null>(null);
+  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string, photoURL?: string, isAdmin?: boolean, isBlocked?: boolean} | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
@@ -131,8 +128,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       if (user) {
         setProfileLoading(true);
         const userDocRef = doc(firestore, "users", user.uid);
-        getDoc(userDocRef)
-          .then((userDoc) => {
+        
+        // Use real-time listener for profile to detect "Blocked" status immediately
+        const unsubProfile = onSnapshot(userDocRef, (userDoc) => {
             if (userDoc.exists()) {
               setUserProfile(userDoc.data() as any);
             } else {
@@ -140,13 +138,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 router.push('/create-profile');
               }
             }
-          })
-          .catch((error) => {
-            console.error("Error fetching user profile:", error);
-          })
-          .finally(() => {
             setProfileLoading(false);
-          });
+        }, (error) => {
+            console.error("Error fetching user profile:", error);
+            setProfileLoading(false);
+        });
+
+        return () => unsubProfile();
       } else {
         setProfileLoading(false);
         setUserProfile(null);
@@ -163,6 +161,37 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
   const isAdmin = userProfile?.email === 'enterspaceindia@gmail.com' || !!userProfile?.isAdmin;
+
+  if (showContent && userProfile?.isBlocked) {
+      return (
+        <div className="flex h-screen items-center justify-center bg-muted/30 p-4">
+            <Card className="max-w-md w-full border-destructive/20 shadow-2xl overflow-hidden">
+                <div className="bg-destructive/10 p-8 flex justify-center border-b border-destructive/10">
+                    <Ban className="h-20 w-20 text-destructive animate-pulse" />
+                </div>
+                <CardHeader className="text-center pt-8">
+                    <CardTitle className="text-2xl font-black tracking-tight text-destructive flex items-center justify-center gap-2">
+                        Account Suspended
+                    </CardTitle>
+                    <CardDescription className="text-sm font-medium pt-2">
+                        Your access to Nyaya Sahayak has been restricted by the system administrator.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6 pb-8">
+                    <div className="p-4 bg-muted/50 rounded-xl flex items-start gap-3 border">
+                        <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                        <p className="text-xs font-medium leading-relaxed">
+                            If you believe this is an error or would like to appeal this decision, please contact our support team at <span className="font-bold text-primary">enterspaceindia@gmail.com</span>
+                        </p>
+                    </div>
+                    <Button onClick={handleLogout} variant="outline" className="w-full h-12 font-bold rounded-xl active:scale-95 transition-all">
+                        <LogOut className="mr-2 h-4 w-4" /> Sign out
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
+      );
+  }
 
   return (
     <SidebarProvider>
@@ -259,7 +288,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       </Sidebar>
       <SidebarInset>
         <div className="flex flex-col h-screen">
-          <Header />
+          <Header userProfile={userProfile} />
           <main
             className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8"
           >

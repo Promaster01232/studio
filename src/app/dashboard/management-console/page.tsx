@@ -7,9 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
-import { collection, query, doc, getDoc, onSnapshot } from "firebase/firestore";
-import { ref, onValue } from "firebase/database";
-import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays } from "lucide-react";
+import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { ref, onValue, update } from "firebase/database";
+import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays, Ban, CheckCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -24,7 +24,8 @@ interface UserRecord {
   userType: string;
   photoURL?: string;
   isAdmin?: boolean;
-  createdAt?: any; // Firestore Timestamp
+  isBlocked?: boolean;
+  createdAt?: any;
 }
 
 interface AdvocateRecord {
@@ -46,6 +47,7 @@ export default function ManagementConsolePage() {
   const [advocates, setAdvocates] = useState<Record<string, AdvocateRecord>>({});
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchSearchQuery] = useState("");
+  const [processingUid, setProcessingUid] = useState<string | null>(null);
 
   useEffect(() => {
     if (!auth.currentUser) {
@@ -55,7 +57,6 @@ export default function ManagementConsolePage() {
 
     let isSubscribed = true;
 
-    // Verify Admin Status first
     const checkAdmin = async () => {
         try {
             const adminDoc = await getDoc(doc(firestore, "users", auth.currentUser!.uid));
@@ -82,7 +83,6 @@ export default function ManagementConsolePage() {
         const isAdmin = await checkAdmin();
         if (!isAdmin || !isSubscribed) return;
 
-        // Real-time Users Listener
         const usersCol = collection(firestore, "users");
         const unsubscribeUsers = onSnapshot(usersCol, (snapshot) => {
             const usersList = snapshot.docs.map(doc => ({
@@ -90,7 +90,6 @@ export default function ManagementConsolePage() {
                 uid: doc.id
             } as UserRecord));
             
-            // Sort in memory: newest first, users without timestamp go to end
             const sorted = usersList.sort((a, b) => {
                 const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
                 const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
@@ -106,7 +105,6 @@ export default function ManagementConsolePage() {
             if (isSubscribed) setLoading(false);
         });
 
-        // Real-time Advocate verification details from RTDB
         const advocatesRef = ref(rtdb, "advocates");
         const unsubscribeAdvocates = onValue(advocatesRef, (snapshot) => {
             if (snapshot.exists() && isSubscribed) {
@@ -130,6 +128,34 @@ export default function ManagementConsolePage() {
     };
   }, [firestore, rtdb, auth, router, toast]);
 
+  const toggleUserBlock = async (user: UserRecord) => {
+    setProcessingUid(user.uid);
+    const newBlockedStatus = !user.isBlocked;
+    
+    try {
+        // Update Firestore
+        const userRef = doc(firestore, "users", user.uid);
+        await updateDoc(userRef, { isBlocked: newBlockedStatus });
+
+        // Update RTDB for immediate enforcement
+        await update(ref(rtdb, `users/${user.uid}`), { isBlocked: newBlockedStatus });
+
+        toast({
+            title: newBlockedStatus ? "User Blocked" : "User Restored",
+            description: `${user.firstName} ${user.lastName}'s access has been updated.`
+        });
+    } catch (error) {
+        console.error("Failed to update user status:", error);
+        toast({
+            variant: "destructive",
+            title: "Action Failed",
+            description: "Could not update user status. Check your permissions."
+        });
+    } finally {
+        setProcessingUid(null);
+    }
+  };
+
   const filteredUsers = users.filter(user => 
     `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.email.toLowerCase().includes(searchQuery.toLowerCase())
@@ -137,7 +163,7 @@ export default function ManagementConsolePage() {
 
   const stats = {
     totalUsers: users.length,
-    totalAdvocates: Math.max(Object.keys(advocates).length, users.filter(u => u.userType === 'lawyer').length),
+    totalAdvocates: users.filter(u => u.userType === 'lawyer').length,
     verifiedAdvocates: Object.values(advocates).filter(a => a.isVerified).length,
   };
 
@@ -235,15 +261,16 @@ export default function ManagementConsolePage() {
                 <TableHead className="font-bold text-[11px] text-muted-foreground pl-6">User Identity</TableHead>
                 <TableHead className="font-bold text-[11px] text-muted-foreground">Type</TableHead>
                 <TableHead className="font-bold text-[11px] text-muted-foreground">Professional Status</TableHead>
-                <TableHead className="font-bold text-[11px] text-muted-foreground">Member Since</TableHead>
-                <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6">System UID</TableHead>
+                <TableHead className="font-bold text-[11px] text-muted-foreground">Account State</TableHead>
+                <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6">Management</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredUsers.length > 0 ? filteredUsers.map((user) => {
                 const adv = advocates[user.uid];
+                const isProcessing = processingUid === user.uid;
                 return (
-                  <TableRow key={user.uid} className="hover:bg-muted/10 transition-colors">
+                  <TableRow key={user.uid} className={`hover:bg-muted/10 transition-colors ${user.isBlocked ? 'bg-destructive/5 opacity-80' : ''}`}>
                     <TableCell className="pl-6">
                       <div className="flex items-center gap-3 py-1">
                         <Avatar className="h-9 w-9 border border-primary/10">
@@ -280,13 +307,31 @@ export default function ManagementConsolePage() {
                       )}
                     </TableCell>
                     <TableCell>
-                        <div className="flex items-center gap-2 text-[11px] font-bold text-muted-foreground">
-                            <CalendarDays className="h-3 w-3 opacity-40" />
-                            {formatJoinDate(user.createdAt)}
-                        </div>
+                        {user.isBlocked ? (
+                            <Badge variant="destructive" className="text-[9px] font-black uppercase tracking-wider h-6">Suspended</Badge>
+                        ) : (
+                            <div className="flex items-center gap-2 text-[11px] font-bold text-muted-foreground">
+                                <CalendarDays className="h-3 w-3 opacity-40" />
+                                {formatJoinDate(user.createdAt)}
+                            </div>
+                        )}
                     </TableCell>
                     <TableCell className="text-right pr-6">
-                      <code className="text-[9px] font-mono bg-muted p-1 rounded-sm text-muted-foreground">{user.uid.slice(0, 8)}...</code>
+                      <Button 
+                        variant={user.isBlocked ? "outline" : "destructive"} 
+                        size="sm" 
+                        className="h-8 px-4 font-bold text-[10px] rounded-lg active:scale-95 transition-all"
+                        onClick={() => toggleUserBlock(user)}
+                        disabled={isProcessing || user.email === 'enterspaceindia@gmail.com'}
+                      >
+                        {isProcessing ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : user.isBlocked ? (
+                            <><CheckCircle className="mr-2 h-3 w-3" /> Unblock</>
+                        ) : (
+                            <><Ban className="mr-2 h-3 w-3" /> Block</>
+                        )}
+                      </Button>
                     </TableCell>
                   </TableRow>
                 );

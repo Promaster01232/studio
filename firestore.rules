@@ -11,13 +11,18 @@ service cloud.firestore {
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
+    
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.email == 'enterspaceindia@gmail.com';
+    }
 
     // Users collection
     match /users/{userId} {
       allow get: if isAuthenticated();
       allow create: if isAuthenticated();
-      allow update: if isOwner(userId);
-      allow delete: if isOwner(userId);
+      // Allow user to update their own profile, or admin to update any profile (e.g. for blocking)
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isOwner(userId) || isAdmin();
     }
 
     // Posts collection
@@ -37,8 +42,8 @@ service cloud.firestore {
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likedBy', 'poll'])
       );
 
-      // Only author can delete
-      allow delete: if isAuthenticated() && resource.data.authorUid == request.auth.uid;
+      // Only author or admin can delete
+      allow delete: if isAuthenticated() && (resource.data.authorUid == request.auth.uid || isAdmin());
     }
   }
 }
