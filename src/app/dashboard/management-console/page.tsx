@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface UserRecord {
   uid: string;
@@ -283,7 +284,7 @@ export default function ManagementConsolePage() {
                 const adv = advocates[user.uid];
                 const isProcessing = processingUid === user.uid;
                 return (
-                  <TableRow key={user.uid} className={`hover:bg-muted/10 transition-colors ${user.isBlocked ? 'bg-destructive/5 opacity-80' : ''}`}>
+                  <TableRow key={user.uid} className={cn("hover:bg-muted/10 transition-colors", user.isBlocked && "bg-destructive/5 opacity-80")}>
                     <TableCell className="pl-6">
                       <div className="flex items-center gap-3 py-1">
                         <Avatar className="h-9 w-9 border border-primary/10">
