@@ -28,6 +28,7 @@ import {
   LifeBuoy,
   ChevronRight,
   Settings,
+  BadgeCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -83,6 +84,7 @@ const navigationItems = [
     isAdminOnly: true,
     items: [
       { href: "/dashboard/management-console", icon: Shield, label: "Management Console" },
+      { href: "/dashboard/management-console", icon: BadgeCheck, label: "Advocate Verification" },
     ],
   },
   {
