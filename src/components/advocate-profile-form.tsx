@@ -349,7 +349,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
             </div>
 
             <div className="pt-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-2 mt-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
-                <Button type="submit" disabled={isSaving} className="w-full h-12 font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                <Button type="submit" disabled={isSaving} className="w-full h-12 font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-0.98 transition-all">
                     {isSaving ? (
                         <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
