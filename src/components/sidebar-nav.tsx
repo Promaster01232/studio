@@ -84,7 +84,7 @@ const navigationItems = [
     isAdminOnly: true,
     items: [
       { href: "/dashboard/management-console", icon: Shield, label: "Management Console" },
-      { href: "/dashboard/management-console", icon: BadgeCheck, label: "Advocate Verification" },
+      { href: "/dashboard/management-console?tab=verification", icon: BadgeCheck, label: "Advocate Verification" },
     ],
   },
   {

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface UserRecord {
   uid: string;
@@ -39,17 +40,21 @@ interface AdvocateRecord {
   courtName: string;
 }
 
-export default function ManagementConsolePage() {
+function ManagementConsoleContent() {
   const firestore = useFirestore();
   const rtdb = useDatabase();
   const auth = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
+  
   const [users, setUsers] = useState<UserRecord[]>([]);
   const [advocates, setAdvocates] = useState<Record<string, AdvocateRecord>>({});
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchSearchQuery] = useState("");
   const [processingUid, setProcessingUid] = useState<string | null>(null);
+
+  const activeTab = searchParams.get("tab") || "users";
 
   useEffect(() => {
     if (!auth.currentUser) {
@@ -175,20 +180,12 @@ export default function ManagementConsolePage() {
     user.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const pendingAdvocates = Object.values(advocates).filter(adv => !adv.isApproved);
+
   const stats = {
     totalUsers: users.length,
     totalAdvocates: Object.keys(advocates).length,
-    pendingApprovals: Object.values(advocates).filter(a => !a.isApproved).length,
-  };
-
-  const formatJoinDate = (timestamp: any) => {
-      if (!timestamp) return "Legacy User";
-      try {
-          const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-          return format(date, "MMM dd, yyyy");
-      } catch (e) {
-          return "Invalid Date";
-      }
+    pendingApprovals: pendingAdvocates.length,
   };
 
   if (loading) {
@@ -198,6 +195,109 @@ export default function ManagementConsolePage() {
       </div>
     );
   }
+
+  const renderTable = (userList: UserRecord[], showOnlyPending: boolean = false) => (
+    <Table>
+        <TableHeader className="bg-muted/20">
+            <TableRow>
+            <TableHead className="font-bold text-[11px] text-muted-foreground pl-6">User Identity</TableHead>
+            <TableHead className="font-bold text-[11px] text-muted-foreground">Type</TableHead>
+            <TableHead className="font-bold text-[11px] text-muted-foreground">Professional Status</TableHead>
+            <TableHead className="font-bold text-[11px] text-muted-foreground">Approval</TableHead>
+            <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6">Management</TableHead>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            {userList.length > 0 ? userList.map((user) => {
+            const adv = advocates[user.uid];
+            if (showOnlyPending && (!adv || adv.isApproved)) return null;
+            
+            const isProcessing = processingUid === user.uid;
+            return (
+                <TableRow key={user.uid} className={cn("hover:bg-muted/10 transition-colors", user.isBlocked && "bg-destructive/5 opacity-80")}>
+                <TableCell className="pl-6">
+                    <div className="flex items-center gap-3 py-1">
+                    <Avatar className="h-9 w-9 border border-primary/10">
+                        <AvatarImage src={user.photoURL} className="object-cover" />
+                        <AvatarFallback className="font-bold">{user.firstName.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                        <span className="font-bold text-sm tracking-tight">{user.firstName} {user.lastName}</span>
+                        <span className="text-[10px] text-muted-foreground font-medium">{user.email}</span>
+                    </div>
+                    </div>
+                </TableCell>
+                <TableCell>
+                    <Badge variant="outline" className="capitalize text-[10px] font-bold border-primary/10 bg-primary/5 text-primary px-3 rounded-lg">
+                    {user.userType}
+                    </Badge>
+                </TableCell>
+                <TableCell>
+                    {adv ? (
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-bold text-foreground truncate max-w-[150px]">{adv.specialty}</span>
+                        {adv.isVerified && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
+                        </div>
+                        <span className="text-[9px] font-bold text-muted-foreground opacity-60">Verified Bar ID: {adv.barId}</span>
+                    </div>
+                    ) : user.userType === 'lawyer' ? (
+                    <div className="flex flex-col gap-1">
+                        <span className="text-[10px] font-bold text-amber-600">Pending Setup</span>
+                        <span className="text-[9px] text-muted-foreground font-medium italic">Profile not yet configured</span>
+                    </div>
+                    ) : (
+                    <span className="text-[10px] font-bold text-muted-foreground/40 italic">Not Listed</span>
+                    )}
+                </TableCell>
+                <TableCell>
+                    {adv ? (
+                        adv.isApproved ? (
+                            <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Approved</Badge>
+                        ) : (
+                            <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="h-7 px-3 bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase hover:bg-amber-500 hover:text-white"
+                                onClick={() => approveAdvocate(adv)}
+                                disabled={isProcessing}
+                            >
+                                {isProcessing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Approve Listing"}
+                            </Button>
+                        )
+                    ) : (
+                        <span className="text-[9px] font-bold text-muted-foreground/40">N/A</span>
+                    )}
+                </TableCell>
+                <TableCell className="text-right pr-6">
+                    <Button 
+                    variant={user.isBlocked ? "outline" : "destructive"} 
+                    size="sm" 
+                    className="h-8 px-4 font-bold text-[10px] rounded-lg active:scale-95 transition-all"
+                    onClick={() => toggleUserBlock(user)}
+                    disabled={isProcessing || user.email === 'enterspaceindia@gmail.com'}
+                    >
+                    {isProcessing ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : user.isBlocked ? (
+                        <><CheckCircle className="mr-2 h-3 w-3" /> Unblock</>
+                    ) : (
+                        <><Ban className="mr-2 h-3 w-3" /> Block</>
+                    )}
+                    </Button>
+                </TableCell>
+                </TableRow>
+            );
+            }) : (
+            <TableRow>
+                <TableCell colSpan={5} className="h-32 text-center text-muted-foreground font-medium">
+                No users found matching your criteria.
+                </TableCell>
+            </TableRow>
+            )}
+        </TableBody>
+    </Table>
+  );
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
@@ -249,8 +349,8 @@ export default function ManagementConsolePage() {
         <CardHeader className="border-b bg-muted/30">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Verification Dashboard</CardTitle>
-              <CardDescription className="font-medium text-xs">Review user status and manual approval queue.</CardDescription>
+              <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">System Oversight</CardTitle>
+              <CardDescription className="font-medium text-xs">Manage user access and verify professional credentials.</CardDescription>
             </div>
             <div className="flex gap-2">
               <div className="relative">
@@ -268,107 +368,38 @@ export default function ManagementConsolePage() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader className="bg-muted/20">
-              <TableRow>
-                <TableHead className="font-bold text-[11px] text-muted-foreground pl-6">User Identity</TableHead>
-                <TableHead className="font-bold text-[11px] text-muted-foreground">Type</TableHead>
-                <TableHead className="font-bold text-[11px] text-muted-foreground">Professional Status</TableHead>
-                <TableHead className="font-bold text-[11px] text-muted-foreground">Approval</TableHead>
-                <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6">Management</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredUsers.length > 0 ? filteredUsers.map((user) => {
-                const adv = advocates[user.uid];
-                const isProcessing = processingUid === user.uid;
-                return (
-                  <TableRow key={user.uid} className={cn("hover:bg-muted/10 transition-colors", user.isBlocked && "bg-destructive/5 opacity-80")}>
-                    <TableCell className="pl-6">
-                      <div className="flex items-center gap-3 py-1">
-                        <Avatar className="h-9 w-9 border border-primary/10">
-                          <AvatarImage src={user.photoURL} className="object-cover" />
-                          <AvatarFallback className="font-bold">{user.firstName.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col">
-                          <span className="font-bold text-sm tracking-tight">{user.firstName} {user.lastName}</span>
-                          <span className="text-[10px] text-muted-foreground font-medium">{user.email}</span>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="capitalize text-[10px] font-bold border-primary/10 bg-primary/5 text-primary px-3 rounded-lg">
-                        {user.userType}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {adv ? (
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[11px] font-bold text-foreground truncate max-w-[150px]">{adv.specialty}</span>
-                            {adv.isVerified && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
-                          </div>
-                          <span className="text-[9px] font-bold text-muted-foreground opacity-60">Verified Bar ID: {adv.barId}</span>
-                        </div>
-                      ) : user.userType === 'lawyer' ? (
-                        <div className="flex flex-col gap-1">
-                            <span className="text-[10px] font-bold text-amber-600">Pending Setup</span>
-                            <span className="text-[9px] text-muted-foreground font-medium italic">Profile not yet configured</span>
-                        </div>
-                      ) : (
-                        <span className="text-[10px] font-bold text-muted-foreground/40 italic">Not Listed</span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                        {adv ? (
-                            adv.isApproved ? (
-                                <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Approved</Badge>
-                            ) : (
-                                <Button 
-                                    size="sm" 
-                                    variant="outline" 
-                                    className="h-7 px-3 bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase hover:bg-amber-500 hover:text-white"
-                                    onClick={() => approveAdvocate(adv)}
-                                    disabled={isProcessing}
-                                >
-                                    {isProcessing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Approve Listing"}
-                                </Button>
-                            )
-                        ) : (
-                            <span className="text-[9px] font-bold text-muted-foreground/40">N/A</span>
-                        )}
-                    </TableCell>
-                    <TableCell className="text-right pr-6">
-                      <Button 
-                        variant={user.isBlocked ? "outline" : "destructive"} 
-                        size="sm" 
-                        className="h-8 px-4 font-bold text-[10px] rounded-lg active:scale-95 transition-all"
-                        onClick={() => toggleUserBlock(user)}
-                        disabled={isProcessing || user.email === 'enterspaceindia@gmail.com'}
-                      >
-                        {isProcessing ? (
-                            <Loader2 className="h-3 w-3 animate-spin" />
-                        ) : user.isBlocked ? (
-                            <><CheckCircle className="mr-2 h-3 w-3" /> Unblock</>
-                        ) : (
-                            <><Ban className="mr-2 h-3 w-3" /> Block</>
-                        )}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              }) : (
-                <TableRow>
-                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground font-medium">
-                    No users found matching your criteria.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+        <CardContent className="p-6">
+          <Tabs defaultValue={activeTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 max-w-md mb-6">
+                <TabsTrigger value="users" className="font-bold text-xs uppercase tracking-tight">User Registry</TabsTrigger>
+                <TabsTrigger value="verification" className="font-bold text-xs uppercase tracking-tight flex items-center gap-2">
+                    Verification Queue
+                    {stats.pendingApprovals > 0 && <Badge variant="destructive" className="h-4 w-4 p-0 flex items-center justify-center text-[8px] animate-pulse">{stats.pendingApprovals}</Badge>}
+                </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="users" className="mt-0">
+                {renderTable(filteredUsers)}
+            </TabsContent>
+            
+            <TabsContent value="verification" className="mt-0">
+                {renderTable(filteredUsers.filter(u => u.userType === 'lawyer'), true)}
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </div>
   );
+}
+
+export default function ManagementConsolePage() {
+    return (
+        <Suspense fallback={
+            <div className="flex h-[70vh] items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        }>
+            <ManagementConsoleContent />
+        </Suspense>
+    );
 }
