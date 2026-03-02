@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
@@ -19,6 +18,8 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 interface UserRecord {
   uid: string;
@@ -207,6 +208,12 @@ function ManagementConsoleContent() {
                     setUsers(sorted);
                     setLoading(false);
                 }
+            }, async (serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: usersCol.path,
+                    operation: 'list',
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
             });
 
             const advocatesRef = ref(rtdb, "advocates");
@@ -242,39 +249,35 @@ function ManagementConsoleContent() {
 
     setProcessingUid(user.uid);
     const newBlockedStatus = !user.isBlocked;
+    const userRef = doc(firestore, "users", user.uid);
     
-    try {
-        const userRef = doc(firestore, "users", user.uid);
-        
-        // 1. Update Firestore (Primary Source of Truth for Blocking)
-        await updateDoc(userRef, { isBlocked: newBlockedStatus });
-
-        // 2. Synchronize to RTDB (For live directory filtering)
-        try {
-            await update(ref(rtdb, `users/${user.uid}`), { isBlocked: newBlockedStatus });
-            
-            // If it's a lawyer, also update their professional record to hidden/blocked
-            if (user.userType === 'lawyer') {
-                await update(ref(rtdb, `advocates/${user.uid}`), { isBlocked: newBlockedStatus });
-            }
-        } catch (rtdbError) {
-            console.warn("RTDB suspension sync skipped. Firestore is updated.");
-        }
-
-        toast({
-            title: newBlockedStatus ? "Account Suspended" : "Account Restored",
-            description: `${user.firstName} ${user.lastName}'s access has been updated successfully.`
+    // 1. Update Firestore (Primary Source of Truth for Blocking)
+    updateDoc(userRef, { isBlocked: newBlockedStatus })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: userRef.path,
+                operation: 'update',
+                requestResourceData: { isBlocked: newBlockedStatus },
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
         });
-    } catch (error: any) {
-        console.error("Suspension Action Error:", error);
-        toast({ 
-            variant: "destructive", 
-            title: "Permission Denied", 
-            description: "You do not have sufficient permissions to suspend this account." 
+
+    // 2. Synchronize to RTDB (For live directory filtering)
+    update(ref(rtdb, `users/${user.uid}`), { isBlocked: newBlockedStatus }).catch(err => {
+        console.warn("RTDB user suspension sync skipped:", err.message);
+    });
+    
+    if (user.userType === 'lawyer') {
+        update(ref(rtdb, `advocates/${user.uid}`), { isBlocked: newBlockedStatus }).catch(err => {
+            console.warn("RTDB advocate suspension sync skipped:", err.message);
         });
-    } finally {
-        setProcessingUid(null);
     }
+
+    toast({
+        title: newBlockedStatus ? "Account Suspended" : "Account Restored",
+        description: `${user.firstName} ${user.lastName}'s access has been updated successfully.`
+    });
+    setProcessingUid(null);
   };
 
   const approveAdvocate = async (adv: AdvocateRecord) => {

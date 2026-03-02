@@ -1,4 +1,3 @@
-
 rules_version = '2';
 
 service cloud.firestore {
@@ -13,48 +12,47 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
     
+    // Designated system administrator with full oversight powers
     function isAdmin() {
       return isAuthenticated() && 
              (request.auth.token.email == 'enterspaceindia@gmail.com' || 
-              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true);
+              (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+               get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true));
     }
 
-    // Users collection
+    // Users collection: Stores primary identity and access control metadata
     match /users/{userId} {
-      // Any authenticated user can read profiles (required for search/connect)
+      // Profiles must be readable for directory discovery and identity verification
       allow get: if isAuthenticated();
       
-      // Only designated admins can list all users
+      // Only administrators can list the entire member registry
       allow list: if isAdmin();
       
-      // Users can create their own profile
+      // Users can create their own profile once during onboarding
       allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
       
-      // Users can update their own profile, or admins can update ANY profile (for blocking/verification)
+      // Users can update their own info; Admins can update ANY profile (crucial for Blocking/Approving)
       allow update: if isOwner(userId) || isAdmin();
       
-      // Only admin or owner can delete
+      // Deletion restricted to the account owner or a system administrator
       allow delete: if isOwner(userId) || isAdmin();
     }
 
-    // Posts collection
+    // Posts collection: Community feed and discussion
     match /posts {
       allow list: if isAuthenticated();
     }
 
     match /posts/{postId} {
       allow get: if isAuthenticated();
-      
-      // Author check for creation
       allow create: if isAuthenticated() && request.resource.data.authorUid == request.auth.uid;
       
-      // Allow updates by author, or specific fields (likes/poll) by any auth user
+      // Allow author updates, or specific field reactions (likes/polls) by any authenticated user
       allow update: if isAuthenticated() && (
         resource.data.authorUid == request.auth.uid ||
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likedBy', 'poll'])
       );
 
-      // Only author or admin can delete
       allow delete: if isAuthenticated() && (resource.data.authorUid == request.auth.uid || isAdmin());
     }
   }

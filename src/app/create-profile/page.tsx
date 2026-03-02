@@ -17,7 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError } from "@/firebase/errors";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { AdvocateProfileForm } from "@/components/advocate-profile-form";
 import { validateUserDetails } from "@/ai/flows/validate-user-details";
@@ -89,70 +89,75 @@ export default function CreateProfilePage() {
     
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
 
-    try {
-        await setDoc(userDocRef, userProfile);
-        
-        // Save to RTDB with error handling to prevent PERMISSION_DENIED crash
-        set(ref(rtdb, `users/${auth.currentUser.uid}`), {
-            ...userProfile,
-            createdAt: Date.now()
-        }).catch(err => {
-            console.warn("RTDB sync skipped. Profile saved to Firestore successfully.", err);
+    setDoc(userDocRef, userProfile)
+        .then(() => {
+            // Save to RTDB with error handling to prevent PERMISSION_DENIED crash
+            set(ref(rtdb, `users/${auth.currentUser!.uid}`), {
+                ...userProfile,
+                createdAt: Date.now()
+            }).catch(err => {
+                console.warn("RTDB sync skipped. Profile saved to Firestore successfully.", err);
+            });
+            
+            setShowAdvocateDialog(false);
+            toast({
+              title: "Registration complete",
+              description: "Welcome to the Nyaya Sahayak community.",
+            });
+            router.push("/dashboard/lawyer-connect");
+        })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+              path: userDocRef.path,
+              operation: 'create',
+              requestResourceData: userProfile,
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        })
+        .finally(() => {
+            setLoading(false);
         });
-        
-        setShowAdvocateDialog(false);
-        toast({
-          title: "Registration complete",
-          description: "Welcome to the Nyaya Sahayak community.",
-        });
-        router.push("/dashboard/lawyer-connect");
-    } catch (serverError: any) {
-        const permissionError = new FirestorePermissionError({
-          path: userDocRef.path,
-          operation: 'create',
-          requestResourceData: userProfile,
-        }, serverError);
-        errorEmitter.emit('permission-error', permissionError);
-    } finally {
-        setLoading(false);
-    }
   };
 
   const handleSkipAdvocate = async () => {
     if (!pendingUserData || !auth.currentUser) return;
     
     setLoading(true);
-    // Mandatory categorization: Skip means Citizen
     const userProfile = {
       uid: auth.currentUser.uid,
       photoURL: auth.currentUser.photoURL || '',
       ...pendingUserData,
-      userType: 'citizen' as const, // Force to citizen as they skipped documentation
+      userType: 'citizen' as const, 
       createdAt: serverTimestamp(),
     };
     
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
 
-    try {
-        await setDoc(userDocRef, userProfile);
-        
-        // Parallel sync to RTDB
-        set(ref(rtdb, `users/${auth.currentUser.uid}`), {
-            ...userProfile,
-            createdAt: Date.now()
-        }).catch(e => {});
+    setDoc(userDocRef, userProfile)
+        .then(() => {
+            set(ref(rtdb, `users/${auth.currentUser!.uid}`), {
+                ...userProfile,
+                createdAt: Date.now()
+            }).catch(e => {});
 
-        setShowAdvocateDialog(false);
-        toast({
-          title: "Profile created",
-          description: "Registered as Citizen. You can complete advocate verification later.",
+            setShowAdvocateDialog(false);
+            toast({
+              title: "Profile created",
+              description: "Registered as Citizen. You can complete advocate verification later.",
+            });
+            router.push("/dashboard");
+        })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: userDocRef.path,
+                operation: 'create',
+                requestResourceData: userProfile,
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        })
+        .finally(() => {
+            setLoading(false);
         });
-        router.push("/dashboard");
-    } catch (err) {
-        console.error("Failed to save skipped profile:", err);
-    } finally {
-        setLoading(false);
-    }
   };
 
   const onSubmit = async (data: ProfileFormValues) => {
@@ -204,36 +209,36 @@ export default function CreateProfilePage() {
       
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
 
-      await setDoc(userDocRef, userProfile);
-      
-      // Parallel sync to RTDB with silent error handling
-      set(ref(rtdb, `users/${auth.currentUser.uid}`), {
-          ...userProfile,
-          createdAt: Date.now()
-      }).catch(err => {
-          console.warn("RTDB sync issue:", err.message);
-      });
-
-      toast({
-        title: "Profile created",
-        description: "Welcome to Nyaya Sahayak.",
-      });
-      router.push("/dashboard");
-    } catch (serverError: any) {
-        if (serverError instanceof Error && !('context' in serverError)) {
-            // Not a FirestorePermissionError, handle normally
-            console.error("Profile creation error:", serverError);
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "Failed to create profile. Please try again.",
+      setDoc(userDocRef, userProfile)
+        .then(() => {
+            set(ref(rtdb, `users/${auth.currentUser!.uid}`), {
+                ...userProfile,
+                createdAt: Date.now()
+            }).catch(err => {
+                console.warn("RTDB sync issue:", err.message);
             });
-        } else {
-            // Standard error handled by emitter elsewhere if needed, 
-            // but for simplicity here we just re-emit if it's our specific error
-            errorEmitter.emit('permission-error', serverError);
-        }
-    } finally {
+
+            toast({
+                title: "Profile created",
+                description: "Welcome to Nyaya Sahayak.",
+            });
+            router.push("/dashboard");
+        })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: userDocRef.path,
+                operation: 'create',
+                requestResourceData: userProfile,
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+
+    } catch (error: any) {
+        console.error("Validation error:", error);
+        toast({ variant: "destructive", title: "Error", description: "Could not validate details." });
         setLoading(false);
     }
   };
