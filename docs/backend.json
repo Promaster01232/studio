@@ -1,3 +1,4 @@
+
 {
     "entities": {
         "UserProfile": {
@@ -40,6 +41,18 @@
                     "type": "string",
                     "format": "uri",
                     "description": "The URL of the user's profile picture."
+                },
+                "isAdmin": {
+                    "type": "boolean",
+                    "description": "Whether the user has administrative privileges."
+                },
+                "isBlocked": {
+                    "type": "boolean",
+                    "description": "Whether the user's access has been suspended."
+                },
+                "createdAt": {
+                    "type": "object",
+                    "description": "Timestamp when the user was created."
                 }
             },
             "required": [

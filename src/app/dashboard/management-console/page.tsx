@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
@@ -9,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { ref, onValue, update } from "firebase/database";
-import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays, Ban, CheckCircle, Clock, Eye, Info, Briefcase, MapPin, GraduationCap } from "lucide-react";
+import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays, Ban, CheckCircle, Clock, Eye, Info, Briefcase, MapPin, GraduationCap, UserCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -169,69 +170,62 @@ function ManagementConsoleContent() {
 
     let isSubscribed = true;
 
-    const checkAdmin = async () => {
+    const checkAdminAndSetupListeners = async () => {
         try {
             const adminDoc = await getDoc(doc(firestore, "users", auth.currentUser!.uid));
             const adminData = adminDoc.data() as UserRecord;
             const isSuperAdmin = adminData?.email === 'enterspaceindia@gmail.com' || !!adminData?.isAdmin;
 
-            if (!isSuperAdmin && isSubscribed) {
-                toast({
-                    variant: "destructive",
-                    title: "Access Denied",
-                    description: "You do not have permission to view the Management Console."
-                });
-                router.push('/dashboard');
-                return false;
+            if (!isSuperAdmin) {
+                if (isSubscribed) {
+                    toast({
+                        variant: "destructive",
+                        title: "Access Denied",
+                        description: "You do not have permission to view the Management Console."
+                    });
+                    router.push('/dashboard');
+                }
+                return;
             }
-            return true;
+
+            // Setup real-time listeners only if confirmed admin
+            const usersCol = collection(firestore, "users");
+            const unsubscribeUsers = onSnapshot(usersCol, (snapshot) => {
+                const usersList = snapshot.docs.map(doc => ({
+                    ...doc.data(),
+                    uid: doc.id
+                } as UserRecord));
+                
+                const sorted = usersList.sort((a, b) => {
+                    const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
+                    const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
+                    return Number(timeB) - Number(timeA);
+                });
+                
+                if (isSubscribed) {
+                    setUsers(sorted);
+                    setLoading(false);
+                }
+            });
+
+            const advocatesRef = ref(rtdb, "advocates");
+            const unsubscribeAdvocates = onValue(advocatesRef, (snapshot) => {
+                if (snapshot.exists() && isSubscribed) {
+                    setAdvocates(snapshot.val());
+                }
+            });
+
+            return () => {
+                unsubscribeUsers();
+                unsubscribeAdvocates();
+            };
         } catch (err) {
-            console.error("Admin check failed:", err);
-            return false;
+            console.error("Management Console Initialization Error:", err);
+            if (isSubscribed) setLoading(false);
         }
     };
 
-    const setupListeners = async () => {
-        const isAdminUser = await checkAdmin();
-        if (!isAdminUser || !isSubscribed) return;
-
-        // Fetch Users from Firestore
-        const usersCol = collection(firestore, "users");
-        const unsubscribeUsers = onSnapshot(usersCol, (snapshot) => {
-            const usersList = snapshot.docs.map(doc => ({
-                ...doc.data(),
-                uid: doc.id
-            } as UserRecord));
-            
-            const sorted = usersList.sort((a, b) => {
-                const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
-                const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
-                return Number(timeB) - Number(timeA);
-            });
-            
-            if (isSubscribed) {
-                setUsers(sorted);
-                setLoading(false);
-            }
-        });
-
-        // Fetch Advocate verification details from RTDB
-        const advocatesRef = ref(rtdb, "advocates");
-        const unsubscribeAdvocates = onValue(advocatesRef, (snapshot) => {
-            if (snapshot.exists() && isSubscribed) {
-                setAdvocates(snapshot.val());
-            }
-        }, (error) => {
-            console.warn("RTDB listener skipped:", error.message);
-        });
-
-        return () => {
-            unsubscribeUsers();
-            unsubscribeAdvocates();
-        };
-    };
-
-    const cleanupPromise = setupListeners();
+    const cleanupPromise = checkAdminAndSetupListeners();
 
     return () => {
         isSubscribed = false;
@@ -240,25 +234,43 @@ function ManagementConsoleContent() {
   }, [firestore, rtdb, auth, router, toast]);
 
   const toggleUserBlock = async (user: UserRecord) => {
+    if (user.email === 'enterspaceindia@gmail.com') {
+        toast({ variant: "destructive", title: "Action Forbidden", description: "Super Admin cannot be suspended." });
+        return;
+    }
+
     setProcessingUid(user.uid);
     const newBlockedStatus = !user.isBlocked;
     
     try {
         const userRef = doc(firestore, "users", user.uid);
+        
+        // 1. Update Firestore (Primary Source of Truth for Blocking)
         await updateDoc(userRef, { isBlocked: newBlockedStatus });
 
+        // 2. Synchronize to RTDB (For live directory filtering)
         try {
             await update(ref(rtdb, `users/${user.uid}`), { isBlocked: newBlockedStatus });
+            
+            // If it's a lawyer, also update their professional record to hidden/blocked
+            if (user.userType === 'lawyer') {
+                await update(ref(rtdb, `advocates/${user.uid}`), { isBlocked: newBlockedStatus });
+            }
         } catch (rtdbError) {
-            console.warn("RTDB sync failed during block action.");
+            console.warn("RTDB suspension sync skipped. Firestore is updated.");
         }
 
         toast({
-            title: newBlockedStatus ? "User Suspended" : "User Restored",
-            description: `${user.firstName} ${user.lastName}'s access has been updated.`
+            title: newBlockedStatus ? "Account Suspended" : "Account Restored",
+            description: `${user.firstName} ${user.lastName}'s access has been updated successfully.`
         });
     } catch (error: any) {
-        toast({ variant: "destructive", title: "Action Failed", description: error.message });
+        console.error("Suspension Action Error:", error);
+        toast({ 
+            variant: "destructive", 
+            title: "Permission Denied", 
+            description: "You do not have sufficient permissions to suspend this account." 
+        });
     } finally {
         setProcessingUid(null);
     }
@@ -273,7 +285,7 @@ function ManagementConsoleContent() {
               description: `${adv.name} is now listed in the public directory.`,
           });
       } catch (error: any) {
-          toast({ variant: "destructive", title: "Approval Failed", description: error.message });
+          toast({ variant: "destructive", title: "Approval Failed", description: "Insufficient permissions to approve professional credentials." });
       } finally {
           setProcessingUid(null);
       }
@@ -308,7 +320,7 @@ function ManagementConsoleContent() {
             <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider text-center">Role</TableHead>
             <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider">Professional Status</TableHead>
             <TableHead className="font-bold text-[11px] text-muted-foreground uppercase tracking-wider text-center">Approval</TableHead>
-            <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6 uppercase tracking-wider">Actions</TableHead>
+            <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6 uppercase tracking-wider">Management</TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>
@@ -382,16 +394,16 @@ function ManagementConsoleContent() {
                     <Button 
                     variant={user.isBlocked ? "outline" : "destructive"} 
                     size="sm" 
-                    className="h-8 px-4 font-bold text-[10px] rounded-lg active:scale-95 transition-all"
+                    className="h-8 px-4 font-bold text-[10px] rounded-lg active:scale-95 transition-all shadow-sm"
                     onClick={() => toggleUserBlock(user)}
                     disabled={isProcessing || user.email === 'enterspaceindia@gmail.com'}
                     >
                     {isProcessing ? (
                         <Loader2 className="h-3 w-3 animate-spin" />
                     ) : user.isBlocked ? (
-                        <><CheckCircle className="mr-2 h-3 w-3" /> Restore</>
+                        <><UserCheck className="mr-2 h-3 w-3" /> Restore access</>
                     ) : (
-                        <><Ban className="mr-2 h-3 w-3" /> Suspend</>
+                        <><Ban className="mr-2 h-3 w-3" /> Suspend account</>
                     )}
                     </Button>
                 </TableCell>
@@ -412,7 +424,7 @@ function ManagementConsoleContent() {
     <div className="space-y-8 max-w-7xl mx-auto">
       <PageHeader
         title="Management Console"
-        description="Unified interface for system oversight and manual professional verification."
+        description="Unified interface for system oversight, user suspension, and manual professional verification."
       />
 
       <div className="grid gap-4 md:grid-cols-3">

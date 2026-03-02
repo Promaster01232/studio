@@ -1,3 +1,4 @@
+
 rules_version = '2';
 
 service cloud.firestore {
@@ -29,7 +30,7 @@ service cloud.firestore {
       // Users can create their own profile
       allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
       
-      // Users can update their own profile, or admins can update ANY profile (for blocking)
+      // Users can update their own profile, or admins can update ANY profile (for blocking/verification)
       allow update: if isOwner(userId) || isAdmin();
       
       // Only admin or owner can delete
