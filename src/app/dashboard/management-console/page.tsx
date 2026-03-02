@@ -7,8 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
-import { collection, query, getDocs, doc, getDoc, orderBy } from "firebase/firestore";
-import { ref, get } from "firebase/database";
+import { collection, query, doc, getDoc, onSnapshot } from "firebase/firestore";
+import { ref, onValue } from "firebase/database";
 import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -48,63 +48,86 @@ export default function ManagementConsolePage() {
   const [searchQuery, setSearchSearchQuery] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!auth.currentUser) {
-          router.push('/login');
-          return;
-      }
+    if (!auth.currentUser) {
+        router.push('/login');
+        return;
+    }
 
-      setLoading(true);
-      try {
-        // Verify Admin Status
-        const adminDoc = await getDoc(doc(firestore, "users", auth.currentUser.uid));
-        const adminData = adminDoc.data() as UserRecord;
-        
-        const isSuperAdmin = adminData?.email === 'enterspaceindia@gmail.com' || !!adminData?.isAdmin;
+    let isSubscribed = true;
 
-        if (!isSuperAdmin) {
-            toast({
-                variant: "destructive",
-                title: "Access Denied",
-                description: "You do not have permission to view the Management Console."
-            });
-            router.push('/dashboard');
-            return;
-        }
-
-        // Fetch Users from Firestore sorted by join date
-        const usersCol = collection(firestore, "users");
-        const usersQuery = query(usersCol, orderBy("createdAt", "desc"));
-        const usersSnapshot = await getDocs(usersQuery);
-        const usersList = usersSnapshot.docs.map(doc => ({
-            ...doc.data(),
-            uid: doc.id
-        } as UserRecord));
-        setUsers(usersList);
-
-        // Fetch Advocate verification details from RTDB with error handling
+    // Verify Admin Status first
+    const checkAdmin = async () => {
         try {
-            const advocatesRef = ref(rtdb, "advocates");
-            const advocatesSnapshot = await get(advocatesRef);
-            if (advocatesSnapshot.exists()) {
-              setAdvocates(advocatesSnapshot.val());
+            const adminDoc = await getDoc(doc(firestore, "users", auth.currentUser!.uid));
+            const adminData = adminDoc.data() as UserRecord;
+            const isSuperAdmin = adminData?.email === 'enterspaceindia@gmail.com' || !!adminData?.isAdmin;
+
+            if (!isSuperAdmin && isSubscribed) {
+                toast({
+                    variant: "destructive",
+                    title: "Access Denied",
+                    description: "You do not have permission to view the Management Console."
+                });
+                router.push('/dashboard');
+                return false;
             }
-        } catch (rtdbError: any) {
-            console.warn("RTDB fetch skipped: Check your Realtime Database Security Rules.", rtdbError.message);
+            return true;
+        } catch (err) {
+            console.error("Admin check failed:", err);
+            return false;
         }
-      } catch (error) {
-        console.error("Management Console fetch error:", error);
-        toast({
-            variant: "destructive",
-            title: "Fetch Error",
-            description: "Failed to load management data. Please refresh and try again."
-        });
-      } finally {
-        setLoading(false);
-      }
     };
 
-    fetchData();
+    const setupListeners = async () => {
+        const isAdmin = await checkAdmin();
+        if (!isAdmin || !isSubscribed) return;
+
+        // Real-time Users Listener
+        const usersCol = collection(firestore, "users");
+        const unsubscribeUsers = onSnapshot(usersCol, (snapshot) => {
+            const usersList = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                uid: doc.id
+            } as UserRecord));
+            
+            // Sort in memory: newest first, users without timestamp go to end
+            const sorted = usersList.sort((a, b) => {
+                const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
+                const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
+                return Number(timeB) - Number(timeA);
+            });
+            
+            if (isSubscribed) {
+                setUsers(sorted);
+                setLoading(false);
+            }
+        }, (error) => {
+            console.error("Users listener error:", error);
+            if (isSubscribed) setLoading(false);
+        });
+
+        // Real-time Advocate verification details from RTDB
+        const advocatesRef = ref(rtdb, "advocates");
+        const unsubscribeAdvocates = onValue(advocatesRef, (snapshot) => {
+            if (snapshot.exists() && isSubscribed) {
+                setAdvocates(snapshot.val());
+            }
+        }, (error) => {
+            console.warn("RTDB listener skipped:", error.message);
+        });
+
+        return () => {
+            unsubscribeUsers();
+            unsubscribeAdvocates();
+        };
+    };
+
+    const cleanupPromise = setupListeners();
+
+    return () => {
+        isSubscribed = false;
+        cleanupPromise.then(cleanup => cleanup?.());
+    };
   }, [firestore, rtdb, auth, router, toast]);
 
   const filteredUsers = users.filter(user => 
@@ -119,9 +142,8 @@ export default function ManagementConsolePage() {
   };
 
   const formatJoinDate = (timestamp: any) => {
-      if (!timestamp) return "Unknown";
+      if (!timestamp) return "Legacy User";
       try {
-          // Handle Firestore Timestamp or standard Date
           const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
           return format(date, "MMM dd, yyyy");
       } catch (e) {
@@ -141,7 +163,7 @@ export default function ManagementConsolePage() {
     <div className="space-y-8 max-w-7xl mx-auto">
       <PageHeader
         title="Management Console"
-        description="Professional registry and system oversight interface for authorized personnel."
+        description="Unified interface for system oversight and professional verification management."
       />
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -159,7 +181,7 @@ export default function ManagementConsolePage() {
         </Card>
         <Card className="border-primary/5 bg-primary/5 shadow-sm">
           <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Professional Registry</CardDescription>
+            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Directory Size</CardDescription>
             <CardTitle className="text-3xl font-black font-headline flex items-center justify-between">
               {stats.totalAdvocates}
               <Gavel className="h-5 w-5 text-primary/40" />
@@ -187,15 +209,15 @@ export default function ManagementConsolePage() {
         <CardHeader className="border-b bg-muted/30">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <CardTitle className="font-headline font-black text-xl tracking-tight">Joined User Registry</CardTitle>
-              <CardDescription className="font-medium text-xs">Chronological list of all platform members.</CardDescription>
+              <CardTitle className="font-headline font-black text-xl tracking-tight">Verification Dashboard</CardTitle>
+              <CardDescription className="font-medium text-xs">Review user status and professional credentials.</CardDescription>
             </div>
             <div className="flex gap-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
                   placeholder="Search members..." 
-                  className="pl-9 h-10 w-full md:w-64 bg-background/50 font-medium text-sm" 
+                  className="pl-9 h-10 w-full md:w-64 bg-background/50 font-medium text-sm border-primary/10" 
                   value={searchQuery}
                   onChange={(e) => setSearchSearchQuery(e.target.value)}
                 />
@@ -210,7 +232,7 @@ export default function ManagementConsolePage() {
           <Table>
             <TableHeader className="bg-muted/20">
               <TableRow>
-                <TableHead className="font-bold text-[11px] text-muted-foreground pl-6">Member Identity</TableHead>
+                <TableHead className="font-bold text-[11px] text-muted-foreground pl-6">User Identity</TableHead>
                 <TableHead className="font-bold text-[11px] text-muted-foreground">Type</TableHead>
                 <TableHead className="font-bold text-[11px] text-muted-foreground">Professional Status</TableHead>
                 <TableHead className="font-bold text-[11px] text-muted-foreground">Member Since</TableHead>
@@ -254,7 +276,7 @@ export default function ManagementConsolePage() {
                             <span className="text-[9px] text-muted-foreground font-medium italic">Profile not yet configured</span>
                         </div>
                       ) : (
-                        <span className="text-[10px] font-bold text-muted-foreground/40 italic">Not Applicable</span>
+                        <span className="text-[10px] font-bold text-muted-foreground/40 italic">Not Listed</span>
                       )}
                     </TableCell>
                     <TableCell>
@@ -271,7 +293,7 @@ export default function ManagementConsolePage() {
               }) : (
                 <TableRow>
                   <TableCell colSpan={5} className="h-32 text-center text-muted-foreground font-medium">
-                    No members match your current filter.
+                    No users found matching your criteria.
                   </TableCell>
                 </TableRow>
               )}
