@@ -2,6 +2,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export interface Lawyer {
     id: number | string;
+    uid?: string;
     name: string;
     specialty: string;
     rating: number | string;
@@ -10,7 +11,7 @@ export interface Lawyer {
         id: string;
         imageUrl: string;
         imageHint: string;
-    };
+    } | null;
     about?: string;
     experience?: string;
     contact?: {
@@ -25,6 +26,7 @@ export interface Lawyer {
     position?: string;
     certificateName?: string;
     isVerified?: boolean;
+    isApproved?: boolean;
     [key: string]: any;
 }
 

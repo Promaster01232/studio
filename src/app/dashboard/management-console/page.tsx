@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { ref, onValue, update } from "firebase/database";
-import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays, Ban, CheckCircle } from "lucide-react";
+import { Users, ShieldCheck, Gavel, Loader2, Search, Filter, BadgeCheck, CalendarDays, Ban, CheckCircle, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -34,6 +34,7 @@ interface AdvocateRecord {
   barId: string;
   specialty: string;
   isVerified: boolean;
+  isApproved: boolean;
   courtName: string;
 }
 
@@ -83,7 +84,7 @@ export default function ManagementConsolePage() {
         const isAdminUser = await checkAdmin();
         if (!isAdminUser || !isSubscribed) return;
 
-        // Fetch Users from Firestore with real-time updates
+        // Fetch Users from Firestore
         const usersCol = collection(firestore, "users");
         const unsubscribeUsers = onSnapshot(usersCol, (snapshot) => {
             const usersList = snapshot.docs.map(doc => ({
@@ -91,7 +92,6 @@ export default function ManagementConsolePage() {
                 uid: doc.id
             } as UserRecord));
             
-            // Sort by join date (most recent first)
             const sorted = usersList.sort((a, b) => {
                 const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
                 const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
@@ -100,16 +100,6 @@ export default function ManagementConsolePage() {
             
             if (isSubscribed) {
                 setUsers(sorted);
-                setLoading(false);
-            }
-        }, (error) => {
-            console.error("Users listener error:", error);
-            if (isSubscribed) {
-                toast({
-                    variant: "destructive",
-                    title: "Permission Error",
-                    description: "You do not have permission to list all users."
-                });
                 setLoading(false);
             }
         });
@@ -121,7 +111,7 @@ export default function ManagementConsolePage() {
                 setAdvocates(snapshot.val());
             }
         }, (error) => {
-            console.warn("RTDB listener skipped due to permissions:", error.message);
+            console.warn("RTDB listener skipped:", error.message);
         });
 
         return () => {
@@ -143,31 +133,40 @@ export default function ManagementConsolePage() {
     const newBlockedStatus = !user.isBlocked;
     
     try {
-        // 1. Update Firestore (Primary Source of Truth)
         const userRef = doc(firestore, "users", user.uid);
         await updateDoc(userRef, { isBlocked: newBlockedStatus });
 
-        // 2. Update RTDB for immediate enforcement (Graceful failure)
         try {
             await update(ref(rtdb, `users/${user.uid}`), { isBlocked: newBlockedStatus });
         } catch (rtdbError) {
-            console.warn("RTDB sync failed during block action. User is blocked in Firestore.", rtdbError);
+            console.warn("RTDB sync failed during block action.");
         }
 
         toast({
             title: newBlockedStatus ? "User Suspended" : "User Restored",
-            description: `${user.firstName} ${user.lastName}'s access has been ${newBlockedStatus ? 'restricted' : 'granted'}.`
+            description: `${user.firstName} ${user.lastName}'s access has been updated.`
         });
     } catch (error: any) {
-        console.error("Failed to update user status:", error);
-        toast({
-            variant: "destructive",
-            title: "Action Failed",
-            description: error.message || "Could not update user status. Check your permissions."
-        });
+        toast({ variant: "destructive", title: "Action Failed", description: error.message });
     } finally {
         setProcessingUid(null);
     }
+  };
+
+  const approveAdvocate = async (adv: AdvocateRecord) => {
+      setProcessingUid(adv.uid);
+      try {
+          // Manual Approval happens in RTDB where the public directory is powered from
+          await update(ref(rtdb, `advocates/${adv.uid}`), { isApproved: true });
+          toast({
+              title: "Advocate Approved",
+              description: `${adv.name} is now listed in the public directory.`,
+          });
+      } catch (error: any) {
+          toast({ variant: "destructive", title: "Approval Failed", description: error.message });
+      } finally {
+          setProcessingUid(null);
+      }
   };
 
   const filteredUsers = users.filter(user => 
@@ -177,8 +176,8 @@ export default function ManagementConsolePage() {
 
   const stats = {
     totalUsers: users.length,
-    totalAdvocates: users.filter(u => u.userType === 'lawyer').length,
-    verifiedAdvocates: Object.values(advocates).filter(a => a.isVerified).length,
+    totalAdvocates: Object.keys(advocates).length,
+    pendingApprovals: Object.values(advocates).filter(a => !a.isApproved).length,
   };
 
   const formatJoinDate = (timestamp: any) => {
@@ -221,26 +220,26 @@ export default function ManagementConsolePage() {
         </Card>
         <Card className="border-primary/5 bg-primary/5 shadow-sm">
           <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Directory Size</CardDescription>
+            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Total Directory</CardDescription>
             <CardTitle className="text-3xl font-black font-headline flex items-center justify-between">
               {stats.totalAdvocates}
               <Gavel className="h-5 w-5 text-primary/40" />
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground font-medium">Advocates listed in Lawyer Connect</p>
+            <p className="text-xs text-muted-foreground font-medium">Total advocates registered on platform</p>
           </CardContent>
         </Card>
-        <Card className="border-primary/5 bg-primary/5 shadow-sm">
+        <Card className={cn("border-primary/5 shadow-sm", stats.pendingApprovals > 0 ? "bg-amber-500/5" : "bg-primary/5")}>
           <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Trust Score</CardDescription>
-            <CardTitle className="text-3xl font-black font-headline flex items-center justify-between">
-              {stats.verifiedAdvocates}
-              <ShieldCheck className="h-5 w-5 text-green-500/40" />
+            <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary">Pending Approvals</CardDescription>
+            <CardTitle className={cn("text-3xl font-black font-headline flex items-center justify-between", stats.pendingApprovals > 0 ? "text-amber-600" : "")}>
+              {stats.pendingApprovals}
+              <Clock className={cn("h-5 w-5", stats.pendingApprovals > 0 ? "text-amber-500/40" : "text-primary/40")} />
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground font-medium">AI-authenticated professional profiles</p>
+            <p className="text-xs text-muted-foreground font-medium">Advocates awaiting manual verification</p>
           </CardContent>
         </Card>
       </div>
@@ -250,7 +249,7 @@ export default function ManagementConsolePage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Verification Dashboard</CardTitle>
-              <CardDescription className="font-medium text-xs">Review user status and professional credentials.</CardDescription>
+              <CardDescription className="font-medium text-xs">Review user status and manual approval queue.</CardDescription>
             </div>
             <div className="flex gap-2">
               <div className="relative">
@@ -275,7 +274,7 @@ export default function ManagementConsolePage() {
                 <TableHead className="font-bold text-[11px] text-muted-foreground pl-6">User Identity</TableHead>
                 <TableHead className="font-bold text-[11px] text-muted-foreground">Type</TableHead>
                 <TableHead className="font-bold text-[11px] text-muted-foreground">Professional Status</TableHead>
-                <TableHead className="font-bold text-[11px] text-muted-foreground">Account State</TableHead>
+                <TableHead className="font-bold text-[11px] text-muted-foreground">Approval</TableHead>
                 <TableHead className="font-bold text-[11px] text-muted-foreground text-right pr-6">Management</TableHead>
               </TableRow>
             </TableHeader>
@@ -321,13 +320,22 @@ export default function ManagementConsolePage() {
                       )}
                     </TableCell>
                     <TableCell>
-                        {user.isBlocked ? (
-                            <Badge variant="destructive" className="text-[9px] font-black uppercase tracking-wider h-6">Suspended</Badge>
+                        {adv ? (
+                            adv.isApproved ? (
+                                <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Approved</Badge>
+                            ) : (
+                                <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    className="h-7 px-3 bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase hover:bg-amber-500 hover:text-white"
+                                    onClick={() => approveAdvocate(adv)}
+                                    disabled={isProcessing}
+                                >
+                                    {isProcessing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Approve Listing"}
+                                </Button>
+                            )
                         ) : (
-                            <div className="flex items-center gap-2 text-[11px] font-bold text-muted-foreground">
-                                <CalendarDays className="h-3 w-3 opacity-40" />
-                                {formatJoinDate(user.createdAt)}
-                            </div>
+                            <span className="text-[9px] font-bold text-muted-foreground/40">N/A</span>
                         )}
                     </TableCell>
                     <TableCell className="text-right pr-6">

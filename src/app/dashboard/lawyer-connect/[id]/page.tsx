@@ -4,25 +4,43 @@ import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, MessageSquare, Star, MapPin, BadgeCheck, Briefcase, Globe, User, Scale, Phone, Mail } from "lucide-react";
+import { ArrowLeft, MessageSquare, Star, MapPin, BadgeCheck, Briefcase, Globe, User, Scale, Phone, Mail, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
-import { getAdvocates, type Lawyer } from '@/lib/advocates-data';
+import { type Lawyer } from '@/lib/advocates-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { motion } from "framer-motion";
+import { useDatabase } from '@/firebase';
+import { ref, get } from 'firebase/database';
 
 export default function LawyerProfilePage() {
   const params = useParams<{ id: string }>();
+  const rtdb = useDatabase();
   const [lawyer, setLawyer] = useState<Lawyer | undefined>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const advocates = getAdvocates();
-    const foundLawyer = advocates.find(l => l.id.toString() === params.id);
-    setLawyer(foundLawyer);
-    setLoading(false);
-  }, [params.id]);
+    const fetchLawyer = async () => {
+        try {
+            const advocateRef = ref(rtdb, `advocates/${params.id}`);
+            const snapshot = await get(advocateRef);
+            if (snapshot.exists()) {
+                const data = snapshot.val() as Lawyer;
+                // Only allow viewing if approved
+                if (data.isApproved) {
+                    setLawyer(data);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching lawyer:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    fetchLawyer();
+  }, [params.id, rtdb]);
 
   if (loading) {
       return (
@@ -100,12 +118,12 @@ export default function LawyerProfilePage() {
 
                 <div className="mt-6 flex flex-col xs:flex-row gap-3 max-w-sm">
                     <Button variant="outline" size="sm" className="flex-1 h-11 font-bold border-primary/10 bg-background/50 rounded-xl" asChild>
-                        <Link href={`/dashboard/lawyer-connect/${lawyer.id}/chat`}>
+                        <Link href={`/dashboard/lawyer-connect/${lawyer.uid || lawyer.id}/chat`}>
                             <MessageSquare className="mr-2 h-4 w-4"/> Chat
                         </Link>
                     </Button>
                     <Button size="sm" className="flex-1 h-11 font-bold shadow-xl shadow-primary/20 tracking-tighter rounded-xl" asChild>
-                        <Link href={`/dashboard/lawyer-connect/${lawyer.id}/book`}>Book Consult</Link>
+                        <Link href={`/dashboard/lawyer-connect/${lawyer.uid || lawyer.id}/book`}>Book Consult</Link>
                     </Button>
                 </div>
             </div>

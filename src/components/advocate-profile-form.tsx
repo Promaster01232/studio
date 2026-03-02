@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { saveAdvocate, type Lawyer } from "@/lib/advocates-data";
 import { useAuth, useDatabase } from "@/firebase";
 import { ref, set } from "firebase/database";
-import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2, Info } from "lucide-react";
 import { verifyAdvocateCertificate } from "@/ai/flows/verify-advocate-certificate";
 
 const practiceAreas = [
@@ -116,14 +116,12 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
             }
 
             const advocateName = name || `${userProfile?.firstName} ${userProfile?.lastName}`;
-            
-            // Ensure image is null instead of undefined for RTDB compatibility
             const advocateImage = userProfile?.photoURL ? 
                 { id: `advocate${auth.currentUser?.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } :
                 (initialData?.image || null);
 
-
             const newAdvocate: Omit<Lawyer, 'id'> = {
+                uid: auth.currentUser?.uid,
                 name: advocateName,
                 specialty: specialization,
                 rating: initialData?.rating || (Math.random() * (5 - 4.5) + 4.5).toFixed(1),
@@ -143,12 +141,13 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                 courtAddress: courtAddress,
                 certificateName: certificateName,
                 isVerified: true,
+                isApproved: initialData?.isApproved || false, // Default to false for manual admin review
             };
 
             // Save to localStorage (directory)
             saveAdvocate(newAdvocate);
             
-            // Save to RTDB (centralized profile) with graceful error handling
+            // Save to RTDB (centralized profile)
             if (auth.currentUser) {
                 const rtdbPayload = JSON.parse(JSON.stringify({
                     ...newAdvocate,
@@ -160,6 +159,11 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                     console.warn("RTDB professional sync skipped:", err.message);
                 });
             }
+
+            toast({
+                title: "Profile submitted",
+                description: "Your details have been sent for manual admin verification. You will be listed once approved.",
+            });
 
             onSave();
         } catch (error) {
@@ -194,15 +198,28 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
 
     return (
         <form className="space-y-8 max-h-[70vh] overflow-y-auto p-1 pr-4 custom-scrollbar" onSubmit={handleSubmit}>
-            <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 flex items-start gap-4 shadow-inner">
-                <div className="bg-primary/10 p-2 rounded-lg">
-                    <ShieldCheck className="h-5 w-5 text-primary" />
+            <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 flex flex-col gap-3 shadow-inner">
+                <div className="flex items-start gap-4">
+                    <div className="bg-primary/10 p-2 rounded-lg">
+                        <ShieldCheck className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="space-y-1">
+                        <p className="text-xs font-bold text-primary">Professional Verification</p>
+                        <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
+                            Our AI system will authenticate your certificate against Bar Council records.
+                        </p>
+                    </div>
                 </div>
-                <div className="space-y-1">
-                    <p className="text-xs font-bold text-primary">Professional Verification</p>
-                    <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                        Our AI system will authenticate your certificate against Bar Council records. Verified advocates appear at the top of search results.
-                    </p>
+                <div className="flex items-start gap-4 pt-2 border-t border-primary/10">
+                    <div className="bg-amber-500/10 p-2 rounded-lg">
+                        <Info className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div className="space-y-1">
+                        <p className="text-xs font-bold text-amber-600">Manual Review Process</p>
+                        <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
+                            Once AI-verified, your profile will be sent to our administrators for a final manual review before appearing in the public directory.
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -338,7 +355,7 @@ export function AdvocateProfileForm({ onSave, userProfile, initialData }: Advoca
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                             AI Authenticating Certificate...
                         </>
-                    ) : (initialData ? "Update Professional Profile" : "Authenticate & Save")}
+                    ) : (initialData ? "Update Professional Profile" : "Submit for Approval")}
                 </Button>
             </div>
         </form>

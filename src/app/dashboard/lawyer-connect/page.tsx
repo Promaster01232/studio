@@ -7,19 +7,44 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Filter, Search, Star, MapPin, Briefcase, BadgeCheck, MessageSquare, Scale, Globe, Phone, Mail, ChevronRight } from "lucide-react";
-import { getAdvocates, type Lawyer } from "@/lib/advocates-data";
+import { Filter, Search, Star, MapPin, Briefcase, BadgeCheck, MessageSquare, Scale, Globe, Phone, Mail, ChevronRight, Loader2, ShieldCheck } from "lucide-react";
+import { type Lawyer } from "@/lib/advocates-data";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDatabase } from "@/firebase";
+import { ref, onValue } from "firebase/database";
 
 export default function LawyerConnectPage() {
+  const rtdb = useDatabase();
   const [allAdvocates, setAllAdvocates] = useState<Lawyer[]>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<Lawyer[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const advocates = getAdvocates();
-    setAllAdvocates(advocates);
-    setFilteredAdvocates(advocates);
-  }, []);
+    const advocatesRef = ref(rtdb, "advocates");
+    
+    // Fetch live from RTDB to respect Admin Approvals
+    const unsubscribe = onValue(advocatesRef, (snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            const list = Object.values(data) as Lawyer[];
+            
+            // CRITICAL: Only show advocates who have been manually approved by the admin
+            const approvedList = list.filter(adv => adv.isApproved === true);
+            
+            setAllAdvocates(approvedList);
+            setFilteredAdvocates(approvedList);
+        } else {
+            setAllAdvocates([]);
+            setFilteredAdvocates([]);
+        }
+        setLoading(false);
+    }, (error) => {
+        console.error("Failed to fetch directory:", error);
+        setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [rtdb]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.toLowerCase();
@@ -32,11 +57,19 @@ export default function LawyerConnectPage() {
     setFilteredAdvocates(filtered);
   };
 
+  if (loading) {
+      return (
+          <div className="flex h-[60vh] items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+      );
+  }
+
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       <PageHeader
         title="Advocate Directory"
-        description="Connect with verified legal professionals near you."
+        description="Connect with AI-authenticated and manually verified legal professionals."
       />
       
       <div className="flex gap-2">
@@ -56,8 +89,8 @@ export default function LawyerConnectPage() {
 
       <div className="flex justify-between items-center border-b border-primary/5 pb-2">
         <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-            <Scale className="h-3.5 w-3.5 text-primary" />
-            Active professionals ({filteredAdvocates.length})
+            <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+            Verified professionals ({filteredAdvocates.length})
         </h2>
       </div>
 
@@ -65,7 +98,7 @@ export default function LawyerConnectPage() {
         <AnimatePresence mode="popLayout">
             {filteredAdvocates.length > 0 ? filteredAdvocates.map((lawyer, index) => (
             <motion.div
-                key={lawyer.id}
+                key={lawyer.uid || lawyer.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
@@ -154,13 +187,13 @@ export default function LawyerConnectPage() {
 
                     <div className="border-t border-primary/10 flex divide-x divide-primary/10 bg-muted/5 group-hover:bg-muted/10 transition-colors">
                         <Button variant="ghost" className="flex-1 h-12 rounded-none font-bold text-xs hover:bg-primary/5 active:bg-primary/10 transition-all" asChild>
-                            <Link href={`/dashboard/lawyer-connect/${lawyer.id}/chat`}>
+                            <Link href={`/dashboard/lawyer-connect/${lawyer.uid || lawyer.id}/chat`}>
                                 <MessageSquare className="mr-2 h-4 w-4" />
                                 Chat now
                             </Link>
                         </Button>
                         <Button variant="ghost" className="flex-1 h-12 rounded-none font-bold text-xs hover:bg-primary/5 active:bg-primary/10 transition-all" asChild>
-                            <Link href={`/dashboard/lawyer-connect/${lawyer.id}`}>
+                            <Link href={`/dashboard/lawyer-connect/${lawyer.uid || lawyer.id}`}>
                                 View profile
                                 <ChevronRight className="ml-1 h-4 w-4" />
                             </Link>
@@ -179,10 +212,7 @@ export default function LawyerConnectPage() {
                         <Search className="h-12 w-12 text-muted-foreground opacity-20" />
                     </div>
                     <h3 className="text-xl font-black font-headline tracking-tighter">No professionals found</h3>
-                    <p className="text-muted-foreground max-w-[250px] mx-auto mt-2 text-xs font-medium">Try searching for a different name, court complex, or specialty.</p>
-                    <Button variant="link" size="sm" className="mt-4 text-primary font-bold" onClick={() => setFilteredAdvocates(allAdvocates)}>
-                        Show all professionals
-                    </Button>
+                    <p className="text-muted-foreground max-w-[250px] mx-auto mt-2 text-xs font-medium">Verified advocates appear here after manual administrative approval.</p>
                 </motion.div>
             )}
         </AnimatePresence>
