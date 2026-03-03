@@ -99,10 +99,10 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-2xl border-none shadow-2xl bg-white">
                 <div className="bg-primary/5 p-6 border-b">
-                    <DialogHeader className="border-none pb-0 mb-0">
+                    <DialogHeader className="border-none pb-0 mb-0 text-left">
                         <div className="flex items-center gap-4">
                             <Avatar className="h-16 w-16 border-2 border-white shadow-lg">
-                                <AvatarImage src={user.photoURL} />
+                                <AvatarImage src={user.photoURL} className="object-cover" />
                                 <AvatarFallback className="font-bold text-lg bg-primary/10 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div>
@@ -221,6 +221,9 @@ export default function ManagementConsolePage() {
                 return dateB - dateA;
             }));
             setLoading(false);
+        }, (err) => {
+            console.error("Firestore Registry Sync Issue:", err);
+            setLoading(false);
         });
 
         const advocatesRef = ref(rtdb, "advocates");
@@ -265,7 +268,7 @@ export default function ManagementConsolePage() {
         return;
     }
     
-    if (!window.confirm(`PERMANENT DELETE: This will remove ALL information for ${user.firstName} ${user.lastName} from Firestore, RTDB and Advocate Directory. The user will no longer be able to login to their profile. Proceed?`)) return;
+    if (!window.confirm(`PERMANENT DELETE: This will remove ALL information for ${user.firstName} ${user.lastName} from the platform. The user will no longer be able to log in. Proceed?`)) return;
 
     setProcessingUid(user.uid);
     try {
@@ -274,8 +277,8 @@ export default function ManagementConsolePage() {
         await remove(ref(rtdb, `advocates/${user.uid}`)).catch(e => console.warn("RTDB Advocate Registry cleanup skipped"));
         
         toast({ 
-            title: "Database Purged", 
-            description: "All user information has been permanently removed from the system." 
+            title: "Account Purged", 
+            description: "All database information has been permanently removed." 
         });
     } catch (error: any) {
         console.error("Purge Error:", error);
@@ -433,16 +436,16 @@ export default function ManagementConsolePage() {
 
         <TabsContent value="registry" className="mt-0">
             <Card className="border border-primary/5 shadow-xl rounded-2xl overflow-hidden bg-white">
-                <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6">
+                <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6 text-left">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div className="space-y-0.5">
                             <CardTitle className="font-headline font-black text-xl tracking-tight">Member Registry</CardTitle>
-                            <CardDescription className="text-xs font-medium">Verify and manage all platform identities.</CardDescription>
+                            <CardDescription className="text-xs font-medium">Platform accounts listed for administrative inspection.</CardDescription>
                         </div>
                         <div className="relative group w-full md:w-80">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input 
-                                placeholder="Search registry..." 
+                                placeholder="Search by name or email..." 
                                 className="pl-9 h-11 w-full bg-background border-primary/10 focus:border-primary rounded-xl text-xs font-bold" 
                                 value={searchQuery}
                                 onChange={(e) => setSearchSearchQuery(e.target.value)}
@@ -509,22 +512,22 @@ export default function ManagementConsolePage() {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl border border-primary/5 bg-white">
-                                                        <DropdownMenuLabel className="font-black text-[9px] uppercase tracking-widest opacity-50 px-3 py-2">Identity Dossier</DropdownMenuLabel>
+                                                        <DropdownMenuLabel className="font-black text-[9px] uppercase tracking-widest opacity-50 px-3 py-2">Account Dossier</DropdownMenuLabel>
                                                         
                                                         <UserDetailsModal user={user} trigger={
                                                             <button className="flex w-full cursor-default select-none items-center rounded-lg px-3 py-2 text-xs font-bold outline-none transition-colors hover:bg-muted active:bg-muted/80">
-                                                                <Eye className="mr-3 h-4 w-4 text-muted-foreground" /> View Full Profile
+                                                                <Eye className="mr-3 h-4 w-4 text-muted-foreground" /> View Profile Details
                                                             </button>
                                                         } />
                                                         
-                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Send Email</DropdownMenuItem>
+                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Send Official Email</DropdownMenuItem>
                                                         <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><MessageSquare className="mr-3 h-4 w-4 text-muted-foreground" /> Platform Message</DropdownMenuItem>
                                                         <DropdownMenuSeparator className="my-2" />
                                                         <DropdownMenuItem 
                                                             onClick={() => handleDeleteUser(user)}
-                                                            className="rounded-lg font-bold text-xs h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
+                                                            className="rounded-lg font-bold text-[10px] h-9 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer uppercase tracking-tight"
                                                         >
-                                                            <Trash2 className="mr-3 h-4 w-4" /> DELETE ALL INFORMATION
+                                                            <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete Account
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -549,7 +552,7 @@ export default function ManagementConsolePage() {
                     <div className="p-6 bg-muted/5 border-t border-primary/5">
                         <Button variant="outline" className="font-black text-[10px] uppercase tracking-widest border border-dashed border-primary/20 bg-white hover:bg-primary/5 h-11 px-8 rounded-xl w-full sm:w-auto shadow-sm active:scale-95 transition-all">
                             <UserPlus className="mr-2 h-4 w-4" />
-                            Add New Member To Registry
+                            Manual Registry Addition
                         </Button>
                     </div>
                 </CardContent>
@@ -562,7 +565,7 @@ export default function ManagementConsolePage() {
                     const isProcessing = processingUid === adv.uid;
                     return (
                         <Card key={adv.uid} className={cn("group overflow-hidden border border-primary/5 shadow-lg transition-all duration-300 hover:shadow-2xl rounded-2xl bg-white", adv.isApproved && "border-green-500/20")}>
-                            <div className="p-6 space-y-5">
+                            <div className="p-6 space-y-5 text-left">
                                 <div className="flex items-start justify-between">
                                     <div className="relative">
                                         <Avatar className="h-16 w-16 border-2 border-white shadow-xl rounded-2xl overflow-hidden">
@@ -579,7 +582,7 @@ export default function ManagementConsolePage() {
                                         {adv.isApproved ? (
                                             <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md">Live Profile</Badge>
                                         ) : (
-                                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Pending Review</Badge>
+                                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Awaiting Jach</Badge>
                                         )}
                                         {adv.isBlocked && (
                                             <Badge className="bg-red-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md shadow-sm">Suspended</Badge>
@@ -625,7 +628,7 @@ export default function ManagementConsolePage() {
                             <Gavel className="h-10 w-10" />
                         </div>
                         <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Clear</h3>
-                        <p className="text-muted-foreground max-w-xs mx-auto mt-3 text-xs font-medium leading-relaxed">No new professional applications awaiting verification at this time.</p>
+                        <p className="text-muted-foreground max-w-xs mx-auto mt-3 text-xs font-medium leading-relaxed">No professional applications awaiting final jach at this time.</p>
                     </div>
                 )}
             </div>

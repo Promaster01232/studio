@@ -79,7 +79,7 @@ async function SearchResultsComponent({ searchParams }: { searchParams: SearchPa
             <span className="sr-only">Back to Search</span>
           </Link>
         </Button>
-        <div className="flex-1">
+        <div className="flex-1 text-left">
           <h1 className="text-xl font-semibold">eCourts Search Results</h1>
           <p className="text-sm text-muted-foreground">{getSearchDescription(searchParams)}</p>
         </div>
@@ -87,12 +87,12 @@ async function SearchResultsComponent({ searchParams }: { searchParams: SearchPa
 
       {caseDetails ? (
         <Card>
-          <CardHeader>
+          <CardHeader className="text-left">
             <CardTitle className="text-lg">{caseDetails.petitioner} vs. {caseDetails.respondent}</CardTitle>
             <CardDescription>{caseDetails.caseType} - {caseDetails.filingNumber}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 text-sm mb-6">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 text-sm mb-6 text-left">
               <div className="flex items-start gap-3">
                 <FileText className="h-4 w-4 mt-1 text-primary" />
                 <div>
@@ -173,7 +173,7 @@ async function SearchResultsComponent({ searchParams }: { searchParams: SearchPa
                   </TableBody>
                 </Table>
               </TabsContent>
-              <TabsContent value="orders" className="pt-4">
+              <TabsContent value="orders" className="pt-4 text-left">
                 <div className="space-y-4">
                   {caseDetails.orders.map((order, index) => (
                     <div key={index} className="p-4 border rounded-lg">

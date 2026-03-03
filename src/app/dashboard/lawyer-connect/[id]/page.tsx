@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, use } from 'react';
@@ -133,23 +134,23 @@ export default function LawyerProfilePage({ params }: { params: Promise<{ id: st
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
             <Card className="border-primary/5 shadow-xl bg-card/30 backdrop-blur-sm rounded-2xl">
-                <CardHeader className="p-5 border-b border-primary/5 bg-primary/5">
+                <CardHeader className="p-5 border-b border-primary/5 bg-primary/5 text-left">
                     <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-tight">
                         <Scale className="h-4 w-4 text-primary" /> Professional Bio
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-6 text-left">
                     <p className="text-muted-foreground leading-relaxed text-sm whitespace-pre-line font-medium">{lawyer.about}</p>
                 </CardContent>
             </Card>
             
             <Card className="border-primary/5 shadow-xl bg-card/30 backdrop-blur-sm rounded-2xl overflow-hidden">
-                <CardHeader className="p-5 border-b border-primary/5 bg-primary/5">
+                <CardHeader className="p-5 border-b border-primary/5 bg-primary/5 text-left">
                     <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-tight">
                         <BadgeCheck className="h-4 w-4 text-primary" /> Core Credentials
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6 space-y-6">
+                <CardContent className="p-6 space-y-6 text-left">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="space-y-1.5">
                             <p className="text-[9px] text-muted-foreground font-bold tracking-tight flex items-center gap-2">
@@ -181,12 +182,12 @@ export default function LawyerProfilePage({ params }: { params: Promise<{ id: st
 
         <div className="space-y-6">
             <Card className="border-primary/5 shadow-xl bg-card/30 backdrop-blur-sm rounded-2xl overflow-hidden">
-                <CardHeader className="p-5 border-b border-primary/5 bg-primary/5">
+                <CardHeader className="p-5 border-b border-primary/5 bg-primary/5 text-left">
                     <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-tight">
                         <MapPin className="h-4 w-4 text-primary" /> Practice Location
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6 space-y-5">
+                <CardContent className="p-6 space-y-5 text-left">
                     <div className="space-y-2">
                         <p className="font-bold text-foreground text-lg tracking-tighter leading-tight">{lawyer.courtName || 'District Court Chamber'}</p>
                         <p className="text-xs text-muted-foreground font-medium leading-relaxed">{lawyer.courtAddress || 'Authorized practice area within state jurisdiction.'}</p>
@@ -200,12 +201,12 @@ export default function LawyerProfilePage({ params }: { params: Promise<{ id: st
             </Card>
 
             <Card className="border-primary/5 shadow-xl bg-card/30 backdrop-blur-sm rounded-2xl overflow-hidden">
-                <CardHeader className="p-5 border-b border-primary/5 bg-primary/5">
+                <CardHeader className="p-5 border-b border-primary/5 bg-primary/5 text-left">
                     <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-tight">
                         <Phone className="h-4 w-4 text-primary" /> Contact Details
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6 space-y-3">
+                <CardContent className="p-6 space-y-3 text-left">
                     <div className="flex items-center p-3 rounded-xl bg-primary/5 border border-primary/10">
                         <div className="bg-primary text-white p-2 rounded-lg mr-3 shadow-lg shadow-primary/20">
                             <Phone className="h-3.5 w-3.5" />
