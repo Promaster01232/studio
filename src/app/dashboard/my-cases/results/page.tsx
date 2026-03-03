@@ -68,7 +68,7 @@ async function SearchResultsComponent({ searchParams }: { searchParams: SearchPa
   const cnr = (searchParams.cnr as string) || '';
   const caseDetails = await searchEcourts({ cnr });
   
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise(resolve => setTimeout(resolve, 800));
 
   return (
     <div className="space-y-6">

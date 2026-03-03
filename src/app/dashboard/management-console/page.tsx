@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
-import { ref, update, onValue, remove } from "firebase/database";
+import { ref, update, onValue, remove, set } from "firebase/database";
 import { 
   Users, 
   ShieldCheck, 
@@ -98,23 +98,25 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                 )}
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-2xl border-none shadow-2xl bg-white">
-                <DialogHeader className="p-6 bg-primary/5 border-b">
-                    <div className="flex items-center gap-4">
-                        <Avatar className="h-16 w-16 border-2 border-white shadow-lg">
-                            <AvatarImage src={user.photoURL} />
-                            <AvatarFallback className="font-bold text-lg bg-primary/10 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <DialogTitle className="text-xl font-black tracking-tight">{user.firstName} {user.lastName}</DialogTitle>
-                                {user.securityStatus === 'verified' && <BadgeCheck className="h-5 w-5 text-primary" />}
+                <div className="bg-primary/5 p-6 border-b">
+                    <DialogHeader className="border-none pb-0 mb-0">
+                        <div className="flex items-center gap-4">
+                            <Avatar className="h-16 w-16 border-2 border-white shadow-lg">
+                                <AvatarImage src={user.photoURL} />
+                                <AvatarFallback className="font-bold text-lg bg-primary/10 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <DialogTitle className="text-xl font-black tracking-tight">{user.firstName} {user.lastName}</DialogTitle>
+                                    {user.securityStatus === 'verified' && <BadgeCheck className="h-5 w-5 text-primary" />}
+                                </div>
+                                <DialogDescription className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
+                                    <ShieldCheck className="h-3.5 w-3.5 text-primary" /> {user.userType} Account
+                                </DialogDescription>
                             </div>
-                            <DialogDescription className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
-                                <ShieldCheck className="h-3.5 w-3.5 text-primary" /> {user.userType} Account
-                            </DialogDescription>
                         </div>
-                    </div>
-                </DialogHeader>
+                    </DialogHeader>
+                </div>
                 <ScrollArea className="max-h-[60vh] p-6">
                     <div className="space-y-6">
                         <div className="grid sm:grid-cols-2 gap-4">
@@ -146,7 +148,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                                     {user.securityStatus === 'verified' ? (
                                         <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Identity Verified</Badge>
                                     ) : (
-                                        <Badge variant="outline" className="text-red-500 border-red-200 text-[9px] font-black uppercase">Not Verified</Badge>
+                                        <Badge variant="outline" className="text-red-500 border-red-200 text-[9px] font-black uppercase">Pending Review</Badge>
                                     )}
                                 </div>
                             </div>
@@ -200,7 +202,6 @@ export default function ManagementConsolePage() {
 
         const isSuperAdmin = user.email === 'enterspaceindia@gmail.com';
         
-        // Parallel check for DB admin flag
         const adminDoc = await getDoc(doc(firestore, "users", user.uid));
         const adminData = adminDoc.data() as any;
         const hasAdminFlag = !!adminData?.isAdmin;
@@ -211,7 +212,6 @@ export default function ManagementConsolePage() {
             return;
         }
 
-        // Setup Listeners
         const usersCol = collection(firestore, "users");
         const unsubUsers = onSnapshot(usersCol, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
@@ -265,17 +265,12 @@ export default function ManagementConsolePage() {
         return;
     }
     
-    if (!window.confirm(`PERMANENT DELETE: This will remove ALL information for ${user.firstName} ${user.lastName} from Firestore, RTDB and Advocate Directory. Proceed?`)) return;
+    if (!window.confirm(`PERMANENT DELETE: This will remove ALL information for ${user.firstName} ${user.lastName} from Firestore, RTDB and Advocate Directory. The user will no longer be able to login to their profile. Proceed?`)) return;
 
     setProcessingUid(user.uid);
     try {
-        // Step 1: Remove from Firestore
         await deleteDoc(doc(firestore, "users", user.uid));
-        
-        // Step 2: Remove from Realtime Database (User Node)
         await remove(ref(rtdb, `users/${user.uid}`)).catch(e => console.warn("RTDB User Node cleanup skipped"));
-        
-        // Step 3: Remove from Realtime Database (Advocate Registry if applicable)
         await remove(ref(rtdb, `advocates/${user.uid}`)).catch(e => console.warn("RTDB Advocate Registry cleanup skipped"));
         
         toast({ 
@@ -296,7 +291,7 @@ export default function ManagementConsolePage() {
           await update(ref(rtdb, `advocates/${adv.uid}`), { isApproved: true, isVerified: true });
           const userRef = doc(firestore, "users", adv.uid);
           await updateDoc(userRef, { securityStatus: 'verified', isBlocked: false });
-          await update(ref(rtdb, `users/${adv.uid}`), { isBlocked: false });
+          await update(ref(rtdb, `users/${adv.uid}`), { isBlocked: false, securityStatus: 'verified' });
           toast({ title: "Professional Activated", description: `${adv.name} is now live in the directory.` });
       } catch (error: any) {
           toast({ variant: "destructive", title: "Activation Failed" });
@@ -365,7 +360,10 @@ export default function ManagementConsolePage() {
 
   const massActivateVerified = async () => {
       const pending = users.filter(u => !u.isBlocked && u.securityStatus !== 'suspicious' && u.securityStatus !== 'verified');
-      if (pending.length === 0) return;
+      if (pending.length === 0) {
+          toast({ title: "No Pending Accounts", description: "All genuine accounts are already verified." });
+          return;
+      }
 
       setIsAuditing(true);
       setAuditProgress(`Activating ${pending.length} genuine accounts...`);
@@ -373,6 +371,7 @@ export default function ManagementConsolePage() {
       for (const user of pending) {
           try {
               await updateDoc(doc(firestore, "users", user.uid), { securityStatus: 'verified' });
+              await update(ref(rtdb, `users/${user.uid}`), { securityStatus: 'verified' }).catch(e => {});
           } catch (e) {}
       }
 
@@ -397,7 +396,7 @@ export default function ManagementConsolePage() {
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1">
           <h1 className="text-3xl font-black tracking-tight font-headline text-[#1a1a1a]">System Management</h1>
-          <p className="text-sm text-muted-foreground font-medium">Platform-wide registry integrity and professional controls.</p>
+          <p className="text-sm text-muted-foreground font-medium">Centralized command for registry integrity and professional approvals.</p>
         </div>
         
         <div className="flex flex-wrap gap-2 sm:gap-3">
@@ -497,7 +496,7 @@ export default function ManagementConsolePage() {
                                             ) : (
                                                 <div className="flex items-center justify-center gap-1.5">
                                                     <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                                                    <span className="text-[10px] font-black uppercase text-red-500 tracking-tight">NOT VERIFIED ALL</span>
+                                                    <span className="text-[10px] font-black uppercase text-red-500 tracking-tight">NOT VERIFIED</span>
                                                 </div>
                                             )}
                                         </TableCell>
