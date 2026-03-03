@@ -33,7 +33,8 @@ import {
   Phone,
   ShieldHalf,
   MapPin,
-  ChevronRight
+  ChevronRight,
+  Filter
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -96,7 +97,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     </button>
                 )}
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-2xl border-none shadow-2xl">
+            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-2xl border-none shadow-2xl bg-white">
                 <DialogHeader className="p-6 bg-primary/5 border-b">
                     <div className="flex items-center gap-4">
                         <Avatar className="h-16 w-16 border-2 border-white shadow-lg">
@@ -264,16 +265,26 @@ export default function ManagementConsolePage() {
         return;
     }
     
-    if (!window.confirm(`Permanently delete registry entry for ${user.firstName} ${user.lastName}?`)) return;
+    if (!window.confirm(`PERMANENT DELETE: This will remove ALL information for ${user.firstName} ${user.lastName} from Firestore, RTDB and Advocate Directory. Proceed?`)) return;
 
     setProcessingUid(user.uid);
     try {
+        // Step 1: Remove from Firestore
         await deleteDoc(doc(firestore, "users", user.uid));
-        await remove(ref(rtdb, `users/${user.uid}`));
-        await remove(ref(rtdb, `advocates/${user.uid}`));
-        toast({ title: "Purge Complete", description: "Identity removed from all registry layers." });
+        
+        // Step 2: Remove from Realtime Database (User Node)
+        await remove(ref(rtdb, `users/${user.uid}`)).catch(e => console.warn("RTDB User Node cleanup skipped"));
+        
+        // Step 3: Remove from Realtime Database (Advocate Registry if applicable)
+        await remove(ref(rtdb, `advocates/${user.uid}`)).catch(e => console.warn("RTDB Advocate Registry cleanup skipped"));
+        
+        toast({ 
+            title: "Database Purged", 
+            description: "All user information has been permanently removed from the system." 
+        });
     } catch (error: any) {
-        toast({ variant: "destructive", title: "Delete Failed" });
+        console.error("Purge Error:", error);
+        toast({ variant: "destructive", title: "Purge Failed", description: "Database connection error." });
     } finally {
         setProcessingUid(null);
     }
@@ -334,7 +345,7 @@ export default function ManagementConsolePage() {
           return;
       }
 
-      if (!window.confirm(`Purge ${suspicious.length} incorrect entries? This cannot be undone.`)) return;
+      if (!window.confirm(`Purge ${suspicious.length} incorrect entries? This will delete ALL their information from the database.`)) return;
 
       setIsAuditing(true);
       setAuditProgress(`Purging ${suspicious.length} records...`);
@@ -349,7 +360,7 @@ export default function ManagementConsolePage() {
 
       setIsAuditing(false);
       setAuditProgress("");
-      toast({ title: "Registry Purged", description: "Incorrect entries removed successfully." });
+      toast({ title: "Purge Complete", description: "All incorrect entries removed from database." });
   };
 
   const massActivateVerified = async () => {
@@ -382,23 +393,23 @@ export default function ManagementConsolePage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8 pb-12">
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+    <div className="max-w-7xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8 pb-12 bg-white min-h-full">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1">
           <h1 className="text-3xl font-black tracking-tight font-headline text-[#1a1a1a]">System Management</h1>
-          <p className="text-sm text-muted-foreground font-medium">Registry integrity and professional credentials hub.</p>
+          <p className="text-sm text-muted-foreground font-medium">Platform-wide registry integrity and professional controls.</p>
         </div>
         
         <div className="flex flex-wrap gap-2 sm:gap-3">
-            <Button onClick={runSecurityAudit} disabled={isAuditing} variant="outline" className="flex-1 sm:flex-none h-11 px-5 border-primary/10 rounded-xl font-bold transition-all active:scale-95 shadow-sm">
+            <Button onClick={runSecurityAudit} disabled={isAuditing} variant="outline" className="flex-1 sm:flex-none h-11 px-6 border-primary/10 rounded-xl font-bold transition-all active:scale-95 shadow-sm bg-white hover:bg-primary/5">
                 {isAuditing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4 text-primary" />}
                 <span className="text-[11px] uppercase tracking-wider">Integrity Scan</span>
             </Button>
-            <Button onClick={purgeIncorrectData} disabled={isAuditing} className="flex-1 sm:flex-none bg-red-500 hover:bg-red-600 text-white h-11 px-5 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-red-500/20">
+            <Button onClick={purgeIncorrectData} disabled={isAuditing} className="flex-1 sm:flex-none bg-red-500 hover:bg-red-600 text-white h-11 px-6 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-red-500/20">
                 <ShieldX className="mr-2 h-4 w-4" />
                 <span className="text-[11px] uppercase tracking-wider">Purge Fake Data</span>
             </Button>
-            <Button onClick={massActivateVerified} disabled={isAuditing} className="flex-1 sm:flex-none bg-primary text-white h-11 px-5 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-primary/20">
+            <Button onClick={massActivateVerified} disabled={isAuditing} className="flex-1 sm:flex-none bg-primary text-white h-11 px-6 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-primary/20">
                 <ShieldCheck className="mr-2 h-4 w-4" />
                 <span className="text-[11px] uppercase tracking-wider">Verify AI-Approved</span>
             </Button>
@@ -406,7 +417,7 @@ export default function ManagementConsolePage() {
       </div>
 
       {auditProgress && (
-          <div className="bg-primary/5 border border-primary/10 p-4 rounded-xl flex items-center gap-3 animate-pulse">
+          <div className="bg-primary/5 border border-primary/10 p-4 rounded-xl flex items-center gap-3 animate-pulse shadow-inner">
               <Loader2 className="h-4 w-4 animate-spin text-primary" />
               <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">{auditProgress}</p>
           </div>
@@ -414,8 +425,8 @@ export default function ManagementConsolePage() {
 
       <Tabs defaultValue="registry" className="space-y-6">
         <TabsList className="bg-muted/30 p-1 rounded-xl border border-primary/5 w-fit">
-            <TabsTrigger value="registry" className="rounded-lg px-6 h-9 font-bold text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">Identity Registry</TabsTrigger>
-            <TabsTrigger value="advocates" className="rounded-lg px-6 h-9 font-bold text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">
+            <TabsTrigger value="registry" className="rounded-lg px-8 h-10 font-bold text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">Identity Registry</TabsTrigger>
+            <TabsTrigger value="advocates" className="rounded-lg px-8 h-10 font-bold text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">
                 Advocate Review
                 {pendingAdvocates.length > 0 && <span className="ml-2 bg-primary text-white h-4 px-1.5 rounded-full text-[9px] flex items-center justify-center">{pendingAdvocates.length}</span>}
             </TabsTrigger>
@@ -433,7 +444,7 @@ export default function ManagementConsolePage() {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input 
                                 placeholder="Search registry..." 
-                                className="pl-9 h-10 w-full bg-background border-primary/10 focus:border-primary rounded-xl text-xs font-bold" 
+                                className="pl-9 h-11 w-full bg-background border-primary/10 focus:border-primary rounded-xl text-xs font-bold" 
                                 value={searchQuery}
                                 onChange={(e) => setSearchSearchQuery(e.target.value)}
                             />
@@ -441,8 +452,8 @@ export default function ManagementConsolePage() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                    <div className="overflow-x-auto">
-                        <Table>
+                    <ScrollArea className="w-full">
+                        <Table className="min-w-[800px] md:min-w-full">
                             <TableHeader className="bg-muted/20">
                                 <TableRow className="hover:bg-transparent">
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest pl-6 h-12">Identity</TableHead>
@@ -453,10 +464,10 @@ export default function ManagementConsolePage() {
                             </TableHeader>
                             <TableBody>
                                 {filteredUsers.map((user) => (
-                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus === 'suspicious' && "bg-red-50/20")}>
+                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus === 'suspicious' && "bg-red-50/30")}>
                                         <TableCell className="pl-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <Avatar className="h-10 w-10 border shadow-sm">
+                                                <Avatar className="h-10 w-10 border border-primary/10 shadow-sm">
                                                     <AvatarImage src={user.photoURL} className="object-cover" />
                                                     <AvatarFallback className="font-bold text-primary bg-primary/5">{user.firstName.charAt(0)}</AvatarFallback>
                                                 </Avatar>
@@ -484,9 +495,9 @@ export default function ManagementConsolePage() {
                                                     <span className="text-[9px] font-black uppercase tracking-widest">Confirmed</span>
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center justify-center gap-1.5 text-red-500">
+                                                <div className="flex items-center justify-center gap-1.5">
                                                     <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                                                    <span className="text-[9px] font-black uppercase tracking-tight">NOT VERIFYED ALL</span>
+                                                    <span className="text-[10px] font-black uppercase text-red-500 tracking-tight">NOT VERIFIED ALL</span>
                                                 </div>
                                             )}
                                         </TableCell>
@@ -494,34 +505,34 @@ export default function ManagementConsolePage() {
                                             <div className="flex items-center justify-end gap-2">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-muted active:scale-90 transition-all">
+                                                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-muted active:scale-90 transition-all border border-transparent hover:border-primary/10">
                                                             <MoreHorizontal className="h-4 w-4" />
                                                         </Button>
                                                     </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end" className="w-48 p-1.5 rounded-xl shadow-xl border border-primary/5 bg-white">
-                                                        <DropdownMenuLabel className="font-black text-[9px] uppercase tracking-widest opacity-50 px-2.5 py-1">Identity Actions</DropdownMenuLabel>
+                                                    <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl border border-primary/5 bg-white">
+                                                        <DropdownMenuLabel className="font-black text-[9px] uppercase tracking-widest opacity-50 px-3 py-2">Identity Dossier</DropdownMenuLabel>
                                                         
                                                         <UserDetailsModal user={user} trigger={
-                                                            <button className="flex w-full cursor-default select-none items-center rounded-lg px-2.5 py-2 text-xs font-bold outline-none transition-colors hover:bg-accent">
-                                                                <Eye className="mr-2.5 h-3.5 w-3.5 text-muted-foreground" /> View Details
+                                                            <button className="flex w-full cursor-default select-none items-center rounded-lg px-3 py-2 text-xs font-bold outline-none transition-colors hover:bg-muted active:bg-muted/80">
+                                                                <Eye className="mr-3 h-4 w-4 text-muted-foreground" /> View Full Profile
                                                             </button>
                                                         } />
                                                         
-                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-9 px-2.5 cursor-pointer"><Mail className="mr-2.5 h-3.5 w-3.5 text-muted-foreground" /> Send Email</DropdownMenuItem>
-                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-9 px-2.5 cursor-pointer"><MessageSquare className="mr-2.5 h-3.5 w-3.5 text-muted-foreground" /> Message</DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Send Email</DropdownMenuItem>
+                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><MessageSquare className="mr-3 h-4 w-4 text-muted-foreground" /> Platform Message</DropdownMenuItem>
+                                                        <DropdownMenuSeparator className="my-2" />
                                                         <DropdownMenuItem 
                                                             onClick={() => handleDeleteUser(user)}
-                                                            className="rounded-lg font-bold text-xs h-9 px-2.5 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
+                                                            className="rounded-lg font-bold text-xs h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
                                                         >
-                                                            <Trash2 className="mr-2.5 h-3.5 w-3.5" /> Delete Account
+                                                            <Trash2 className="mr-3 h-4 w-4" /> DELETE ALL INFORMATION
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                                 
                                                 <Button 
                                                     className={cn(
-                                                        "h-8 px-4 font-black text-[9px] uppercase tracking-wider rounded-lg active:scale-95 transition-all shadow-sm",
+                                                        "h-9 px-5 font-black text-[10px] uppercase tracking-wider rounded-lg active:scale-95 transition-all shadow-sm",
                                                         user.isBlocked ? "bg-white border border-primary/10 text-primary hover:bg-primary/5" : "bg-red-500 hover:bg-red-600 text-white"
                                                     )}
                                                     onClick={() => toggleUserBlock(user)}
@@ -535,11 +546,11 @@ export default function ManagementConsolePage() {
                                 ))}
                             </TableBody>
                         </Table>
-                    </div>
+                    </ScrollArea>
                     <div className="p-6 bg-muted/5 border-t border-primary/5">
-                        <Button variant="outline" className="font-black text-[10px] uppercase tracking-widest border border-dashed border-primary/20 bg-white hover:bg-primary/5 h-10 px-6 rounded-xl w-full sm:w-auto">
-                            <UserPlus className="mr-2 h-3.5 w-3.5" />
-                            Add New Member
+                        <Button variant="outline" className="font-black text-[10px] uppercase tracking-widest border border-dashed border-primary/20 bg-white hover:bg-primary/5 h-11 px-8 rounded-xl w-full sm:w-auto shadow-sm active:scale-95 transition-all">
+                            <UserPlus className="mr-2 h-4 w-4" />
+                            Add New Member To Registry
                         </Button>
                     </div>
                 </CardContent>
@@ -551,68 +562,71 @@ export default function ManagementConsolePage() {
                 {advocates.length > 0 ? advocates.map((adv) => {
                     const isProcessing = processingUid === adv.uid;
                     return (
-                        <Card key={adv.uid} className={cn("group overflow-hidden border border-primary/5 shadow-lg transition-all duration-300 hover:shadow-xl rounded-2xl bg-white", adv.isApproved && "border-green-500/20")}>
+                        <Card key={adv.uid} className={cn("group overflow-hidden border border-primary/5 shadow-lg transition-all duration-300 hover:shadow-2xl rounded-2xl bg-white", adv.isApproved && "border-green-500/20")}>
                             <div className="p-6 space-y-5">
                                 <div className="flex items-start justify-between">
                                     <div className="relative">
-                                        <Avatar className="h-16 w-16 border-2 border-white shadow-xl rounded-2xl">
+                                        <Avatar className="h-16 w-16 border-2 border-white shadow-xl rounded-2xl overflow-hidden">
+                                            <AvatarImage src={users.find(u => u.uid === adv.uid)?.photoURL} className="object-cover" />
                                             <AvatarFallback className="font-black text-xl bg-primary text-white">{adv.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         {adv.isApproved && (
-                                            <div className="absolute -bottom-1.5 -right-1.5 bg-green-500 text-white p-1 rounded-lg shadow-lg">
-                                                <CheckCircle className="h-3 w-3" />
+                                            <div className="absolute -bottom-1.5 -right-1.5 bg-green-500 text-white p-1.5 rounded-lg shadow-lg">
+                                                <CheckCircle className="h-3.5 w-3.5" />
                                             </div>
                                         )}
                                     </div>
-                                    <div className="flex flex-col items-end gap-1">
+                                    <div className="flex flex-col items-end gap-1.5">
                                         {adv.isApproved ? (
-                                            <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2 py-1 rounded-md">Live Profile</Badge>
+                                            <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md">Live Profile</Badge>
                                         ) : (
-                                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2 py-1 rounded-md">Pending Review</Badge>
+                                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Pending Review</Badge>
                                         )}
                                         {adv.isBlocked && (
-                                            <Badge className="bg-red-500 text-white font-black text-[8px] uppercase tracking-widest px-2 py-1 rounded-md">Suspended</Badge>
+                                            <Badge className="bg-red-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md shadow-sm">Suspended</Badge>
                                         )}
                                     </div>
                                 </div>
-                                <div className="space-y-0.5">
-                                    <h3 className="text-lg font-black tracking-tight text-[#1a1a1a] truncate">{adv.name}</h3>
+                                <div className="space-y-1">
+                                    <h3 className="text-xl font-black tracking-tight text-[#1a1a1a] truncate group-hover:text-primary transition-colors">{adv.name}</h3>
                                     <p className="text-[10px] font-black text-primary uppercase tracking-widest">{adv.specialty}</p>
                                 </div>
-                                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-primary/5">
+                                <div className="grid grid-cols-2 gap-4 pt-5 border-t border-primary/5">
                                     <div className="space-y-1">
-                                        <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5"><Gavel className="h-3 w-3" /> Bar ID</p>
+                                        <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5"><Gavel className="h-3.5 w-3.5" /> Bar ID</p>
                                         <p className="text-xs font-bold truncate text-[#1a1a1a]">{adv.barId}</p>
                                     </div>
                                     <div className="space-y-1">
-                                        <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5"><MapPin className="h-3 w-3" /> Location</p>
+                                        <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Location</p>
                                         <p className="text-xs font-bold truncate text-[#1a1a1a]">{adv.courtName}</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="p-4 bg-muted/5 border-t border-primary/5 flex gap-2">
+                            <div className="p-4 bg-muted/10 border-t border-primary/5 flex gap-3">
                                 {!adv.isApproved && (
                                     <Button 
-                                        className="flex-1 h-9 font-black text-[9px] uppercase tracking-widest shadow-md shadow-primary/10 active:scale-95 transition-all bg-primary text-white rounded-lg"
+                                        className="flex-1 h-10 font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/10 active:scale-95 transition-all bg-primary text-white rounded-xl"
                                         onClick={() => approveAdvocate(adv)}
                                         disabled={isProcessing}
                                     >
-                                        {isProcessing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Verify & Activate"}
+                                        {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verify & Activate"}
                                     </Button>
                                 )}
-                                <Button variant="outline" size="icon" className="h-9 w-9 border-primary/10 hover:bg-white rounded-lg transition-all shadow-sm">
-                                    <ChevronRight className="h-4 w-4" />
+                                <Button variant="outline" size="icon" className="h-10 w-10 border-primary/10 hover:bg-white rounded-xl transition-all shadow-sm active:scale-90" asChild>
+                                    <a href={`/dashboard/lawyer-connect/${adv.uid}`} target="_blank">
+                                        <ChevronRight className="h-5 w-5" />
+                                    </a>
                                 </Button>
                             </div>
                         </Card>
                     );
                 }) : (
                     <div className="col-span-full py-24 text-center bg-muted/5 rounded-3xl border-2 border-dashed border-primary/5">
-                        <div className="h-16 w-16 bg-white rounded-2xl shadow-lg mx-auto mb-6 flex items-center justify-center text-primary/20">
-                            <Gavel className="h-8 w-8" />
+                        <div className="h-20 w-20 bg-white rounded-2xl shadow-xl mx-auto mb-8 flex items-center justify-center text-primary/20 border border-primary/5">
+                            <Gavel className="h-10 w-10" />
                         </div>
-                        <h3 className="text-xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Clear</h3>
-                        <p className="text-muted-foreground max-w-xs mx-auto mt-2 text-xs font-medium">New professional applications will appear here for review.</p>
+                        <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Clear</h3>
+                        <p className="text-muted-foreground max-w-xs mx-auto mt-3 text-xs font-medium leading-relaxed">No new professional applications awaiting verification at this time.</p>
                     </div>
                 )}
             </div>
