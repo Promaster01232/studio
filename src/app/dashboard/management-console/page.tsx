@@ -44,6 +44,8 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { validateUserDetails } from "@/ai/flows/validate-user-details";
 import { onAuthStateChanged } from "firebase/auth";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -111,7 +113,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                                     {user.securityStatus === 'verified' && <BadgeCheck className="h-5 w-5 text-primary" />}
                                 </div>
                                 <DialogDescription className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
-                                    <ShieldCheck className="h-3.5 w-3.5 text-primary" /> {user.userType} Account
+                                    <ShieldCheck className="h-3.5 w-3.5 text-primary" /> {user.userType} Account Dossier
                                 </DialogDescription>
                             </div>
                         </div>
@@ -122,33 +124,33 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                         <div className="grid sm:grid-cols-2 gap-4">
                             <div className="p-4 rounded-xl bg-muted/30 border border-primary/5 space-y-1">
                                 <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                                    <Mail className="h-3 w-3" /> Email
+                                    <Mail className="h-3 w-3" /> Email Address
                                 </p>
                                 <p className="font-bold text-xs truncate">{user.email}</p>
                             </div>
                             <div className="p-4 rounded-xl bg-muted/30 border border-primary/5 space-y-1">
                                 <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                                    <Phone className="h-3 w-3" /> Mobile
+                                    <Phone className="h-3 w-3" /> Mobile Number
                                 </p>
                                 <p className="font-bold text-xs">{user.mobileNumber || "Not Provided"}</p>
                             </div>
                             <div className="p-4 rounded-xl bg-muted/30 border border-primary/5 space-y-1">
                                 <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                                    <Calendar className="h-3 w-3" /> Registration
+                                    <Calendar className="h-3 w-3" /> Registration Date
                                 </p>
                                 <p className="font-bold text-xs">
-                                    {user.createdAt ? (user.createdAt.toDate ? user.createdAt.toDate().toLocaleDateString() : new Date(user.createdAt).toLocaleDateString()) : "Legacy"}
+                                    {user.createdAt ? (user.createdAt.toDate ? user.createdAt.toDate().toLocaleDateString() : new Date(user.createdAt).toLocaleDateString()) : "Legacy Record"}
                                 </p>
                             </div>
                             <div className="p-4 rounded-xl bg-muted/30 border border-primary/5 space-y-1">
                                 <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                                    <ShieldHalf className="h-3 w-3" /> Status
+                                    <ShieldHalf className="h-3 w-3" /> Verification Status
                                 </p>
                                 <div className="mt-0.5">
                                     {user.securityStatus === 'verified' ? (
                                         <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Identity Verified</Badge>
                                     ) : (
-                                        <Badge variant="outline" className="text-red-500 border-red-200 text-[9px] font-black uppercase">Pending Review</Badge>
+                                        <Badge variant="outline" className="text-red-500 border-red-200 text-[9px] font-black uppercase">Awaiting Inspection</Badge>
                                     )}
                                 </div>
                             </div>
@@ -158,7 +160,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                             <div className="p-4 rounded-xl bg-red-50 border border-red-100 space-y-2">
                                 <div className="flex items-center gap-2 text-red-600">
                                     <AlertTriangle className="h-4 w-4" />
-                                    <p className="text-[10px] font-black uppercase tracking-wider">AI Security Flag</p>
+                                    <p className="text-[10px] font-black uppercase tracking-wider">AI Forensic Security Flag</p>
                                 </div>
                                 <p className="text-xs font-medium text-red-800 leading-relaxed italic">
                                     "{user.flagReason}"
@@ -168,10 +170,8 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     </div>
                 </ScrollArea>
                 <div className="p-6 border-t flex justify-end gap-3 bg-muted/10">
-                    <DialogTrigger asChild>
-                        <Button variant="outline" className="font-bold text-xs h-10 px-6 rounded-lg">Close Dossier</Button>
-                    </DialogTrigger>
-                    <Button className="font-bold text-xs h-10 px-6 rounded-lg shadow-lg shadow-primary/20">Message User</Button>
+                    <Button variant="outline" className="font-bold text-xs h-10 px-6 rounded-lg shadow-sm">Close Dossier</Button>
+                    <Button className="font-bold text-xs h-10 px-6 rounded-lg shadow-lg shadow-primary/20">Official Message</Button>
                 </div>
             </DialogContent>
         </Dialog>
@@ -221,8 +221,12 @@ export default function ManagementConsolePage() {
                 return dateB - dateA;
             }));
             setLoading(false);
-        }, (err) => {
-            console.error("Firestore Registry Sync Issue:", err);
+        }, async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: usersCol.path,
+                operation: 'list',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
             setLoading(false);
         });
 
@@ -248,44 +252,52 @@ export default function ManagementConsolePage() {
     if (user.email === 'enterspaceindia@gmail.com') return;
     setProcessingUid(user.uid);
     const newStatus = !user.isBlocked;
-    try {
-        await updateDoc(doc(firestore, "users", user.uid), { isBlocked: newStatus });
-        await update(ref(rtdb, `users/${user.uid}`), { isBlocked: newStatus });
-        if (user.userType === 'lawyer') {
-            await update(ref(rtdb, `advocates/${user.uid}`), { isBlocked: newStatus });
-        }
-        toast({ title: newStatus ? "Suspended" : "Restored", description: `${user.firstName}'s access updated.` });
-    } catch (e) {
-        toast({ variant: "destructive", title: "Action Failed" });
-    } finally {
-        setProcessingUid(null);
+    
+    const userRef = doc(firestore, "users", user.uid);
+    updateDoc(userRef, { isBlocked: newStatus })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: userRef.path,
+                operation: 'update',
+                requestResourceData: { isBlocked: newStatus },
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        });
+
+    await update(ref(rtdb, `users/${user.uid}`), { isBlocked: newStatus }).catch(() => {});
+    if (user.userType === 'lawyer') {
+        await update(ref(rtdb, `advocates/${user.uid}`), { isBlocked: newStatus }).catch(() => {});
     }
+    
+    toast({ title: newStatus ? "Identity Suspended" : "Identity Restored" });
+    setProcessingUid(null);
   };
 
   const handleDeleteUser = async (user: UserRecord) => {
     if (user.email === 'enterspaceindia@gmail.com') {
-        toast({ variant: "destructive", title: "Cannot delete system root" });
+        toast({ variant: "destructive", title: "System Root Unbreakable" });
         return;
     }
     
-    if (!window.confirm(`PERMANENT DELETE: This will remove ALL information for ${user.firstName} ${user.lastName} from the platform. The user will no longer be able to log in. Proceed?`)) return;
+    if (!window.confirm(`PERMANENT FORENSIC DELETE: This will purge ALL data for ${user.firstName} ${user.lastName} across ALL platform databases. This action is irreversible. Proceed?`)) return;
 
     setProcessingUid(user.uid);
-    try {
-        await deleteDoc(doc(firestore, "users", user.uid));
-        await remove(ref(rtdb, `users/${user.uid}`)).catch(e => console.warn("RTDB User Node cleanup skipped"));
-        await remove(ref(rtdb, `advocates/${user.uid}`)).catch(e => console.warn("RTDB Advocate Registry cleanup skipped"));
-        
-        toast({ 
-            title: "Account Purged", 
-            description: "All database information has been permanently removed." 
+    const userRef = doc(firestore, "users", user.uid);
+
+    deleteDoc(userRef)
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: userRef.path,
+                operation: 'delete',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
         });
-    } catch (error: any) {
-        console.error("Purge Error:", error);
-        toast({ variant: "destructive", title: "Purge Failed", description: "Database connection error." });
-    } finally {
-        setProcessingUid(null);
-    }
+
+    await remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
+    await remove(ref(rtdb, `advocates/${user.uid}`)).catch(() => {});
+    
+    toast({ title: "Account Purged Successfully" });
+    setProcessingUid(null);
   };
 
   const approveAdvocate = async (adv: AdvocateRecord) => {
@@ -293,9 +305,18 @@ export default function ManagementConsolePage() {
       try {
           await update(ref(rtdb, `advocates/${adv.uid}`), { isApproved: true, isVerified: true });
           const userRef = doc(firestore, "users", adv.uid);
-          await updateDoc(userRef, { securityStatus: 'verified', isBlocked: false });
-          await update(ref(rtdb, `users/${adv.uid}`), { isBlocked: false, securityStatus: 'verified' });
-          toast({ title: "Professional Activated", description: `${adv.name} is now live in the directory.` });
+          updateDoc(userRef, { securityStatus: 'verified', isBlocked: false })
+            .catch(async (err) => {
+                const permissionError = new FirestorePermissionError({
+                    path: userRef.path,
+                    operation: 'update',
+                    requestResourceData: { securityStatus: 'verified' },
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
+            });
+          
+          await update(ref(rtdb, `users/${adv.uid}`), { isBlocked: false, securityStatus: 'verified' }).catch(() => {});
+          toast({ title: "Professional Identity Activated" });
       } catch (error: any) {
           toast({ variant: "destructive", title: "Activation Failed" });
       } finally {
@@ -321,11 +342,12 @@ export default function ManagementConsolePage() {
               });
 
               if (!validation.isValid) {
-                  await updateDoc(doc(firestore, "users", user.uid), {
+                  const userRef = doc(firestore, "users", user.uid);
+                  updateDoc(userRef, {
                       securityStatus: 'suspicious',
                       flaggedAt: serverTimestamp(),
-                      flagReason: validation.reason || "Pattern mismatch."
-                  });
+                      flagReason: validation.reason || "Pattern mismatch identified."
+                  }).catch(() => {});
                   flagged++;
               }
           } catch (e) {}
@@ -333,54 +355,55 @@ export default function ManagementConsolePage() {
 
       setIsAuditing(false);
       setAuditProgress("");
-      toast({ title: "Audit Complete", description: `Marked ${flagged} suspicious entries.` });
+      toast({ title: "Security Audit Complete", description: `Marked ${flagged} suspicious identities.` });
   };
 
   const purgeIncorrectData = async () => {
       const suspicious = users.filter(u => u.securityStatus === 'suspicious');
       if (suspicious.length === 0) {
-          toast({ title: "Registry Clean", description: "No incorrect data found." });
+          toast({ title: "Registry Healthy", description: "No suspicious data found." });
           return;
       }
 
-      if (!window.confirm(`Purge ${suspicious.length} incorrect entries? This will delete ALL their information from the database.`)) return;
+      if (!window.confirm(`FORENSIC PURGE: Delete ${suspicious.length} suspicious entries? This will permanently wipe all their platform records.`)) return;
 
       setIsAuditing(true);
       setAuditProgress(`Purging ${suspicious.length} records...`);
 
       for (const user of suspicious) {
           try {
-              await deleteDoc(doc(firestore, "users", user.uid));
-              await remove(ref(rtdb, `users/${user.uid}`));
-              await remove(ref(rtdb, `advocates/${user.uid}`));
+              await deleteDoc(doc(firestore, "users", user.uid)).catch(() => {});
+              await remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
+              await remove(ref(rtdb, `advocates/${user.uid}`)).catch(() => {});
           } catch (e) {}
       }
 
       setIsAuditing(false);
       setAuditProgress("");
-      toast({ title: "Purge Complete", description: "All incorrect entries removed from database." });
+      toast({ title: "Purge Complete" });
   };
 
   const massActivateVerified = async () => {
       const pending = users.filter(u => !u.isBlocked && u.securityStatus !== 'suspicious' && u.securityStatus !== 'verified');
       if (pending.length === 0) {
-          toast({ title: "No Pending Accounts", description: "All genuine accounts are already verified." });
+          toast({ title: "No Pending Activation", description: "All legitimate accounts are active." });
           return;
       }
 
       setIsAuditing(true);
-      setAuditProgress(`Activating ${pending.length} genuine accounts...`);
+      setAuditProgress(`Activating ${pending.length} verified accounts...`);
 
       for (const user of pending) {
           try {
-              await updateDoc(doc(firestore, "users", user.uid), { securityStatus: 'verified' });
-              await update(ref(rtdb, `users/${user.uid}`), { securityStatus: 'verified' }).catch(e => {});
+              const userRef = doc(firestore, "users", user.uid);
+              await updateDoc(userRef, { securityStatus: 'verified' }).catch(() => {});
+              await update(ref(rtdb, `users/${user.uid}`), { securityStatus: 'verified' }).catch(() => {});
           } catch (e) {}
       }
 
       setIsAuditing(false);
       setAuditProgress("");
-      toast({ title: "Bulk Activation Complete" });
+      toast({ title: "Mass Verification Successful" });
   };
 
   const filteredUsers = users.filter(u => 
@@ -399,48 +422,48 @@ export default function ManagementConsolePage() {
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1">
           <h1 className="text-3xl font-black tracking-tight font-headline text-[#1a1a1a]">System Management</h1>
-          <p className="text-sm text-muted-foreground font-medium">Centralized command for registry integrity and professional approvals.</p>
+          <p className="text-sm text-muted-foreground font-medium">Platform-wide control for identity registry and professional approvals.</p>
         </div>
         
-        <div className="flex flex-wrap gap-2 sm:gap-3">
-            <Button onClick={runSecurityAudit} disabled={isAuditing} variant="outline" className="flex-1 sm:flex-none h-11 px-6 border-primary/10 rounded-xl font-bold transition-all active:scale-95 shadow-sm bg-white hover:bg-primary/5">
-                {isAuditing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4 text-primary" />}
-                <span className="text-[11px] uppercase tracking-wider">Integrity Scan</span>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Button onClick={runSecurityAudit} disabled={isAuditing} variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-white hover:bg-primary/5 transition-all shadow-sm">
+                {isAuditing ? <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" /> : <Sparkles className="mr-2 h-4 w-4 text-primary" />}
+                <span className="text-[10px] uppercase tracking-wider">Integrity Audit</span>
             </Button>
-            <Button onClick={purgeIncorrectData} disabled={isAuditing} className="flex-1 sm:flex-none bg-red-500 hover:bg-red-600 text-white h-11 px-6 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-red-500/20">
+            <Button onClick={purgeIncorrectData} disabled={isAuditing} className="bg-red-500 hover:bg-red-600 text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-red-500/20 active:scale-95 transition-all">
                 <ShieldX className="mr-2 h-4 w-4" />
-                <span className="text-[11px] uppercase tracking-wider">Purge Fake Data</span>
+                <span className="text-[10px] uppercase tracking-wider">Purge Fake Data</span>
             </Button>
-            <Button onClick={massActivateVerified} disabled={isAuditing} className="flex-1 sm:flex-none bg-primary text-white h-11 px-6 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-primary/20">
+            <Button onClick={massActivateVerified} disabled={isAuditing} className="bg-primary text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all">
                 <ShieldCheck className="mr-2 h-4 w-4" />
-                <span className="text-[11px] uppercase tracking-wider">Verify AI-Approved</span>
+                <span className="text-[10px] uppercase tracking-wider">Verify AI-Approved</span>
             </Button>
         </div>
       </div>
 
       {auditProgress && (
-          <div className="bg-primary/5 border border-primary/10 p-4 rounded-xl flex items-center gap-3 animate-pulse shadow-inner">
+          <div className="bg-primary/5 border border-primary/10 p-4 rounded-xl flex items-center gap-3 animate-pulse shadow-sm">
               <Loader2 className="h-4 w-4 animate-spin text-primary" />
-              <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">{auditProgress}</p>
+              <p className="text-[10px] font-black text-primary uppercase tracking-widest">{auditProgress}</p>
           </div>
       )}
 
       <Tabs defaultValue="registry" className="space-y-6">
-        <TabsList className="bg-muted/30 p-1 rounded-xl border border-primary/5 w-fit">
-            <TabsTrigger value="registry" className="rounded-lg px-8 h-10 font-bold text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">Identity Registry</TabsTrigger>
-            <TabsTrigger value="advocates" className="rounded-lg px-8 h-10 font-bold text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">
+        <TabsList className="bg-muted/30 p-1 rounded-xl border border-primary/5">
+            <TabsTrigger value="registry" className="rounded-lg px-8 h-10 font-bold text-xs">Identity Registry</TabsTrigger>
+            <TabsTrigger value="advocates" className="rounded-lg px-8 h-10 font-bold text-xs flex gap-2 items-center">
                 Advocate Review
-                {pendingAdvocates.length > 0 && <span className="ml-2 bg-primary text-white h-4 px-1.5 rounded-full text-[9px] flex items-center justify-center">{pendingAdvocates.length}</span>}
+                {pendingAdvocates.length > 0 && <span className="bg-primary text-white h-4 px-1.5 rounded-full text-[9px] font-black">{pendingAdvocates.length}</span>}
             </TabsTrigger>
         </TabsList>
 
         <TabsContent value="registry" className="mt-0">
             <Card className="border border-primary/5 shadow-xl rounded-2xl overflow-hidden bg-white">
-                <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6 text-left">
+                <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div className="space-y-0.5">
+                        <div>
                             <CardTitle className="font-headline font-black text-xl tracking-tight">Member Registry</CardTitle>
-                            <CardDescription className="text-xs font-medium">Platform accounts listed for administrative inspection.</CardDescription>
+                            <CardDescription className="text-xs font-medium">Real-time inspection of platform identities.</CardDescription>
                         </div>
                         <div className="relative group w-full md:w-80">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -458,7 +481,7 @@ export default function ManagementConsolePage() {
                         <Table className="min-w-[800px] md:min-w-full">
                             <TableHeader className="bg-muted/20">
                                 <TableRow className="hover:bg-transparent">
-                                    <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest pl-6 h-12">Identity</TableHead>
+                                    <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest pl-6 h-12">Platform Identity</TableHead>
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Security Jach</TableHead>
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Status</TableHead>
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
@@ -480,15 +503,13 @@ export default function ManagementConsolePage() {
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            <div className="flex flex-col items-center justify-center gap-1">
-                                                {user.securityStatus === 'suspicious' ? (
-                                                    <Badge className="bg-red-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Incorrect Entry</Badge>
-                                                ) : user.securityStatus === 'verified' ? (
-                                                    <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Genuine Identity</Badge>
-                                                ) : (
-                                                    <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 opacity-60">Pending Audit</Badge>
-                                                )}
-                                            </div>
+                                            {user.securityStatus === 'suspicious' ? (
+                                                <Badge className="bg-red-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Incorrect Entry</Badge>
+                                            ) : user.securityStatus === 'verified' ? (
+                                                <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Genuine Identity</Badge>
+                                            ) : (
+                                                <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 opacity-60">Pending Inspection</Badge>
+                                            )}
                                         </TableCell>
                                         <TableCell className="text-center">
                                             {user.securityStatus === 'verified' ? (
@@ -497,9 +518,9 @@ export default function ManagementConsolePage() {
                                                     <span className="text-[9px] font-black uppercase tracking-widest">Confirmed</span>
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center justify-center gap-1.5">
+                                                <div className="flex items-center justify-center gap-1.5 group">
                                                     <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                                                    <span className="text-[10px] font-black uppercase text-red-500 tracking-tight">NOT VERIFIED</span>
+                                                    <span className="text-[9px] font-black uppercase text-red-500 tracking-tight">NOT VERIFIED</span>
                                                 </div>
                                             )}
                                         </TableCell>
@@ -507,27 +528,26 @@ export default function ManagementConsolePage() {
                                             <div className="flex items-center justify-end gap-2">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-muted active:scale-90 transition-all border border-transparent hover:border-primary/10">
+                                                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-muted border border-transparent hover:border-primary/10 transition-all">
                                                             <MoreHorizontal className="h-4 w-4" />
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl border border-primary/5 bg-white">
-                                                        <DropdownMenuLabel className="font-black text-[9px] uppercase tracking-widest opacity-50 px-3 py-2">Account Dossier</DropdownMenuLabel>
+                                                        <DropdownMenuLabel className="font-black text-[9px] uppercase tracking-widest opacity-50 px-3 py-2">Administrative Actions</DropdownMenuLabel>
                                                         
                                                         <UserDetailsModal user={user} trigger={
-                                                            <button className="flex w-full cursor-default select-none items-center rounded-lg px-3 py-2 text-xs font-bold outline-none transition-colors hover:bg-muted active:bg-muted/80">
-                                                                <Eye className="mr-3 h-4 w-4 text-muted-foreground" /> View Profile Details
+                                                            <button className="flex w-full cursor-default select-none items-center rounded-lg px-3 py-2.5 text-xs font-bold outline-none transition-colors hover:bg-muted active:bg-muted/80">
+                                                                <Eye className="mr-3 h-4 w-4 text-muted-foreground" /> View Full Details
                                                             </button>
                                                         } />
                                                         
                                                         <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Send Official Email</DropdownMenuItem>
-                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><MessageSquare className="mr-3 h-4 w-4 text-muted-foreground" /> Platform Message</DropdownMenuItem>
                                                         <DropdownMenuSeparator className="my-2" />
                                                         <DropdownMenuItem 
                                                             onClick={() => handleDeleteUser(user)}
-                                                            className="rounded-lg font-bold text-[10px] h-9 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer uppercase tracking-tight"
+                                                            className="rounded-lg font-bold text-[10px] h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer uppercase tracking-tight"
                                                         >
-                                                            <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete Account
+                                                            <Trash2 className="mr-3 h-4 w-4" /> Delete Account
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -580,9 +600,9 @@ export default function ManagementConsolePage() {
                                     </div>
                                     <div className="flex flex-col items-end gap-1.5">
                                         {adv.isApproved ? (
-                                            <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md">Live Profile</Badge>
+                                            <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md">Verified Pro</Badge>
                                         ) : (
-                                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Awaiting Jach</Badge>
+                                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Awaiting Inspection</Badge>
                                         )}
                                         {adv.isBlocked && (
                                             <Badge className="bg-red-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md shadow-sm">Suspended</Badge>
@@ -628,7 +648,7 @@ export default function ManagementConsolePage() {
                             <Gavel className="h-10 w-10" />
                         </div>
                         <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Clear</h3>
-                        <p className="text-muted-foreground max-w-xs mx-auto mt-3 text-xs font-medium leading-relaxed">No professional applications awaiting final jach at this time.</p>
+                        <p className="text-muted-foreground max-w-xs mx-auto mt-3 text-xs font-medium leading-relaxed">No professional applications awaiting final inspection at this time.</p>
                     </div>
                 )}
             </div>
