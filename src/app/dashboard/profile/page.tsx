@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -9,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User, Sparkles, UserMinus, ImageUp } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User, Sparkles, UserMinus, ImageUp, ShieldAlert } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -47,6 +46,8 @@ type UserProfile = {
   photoURL?: string;
   securityStatus?: string;
 }
+
+const ADMIN_EMAIL = 'enterspaceindia@gmail.com';
 
 export default function ProfilePage() {
   const { theme, setTheme } = useTheme();
@@ -331,6 +332,10 @@ export default function ProfilePage() {
 
   const handleDeleteAccount = async () => {
     if (!auth.currentUser) return;
+    if (email === ADMIN_EMAIL) {
+        toast({ variant: "destructive", title: "Action Blocked", description: "Root Admin account cannot be deleted." });
+        return;
+    }
     
     setSaving(true);
     const user = auth.currentUser;
@@ -396,6 +401,8 @@ export default function ProfilePage() {
       },
     },
   };
+
+  const isSuperAdmin = email === ADMIN_EMAIL;
 
   if (loading || !isMounted) {
       return (
@@ -473,7 +480,7 @@ export default function ProfilePage() {
                     <div className="flex flex-col sm:flex-row items-center gap-2">
                         <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter text-foreground truncate">{firstName} {lastName}</h2>
                         <div className="flex items-center gap-2">
-                            {userProfile?.securityStatus === 'verified' ? (
+                            {userProfile?.securityStatus === 'verified' || isSuperAdmin ? (
                                 <BadgeCheck className="h-4 w-4 text-primary shrink-0" />
                             ) : (
                                 <Button 
@@ -599,7 +606,7 @@ export default function ProfilePage() {
                                         {advocateDetails ? "Edit profile" : "Complete setup"}
                                     </Button>
                                     
-                                    {advocateDetails && (
+                                    {advocateDetails && !isSuperAdmin && (
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="ghost" size="sm" className="flex-1 text-destructive hover:bg-destructive/10 font-bold h-11 active:scale-95 transition-all">
@@ -667,30 +674,41 @@ export default function ProfilePage() {
                                 <span>Logout</span>
                             </Button>
                             
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button variant="destructive" size="sm" className="w-full justify-start font-bold h-11 px-4 rounded-xl active:scale-95 transition-all">
-                                    <Trash2 className="mr-3 h-4 w-4" />
-                                    <span>Delete account</span>
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent className="max-w-[90vw] sm:max-w-lg">
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle className="font-black tracking-tight text-destructive">Are you absolutely sure?</AlertDialogTitle>
-                                  <AlertDialogDescription className="font-medium text-xs sm:text-sm">
-                                    This action cannot be undone. This will permanently delete your account
-                                    and remove your data from our servers. You will not be able to log in again.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-                                  <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
-                                    {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                                    Delete permanently
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
+                            {isSuperAdmin ? (
+                                <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 mt-2">
+                                    <div className="flex items-start gap-3">
+                                        <ShieldAlert className="h-5 w-5 text-destructive shrink-0" />
+                                        <p className="text-[10px] font-black uppercase text-destructive tracking-widest leading-relaxed">
+                                            Root Account Locked: System management nodes are immutable and cannot be deleted.
+                                        </p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="destructive" size="sm" className="w-full justify-start font-bold h-11 px-4 rounded-xl active:scale-95 transition-all">
+                                        <Trash2 className="mr-3 h-4 w-4" />
+                                        <span>Delete account</span>
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent className="max-w-[90vw] sm:max-w-lg">
+                                    <AlertDialogHeader>
+                                    <AlertDialogTitle className="font-black tracking-tight text-destructive">Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription className="font-medium text-xs sm:text-sm">
+                                        This action cannot be undone. This will permanently delete your account
+                                        and remove your data from our servers. You will not be able to log in again.
+                                    </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                                    <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
+                                        {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                                        Delete permanently
+                                    </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                                </AlertDialog>
+                            )}
                         </CardContent>
                     </Card>
                 </motion.div>

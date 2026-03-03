@@ -93,6 +93,8 @@ interface AdvocateRecord {
   isBlocked?: boolean;
 }
 
+const ADMIN_EMAIL = 'enterspaceindia@gmail.com';
+
 function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React.ReactNode }) {
     return (
         <Dialog>
@@ -114,7 +116,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                             <div className="min-w-0">
                                 <div className="flex items-center gap-2">
                                     <DialogTitle className="text-lg sm:text-xl font-black tracking-tight truncate">{user.firstName} {user.lastName}</DialogTitle>
-                                    {user.securityStatus === 'verified' && <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />}
+                                    {(user.securityStatus === 'verified' || user.email === ADMIN_EMAIL) && <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />}
                                 </div>
                                 <DialogDescription className="text-[10px] sm:text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
                                     <ShieldCheck className="h-3 w-3 text-primary" /> {user.userType} Account Dossier
@@ -151,7 +153,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                                     <ShieldHalf className="h-3 w-3" /> Verification Status
                                 </p>
                                 <div className="mt-0.5">
-                                    {user.securityStatus === 'verified' ? (
+                                    {user.securityStatus === 'verified' || user.email === ADMIN_EMAIL ? (
                                         <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Identity Verified</Badge>
                                     ) : (
                                         <Badge variant="outline" className="text-red-500 border-red-200 text-[9px] font-black uppercase">Awaiting Inspection</Badge>
@@ -314,7 +316,7 @@ export default function ManagementConsolePage() {
             return;
         }
 
-        const isSuperAdmin = user.email === 'enterspaceindia@gmail.com';
+        const isSuperAdmin = user.email === ADMIN_EMAIL;
         
         const adminDoc = await getDoc(doc(firestore, "users", user.uid));
         const adminData = adminDoc.data() as any;
@@ -369,7 +371,10 @@ export default function ManagementConsolePage() {
   }, [firestore, auth, router, toast, rtdb]);
 
   const toggleUserBlock = async (user: UserRecord) => {
-    if (user.email === 'enterspaceindia@gmail.com') return;
+    if (user.email === ADMIN_EMAIL) {
+        toast({ variant: "destructive", title: "Root Account Immutable", description: "Admin cannot be blocked." });
+        return;
+    }
     setProcessingUid(user.uid);
     const newStatus = !user.isBlocked;
     
@@ -432,8 +437,8 @@ export default function ManagementConsolePage() {
   };
 
   const handleDeleteUser = async (user: UserRecord) => {
-    if (user.email === 'enterspaceindia@gmail.com') {
-        toast({ variant: "destructive", title: "System Root Unbreakable" });
+    if (user.email === ADMIN_EMAIL) {
+        toast({ variant: "destructive", title: "System Root Immutable", description: "Admin account cannot be deleted." });
         return;
     }
     
@@ -486,7 +491,7 @@ export default function ManagementConsolePage() {
       total: users.length,
       active: users.filter(u => !u.isBlocked).length,
       blocked: users.filter(u => u.isBlocked).length,
-      suspicious: users.filter(u => u.securityStatus !== 'verified').length,
+      suspicious: users.filter(u => u.securityStatus !== 'verified' && u.email !== ADMIN_EMAIL).length,
   };
 
   if (loading) {
@@ -607,7 +612,7 @@ export default function ManagementConsolePage() {
                             </TableHeader>
                             <TableBody>
                                 {filteredUsers.length > 0 ? filteredUsers.map((user) => (
-                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus !== 'verified' && "bg-amber-50/10")}>
+                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus !== 'verified' && user.email !== ADMIN_EMAIL && "bg-amber-50/10")}>
                                         <TableCell className="pl-6 py-4">
                                             <div className="flex items-center gap-3">
                                                 <Avatar className="h-10 w-10 border border-primary/10 shadow-sm">
@@ -624,7 +629,7 @@ export default function ManagementConsolePage() {
                                             <Badge variant="outline" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 border-primary/20 text-primary">{user.userType}</Badge>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            {user.securityStatus === 'verified' ? (
+                                            {user.securityStatus === 'verified' || user.email === ADMIN_EMAIL ? (
                                                 <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Verified</Badge>
                                             ) : (
                                                 <div className="flex flex-col items-center gap-1.5">
@@ -663,13 +668,18 @@ export default function ManagementConsolePage() {
                                                         } />
                                                         
                                                         <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Official Message</DropdownMenuItem>
-                                                        <DropdownMenuSeparator className="my-2" />
-                                                        <DropdownMenuItem 
-                                                            onClick={() => handleDeleteUser(user)}
-                                                            className="rounded-lg font-bold text-[10px] h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer uppercase tracking-tight"
-                                                        >
-                                                            <Trash2 className="mr-3 h-4 w-4" /> Delete account
-                                                        </DropdownMenuItem>
+                                                        
+                                                        {user.email !== ADMIN_EMAIL && (
+                                                            <>
+                                                                <DropdownMenuSeparator className="my-2" />
+                                                                <DropdownMenuItem 
+                                                                    onClick={() => handleDeleteUser(user)}
+                                                                    className="rounded-lg font-bold text-[10px] h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer uppercase tracking-tight"
+                                                                >
+                                                                    <Trash2 className="mr-3 h-4 w-4" /> Delete account
+                                                                </DropdownMenuItem>
+                                                            </>
+                                                        )}
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                                 
@@ -679,7 +689,7 @@ export default function ManagementConsolePage() {
                                                         user.isBlocked ? "bg-white border border-primary/10 text-primary hover:bg-primary/5" : "bg-red-500 hover:bg-red-600 text-white"
                                                     )}
                                                     onClick={() => toggleUserBlock(user)}
-                                                    disabled={processingUid === user.uid || user.email === 'enterspaceindia@gmail.com'}
+                                                    disabled={processingUid === user.uid || user.email === ADMIN_EMAIL}
                                                 >
                                                     {processingUid === user.uid ? <Loader2 className="h-3 w-3 animate-spin" /> : user.isBlocked ? "Restore" : "Suspend"}
                                                 </Button>
@@ -712,14 +722,14 @@ export default function ManagementConsolePage() {
                                             <AvatarImage src={user?.photoURL} className="object-cover" />
                                             <AvatarFallback className="font-black text-xl bg-primary text-white">{adv.name?.charAt(0) || user?.firstName?.charAt(0) || "A"}</AvatarFallback>
                                         </Avatar>
-                                        {adv.isApproved && (
+                                        {(adv.isApproved || user?.email === ADMIN_EMAIL) && (
                                             <div className="absolute -bottom-1.5 -right-1.5 bg-green-500 text-white p-1.5 rounded-lg shadow-lg">
                                                 <CheckCircle className="h-3.5 w-3.5" />
                                             </div>
                                         )}
                                     </div>
                                     <div className="flex flex-col items-end gap-1.5">
-                                        {adv.isApproved ? (
+                                        {adv.isApproved || user?.email === ADMIN_EMAIL ? (
                                             <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md">Verified Pro</Badge>
                                         ) : (
                                             <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Awaiting Manual Audit</Badge>
@@ -746,7 +756,7 @@ export default function ManagementConsolePage() {
                             </div>
                             <div className="p-4 bg-muted/10 border-t border-primary/5 flex gap-3">
                                 <AdvocateDetailsModal adv={adv} onApprove={approveAdvocate} isProcessing={isProcessing} />
-                                {!adv.isApproved && (
+                                {!adv.isApproved && user?.email !== ADMIN_EMAIL && (
                                     <Button 
                                         className="flex-1 h-10 font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/10 active:scale-95 transition-all bg-primary text-white rounded-xl"
                                         onClick={() => approveAdvocate(adv)}
