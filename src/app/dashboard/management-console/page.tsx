@@ -35,7 +35,11 @@ import {
   MessageSquare,
   FileText,
   Trash2,
-  ChevronDown
+  ChevronDown,
+  Calendar,
+  Phone,
+  ShieldHalf,
+  Info
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -53,6 +57,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface UserRecord {
   uid: string;
@@ -67,6 +73,7 @@ interface UserRecord {
   flaggedAt?: any;
   flagReason?: string;
   createdAt?: any;
+  mobileNumber?: string;
 }
 
 interface AdvocateRecord {
@@ -82,6 +89,125 @@ interface AdvocateRecord {
   position?: string;
   courts?: string[];
   certificateName?: string;
+}
+
+function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React.ReactNode }) {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                {trigger || (
+                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-muted active:scale-90 transition-all">
+                        <Eye className="h-5 w-5" />
+                    </Button>
+                )}
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl bg-white p-0 overflow-hidden rounded-[2rem] border-none shadow-2xl">
+                <div className="bg-primary/5 p-8 border-b border-primary/10">
+                    <div className="flex items-center gap-6">
+                        <Avatar className="h-24 w-24 border-4 border-white shadow-xl">
+                            <AvatarImage src={user.photoURL} />
+                            <AvatarFallback className="font-black text-2xl bg-primary/10 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                                <h2 className="text-3xl font-black tracking-tighter text-[#1a1a1a]">{user.firstName} {user.lastName}</h2>
+                                {user.securityStatus === 'verified' && <BadgeCheck className="h-6 w-6 text-primary" />}
+                            </div>
+                            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                                <ShieldCheck className="h-4 w-4 text-primary" /> {user.userType} Registry
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <ScrollArea className="max-h-[60vh] p-8">
+                    <div className="space-y-8">
+                        <div className="grid sm:grid-cols-2 gap-6">
+                            <div className="p-5 rounded-2xl bg-muted/20 border-2 border-transparent flex flex-col gap-1">
+                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <Mail className="h-3.5 w-3.5" /> Primary Email
+                                </p>
+                                <p className="font-bold text-sm text-[#1a1a1a]">{user.email}</p>
+                            </div>
+                            <div className="p-5 rounded-2xl bg-muted/20 border-2 border-transparent flex flex-col gap-1">
+                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <Phone className="h-3.5 w-3.5" /> Mobile Number
+                                </p>
+                                <p className="font-bold text-sm text-[#1a1a1a]">{user.mobileNumber || "Not Provided"}</p>
+                            </div>
+                            <div className="p-5 rounded-2xl bg-muted/20 border-2 border-transparent flex flex-col gap-1">
+                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <Calendar className="h-3.5 w-3.5" /> Joined Date
+                                </p>
+                                <p className="font-bold text-sm text-[#1a1a1a]">
+                                    {user.createdAt ? (user.createdAt.toDate ? user.createdAt.toDate().toLocaleDateString() : new Date(user.createdAt).toLocaleDateString()) : "Legacy User"}
+                                </p>
+                            </div>
+                            <div className="p-5 rounded-2xl bg-muted/20 border-2 border-transparent flex flex-col gap-1">
+                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <ShieldHalf className="h-3.5 w-3.5" /> Security Status
+                                </p>
+                                <div className="mt-1">
+                                    {user.securityStatus === 'suspicious' ? (
+                                        <Badge className="bg-red-500 text-white font-black text-[9px] uppercase tracking-wider">Incorrect Entry</Badge>
+                                    ) : user.securityStatus === 'verified' ? (
+                                        <Badge className="bg-green-500 text-white font-black text-[9px] uppercase tracking-wider">Identity Confirmed</Badge>
+                                    ) : (
+                                        <Badge variant="secondary" className="font-black text-[9px] uppercase tracking-wider opacity-60">Pending Jach</Badge>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {user.flagReason && (
+                            <div className="p-6 rounded-2xl bg-red-50 border-2 border-red-100 flex flex-col gap-3">
+                                <div className="flex items-center gap-2 text-red-600">
+                                    <AlertTriangle className="h-5 w-5" />
+                                    <p className="text-xs font-black uppercase tracking-widest">AI Forensic Flags</p>
+                                </div>
+                                <p className="text-sm font-medium text-red-800 leading-relaxed italic">
+                                    "{user.flagReason}"
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="space-y-4">
+                            <h3 className="text-xs font-black text-[#1a1a1a] uppercase tracking-[0.3em] px-1">System Permissions</h3>
+                            <div className="grid grid-cols-1 gap-3">
+                                <div className="flex items-center justify-between p-4 rounded-xl border-2 border-primary/5 hover:border-primary/10 transition-all">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                                            <Gavel className="h-5 w-5" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-black text-[#1a1a1a]">Legal Tool Access</p>
+                                            <p className="text-[10px] font-bold text-muted-foreground">Standard citizen package enabled</p>
+                                        </div>
+                                    </div>
+                                    <div className="h-2.5 w-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
+                                </div>
+                                <div className="flex items-center justify-between p-4 rounded-xl border-2 border-primary/5 hover:border-primary/10 transition-all">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                                            <ShieldAlert className="h-5 w-5" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-black text-[#1a1a1a]">Account Standing</p>
+                                            <p className="text-[10px] font-bold text-muted-foreground">{user.isBlocked ? "Suspended by Admin" : "Active & Healthy"}</p>
+                                        </div>
+                                    </div>
+                                    <div className={cn("h-2.5 w-2.5 rounded-full shadow-lg", user.isBlocked ? "bg-red-500 shadow-red-500/50" : "bg-green-500 shadow-green-500/50")}></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ScrollArea>
+                <div className="p-8 border-t border-primary/5 flex justify-end gap-3 bg-muted/5">
+                    <Button variant="outline" className="rounded-xl h-12 px-8 font-black text-xs uppercase tracking-widest border-2 border-primary/10">Close Dossier</Button>
+                    <Button className="rounded-xl h-12 px-8 font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20">Send Direct Message</Button>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
 }
 
 export default function ManagementConsolePage() {
@@ -120,7 +246,11 @@ export default function ManagementConsolePage() {
         const usersCol = collection(firestore, "users");
         const unsubUsers = onSnapshot(usersCol, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
-            setUsers(list.sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0)));
+            setUsers(list.sort((a, b) => {
+                const dateA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : Number(a.createdAt || 0);
+                const dateB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : Number(b.createdAt || 0);
+                return dateB - dateA;
+            }));
             setLoading(false);
         });
 
@@ -366,7 +496,7 @@ export default function ManagementConsolePage() {
                                         {user.securityStatus === 'verified' ? (
                                             <span className="text-[11px] font-black text-green-600 uppercase tracking-widest">Confirmed</span>
                                         ) : (
-                                            <span className="text-[11px] font-black text-[#ef4444] uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full">Not Verifyed All</span>
+                                            <span className="text-[11px] font-black text-[#ef4444] uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full">NOT VERIFYED ALL</span>
                                         )}
                                     </TableCell>
                                     <TableCell className="text-right pr-10">
@@ -377,9 +507,15 @@ export default function ManagementConsolePage() {
                                                         <MoreHorizontal className="h-5 w-5" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl border-2 border-primary/5">
+                                                <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl border-2 border-primary/5 bg-white">
                                                     <DropdownMenuLabel className="font-black text-[10px] uppercase tracking-widest opacity-50 px-3">Identity Actions</DropdownMenuLabel>
-                                                    <DropdownMenuItem className="rounded-xl font-bold h-11 px-3"><Eye className="mr-3 h-4 w-4" /> View Details</DropdownMenuItem>
+                                                    <DropdownMenuItem asChild className="rounded-xl font-bold h-11 px-3">
+                                                        <UserDetailsModal user={user} trigger={
+                                                            <button className="flex items-center w-full outline-none">
+                                                                <Eye className="mr-3 h-4 w-4" /> View Details
+                                                            </button>
+                                                        } />
+                                                    </DropdownMenuItem>
                                                     <DropdownMenuItem className="rounded-xl font-bold h-11 px-3"><Mail className="mr-3 h-4 w-4" /> Send Email</DropdownMenuItem>
                                                     <DropdownMenuItem className="rounded-xl font-bold h-11 px-3"><MessageSquare className="mr-3 h-4 w-4" /> Message</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
