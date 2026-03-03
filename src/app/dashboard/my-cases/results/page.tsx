@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, use } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FileText, Calendar, Gavel, User, Users, Search, ExternalLink } from "lucide-react";
@@ -63,13 +63,11 @@ const SearchResultsSkeleton = () => (
     </div>
 );
 
-async function SearchResultsComponent({ searchParams }: { searchParams: SearchParams }) {
+async function SearchResultsComponent({ searchParamsPromise }: { searchParamsPromise: Promise<SearchParams> }) {
+  const searchParams = await searchParamsPromise;
   const cnr = searchParams.cnr || '';
-  // In a real app, you would use all search params to query the flow.
-  // For this demo, we only use CNR.
-  const caseDetails = await searchEcourts({ cnr });
+  const caseDetails = await searchEcourts({ cnr: cnr as string });
   
-  // A simulated delay to show the skeleton
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   return (
@@ -216,10 +214,10 @@ async function SearchResultsComponent({ searchParams }: { searchParams: SearchPa
 }
 
 
-export default function SearchResultsPage({ searchParams }: { searchParams: SearchParams }) {
+export default function SearchResultsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
     return (
         <Suspense fallback={<SearchResultsSkeleton />}>
-            <SearchResultsComponent searchParams={searchParams} />
+            <SearchResultsComponent searchParamsPromise={searchParams} />
         </Suspense>
     );
 }
