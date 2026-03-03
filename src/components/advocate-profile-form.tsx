@@ -41,7 +41,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
     const rtdb = useDatabase();
     const [isSaving, setIsSaving] = useState(false);
     const [certificateName, setCertificateName] = useState<string>(initialData?.certificateName || "");
-    const [certificateDataUri, setCertificateDataUri] = useState<string | null>(null);
+    const [certificateDataUri, setCertificateDataUri] = useState<string | null>(initialData?.certificateDataUri || null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +89,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
             toast({
                 variant: "destructive",
                 title: "Certificate required",
-                description: "Please upload your Bar Council certificate for AI authentication.",
+                description: "Please upload your Bar Council certificate for manual Admin verification.",
             });
             return;
         }
@@ -97,22 +97,17 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
         setIsSaving(true);
 
         try {
-            // AI Verification of Certificate
-            if (certificateDataUri) {
-                const verification = await verifyAdvocateCertificate({
-                    certificateDataUri,
-                    fullName: name,
-                    barId: barId
-                });
-
-                if (!verification.isAuthentic || !verification.matchesUser) {
-                    toast({
-                        variant: "destructive",
-                        title: "Authentication failed",
-                        description: verification.reason || "The uploaded document does not match your professional details. Please provide a clear copy of your Bar ID.",
+            // Note: Preliminary AI check is performed for initial feedback, 
+            // but Admin performs final manual verification in the console.
+            if (certificateDataUri && !initialData?.certificateDataUri) {
+                try {
+                    await verifyAdvocateCertificate({
+                        certificateDataUri,
+                        fullName: name,
+                        barId: barId
                     });
-                    setIsSaving(false);
-                    return;
+                } catch (e) {
+                    console.warn("Pre-verification hint failed, proceeding to manual admin review.");
                 }
             }
 
@@ -121,7 +116,6 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                 { id: `advocate${auth.currentUser?.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } :
                 (initialData?.image || null);
 
-            // CRITICAL: isApproved is ALWAYS false for new submissions or updates to Bar ID
             const isBarIdChanged = initialData && initialData.barId !== barId;
             
             const newAdvocate: Omit<Lawyer, 'id'> = {
@@ -144,14 +138,13 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                 courtName: courtName,
                 courtAddress: courtAddress,
                 certificateName: certificateName,
+                certificateDataUri: certificateDataUri || undefined,
                 isVerified: true,
                 isApproved: isBarIdChanged ? false : (initialData?.isApproved || false), 
             };
 
-            // Save to localStorage (directory simulation)
             saveAdvocate(newAdvocate);
             
-            // Save to RTDB (centralized profile)
             if (auth.currentUser) {
                 const rtdbPayload = JSON.parse(JSON.stringify({
                     ...newAdvocate,
@@ -165,8 +158,8 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
             }
 
             toast({
-                title: "Profile submitted for review",
-                description: "Your credentials will be manually verified by an administrator. You will be notified once active.",
+                title: "Submitted for Manual Review",
+                description: "The Admin will manually verify your certificate for 100% accuracy. You will be notified once active.",
             });
 
             onSave();
@@ -208,9 +201,9 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                         <AlertTriangle className="h-5 w-5 text-amber-600" />
                     </div>
                     <div className="space-y-1">
-                        <p className="text-xs font-bold text-amber-600 uppercase tracking-wider">Mandatory Verification</p>
+                        <p className="text-xs font-bold text-amber-600 uppercase tracking-wider">Manual Certificate Verification</p>
                         <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                            Professional details are required to activate a Lawyer profile. New submissions remain inactive until manually approved by the administrator.
+                            To ensure 100% accuracy, your Bar Council certificate will be manually inspected by the system administrator. Approval is required before your profile is activated in the public directory.
                         </p>
                     </div>
                 </div>
@@ -270,7 +263,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                                     </div>
                                     <div className="min-w-0">
                                         <p className="text-[11px] font-bold truncate max-w-[200px]">{certificateName}</p>
-                                        <p className="text-[10px] text-primary font-bold">Awaiting Verification</p>
+                                        <p className="text-[10px] text-primary font-bold">Awaiting Admin Inspection</p>
                                     </div>
                                 </div>
                                 <button 
@@ -346,9 +339,9 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                     {isSaving ? (
                         <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            AI Validating Professional Identity...
+                            Submitting credentials...
                         </>
-                    ) : (initialData ? "Update & Re-verify Profile" : "Activate Approval Workflow")}
+                    ) : (initialData ? "Update professional profile" : "Activate professional registration")}
                 </Button>
                 
                 {onSkip && !initialData && (
