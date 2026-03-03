@@ -513,7 +513,7 @@ export default function ManagementConsolePage() {
                                                         disabled={processingUid === user.uid}
                                                     >
                                                         {processingUid === user.uid ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : <ShieldCheck className="h-2.5 w-2.5 mr-1" />}
-                                                        Run AI Verify
+                                                        Click to Verify
                                                     </Button>
                                                 </div>
                                             )}

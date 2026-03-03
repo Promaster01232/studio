@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -34,6 +35,7 @@ import {
 import { AdvocateProfileForm } from '@/components/advocate-profile-form';
 import { getAdvocates, type Lawyer, deleteAdvocate } from '@/lib/advocates-data';
 import { motion, AnimatePresence } from 'framer-motion';
+import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 
 type UserProfile = {
   uid: string;
@@ -43,6 +45,7 @@ type UserProfile = {
   mobileNumber: string;
   userType: string;
   photoURL?: string;
+  securityStatus?: string;
 }
 
 export default function ProfilePage() {
@@ -58,6 +61,7 @@ export default function ProfilePage() {
   const [advocateDetails, setAdvocateDetails] = useState<Lawyer | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const [showAdvocateDialog, setShowAdvocateDialog] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
@@ -114,6 +118,53 @@ export default function ProfilePage() {
       router.push('/login');
     }
   }, [auth, firestore, router]);
+
+  const handleVerifySelf = async () => {
+    if (!userProfile || isVerifying) return;
+    setIsVerifying(true);
+    toast({ title: "AI Verification Started", description: "Verifying email and identity authenticity..." });
+
+    try {
+        const verification = await verifyEmailAuthenticity({
+            email: userProfile.email,
+            firstName: userProfile.firstName,
+            lastName: userProfile.lastName
+        });
+
+        if (verification.isAuthentic) {
+            const userRef = doc(firestore, "users", userProfile.uid);
+            await setDoc(userRef, { 
+                securityStatus: 'verified', 
+                flagReason: "",
+                isBlocked: false 
+            }, { merge: true });
+            
+            setUserProfile(prev => prev ? { ...prev, securityStatus: 'verified' } : null);
+            toast({ 
+                title: "Account Verified", 
+                description: `AI confirmed authenticity with ${verification.confidenceScore}% confidence.` 
+            });
+        } else {
+            const userRef = doc(firestore, "users", userProfile.uid);
+            await setDoc(userRef, { 
+                securityStatus: 'suspicious',
+                flagReason: verification.reason || "AI detected suspicious identity patterns."
+            }, { merge: true });
+            
+            setUserProfile(prev => prev ? { ...prev, securityStatus: 'suspicious' } : null);
+            toast({ 
+                variant: "destructive", 
+                title: "Verification Failed", 
+                description: verification.reason || "The identity appears to be incorrect or fake." 
+            });
+        }
+    } catch (error: any) {
+        console.error("Verification error:", error);
+        toast({ variant: "destructive", title: "Process Error", description: "Could not complete AI verification." });
+    } finally {
+        setIsVerifying(false);
+    }
+  };
 
   const updateUserPhoto = (newPhotoURL: string) => {
       if (!auth.currentUser || !userProfile) return;
@@ -421,11 +472,24 @@ export default function ProfilePage() {
                 <div className="flex-1 text-center sm:text-left space-y-1 min-w-0">
                     <div className="flex items-center justify-center sm:justify-start gap-2">
                         <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter text-foreground truncate">{firstName} {lastName}</h2>
-                        {advocateDetails?.isVerified && <BadgeCheck className="h-4 w-4 text-primary shrink-0" />}
+                        {userProfile?.securityStatus === 'verified' ? (
+                            <BadgeCheck className="h-4 w-4 text-primary shrink-0" />
+                        ) : (
+                            <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="h-7 px-3 text-[9px] font-black uppercase tracking-tight text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600 rounded-full animate-pulse"
+                                onClick={handleVerifySelf}
+                                disabled={isVerifying}
+                            >
+                                {isVerifying ? <Loader2 className="h-2.5 w-2.5 animate-spin mr-1" /> : <ShieldCheck className="h-2.5 w-2.5 mr-1" />}
+                                Click to Verify
+                            </Button>
+                        )}
                     </div>
-                    {advocateDetails && (
+                    {userProfile?.userType && (
                         <div className="flex items-center gap-1.5 px-3 py-0.5 bg-primary/5 rounded-full border border-primary/10 w-fit mx-auto sm:mx-0">
-                            <span className="text-[10px] font-bold text-primary capitalize">{userProfile?.userType}</span>
+                            <span className="text-[10px] font-bold text-primary capitalize">{userProfile.userType}</span>
                         </div>
                     )}
                     <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate opacity-80">{email}</p>
