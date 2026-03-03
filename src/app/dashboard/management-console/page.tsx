@@ -97,9 +97,9 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
         <Dialog>
             <DialogTrigger asChild>
                 {trigger || (
-                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-muted active:scale-90 transition-all">
+                    <button className="h-10 w-10 rounded-xl hover:bg-muted flex items-center justify-center transition-all">
                         <Eye className="h-5 w-5" />
-                    </Button>
+                    </button>
                 )}
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl bg-white p-0 overflow-hidden rounded-[2rem] border-none shadow-2xl">
@@ -235,9 +235,10 @@ export default function ManagementConsolePage() {
             return;
         }
 
+        const isSuperAdminEmail = user.email === 'enterspaceindia@gmail.com';
         const adminDoc = await getDoc(doc(firestore, "users", user.uid));
         const adminData = adminDoc.data() as any;
-        const isSuperAdmin = adminData?.email === 'enterspaceindia@gmail.com' || !!adminData?.isAdmin;
+        const isSuperAdmin = isSuperAdminEmail || !!adminData?.isAdmin;
 
         if (!isSuperAdmin) {
             toast({ variant: "destructive", title: "Access Denied" });
@@ -518,7 +519,10 @@ export default function ManagementConsolePage() {
                                         {user.securityStatus === 'verified' ? (
                                             <span className="text-[11px] font-black text-green-600 uppercase tracking-widest">Confirmed</span>
                                         ) : (
-                                            <span className="text-[11px] font-black text-[#ef4444] uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full">NOT VERIFYED ALL</span>
+                                            <div className="flex items-center justify-center gap-1.5 text-red-600">
+                                                <div className="h-1.5 w-1.5 rounded-full bg-red-600 animate-pulse" />
+                                                <span className="text-[9px] font-black uppercase tracking-tight">Not Verified</span>
+                                            </div>
                                         )}
                                     </TableCell>
                                     <TableCell className="text-right pr-10">
@@ -648,7 +652,7 @@ export default function ManagementConsolePage() {
                             <Gavel className="h-10 w-10" />
                         </div>
                         <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Clear</h3>
-                        <p className="text-muted-foreground max-w-sm mx-auto mt-3 text-sm font-medium">New professional applications will appear here for forensic inspection.</p>
+                        <p className="text-muted-foreground max-sm mx-auto mt-3 text-sm font-medium">New professional applications will appear here for forensic inspection.</p>
                     </div>
                 )}
             </div>
