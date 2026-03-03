@@ -102,7 +102,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                 )}
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl bg-white p-0 overflow-hidden rounded-[2rem] border-none shadow-2xl">
-                <div className="bg-primary/5 p-8 border-b border-primary/10">
+                <DialogHeader className="p-8 pb-4 bg-primary/5 border-b border-primary/10">
                     <div className="flex items-center gap-6">
                         <Avatar className="h-24 w-24 border-4 border-white shadow-xl">
                             <AvatarImage src={user.photoURL} />
@@ -110,15 +110,15 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                         </Avatar>
                         <div className="space-y-1">
                             <div className="flex items-center gap-2">
-                                <h2 className="text-3xl font-black tracking-tighter text-[#1a1a1a]">{user.firstName} {user.lastName}</h2>
+                                <DialogTitle className="text-3xl font-black tracking-tighter text-[#1a1a1a]">{user.firstName} {user.lastName}</DialogTitle>
                                 {user.securityStatus === 'verified' && <BadgeCheck className="h-6 w-6 text-primary" />}
                             </div>
-                            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                            <DialogDescription className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                                 <ShieldCheck className="h-4 w-4 text-primary" /> {user.userType} Registry
-                            </p>
+                            </DialogDescription>
                         </div>
                     </div>
-                </div>
+                </DialogHeader>
                 <ScrollArea className="max-h-[60vh] p-8">
                     <div className="space-y-8">
                         <div className="grid sm:grid-cols-2 gap-6">
@@ -202,7 +202,9 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     </div>
                 </ScrollArea>
                 <div className="p-8 border-t border-primary/5 flex justify-end gap-3 bg-muted/5">
-                    <Button variant="outline" className="rounded-xl h-12 px-8 font-black text-xs uppercase tracking-widest border-2 border-primary/10">Close Dossier</Button>
+                    <DialogTrigger asChild>
+                        <Button variant="outline" className="rounded-xl h-12 px-8 font-black text-xs uppercase tracking-widest border-2 border-primary/10">Close Dossier</Button>
+                    </DialogTrigger>
                     <Button className="rounded-xl h-12 px-8 font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20">Send Direct Message</Button>
                 </div>
             </DialogContent>
@@ -509,13 +511,14 @@ export default function ManagementConsolePage() {
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl border-2 border-primary/5 bg-white">
                                                     <DropdownMenuLabel className="font-black text-[10px] uppercase tracking-widest opacity-50 px-3">Identity Actions</DropdownMenuLabel>
-                                                    <DropdownMenuItem asChild className="rounded-xl font-bold h-11 px-3">
-                                                        <UserDetailsModal user={user} trigger={
-                                                            <button className="flex items-center w-full outline-none">
-                                                                <Eye className="mr-3 h-4 w-4" /> View Details
-                                                            </button>
-                                                        } />
-                                                    </DropdownMenuItem>
+                                                    
+                                                    {/* Proper Dialog Trigger from Dropdown */}
+                                                    <UserDetailsModal user={user} trigger={
+                                                        <button className="flex w-full cursor-default select-none items-center rounded-sm px-3 py-2.5 text-sm font-bold outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
+                                                            <Eye className="mr-3 h-4 w-4" /> View Details
+                                                        </button>
+                                                    } />
+                                                    
                                                     <DropdownMenuItem className="rounded-xl font-bold h-11 px-3"><Mail className="mr-3 h-4 w-4" /> Send Email</DropdownMenuItem>
                                                     <DropdownMenuItem className="rounded-xl font-bold h-11 px-3"><MessageSquare className="mr-3 h-4 w-4" /> Message</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
