@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,8 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
-import { collection, doc, getDoc, onSnapshot, updateDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
-import { ref, update, onValue, remove, set } from "firebase/database";
+import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc } from "firebase/firestore";
+import { ref, update, remove } from "firebase/database";
 import { 
   Users, 
   ShieldCheck, 
@@ -18,7 +19,6 @@ import {
   AlertTriangle, 
   ShieldAlert, 
   Sparkles, 
-  ShieldX, 
   CheckCircle, 
   Gavel, 
   BadgeCheck, 
@@ -33,8 +33,7 @@ import {
   MapPin,
   ChevronRight,
   UserCheck,
-  UserMinus,
-  Verified
+  UserMinus
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -190,7 +189,6 @@ export default function ManagementConsolePage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchSearchQuery] = useState("");
   const [processingUid, setProcessingUid] = useState<string | null>(null);
-  const [isAuditing, setIsAuditing] = useState(false);
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, async (user) => {
@@ -211,6 +209,7 @@ export default function ManagementConsolePage() {
             return;
         }
 
+        // Setup User Listener with robust error handling for list operation
         const usersCol = collection(firestore, "users");
         const unsubUsers = onSnapshot(usersCol, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
@@ -220,7 +219,7 @@ export default function ManagementConsolePage() {
                 return dateB - dateA;
             }));
             setLoading(false);
-        }, async (serverError) => {
+        }, (serverError) => {
             if (!auth.currentUser) return;
             const permissionError = new FirestorePermissionError({
                 path: usersCol.path,
@@ -230,6 +229,7 @@ export default function ManagementConsolePage() {
             setLoading(false);
         });
 
+        // Setup Advocate Listener with robust error handling for list operation
         const advocatesCol = collection(firestore, "advocates");
         const unsubAdvocates = onSnapshot(advocatesCol, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as AdvocateRecord));
@@ -250,7 +250,7 @@ export default function ManagementConsolePage() {
     });
 
     return () => unsubAuth();
-  }, [firestore, rtdb, auth, router, toast]);
+  }, [firestore, auth, router, toast]);
 
   const toggleUserBlock = async (user: UserRecord) => {
     if (user.email === 'enterspaceindia@gmail.com') return;
@@ -268,15 +268,6 @@ export default function ManagementConsolePage() {
             errorEmitter.emit('permission-error', permissionError);
         });
 
-    await update(ref(rtdb, `users/${user.uid}`), { isBlocked: newStatus }).catch(() => {});
-    
-    const advRef = doc(firestore, "advocates", user.uid);
-    getDoc(advRef).then(snap => {
-        if (snap.exists()) {
-            updateDoc(advRef, { isBlocked: newStatus }).catch(() => {});
-        }
-    });
-    
     toast({ title: newStatus ? "Identity Suspended" : "Identity Restored" });
     setProcessingUid(null);
   };
@@ -300,11 +291,6 @@ export default function ManagementConsolePage() {
                   isBlocked: false 
               });
               
-              await update(ref(rtdb, `users/${user.uid}`), { 
-                  securityStatus: 'verified', 
-                  isBlocked: false 
-              }).catch(() => {});
-
               toast({ 
                   title: "User Verified", 
                   description: `AI confirmed authenticity with ${verification.confidenceScore}% confidence.` 
@@ -343,7 +329,6 @@ export default function ManagementConsolePage() {
 
     deleteDoc(userRef).catch(() => {});
     deleteDoc(advRef).catch(() => {});
-    remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
     
     toast({ title: "Account Purged Successfully" });
     setProcessingUid(null);
@@ -358,7 +343,6 @@ export default function ManagementConsolePage() {
           const userRef = doc(firestore, "users", adv.uid);
           await updateDoc(userRef, { securityStatus: 'verified', isBlocked: false });
           
-          await update(ref(rtdb, `users/${adv.uid}`), { isBlocked: false, securityStatus: 'verified' }).catch(() => {});
           toast({ title: "Professional Identity Activated" });
       } catch (error: any) {
           toast({ variant: "destructive", title: "Activation Failed" });
@@ -653,7 +637,7 @@ export default function ManagementConsolePage() {
                             <Gavel className="h-10 w-10" />
                         </div>
                         <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Clear</h3>
-                        <p className="text-muted-foreground max-w-xs mx-auto mt-3 text-xs font-medium leading-relaxed">No professional applications awaiting final inspection at this time.</p>
+                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed">No professional applications awaiting final inspection at this time.</p>
                     </div>
                 )}
             </div>

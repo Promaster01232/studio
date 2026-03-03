@@ -9,20 +9,27 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    // Super Admin: Prioritized check for the root admin email
+    function isSuperAdmin() {
+      return isAuthenticated() && request.auth.token.email == 'enterspaceindia@gmail.com';
+    }
+
+    // General Admin check (flag in profile)
+    function hasAdminFlag() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    function isAdmin() {
+      return isSuperAdmin() || hasAdminFlag();
+    }
+
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
-    
-    // Super Admin check based on email and isAdmin flag
-    function isAdmin() {
-      return isAuthenticated() && (
-        request.auth.token.email == 'enterspaceindia@gmail.com' || 
-        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true)
-      );
-    }
 
-    // Global Admin Override: Admins can do anything
+    // GLOBAL ADMIN OVERRIDE: Absolute power for administrative tasks
     match /{document=**} {
       allow read, write: if isAdmin();
     }
@@ -32,12 +39,16 @@ service cloud.firestore {
       allow get: if isAuthenticated();
       allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
       allow update: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      // Explicitly allow list for management console
+      allow list: if isAdmin();
     }
 
     // Advocates collection
     match /advocates/{userId} {
       allow read: if isAuthenticated();
-      allow write: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow write: if isAdmin() || (isAuthenticated() && isOwner(userId));
+      // Explicitly allow list for management console
+      allow list: if isAdmin();
     }
 
     // Posts collection
