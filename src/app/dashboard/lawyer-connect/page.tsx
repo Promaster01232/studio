@@ -70,7 +70,7 @@ export default function LawyerConnectPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <div className="space-y-6 max-w-5xl mx-auto pb-10">
       <PageHeader
         title="Advocate Directory"
         description="Connect with AI-authenticated and manually verified legal professionals."
@@ -80,8 +80,8 @@ export default function LawyerConnectPage() {
         <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input 
-              placeholder="Search by name, court or specialty..." 
-              className="pl-9 h-11 border-primary/10 focus:border-primary bg-background/50 backdrop-blur-sm rounded-xl font-medium" 
+              placeholder="Search..." 
+              className="pl-9 h-11 border-primary/10 focus:border-primary bg-background/50 backdrop-blur-sm rounded-xl font-medium text-sm" 
               onChange={handleSearch}
             />
         </div>
@@ -116,58 +116,58 @@ export default function LawyerConnectPage() {
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent"></div>
                             <div className="relative group/avatar">
                                 {lawyer.image?.imageUrl ? (
-                                    <Avatar className="h-24 w-24 border-4 border-background shadow-2xl rounded-full transition-transform group-hover/avatar:scale-105 duration-500">
+                                    <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-4 border-background shadow-2xl rounded-full transition-transform group-hover/avatar:scale-105 duration-500">
                                         <AvatarImage src={lawyer.image.imageUrl} alt={lawyer.name} className="object-cover" />
                                         <AvatarFallback className="text-2xl font-black">{lawyer.name.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 ) : (
-                                    <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center text-primary border-4 border-background shadow-xl">
-                                        <Scale className="h-10 w-10 opacity-40" />
+                                    <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-primary/10 flex items-center justify-center text-primary border-4 border-background shadow-xl">
+                                        <Scale className="h-8 w-8 sm:h-10 sm:w-10 opacity-40" />
                                     </div>
                                 )}
-                                <div className="absolute -bottom-1 -right-1 bg-green-500 border-4 border-background h-6 w-6 rounded-full shadow-lg animate-pulse"></div>
+                                <div className="absolute -bottom-1 -right-1 bg-green-500 border-4 border-background h-5 w-5 sm:h-6 sm:w-6 rounded-full shadow-lg animate-pulse"></div>
                             </div>
                             <div className="mt-4 text-center z-10">
-                                <p className="text-[9px] font-bold text-primary/60 mt-1 uppercase tracking-tighter">Verified Member</p>
+                                <p className="text-[8px] sm:text-[9px] font-bold text-primary/60 mt-1 uppercase tracking-tighter">Verified Member</p>
                             </div>
                         </div>
 
                         {/* Professional Info Section */}
-                        <div className="flex-1 p-6 md:p-8 flex flex-col justify-center">
-                            <div className="mb-6 space-y-1">
+                        <div className="flex-1 p-5 sm:p-6 md:p-8 flex flex-col justify-center">
+                            <div className="mb-4 sm:mb-6 space-y-1">
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <h3 className="text-2xl font-black tracking-tighter leading-none group-hover:text-primary transition-colors">
+                                    <h3 className="text-xl sm:text-2xl font-black tracking-tighter leading-none group-hover:text-primary transition-colors truncate">
                                         {lawyer.name}
                                     </h3>
                                     {lawyer.isVerified && (
-                                        <BadgeCheck className="h-5 w-5 text-blue-500" />
+                                        <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500 shrink-0" />
                                     )}
                                 </div>
-                                <p className="text-sm font-bold text-primary tracking-tight">
+                                <p className="text-[11px] sm:text-sm font-bold text-primary tracking-tight">
                                     {lawyer.specialty}
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 text-[11px] font-bold text-muted-foreground">
-                                <div className="flex items-center gap-3 group/item">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 sm:gap-y-3 gap-x-6 text-[10px] sm:text-[11px] font-bold text-muted-foreground">
+                                <div className="flex items-center gap-2 sm:gap-3 group/item">
                                     <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
                                         <Globe className="h-3 w-3" />
                                     </div>
-                                    <span className="truncate tracking-tight">Nyaya Sahayak</span>
+                                    <span className="truncate tracking-tight">Nyaya Sahayak Registry</span>
                                 </div>
-                                <div className="flex items-center gap-3 group/item">
+                                <div className="flex items-center gap-2 sm:gap-3 group/item">
                                     <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
                                         <Phone className="h-3 w-3" />
                                     </div>
-                                    <span>{lawyer.contact?.phone || 'Verified'}</span>
+                                    <span>{lawyer.contact?.phone || 'Identity Verified'}</span>
                                 </div>
-                                <div className="flex items-center gap-3 group/item">
+                                <div className="flex items-center gap-2 sm:gap-3 group/item">
                                     <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
                                         <Mail className="h-3 w-3" />
                                     </div>
                                     <span className="truncate lowercase">{lawyer.contact?.email}</span>
                                 </div>
-                                <div className="flex items-center gap-3 group/item">
+                                <div className="flex items-center gap-2 sm:gap-3 group/item">
                                     <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-colors">
                                         <MapPin className="h-3 w-3" />
                                     </div>
@@ -175,31 +175,31 @@ export default function LawyerConnectPage() {
                                 </div>
                             </div>
                             
-                            <div className="mt-6 pt-6 border-t border-primary/5 flex items-center gap-6">
-                                <div className="flex items-center gap-1.5">
-                                    <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
-                                    <span className="text-sm font-black tracking-tighter">{lawyer.rating}</span>
-                                    <span className="text-[10px] opacity-40">({lawyer.reviews} reviews)</span>
+                            <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-primary/5 flex items-center gap-4 sm:gap-6">
+                                <div className="flex items-center gap-1 sm:gap-1.5">
+                                    <Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-yellow-500 fill-yellow-500" />
+                                    <span className="text-xs sm:text-sm font-black tracking-tighter">{lawyer.rating}</span>
+                                    <span className="text-[9px] sm:text-[10px] opacity-40">({lawyer.reviews})</span>
                                 </div>
-                                <div className="flex items-center gap-1.5 text-muted-foreground">
-                                    <Briefcase className="h-3.5 w-3.5" />
-                                    <span className="text-sm font-black tracking-tighter">{lawyer.experience?.split(' ')[0]}Y exp.</span>
+                                <div className="flex items-center gap-1 sm:gap-1.5 text-muted-foreground">
+                                    <Briefcase className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                                    <span className="text-xs sm:text-sm font-black tracking-tighter">{lawyer.experience?.split(' ')[0]}Y exp.</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div className="border-t border-primary/10 flex divide-x divide-primary/10 bg-muted/5 group-hover:bg-muted/10 transition-colors">
-                        <Button variant="ghost" className="flex-1 h-12 rounded-none font-bold text-xs hover:bg-primary/5 active:bg-primary/10 transition-all" asChild>
+                        <Button variant="ghost" className="flex-1 h-12 rounded-none font-bold text-[10px] sm:text-xs hover:bg-primary/5 active:bg-primary/10 transition-all" asChild>
                             <Link href={`/dashboard/lawyer-connect/${lawyer.uid || lawyer.id}/chat`}>
-                                <MessageSquare className="mr-2 h-4 w-4" />
-                                Chat now
+                                <MessageSquare className="mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                Chat
                             </Link>
                         </Button>
-                        <Button variant="ghost" className="flex-1 h-12 rounded-none font-bold text-xs hover:bg-primary/5 active:bg-primary/10 transition-all" asChild>
+                        <Button variant="ghost" className="flex-1 h-12 rounded-none font-bold text-[10px] sm:text-xs hover:bg-primary/5 active:bg-primary/10 transition-all" asChild>
                             <Link href={`/dashboard/lawyer-connect/${lawyer.uid || lawyer.id}`}>
-                                View profile
-                                <ChevronRight className="ml-1 h-4 w-4" />
+                                Profile
+                                <ChevronRight className="ml-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                             </Link>
                         </Button>
                     </div>
@@ -210,13 +210,13 @@ export default function LawyerConnectPage() {
                 <motion.div 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center py-20 bg-muted/5 rounded-3xl border-2 border-dashed border-primary/10"
+                    className="text-center py-20 bg-muted/5 rounded-3xl border-2 border-dashed border-primary/10 mx-2"
                 >
                     <div className="bg-primary/5 p-6 rounded-full w-fit mx-auto mb-4">
-                        <Search className="h-12 w-12 text-muted-foreground opacity-20" />
+                        <Search className="h-10 w-10 text-muted-foreground opacity-20" />
                     </div>
-                    <h3 className="text-xl font-black font-headline tracking-tighter">No professionals found</h3>
-                    <p className="text-muted-foreground max-w-[250px] mx-auto mt-2 text-xs font-medium">Verified advocates appear here after manual administrative approval.</p>
+                    <h3 className="text-lg font-black font-headline tracking-tighter">No professionals found</h3>
+                    <p className="text-muted-foreground max-w-[200px] mx-auto mt-2 text-[10px] font-medium leading-relaxed">Verified advocates appear here after manual administrative approval.</p>
                 </motion.div>
             )}
         </AnimatePresence>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -101,25 +102,25 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                 <div className="bg-primary/5 p-6 border-b">
                     <DialogHeader className="border-none pb-0 mb-0 text-left">
                         <div className="flex items-center gap-4">
-                            <Avatar className="h-16 w-16 border-2 border-white shadow-lg">
+                            <Avatar className="h-12 w-12 sm:h-16 sm:w-16 border-2 border-white shadow-lg">
                                 <AvatarImage src={user.photoURL} className="object-cover" />
                                 <AvatarFallback className="font-bold text-lg bg-primary/10 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
                             </Avatar>
-                            <div>
+                            <div className="min-w-0">
                                 <div className="flex items-center gap-2">
-                                    <DialogTitle className="text-xl font-black tracking-tight">{user.firstName} {user.lastName}</DialogTitle>
-                                    {user.securityStatus === 'verified' && <BadgeCheck className="h-5 w-5 text-primary" />}
+                                    <DialogTitle className="text-lg sm:text-xl font-black tracking-tight truncate">{user.firstName} {user.lastName}</DialogTitle>
+                                    {user.securityStatus === 'verified' && <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />}
                                 </div>
-                                <DialogDescription className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
-                                    <ShieldCheck className="h-3.5 w-3.5 text-primary" /> {user.userType} Account Dossier
+                                <DialogDescription className="text-[10px] sm:text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
+                                    <ShieldCheck className="h-3 w-3 text-primary" /> {user.userType} Account Dossier
                                 </DialogDescription>
                             </div>
                         </div>
                     </DialogHeader>
                 </div>
-                <ScrollArea className="max-h-[60vh] p-6">
+                <ScrollArea className="max-h-[60vh] p-4 sm:p-6">
                     <div className="space-y-6">
-                        <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="p-4 rounded-xl bg-muted/30 border border-primary/5 space-y-1">
                                 <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
                                     <Mail className="h-3 w-3" /> Email Address
@@ -167,9 +168,9 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                         )}
                     </div>
                 </ScrollArea>
-                <div className="p-6 border-t flex justify-end gap-3 bg-muted/10">
-                    <Button variant="outline" className="font-bold text-xs h-10 px-6 rounded-lg shadow-sm">Close Dossier</Button>
-                    <Button className="font-bold text-xs h-10 px-6 rounded-lg shadow-lg shadow-primary/20">Official Message</Button>
+                <div className="p-4 sm:p-6 border-t flex flex-col sm:flex-row justify-end gap-3 bg-muted/10">
+                    <Button variant="outline" className="font-bold text-xs h-10 rounded-lg shadow-sm w-full sm:w-auto">Close Dossier</Button>
+                    <Button className="font-bold text-xs h-10 rounded-lg shadow-lg shadow-primary/20 w-full sm:w-auto">Official Message</Button>
                 </div>
             </DialogContent>
         </Dialog>
@@ -374,11 +375,11 @@ export default function ManagementConsolePage() {
     <div className="max-w-7xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8 pb-12 bg-white min-h-full">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tight font-headline text-[#1a1a1a]">System Management</h1>
-          <p className="text-sm text-muted-foreground font-medium">Platform-wide control for identity registry and professional approvals.</p>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-headline text-[#1a1a1a]">System Management</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium">Platform-wide control for identity registry and professional approvals.</p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
             <Button variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-white hover:bg-primary/5 transition-all shadow-sm">
                 <Sparkles className="mr-2 h-4 w-4 text-primary" />
                 <span className="text-[10px] uppercase tracking-wider">Integrity Audit</span>
@@ -390,74 +391,76 @@ export default function ManagementConsolePage() {
         </div>
       </div>
 
-      {/* Stats Dashboard */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Stats Dashboard - Dynamic Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <Card className="border-primary/5 shadow-sm bg-muted/5">
-              <CardHeader className="p-4 pb-2">
-                  <CardDescription className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Registry</CardDescription>
-                  <CardTitle className="text-2xl font-black">{stats.total}</CardTitle>
+              <CardHeader className="p-3 sm:p-4 pb-1">
+                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground truncate">Total Registry</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl font-black">{stats.total}</CardTitle>
               </CardHeader>
-              <CardContent className="p-4 pt-0">
+              <CardContent className="p-3 sm:p-4 pt-0">
                   <div className="flex items-center gap-1.5 text-primary">
                       <Users className="h-3 w-3" />
-                      <span className="text-[9px] font-bold">Platform Nodes</span>
+                      <span className="text-[8px] sm:text-[9px] font-bold">Platform Nodes</span>
                   </div>
               </CardContent>
           </Card>
           <Card className="border-primary/5 shadow-sm bg-green-50/30">
-              <CardHeader className="p-4 pb-2">
-                  <CardDescription className="text-[10px] font-black uppercase tracking-widest text-green-600">Active Citizens</CardDescription>
-                  <CardTitle className="text-2xl font-black text-green-700">{stats.active}</CardTitle>
+              <CardHeader className="p-3 sm:p-4 pb-1">
+                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-green-600 truncate">Active Citizens</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl font-black text-green-700">{stats.active}</CardTitle>
               </CardHeader>
-              <CardContent className="p-4 pt-0">
+              <CardContent className="p-3 sm:p-4 pt-0">
                   <div className="flex items-center gap-1.5 text-green-600">
                       <UserCheck className="h-3 w-3" />
-                      <span className="text-[9px] font-bold">Unrestricted Access</span>
+                      <span className="text-[8px] sm:text-[9px] font-bold">Unrestricted</span>
                   </div>
               </CardContent>
           </Card>
           <Card className="border-primary/5 shadow-sm bg-red-50/30">
-              <CardHeader className="p-4 pb-2">
-                  <CardDescription className="text-[10px] font-black uppercase tracking-widest text-red-600">Suspended Nodes</CardDescription>
-                  <CardTitle className="text-2xl font-black text-red-700">{stats.blocked}</CardTitle>
+              <CardHeader className="p-3 sm:p-4 pb-1">
+                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-red-600 truncate">Suspended Nodes</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl font-black text-red-700">{stats.blocked}</CardTitle>
               </CardHeader>
-              <CardContent className="p-4 pt-0">
+              <CardContent className="p-3 sm:p-4 pt-0">
                   <div className="flex items-center gap-1.5 text-red-600">
                       <UserMinus className="h-3 w-3" />
-                      <span className="text-[9px] font-bold">Access Revoked</span>
+                      <span className="text-[8px] sm:text-[9px] font-bold">Revoked</span>
                   </div>
               </CardContent>
           </Card>
           <Card className="border-primary/5 shadow-sm bg-amber-50/30">
-              <CardHeader className="p-4 pb-2">
-                  <CardDescription className="text-[10px] font-black uppercase tracking-widest text-amber-600">Pending Jach</CardDescription>
-                  <CardTitle className="text-2xl font-black text-amber-700">{stats.suspicious}</CardTitle>
+              <CardHeader className="p-3 sm:p-4 pb-1">
+                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-amber-600 truncate">Pending Jach</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl font-black text-amber-700">{stats.suspicious}</CardTitle>
               </CardHeader>
-              <CardContent className="p-4 pt-0">
+              <CardContent className="p-3 sm:p-4 pt-0">
                   <div className="flex items-center gap-1.5 text-amber-600">
                       <ShieldAlert className="h-3 w-3" />
-                      <span className="text-[9px] font-bold">Awaiting Verification</span>
+                      <span className="text-[8px] sm:text-[9px] font-bold">Inspection</span>
                   </div>
               </CardContent>
           </Card>
       </div>
 
       <Tabs defaultValue="registry" className="space-y-6">
-        <TabsList className="bg-muted/30 p-1 rounded-xl border border-primary/5">
-            <TabsTrigger value="registry" className="rounded-lg px-8 h-10 font-bold text-xs">Identity Registry</TabsTrigger>
-            <TabsTrigger value="advocates" className="rounded-lg px-8 h-10 font-bold text-xs flex gap-2 items-center">
-                Advocate Review
-                {advocates.filter(a => !a.isApproved).length > 0 && <span className="bg-primary text-white h-4 px-1.5 rounded-full text-[9px] font-black">{advocates.filter(a => !a.isApproved).length}</span>}
-            </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-1">
+            <TabsList className="bg-muted/30 p-1 rounded-xl border border-primary/5 inline-flex min-w-full sm:min-w-0">
+                <TabsTrigger value="registry" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs">Identity Registry</TabsTrigger>
+                <TabsTrigger value="advocates" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs flex gap-2 items-center">
+                    Advocate Review
+                    {advocates.filter(a => !a.isApproved).length > 0 && <span className="bg-primary text-white h-4 px-1.5 rounded-full text-[9px] font-black">{advocates.filter(a => !a.isApproved).length}</span>}
+                </TabsTrigger>
+            </TabsList>
+        </div>
 
         <TabsContent value="registry" className="mt-0">
             <Card className="border border-primary/5 shadow-xl rounded-2xl overflow-hidden bg-white">
-                <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6">
+                <CardHeader className="bg-muted/5 border-b border-primary/5 px-4 sm:px-6 py-6">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
                             <CardTitle className="font-headline font-black text-xl tracking-tight">Member Registry</CardTitle>
-                            <CardDescription className="text-xs font-medium">Real-time inspection of all platform identities.</CardDescription>
+                            <CardDescription className="text-[10px] sm:text-xs font-medium">Real-time inspection of all platform identities.</CardDescription>
                         </div>
                         <div className="relative group w-full md:w-80">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -472,7 +475,7 @@ export default function ManagementConsolePage() {
                 </CardHeader>
                 <CardContent className="p-0">
                     <ScrollArea className="w-full">
-                        <Table className="min-w-[800px] md:min-w-full">
+                        <Table className="min-w-[800px]">
                             <TableHeader className="bg-muted/20">
                                 <TableRow className="hover:bg-transparent">
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest pl-6 h-12">Identity</TableHead>
@@ -482,7 +485,7 @@ export default function ManagementConsolePage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {filteredUsers.map((user) => (
+                                {filteredUsers.length > 0 ? filteredUsers.map((user) => (
                                     <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus !== 'verified' && "bg-amber-50/10")}>
                                         <TableCell className="pl-6 py-4">
                                             <div className="flex items-center gap-3">
@@ -562,7 +565,11 @@ export default function ManagementConsolePage() {
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )) : (
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="h-32 text-center text-muted-foreground font-bold">No records found matching your scan.</TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
                     </ScrollArea>

@@ -430,7 +430,7 @@ export default function ProfilePage() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-6 sm:space-y-8 max-w-5xl mx-auto"
+        className="space-y-6 sm:space-y-8 max-w-5xl mx-auto pb-10"
     >
         <motion.div variants={itemVariants}>
             <PageHeader
@@ -457,35 +457,37 @@ export default function ProfilePage() {
                         </div>
                     </div>
                 ) : (
-                    <div className="shrink-0 flex flex-col sm:flex-row gap-3">
-                        <Button variant="outline" className="h-20 w-20 rounded-full border-2 border-dashed border-primary/20 flex flex-col gap-1 items-center justify-center text-muted-foreground hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 shadow-inner group" onClick={startCamera}>
-                            <Camera className="h-6 w-6 group-hover:scale-110 transition-transform" />
-                            <span className="text-[9px] font-bold opacity-60 leading-none">Camera</span>
+                    <div className="shrink-0 flex flex-row gap-3">
+                        <Button variant="outline" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full border-2 border-dashed border-primary/20 flex flex-col gap-1 items-center justify-center text-muted-foreground hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 shadow-inner group" onClick={startCamera}>
+                            <Camera className="h-5 w-5 sm:h-6 sm:w-6 group-hover:scale-110 transition-transform" />
+                            <span className="text-[8px] sm:text-[9px] font-bold opacity-60 leading-none">Camera</span>
                         </Button>
-                        <Button variant="outline" className="h-20 w-20 rounded-full border-2 border-dashed border-primary/20 flex flex-col gap-1 items-center justify-center text-muted-foreground hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 shadow-inner group" onClick={() => fileInputRef.current?.click()}>
-                            <ImageUp className="h-6 w-6 group-hover:scale-110 transition-transform" />
-                            <span className="text-[9px] font-bold opacity-60 leading-none">Device</span>
+                        <Button variant="outline" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full border-2 border-dashed border-primary/20 flex flex-col gap-1 items-center justify-center text-muted-foreground hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 shadow-inner group" onClick={() => fileInputRef.current?.click()}>
+                            <ImageUp className="h-5 w-5 sm:h-6 sm:w-6 group-hover:scale-110 transition-transform" />
+                            <span className="text-[8px] sm:text-[9px] font-bold opacity-60 leading-none">Device</span>
                         </Button>
                     </div>
                 )}
                 <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
-                <div className="flex-1 text-center sm:text-left space-y-1 min-w-0">
-                    <div className="flex items-center justify-center sm:justify-start gap-2">
+                <div className="flex-1 text-center sm:text-left space-y-1.5 min-w-0 w-full">
+                    <div className="flex flex-col sm:flex-row items-center gap-2">
                         <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter text-foreground truncate">{firstName} {lastName}</h2>
-                        {userProfile?.securityStatus === 'verified' ? (
-                            <BadgeCheck className="h-4 w-4 text-primary shrink-0" />
-                        ) : (
-                            <Button 
-                                size="sm" 
-                                variant="outline" 
-                                className="h-7 px-3 text-[9px] font-black uppercase tracking-tight text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600 rounded-full animate-pulse"
-                                onClick={handleVerifySelf}
-                                disabled={isVerifying}
-                            >
-                                {isVerifying ? <Loader2 className="h-2.5 w-2.5 animate-spin mr-1" /> : <ShieldCheck className="h-2.5 w-2.5 mr-1" />}
-                                Click to Verify
-                            </Button>
-                        )}
+                        <div className="flex items-center gap-2">
+                            {userProfile?.securityStatus === 'verified' ? (
+                                <BadgeCheck className="h-4 w-4 text-primary shrink-0" />
+                            ) : (
+                                <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    className="h-7 px-3 text-[9px] font-black uppercase tracking-tight text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600 rounded-full animate-pulse"
+                                    onClick={handleVerifySelf}
+                                    disabled={isVerifying}
+                                >
+                                    {isVerifying ? <Loader2 className="h-2.5 w-2.5 animate-spin mr-1" /> : <ShieldCheck className="h-2.5 w-2.5 mr-1" />}
+                                    Click to Verify
+                                </Button>
+                            )}
+                        </div>
                     </div>
                     {userProfile?.userType && (
                         <div className="flex items-center gap-1.5 px-3 py-0.5 bg-primary/5 rounded-full border border-primary/10 w-fit mx-auto sm:mx-0">
@@ -550,34 +552,34 @@ export default function ProfilePage() {
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 {advocateDetails ? (
-                                    <div className="grid sm:grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                         <div className="space-y-4">
                                             <div className="flex items-start gap-3">
-                                                <div className="bg-primary/10 p-2 rounded-lg"><Briefcase className="h-3.5 w-3.5 text-primary" /></div>
-                                                <div>
+                                                <div className="bg-primary/10 p-2 rounded-lg shrink-0"><Briefcase className="h-3.5 w-3.5 text-primary" /></div>
+                                                <div className="min-w-0">
                                                     <p className="text-[10px] font-bold text-muted-foreground">Experience</p>
-                                                    <p className="font-bold text-xs text-foreground leading-tight">{advocateDetails.experience}</p>
+                                                    <p className="font-bold text-xs text-foreground leading-tight truncate">{advocateDetails.experience}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-start gap-3">
-                                                <div className="bg-primary/10 p-2 rounded-lg"><Gavel className="h-3.5 w-3.5 text-primary" /></div>
-                                                <div>
+                                                <div className="bg-primary/10 p-2 rounded-lg shrink-0"><Gavel className="h-3.5 w-3.5 text-primary" /></div>
+                                                <div className="min-w-0">
                                                     <p className="text-[10px] font-bold text-muted-foreground">Specialization</p>
-                                                    <p className="font-bold text-xs text-foreground">{advocateDetails.specialty}</p>
+                                                    <p className="font-bold text-xs text-foreground truncate">{advocateDetails.specialty}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="space-y-4">
                                             <div className="flex items-start gap-3">
-                                                <div className="bg-primary/10 p-2 rounded-lg"><MapPin className="h-3.5 w-3.5 text-primary" /></div>
-                                                <div>
+                                                <div className="bg-primary/10 p-2 rounded-lg shrink-0"><MapPin className="h-3.5 w-3.5 text-primary" /></div>
+                                                <div className="min-w-0">
                                                     <p className="text-[10px] font-bold text-muted-foreground">Location</p>
-                                                    <p className="font-bold text-xs text-foreground leading-tight">{advocateDetails.courtName}</p>
+                                                    <p className="font-bold text-xs text-foreground leading-tight truncate">{advocateDetails.courtName}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-start gap-3">
-                                                <div className="bg-primary/10 p-2 rounded-lg"><BadgeCheck className="h-3.5 w-3.5 text-primary" /></div>
-                                                <div>
+                                                <div className="bg-primary/10 p-2 rounded-lg shrink-0"><BadgeCheck className="h-3.5 w-3.5 text-primary" /></div>
+                                                <div className="min-w-0">
                                                     <p className="text-[10px] font-bold text-muted-foreground">Bar status</p>
                                                     <p className="font-bold text-xs text-foreground">Verified member</p>
                                                 </div>
@@ -605,17 +607,17 @@ export default function ProfilePage() {
                                                     Remove listing
                                                 </Button>
                                             </AlertDialogTrigger>
-                                            <AlertDialogContent>
+                                            <AlertDialogContent className="max-w-[90vw] sm:max-w-lg">
                                                 <AlertDialogHeader>
                                                     <AlertDialogTitle className="font-black tracking-tight">Unlist from directory?</AlertDialogTitle>
-                                                    <AlertDialogDescription className="font-medium">
+                                                    <AlertDialogDescription className="font-medium text-xs sm:text-sm">
                                                         This will remove your professional profile from the lawyer directory. 
                                                         Your main account and access to legal tools will not be affected.
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel className="font-bold h-11 px-6">Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={handleRemoveAdvocateListing} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6">
+                                                <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                                                    <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={handleRemoveAdvocateListing} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
                                                         Confirm removal
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>
@@ -672,17 +674,17 @@ export default function ProfilePage() {
                                     <span>Delete account</span>
                                 </Button>
                               </AlertDialogTrigger>
-                              <AlertDialogContent>
+                              <AlertDialogContent className="max-w-[90vw] sm:max-w-lg">
                                 <AlertDialogHeader>
                                   <AlertDialogTitle className="font-black tracking-tight text-destructive">Are you absolutely sure?</AlertDialogTitle>
-                                  <AlertDialogDescription className="font-medium">
+                                  <AlertDialogDescription className="font-medium text-xs sm:text-sm">
                                     This action cannot be undone. This will permanently delete your account
                                     and remove your data from our servers. You will not be able to log in again.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel className="font-bold h-11 px-6">Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6">
+                                <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                                  <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
                                     {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                                     Delete permanently
                                   </AlertDialogAction>
@@ -701,10 +703,10 @@ export default function ProfilePage() {
                 toast({ title: "Profile required", description: "You must complete your advocate details to use this role." });
             }
         }}>
-            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden sm:rounded-2xl" onPointerDownOutside={(e) => {
+            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden sm:rounded-2xl h-[100dvh] sm:h-auto" onPointerDownOutside={(e) => {
                 if (userProfile?.userType === 'lawyer' && !advocateDetails) e.preventDefault();
             }}>
-                <div className="p-6 sm:p-8">
+                <div className="p-6 sm:p-8 h-full overflow-y-auto">
                     <DialogHeader className="mb-6">
                         <DialogTitle className="text-xl sm:text-2xl font-black tracking-tight">Professional credentials</DialogTitle>
                         <DialogDescription className="text-xs sm:text-sm font-medium">Your details are verified against Bar Council records.</DialogDescription>
@@ -761,7 +763,7 @@ export default function ProfilePage() {
                   <div className="flex gap-3 max-w-sm mx-auto sm:max-w-none">
                       <Button variant="secondary" onClick={stopCamera} className="flex-1 font-bold h-12 hidden sm:flex active:scale-95 transition-all">Cancel</Button>
                       <Button onClick={capturePhoto} className="flex-1 h-12 font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all bg-primary text-white" disabled={!hasCameraPermission}>
-                          <Camera className="mr-2 h-5 w-5" /> Capture photo
+                          <Camera className="mr-2 h-5 w-5" /> Capture
                       </Button>
                   </div>
               </div>

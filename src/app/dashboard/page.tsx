@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -105,7 +106,7 @@ const resources = [
 
 
 const SectionTitle = ({children}: {children: React.ReactNode}) => (
-    <h2 className="text-xl sm:text-2xl font-black tracking-tighter text-foreground/90">{children}</h2>
+    <h2 className="text-lg sm:text-xl md:text-2xl font-black tracking-tighter text-foreground/90">{children}</h2>
 )
 
 
@@ -140,20 +141,20 @@ export default function DashboardHomePage() {
 
 
   return (
-    <div className="flex flex-col h-full relative space-y-8 sm:space-y-12">
+    <div className="flex flex-col h-full relative space-y-8 sm:space-y-12 pb-10">
         {/* Welcome Header */}
         <MotionWrapper>
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div>
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-black font-headline tracking-tighter min-h-[3rem] flex items-center leading-none">
+                  <h1 className="text-xl sm:text-2xl md:text-4xl font-black font-headline tracking-tighter min-h-[2.5rem] sm:min-h-[3rem] flex items-center leading-none">
                       {text}
                       {isTyping && <TypingCaret />}
                   </h1>
-                  <p className="text-sm sm:text-base text-muted-foreground mt-2 font-medium">Your AI-powered legal co-pilot.</p>
+                  <p className="text-xs sm:text-sm md:text-base text-muted-foreground mt-1 font-medium">Your AI-powered legal co-pilot.</p>
               </div>
               <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none h-10 font-bold" asChild><Link href="/dashboard/lawyer-connect">Find a Lawyer</Link></Button>
-                   <Button size="sm" className="flex-1 sm:flex-none h-10 font-bold shadow-lg shadow-primary/20" asChild><Link href="/dashboard/support">Ask AI</Link></Button>
+                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none h-10 font-bold text-xs" asChild><Link href="/dashboard/lawyer-connect">Find a Lawyer</Link></Button>
+                   <Button size="sm" className="flex-1 sm:flex-none h-10 font-bold shadow-lg shadow-primary/20 text-xs" asChild><Link href="/dashboard/support">Ask AI</Link></Button>
               </div>
           </div>
         </MotionWrapper>
@@ -169,12 +170,12 @@ export default function DashboardHomePage() {
                     <Card className="hover:border-primary/50 transition-all active:scale-[0.98] border-primary/10 shadow-lg">
                         <CardContent className="p-4 sm:p-6">
                             <Link href="/dashboard/narrate" className="flex items-center gap-4 group">
-                                <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                                    <Mic className="h-6 w-6 text-primary" />
+                                <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
+                                    <Mic className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                                 </div>
-                                <div className="flex-1">
-                                    <h3 className="font-black text-base sm:text-lg tracking-tight">Speak Your Problem</h3>
-                                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 font-medium">Narrate your issue for an AI summary.</p>
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="font-black text-sm sm:text-lg tracking-tight truncate">Speak Your Problem</h3>
+                                    <p className="text-[10px] sm:text-sm text-muted-foreground line-clamp-1 font-medium">Narrate your issue for an AI summary.</p>
                                 </div>
                             </Link>
                         </CardContent>
@@ -184,12 +185,12 @@ export default function DashboardHomePage() {
                       <Card className="hover:border-primary/50 transition-all active:scale-[0.98] border-primary/10 shadow-lg">
                         <CardContent className="p-4 sm:p-6">
                             <Link href="/dashboard/support" className="flex items-center gap-4 group">
-                                <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                                    <MessageSquare className="h-6 w-6 text-primary" />
+                                <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
+                                    <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                                 </div>
-                                <div className="flex-1">
-                                    <h3 className="font-black text-base sm:text-lg tracking-tight">AI Legal Chat</h3>
-                                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 font-medium">Get answers to legal questions.</p>
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="font-black text-sm sm:text-lg tracking-tight truncate">AI Legal Chat</h3>
+                                    <p className="text-[10px] sm:text-sm text-muted-foreground line-clamp-1 font-medium">Get answers to legal questions.</p>
                                 </div>
                             </Link>
                         </CardContent>
@@ -206,12 +207,12 @@ export default function DashboardHomePage() {
                   {aiFeatures.map((feature, index) => (
                     <MotionWrapper key={feature.href} delay={0.5 + index * 0.1}>
                       <Link key={feature.href} href={feature.href} className="block group h-full">
-                          <Card className="h-full p-4 flex flex-col items-start hover:border-primary/50 transition-all active:scale-[0.97] border-primary/5 shadow-md">
-                              <div className="p-2 rounded-lg bg-primary/10 mb-3 group-hover:bg-primary/20 transition-colors">
-                                <feature.icon className="h-5 w-5 text-primary" />
+                          <Card className="h-full p-3 sm:p-4 flex flex-col items-start hover:border-primary/50 transition-all active:scale-[0.97] border-primary/5 shadow-md">
+                              <div className="p-2 rounded-lg bg-primary/10 mb-2 sm:mb-3 group-hover:bg-primary/20 transition-colors">
+                                <feature.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                               </div>
-                              <h3 className="font-black text-xs sm:text-sm leading-tight tracking-tight">{feature.title}</h3>
-                              <p className="hidden sm:block text-xs text-muted-foreground mt-1.5 line-clamp-2 font-medium">{feature.description}</p>
+                              <h3 className="font-black text-[11px] sm:text-sm leading-tight tracking-tight">{feature.title}</h3>
+                              <p className="hidden sm:block text-[10px] sm:text-xs text-muted-foreground mt-1.5 line-clamp-2 font-medium">{feature.description}</p>
                           </Card>
                       </Link>
                     </MotionWrapper>
@@ -241,7 +242,7 @@ export default function DashboardHomePage() {
                         </div>
                       )}
                       <div className="p-4 flex-grow">
-                        <h3 className="font-bold text-sm sm:text-base leading-snug group-hover:text-primary transition-colors tracking-tight">{item.title}</h3>
+                        <h3 className="font-bold text-sm leading-snug group-hover:text-primary transition-colors tracking-tight">{item.title}</h3>
                       </div>
                     </Card>
                   </Link>
@@ -262,12 +263,12 @@ export default function DashboardHomePage() {
                     <Card className="h-full hover:border-primary/50 transition-all active:scale-[0.98] border-primary/5 shadow-lg">
                       <CardContent className="p-4 sm:p-6">
                         <div className="flex flex-row md:flex-col items-center md:items-start gap-4">
-                          <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                            <resource.icon className="h-6 w-6 text-primary" />
+                          <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
+                            <resource.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                           </div>
-                          <div className="flex-1">
-                            <h3 className="font-black text-base sm:text-lg tracking-tight">{resource.title}</h3>
-                            <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-1 md:line-clamp-none font-medium">{resource.description}</p>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-black text-sm sm:text-lg tracking-tight truncate">{resource.title}</h3>
+                            <p className="text-[10px] sm:text-sm text-muted-foreground mt-1 line-clamp-1 md:line-clamp-none font-medium">{resource.description}</p>
                           </div>
                         </div>
                       </CardContent>

@@ -60,7 +60,7 @@ function Header({ userProfile }: { userProfile: any }) {
         )}>
             <div className="flex items-center gap-2 md:hidden">
                 <SidebarTrigger />
-                <Logo className="h-11 w-11" />
+                <Logo className="h-10 w-10" />
             </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
@@ -298,21 +298,23 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-             <Button asChild className="m-2 rounded-xl h-11 font-bold shadow-lg shadow-primary/20">
-                <Link href="/login">Sign In / Register</Link>
-              </Button>
+             <div className="p-2">
+                <Button asChild className="w-full rounded-xl h-11 font-bold shadow-lg shadow-primary/20">
+                    <Link href="/login">Sign In</Link>
+                </Button>
+             </div>
           )}
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-screen overflow-hidden">
           <Header userProfile={userProfile} />
           <main
             className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8"
           >
             {showContent ? children : (
               <div className="flex flex-1 items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin" />
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             )}
           </main>
