@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc } from "firebase/firestore";
-import { ref, update, remove, onValue } from "firebase/database";
+import { ref, update, remove } from "firebase/database";
 import { 
   Users, 
   ShieldCheck, 
@@ -31,7 +30,6 @@ import {
   Phone,
   ShieldHalf,
   MapPin,
-  ChevronRight,
   UserCheck,
   UserMinus,
   FileText,
@@ -318,7 +316,6 @@ export default function ManagementConsolePage() {
         }
 
         const isSuperAdmin = user.email === ADMIN_EMAIL;
-        
         const adminDoc = await getDoc(doc(firestore, "users", user.uid));
         const adminData = adminDoc.data() as any;
         const hasAdminFlag = !!adminData?.isAdmin;
@@ -329,7 +326,7 @@ export default function ManagementConsolePage() {
             return;
         }
 
-        // Setup User Listener
+        // Setup User Listener from Firestore
         const usersCol = collection(firestore, "users");
         const unsubUsers = onSnapshot(usersCol, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
@@ -349,17 +346,18 @@ export default function ManagementConsolePage() {
             setLoading(false);
         });
 
-        // Setup Advocate Listener from RTDB for manual review queue
-        const advocatesRef = ref(rtdb, "advocates");
-        const unsubAdvocates = onValue(advocatesRef, (snapshot) => {
-            if (snapshot.exists()) {
-                const list = Object.values(snapshot.val()) as AdvocateRecord[];
-                setAdvocates(list);
-            } else {
-                setAdvocates([]);
-            }
-        }, (error) => {
-            console.error("Failed to sync advocates:", error);
+        // Setup Advocate Listener from Firestore (Unapproved profiles go here first)
+        const advocatesCol = collection(firestore, "advocates");
+        const unsubAdvocates = onSnapshot(advocatesCol, (snapshot) => {
+            const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as AdvocateRecord));
+            setAdvocates(list);
+        }, (serverError) => {
+            if (!auth.currentUser) return;
+            const permissionError = new FirestorePermissionError({
+                path: advocatesCol.path,
+                operation: 'list',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
         });
 
         return () => {
@@ -369,7 +367,7 @@ export default function ManagementConsolePage() {
     });
 
     return () => unsubAuth();
-  }, [firestore, auth, router, toast, rtdb]);
+  }, [firestore, auth, router, toast]);
 
   const toggleUserBlock = async (user: UserRecord) => {
     if (user.email === ADMIN_EMAIL) {
@@ -447,8 +445,10 @@ export default function ManagementConsolePage() {
 
     setProcessingUid(user.uid);
     const userRef = doc(firestore, "users", user.uid);
+    const advocateRef = doc(firestore, "advocates", user.uid);
     
-    deleteDoc(userRef).catch(() => {});
+    await deleteDoc(userRef).catch(() => {});
+    await deleteDoc(advocateRef).catch(() => {});
     
     // Also remove from RTDB
     remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
@@ -461,8 +461,9 @@ export default function ManagementConsolePage() {
   const approveAdvocate = async (adv: AdvocateRecord) => {
       setProcessingUid(adv.uid);
       try {
-          // Manual Admin Approval updates RTDB and syncs back to core profile
-          await update(ref(rtdb, `advocates/${adv.uid}`), { 
+          // Update Firestore
+          const advRef = doc(firestore, "advocates", adv.uid);
+          await updateDoc(advRef, { 
               isApproved: true, 
               isVerified: true 
           });
@@ -471,6 +472,12 @@ export default function ManagementConsolePage() {
           await updateDoc(userRef, { 
               securityStatus: 'verified', 
               isBlocked: false 
+          });
+
+          // Sync to RTDB
+          await update(ref(rtdb, `advocates/${adv.uid}`), { 
+              isApproved: true, 
+              isVerified: true 
           });
           
           toast({ title: "Professional Profile Activated Publicly" });

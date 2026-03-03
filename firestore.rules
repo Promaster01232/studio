@@ -48,7 +48,7 @@ service cloud.firestore {
 
     // Advocates collection
     match /advocates/{userId} {
-      allow read: if isAuthenticated();
+      allow read: if isAuthenticated() && (resource.data.isApproved == true || isAdmin() || isOwner(userId));
       allow write: if isAdmin() || (isAuthenticated() && isOwner(userId));
       allow list: if isAdmin();
     }

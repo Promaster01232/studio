@@ -8,11 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { saveAdvocate, type Lawyer } from "@/lib/advocates-data";
-import { useAuth, useDatabase } from "@/firebase";
+import { useAuth, useFirestore, useDatabase } from "@/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { ref, set } from "firebase/database";
 import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2, Info, UserMinus, AlertTriangle } from "lucide-react";
 import { verifyAdvocateCertificate } from "@/ai/flows/verify-advocate-certificate";
+import type { Lawyer } from "@/lib/advocates-data";
 
 const practiceAreas = [
     "Family Law", "Criminal Law", "Civil Law", "Corporate Law", "Cyber Law",
@@ -38,6 +39,7 @@ interface AdvocateProfileFormProps {
 export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }: AdvocateProfileFormProps) {
     const { toast } = useToast();
     const auth = useAuth();
+    const firestore = useFirestore();
     const rtdb = useDatabase();
     const [isSaving, setIsSaving] = useState(false);
     const [certificateName, setCertificateName] = useState<string>(initialData?.certificateName || "");
@@ -64,6 +66,8 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (!auth.currentUser) return;
+
         const formData = new FormData(event.currentTarget);
         const courtsOfPractice = formData.getAll('courts') as string[];
 
@@ -97,34 +101,15 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
         setIsSaving(true);
 
         try {
-            // Note: Preliminary AI check is performed for initial feedback, 
-            // but Admin performs final manual verification in the console.
-            if (certificateDataUri && !initialData?.certificateDataUri) {
-                try {
-                    await verifyAdvocateCertificate({
-                        certificateDataUri,
-                        fullName: name,
-                        barId: barId
-                    });
-                } catch (e) {
-                    console.warn("Pre-verification hint failed, proceeding to manual admin review.");
-                }
-            }
-
-            const advocateName = name || `${userProfile?.firstName} ${userProfile?.lastName}`;
-            const advocateImage = userProfile?.photoURL ? 
-                { id: `advocate${auth.currentUser?.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } :
-                (initialData?.image || null);
-
             const isBarIdChanged = initialData && initialData.barId !== barId;
             
-            const newAdvocate: Omit<Lawyer, 'id'> = {
-                uid: auth.currentUser?.uid,
-                name: advocateName,
+            const newAdvocateData = {
+                uid: auth.currentUser.uid,
+                name: name || `${userProfile?.firstName} ${userProfile?.lastName}`,
                 specialty: specialization,
                 rating: initialData?.rating || (Math.random() * (5 - 4.5) + 4.5).toFixed(1),
                 reviews: initialData?.reviews || Math.floor(Math.random() * 50),
-                image: advocateImage,
+                image: userProfile?.photoURL ? { id: `advocate${auth.currentUser.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } : (initialData?.image || null),
                 about: bio,
                 experience: `${experience} years of experience as ${position}.`,
                 rawExperience: experience,
@@ -132,30 +117,26 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                 courts: courtsOfPractice,
                 contact: {
                     phone: "Verified",
-                    email: userProfile?.email || initialData?.contact?.email || "Verified"
+                    email: userProfile?.email || initialData?.contact?.email || auth.currentUser.email || "Verified"
                 },
                 barId: barId,
                 courtName: courtName,
                 courtAddress: courtAddress,
                 certificateName: certificateName,
-                certificateDataUri: certificateDataUri || undefined,
+                certificateDataUri: certificateDataUri || initialData?.certificateDataUri || undefined,
                 isVerified: true,
-                isApproved: isBarIdChanged ? false : (initialData?.isApproved || false), 
+                isApproved: isBarIdChanged ? false : (initialData?.isApproved || false),
+                updatedAt: Date.now()
             };
 
-            saveAdvocate(newAdvocate);
+            // Save to Firestore (Primary Registry)
+            const advocateRef = doc(firestore, "advocates", auth.currentUser.uid);
+            await setDoc(advocateRef, newAdvocateData);
             
-            if (auth.currentUser) {
-                const rtdbPayload = JSON.parse(JSON.stringify({
-                    ...newAdvocate,
-                    uid: auth.currentUser.uid,
-                    updatedAt: Date.now()
-                }));
-
-                await set(ref(rtdb, `advocates/${auth.currentUser.uid}`), rtdbPayload).catch(err => {
-                    console.warn("RTDB professional sync skipped:", err.message);
-                });
-            }
+            // Sync to RTDB (Real-time features)
+            await set(ref(rtdb, `advocates/${auth.currentUser.uid}`), newAdvocateData).catch(err => {
+                console.warn("RTDB professional sync skipped:", err.message);
+            });
 
             toast({
                 title: "Submitted for Manual Review",
