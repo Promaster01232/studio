@@ -780,7 +780,7 @@ export default function ManagementConsolePage() {
                             <Gavel className="h-10 w-10" />
                         </div>
                         <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Empty</h3>
-                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed">No new professional applications awaiting manual audit.</p>
+                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed">Professional Registry Empty - Advocate verification happens here. All submitted professional details will appear in this queue for manual inspection.</p>
                     </div>
                 )}
             </div>

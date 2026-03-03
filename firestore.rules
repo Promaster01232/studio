@@ -29,6 +29,7 @@ service cloud.firestore {
     }
 
     // GLOBAL ADMIN OVERRIDE: Absolute power for administrative tasks
+    // This handles collection listing and global management
     match /{document=**} {
       allow read, write: if isSuperAdmin() || isAdmin();
     }
