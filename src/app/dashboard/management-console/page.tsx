@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -33,9 +32,9 @@ import {
   ShieldHalf,
   MapPin,
   ChevronRight,
-  Filter,
   UserCheck,
-  UserMinus
+  UserMinus,
+  Verified
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -43,7 +42,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { validateUserDetails } from "@/ai/flows/validate-user-details";
 import { onAuthStateChanged } from "firebase/auth";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
@@ -57,6 +55,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 
 interface UserRecord {
   uid: string;
@@ -192,7 +191,6 @@ export default function ManagementConsolePage() {
   const [searchQuery, setSearchSearchQuery] = useState("");
   const [processingUid, setProcessingUid] = useState<string | null>(null);
   const [isAuditing, setIsAuditing] = useState(false);
-  const [auditProgress, setAuditProgress] = useState("");
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, async (user) => {
@@ -283,6 +281,54 @@ export default function ManagementConsolePage() {
     setProcessingUid(null);
   };
 
+  const handleVerifyUser = async (user: UserRecord) => {
+      setProcessingUid(user.uid);
+      toast({ title: "AI Verification Started", description: "Verifying email and identity authenticity..." });
+
+      try {
+          const verification = await verifyEmailAuthenticity({
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName
+          });
+
+          if (verification.isAuthentic) {
+              const userRef = doc(firestore, "users", user.uid);
+              await updateDoc(userRef, { 
+                  securityStatus: 'verified', 
+                  flagReason: "",
+                  isBlocked: false 
+              });
+              
+              await update(ref(rtdb, `users/${user.uid}`), { 
+                  securityStatus: 'verified', 
+                  isBlocked: false 
+              }).catch(() => {});
+
+              toast({ 
+                  title: "User Verified", 
+                  description: `AI confirmed authenticity with ${verification.confidenceScore}% confidence.` 
+              });
+          } else {
+              const userRef = doc(firestore, "users", user.uid);
+              await updateDoc(userRef, { 
+                  securityStatus: 'suspicious',
+                  flagReason: verification.reason || "AI detected suspicious identity patterns."
+              });
+              toast({ 
+                  variant: "destructive", 
+                  title: "Verification Failed", 
+                  description: verification.reason || "The identity appears to be incorrect or fake." 
+              });
+          }
+      } catch (error: any) {
+          console.error("Verification error:", error);
+          toast({ variant: "destructive", title: "Process Error", description: "Could not complete AI verification." });
+      } finally {
+          setProcessingUid(null);
+      }
+  };
+
   const handleDeleteUser = async (user: UserRecord) => {
     if (user.email === 'enterspaceindia@gmail.com') {
         toast({ variant: "destructive", title: "System Root Unbreakable" });
@@ -321,40 +367,6 @@ export default function ManagementConsolePage() {
       }
   };
 
-  const runSecurityAudit = async () => {
-      setIsAuditing(true);
-      setAuditProgress("Initializing forensic audit...");
-      let flagged = 0;
-
-      for (const user of users) {
-          if (user.isAdmin || user.email === 'enterspaceindia@gmail.com') continue;
-          setAuditProgress(`Inspecting: ${user.email}`);
-          try {
-              const validation = await validateUserDetails({
-                  firstName: user.firstName,
-                  lastName: user.lastName,
-                  email: user.email,
-                  mobileNumber: user.mobileNumber || '',
-                  userType: user.userType
-              });
-
-              if (!validation.isValid) {
-                  const userRef = doc(firestore, "users", user.uid);
-                  updateDoc(userRef, {
-                      securityStatus: 'suspicious',
-                      flaggedAt: serverTimestamp(),
-                      flagReason: validation.reason || "Pattern mismatch identified."
-                  }).catch(() => {});
-                  flagged++;
-              }
-          } catch (e) {}
-      }
-
-      setIsAuditing(false);
-      setAuditProgress("");
-      toast({ title: "Security Audit Complete", description: `Marked ${flagged} suspicious identities.` });
-  };
-
   const filteredUsers = users.filter(u => 
     `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
     u.email.toLowerCase().includes(searchQuery.toLowerCase())
@@ -364,7 +376,7 @@ export default function ManagementConsolePage() {
       total: users.length,
       active: users.filter(u => !u.isBlocked).length,
       blocked: users.filter(u => u.isBlocked).length,
-      suspicious: users.filter(u => u.securityStatus === 'suspicious').length,
+      suspicious: users.filter(u => u.securityStatus !== 'verified').length,
   };
 
   if (loading) {
@@ -380,8 +392,8 @@ export default function ManagementConsolePage() {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Button onClick={runSecurityAudit} disabled={isAuditing} variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-white hover:bg-primary/5 transition-all shadow-sm">
-                {isAuditing ? <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" /> : <Sparkles className="mr-2 h-4 w-4 text-primary" />}
+            <Button variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-white hover:bg-primary/5 transition-all shadow-sm">
+                <Sparkles className="mr-2 h-4 w-4 text-primary" />
                 <span className="text-[10px] uppercase tracking-wider">Integrity Audit</span>
             </Button>
             <Button className="bg-primary text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all">
@@ -431,13 +443,13 @@ export default function ManagementConsolePage() {
           </Card>
           <Card className="border-primary/5 shadow-sm bg-amber-50/30">
               <CardHeader className="p-4 pb-2">
-                  <CardDescription className="text-[10px] font-black uppercase tracking-widest text-amber-600">Security Flags</CardDescription>
+                  <CardDescription className="text-[10px] font-black uppercase tracking-widest text-amber-600">Pending Jach</CardDescription>
                   <CardTitle className="text-2xl font-black text-amber-700">{stats.suspicious}</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0">
                   <div className="flex items-center gap-1.5 text-amber-600">
                       <ShieldAlert className="h-3 w-3" />
-                      <span className="text-[9px] font-bold">AI Flagged Data</span>
+                      <span className="text-[9px] font-bold">Awaiting Verification</span>
                   </div>
               </CardContent>
           </Card>
@@ -478,13 +490,13 @@ export default function ManagementConsolePage() {
                                 <TableRow className="hover:bg-transparent">
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest pl-6 h-12">Identity</TableHead>
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Role</TableHead>
-                                    <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Security Jach</TableHead>
+                                    <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Security Status</TableHead>
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {filteredUsers.map((user) => (
-                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus === 'suspicious' && "bg-red-50/30")}>
+                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus !== 'verified' && "bg-amber-50/10")}>
                                         <TableCell className="pl-6 py-4">
                                             <div className="flex items-center gap-3">
                                                 <Avatar className="h-10 w-10 border border-primary/10 shadow-sm">
@@ -501,15 +513,25 @@ export default function ManagementConsolePage() {
                                             <Badge variant="outline" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 border-primary/20 text-primary">{user.userType}</Badge>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            {user.securityStatus === 'suspicious' ? (
-                                                <div className="flex items-center justify-center gap-1.5">
-                                                    <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                                                    <span className="text-[9px] font-black uppercase text-red-500 tracking-tight">NOT VERIFIED</span>
-                                                </div>
-                                            ) : user.securityStatus === 'verified' ? (
+                                            {user.securityStatus === 'verified' ? (
                                                 <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Verified</Badge>
                                             ) : (
-                                                <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 opacity-60">Pending</Badge>
+                                                <div className="flex flex-col items-center gap-1.5">
+                                                    <div className="flex items-center justify-center gap-1.5">
+                                                        <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+                                                        <span className="text-[9px] font-black uppercase text-red-500 tracking-tight">NOT VERIFIED</span>
+                                                    </div>
+                                                    <Button 
+                                                        size="sm" 
+                                                        variant="ghost" 
+                                                        className="h-6 px-3 text-[8px] font-black uppercase tracking-tight text-primary hover:bg-primary/5 rounded-full border border-primary/10"
+                                                        onClick={() => handleVerifyUser(user)}
+                                                        disabled={processingUid === user.uid}
+                                                    >
+                                                        {processingUid === user.uid ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : <ShieldCheck className="h-2.5 w-2.5 mr-1" />}
+                                                        Run AI Verify
+                                                    </Button>
+                                                </div>
                                             )}
                                         </TableCell>
                                         <TableCell className="text-right pr-6">
@@ -573,7 +595,7 @@ export default function ManagementConsolePage() {
                                     <div className="relative">
                                         <Avatar className="h-16 w-16 border-2 border-white shadow-xl rounded-2xl overflow-hidden">
                                             <AvatarImage src={user?.photoURL} className="object-cover" />
-                                            <AvatarFallback className="font-black text-xl bg-primary text-white">{adv.name.charAt(0)}</AvatarFallback>
+                                            <AvatarFallback className="font-black text-xl bg-primary text-white">{adv.name?.charAt(0) || user?.firstName?.charAt(0) || "A"}</AvatarFallback>
                                         </Avatar>
                                         {adv.isApproved && (
                                             <div className="absolute -bottom-1.5 -right-1.5 bg-green-500 text-white p-1.5 rounded-lg shadow-lg">
@@ -593,7 +615,7 @@ export default function ManagementConsolePage() {
                                     </div>
                                 </div>
                                 <div className="space-y-1">
-                                    <h3 className="text-xl font-black tracking-tight text-[#1a1a1a] truncate group-hover:text-primary transition-colors">{adv.name}</h3>
+                                    <h3 className="text-xl font-black tracking-tight text-[#1a1a1a] truncate group-hover:text-primary transition-colors">{adv.name || `${user?.firstName} ${user?.lastName}`}</h3>
                                     <p className="text-[10px] font-black text-primary uppercase tracking-widest">{adv.specialty}</p>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 pt-5 border-t border-primary/5">
