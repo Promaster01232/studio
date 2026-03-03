@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -102,6 +103,7 @@ export default function RegisterPage() {
         mobileNumber,
         userType,
         photoURL: user.photoURL || '',
+        securityStatus: 'verified',
         createdAt: serverTimestamp(),
       };
 

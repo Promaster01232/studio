@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, MessageSquare, ShieldAlert, Ban, AlertTriangle } from "lucide-react";
+import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, MessageSquare, ShieldAlert, Ban, AlertTriangle, ShieldX } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -117,7 +117,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
-  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string, photoURL?: string, isAdmin?: boolean, isBlocked?: boolean} | null>(null);
+  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string, photoURL?: string, isAdmin?: boolean, isBlocked?: boolean, securityStatus?: string, flaggedAt?: any} | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
@@ -130,7 +130,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         setProfileLoading(true);
         const userDocRef = doc(firestore, "users", user.uid);
         
-        // Use real-time listener for profile to detect "Blocked" status immediately
         const unsubProfile = onSnapshot(userDocRef, (userDoc) => {
             if (userDoc.exists()) {
               setUserProfile(userDoc.data() as any);
@@ -161,28 +160,46 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   };
 
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
+  
+  // 48-Hour Automatic Block Enforcement Logic
+  const isSecurityViolation = () => {
+      if (!userProfile) return false;
+      if (userProfile.isBlocked) return true;
+      
+      if (userProfile.securityStatus === 'suspicious' && userProfile.flaggedAt) {
+          const flaggedTime = userProfile.flaggedAt.toMillis();
+          const fortyEightHours = 48 * 60 * 60 * 1000;
+          if (Date.now() - flaggedTime > fortyEightHours) {
+              return true;
+          }
+      }
+      return false;
+  };
+
   const isAdmin = userProfile?.email === 'enterspaceindia@gmail.com' || !!userProfile?.isAdmin;
 
-  if (showContent && userProfile?.isBlocked) {
+  if (showContent && isSecurityViolation()) {
       return (
         <div className="flex h-screen items-center justify-center bg-muted/30 p-4">
             <Card className="max-w-md w-full border-destructive/20 shadow-2xl overflow-hidden">
                 <div className="bg-destructive/10 p-8 flex justify-center border-b border-destructive/10">
-                    <Ban className="h-20 w-20 text-destructive animate-pulse" />
+                    <ShieldX className="h-20 w-20 text-destructive animate-pulse" />
                 </div>
                 <CardHeader className="text-center pt-8">
                     <CardTitle className="text-2xl font-black tracking-tight text-destructive flex items-center justify-center gap-2">
-                        Account Suspended
+                        Access Revoked
                     </CardTitle>
                     <CardDescription className="text-sm font-medium pt-2">
-                        Your access to Nyaya Sahayak has been restricted by the system administrator.
+                        {userProfile?.securityStatus === 'suspicious' 
+                            ? "Your account has been automatically disabled following an AI security audit. Suspicious registrations are permanently blocked after 48 hours."
+                            : "Your access to Nyaya Sahayak has been restricted by the system administrator."}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6 pb-8">
                     <div className="p-4 bg-muted/50 rounded-xl flex items-start gap-3 border">
                         <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
                         <p className="text-xs font-medium leading-relaxed">
-                            If you believe this is an error or would like to appeal this decision, please contact our support team at <span className="font-bold text-primary">enterspaceindia@gmail.com</span>
+                            If you believe this is an error and can provide valid identity documents, please contact our security team at <span className="font-bold text-primary">enterspaceindia@gmail.com</span>
                         </p>
                     </div>
                     <Button onClick={handleLogout} variant="outline" className="w-full h-12 font-bold rounded-xl active:scale-95 transition-all">

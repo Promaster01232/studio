@@ -50,6 +50,23 @@
                     "type": "boolean",
                     "description": "Whether the user's access has been suspended."
                 },
+                "securityStatus": {
+                    "type": "string",
+                    "enum": [
+                        "verified",
+                        "suspicious",
+                        "flagged"
+                    ],
+                    "description": "The AI-determined security status of the account."
+                },
+                "flaggedAt": {
+                    "type": "object",
+                    "description": "Timestamp when the account was flagged by AI."
+                },
+                "flagReason": {
+                    "type": "string",
+                    "description": "Reason provided by AI for flagging the account."
+                },
                 "createdAt": {
                     "type": "object",
                     "description": "Timestamp when the user was created."
