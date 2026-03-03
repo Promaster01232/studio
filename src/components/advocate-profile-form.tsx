@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { saveAdvocate, type Lawyer } from "@/lib/advocates-data";
 import { useAuth, useDatabase } from "@/firebase";
 import { ref, set } from "firebase/database";
-import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2, Info, UserMinus } from "lucide-react";
+import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2, Info, UserMinus, AlertTriangle } from "lucide-react";
 import { verifyAdvocateCertificate } from "@/ai/flows/verify-advocate-certificate";
 
 const practiceAreas = [
@@ -121,6 +121,9 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                 { id: `advocate${auth.currentUser?.uid}`, imageUrl: userProfile.photoURL, imageHint: 'person portrait' } :
                 (initialData?.image || null);
 
+            // CRITICAL: isApproved is ALWAYS false for new submissions or updates to Bar ID
+            const isBarIdChanged = initialData && initialData.barId !== barId;
+            
             const newAdvocate: Omit<Lawyer, 'id'> = {
                 uid: auth.currentUser?.uid,
                 name: advocateName,
@@ -142,10 +145,10 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                 courtAddress: courtAddress,
                 certificateName: certificateName,
                 isVerified: true,
-                isApproved: initialData?.isApproved || false, // Default to false for manual admin review
+                isApproved: isBarIdChanged ? false : (initialData?.isApproved || false), 
             };
 
-            // Save to localStorage (directory)
+            // Save to localStorage (directory simulation)
             saveAdvocate(newAdvocate);
             
             // Save to RTDB (centralized profile)
@@ -162,8 +165,8 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
             }
 
             toast({
-                title: "Profile submitted",
-                description: "Your details have been sent for manual admin verification. You will be listed once approved.",
+                title: "Profile submitted for review",
+                description: "Your credentials will be manually verified by an administrator. You will be notified once active.",
             });
 
             onSave();
@@ -199,26 +202,15 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
 
     return (
         <form className="space-y-8 max-h-[70vh] overflow-y-auto p-1 pr-4 custom-scrollbar" onSubmit={handleSubmit}>
-            <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 flex flex-col gap-3 shadow-inner">
+            <div className="bg-amber-500/5 p-4 rounded-xl border border-amber-500/20 flex flex-col gap-3 shadow-inner">
                 <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-2 rounded-lg">
-                        <ShieldCheck className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="space-y-1">
-                        <p className="text-xs font-bold text-primary">Professional Verification</p>
-                        <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                            Our AI system will authenticate your certificate against Bar Council records.
-                        </p>
-                    </div>
-                </div>
-                <div className="flex items-start gap-4 pt-2 border-t border-primary/10">
                     <div className="bg-amber-500/10 p-2 rounded-lg">
-                        <Info className="h-5 w-5 text-amber-600" />
+                        <AlertTriangle className="h-5 w-5 text-amber-600" />
                     </div>
                     <div className="space-y-1">
-                        <p className="text-xs font-bold text-amber-600">Manual Review Process</p>
+                        <p className="text-xs font-bold text-amber-600 uppercase tracking-wider">Mandatory Verification</p>
                         <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                            Once AI-verified, your profile will be sent to our administrators for a final manual review before appearing in the public directory.
+                            Professional details are required to activate a Lawyer profile. New submissions remain inactive until manually approved by the administrator.
                         </p>
                     </div>
                 </div>
@@ -226,7 +218,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
 
             <div className="grid gap-6">
                 <div className="space-y-3">
-                    <Label htmlFor="fullName" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
+                    <Label htmlFor="fullName" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground uppercase tracking-widest">
                         <Gavel className="h-4 w-4 text-primary" /> Full Name (as on Bar ID)
                     </Label>
                     <Input id="fullName" name="fullName" placeholder="e.g., Rajesh Kumar" required defaultValue={initialData?.name || `${userProfile?.firstName || ''} ${userProfile?.lastName || ''}`} className="h-11 border-primary/10 focus:border-primary font-bold" />
@@ -234,13 +226,13 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
 
                 <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <Label htmlFor="barId" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
+                        <Label htmlFor="barId" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground uppercase tracking-widest">
                             <GraduationCap className="h-4 w-4 text-primary" /> Bar Council ID
                         </Label>
                         <Input id="barId" name="barId" placeholder="MAH/1234/2010" required defaultValue={initialData?.barId || ""} className="h-11 border-primary/10 font-bold" />
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="experience" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
+                        <Label htmlFor="experience" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground uppercase tracking-widest">
                             <Briefcase className="h-4 w-4 text-primary" /> Years of Experience
                         </Label>
                         <Input id="experience" name="experience" type="number" placeholder="10" required defaultValue={getExperienceValue()} className="h-11 border-primary/10 font-bold" />
@@ -248,8 +240,8 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                 </div>
 
                 <div className="space-y-3">
-                    <Label className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
-                        <FileUp className="h-4 w-4 text-primary" /> Court Certificate / Bar Enrollment
+                    <Label className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground uppercase tracking-widest">
+                        <FileUp className="h-4 w-4 text-primary" /> Enrollment Certificate
                     </Label>
                     <div className={`relative border-2 border-dashed rounded-xl p-6 transition-all ${certificateName ? 'bg-primary/5 border-primary/40' : 'hover:border-primary/30 bg-muted/20'}`}>
                         <input
@@ -266,7 +258,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                                     <FileUp className="h-6 w-6 text-muted-foreground" />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-[11px] font-bold text-foreground">Upload Certificate</p>
+                                    <p className="text-[11px] font-bold text-foreground">Upload Bar Certificate</p>
                                     <p className="text-[10px] text-muted-foreground font-medium">PDF or Image (Max 5MB)</p>
                                 </div>
                             </div>
@@ -278,7 +270,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                                     </div>
                                     <div className="min-w-0">
                                         <p className="text-[11px] font-bold truncate max-w-[200px]">{certificateName}</p>
-                                        <p className="text-[10px] text-primary font-bold">Document Ready for AI Verification</p>
+                                        <p className="text-[10px] text-primary font-bold">Awaiting Verification</p>
                                     </div>
                                 </div>
                                 <button 
@@ -296,7 +288,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
 
                 <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <Label htmlFor="specialization" className="text-[11px] font-bold text-muted-foreground">Primary Specialization</Label>
+                        <Label htmlFor="specialization" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Primary Specialization</Label>
                         <Select name="specialization" required defaultValue={initialData?.specialty || ""}>
                             <SelectTrigger id="specialization" className="h-11 border-primary/10 font-bold">
                                 <SelectValue placeholder="Select practice area" />
@@ -307,13 +299,13 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                         </Select>
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="position" className="text-[11px] font-bold text-muted-foreground">Current Position / Title</Label>
-                        <Input id="position" name="position" placeholder="e.g., Senior Partner" required defaultValue={getPositionValue()} className="h-11 border-primary/10 font-bold" />
+                        <Label htmlFor="position" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Current Position</Label>
+                        <Input id="position" name="position" placeholder="e.g., Senior Advocate" required defaultValue={getPositionValue()} className="h-11 border-primary/10 font-bold" />
                     </div>
                 </div>
 
                 <div className="space-y-4">
-                    <Label className="text-[11px] font-bold text-muted-foreground">Courts of Practice</Label>
+                    <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Courts of Practice</Label>
                     <div className="grid grid-cols-2 gap-3">
                         {courtsList.map(court => (
                             <div key={court} className="flex items-center space-x-3 border rounded-xl p-3 hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer group shadow-sm bg-card/50">
@@ -331,20 +323,20 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                 </div>
                 
                 <div className="space-y-3">
-                    <Label htmlFor="bio" className="text-[11px] font-bold text-muted-foreground">Professional Bio</Label>
-                    <Textarea id="bio" name="bio" placeholder="Describe your legal expertise, notable cases, and consultation approach..." rows={4} required defaultValue={initialData?.about || ""} className="resize-none border-primary/10 focus:border-primary font-medium text-sm" />
+                    <Label htmlFor="bio" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Professional Bio</Label>
+                    <Textarea id="bio" name="bio" placeholder="Describe your legal expertise and notable achievements..." rows={4} required defaultValue={initialData?.about || ""} className="resize-none border-primary/10 focus:border-primary font-medium text-sm" />
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <Label htmlFor="courtName" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground">
-                            <MapPin className="h-4 w-4 text-primary" /> Primary Court Location
+                        <Label htmlFor="courtName" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground uppercase tracking-widest">
+                            <MapPin className="h-4 w-4 text-primary" /> Practice Location
                         </Label>
-                        <Input id="courtName" name="courtName" placeholder="e.g., Bombay High Court" required defaultValue={initialData?.courtName || ""} className="h-11 border-primary/10 font-bold" />
+                        <Input id="courtName" name="courtName" placeholder="e.g., High Court" required defaultValue={initialData?.courtName || ""} className="h-11 border-primary/10 font-bold" />
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="courtAddress" className="text-[11px] font-bold text-muted-foreground">City / Address</Label>
-                        <Input id="courtAddress" name="courtAddress" placeholder="e.g., Mumbai, Maharashtra" required defaultValue={initialData?.courtAddress || ""} className="h-11 border-primary/10 font-bold" />
+                        <Label htmlFor="courtAddress" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">City / State</Label>
+                        <Input id="courtAddress" name="courtAddress" placeholder="e.g., New Delhi" required defaultValue={initialData?.courtAddress || ""} className="h-11 border-primary/10 font-bold" />
                     </div>
                 </div>
             </div>
@@ -354,9 +346,9 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                     {isSaving ? (
                         <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            AI Authenticating Certificate...
+                            AI Validating Professional Identity...
                         </>
-                    ) : (initialData ? "Update Professional Profile" : "Submit for Approval")}
+                    ) : (initialData ? "Update & Re-verify Profile" : "Activate Approval Workflow")}
                 </Button>
                 
                 {onSkip && !initialData && (
@@ -365,10 +357,10 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                         variant="ghost" 
                         onClick={onSkip} 
                         disabled={isSaving} 
-                        className="w-full h-10 font-bold text-muted-foreground hover:text-foreground text-xs"
+                        className="w-full h-10 font-bold text-muted-foreground hover:text-foreground text-[10px] uppercase tracking-wider"
                     >
                         <UserMinus className="mr-2 h-3.5 w-3.5" />
-                        Skip & continue as General Citizen
+                        Skip & proceed as General Citizen
                     </Button>
                 )}
             </div>

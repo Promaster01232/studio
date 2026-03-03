@@ -14,8 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Loader2, ShieldCheck, Scale } from "lucide-react";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -89,22 +88,22 @@ export default function CreateProfilePage() {
     
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
 
+    // CRITICAL: Profile is saved but Lawyer directory entry is handled by AdvocateProfileForm logic
     setDoc(userDocRef, userProfile)
         .then(() => {
-            // Save to RTDB with error handling to prevent PERMISSION_DENIED crash
             set(ref(rtdb, `users/${auth.currentUser!.uid}`), {
                 ...userProfile,
                 createdAt: Date.now()
             }).catch(err => {
-                console.warn("RTDB sync skipped. Profile saved to Firestore successfully.", err);
+                console.warn("RTDB sync issues handled silently.", err.message);
             });
             
             setShowAdvocateDialog(false);
             toast({
-              title: "Registration complete",
-              description: "Welcome to the Nyaya Sahayak community.",
+              title: "Application Received",
+              description: "Professional profile submitted. Access to Lawyer features is pending admin approval.",
             });
-            router.push("/dashboard/lawyer-connect");
+            router.push("/dashboard");
         })
         .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -123,6 +122,7 @@ export default function CreateProfilePage() {
     if (!pendingUserData || !auth.currentUser) return;
     
     setLoading(true);
+    // Explicitly downgrade to citizen if professional details are skipped
     const userProfile = {
       uid: auth.currentUser.uid,
       photoURL: auth.currentUser.photoURL || '',
@@ -142,8 +142,8 @@ export default function CreateProfilePage() {
 
             setShowAdvocateDialog(false);
             toast({
-              title: "Profile created",
-              description: "Registered as Citizen. You can complete advocate verification later.",
+              title: "Profile Created",
+              description: "Registered as Citizen. You can complete professional verification later in Profile.",
             });
             router.push("/dashboard");
         })
@@ -174,7 +174,7 @@ export default function CreateProfilePage() {
     setLoading(true);
 
     try {
-      // AI Validation
+      // AI Verification of personal details
       const validation = await validateUserDetails({
         firstName: data.firstName,
         lastName: data.lastName,
@@ -193,6 +193,7 @@ export default function CreateProfilePage() {
         return;
       }
 
+      // If user selected lawyer, trigger mandatory documentation flow
       if (data.userType === 'lawyer') {
           setPendingUserData(data);
           setShowAdvocateDialog(true);
@@ -215,11 +216,11 @@ export default function CreateProfilePage() {
                 ...userProfile,
                 createdAt: Date.now()
             }).catch(err => {
-                console.warn("RTDB sync issue:", err.message);
+                console.warn("RTDB registry issue:", err.message);
             });
 
             toast({
-                title: "Profile created",
+                title: "Profile active",
                 description: "Welcome to Nyaya Sahayak.",
             });
             router.push("/dashboard");
@@ -238,7 +239,7 @@ export default function CreateProfilePage() {
 
     } catch (error: any) {
         console.error("Validation error:", error);
-        toast({ variant: "destructive", title: "Error", description: "Could not validate details." });
+        toast({ variant: "destructive", title: "Error", description: "Could not validate registration details." });
         setLoading(false);
     }
   };
@@ -246,21 +247,24 @@ export default function CreateProfilePage() {
   if (authLoading) {
       return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
-            <Loader2 className="h-8 w-8 animate-spin" />
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       );
   }
 
   return (
     <>
-      <Card className="w-full max-w-lg">
-        <CardHeader>
-          <CardTitle>Create your profile</CardTitle>
-          <CardDescription>
-            Welcome! Just a few more details to get you started.
+      <Card className="w-full max-w-lg border-primary/5 shadow-2xl overflow-hidden rounded-2xl bg-card/40 backdrop-blur-md">
+        <CardHeader className="bg-primary/5 border-b border-primary/5 pb-6">
+          <div className="flex items-center gap-3 mb-2">
+            <Scale className="h-6 w-6 text-primary" />
+            <CardTitle className="font-headline font-black tracking-tighter">Onboarding</CardTitle>
+          </div>
+          <CardDescription className="font-medium">
+            Let's customize your experience based on your legal role.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-8">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-4">
@@ -269,9 +273,9 @@ export default function CreateProfilePage() {
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First name</FormLabel>
+                      <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">First name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Rajesh" {...field} />
+                        <Input placeholder="Rajesh" {...field} className="h-11 font-bold" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -282,9 +286,9 @@ export default function CreateProfilePage() {
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Last name</FormLabel>
+                      <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Last name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Kumar" {...field} />
+                        <Input placeholder="Kumar" {...field} className="h-11 font-bold" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -296,9 +300,9 @@ export default function CreateProfilePage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email address</FormLabel>
+                    <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Email address</FormLabel>
                     <FormControl>
-                      <Input placeholder="rajesh.k@example.com" {...field} disabled />
+                      <Input placeholder="rajesh.k@example.com" {...field} disabled className="h-11 font-bold opacity-50" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -310,9 +314,9 @@ export default function CreateProfilePage() {
                 name="mobileNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Mobile number</FormLabel>
+                    <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Mobile number</FormLabel>
                     <FormControl>
-                      <Input placeholder="+91 12345 67890" {...field} />
+                      <Input placeholder="+91 12345 67890" {...field} className="h-11 font-bold" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -324,20 +328,18 @@ export default function CreateProfilePage() {
                 name="userType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>I am a...</FormLabel>
-                    <Select onValueChange={(val) => {
-                        field.onChange(val);
-                    }} defaultValue={field.value}>
+                    <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Select Platform Role</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-11 font-bold">
                           <SelectValue placeholder="Select your role" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="citizen">Citizen</SelectItem>
-                        <SelectItem value="lawyer">Advocate</SelectItem>
-                        <SelectItem value="businessman">Business person</SelectItem>
-                        <SelectItem value="student">Law student</SelectItem>
+                        <SelectItem value="citizen" className="font-bold">Citizen</SelectItem>
+                        <SelectItem value="lawyer" className="font-bold">Legal Professional (Advocate)</SelectItem>
+                        <SelectItem value="businessman" className="font-bold">Business / MSME</SelectItem>
+                        <SelectItem value="student" className="font-bold">Law Student</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -345,8 +347,8 @@ export default function CreateProfilePage() {
                 )}
               />
 
-              <Button type="submit" disabled={loading} className="w-full">
-                {loading ? <Loader2 className="animate-spin" /> : (form.watch('userType') === 'lawyer' ? "Complete advocate setup" : "Save profile & continue")}
+              <Button type="submit" disabled={loading} className="w-full h-12 font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all">
+                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : (form.watch('userType') === 'lawyer' ? "Proceed to Credentials" : "Activate My Account")}
               </Button>
             </form>
           </Form>
@@ -354,26 +356,33 @@ export default function CreateProfilePage() {
       </Card>
 
       <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
-          setShowAdvocateDialog(open);
+          // If they close the dialog, trigger automatic downgrade to citizen
           if (!open && pendingUserData) {
               handleSkipAdvocate();
           }
       }}>
-          <DialogContent className="sm:max-w-2xl">
-              <DialogHeader>
-                    <DialogTitle>Complete advocate profile</DialogTitle>
-                    <DialogDescription>Provide your professional details to be listed on Lawyer Connect. If you skip, you will be categorized as a Citizen.</DialogDescription>
-              </DialogHeader>
-              <AdvocateProfileForm 
-                onSave={handleAdvocateProfileSaved}
-                onSkip={handleSkipAdvocate}
-                userProfile={{
-                    firstName: pendingUserData?.firstName || form.getValues('firstName'),
-                    lastName: pendingUserData?.lastName || form.getValues('lastName'),
-                    email: pendingUserData?.email || form.getValues('email'),
-                    photoURL: auth.currentUser?.photoURL || ''
-                }}
-              />
+          <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-2xl">
+              <div className="bg-primary/5 p-6 border-b border-primary/5">
+                <div className="flex items-center gap-3 mb-2">
+                    <ShieldCheck className="h-6 w-6 text-primary" />
+                    <DialogTitle className="font-headline font-black text-xl tracking-tight">Professional Credentials</DialogTitle>
+                </div>
+                <DialogDescription className="font-medium text-xs">
+                    Legal professionals must submit Bar ID and certificates for manual administrative approval. Failure to submit will result in a standard Citizen profile.
+                </DialogDescription>
+              </div>
+              <div className="p-6">
+                <AdvocateProfileForm 
+                    onSave={handleAdvocateProfileSaved}
+                    onSkip={handleSkipAdvocate}
+                    userProfile={{
+                        firstName: pendingUserData?.firstName || form.getValues('firstName'),
+                        lastName: pendingUserData?.lastName || form.getValues('lastName'),
+                        email: pendingUserData?.email || form.getValues('email'),
+                        photoURL: auth.currentUser?.photoURL || ''
+                    }}
+                />
+              </div>
           </DialogContent>
       </Dialog>
     </>

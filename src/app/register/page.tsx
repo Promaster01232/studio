@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff, Scale, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/logo";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -108,20 +108,19 @@ export default function RegisterPage() {
       // Save to Firestore
       await setDoc(doc(firestore, "users", user.uid), userProfile);
       
-      // Save to RTDB with error handling to prevent PERMISSION_DENIED crash
+      // Sync to RTDB
       set(ref(rtdb, `users/${user.uid}`), {
           ...userProfile,
-          createdAt: Date.now() // RTDB uses number timestamps
-      }).catch(err => {
-          console.warn("RTDB sync skipped due to permissions. Profile saved to Firestore successfully.", err);
-      });
+          createdAt: Date.now()
+      }).catch(err => console.warn("RTDB sync skipped.", err.message));
 
+      // MANDATORY: If lawyer, enforce professional setup before proceeding
       if (userType === 'lawyer') {
           setShowAdvocateDialog(true);
       } else {
         toast({
-            title: "Account created",
-            description: "Welcome to Nyaya Sahayak. Your legal journey starts here.",
+            title: "Welcome aboard",
+            description: "Your account is active. Explore our legal tools.",
         });
         router.push("/dashboard");
       }
@@ -129,11 +128,9 @@ export default function RegisterPage() {
     } catch (error: any) {
       let errorMessage = "An unknown error occurred. Please try again.";
       if (error.code === 'auth/email-already-in-use') {
-          errorMessage = "This email address is already registered. Please login instead.";
+          errorMessage = "This email address is already registered.";
       } else if (error.code === 'auth/weak-password') {
-          errorMessage = "The password is too weak. Please use at least 6 characters.";
-      } else if (error.code === 'auth/invalid-email') {
-          errorMessage = "The email address provided is invalid.";
+          errorMessage = "The password is too weak.";
       }
 
       toast({
@@ -149,10 +146,10 @@ export default function RegisterPage() {
     setShowAdvocateDialog(false);
     setLoading(false);
     toast({
-        title: "Registration complete",
-        description: "Your advocate profile has been created and verified. Welcome aboard!",
+        title: "Submission complete",
+        description: "Your professional details are awaiting manual admin approval. Your profile is currently inactive.",
     });
-    router.push('/dashboard/lawyer-connect');
+    router.push('/dashboard');
   };
 
   const handleSkipAdvocate = async () => {
@@ -160,7 +157,7 @@ export default function RegisterPage() {
     
     setLoading(true);
     const user = auth.currentUser;
-    // Downgrade to citizen if documentation is skipped
+    // Downgrade to citizen if professional setup is skipped
     try {
         await updateDoc(doc(firestore, "users", user.uid), { userType: 'citizen' });
         await update(ref(rtdb, `users/${user.uid}`), { userType: 'citizen' }).catch(e => {});
@@ -168,8 +165,8 @@ export default function RegisterPage() {
         setShowAdvocateDialog(false);
         setLoading(false);
         toast({
-            title: "Account configured",
-            description: "You have been registered as a Citizen. Complete your advocate setup later in Profile.",
+            title: "Citizen Profile Activated",
+            description: "Professional setup skipped. You have been registered as a Citizen.",
         });
         router.push("/dashboard");
     } catch (err) {
@@ -203,7 +200,7 @@ export default function RegisterPage() {
 
   return (
     <>
-        <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl">
+        <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl border-primary/5 rounded-2xl">
         <motion.div 
             className="p-8 sm:p-12 flex flex-col justify-center"
             variants={containerVariants}
@@ -216,24 +213,24 @@ export default function RegisterPage() {
                     Nyaya Sahayak
                 </h1>
             </motion.div>
-            <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Create account</motion.h2>
+            <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Join the community</motion.h2>
             <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
-            Join the community of legal professionals and citizens.
+            Select your role to unlock specialized legal tools.
             </motion.p>
             <CardContent className="p-0">
                 <motion.div variants={itemVariants} className="grid gap-4">
                 <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                    <Label htmlFor="first-name" className="font-bold opacity-70">First name</Label>
-                    <Input id="first-name" placeholder="Max" required value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} className="font-bold" />
+                    <Label htmlFor="first-name" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">First name</Label>
+                    <Input id="first-name" placeholder="Rajesh" required value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} className="h-11 font-bold" />
                     </div>
                     <div className="grid gap-2">
-                    <Label htmlFor="last-name" className="font-bold opacity-70">Last name</Label>
-                    <Input id="last-name" placeholder="Robinson" required value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} className="font-bold" />
+                    <Label htmlFor="last-name" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Last name</Label>
+                    <Input id="last-name" placeholder="Kumar" required value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} className="h-11 font-bold" />
                     </div>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="email" className="font-bold opacity-70">Email address</Label>
+                    <Label htmlFor="email" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Email address</Label>
                     <Input
                     id="email"
                     type="email"
@@ -242,39 +239,39 @@ export default function RegisterPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={loading}
-                    className="font-bold"
+                    className="h-11 font-bold"
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="mobile-number" className="font-bold opacity-70">Mobile number</Label>
+                    <Label htmlFor="mobile-number" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Mobile number</Label>
                     <Input
                     id="mobile-number"
                     type="tel"
-                    placeholder="Your mobile number"
+                    placeholder="+91 12345 67890"
                     required
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
                     disabled={loading}
-                    className="font-bold"
+                    className="h-11 font-bold"
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="userType" className="font-bold opacity-70">I am a...</Label>
+                    <Label htmlFor="userType" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">I am registering as a...</Label>
                     <Select value={userType} onValueChange={setUserType} disabled={loading}>
-                        <SelectTrigger id="userType" className="font-bold">
+                        <SelectTrigger id="userType" className="h-11 font-bold">
                             <SelectValue placeholder="Select your role" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="citizen" className="font-bold">Citizen</SelectItem>
-                            <SelectItem value="lawyer" className="font-bold">Advocate</SelectItem>
-                            <SelectItem value="businessman" className="font-bold">Business person</SelectItem>
-                            <SelectItem value="student" className="font-bold">Law student</SelectItem>
+                            <SelectItem value="citizen" className="font-bold">General Citizen</SelectItem>
+                            <SelectItem value="lawyer" className="font-bold">Legal Professional (Advocate)</SelectItem>
+                            <SelectItem value="businessman" className="font-bold">Business Owner / MSME</SelectItem>
+                            <SelectItem value="student" className="font-bold">Law Student</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                        <Label htmlFor="password" title="password" className="font-bold opacity-70">Password</Label>
+                        <Label htmlFor="password" title="password" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Password</Label>
                         <div className="relative">
                             <Input 
                                 id="password" 
@@ -283,7 +280,7 @@ export default function RegisterPage() {
                                 value={password} 
                                 onChange={(e) => setPassword(e.target.value)} 
                                 disabled={loading} 
-                                className="font-bold pr-10" 
+                                className="h-11 font-bold pr-10" 
                             />
                             <button
                                 type="button"
@@ -295,7 +292,7 @@ export default function RegisterPage() {
                         </div>
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="confirm-password" title="confirm-password" className="font-bold opacity-70">Confirm</Label>
+                        <Label htmlFor="confirm-password" title="confirm-password" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Confirm</Label>
                         <div className="relative">
                             <Input 
                                 id="confirm-password" 
@@ -304,7 +301,7 @@ export default function RegisterPage() {
                                 value={confirmPassword} 
                                 onChange={(e) => setConfirmPassword(e.target.value)} 
                                 disabled={loading} 
-                                className="font-bold pr-10" 
+                                className="h-11 font-bold pr-10" 
                             />
                             <button
                                 type="button"
@@ -316,14 +313,14 @@ export default function RegisterPage() {
                         </div>
                     </div>
                 </div>
-                <Button type="submit" className="w-full h-11 font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all" onClick={handleRegister} disabled={loading}>
-                    {loading ? <Loader2 className="animate-spin" /> : "Create account"}
+                <Button type="submit" className="w-full h-12 font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all mt-4" onClick={handleRegister} disabled={loading}>
+                    {loading ? <Loader2 className="animate-spin h-5 w-5" /> : "Complete Registration"}
                 </Button>
                 </motion.div>
-                <motion.div variants={itemVariants} className="mt-4 text-center text-sm font-medium">
+                <motion.div variants={itemVariants} className="mt-6 text-center text-sm font-medium">
                 Already have an account?{" "}
                 <Link href="/login" className="font-bold text-primary hover:underline">
-                    Sign in
+                    Sign in here
                 </Link>
                 </motion.div>
             </CardContent>
@@ -344,28 +341,33 @@ export default function RegisterPage() {
         </Card>
 
         <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
-            setShowAdvocateDialog(open);
+            // Mandatory documentation check
             if (!open) {
                 handleSkipAdvocate();
             }
         }}>
-            <DialogContent className="sm:max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
-                <DialogHeader>
-                    <DialogTitle className="font-black tracking-tight">Complete advocate profile</DialogTitle>
-                    <DialogDescription className="font-medium">
-                        As an Advocate, you must provide your professional details to be listed. If you skip, you will be registered as a Citizen.
+            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
+                <div className="bg-primary/5 p-6 border-b border-primary/5">
+                    <div className="flex items-center gap-3 mb-2">
+                        <ShieldCheck className="h-6 w-6 text-primary" />
+                        <DialogTitle className="font-headline font-black text-xl tracking-tight leading-none">Professional Onboarding</DialogTitle>
+                    </div>
+                    <DialogDescription className="font-medium text-[11px] leading-relaxed">
+                        To activate your Lawyer profile, you must provide your professional details. All submissions require manual admin approval before appearing in the directory.
                     </DialogDescription>
-                </DialogHeader>
-                <AdvocateProfileForm 
-                    onSave={handleAdvocateProfileSaved}
-                    onSkip={handleSkipAdvocate}
-                    userProfile={{
-                        firstName,
-                        lastName,
-                        email,
-                        photoURL: auth.currentUser?.photoURL || ''
-                    }}
-                />
+                </div>
+                <div className="p-6">
+                    <AdvocateProfileForm 
+                        onSave={handleAdvocateProfileSaved}
+                        onSkip={handleSkipAdvocate}
+                        userProfile={{
+                            firstName,
+                            lastName,
+                            email,
+                            photoURL: auth.currentUser?.photoURL || ''
+                        }}
+                    />
+                </div>
             </DialogContent>
         </Dialog>
     </>
