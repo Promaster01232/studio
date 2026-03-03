@@ -12,12 +12,13 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
     
-    // Robust admin check: priority email check followed by document flag check
+    // Robust admin check: checks auth token email, document email field, and isAdmin flag
     function isAdmin() {
       return isAuthenticated() && (
         request.auth.token.email == 'enterspaceindia@gmail.com' || 
         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true)
+         (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true ||
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.email == 'enterspaceindia@gmail.com'))
       );
     }
 

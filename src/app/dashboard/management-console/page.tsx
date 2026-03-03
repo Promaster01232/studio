@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { ref, update } from "firebase/database";
-import { Users, ShieldCheck, Loader2, Search, Filter, Ban, UserCheck, Gavel, BadgeCheck } from "lucide-react";
+import { Users, ShieldCheck, Loader2, Search, Ban, UserCheck, AlertTriangle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -85,6 +85,7 @@ export default function ManagementConsolePage() {
     const newBlockedStatus = !user.isBlocked;
     const userRef = doc(firestore, "users", user.uid);
     
+    // Initiate non-blocking Firestore update
     updateDoc(userRef, { isBlocked: newBlockedStatus })
         .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -95,6 +96,7 @@ export default function ManagementConsolePage() {
             errorEmitter.emit('permission-error', permissionError);
         });
 
+    // Synchronize status to RTDB for live directory logic
     update(ref(rtdb, `users/${user.uid}`), { isBlocked: newBlockedStatus }).catch(e => {});
     if (user.userType === 'lawyer') {
         update(ref(rtdb, `advocates/${user.uid}`), { isBlocked: newBlockedStatus }).catch(e => {});
