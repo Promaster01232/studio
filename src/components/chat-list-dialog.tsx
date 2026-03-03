@@ -10,23 +10,37 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { MessageSquare, Search } from "lucide-react";
+import { MessageSquare, Search, ShieldCheck } from "lucide-react";
 import { ReactNode, useState, useEffect } from "react";
-import { getAdvocates, type Lawyer } from "@/lib/advocates-data";
+import { type Lawyer } from "@/lib/advocates-data";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { ScrollArea } from "./ui/scroll-area";
 import { Input } from "./ui/input";
+import { useDatabase } from "@/firebase";
+import { ref, onValue } from "firebase/database";
 
 export function ChatListDialog({ children }: { children: ReactNode }) {
+  const rtdb = useDatabase();
   const [advocates, setAdvocates] = useState<Lawyer[]>([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    // In a real app, this would be a real-time listener
-    // For now we fetch from our local directory
-    setAdvocates(getAdvocates());
-  }, []);
+    const advocatesRef = ref(rtdb, "advocates");
+    
+    // Only show approved and verified advocates in the chat selection
+    const unsubscribe = onValue(advocatesRef, (snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            const list = Object.values(data) as Lawyer[];
+            setAdvocates(list.filter(adv => adv.isApproved === true));
+        } else {
+            setAdvocates([]);
+        }
+    });
+
+    return () => unsubscribe();
+  }, [rtdb]);
 
   const filtered = advocates.filter(a => 
     a.name.toLowerCase().includes(search.toLowerCase()) || 
@@ -38,56 +52,63 @@ export function ChatListDialog({ children }: { children: ReactNode }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-primary" />
-            Connect & Chat
-          </DialogTitle>
-          <DialogDescription>
-            Select an advocate from your directory to start a conversation.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <div className="relative my-2">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-                placeholder="Search by name or specialty..." 
-                className="pl-9" 
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-2xl">
+        <div className="bg-primary/5 p-6 border-b border-primary/5">
+            <DialogHeader className="p-0 border-none mb-0">
+                <div className="flex items-center gap-3 mb-1">
+                    <MessageSquare className="h-5 w-5 text-primary" />
+                    <DialogTitle className="font-headline font-black text-xl tracking-tight">Verified Professionals</DialogTitle>
+                </div>
+                <DialogDescription className="font-medium text-xs">
+                    Start a secure consultation with approved legal experts.
+                </DialogDescription>
+            </DialogHeader>
         </div>
-
-        <ScrollArea className="h-[400px] mt-2 pr-4">
-            <div className="space-y-3">
-                {filtered.length > 0 ? filtered.map((advocate) => (
-                    <div key={advocate.id} className="flex items-center gap-4 p-3 rounded-xl border bg-card hover:shadow-md transition-all">
-                        <Avatar className="h-10 w-10 border border-primary/10">
-                            {advocate.image && <AvatarImage src={advocate.image.imageUrl} alt={advocate.name} />}
-                            <AvatarFallback>{advocate.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold truncate">{advocate.name}</p>
-                            <p className="text-[10px] uppercase tracking-wider text-primary font-medium truncate">{advocate.specialty}</p>
-                        </div>
-                        <Button size="sm" variant="secondary" asChild className="rounded-full px-4">
-                            <Link href={`/dashboard/lawyer-connect/${advocate.id}/chat`}>
-                                Chat
-                            </Link>
-                        </Button>
-                    </div>
-                )) : (
-                    <div className="text-center py-20 bg-muted/20 rounded-xl border border-dashed">
-                        <Search className="h-10 w-10 text-muted-foreground mx-auto mb-2 opacity-20" />
-                        <p className="text-sm text-muted-foreground">No advocates found matching your search.</p>
-                    </div>
-                )}
+        
+        <div className="p-4">
+            <div className="relative mb-4 group">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                <Input 
+                    placeholder="Search by name or specialty..." 
+                    className="pl-9 h-11 border-primary/10 rounded-xl bg-background/50 font-bold text-sm" 
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
             </div>
-        </ScrollArea>
-        <div className="pt-4 border-t text-center">
-            <Button variant="link" className="text-xs" asChild>
-                <Link href="/dashboard/lawyer-connect">View Full Directory</Link>
+
+            <ScrollArea className="h-[350px] pr-2">
+                <div className="space-y-3">
+                    {filtered.length > 0 ? filtered.map((advocate) => (
+                        <div key={advocate.uid || advocate.id} className="flex items-center gap-4 p-3 rounded-xl border border-primary/5 bg-card hover:bg-primary/5 hover:border-primary/20 transition-all group">
+                            <Avatar className="h-12 w-12 border-2 border-background shadow-md group-hover:scale-105 transition-transform">
+                                {advocate.image && <AvatarImage src={advocate.image.imageUrl} alt={advocate.name} className="object-cover" />}
+                                <AvatarFallback className="font-black bg-primary/10 text-primary">{advocate.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-black truncate tracking-tight">{advocate.name}</p>
+                                <div className="flex items-center gap-1">
+                                    <span className="text-[9px] uppercase tracking-widest text-primary font-black truncate">{advocate.specialty}</span>
+                                    <ShieldCheck className="h-2.5 w-2.5 text-blue-500 shrink-0" />
+                                </div>
+                            </div>
+                            <Button size="sm" variant="outline" asChild className="rounded-xl h-9 px-4 font-bold border-primary/10 hover:bg-primary hover:text-white shadow-sm transition-all active:scale-95">
+                                <Link href={`/dashboard/lawyer-connect/${advocate.uid || advocate.id}/chat`}>
+                                    Chat
+                                </Link>
+                            </Button>
+                        </div>
+                    )) : (
+                        <div className="text-center py-16 bg-muted/10 rounded-2xl border border-dashed border-primary/10 mx-1">
+                            <Search className="h-10 w-10 text-muted-foreground mx-auto mb-2 opacity-20" />
+                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">No verified advocates found.</p>
+                        </div>
+                    )}
+                </div>
+            </ScrollArea>
+        </div>
+        <div className="p-4 border-t bg-muted/5 text-center">
+            <Button variant="link" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors" asChild>
+                <Link href="/dashboard/lawyer-connect">Explore Full Registry</Link>
             </Button>
         </div>
       </DialogContent>

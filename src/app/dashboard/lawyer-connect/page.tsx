@@ -23,13 +23,13 @@ export default function LawyerConnectPage() {
   useEffect(() => {
     const advocatesRef = ref(rtdb, "advocates");
     
-    // Fetch live from RTDB to respect Admin Approvals and Blocks
     const unsubscribe = onValue(advocatesRef, (snapshot) => {
         if (snapshot.exists()) {
             const data = snapshot.val();
             const list = Object.values(data) as Lawyer[];
             
             // CRITICAL: Filter for Approved AND Not Blocked professionals
+            // Unapproved profiles are never visible to the public.
             const approvedList = list.filter(adv => 
                 adv.isApproved === true && 
                 adv.isBlocked !== true
@@ -215,8 +215,8 @@ export default function LawyerConnectPage() {
                     <div className="bg-primary/5 p-6 rounded-full w-fit mx-auto mb-4">
                         <Search className="h-10 w-10 text-muted-foreground opacity-20" />
                     </div>
-                    <h3 className="text-lg font-black font-headline tracking-tighter">No professionals found</h3>
-                    <p className="text-muted-foreground max-w-[200px] mx-auto mt-2 text-[10px] font-medium leading-relaxed">Verified advocates appear here after manual administrative approval.</p>
+                    <h3 className="text-lg font-black font-headline tracking-tighter">No verified professionals found</h3>
+                    <p className="text-muted-foreground max-w-[200px] mx-auto mt-2 text-[10px] font-medium leading-relaxed">Advocates only appear here after their Bar credentials have been manually verified by the Admin.</p>
                 </motion.div>
             )}
         </AnimatePresence>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -200,8 +201,8 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
                                 <Gavel className="h-5 w-5" />
                             </div>
                             <div className="text-left">
-                                <DialogTitle className="font-headline font-black text-xl tracking-tight">Manual Verification: {adv.name}</DialogTitle>
-                                <DialogDescription className="text-xs font-medium text-muted-foreground">Inspect certificate for 100% accuracy.</DialogDescription>
+                                <DialogTitle className="font-headline font-black text-xl tracking-tight">Professional Manual Audit: {adv.name}</DialogTitle>
+                                <DialogDescription className="text-xs font-medium text-muted-foreground">Inspect certificate for 100% authenticity before activation.</DialogDescription>
                             </div>
                         </div>
                     </DialogHeader>
@@ -238,7 +239,7 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
 
                         <div className="space-y-3">
                             <h4 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2">
-                                <FileText className="h-3.5 w-3.5" /> Official Certificate Attachment
+                                <FileText className="h-3.5 w-3.5" /> Bar Council Certificate Attachment
                             </h4>
                             {adv.certificateDataUri ? (
                                 <div className="relative group aspect-auto min-h-[300px] bg-black/5 rounded-2xl overflow-hidden border-2 border-dashed border-primary/20">
@@ -251,7 +252,7 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
                                     />
                                     <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none flex items-center justify-center">
                                         <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-2xl border border-primary/20 scale-95 group-hover:scale-100 transition-transform">
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">Manual Document Review</p>
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">Manual Audit Required</p>
                                         </div>
                                     </div>
                                 </div>
@@ -265,7 +266,7 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
 
                         {adv.about && (
                             <div className="space-y-2">
-                                <h4 className="text-[10px] font-black text-primary uppercase tracking-widest">Professional Dossier</h4>
+                                <h4 className="text-[10px] font-black text-primary uppercase tracking-widest">Professional Bio</h4>
                                 <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
                                     <p className="text-xs leading-relaxed font-medium text-foreground/80 whitespace-pre-line">
                                         {adv.about}
@@ -286,7 +287,7 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
                                 disabled={isProcessing}
                             >
                                 {isProcessing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ShieldCheck className="h-4 w-4 mr-2" />}
-                                Verify & Activate Pro
+                                Verify & Activate Listing
                             </Button>
                         )}
                     </div>
@@ -328,7 +329,7 @@ export default function ManagementConsolePage() {
             return;
         }
 
-        // Setup User Listener with robust error handling for list operation
+        // Setup User Listener
         const usersCol = collection(firestore, "users");
         const unsubUsers = onSnapshot(usersCol, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
@@ -348,7 +349,7 @@ export default function ManagementConsolePage() {
             setLoading(false);
         });
 
-        // Setup Advocate Listener from RTDB for higher accuracy in manual checks
+        // Setup Advocate Listener from RTDB for manual review queue
         const advocatesRef = ref(rtdb, "advocates");
         const unsubAdvocates = onValue(advocatesRef, (snapshot) => {
             if (snapshot.exists()) {
@@ -395,7 +396,7 @@ export default function ManagementConsolePage() {
 
   const handleVerifyUser = async (user: UserRecord) => {
       setProcessingUid(user.uid);
-      toast({ title: "AI Verification Started", description: "Verifying email and identity authenticity..." });
+      toast({ title: "AI Forensic Analysis", description: "Verifying identity authenticity..." });
 
       try {
           const verification = await verifyEmailAuthenticity({
@@ -446,10 +447,8 @@ export default function ManagementConsolePage() {
 
     setProcessingUid(user.uid);
     const userRef = doc(firestore, "users", user.uid);
-    const advRef = doc(firestore, "advocates", user.uid);
-
+    
     deleteDoc(userRef).catch(() => {});
-    deleteDoc(advRef).catch(() => {});
     
     // Also remove from RTDB
     remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
@@ -474,9 +473,9 @@ export default function ManagementConsolePage() {
               isBlocked: false 
           });
           
-          toast({ title: "Professional Identity Manually Activated" });
+          toast({ title: "Professional Profile Activated Publicly" });
       } catch (error: any) {
-          toast({ variant: "destructive", title: "Manual Activation Failed" });
+          toast({ variant: "destructive", title: "Activation Failed" });
       } finally {
           setProcessingUid(null);
       }
@@ -502,14 +501,14 @@ export default function ManagementConsolePage() {
     <div className="max-w-7xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8 pb-12 bg-white min-h-full">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-headline text-[#1a1a1a]">Forensic Registry Console</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground font-medium">Absolute authority over platform enrollment and manual certificate audits.</p>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-headline text-[#1a1a1a]">System Registry Console</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium">Platform enrollment oversight and manual professional certificate audits.</p>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
             <Button variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-white hover:bg-primary/5 transition-all shadow-sm">
                 <Sparkles className="mr-2 h-4 w-4 text-primary" />
-                <span className="text-[10px] uppercase tracking-wider">Integrity Audit</span>
+                <span className="text-[10px] uppercase tracking-wider">Identity Audit</span>
             </Button>
             <Button className="bg-primary text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all">
                 <UserPlus className="mr-2 h-4 w-4" />
@@ -557,13 +556,13 @@ export default function ManagementConsolePage() {
           </Card>
           <Card className="border-primary/5 shadow-sm bg-amber-50/30">
               <CardHeader className="p-3 sm:p-4 pb-1 text-left">
-                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-amber-600 truncate">Pending Jach</CardDescription>
+                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-amber-600 truncate">Pending Audit</CardDescription>
                   <CardTitle className="text-xl sm:text-2xl font-black text-amber-700">{stats.suspicious}</CardTitle>
               </CardHeader>
               <CardContent className="p-3 sm:p-4 pt-0">
                   <div className="flex items-center gap-1.5 text-amber-600">
                       <ShieldAlert className="h-3 w-3" />
-                      <span className="text-[8px] sm:text-[9px] font-bold">Manual Inspection</span>
+                      <span className="text-[8px] sm:text-[9px] font-bold">Manual Review</span>
                   </div>
               </CardContent>
           </Card>
@@ -572,9 +571,9 @@ export default function ManagementConsolePage() {
       <Tabs defaultValue="registry" className="space-y-6">
         <div className="overflow-x-auto pb-1">
             <TabsList className="bg-muted/30 p-1 rounded-xl border border-primary/5 inline-flex min-w-full sm:min-w-0">
-                <TabsTrigger value="registry" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs">Identity Registry</TabsTrigger>
+                <TabsTrigger value="registry" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs">Member Registry</TabsTrigger>
                 <TabsTrigger value="advocates" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs flex gap-2 items-center">
-                    Manual Advocate Review
+                    Professional Approval Queue
                     {advocates.filter(a => !a.isApproved).length > 0 && <span className="bg-primary text-white h-4 px-1.5 rounded-full text-[9px] font-black">{advocates.filter(a => !a.isApproved).length}</span>}
                 </TabsTrigger>
             </TabsList>
@@ -585,8 +584,8 @@ export default function ManagementConsolePage() {
                 <CardHeader className="bg-muted/5 border-b border-primary/5 px-4 sm:px-6 py-6 text-left">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <CardTitle className="font-headline font-black text-xl tracking-tight">Member Registry</CardTitle>
-                            <CardDescription className="text-[10px] sm:text-xs font-medium">Real-time inspection of all platform identities.</CardDescription>
+                            <CardTitle className="font-headline font-black text-xl tracking-tight">Identity Registry</CardTitle>
+                            <CardDescription className="text-[10px] sm:text-xs font-medium">Real-time inspection of all enrolled platform accounts.</CardDescription>
                         </div>
                         <div className="relative group w-full md:w-80">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -645,7 +644,7 @@ export default function ManagementConsolePage() {
                                                         disabled={processingUid === user.uid}
                                                     >
                                                         {processingUid === user.uid ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : <ShieldCheck className="h-2.5 w-2.5 mr-1" />}
-                                                        Run AI Verify
+                                                        Click to Verify
                                                     </Button>
                                                 </div>
                                             )}
@@ -659,15 +658,15 @@ export default function ManagementConsolePage() {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl border border-primary/5 bg-white">
-                                                        <DropdownMenuLabel className="font-black text-[9px] uppercase tracking-widest opacity-50 px-3 py-2">Account Control</DropdownMenuLabel>
+                                                        <DropdownMenuLabel className="font-black text-[9px] uppercase tracking-widest opacity-50 px-3 py-2">Registry Control</DropdownMenuLabel>
                                                         
                                                         <UserDetailsModal user={user} trigger={
                                                             <button className="flex w-full cursor-default select-none items-center rounded-lg px-3 py-2.5 text-xs font-bold outline-none transition-colors hover:bg-muted active:bg-muted/80 text-left">
-                                                                <Eye className="mr-3 h-4 w-4 text-muted-foreground" /> View Dossier
+                                                                <Eye className="mr-3 h-4 w-4 text-muted-foreground" /> View Profile
                                                             </button>
                                                         } />
                                                         
-                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Official Message</DropdownMenuItem>
+                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Send Message</DropdownMenuItem>
                                                         
                                                         {user.email !== ADMIN_EMAIL && (
                                                             <>
@@ -698,7 +697,7 @@ export default function ManagementConsolePage() {
                                     </TableRow>
                                 )) : (
                                     <TableRow>
-                                        <TableCell colSpan={4} className="h-32 text-center text-muted-foreground font-bold">No records found matching your scan.</TableCell>
+                                        <TableCell colSpan={4} className="h-32 text-center text-muted-foreground font-bold">No identity records found.</TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -730,9 +729,9 @@ export default function ManagementConsolePage() {
                                     </div>
                                     <div className="flex flex-col items-end gap-1.5">
                                         {adv.isApproved || user?.email === ADMIN_EMAIL ? (
-                                            <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md">Verified Pro</Badge>
+                                            <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md">Verified & Public</Badge>
                                         ) : (
-                                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Awaiting Manual Audit</Badge>
+                                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Pending Manual Review</Badge>
                                         )}
                                         {user?.isBlocked && (
                                             <Badge className="bg-red-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md shadow-sm">Suspended</Badge>
@@ -773,8 +772,8 @@ export default function ManagementConsolePage() {
                         <div className="h-20 w-20 bg-white rounded-2xl shadow-xl mx-auto mb-8 flex items-center justify-center text-primary/20 border border-primary/5">
                             <Gavel className="h-10 w-10" />
                         </div>
-                        <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Clear</h3>
-                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed">No professional applications awaiting manual audit at this time.</p>
+                        <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Empty</h3>
+                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed">No new professional applications awaiting manual audit.</p>
                     </div>
                 )}
             </div>
