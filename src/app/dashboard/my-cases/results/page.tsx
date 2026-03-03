@@ -1,4 +1,5 @@
-import React, { Suspense, use } from 'react';
+
+import React, { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FileText, Calendar, Gavel, User, Users, Search, ExternalLink } from "lucide-react";
@@ -63,10 +64,9 @@ const SearchResultsSkeleton = () => (
     </div>
 );
 
-async function SearchResultsComponent({ searchParamsPromise }: { searchParamsPromise: Promise<SearchParams> }) {
-  const searchParams = await searchParamsPromise;
-  const cnr = searchParams.cnr || '';
-  const caseDetails = await searchEcourts({ cnr: cnr as string });
+async function SearchResultsComponent({ searchParams }: { searchParams: SearchParams }) {
+  const cnr = (searchParams.cnr as string) || '';
+  const caseDetails = await searchEcourts({ cnr });
   
   await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -195,7 +195,7 @@ async function SearchResultsComponent({ searchParamsPromise }: { searchParamsPro
             </div>
             <h3 className="mt-6 text-xl font-semibold">No Matching Case Found</h3>
             <p className="mt-2 text-muted-foreground max-w-md mx-auto">
-              The AI search simulation did not find a match for your query. For this demo, please try CNR number <code className="font-mono bg-primary/10 p-1 rounded-sm">MHHC010012342023</code> to see a sample report.
+              The search did not find a match for your query. For this demo, please try CNR number <code className="font-mono bg-primary/10 p-1 rounded-sm">MHHC010012342023</code> to see a sample report.
             </p>
             <p className="mt-4 text-muted-foreground max-w-md mx-auto">
               To perform a live search, you can visit the official eCourts services website.
@@ -214,10 +214,11 @@ async function SearchResultsComponent({ searchParamsPromise }: { searchParamsPro
 }
 
 
-export default function SearchResultsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+export default async function SearchResultsPage(props: { searchParams: Promise<SearchParams> }) {
+    const searchParams = await props.searchParams;
     return (
         <Suspense fallback={<SearchResultsSkeleton />}>
-            <SearchResultsComponent searchParamsPromise={searchParams} />
+            <SearchResultsComponent searchParams={searchParams} />
         </Suspense>
     );
 }

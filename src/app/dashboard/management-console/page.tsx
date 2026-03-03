@@ -39,7 +39,8 @@ import {
   Calendar,
   Phone,
   ShieldHalf,
-  Info
+  Info,
+  MapPin
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -114,7 +115,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                                 {user.securityStatus === 'verified' && <BadgeCheck className="h-6 w-6 text-primary" />}
                             </div>
                             <DialogDescription className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                                <ShieldCheck className="h-4 w-4 text-primary" /> {user.userType} Registry
+                                <ShieldCheck className="h-4 w-4 text-primary" /> {user.userType} Registry Profile
                             </DialogDescription>
                         </div>
                     </div>
@@ -152,7 +153,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                                     ) : user.securityStatus === 'verified' ? (
                                         <Badge className="bg-green-500 text-white font-black text-[9px] uppercase tracking-wider">Identity Confirmed</Badge>
                                     ) : (
-                                        <Badge variant="secondary" className="font-black text-[9px] uppercase tracking-wider opacity-60">Pending Jach</Badge>
+                                        <Badge variant="secondary" className="font-black text-[9px] uppercase tracking-wider opacity-60">Pending Inspection</Badge>
                                     )}
                                 </div>
                             </div>
@@ -180,7 +181,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                                         </div>
                                         <div>
                                             <p className="text-xs font-black text-[#1a1a1a]">Legal Tool Access</p>
-                                            <p className="text-[10px] font-bold text-muted-foreground">Standard citizen package enabled</p>
+                                            <p className="text-[10px] font-bold text-muted-foreground">Standard package enabled</p>
                                         </div>
                                     </div>
                                     <div className="h-2.5 w-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
@@ -205,7 +206,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     <DialogTrigger asChild>
                         <Button variant="outline" className="rounded-xl h-12 px-8 font-black text-xs uppercase tracking-widest border-2 border-primary/10">Close Dossier</Button>
                     </DialogTrigger>
-                    <Button className="rounded-xl h-12 px-8 font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20">Send Direct Message</Button>
+                    <Button className="rounded-xl h-12 px-8 font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20">Send Message</Button>
                 </div>
             </DialogContent>
         </Dialog>
@@ -293,6 +294,27 @@ export default function ManagementConsolePage() {
     }
   };
 
+  const handleDeleteUser = async (user: UserRecord) => {
+    if (user.email === 'enterspaceindia@gmail.com') {
+        toast({ variant: "destructive", title: "Cannot delete super admin" });
+        return;
+    }
+    
+    if (!window.confirm(`Permanently delete account for ${user.firstName} ${user.lastName}? This action cannot be undone.`)) return;
+
+    setProcessingUid(user.uid);
+    try {
+        await deleteDoc(doc(firestore, "users", user.uid));
+        await remove(ref(rtdb, `users/${user.uid}`));
+        await remove(ref(rtdb, `advocates/${user.uid}`));
+        toast({ title: "Account Deleted", description: "Registry cleaned successfully." });
+    } catch (error: any) {
+        toast({ variant: "destructive", title: "Delete Failed", description: error.message });
+    } finally {
+        setProcessingUid(null);
+    }
+  };
+
   const approveAdvocate = async (adv: AdvocateRecord) => {
       setProcessingUid(adv.uid);
       try {
@@ -338,13 +360,13 @@ export default function ManagementConsolePage() {
 
       setIsAuditing(false);
       setAuditProgress("");
-      toast({ title: "Audit Complete", description: `Detected ${flagged} incorrect entries.` });
+      toast({ title: "Audit Complete", description: `Detected ${flagged} suspicious entries.` });
   };
 
   const purgeIncorrectData = async () => {
       const suspicious = users.filter(u => u.securityStatus === 'suspicious');
       if (suspicious.length === 0) {
-          toast({ title: "Registry Clean", description: "No incorrect data found." });
+          toast({ title: "Registry Clean", description: "No suspicious data found." });
           return;
       }
 
@@ -361,7 +383,7 @@ export default function ManagementConsolePage() {
 
       setIsAuditing(false);
       setAuditProgress("");
-      toast({ title: "Forensic Purge Complete", description: "Suspicious data permanently removed." });
+      toast({ title: "Forensic Purge Complete", description: "Suspicious records removed." });
   };
 
   const massActivateVerified = async () => {
@@ -395,16 +417,14 @@ export default function ManagementConsolePage() {
 
   return (
     <div className="min-h-full bg-white -m-4 md:-m-6 lg:-m-8 p-4 md:p-8 lg:p-10 space-y-10">
-      {/* Design Header */}
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
         <div className="space-y-2">
           <h1 className="text-4xl font-black tracking-tighter font-headline text-[#1a1a1a]">System Management</h1>
           <p className="text-sm text-muted-foreground font-medium max-w-xl">
-            Centralized command for registry integrity and professional approvals. All jach (inspection) metrics are real-time.
+            Centralized command for registry integrity and professional approvals. All inspection metrics are real-time.
           </p>
         </div>
         
-        {/* Design Action Grid */}
         <div className="flex flex-wrap gap-3">
             <Button onClick={runSecurityAudit} disabled={isAuditing} variant="outline" className="bg-white hover:bg-muted text-[#1a1a1a] font-bold h-12 px-6 border-2 border-primary/10 rounded-xl shadow-sm transition-all active:scale-95">
                 {isAuditing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4 text-primary" />}
@@ -445,7 +465,7 @@ export default function ManagementConsolePage() {
                     <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="space-y-1">
                             <CardTitle className="font-headline font-black text-2xl tracking-tight text-[#1a1a1a]">Member Registry</CardTitle>
-                            <CardDescription className="text-sm font-medium">Accounts detected are listed for administrative jach.</CardDescription>
+                            <CardDescription className="text-sm font-medium">Platform accounts listed for administrative inspection.</CardDescription>
                         </div>
                         <div className="relative group w-full md:w-96">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -490,7 +510,7 @@ export default function ManagementConsolePage() {
                                             ) : user.securityStatus === 'verified' ? (
                                                 <Badge className="bg-green-500 text-white font-black text-[10px] uppercase rounded-lg px-3 py-1.5">Genuine Identity</Badge>
                                             ) : (
-                                                <Badge variant="secondary" className="bg-muted text-muted-foreground font-black text-[10px] uppercase rounded-lg px-3 py-1.5 opacity-50">Forensic Audit</Badge>
+                                                <Badge variant="secondary" className="bg-muted text-muted-foreground font-black text-[10px] uppercase rounded-lg px-3 py-1.5 opacity-50">Pending Audit</Badge>
                                             )}
                                         </div>
                                     </TableCell>
@@ -512,17 +532,21 @@ export default function ManagementConsolePage() {
                                                 <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl border-2 border-primary/5 bg-white">
                                                     <DropdownMenuLabel className="font-black text-[10px] uppercase tracking-widest opacity-50 px-3">Identity Actions</DropdownMenuLabel>
                                                     
-                                                    {/* Proper Dialog Trigger from Dropdown */}
                                                     <UserDetailsModal user={user} trigger={
                                                         <button className="flex w-full cursor-default select-none items-center rounded-sm px-3 py-2.5 text-sm font-bold outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
                                                             <Eye className="mr-3 h-4 w-4" /> View Details
                                                         </button>
                                                     } />
                                                     
-                                                    <DropdownMenuItem className="rounded-xl font-bold h-11 px-3"><Mail className="mr-3 h-4 w-4" /> Send Email</DropdownMenuItem>
-                                                    <DropdownMenuItem className="rounded-xl font-bold h-11 px-3"><MessageSquare className="mr-3 h-4 w-4" /> Message</DropdownMenuItem>
+                                                    <DropdownMenuItem className="rounded-xl font-bold h-11 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4" /> Send Email</DropdownMenuItem>
+                                                    <DropdownMenuItem className="rounded-xl font-bold h-11 px-3 cursor-pointer"><MessageSquare className="mr-3 h-4 w-4" /> Message</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
-                                                    <DropdownMenuItem className="rounded-xl font-bold h-11 px-3 text-red-600 focus:text-red-600 focus:bg-red-50"><Trash2 className="mr-3 h-4 w-4" /> Flag Content</DropdownMenuItem>
+                                                    <DropdownMenuItem 
+                                                        onClick={() => handleDeleteUser(user)}
+                                                        className="rounded-xl font-bold h-11 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
+                                                    >
+                                                        <Trash2 className="mr-3 h-4 w-4" /> Delete Account
+                                                    </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                             
