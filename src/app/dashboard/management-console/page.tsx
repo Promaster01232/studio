@@ -27,14 +27,15 @@ import {
   MoreHorizontal,
   Mail,
   UserPlus,
-  MessageSquare,
   Trash2,
   Calendar,
   Phone,
   ShieldHalf,
   MapPin,
   ChevronRight,
-  Filter
+  Filter,
+  UserCheck,
+  UserMinus
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -222,6 +223,7 @@ export default function ManagementConsolePage() {
             }));
             setLoading(false);
         }, async (serverError) => {
+            if (!auth.currentUser) return;
             const permissionError = new FirestorePermissionError({
                 path: usersCol.path,
                 operation: 'list',
@@ -230,13 +232,17 @@ export default function ManagementConsolePage() {
             setLoading(false);
         });
 
-        const advocatesRef = ref(rtdb, "advocates");
-        const unsubAdvocates = onValue(advocatesRef, (snap) => {
-            if (snap.exists()) {
-                setAdvocates(Object.values(snap.val()) as AdvocateRecord[]);
-            } else {
-                setAdvocates([]);
-            }
+        const advocatesCol = collection(firestore, "advocates");
+        const unsubAdvocates = onSnapshot(advocatesCol, (snapshot) => {
+            const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as AdvocateRecord));
+            setAdvocates(list);
+        }, (serverError) => {
+            if (!auth.currentUser) return;
+            const permissionError = new FirestorePermissionError({
+                path: advocatesCol.path,
+                operation: 'list',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
         });
 
         return () => {
@@ -265,9 +271,13 @@ export default function ManagementConsolePage() {
         });
 
     await update(ref(rtdb, `users/${user.uid}`), { isBlocked: newStatus }).catch(() => {});
-    if (user.userType === 'lawyer') {
-        await update(ref(rtdb, `advocates/${user.uid}`), { isBlocked: newStatus }).catch(() => {});
-    }
+    
+    const advRef = doc(firestore, "advocates", user.uid);
+    getDoc(advRef).then(snap => {
+        if (snap.exists()) {
+            updateDoc(advRef, { isBlocked: newStatus }).catch(() => {});
+        }
+    });
     
     toast({ title: newStatus ? "Identity Suspended" : "Identity Restored" });
     setProcessingUid(null);
@@ -279,22 +289,15 @@ export default function ManagementConsolePage() {
         return;
     }
     
-    if (!window.confirm(`PERMANENT FORENSIC DELETE: This will purge ALL data for ${user.firstName} ${user.lastName} across ALL platform databases. This action is irreversible. Proceed?`)) return;
+    if (!window.confirm(`FORENSIC PURGE: Permanently delete all records for ${user.firstName} ${user.lastName}?`)) return;
 
     setProcessingUid(user.uid);
     const userRef = doc(firestore, "users", user.uid);
+    const advRef = doc(firestore, "advocates", user.uid);
 
-    deleteDoc(userRef)
-        .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: userRef.path,
-                operation: 'delete',
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
-        });
-
-    await remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
-    await remove(ref(rtdb, `advocates/${user.uid}`)).catch(() => {});
+    deleteDoc(userRef).catch(() => {});
+    deleteDoc(advRef).catch(() => {});
+    remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
     
     toast({ title: "Account Purged Successfully" });
     setProcessingUid(null);
@@ -303,17 +306,11 @@ export default function ManagementConsolePage() {
   const approveAdvocate = async (adv: AdvocateRecord) => {
       setProcessingUid(adv.uid);
       try {
-          await update(ref(rtdb, `advocates/${adv.uid}`), { isApproved: true, isVerified: true });
+          const advRef = doc(firestore, "advocates", adv.uid);
+          await updateDoc(advRef, { isApproved: true, isVerified: true });
+          
           const userRef = doc(firestore, "users", adv.uid);
-          updateDoc(userRef, { securityStatus: 'verified', isBlocked: false })
-            .catch(async (err) => {
-                const permissionError = new FirestorePermissionError({
-                    path: userRef.path,
-                    operation: 'update',
-                    requestResourceData: { securityStatus: 'verified' },
-                } satisfies SecurityRuleContext, err);
-                errorEmitter.emit('permission-error', permissionError);
-            });
+          await updateDoc(userRef, { securityStatus: 'verified', isBlocked: false });
           
           await update(ref(rtdb, `users/${adv.uid}`), { isBlocked: false, securityStatus: 'verified' }).catch(() => {});
           toast({ title: "Professional Identity Activated" });
@@ -358,60 +355,17 @@ export default function ManagementConsolePage() {
       toast({ title: "Security Audit Complete", description: `Marked ${flagged} suspicious identities.` });
   };
 
-  const purgeIncorrectData = async () => {
-      const suspicious = users.filter(u => u.securityStatus === 'suspicious');
-      if (suspicious.length === 0) {
-          toast({ title: "Registry Healthy", description: "No suspicious data found." });
-          return;
-      }
-
-      if (!window.confirm(`FORENSIC PURGE: Delete ${suspicious.length} suspicious entries? This will permanently wipe all their platform records.`)) return;
-
-      setIsAuditing(true);
-      setAuditProgress(`Purging ${suspicious.length} records...`);
-
-      for (const user of suspicious) {
-          try {
-              await deleteDoc(doc(firestore, "users", user.uid)).catch(() => {});
-              await remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
-              await remove(ref(rtdb, `advocates/${user.uid}`)).catch(() => {});
-          } catch (e) {}
-      }
-
-      setIsAuditing(false);
-      setAuditProgress("");
-      toast({ title: "Purge Complete" });
-  };
-
-  const massActivateVerified = async () => {
-      const pending = users.filter(u => !u.isBlocked && u.securityStatus !== 'suspicious' && u.securityStatus !== 'verified');
-      if (pending.length === 0) {
-          toast({ title: "No Pending Activation", description: "All legitimate accounts are active." });
-          return;
-      }
-
-      setIsAuditing(true);
-      setAuditProgress(`Activating ${pending.length} verified accounts...`);
-
-      for (const user of pending) {
-          try {
-              const userRef = doc(firestore, "users", user.uid);
-              await updateDoc(userRef, { securityStatus: 'verified' }).catch(() => {});
-              await update(ref(rtdb, `users/${user.uid}`), { securityStatus: 'verified' }).catch(() => {});
-          } catch (e) {}
-      }
-
-      setIsAuditing(false);
-      setAuditProgress("");
-      toast({ title: "Mass Verification Successful" });
-  };
-
   const filteredUsers = users.filter(u => 
     `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
     u.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const pendingAdvocates = advocates.filter(a => !a.isApproved);
+  const stats = {
+      total: users.length,
+      active: users.filter(u => !u.isBlocked).length,
+      blocked: users.filter(u => u.isBlocked).length,
+      suspicious: users.filter(u => u.securityStatus === 'suspicious').length,
+  };
 
   if (loading) {
     return <div className="flex h-[70vh] items-center justify-center bg-white"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
@@ -425,35 +379,76 @@ export default function ManagementConsolePage() {
           <p className="text-sm text-muted-foreground font-medium">Platform-wide control for identity registry and professional approvals.</p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Button onClick={runSecurityAudit} disabled={isAuditing} variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-white hover:bg-primary/5 transition-all shadow-sm">
                 {isAuditing ? <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" /> : <Sparkles className="mr-2 h-4 w-4 text-primary" />}
                 <span className="text-[10px] uppercase tracking-wider">Integrity Audit</span>
             </Button>
-            <Button onClick={purgeIncorrectData} disabled={isAuditing} className="bg-red-500 hover:bg-red-600 text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-red-500/20 active:scale-95 transition-all">
-                <ShieldX className="mr-2 h-4 w-4" />
-                <span className="text-[10px] uppercase tracking-wider">Purge Fake Data</span>
-            </Button>
-            <Button onClick={massActivateVerified} disabled={isAuditing} className="bg-primary text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all">
-                <ShieldCheck className="mr-2 h-4 w-4" />
-                <span className="text-[10px] uppercase tracking-wider">Verify AI-Approved</span>
+            <Button className="bg-primary text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                <UserPlus className="mr-2 h-4 w-4" />
+                <span className="text-[10px] uppercase tracking-wider">Manual Entry</span>
             </Button>
         </div>
       </div>
 
-      {auditProgress && (
-          <div className="bg-primary/5 border border-primary/10 p-4 rounded-xl flex items-center gap-3 animate-pulse shadow-sm">
-              <Loader2 className="h-4 w-4 animate-spin text-primary" />
-              <p className="text-[10px] font-black text-primary uppercase tracking-widest">{auditProgress}</p>
-          </div>
-      )}
+      {/* Stats Dashboard */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="border-primary/5 shadow-sm bg-muted/5">
+              <CardHeader className="p-4 pb-2">
+                  <CardDescription className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Registry</CardDescription>
+                  <CardTitle className="text-2xl font-black">{stats.total}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                  <div className="flex items-center gap-1.5 text-primary">
+                      <Users className="h-3 w-3" />
+                      <span className="text-[9px] font-bold">Platform Nodes</span>
+                  </div>
+              </CardContent>
+          </Card>
+          <Card className="border-primary/5 shadow-sm bg-green-50/30">
+              <CardHeader className="p-4 pb-2">
+                  <CardDescription className="text-[10px] font-black uppercase tracking-widest text-green-600">Active Citizens</CardDescription>
+                  <CardTitle className="text-2xl font-black text-green-700">{stats.active}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                  <div className="flex items-center gap-1.5 text-green-600">
+                      <UserCheck className="h-3 w-3" />
+                      <span className="text-[9px] font-bold">Unrestricted Access</span>
+                  </div>
+              </CardContent>
+          </Card>
+          <Card className="border-primary/5 shadow-sm bg-red-50/30">
+              <CardHeader className="p-4 pb-2">
+                  <CardDescription className="text-[10px] font-black uppercase tracking-widest text-red-600">Suspended Nodes</CardDescription>
+                  <CardTitle className="text-2xl font-black text-red-700">{stats.blocked}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                  <div className="flex items-center gap-1.5 text-red-600">
+                      <UserMinus className="h-3 w-3" />
+                      <span className="text-[9px] font-bold">Access Revoked</span>
+                  </div>
+              </CardContent>
+          </Card>
+          <Card className="border-primary/5 shadow-sm bg-amber-50/30">
+              <CardHeader className="p-4 pb-2">
+                  <CardDescription className="text-[10px] font-black uppercase tracking-widest text-amber-600">Security Flags</CardDescription>
+                  <CardTitle className="text-2xl font-black text-amber-700">{stats.suspicious}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                  <div className="flex items-center gap-1.5 text-amber-600">
+                      <ShieldAlert className="h-3 w-3" />
+                      <span className="text-[9px] font-bold">AI Flagged Data</span>
+                  </div>
+              </CardContent>
+          </Card>
+      </div>
 
       <Tabs defaultValue="registry" className="space-y-6">
         <TabsList className="bg-muted/30 p-1 rounded-xl border border-primary/5">
             <TabsTrigger value="registry" className="rounded-lg px-8 h-10 font-bold text-xs">Identity Registry</TabsTrigger>
             <TabsTrigger value="advocates" className="rounded-lg px-8 h-10 font-bold text-xs flex gap-2 items-center">
                 Advocate Review
-                {pendingAdvocates.length > 0 && <span className="bg-primary text-white h-4 px-1.5 rounded-full text-[9px] font-black">{pendingAdvocates.length}</span>}
+                {advocates.filter(a => !a.isApproved).length > 0 && <span className="bg-primary text-white h-4 px-1.5 rounded-full text-[9px] font-black">{advocates.filter(a => !a.isApproved).length}</span>}
             </TabsTrigger>
         </TabsList>
 
@@ -463,7 +458,7 @@ export default function ManagementConsolePage() {
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
                             <CardTitle className="font-headline font-black text-xl tracking-tight">Member Registry</CardTitle>
-                            <CardDescription className="text-xs font-medium">Real-time inspection of platform identities.</CardDescription>
+                            <CardDescription className="text-xs font-medium">Real-time inspection of all platform identities.</CardDescription>
                         </div>
                         <div className="relative group w-full md:w-80">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -481,9 +476,9 @@ export default function ManagementConsolePage() {
                         <Table className="min-w-[800px] md:min-w-full">
                             <TableHeader className="bg-muted/20">
                                 <TableRow className="hover:bg-transparent">
-                                    <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest pl-6 h-12">Platform Identity</TableHead>
+                                    <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest pl-6 h-12">Identity</TableHead>
+                                    <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Role</TableHead>
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Security Jach</TableHead>
-                                    <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Status</TableHead>
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -503,25 +498,18 @@ export default function ManagementConsolePage() {
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            {user.securityStatus === 'suspicious' ? (
-                                                <Badge className="bg-red-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Incorrect Entry</Badge>
-                                            ) : user.securityStatus === 'verified' ? (
-                                                <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Genuine Identity</Badge>
-                                            ) : (
-                                                <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 opacity-60">Pending Inspection</Badge>
-                                            )}
+                                            <Badge variant="outline" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 border-primary/20 text-primary">{user.userType}</Badge>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            {user.securityStatus === 'verified' ? (
-                                                <div className="flex items-center justify-center gap-1 text-green-600">
-                                                    <CheckCircle className="h-3 w-3" />
-                                                    <span className="text-[9px] font-black uppercase tracking-widest">Confirmed</span>
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center justify-center gap-1.5 group">
+                                            {user.securityStatus === 'suspicious' ? (
+                                                <div className="flex items-center justify-center gap-1.5">
                                                     <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
                                                     <span className="text-[9px] font-black uppercase text-red-500 tracking-tight">NOT VERIFIED</span>
                                                 </div>
+                                            ) : user.securityStatus === 'verified' ? (
+                                                <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Verified</Badge>
+                                            ) : (
+                                                <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 opacity-60">Pending</Badge>
                                             )}
                                         </TableCell>
                                         <TableCell className="text-right pr-6">
@@ -533,21 +521,21 @@ export default function ManagementConsolePage() {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl border border-primary/5 bg-white">
-                                                        <DropdownMenuLabel className="font-black text-[9px] uppercase tracking-widest opacity-50 px-3 py-2">Administrative Actions</DropdownMenuLabel>
+                                                        <DropdownMenuLabel className="font-black text-[9px] uppercase tracking-widest opacity-50 px-3 py-2">Account Control</DropdownMenuLabel>
                                                         
                                                         <UserDetailsModal user={user} trigger={
                                                             <button className="flex w-full cursor-default select-none items-center rounded-lg px-3 py-2.5 text-xs font-bold outline-none transition-colors hover:bg-muted active:bg-muted/80">
-                                                                <Eye className="mr-3 h-4 w-4 text-muted-foreground" /> View Full Details
+                                                                <Eye className="mr-3 h-4 w-4 text-muted-foreground" /> View Dossier
                                                             </button>
                                                         } />
                                                         
-                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Send Official Email</DropdownMenuItem>
+                                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Official Message</DropdownMenuItem>
                                                         <DropdownMenuSeparator className="my-2" />
                                                         <DropdownMenuItem 
                                                             onClick={() => handleDeleteUser(user)}
                                                             className="rounded-lg font-bold text-[10px] h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer uppercase tracking-tight"
                                                         >
-                                                            <Trash2 className="mr-3 h-4 w-4" /> Delete Account
+                                                            <Trash2 className="mr-3 h-4 w-4" /> Delete account
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -569,12 +557,6 @@ export default function ManagementConsolePage() {
                             </TableBody>
                         </Table>
                     </ScrollArea>
-                    <div className="p-6 bg-muted/5 border-t border-primary/5">
-                        <Button variant="outline" className="font-black text-[10px] uppercase tracking-widest border border-dashed border-primary/20 bg-white hover:bg-primary/5 h-11 px-8 rounded-xl w-full sm:w-auto shadow-sm active:scale-95 transition-all">
-                            <UserPlus className="mr-2 h-4 w-4" />
-                            Manual Registry Addition
-                        </Button>
-                    </div>
                 </CardContent>
             </Card>
         </TabsContent>
@@ -583,13 +565,14 @@ export default function ManagementConsolePage() {
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {advocates.length > 0 ? advocates.map((adv) => {
                     const isProcessing = processingUid === adv.uid;
+                    const user = users.find(u => u.uid === adv.uid);
                     return (
                         <Card key={adv.uid} className={cn("group overflow-hidden border border-primary/5 shadow-lg transition-all duration-300 hover:shadow-2xl rounded-2xl bg-white", adv.isApproved && "border-green-500/20")}>
                             <div className="p-6 space-y-5 text-left">
                                 <div className="flex items-start justify-between">
                                     <div className="relative">
                                         <Avatar className="h-16 w-16 border-2 border-white shadow-xl rounded-2xl overflow-hidden">
-                                            <AvatarImage src={users.find(u => u.uid === adv.uid)?.photoURL} className="object-cover" />
+                                            <AvatarImage src={user?.photoURL} className="object-cover" />
                                             <AvatarFallback className="font-black text-xl bg-primary text-white">{adv.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         {adv.isApproved && (
@@ -602,9 +585,9 @@ export default function ManagementConsolePage() {
                                         {adv.isApproved ? (
                                             <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md">Verified Pro</Badge>
                                         ) : (
-                                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Awaiting Inspection</Badge>
+                                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Awaiting Approval</Badge>
                                         )}
-                                        {adv.isBlocked && (
+                                        {user?.isBlocked && (
                                             <Badge className="bg-red-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md shadow-sm">Suspended</Badge>
                                         )}
                                     </div>
