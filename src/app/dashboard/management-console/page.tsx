@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,7 +10,33 @@ import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
 import { ref, update, onValue, remove } from "firebase/database";
-import { Users, ShieldCheck, Loader2, Search, Ban, UserCheck, AlertTriangle, ShieldAlert, Sparkles, ShieldX, CheckCircle, Gavel, BadgeCheck, Clock, Eye, Briefcase, GraduationCap } from "lucide-react";
+import { 
+  Users, 
+  ShieldCheck, 
+  Loader2, 
+  Search, 
+  Ban, 
+  UserCheck, 
+  AlertTriangle, 
+  ShieldAlert, 
+  Sparkles, 
+  ShieldX, 
+  CheckCircle, 
+  Gavel, 
+  BadgeCheck, 
+  Clock, 
+  Eye, 
+  Briefcase, 
+  GraduationCap,
+  MoreHorizontal,
+  Mail,
+  UserPlus,
+  Send,
+  MessageSquare,
+  FileText,
+  Trash2,
+  ChevronDown
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,8 +45,14 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { validateUserDetails } from "@/ai/flows/validate-user-details";
 import { onAuthStateChanged } from "firebase/auth";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface UserRecord {
   uid: string;
@@ -131,19 +164,11 @@ export default function ManagementConsolePage() {
   const approveAdvocate = async (adv: AdvocateRecord) => {
       setProcessingUid(adv.uid);
       try {
-          // 1. Approve professional listing
           await update(ref(rtdb, `advocates/${adv.uid}`), { isApproved: true, isVerified: true });
-          
-          // 2. Activate central identity (Proper Sync)
           const userRef = doc(firestore, "users", adv.uid);
-          await updateDoc(userRef, { 
-              securityStatus: 'verified',
-              isBlocked: false 
-          });
-          
+          await updateDoc(userRef, { securityStatus: 'verified', isBlocked: false });
           await update(ref(rtdb, `users/${adv.uid}`), { isBlocked: false });
-
-          toast({ title: "Advocate Approved", description: `${adv.name}'s identity and listing are now active.` });
+          toast({ title: "Advocate Approved", description: `${adv.name} is now active.` });
       } catch (error: any) {
           toast({ variant: "destructive", title: "Approval Failed" });
       } finally {
@@ -153,12 +178,12 @@ export default function ManagementConsolePage() {
 
   const runSecurityAudit = async () => {
       setIsAuditing(true);
-      setAuditProgress("Starting forensic scan...");
+      setAuditProgress("Forensic audit in progress...");
       let flagged = 0;
 
       for (const user of users) {
           if (user.isAdmin || user.email === 'enterspaceindia@gmail.com') continue;
-          setAuditProgress(`Inspecting: ${user.email}`);
+          setAuditProgress(`Scanning: ${user.email}`);
           try {
               const validation = await validateUserDetails({
                   firstName: user.firstName,
@@ -172,7 +197,7 @@ export default function ManagementConsolePage() {
                   await updateDoc(doc(firestore, "users", user.uid), {
                       securityStatus: 'suspicious',
                       flaggedAt: serverTimestamp(),
-                      flagReason: validation.reason || "AI Security Audit: Incorrect identity patterns detected."
+                      flagReason: validation.reason || "AI Forensics: Bot pattern detected."
                   });
                   flagged++;
               }
@@ -187,7 +212,7 @@ export default function ManagementConsolePage() {
   const purgeIncorrectData = async () => {
       const suspicious = users.filter(u => u.securityStatus === 'suspicious');
       if (suspicious.length === 0) {
-          toast({ title: "Registry Clean", description: "No incorrect entries identified." });
+          toast({ title: "Registry Clean", description: "No incorrect data found." });
           return;
       }
 
@@ -204,7 +229,7 @@ export default function ManagementConsolePage() {
 
       setIsAuditing(false);
       setAuditProgress("");
-      toast({ title: "Database Purged", description: "Incorrect entries permanently removed." });
+      toast({ title: "Forensic Purge Complete", description: "Suspicious data permanently removed." });
   };
 
   const massActivateVerified = async () => {
@@ -212,7 +237,7 @@ export default function ManagementConsolePage() {
       if (pending.length === 0) return;
 
       setIsAuditing(true);
-      setAuditProgress(`Activating ${pending.length} verified accounts...`);
+      setAuditProgress(`Activating ${pending.length} genuine accounts...`);
 
       for (const user of pending) {
           try {
@@ -222,7 +247,7 @@ export default function ManagementConsolePage() {
 
       setIsAuditing(false);
       setAuditProgress("");
-      toast({ title: "Identities Restored", description: "Legitimate users are now active." });
+      toast({ title: "Bulk Activation Complete", description: "Legitimate users are now confirmed." });
   };
 
   const filteredUsers = users.filter(u => 
@@ -233,26 +258,31 @@ export default function ManagementConsolePage() {
   const pendingAdvocates = advocates.filter(a => !a.isApproved);
 
   if (loading) {
-    return <div className="flex h-[70vh] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+    return <div className="flex h-[70vh] items-center justify-center bg-white"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <PageHeader
-            title="System Management"
-            description="Centralized command for registry integrity and professional approvals."
-        />
-        <div className="flex flex-wrap gap-2">
-            <Button onClick={runSecurityAudit} disabled={isAuditing} variant="outline" className="font-bold border-primary/20 h-11">
+    <div className="min-h-full bg-white -m-4 md:-m-6 lg:-m-8 p-4 md:p-8 lg:p-10 space-y-10">
+      {/* Design Header */}
+      <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-black tracking-tighter font-headline text-[#1a1a1a]">System Management</h1>
+          <p className="text-sm text-muted-foreground font-medium max-w-xl">
+            Centralized command for registry integrity and professional approvals. All jach (inspection) metrics are real-time.
+          </p>
+        </div>
+        
+        {/* Design Action Grid */}
+        <div className="flex flex-wrap gap-3">
+            <Button onClick={runSecurityAudit} disabled={isAuditing} variant="outline" className="bg-white hover:bg-muted text-[#1a1a1a] font-bold h-12 px-6 border-2 border-primary/10 rounded-xl shadow-sm transition-all active:scale-95">
                 {isAuditing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4 text-primary" />}
                 Integrity Scan
             </Button>
-            <Button onClick={purgeIncorrectData} disabled={isAuditing} variant="destructive" className="font-bold h-11">
+            <Button onClick={purgeIncorrectData} disabled={isAuditing} className="bg-[#ef4444] hover:bg-[#dc2626] text-white font-bold h-12 px-6 rounded-xl shadow-lg shadow-red-500/20 active:scale-95 transition-all">
                 <ShieldX className="mr-2 h-4 w-4" />
                 Purge Fake Data
             </Button>
-            <Button onClick={massActivateVerified} disabled={isAuditing} className="font-bold h-11 shadow-lg shadow-primary/20">
+            <Button onClick={massActivateVerified} disabled={isAuditing} className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-bold h-12 px-6 rounded-xl shadow-lg shadow-blue-500/20 active:scale-95 transition-all">
                 <ShieldCheck className="mr-2 h-4 w-4" />
                 Verify AI-Approved
             </Button>
@@ -260,34 +290,36 @@ export default function ManagementConsolePage() {
       </div>
 
       {auditProgress && (
-          <div className="bg-primary/10 border border-primary/20 p-3 rounded-xl flex items-center gap-3 animate-pulse">
-              <Loader2 className="h-4 w-4 animate-spin text-primary" />
-              <p className="text-xs font-bold text-primary uppercase tracking-widest">{auditProgress}</p>
+          <div className="bg-primary/5 border-2 border-primary/10 p-4 rounded-2xl flex items-center gap-4 animate-pulse">
+              <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                <Loader2 className="h-5 w-5 animate-spin" />
+              </div>
+              <p className="text-sm font-bold text-primary uppercase tracking-widest">{auditProgress}</p>
           </div>
       )}
 
-      <Tabs defaultValue="registry" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 max-w-md bg-muted/50 p-1 rounded-xl">
-            <TabsTrigger value="registry" className="rounded-lg font-bold">Identity Registry</TabsTrigger>
-            <TabsTrigger value="advocates" className="rounded-lg font-bold">
+      <Tabs defaultValue="registry" className="space-y-8">
+        <TabsList className="bg-muted/30 p-1.5 rounded-2xl border-2 border-primary/5 w-fit">
+            <TabsTrigger value="registry" className="rounded-xl px-8 h-11 font-black data-[state=active]:bg-white data-[state=active]:shadow-xl data-[state=active]:text-primary transition-all">Identity Registry</TabsTrigger>
+            <TabsTrigger value="advocates" className="rounded-xl px-8 h-11 font-black data-[state=active]:bg-white data-[state=active]:shadow-xl data-[state=active]:text-primary transition-all">
                 Advocate Review
-                {pendingAdvocates.length > 0 && <Badge className="ml-2 bg-primary text-white h-5 px-1.5">{pendingAdvocates.length}</Badge>}
+                {pendingAdvocates.length > 0 && <Badge className="ml-3 bg-primary text-white h-6 px-2.5 rounded-full">{pendingAdvocates.length}</Badge>}
             </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="registry">
-            <Card className="border-primary/5 shadow-2xl rounded-2xl overflow-hidden bg-card/40 backdrop-blur-md">
-                <CardHeader className="bg-muted/30 border-b border-primary/5 p-6">
-                    <div className="flex flex-col md:flex-row justify-between gap-4">
+        <TabsContent value="registry" className="mt-0">
+            <Card className="border-2 border-primary/5 shadow-2xl rounded-[2.5rem] overflow-hidden bg-white">
+                <CardHeader className="bg-muted/10 border-b border-primary/5 p-8">
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="space-y-1">
-                            <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Member Monitor</CardTitle>
-                            <CardDescription className="text-xs font-medium italic text-muted-foreground">Accounts not finalized are labeled "not verifyed all".</CardDescription>
+                            <CardTitle className="font-headline font-black text-2xl tracking-tight text-[#1a1a1a]">Member Registry</CardTitle>
+                            <CardDescription className="text-sm font-medium">Accounts detected are listed for administrative jach.</CardDescription>
                         </div>
-                        <div className="relative group">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <div className="relative group w-full md:w-96">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input 
                                 placeholder="Filter registry..." 
-                                className="pl-9 h-11 w-full md:w-72 bg-background/50 font-bold border-primary/10 rounded-xl" 
+                                className="pl-12 h-12 w-full bg-muted/20 font-bold border-2 border-transparent focus:border-primary rounded-2xl transition-all" 
                                 value={searchQuery}
                                 onChange={(e) => setSearchSearchQuery(e.target.value)}
                             />
@@ -297,124 +329,163 @@ export default function ManagementConsolePage() {
                 <CardContent className="p-0">
                     <Table>
                         <TableHeader className="bg-muted/20">
-                            <TableRow>
-                                <TableHead className="font-bold text-[11px] uppercase tracking-wider pl-6">Identity</TableHead>
-                                <TableHead className="font-bold text-[11px] uppercase tracking-wider text-center">Security Jach</TableHead>
-                                <TableHead className="font-bold text-[11px] uppercase tracking-wider text-center">Status</TableHead>
-                                <TableHead className="font-bold text-[11px] uppercase tracking-wider text-right pr-6">Controls</TableHead>
+                            <TableRow className="hover:bg-transparent">
+                                <TableHead className="font-black text-[11px] text-muted-foreground uppercase tracking-[0.2em] pl-10 h-16">Identity</TableHead>
+                                <TableHead className="font-black text-[11px] text-muted-foreground uppercase tracking-[0.2em] text-center">Security Jach</TableHead>
+                                <TableHead className="font-black text-[11px] text-muted-foreground uppercase tracking-[0.2em] text-center">Status</TableHead>
+                                <TableHead className="font-black text-[11px] text-muted-foreground uppercase tracking-[0.2em] text-right pr-10">Controls</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {filteredUsers.map((user) => (
-                                <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors", user.securityStatus === 'suspicious' && "bg-destructive/5")}>
-                                    <TableCell className="pl-6 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <Avatar className="h-10 w-10 border border-primary/10 shadow-sm">
+                                <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus === 'suspicious' && "bg-red-50/30")}>
+                                    <TableCell className="pl-10 py-6">
+                                        <div className="flex items-center gap-4">
+                                            <Avatar className="h-12 w-12 border-2 border-white shadow-xl">
                                                 <AvatarImage src={user.photoURL} />
-                                                <AvatarFallback className="font-bold text-primary bg-primary/5">{user.firstName.charAt(0)}</AvatarFallback>
+                                                <AvatarFallback className="font-black text-primary bg-primary/5">{user.firstName.charAt(0)}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col">
-                                                <span className="font-bold text-sm tracking-tight">{user.firstName} {user.lastName}</span>
-                                                <span className="text-[10px] text-muted-foreground font-medium">{user.email}</span>
+                                                <span className="font-black text-base tracking-tight text-[#1a1a1a]">{user.firstName} {user.lastName}</span>
+                                                <span className="text-xs text-muted-foreground font-bold opacity-70">{user.email}</span>
                                             </div>
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        {user.securityStatus === 'suspicious' ? (
-                                            <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase">Incorrect Entry</Badge>
-                                        ) : user.securityStatus === 'verified' ? (
-                                            <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Genuine</Badge>
-                                        ) : (
-                                            <Badge variant="secondary" className="text-[9px] font-black uppercase opacity-50">Pending Audit</Badge>
-                                        )}
+                                        <div className="flex flex-col items-center gap-1">
+                                            {user.securityStatus === 'suspicious' ? (
+                                                <Badge className="bg-red-500 text-white font-black text-[10px] uppercase rounded-lg px-3 py-1.5">Incorrect Entry</Badge>
+                                            ) : user.securityStatus === 'verified' ? (
+                                                <Badge className="bg-green-500 text-white font-black text-[10px] uppercase rounded-lg px-3 py-1.5">Genuine Identity</Badge>
+                                            ) : (
+                                                <Badge variant="secondary" className="bg-muted text-muted-foreground font-black text-[10px] uppercase rounded-lg px-3 py-1.5 opacity-50">Forensic Audit</Badge>
+                                            )}
+                                        </div>
                                     </TableCell>
                                     <TableCell className="text-center">
                                         {user.securityStatus === 'verified' ? (
-                                            <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Confirmed</Badge>
+                                            <span className="text-[11px] font-black text-green-600 uppercase tracking-widest">Confirmed</span>
                                         ) : (
-                                            <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/20 text-[9px] font-black uppercase">not verifyed all</Badge>
+                                            <span className="text-[11px] font-black text-[#ef4444] uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full">Not Verifyed All</span>
                                         )}
                                     </TableCell>
-                                    <TableCell className="text-right pr-6">
-                                        <Button 
-                                            variant={user.isBlocked ? "outline" : "destructive"} 
-                                            size="sm" 
-                                            className="h-9 px-4 font-bold text-[10px] rounded-xl active:scale-95 transition-all"
-                                            onClick={() => toggleUserBlock(user)}
-                                            disabled={processingUid === user.uid || user.email === 'enterspaceindia@gmail.com'}
-                                        >
-                                            {processingUid === user.uid ? <Loader2 className="h-3 w-3 animate-spin" /> : user.isBlocked ? "Restore" : "Suspend"}
-                                        </Button>
+                                    <TableCell className="text-right pr-10">
+                                        <div className="flex items-center justify-end gap-3">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-muted active:scale-90 transition-all">
+                                                        <MoreHorizontal className="h-5 w-5" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl border-2 border-primary/5">
+                                                    <DropdownMenuLabel className="font-black text-[10px] uppercase tracking-widest opacity-50 px-3">Identity Actions</DropdownMenuLabel>
+                                                    <DropdownMenuItem className="rounded-xl font-bold h-11 px-3"><Eye className="mr-3 h-4 w-4" /> View Details</DropdownMenuItem>
+                                                    <DropdownMenuItem className="rounded-xl font-bold h-11 px-3"><Mail className="mr-3 h-4 w-4" /> Send Email</DropdownMenuItem>
+                                                    <DropdownMenuItem className="rounded-xl font-bold h-11 px-3"><MessageSquare className="mr-3 h-4 w-4" /> Message</DropdownMenuItem>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem className="rounded-xl font-bold h-11 px-3 text-red-600 focus:text-red-600 focus:bg-red-50"><Trash2 className="mr-3 h-4 w-4" /> Flag Content</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                            
+                                            <Button 
+                                                className={cn(
+                                                    "h-10 px-6 font-black text-[11px] uppercase tracking-wider rounded-xl active:scale-95 transition-all shadow-sm",
+                                                    user.isBlocked ? "bg-white border-2 border-primary/10 text-primary hover:bg-primary/5" : "bg-[#ef4444] hover:bg-[#dc2626] text-white"
+                                                )}
+                                                onClick={() => toggleUserBlock(user)}
+                                                disabled={processingUid === user.uid || user.email === 'enterspaceindia@gmail.com'}
+                                            >
+                                                {processingUid === user.uid ? <Loader2 className="h-3 w-3 animate-spin" /> : user.isBlocked ? "Restore" : "Suspend"}
+                                            </Button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
+                    <div className="p-8 bg-muted/5 border-t border-primary/5">
+                        <Button variant="outline" className="font-black text-xs uppercase tracking-widest border-2 border-dashed border-primary/20 bg-white hover:bg-primary hover:text-white h-12 px-8 rounded-2xl transition-all">
+                            <UserPlus className="mr-3 h-4 w-4" />
+                            Add New Member
+                        </Button>
+                    </div>
                 </CardContent>
             </Card>
         </TabsContent>
 
         <TabsContent value="advocates">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                 {advocates.length > 0 ? advocates.map((adv) => {
                     const isProcessing = processingUid === adv.uid;
                     return (
-                        <Card key={adv.uid} className={cn("overflow-hidden border-primary/10 shadow-xl transition-all hover:border-primary/30", adv.isApproved && "bg-green-500/5")}>
-                            <CardHeader className="pb-4 bg-muted/20 border-b border-primary/5">
-                                <div className="flex items-center justify-between">
-                                    <Avatar className="h-12 w-12 border-2 border-background shadow-lg">
-                                        <AvatarFallback className="font-bold bg-primary text-white">{adv.name.charAt(0)}</AvatarFallback>
-                                    </Avatar>
+                        <Card key={adv.uid} className={cn("group overflow-hidden border-2 border-primary/5 shadow-xl transition-all duration-500 hover:shadow-2xl rounded-[2.5rem] bg-white", adv.isApproved && "border-green-500/20")}>
+                            <div className="p-8 space-y-6">
+                                <div className="flex items-start justify-between">
+                                    <div className="relative">
+                                        <Avatar className="h-20 w-20 border-4 border-white shadow-2xl rounded-3xl">
+                                            <AvatarFallback className="font-black text-2xl bg-primary text-white">{adv.name.charAt(0)}</AvatarFallback>
+                                        </Avatar>
+                                        {adv.isApproved && (
+                                            <div className="absolute -bottom-2 -right-2 bg-green-500 text-white p-1.5 rounded-xl shadow-lg">
+                                                <CheckCircle className="h-4 w-4" />
+                                            </div>
+                                        )}
+                                    </div>
                                     {adv.isApproved ? (
-                                        <Badge className="bg-green-500 text-white font-black text-[9px] uppercase tracking-tighter">Listed & Active</Badge>
+                                        <Badge className="bg-green-500 text-white font-black text-[10px] uppercase tracking-widest px-3 py-1.5 rounded-xl">Live Profile</Badge>
                                     ) : (
-                                        <Badge variant="secondary" className="text-amber-600 bg-amber-500/10 font-black text-[9px] uppercase tracking-tighter">Awaiting Review</Badge>
+                                        <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[10px] uppercase tracking-widest px-3 py-1.5 rounded-xl">Pending Review</Badge>
                                     )}
                                 </div>
-                                <div className="pt-4 space-y-1">
-                                    <CardTitle className="text-lg font-black tracking-tight">{adv.name}</CardTitle>
-                                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest">{adv.specialty}</p>
+                                <div className="space-y-1">
+                                    <h3 className="text-2xl font-black tracking-tighter text-[#1a1a1a]">{adv.name}</h3>
+                                    <p className="text-xs font-black text-primary uppercase tracking-[0.2em]">{adv.specialty}</p>
                                 </div>
-                            </CardHeader>
-                            <CardContent className="pt-6 space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-1">
-                                        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1"><GraduationCap className="h-3 w-3" /> Bar ID</p>
-                                        <p className="text-xs font-bold truncate">{adv.barId}</p>
+                                <div className="grid grid-cols-2 gap-6 pt-4 border-t border-primary/5">
+                                    <div className="space-y-1.5">
+                                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2"><GraduationCap className="h-3.5 w-3.5 text-primary" /> Bar ID</p>
+                                        <p className="text-sm font-black text-[#1a1a1a] truncate">{adv.barId}</p>
                                     </div>
-                                    <div className="space-y-1">
-                                        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1"><MapPin className="h-3 w-3" /> Court</p>
-                                        <p className="text-xs font-bold truncate">{adv.courtName}</p>
+                                    <div className="space-y-1.5">
+                                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2"><MapPin className="h-3.5 w-3.5 text-primary" /> Location</p>
+                                        <p className="text-sm font-black text-[#1a1a1a] truncate">{adv.courtName}</p>
                                     </div>
                                 </div>
                                 {adv.certificateName && (
-                                    <div className="p-3 rounded-lg bg-primary/5 border border-primary/10 flex items-center gap-3">
-                                        <ShieldCheck className="h-4 w-4 text-primary" />
-                                        <span className="text-[10px] font-bold truncate">{adv.certificateName}</span>
+                                    <div className="p-4 rounded-2xl bg-muted/20 border-2 border-transparent group-hover:border-primary/10 flex items-center gap-4 transition-all">
+                                        <div className="h-10 w-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-primary">
+                                            <FileText className="h-5 w-5" />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none mb-1">Attached Cert</p>
+                                            <p className="text-xs font-bold truncate text-[#1a1a1a]">{adv.certificateName}</p>
+                                        </div>
                                     </div>
                                 )}
-                            </CardContent>
-                            <CardFooter className="bg-muted/10 border-t border-primary/5 p-4 flex gap-2">
+                            </div>
+                            <div className="p-6 bg-muted/10 border-t border-primary/5 flex gap-3">
                                 {!adv.isApproved && (
                                     <Button 
-                                        className="flex-1 h-10 font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all"
+                                        className="flex-1 h-12 font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all bg-primary text-white rounded-2xl"
                                         onClick={() => approveAdvocate(adv)}
                                         disabled={isProcessing}
                                     >
                                         {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verify & Activate"}
                                     </Button>
                                 )}
-                                <Button variant="outline" size="icon" className="h-10 w-10 border-primary/10 hover:bg-primary/5">
-                                    <Eye className="h-4 w-4 text-primary" />
+                                <Button variant="outline" size="icon" className="h-12 w-12 border-2 border-primary/10 hover:bg-white hover:border-primary rounded-2xl transition-all shadow-sm">
+                                    <Eye className="h-5 w-5 text-[#1a1a1a]" />
                                 </Button>
-                            </CardFooter>
+                            </div>
                         </Card>
                     );
                 }) : (
-                    <div className="col-span-full py-32 text-center bg-muted/5 rounded-3xl border-2 border-dashed border-primary/10">
-                        <Gavel className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-20" />
-                        <h3 className="text-xl font-black font-headline tracking-tighter">No Professional Applications</h3>
-                        <p className="text-muted-foreground max-w-[250px] mx-auto mt-2 text-xs font-medium">New advocate listings requiring manual jach will appear here.</p>
+                    <div className="col-span-full py-40 text-center bg-muted/5 rounded-[3rem] border-4 border-dashed border-primary/5">
+                        <div className="h-20 w-20 bg-white rounded-3xl shadow-xl mx-auto mb-8 flex items-center justify-center text-primary/20">
+                            <Gavel className="h-10 w-10" />
+                        </div>
+                        <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Clear</h3>
+                        <p className="text-muted-foreground max-w-sm mx-auto mt-3 text-sm font-medium">New professional applications will appear here for forensic inspection.</p>
                     </div>
                 )}
             </div>
