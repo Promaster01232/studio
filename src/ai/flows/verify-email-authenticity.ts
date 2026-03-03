@@ -62,15 +62,16 @@ const verifyEmailAuthenticityFlow = ai.defineFlow(
         const { output } = await prompt(input);
         return output!;
       } catch (error: any) {
+        // If it's a 429 Quota error, wait for 35s before retrying
         if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
-          console.warn(`AI Rate Limit hit in verifyEmailAuthenticity. Retrying in 10s...`);
-          await new Promise(resolve => setTimeout(resolve, 10000));
+          console.warn(`AI Rate Limit hit in verifyEmailAuthenticity. Retrying in 35s (Retries left: ${retries})...`);
+          await new Promise(resolve => setTimeout(resolve, 35000));
           retries--;
           continue;
         }
         throw error;
       }
     }
-    throw new Error("AI verification timed out due to quota limits.");
+    throw new Error("AI verification timed out due to quota limits. Please try again in a few minutes.");
   }
 );

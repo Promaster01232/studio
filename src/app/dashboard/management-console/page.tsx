@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -330,6 +329,10 @@ export default function ManagementConsolePage() {
     deleteDoc(userRef).catch(() => {});
     deleteDoc(advRef).catch(() => {});
     
+    // Also remove from RTDB
+    remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
+    remove(ref(rtdb, `advocates/${user.uid}`)).catch(() => {});
+    
     toast({ title: "Account Purged Successfully" });
     setProcessingUid(null);
   };
@@ -513,7 +516,7 @@ export default function ManagementConsolePage() {
                                                         disabled={processingUid === user.uid}
                                                     >
                                                         {processingUid === user.uid ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : <ShieldCheck className="h-2.5 w-2.5 mr-1" />}
-                                                        Click to Verify
+                                                        Run AI Verify
                                                     </Button>
                                                 </div>
                                             )}

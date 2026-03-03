@@ -64,7 +64,21 @@ const verifyAdvocateCertificateFlow = ai.defineFlow(
     outputSchema: VerifyAdvocateCertificateOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    let retries = 3;
+    while (retries >= 0) {
+      try {
+        const {output} = await prompt(input);
+        return output!;
+      } catch (error: any) {
+        if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
+          console.warn(`AI Rate Limit hit in verifyAdvocateCertificate. Retrying in 35s (Retries left: ${retries})...`);
+          await new Promise(resolve => setTimeout(resolve, 35000));
+          retries--;
+          continue;
+        }
+        throw error;
+      }
+    }
+    throw new Error("AI certificate verification timed out due to quota limits.");
   }
 );
