@@ -8,7 +8,7 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Super Admin: Direct token check for absolute, prioritized authority
+    // Super Admin: Absolute authority check
     function isSuperAdmin() {
       return isAuthenticated() && request.auth.token.email == 'enterspaceindia@gmail.com';
     }
@@ -28,13 +28,12 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    // GLOBAL ADMIN OVERRIDE: Absolute power for administrative tasks
-    // This handles collection listing and global management
+    // GLOBAL ADMIN OVERRIDE: Prioritized access for management
     match /{document=**} {
-      allow read, write: if isSuperAdmin() || isAdmin();
+      allow read, write: if isSuperAdmin();
     }
 
-    // Users collection - Immutability for Super Admin
+    // Users collection
     match /users/{userId} {
       allow get: if isAuthenticated();
       allow create: if isAuthenticated() && userId == request.auth.uid;
