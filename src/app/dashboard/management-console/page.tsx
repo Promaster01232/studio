@@ -191,7 +191,7 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
                     <Eye className="h-4 w-4" />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0 overflow-hidden">
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0 overflow-hidden rounded-2xl">
                 <div className="bg-primary/5 p-6 border-b border-primary/5 shrink-0">
                     <DialogHeader>
                         <div className="flex items-center gap-3">

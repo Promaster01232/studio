@@ -8,9 +8,12 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Super Admin: Absolute authority check
+    // Super Admin: Absolute authority check based on token email
     function isSuperAdmin() {
-      return isAuthenticated() && request.auth.token.email == 'enterspaceindia@gmail.com';
+      return isAuthenticated() && (
+        request.auth.token.email == 'enterspaceindia@gmail.com' ||
+        request.auth.token.email == 'piyushkumarsingh23323@gmail.com'
+      );
     }
 
     // General Admin check (flag in profile)
@@ -29,6 +32,7 @@ service cloud.firestore {
     }
 
     // GLOBAL ADMIN OVERRIDE: Prioritized access for management
+    // Ensures admin never gets "Missing or insufficient permissions" when listing
     match /{document=**} {
       allow read, write: if isSuperAdmin();
     }
@@ -36,6 +40,7 @@ service cloud.firestore {
     // Users collection
     match /users/{userId} {
       allow get: if isAuthenticated();
+      allow list: if isAdmin();
       allow create: if isAuthenticated() && userId == request.auth.uid;
       allow update: if isAuthenticated() && (isOwner(userId) || isAdmin()) && (
         // Prevent blocking the Super Admin
@@ -43,14 +48,13 @@ service cloud.firestore {
       );
       allow delete: if isAdmin() && 
         get(/databases/$(database)/documents/users/$(userId)).data.email != 'enterspaceindia@gmail.com';
-      allow list: if isAdmin();
     }
 
     // Advocates collection
     match /advocates/{userId} {
-      allow read: if isAuthenticated() && (resource.data.isApproved == true || isAdmin() || isOwner(userId));
-      allow write: if isAdmin() || (isAuthenticated() && isOwner(userId));
+      allow get: if isAuthenticated() && (resource.data.isApproved == true || isAdmin() || isOwner(userId));
       allow list: if isAdmin();
+      allow write: if isAdmin() || (isAuthenticated() && isOwner(userId));
     }
 
     // Posts collection
