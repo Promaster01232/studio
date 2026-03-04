@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
-import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 import { ref, update, remove } from "firebase/database";
 import { 
   Users, 
@@ -198,7 +198,7 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
                     <Eye className="h-4 w-4" />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0 overflow-hidden rounded-2xl border-none shadow-2xl">
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0 overflow-hidden rounded-2xl border-none shadow-2xl bg-white">
                 <div className="bg-primary/5 p-6 border-b border-primary/5 shrink-0">
                     <DialogHeader>
                         <div className="flex items-center gap-3">
@@ -206,8 +206,8 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
                                 <Gavel className="h-5 w-5" />
                             </div>
                             <div className="text-left">
-                                <DialogTitle className="font-headline font-black text-xl tracking-tight">Professional Audit: {adv.name}</DialogTitle>
-                                <DialogDescription className="text-xs font-medium text-muted-foreground">Manual verification of Bar records and identity.</DialogDescription>
+                                <DialogTitle className="font-headline font-black text-xl tracking-tight leading-none">Professional Audit: {adv.name}</DialogTitle>
+                                <DialogDescription className="text-[10px] font-medium text-muted-foreground mt-1.5">Manual verification of Bar records and identity.</DialogDescription>
                             </div>
                         </div>
                     </DialogHeader>
@@ -285,11 +285,11 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
                 <div className="p-6 border-t bg-muted/10 shrink-0">
                     <div className="flex gap-3">
                         <DialogTrigger asChild>
-                            <Button variant="outline" className="flex-1 font-bold h-12 rounded-xl active:scale-95 transition-all">Close</Button>
+                            <Button variant="outline" className="flex-1 font-bold h-12 rounded-xl active:scale-95 transition-all text-xs">Close</Button>
                         </DialogTrigger>
                         {!adv.isApproved && (
                             <Button 
-                                className="flex-[2] bg-primary text-white font-black text-[11px] uppercase tracking-widest h-12 rounded-xl shadow-xl shadow-primary/20 active:scale-95 transition-all"
+                                className="flex-[2] bg-primary text-white font-black text-[10px] uppercase tracking-widest h-12 rounded-xl shadow-xl shadow-primary/20 active:scale-95 transition-all"
                                 onClick={() => onApprove(adv)}
                                 disabled={isProcessing}
                             >
@@ -356,8 +356,10 @@ export default function ManagementConsolePage() {
         });
 
         // Setup Advocate Listener from Firestore (Primary Registry for manual audit)
+        // Ordered by name for consistent Admin connection
         const advocatesCol = collection(firestore, "advocates");
-        const unsubAdvocates = onSnapshot(advocatesCol, (snapshot) => {
+        const advQuery = query(advocatesCol, orderBy("name", "asc"));
+        const unsubAdvocates = onSnapshot(advQuery, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as AdvocateRecord));
             setAdvocates(list);
         }, (serverError) => {
@@ -514,7 +516,7 @@ export default function ManagementConsolePage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8 pb-12 bg-white min-h-full">
+    <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8 pb-12 bg-white min-h-full">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-headline text-[#1a1a1a]">System Registry Console</h1>
@@ -534,7 +536,7 @@ export default function ManagementConsolePage() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <Card className="border-primary/5 shadow-sm bg-muted/5">
+          <Card className="border-primary/5 shadow-sm bg-muted/5 rounded-2xl overflow-hidden">
               <CardHeader className="p-3 sm:p-4 pb-1 text-left">
                   <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground truncate">Total Registry</CardDescription>
                   <CardTitle className="text-xl sm:text-2xl font-black">{stats.total}</CardTitle>
@@ -546,7 +548,7 @@ export default function ManagementConsolePage() {
                   </div>
               </CardContent>
           </Card>
-          <Card className="border-primary/5 shadow-sm bg-green-50/30">
+          <Card className="border-primary/5 shadow-sm bg-green-50/30 rounded-2xl overflow-hidden">
               <CardHeader className="p-3 sm:p-4 pb-1 text-left">
                   <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-green-600 truncate">Active Citizens</CardDescription>
                   <CardTitle className="text-xl sm:text-2xl font-black text-green-700">{stats.active}</CardTitle>
@@ -558,7 +560,7 @@ export default function ManagementConsolePage() {
                   </div>
               </CardContent>
           </Card>
-          <Card className="border-primary/5 shadow-sm bg-red-50/30">
+          <Card className="border-primary/5 shadow-sm bg-red-50/30 rounded-2xl overflow-hidden">
               <CardHeader className="p-3 sm:p-4 pb-1 text-left">
                   <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-red-600 truncate">Suspended Nodes</CardDescription>
                   <CardTitle className="text-xl sm:text-2xl font-black text-red-700">{stats.blocked}</CardTitle>
@@ -570,7 +572,7 @@ export default function ManagementConsolePage() {
                   </div>
               </CardContent>
           </Card>
-          <Card className="border-primary/5 shadow-sm bg-amber-50/30">
+          <Card className="border-primary/5 shadow-sm bg-amber-50/30 rounded-2xl overflow-hidden">
               <CardHeader className="p-3 sm:p-4 pb-1 text-left">
                   <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-amber-600 truncate">Pending Audit</CardDescription>
                   <CardTitle className="text-xl sm:text-2xl font-black text-amber-700">{stats.suspicious}</CardTitle>
@@ -587,8 +589,8 @@ export default function ManagementConsolePage() {
       <Tabs defaultValue="registry" className="space-y-6">
         <div className="overflow-x-auto pb-1">
             <TabsList className="bg-muted/30 p-1 rounded-xl border border-primary/5 inline-flex min-w-full sm:min-w-0">
-                <TabsTrigger value="registry" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs">Member Registry</TabsTrigger>
-                <TabsTrigger value="advocates" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs flex gap-2 items-center">
+                <TabsTrigger value="registry" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs data-[state=active]:shadow-lg">Member Registry</TabsTrigger>
+                <TabsTrigger value="advocates" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs flex gap-2 items-center data-[state=active]:shadow-lg">
                     Advocate Registry (Verification)
                     {advocates.filter(a => !a.isApproved).length > 0 && <span className="bg-primary text-white h-4 px-1.5 rounded-full text-[9px] font-black">{advocates.filter(a => !a.isApproved).length}</span>}
                 </TabsTrigger>
@@ -600,8 +602,8 @@ export default function ManagementConsolePage() {
                 <CardHeader className="bg-muted/5 border-b border-primary/5 px-4 sm:px-6 py-6 text-left">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <CardTitle className="font-headline font-black text-xl tracking-tight">Identity Registry</CardTitle>
-                            <CardDescription className="text-[10px] sm:text-xs font-medium">Real-time inspection of all enrolled platform accounts.</CardDescription>
+                            <CardTitle className="font-headline font-black text-xl tracking-tight leading-none">Identity Registry</CardTitle>
+                            <CardDescription className="text-[10px] sm:text-xs font-medium mt-1.5">Real-time inspection of all enrolled platform accounts.</CardDescription>
                         </div>
                         <div className="relative group w-full md:w-80">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
