@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -35,7 +34,7 @@ import {
 import { useTheme } from "@/components/theme-provider";
 import { useLanguage, type Language } from "@/components/language-provider";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
 import { SosDialog } from "@/components/sos-dialog";
@@ -117,7 +116,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
-  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string, photoURL?: string, isAdmin?: boolean, isBlocked?: boolean, securityStatus?: string, flaggedAt?: any} | null>(null);
+  const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string, photoURL?: string, isAdmin?: boolean, isBlocked?: boolean, securityStatus?: string, flaggedAt?: any, emailVerified?: boolean} | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
@@ -125,11 +124,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setProfileLoading(true);
         const userDocRef = doc(firestore, "users", user.uid);
         
+        // Sync emailVerified status directly from Auth source
+        await updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(e => {
+            // Silently skip if document doesn't exist yet (handled in onboarding)
+        });
+
         const unsubProfile = onSnapshot(userDocRef, (userDoc) => {
             if (userDoc.exists()) {
               setUserProfile(userDoc.data() as any);
@@ -167,7 +171,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       if (userProfile.isBlocked) return true;
       
       if (userProfile.securityStatus === 'suspicious' && userProfile.flaggedAt) {
-          const flaggedTime = userProfile.flaggedAt.toMillis();
+          const flaggedTime = userProfile.flaggedAt.toMillis ? userProfile.flaggedAt.toMillis() : Number(userProfile.flaggedAt);
           const fortyEightHours = 48 * 60 * 60 * 1000;
           if (Date.now() - flaggedTime > fortyEightHours) {
               return true;

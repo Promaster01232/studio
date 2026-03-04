@@ -73,6 +73,7 @@ interface UserRecord {
   flagReason?: string;
   createdAt?: any;
   mobileNumber?: string;
+  emailVerified?: boolean;
 }
 
 interface AdvocateRecord {
@@ -120,7 +121,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                             <div className="min-w-0">
                                 <div className="flex items-center gap-2">
                                     <DialogTitle className="text-lg sm:text-xl font-black tracking-tight truncate">{user.firstName} {user.lastName}</DialogTitle>
-                                    {(user.securityStatus === 'verified' || ADMIN_EMAILS.includes(user.email)) && <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />}
+                                    {user.emailVerified && <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />}
                                 </div>
                                 <DialogDescription className="text-[10px] sm:text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
                                     <ShieldCheck className="h-3 w-3 text-primary" /> {user.userType} Account Dossier
@@ -157,10 +158,10 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                                     <ShieldHalf className="h-3 w-3" /> Verification Status
                                 </p>
                                 <div className="mt-0.5">
-                                    {user.securityStatus === 'verified' || ADMIN_EMAILS.includes(user.email) ? (
-                                        <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Identity Verified</Badge>
+                                    {user.emailVerified ? (
+                                        <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Email Link Verified</Badge>
                                     ) : (
-                                        <Badge variant="outline" className="text-red-500 border-red-200 text-[9px] font-black uppercase">Awaiting Inspection</Badge>
+                                        <Badge variant="outline" className="text-red-500 border-red-200 text-[9px] font-black uppercase">Awaiting Email Check</Badge>
                                     )}
                                 </div>
                             </div>
@@ -422,8 +423,8 @@ export default function ManagementConsolePage() {
               });
               
               toast({ 
-                  title: "User Verified", 
-                  description: `AI confirmed authenticity with ${verification.confidenceScore}% confidence.` 
+                  title: "User Authenticated", 
+                  description: `AI confirmed authenticity with ${verification.confidenceScore}% confidence. Official Verified Badge still requires user email link verification.` 
               });
           } else {
               const userRef = doc(firestore, "users", user.uid);
@@ -507,7 +508,7 @@ export default function ManagementConsolePage() {
       total: users.length,
       active: users.filter(u => !u.isBlocked).length,
       blocked: users.filter(u => u.isBlocked).length,
-      suspicious: users.filter(u => u.securityStatus !== 'verified' && !ADMIN_EMAILS.includes(u.email.toLowerCase())).length,
+      suspicious: users.filter(u => !u.emailVerified && !ADMIN_EMAILS.includes(u.email.toLowerCase())).length,
   };
 
   if (loading) {
@@ -573,13 +574,13 @@ export default function ManagementConsolePage() {
           </Card>
           <Card className="border-primary/5 shadow-sm bg-amber-50/30 rounded-2xl overflow-hidden">
               <CardHeader className="p-3 sm:p-4 pb-1 text-left">
-                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-amber-600 truncate">Pending Audit</CardDescription>
+                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-amber-600 truncate">Pending Verification</CardDescription>
                   <CardTitle className="text-xl sm:text-2xl font-black text-amber-700">{stats.suspicious}</CardTitle>
               </CardHeader>
               <CardContent className="p-3 sm:p-4 pt-0">
                   <div className="flex items-center gap-1.5 text-amber-600">
                       <ShieldAlert className="h-3 w-3" />
-                      <span className="text-[8px] sm:text-[9px] font-bold">Manual Review</span>
+                      <span className="text-[8px] sm:text-[9px] font-bold">Email Unverified</span>
                   </div>
               </CardContent>
           </Card>
@@ -622,13 +623,13 @@ export default function ManagementConsolePage() {
                                 <TableRow className="hover:bg-transparent">
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest pl-6 h-12">Identity</TableHead>
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Role</TableHead>
-                                    <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Security Status</TableHead>
+                                    <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-center h-12">Verification Status</TableHead>
                                     <TableHead className="font-black text-[10px] text-muted-foreground uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {filteredUsers.length > 0 ? filteredUsers.map((user) => (
-                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus !== 'verified' && !ADMIN_EMAILS.includes(user.email.toLowerCase()) && "bg-amber-50/10")}>
+                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", !user.emailVerified && !ADMIN_EMAILS.includes(user.email.toLowerCase()) && "bg-amber-50/10")}>
                                         <TableCell className="pl-6 py-4">
                                             <div className="flex items-center gap-3">
                                                 <Avatar className="h-10 w-10 border border-primary/10 shadow-sm">
@@ -645,13 +646,16 @@ export default function ManagementConsolePage() {
                                             <Badge variant="outline" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 border-primary/20 text-primary">{user.userType}</Badge>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            {user.securityStatus === 'verified' || ADMIN_EMAILS.includes(user.email.toLowerCase()) ? (
-                                                <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Verified</Badge>
+                                            {user.emailVerified ? (
+                                                <div className="flex items-center justify-center gap-1.5 text-green-600">
+                                                    <BadgeCheck className="h-4 w-4" />
+                                                    <span className="text-[9px] font-black uppercase tracking-tight">Verified Identity</span>
+                                                </div>
                                             ) : (
                                                 <div className="flex flex-col items-center gap-1.5">
                                                     <div className="flex items-center justify-center gap-1.5">
                                                         <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                                                        <span className="text-[9px] font-black uppercase text-red-500 tracking-tight">NOT VERIFIED</span>
+                                                        <span className="text-[9px] font-black uppercase text-red-500 tracking-tight">Email Link Pending</span>
                                                     </div>
                                                     <Button 
                                                         size="sm" 
@@ -661,7 +665,7 @@ export default function ManagementConsolePage() {
                                                         disabled={processingUid === user.uid}
                                                     >
                                                         {processingUid === user.uid ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : <ShieldCheck className="h-2.5 w-2.5 mr-1" />}
-                                                        Click to Verify
+                                                        Audit Profile
                                                     </Button>
                                                 </div>
                                             )}

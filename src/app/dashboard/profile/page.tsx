@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User, Sparkles, UserMinus, ImageUp, ShieldAlert } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User, Sparkles, UserMinus, ImageUp, ShieldAlert, MailCheck } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -16,7 +16,7 @@ import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { ref, set, update, remove } from 'firebase/database';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import { signOut, deleteUser } from 'firebase/auth';
+import { signOut, deleteUser, sendEmailVerification } from 'firebase/auth';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -45,6 +45,7 @@ type UserProfile = {
   userType: string;
   photoURL?: string;
   securityStatus?: string;
+  emailVerified?: boolean;
 }
 
 const ADMIN_EMAIL = 'enterspaceindia@gmail.com';
@@ -120,10 +121,27 @@ export default function ProfilePage() {
     }
   }, [auth, firestore, router]);
 
+  const handleSendVerification = async () => {
+      if (!auth.currentUser) return;
+      try {
+          await sendEmailVerification(auth.currentUser);
+          toast({
+              title: "Verification email sent",
+              description: "Please check your inbox and follow the link to verify your identity.",
+          });
+      } catch (error: any) {
+          toast({
+              variant: "destructive",
+              title: "Error",
+              description: error.message || "Failed to send verification email.",
+          });
+      }
+  };
+
   const handleVerifySelf = async () => {
     if (!userProfile || isVerifying) return;
     setIsVerifying(true);
-    toast({ title: "AI Verification Started", description: "Verifying email and identity authenticity..." });
+    toast({ title: "AI Forensic Analysis", description: "Verifying account registration pattern..." });
 
     try {
         const verification = await verifyEmailAuthenticity({
@@ -142,8 +160,8 @@ export default function ProfilePage() {
             
             setUserProfile(prev => prev ? { ...prev, securityStatus: 'verified' } : null);
             toast({ 
-                title: "Account Verified", 
-                description: `AI confirmed authenticity with ${verification.confidenceScore}% confidence.` 
+                title: "Forensic Check Passed", 
+                description: `AI confirmed registration authenticity. Verified Badge still requires clicking the link in your email.` 
             });
         } else {
             const userRef = doc(firestore, "users", userProfile.uid);
@@ -155,13 +173,13 @@ export default function ProfilePage() {
             setUserProfile(prev => prev ? { ...prev, securityStatus: 'suspicious' } : null);
             toast({ 
                 variant: "destructive", 
-                title: "Verification Failed", 
-                description: verification.reason || "The identity appears to be incorrect or fake." 
+                title: "Forensic Audit Failed", 
+                description: verification.reason || "The account registration pattern looks incorrect." 
             });
         }
     } catch (error: any) {
         console.error("Verification error:", error);
-        toast({ variant: "destructive", title: "Process Error", description: "Could not complete AI verification." });
+        toast({ variant: "destructive", title: "Process Error", description: "Could not complete AI audit." });
     } finally {
         setIsVerifying(false);
     }
@@ -480,7 +498,7 @@ export default function ProfilePage() {
                     <div className="flex flex-col sm:flex-row items-center gap-2">
                         <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter text-foreground truncate">{firstName} {lastName}</h2>
                         <div className="flex items-center gap-2">
-                            {userProfile?.securityStatus === 'verified' || isSuperAdmin ? (
+                            {userProfile?.emailVerified || isSuperAdmin ? (
                                 <BadgeCheck className="h-4 w-4 text-primary shrink-0" />
                             ) : (
                                 <Button 
@@ -491,7 +509,7 @@ export default function ProfilePage() {
                                     disabled={isVerifying}
                                 >
                                     {isVerifying ? <Loader2 className="h-2.5 w-2.5 animate-spin mr-1" /> : <ShieldCheck className="h-2.5 w-2.5 mr-1" />}
-                                    Click to Verify
+                                    Forensic Audit
                                 </Button>
                             )}
                         </div>
@@ -546,6 +564,30 @@ export default function ProfilePage() {
                         </CardContent>
                     </Card>
                 </motion.div>
+
+                {!userProfile?.emailVerified && (
+                    <motion.div variants={itemVariants}>
+                        <Card className="border-amber-200 bg-amber-50 rounded-2xl overflow-hidden">
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-amber-800 font-headline font-black text-lg flex items-center gap-2">
+                                    <MailCheck className="h-5 w-5" /> Identity Link Verification
+                                </CardTitle>
+                                <CardDescription className="text-amber-700 font-medium text-xs">
+                                    Official verification link email se verify kiye hue nahi hona chahie. Please verify your email to unlock the trusted identity badge.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="pt-2 pb-6">
+                                <Button 
+                                    onClick={handleSendVerification}
+                                    variant="outline" 
+                                    className="border-amber-300 text-amber-800 hover:bg-amber-100 font-bold h-11 px-6 rounded-xl"
+                                >
+                                    Resend Verification Link
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                )}
                 
                 {userProfile?.userType === 'lawyer' && (
                     <motion.div variants={itemVariants}>
