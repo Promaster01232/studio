@@ -95,7 +95,8 @@ interface AdvocateRecord {
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
   'piyushkumarsingh23323@gmail.com',
-  'piyushkumrsingh23323@gmail.com'
+  'piyushkumrsingh23323@gmail.com',
+  'piyushkumrsingh23399@gmail.com'
 ];
 
 function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React.ReactNode }) {
@@ -179,7 +180,9 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     </div>
                 </ScrollArea>
                 <div className="p-4 sm:p-6 border-t flex flex-col sm:flex-row justify-end gap-3 bg-muted/10">
-                    <Button variant="outline" className="font-bold text-xs h-10 rounded-lg shadow-sm w-full sm:w-auto">Close Dossier</Button>
+                    <DialogTrigger asChild>
+                        <Button variant="outline" className="font-bold text-xs h-10 rounded-lg shadow-sm w-full sm:w-auto">Close Dossier</Button>
+                    </DialogTrigger>
                     <Button className="font-bold text-xs h-10 rounded-lg shadow-lg shadow-primary/20 w-full sm:w-auto">Official Message</Button>
                 </div>
             </DialogContent>
@@ -195,7 +198,7 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
                     <Eye className="h-4 w-4" />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0 overflow-hidden rounded-2xl">
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col p-0 overflow-hidden rounded-2xl border-none shadow-2xl">
                 <div className="bg-primary/5 p-6 border-b border-primary/5 shrink-0">
                     <DialogHeader>
                         <div className="flex items-center gap-3">
@@ -281,9 +284,9 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
 
                 <div className="p-6 border-t bg-muted/10 shrink-0">
                     <div className="flex gap-3">
-                        <Button variant="outline" className="flex-1 font-bold h-12 rounded-xl active:scale-95 transition-all" asChild>
-                            <DialogTrigger>Close</DialogTrigger>
-                        </Button>
+                        <DialogTrigger asChild>
+                            <Button variant="outline" className="flex-1 font-bold h-12 rounded-xl active:scale-95 transition-all">Close</Button>
+                        </DialogTrigger>
                         {!adv.isApproved && (
                             <Button 
                                 className="flex-[2] bg-primary text-white font-black text-[11px] uppercase tracking-widest h-12 rounded-xl shadow-xl shadow-primary/20 active:scale-95 transition-all"
@@ -586,7 +589,7 @@ export default function ManagementConsolePage() {
             <TabsList className="bg-muted/30 p-1 rounded-xl border border-primary/5 inline-flex min-w-full sm:min-w-0">
                 <TabsTrigger value="registry" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs">Member Registry</TabsTrigger>
                 <TabsTrigger value="advocates" className="rounded-lg px-4 sm:px-8 h-10 font-bold text-[10px] sm:text-xs flex gap-2 items-center">
-                    Professional Approval Queue
+                    Advocate Registry (Verification)
                     {advocates.filter(a => !a.isApproved).length > 0 && <span className="bg-primary text-white h-4 px-1.5 rounded-full text-[9px] font-black">{advocates.filter(a => !a.isApproved).length}</span>}
                 </TabsTrigger>
             </TabsList>
