@@ -346,7 +346,7 @@ export default function ManagementConsolePage() {
             setLoading(false);
         });
 
-        // Setup Advocate Listener from Firestore (Unapproved profiles go here first)
+        // Setup Advocate Listener from Firestore (Primary Registry for manual audit)
         const advocatesCol = collection(firestore, "advocates");
         const unsubAdvocates = onSnapshot(advocatesCol, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as AdvocateRecord));
