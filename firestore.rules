@@ -44,11 +44,11 @@ service cloud.firestore {
       allow list: if isAdmin();
       allow create: if isAuthenticated() && userId == request.auth.uid;
       allow update: if isAuthenticated() && (isOwner(userId) || isAdmin()) && (
-        // Prevent blocking the Super Admin account
-        !(get(/databases/$(database)/documents/users/$(userId)).data.email == 'enterspaceindia@gmail.com' && request.resource.data.isBlocked == true)
+        // Prevent blocking the Super Admin accounts
+        !(get(/databases/$(database)/documents/users/$(userId)).data.email in ['enterspaceindia@gmail.com', 'piyushkumarsingh23323@gmail.com'] && request.resource.data.isBlocked == true)
       );
       allow delete: if isAdmin() && 
-        get(/databases/$(database)/documents/users/$(userId)).data.email != 'enterspaceindia@gmail.com';
+        !(get(/databases/$(database)/documents/users/$(userId)).data.email in ['enterspaceindia@gmail.com', 'piyushkumarsingh23323@gmail.com']);
     }
 
     // Advocates collection

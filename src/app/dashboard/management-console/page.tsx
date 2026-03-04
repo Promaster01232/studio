@@ -92,7 +92,7 @@ interface AdvocateRecord {
   isBlocked?: boolean;
 }
 
-const ADMIN_EMAIL = 'enterspaceindia@gmail.com';
+const ADMIN_EMAILS = ['enterspaceindia@gmail.com', 'piyushkumarsingh23323@gmail.com'];
 
 function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React.ReactNode }) {
     return (
@@ -115,7 +115,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                             <div className="min-w-0">
                                 <div className="flex items-center gap-2">
                                     <DialogTitle className="text-lg sm:text-xl font-black tracking-tight truncate">{user.firstName} {user.lastName}</DialogTitle>
-                                    {(user.securityStatus === 'verified' || user.email === ADMIN_EMAIL) && <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />}
+                                    {(user.securityStatus === 'verified' || ADMIN_EMAILS.includes(user.email)) && <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />}
                                 </div>
                                 <DialogDescription className="text-[10px] sm:text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
                                     <ShieldCheck className="h-3 w-3 text-primary" /> {user.userType} Account Dossier
@@ -152,7 +152,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                                     <ShieldHalf className="h-3 w-3" /> Verification Status
                                 </p>
                                 <div className="mt-0.5">
-                                    {user.securityStatus === 'verified' || user.email === ADMIN_EMAIL ? (
+                                    {user.securityStatus === 'verified' || ADMIN_EMAILS.includes(user.email) ? (
                                         <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Identity Verified</Badge>
                                     ) : (
                                         <Badge variant="outline" className="text-red-500 border-red-200 text-[9px] font-black uppercase">Awaiting Inspection</Badge>
@@ -199,8 +199,8 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
                                 <Gavel className="h-5 w-5" />
                             </div>
                             <div className="text-left">
-                                <DialogTitle className="font-headline font-black text-xl tracking-tight">Professional Manual Audit: {adv.name}</DialogTitle>
-                                <DialogDescription className="text-xs font-medium text-muted-foreground">Inspect certificate for 100% authenticity before activation.</DialogDescription>
+                                <DialogTitle className="font-headline font-black text-xl tracking-tight">Professional Audit: {adv.name}</DialogTitle>
+                                <DialogDescription className="text-xs font-medium text-muted-foreground">Manual verification of Bar records and identity.</DialogDescription>
                             </div>
                         </div>
                     </DialogHeader>
@@ -277,7 +277,9 @@ function AdvocateDetailsModal({ adv, onApprove, isProcessing }: { adv: AdvocateR
 
                 <div className="p-6 border-t bg-muted/10 shrink-0">
                     <div className="flex gap-3">
-                        <Button variant="outline" className="flex-1 font-bold h-12 rounded-xl active:scale-95 transition-all">Close</Button>
+                        <Button variant="outline" className="flex-1 font-bold h-12 rounded-xl active:scale-95 transition-all" asChild>
+                            <DialogTrigger>Close</DialogTrigger>
+                        </Button>
                         {!adv.isApproved && (
                             <Button 
                                 className="flex-[2] bg-primary text-white font-black text-[11px] uppercase tracking-widest h-12 rounded-xl shadow-xl shadow-primary/20 active:scale-95 transition-all"
@@ -315,7 +317,7 @@ export default function ManagementConsolePage() {
             return;
         }
 
-        const isSuperAdmin = user.email === ADMIN_EMAIL;
+        const isSuperAdmin = ADMIN_EMAILS.includes(user.email || '');
         const adminDoc = await getDoc(doc(firestore, "users", user.uid));
         const adminData = adminDoc.data() as any;
         const hasAdminFlag = !!adminData?.isAdmin;
@@ -370,7 +372,7 @@ export default function ManagementConsolePage() {
   }, [firestore, auth, router, toast]);
 
   const toggleUserBlock = async (user: UserRecord) => {
-    if (user.email === ADMIN_EMAIL) {
+    if (ADMIN_EMAILS.includes(user.email)) {
         toast({ variant: "destructive", title: "Root Account Immutable", description: "Admin cannot be blocked." });
         return;
     }
@@ -436,7 +438,7 @@ export default function ManagementConsolePage() {
   };
 
   const handleDeleteUser = async (user: UserRecord) => {
-    if (user.email === ADMIN_EMAIL) {
+    if (ADMIN_EMAILS.includes(user.email)) {
         toast({ variant: "destructive", title: "System Root Immutable", description: "Admin account cannot be deleted." });
         return;
     }
@@ -497,7 +499,7 @@ export default function ManagementConsolePage() {
       total: users.length,
       active: users.filter(u => !u.isBlocked).length,
       blocked: users.filter(u => u.isBlocked).length,
-      suspicious: users.filter(u => u.securityStatus !== 'verified' && u.email !== ADMIN_EMAIL).length,
+      suspicious: users.filter(u => u.securityStatus !== 'verified' && !ADMIN_EMAILS.includes(u.email)).length,
   };
 
   if (loading) {
@@ -618,7 +620,7 @@ export default function ManagementConsolePage() {
                             </TableHeader>
                             <TableBody>
                                 {filteredUsers.length > 0 ? filteredUsers.map((user) => (
-                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus !== 'verified' && user.email !== ADMIN_EMAIL && "bg-amber-50/10")}>
+                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus !== 'verified' && !ADMIN_EMAILS.includes(user.email) && "bg-amber-50/10")}>
                                         <TableCell className="pl-6 py-4">
                                             <div className="flex items-center gap-3">
                                                 <Avatar className="h-10 w-10 border border-primary/10 shadow-sm">
@@ -635,7 +637,7 @@ export default function ManagementConsolePage() {
                                             <Badge variant="outline" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 border-primary/20 text-primary">{user.userType}</Badge>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            {user.securityStatus === 'verified' || user.email === ADMIN_EMAIL ? (
+                                            {user.securityStatus === 'verified' || ADMIN_EMAILS.includes(user.email) ? (
                                                 <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Verified</Badge>
                                             ) : (
                                                 <div className="flex flex-col items-center gap-1.5">
@@ -675,7 +677,7 @@ export default function ManagementConsolePage() {
                                                         
                                                         <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Send Message</DropdownMenuItem>
                                                         
-                                                        {user.email !== ADMIN_EMAIL && (
+                                                        {!ADMIN_EMAILS.includes(user.email) && (
                                                             <>
                                                                 <DropdownMenuSeparator className="my-2" />
                                                                 <DropdownMenuItem 
@@ -695,7 +697,7 @@ export default function ManagementConsolePage() {
                                                         user.isBlocked ? "bg-white border border-primary/10 text-primary hover:bg-primary/5" : "bg-red-500 hover:bg-red-600 text-white"
                                                     )}
                                                     onClick={() => toggleUserBlock(user)}
-                                                    disabled={processingUid === user.uid || user.email === ADMIN_EMAIL}
+                                                    disabled={processingUid === user.uid || ADMIN_EMAILS.includes(user.email)}
                                                 >
                                                     {processingUid === user.uid ? <Loader2 className="h-3 w-3 animate-spin" /> : user.isBlocked ? "Restore" : "Suspend"}
                                                 </Button>
@@ -728,14 +730,14 @@ export default function ManagementConsolePage() {
                                             <AvatarImage src={user?.photoURL} className="object-cover" />
                                             <AvatarFallback className="font-black text-xl bg-primary text-white">{adv.name?.charAt(0) || user?.firstName?.charAt(0) || "A"}</AvatarFallback>
                                         </Avatar>
-                                        {(adv.isApproved || user?.email === ADMIN_EMAIL) && (
+                                        {(adv.isApproved || ADMIN_EMAILS.includes(user?.email || '')) && (
                                             <div className="absolute -bottom-1.5 -right-1.5 bg-green-500 text-white p-1.5 rounded-lg shadow-lg">
                                                 <CheckCircle className="h-3.5 w-3.5" />
                                             </div>
                                         )}
                                     </div>
                                     <div className="flex flex-col items-end gap-1.5">
-                                        {adv.isApproved || user?.email === ADMIN_EMAIL ? (
+                                        {adv.isApproved || ADMIN_EMAILS.includes(user?.email || '') ? (
                                             <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md">Verified & Public</Badge>
                                         ) : (
                                             <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Pending Manual Review</Badge>
@@ -762,7 +764,7 @@ export default function ManagementConsolePage() {
                             </div>
                             <div className="p-4 bg-muted/10 border-t border-primary/5 flex gap-3">
                                 <AdvocateDetailsModal adv={adv} onApprove={approveAdvocate} isProcessing={isProcessing} />
-                                {!adv.isApproved && user?.email !== ADMIN_EMAIL && (
+                                {!adv.isApproved && !ADMIN_EMAILS.includes(user?.email || '') && (
                                     <Button 
                                         className="flex-1 h-10 font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/10 active:scale-95 transition-all bg-primary text-white rounded-xl"
                                         onClick={() => approveAdvocate(adv)}
@@ -779,8 +781,8 @@ export default function ManagementConsolePage() {
                         <div className="h-20 w-20 bg-white rounded-2xl shadow-xl mx-auto mb-8 flex items-center justify-center text-primary/20 border border-primary/5">
                             <Gavel className="h-10 w-10" />
                         </div>
-                        <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Queue is Empty</h3>
-                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed">Professional Registry Empty - Advocate verification happens here. All submitted professional details will appear in this queue for manual inspection.</p>
+                        <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Esme advocate verification hoga</h3>
+                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed">Sara advocate ka dital eha show hoga. All professional submissions await manual inspection here before activation.</p>
                     </div>
                 )}
             </div>
