@@ -12,10 +12,10 @@ service cloud.firestore {
     // Whitelisted emails have prioritized access to all registries
     function isSuperAdmin() {
       return isAuthenticated() && (
-        request.auth.token.email == 'enterspaceindia@gmail.com' ||
-        request.auth.token.email == 'piyushkumarsingh23323@gmail.com' ||
-        request.auth.token.email == 'piyushkumrsingh23323@gmail.com' ||
-        request.auth.token.email == 'piyushkumrsingh23399@gmail.com'
+        request.auth.token.email.lower() == 'enterspaceindia@gmail.com' ||
+        request.auth.token.email.lower() == 'piyushkumarsingh23323@gmail.com' ||
+        request.auth.token.email.lower() == 'piyushkumrsingh23323@gmail.com' ||
+        request.auth.token.email.lower() == 'piyushkumrsingh23399@gmail.com'
       );
     }
 
@@ -47,10 +47,10 @@ service cloud.firestore {
       allow create: if isAuthenticated() && userId == request.auth.uid;
       allow update: if isAuthenticated() && (isOwner(userId) || isAdmin()) && (
         // Prevent blocking the Super Admin accounts (Root node immutability)
-        !(get(/databases/$(database)/documents/users/$(userId)).data.email in ['enterspaceindia@gmail.com', 'piyushkumarsingh23323@gmail.com', 'piyushkumrsingh23323@gmail.com', 'piyushkumrsingh23399@gmail.com'] && request.resource.data.isBlocked == true)
+        !(get(/databases/$(database)/documents/users/$(userId)).data.email.lower() in ['enterspaceindia@gmail.com', 'piyushkumarsingh23323@gmail.com', 'piyushkumrsingh23323@gmail.com', 'piyushkumrsingh23399@gmail.com'] && request.resource.data.isBlocked == true)
       );
       allow delete: if isAdmin() && 
-        !(get(/databases/$(database)/documents/users/$(userId)).data.email in ['enterspaceindia@gmail.com', 'piyushkumarsingh23323@gmail.com', 'piyushkumrsingh23323@gmail.com', 'piyushkumrsingh23399@gmail.com']);
+        !(get(/databases/$(database)/documents/users/$(userId)).data.email.lower() in ['enterspaceindia@gmail.com', 'piyushkumarsingh23323@gmail.com', 'piyushkumrsingh23323@gmail.com', 'piyushkumrsingh23399@gmail.com']);
     }
 
     // Advocates collection

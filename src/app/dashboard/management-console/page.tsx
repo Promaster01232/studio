@@ -324,7 +324,7 @@ export default function ManagementConsolePage() {
             return;
         }
 
-        const isSuperAdmin = ADMIN_EMAILS.includes(user.email || '');
+        const isSuperAdmin = ADMIN_EMAILS.includes(user.email?.toLowerCase() || '');
         const adminDoc = await getDoc(doc(firestore, "users", user.uid));
         const adminData = adminDoc.data() as any;
         const hasAdminFlag = !!adminData?.isAdmin;
@@ -356,7 +356,6 @@ export default function ManagementConsolePage() {
         });
 
         // Setup Advocate Listener from Firestore (Primary Registry for manual audit)
-        // Ordered by name for consistent Admin connection
         const advocatesCol = collection(firestore, "advocates");
         const advQuery = query(advocatesCol, orderBy("name", "asc"));
         const unsubAdvocates = onSnapshot(advQuery, (snapshot) => {
@@ -381,7 +380,7 @@ export default function ManagementConsolePage() {
   }, [firestore, auth, router, toast]);
 
   const toggleUserBlock = async (user: UserRecord) => {
-    if (ADMIN_EMAILS.includes(user.email)) {
+    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         toast({ variant: "destructive", title: "Root Account Immutable", description: "Admin cannot be blocked." });
         return;
     }
@@ -447,7 +446,7 @@ export default function ManagementConsolePage() {
   };
 
   const handleDeleteUser = async (user: UserRecord) => {
-    if (ADMIN_EMAILS.includes(user.email)) {
+    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         toast({ variant: "destructive", title: "System Root Immutable", description: "Admin account cannot be deleted." });
         return;
     }
@@ -508,7 +507,7 @@ export default function ManagementConsolePage() {
       total: users.length,
       active: users.filter(u => !u.isBlocked).length,
       blocked: users.filter(u => u.isBlocked).length,
-      suspicious: users.filter(u => u.securityStatus !== 'verified' && !ADMIN_EMAILS.includes(u.email)).length,
+      suspicious: users.filter(u => u.securityStatus !== 'verified' && !ADMIN_EMAILS.includes(u.email.toLowerCase())).length,
   };
 
   if (loading) {
@@ -629,7 +628,7 @@ export default function ManagementConsolePage() {
                             </TableHeader>
                             <TableBody>
                                 {filteredUsers.length > 0 ? filteredUsers.map((user) => (
-                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus !== 'verified' && !ADMIN_EMAILS.includes(user.email) && "bg-amber-50/10")}>
+                                    <TableRow key={user.uid} className={cn("hover:bg-muted/5 transition-colors border-b border-primary/5", user.securityStatus !== 'verified' && !ADMIN_EMAILS.includes(user.email.toLowerCase()) && "bg-amber-50/10")}>
                                         <TableCell className="pl-6 py-4">
                                             <div className="flex items-center gap-3">
                                                 <Avatar className="h-10 w-10 border border-primary/10 shadow-sm">
@@ -646,7 +645,7 @@ export default function ManagementConsolePage() {
                                             <Badge variant="outline" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 border-primary/20 text-primary">{user.userType}</Badge>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            {user.securityStatus === 'verified' || ADMIN_EMAILS.includes(user.email) ? (
+                                            {user.securityStatus === 'verified' || ADMIN_EMAILS.includes(user.email.toLowerCase()) ? (
                                                 <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2">Verified</Badge>
                                             ) : (
                                                 <div className="flex flex-col items-center gap-1.5">
@@ -686,7 +685,7 @@ export default function ManagementConsolePage() {
                                                         
                                                         <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4 text-muted-foreground" /> Send Message</DropdownMenuItem>
                                                         
-                                                        {!ADMIN_EMAILS.includes(user.email) && (
+                                                        {!ADMIN_EMAILS.includes(user.email.toLowerCase()) && (
                                                             <>
                                                                 <DropdownMenuSeparator className="my-2" />
                                                                 <DropdownMenuItem 
@@ -706,7 +705,7 @@ export default function ManagementConsolePage() {
                                                         user.isBlocked ? "bg-white border border-primary/10 text-primary hover:bg-primary/5" : "bg-red-500 hover:bg-red-600 text-white"
                                                     )}
                                                     onClick={() => toggleUserBlock(user)}
-                                                    disabled={processingUid === user.uid || ADMIN_EMAILS.includes(user.email)}
+                                                    disabled={processingUid === user.uid || ADMIN_EMAILS.includes(user.email.toLowerCase())}
                                                 >
                                                     {processingUid === user.uid ? <Loader2 className="h-3 w-3 animate-spin" /> : user.isBlocked ? "Restore" : "Suspend"}
                                                 </Button>
@@ -739,14 +738,14 @@ export default function ManagementConsolePage() {
                                             <AvatarImage src={user?.photoURL} className="object-cover" />
                                             <AvatarFallback className="font-black text-xl bg-primary text-white">{adv.name?.charAt(0) || user?.firstName?.charAt(0) || "A"}</AvatarFallback>
                                         </Avatar>
-                                        {(adv.isApproved || ADMIN_EMAILS.includes(user?.email || '')) && (
+                                        {(adv.isApproved || ADMIN_EMAILS.includes(user?.email?.toLowerCase() || '')) && (
                                             <div className="absolute -bottom-1.5 -right-1.5 bg-green-500 text-white p-1.5 rounded-lg shadow-lg">
                                                 <CheckCircle className="h-3.5 w-3.5" />
                                             </div>
                                         )}
                                     </div>
                                     <div className="flex flex-col items-end gap-1.5">
-                                        {adv.isApproved || ADMIN_EMAILS.includes(user?.email || '') ? (
+                                        {adv.isApproved || ADMIN_EMAILS.includes(user?.email?.toLowerCase() || '') ? (
                                             <Badge className="bg-green-500 text-white font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md">Verified & Public</Badge>
                                         ) : (
                                             <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 font-black text-[8px] uppercase tracking-widest px-2.5 py-1 rounded-md border border-amber-500/20">Pending Manual Review</Badge>
@@ -773,7 +772,7 @@ export default function ManagementConsolePage() {
                             </div>
                             <div className="p-4 bg-muted/10 border-t border-primary/5 flex gap-3">
                                 <AdvocateDetailsModal adv={adv} onApprove={approveAdvocate} isProcessing={isProcessing} />
-                                {!adv.isApproved && !ADMIN_EMAILS.includes(user?.email || '') && (
+                                {!adv.isApproved && !ADMIN_EMAILS.includes(user?.email?.toLowerCase() || '') && (
                                     <Button 
                                         className="flex-1 h-10 font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/10 active:scale-95 transition-all bg-primary text-white rounded-xl"
                                         onClick={() => approveAdvocate(adv)}
@@ -786,12 +785,12 @@ export default function ManagementConsolePage() {
                         </Card>
                     );
                 }) : (
-                    <div className="col-span-full py-24 text-center bg-muted/5 rounded-3xl border-2 border-dashed border-primary/5">
+                    <div className="col-span-full py-24 text-center bg-muted/5 rounded-3xl border-2 border-dashed border-primary/5 mx-2">
                         <div className="h-20 w-20 bg-white rounded-2xl shadow-xl mx-auto mb-8 flex items-center justify-center text-primary/20 border border-primary/5">
                             <Gavel className="h-10 w-10" />
                         </div>
                         <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">esme advocate verification hoga</h3>
-                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed">sara advocate ka dital eha show hoga. All professional submissions await manual inspection here before activation.</p>
+                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed px-4">sara advocate ka dital eha show hoga. All professional submissions await manual inspection here before activation.</p>
                     </div>
                 )}
             </div>
