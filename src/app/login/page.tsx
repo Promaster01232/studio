@@ -11,7 +11,8 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   OAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  sendPasswordResetEmail
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
@@ -79,6 +80,35 @@ export default function LoginPage() {
         });
     } finally {
         setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast({
+        variant: "destructive",
+        title: "Email required",
+        description: "Please enter your email address to receive a password reset link.",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast({
+        title: "Reset link sent",
+        description: `A password reset link has been sent to ${email}. Please check your inbox.`,
+      });
+    } catch (error: any) {
+      console.error("Reset error:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not send reset email. Please try again later.",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -191,9 +221,13 @@ export default function LoginPage() {
                 <div className="space-y-2">
                 <div className="flex items-center">
                     <Label htmlFor="password" title="password" className="font-bold opacity-70">Password</Label>
-                    <Link href="#" className="ml-auto inline-block text-[11px] font-bold text-primary hover:underline">
-                    Forgot password?
-                    </Link>
+                    <button
+                        type="button"
+                        onClick={handleForgotPassword}
+                        className="ml-auto inline-block text-[11px] font-bold text-primary hover:underline bg-transparent border-none p-0 cursor-pointer"
+                    >
+                        Forgot password?
+                    </button>
                 </div>
                 <div className="relative">
                     <Input 
