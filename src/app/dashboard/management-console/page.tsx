@@ -92,7 +92,11 @@ interface AdvocateRecord {
   isBlocked?: boolean;
 }
 
-const ADMIN_EMAILS = ['enterspaceindia@gmail.com', 'piyushkumarsingh23323@gmail.com'];
+const ADMIN_EMAILS = [
+  'enterspaceindia@gmail.com', 
+  'piyushkumarsingh23323@gmail.com',
+  'piyushkumrsingh23323@gmail.com'
+];
 
 function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React.ReactNode }) {
     return (
@@ -781,8 +785,8 @@ export default function ManagementConsolePage() {
                         <div className="h-20 w-20 bg-white rounded-2xl shadow-xl mx-auto mb-8 flex items-center justify-center text-primary/20 border border-primary/5">
                             <Gavel className="h-10 w-10" />
                         </div>
-                        <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">Esme advocate verification hoga</h3>
-                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed">Sara advocate ka dital eha show hoga. All professional submissions await manual inspection here before activation.</p>
+                        <h3 className="text-2xl font-black font-headline tracking-tighter text-[#1a1a1a]">esme advocate verification hoga</h3>
+                        <p className="text-muted-foreground max-xs mx-auto mt-3 text-xs font-medium leading-relaxed">sara advocate ka dital eha show hoga. All professional submissions await manual inspection here before activation.</p>
                     </div>
                 )}
             </div>
