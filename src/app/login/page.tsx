@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -234,9 +235,10 @@ export default function LoginPage() {
                     <button
                         type="button"
                         onClick={handleForgotPassword}
-                        className="ml-auto inline-block text-[11px] font-bold text-primary hover:underline bg-transparent border-none p-0 cursor-pointer"
+                        disabled={loading}
+                        className="ml-auto inline-block text-[11px] font-bold text-primary hover:underline bg-transparent border-none p-0 cursor-pointer disabled:opacity-50"
                     >
-                        Forgot password?
+                        {loading ? "Please wait..." : "Forgot password?"}
                     </button>
                 </div>
                 <div className="relative">
@@ -276,7 +278,7 @@ export default function LoginPage() {
 
             <div className="grid grid-cols-1 gap-2">
                 <Button variant="outline" className="w-full font-bold h-12 active:scale-95 transition-all border-primary/10 hover:border-primary/30" onClick={handleGoogleLogin} disabled={loading}>
-                    <GoogleIcon className="mr-2 h-4 w-4" />
+                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
                     Google
                 </Button>
             </div>

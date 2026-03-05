@@ -239,7 +239,10 @@ function PostCard({ post }: { post: Post }) {
                                 disabled={userHasVotedOnPoll || isVoting}
                             >
                                 <div className="flex items-center justify-between w-full z-10">
-                                    <span className="font-medium text-sm">{option.text}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-medium text-sm">{option.text}</span>
+                                        {isVoting && userVotedForThis && <Loader2 className="h-3 w-3 animate-spin text-primary" />}
+                                    </div>
                                     {userVotedForThis && <span className="text-xs font-bold">{votePercentage.toFixed(0)}%</span>}
                                 </div>
                                {userVotedForThis && (
@@ -247,7 +250,6 @@ function PostCard({ post }: { post: Post }) {
                                )}
                            </Button>
                        )})}
-                       {isVoting && <p className="text-xs text-muted-foreground text-center">Voting...</p>}
                     </div>
                 )}
             </div>
@@ -255,7 +257,7 @@ function PostCard({ post }: { post: Post }) {
             <CardFooter className="p-2 sm:p-3 mt-2 flex justify-between items-center">
                 <div className="flex gap-1">
                     <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={handleLike} disabled={isLiking}>
-                        <Heart className={cn("h-4 w-4", userHasLiked && "fill-red-500 text-red-500")} />
+                        {isLiking ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-red-500 text-red-500")} />}
                         <span className="text-xs text-muted-foreground">{optimisticLikes}</span>
                     </Button>
                     <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={() => handleAction('Comment')}>
@@ -662,9 +664,8 @@ export default function ResearchAnalyticsPage() {
                             </TabsContent>
                         </Tabs>
                         <DialogFooter className="pt-4">
-                            <Button type="submit" disabled={isPosting} className="w-full">
-                                {isPosting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                <Send className="mr-2 h-4 w-4" />
+                            <Button type="submit" disabled={isPosting} className="w-full h-12">
+                                {isPosting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
                                 Publish Post
                             </Button>
                         </DialogFooter>

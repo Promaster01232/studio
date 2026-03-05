@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -397,10 +398,12 @@ export default function ManagementConsolePage() {
                 requestResourceData: { isBlocked: newStatus },
             } satisfies SecurityRuleContext, serverError);
             errorEmitter.emit('permission-error', permissionError);
+        })
+        .finally(() => {
+            setProcessingUid(null);
         });
 
     toast({ title: newStatus ? "Identity Suspended" : "Identity Restored" });
-    setProcessingUid(null);
   };
 
   const handleVerifyUser = async (user: UserRecord) => {
@@ -458,15 +461,18 @@ export default function ManagementConsolePage() {
     const userRef = doc(firestore, "users", user.uid);
     const advocateRef = doc(firestore, "advocates", user.uid);
     
-    await deleteDoc(userRef).catch(() => {});
-    await deleteDoc(advocateRef).catch(() => {});
-    
-    // Also remove from RTDB
-    remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
-    remove(ref(rtdb, `advocates/${user.uid}`)).catch(() => {});
-    
-    toast({ title: "Account Purged Successfully" });
-    setProcessingUid(null);
+    try {
+        await deleteDoc(userRef).catch(() => {});
+        await deleteDoc(advocateRef).catch(() => {});
+        
+        // Also remove from RTDB
+        remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
+        remove(ref(rtdb, `advocates/${user.uid}`)).catch(() => {});
+        
+        toast({ title: "Account Purged Successfully" });
+    } finally {
+        setProcessingUid(null);
+    }
   };
 
   const approveAdvocate = async (adv: AdvocateRecord) => {
@@ -694,9 +700,11 @@ export default function ManagementConsolePage() {
                                                                 <DropdownMenuSeparator className="my-2" />
                                                                 <DropdownMenuItem 
                                                                     onClick={() => handleDeleteUser(user)}
+                                                                    disabled={processingUid === user.uid}
                                                                     className="rounded-lg font-bold text-[10px] h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer uppercase tracking-tight"
                                                                 >
-                                                                    <Trash2 className="mr-3 h-4 w-4" /> Delete account
+                                                                    {processingUid === user.uid ? <Loader2 className="mr-3 h-4 w-4 animate-spin" /> : <Trash2 className="mr-3 h-4 w-4" />}
+                                                                    Delete account
                                                                 </DropdownMenuItem>
                                                             </>
                                                         )}

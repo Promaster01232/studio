@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -70,6 +71,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [showAdvocateDialog, setShowAdvocateDialog] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
@@ -131,6 +133,7 @@ export default function ProfilePage() {
 
   const handleSendVerification = async () => {
       if (!auth.currentUser) return;
+      setIsResending(true);
       try {
           await sendEmailVerification(auth.currentUser);
           toast({
@@ -143,6 +146,8 @@ export default function ProfilePage() {
               title: "Error",
               description: error.message || "Failed to send verification email.",
           });
+      } finally {
+          setIsResending(false);
       }
   };
 
@@ -305,6 +310,7 @@ export default function ProfilePage() {
   const handleRemoveAdvocateListing = async () => {
     if (!auth.currentUser || !userProfile) return;
     
+    setSaving(true);
     const advRef = doc(firestore, "advocates", auth.currentUser.uid);
     const userRef = doc(firestore, "users", auth.currentUser.uid);
 
@@ -325,6 +331,8 @@ export default function ProfilePage() {
         });
     } catch (err) {
         console.error("Failed to remove listing:", err);
+    } finally {
+        setSaving(false);
     }
   };
 
@@ -614,7 +622,7 @@ export default function ProfilePage() {
                                     size="sm" 
                                     className="w-full sm:w-auto shadow-lg shadow-primary/10 h-11 px-10 font-bold active:scale-95 transition-all disabled:opacity-50 disabled:grayscale"
                                 >
-                                    {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                     Update details
                                 </Button>
                             </div>
@@ -636,9 +644,11 @@ export default function ProfilePage() {
                             <CardContent className="pt-2 pb-6 text-left">
                                 <Button 
                                     onClick={handleSendVerification}
+                                    disabled={isResending}
                                     variant="outline" 
                                     className="border-amber-300 text-amber-800 hover:bg-amber-100 font-bold h-11 px-6 rounded-xl"
                                 >
+                                    {isResending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                     Resend Verification Link
                                 </Button>
                             </CardContent>
@@ -726,7 +736,8 @@ export default function ProfilePage() {
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter className="flex-col sm:flex-row gap-2">
                                                     <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={handleRemoveAdvocateListing} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
+                                                    <AlertDialogAction onClick={handleRemoveAdvocateListing} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
+                                                        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                                         Confirm removal
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>
@@ -803,7 +814,7 @@ export default function ProfilePage() {
                                     </AlertDialogHeader>
                                     <AlertDialogFooter className="flex-col sm:flex-row gap-2">
                                     <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
+                                    <AlertDialogAction onClick={handleDeleteAccount} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
                                         {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                                         Delete permanently
                                     </AlertDialogAction>
