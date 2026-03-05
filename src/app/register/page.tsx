@@ -1,11 +1,10 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore, useDatabase } from "@/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { ref, set, update } from "firebase/database";
 import { Button } from "@/components/ui/button";
@@ -46,6 +45,15 @@ export default function RegisterPage() {
   const [showAdvocateDialog, setShowAdvocateDialog] = useState(false);
 
   const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.replace('/dashboard');
+      }
+    });
+    return () => unsubscribe();
+  }, [auth, router]);
 
   const handleRegister = async () => {
     if (!firstName || !lastName || !email || !mobileNumber || !password || !confirmPassword) {

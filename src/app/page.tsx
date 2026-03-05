@@ -1,10 +1,27 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import { ArrowRight, Lightbulb } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowRight, Lightbulb, Loader2 } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { useAuth } from "@/firebase";
+import { onAuthStateChanged, User } from "firebase/auth";
 
 export default function WelcomePage() {
+  const auth = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, [auth]);
+
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md overflow-hidden border-none shadow-2xl">
@@ -24,8 +41,16 @@ export default function WelcomePage() {
           </p>
           
           <Button asChild size="lg" className="group w-full h-12 font-bold shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 active:scale-95 rounded-xl">
-            <Link href="/login">
-              Get Started <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <Link href={loading ? "#" : (user ? "/dashboard" : "/login")}>
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" /> Authenticating...
+                </span>
+              ) : (
+                <>
+                  {user ? "Go to Dashboard" : "Get Started"} <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </>
+              )}
             </Link>
           </Button>
 

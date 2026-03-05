@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +12,8 @@ import {
   GoogleAuthProvider,
   OAuthProvider,
   signInWithPopup,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  onAuthStateChanged
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
@@ -43,6 +44,15 @@ export default function LoginPage() {
   const [domainError, setDomainError] = useState<string | null>(null);
 
   const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.replace('/dashboard');
+      }
+    });
+    return () => unsubscribe();
+  }, [auth, router]);
 
   const handleEmailLogin = async () => {
     if (!email || !password) {
