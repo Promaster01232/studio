@@ -10,9 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth, useFirestore, useDatabase } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import { ref, set } from "firebase/database";
+import { ref, set, update } from "firebase/database";
 import { Loader2, ShieldCheck, Gavel, MapPin, Briefcase, GraduationCap, FileUp, X, CheckCircle2, Info, UserMinus, AlertTriangle } from "lucide-react";
-import { verifyAdvocateCertificate } from "@/ai/flows/verify-advocate-certificate";
 import type { Lawyer } from "@/lib/advocates-data";
 
 const practiceAreas = [
@@ -129,18 +128,21 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                 updatedAt: Date.now()
             };
 
-            // Save to Firestore (Primary Registry)
+            // 1. Update Advocate Registry (Primary for manual audit)
             const advocateRef = doc(firestore, "advocates", auth.currentUser.uid);
             await setDoc(advocateRef, newAdvocateData);
             
-            // Sync to RTDB (Real-time features)
-            await set(ref(rtdb, `advocates/${auth.currentUser.uid}`), newAdvocateData).catch(err => {
-                console.warn("RTDB professional sync skipped:", err.message);
-            });
+            // 2. IMPORTANT: Update core user type to lawyer
+            const userRef = doc(firestore, "users", auth.currentUser.uid);
+            await setDoc(userRef, { userType: 'lawyer' }, { merge: true });
+
+            // 3. Sync to RTDB for real-time features
+            await set(ref(rtdb, `advocates/${auth.currentUser.uid}`), newAdvocateData).catch(() => {});
+            await update(ref(rtdb, `users/${auth.currentUser.uid}`), { userType: 'lawyer' }).catch(() => {});
 
             toast({
-                title: "Submitted for Manual Review",
-                description: "The Admin will manually verify your certificate for 100% accuracy. You will be notified once active.",
+                title: "Professional Dital Saved",
+                description: "The Admin will manually verify your Bar certificate for 100% accuracy before public activation.",
             });
 
             onSave();
@@ -149,7 +151,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
             toast({
                 variant: "destructive",
                 title: "Save failed",
-                description: "Could not save your professional profile. Please try again.",
+                description: "Could not save professional data. Please check your connection.",
             });
         } finally {
             setIsSaving(false);
@@ -176,21 +178,21 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
 
     return (
         <form className="space-y-8 max-h-[70vh] overflow-y-auto p-1 pr-4 custom-scrollbar" onSubmit={handleSubmit}>
-            <div className="bg-amber-500/5 p-4 rounded-xl border border-amber-500/20 flex flex-col gap-3 shadow-inner">
+            <div className="bg-amber-500/5 p-4 rounded-xl border border-amber-500/20 flex flex-col gap-3 shadow-inner text-left">
                 <div className="flex items-start gap-4">
                     <div className="bg-amber-500/10 p-2 rounded-lg">
                         <AlertTriangle className="h-5 w-5 text-amber-600" />
                     </div>
                     <div className="space-y-1">
-                        <p className="text-xs font-bold text-amber-600 uppercase tracking-wider">Manual Certificate Verification</p>
+                        <p className="text-xs font-bold text-amber-600 uppercase tracking-wider">Manual Certificate Audit</p>
                         <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                            To ensure 100% accuracy, your Bar Council certificate will be manually inspected by the system administrator. Approval is required before your profile is activated in the public directory.
+                            To ensure 100% platform accuracy, your Bar Certificate will be manually inspected by the Admin. Approval is required before public listing activation.
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div className="grid gap-6">
+            <div className="grid gap-6 text-left">
                 <div className="space-y-3">
                     <Label htmlFor="fullName" className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground uppercase tracking-widest">
                         <Gavel className="h-4 w-4 text-primary" /> Full Name (as on Bar ID)
@@ -215,7 +217,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
 
                 <div className="space-y-3">
                     <Label className="text-[11px] font-bold flex items-center gap-2 text-muted-foreground uppercase tracking-widest">
-                        <FileUp className="h-4 w-4 text-primary" /> Enrollment Certificate
+                        <FileUp className="h-4 w-4 text-primary" /> Bar Certificate Attachment
                     </Label>
                     <div className={`relative border-2 border-dashed rounded-xl p-6 transition-all ${certificateName ? 'bg-primary/5 border-primary/40' : 'hover:border-primary/30 bg-muted/20'}`}>
                         <input
@@ -244,7 +246,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                                     </div>
                                     <div className="min-w-0">
                                         <p className="text-[11px] font-bold truncate max-w-[200px]">{certificateName}</p>
-                                        <p className="text-[10px] text-primary font-bold">Awaiting Admin Inspection</p>
+                                        <p className="text-[10px] text-primary font-bold">Manual Audit Queue</p>
                                     </div>
                                 </div>
                                 <button 
@@ -262,7 +264,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
 
                 <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <Label htmlFor="specialization" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Primary Specialization</Label>
+                        <Label htmlFor="specialization" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Specialty</Label>
                         <Select name="specialization" required defaultValue={initialData?.specialty || ""}>
                             <SelectTrigger id="specialization" className="h-11 border-primary/10 font-bold">
                                 <SelectValue placeholder="Select practice area" />
@@ -298,7 +300,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                 
                 <div className="space-y-3">
                     <Label htmlFor="bio" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Professional Bio</Label>
-                    <Textarea id="bio" name="bio" placeholder="Describe your legal expertise and notable achievements..." rows={4} required defaultValue={initialData?.about || ""} className="resize-none border-primary/10 focus:border-primary font-medium text-sm" />
+                    <Textarea id="bio" name="bio" placeholder="Describe your legal expertise..." rows={4} required defaultValue={initialData?.about || ""} className="resize-none border-primary/10 focus:border-primary font-medium text-sm" />
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
@@ -320,9 +322,9 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                     {isSaving ? (
                         <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Submitting credentials...
+                            Submitting professional dital...
                         </>
-                    ) : (initialData ? "Update professional profile" : "Activate professional registration")}
+                    ) : (initialData ? "Update professional dital" : "Register as Legal Professional")}
                 </Button>
                 
                 {onSkip && !initialData && (
@@ -334,7 +336,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                         className="w-full h-10 font-bold text-muted-foreground hover:text-foreground text-[10px] uppercase tracking-wider"
                     >
                         <UserMinus className="mr-2 h-3.5 w-3.5" />
-                        Skip & proceed as General Citizen
+                        Skip & proceed as Citizen
                     </Button>
                 )}
             </div>
