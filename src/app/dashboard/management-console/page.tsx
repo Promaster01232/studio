@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -48,7 +47,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 
@@ -86,11 +85,11 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     </button>
                 )}
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-2xl border-none shadow-2xl bg-white">
+            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-2xl border-none shadow-2xl bg-card">
                 <div className="bg-primary/5 p-6 border-b">
                     <DialogHeader className="border-none pb-0 mb-0 text-left">
                         <div className="flex items-center gap-4">
-                            <Avatar className="h-12 w-12 sm:h-16 sm:w-16 border-2 border-white shadow-lg">
+                            <Avatar className="h-12 w-12 sm:h-16 sm:w-16 border-2 border-background shadow-lg">
                                 <AvatarImage src={user.photoURL} className="object-cover" />
                                 <AvatarFallback className="font-bold text-lg bg-primary/10 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
                             </Avatar>
@@ -144,12 +143,12 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                         </div>
 
                         {user.flagReason && (
-                            <div className="p-4 rounded-xl bg-red-50 border border-red-100 space-y-2">
+                            <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/10 space-y-2">
                                 <div className="flex items-center gap-2 text-red-600">
                                     <AlertTriangle className="h-4 w-4" />
                                     <p className="text-[10px] font-black uppercase tracking-wider">AI Forensic Security Flag</p>
                                 </div>
-                                <p className="text-xs font-medium text-red-800 leading-relaxed italic">
+                                <p className="text-xs font-medium text-red-600 leading-relaxed italic">
                                     "{user.flagReason}"
                                 </p>
                             </div>
@@ -320,15 +319,15 @@ export default function ManagementConsolePage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8 pb-12">
+    <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 px-2 sm:px-6 lg:px-8 pb-12">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-headline text-[#1a1a1a]">System Registry Console</h1>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-headline text-foreground">System Registry Console</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-medium">Comprehensive control over user access and forensic security.</p>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
-            <Button variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-white active:scale-95 transition-all">
+            <Button variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-background active:scale-95 transition-all">
                 <Sparkles className="mr-2 h-4 w-4 text-primary" />
                 <span className="text-[10px] uppercase tracking-wider">Identity Audit</span>
             </Button>
@@ -340,7 +339,7 @@ export default function ManagementConsolePage() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <Card className="border-primary/5 shadow-sm bg-muted/5 rounded-2xl">
+          <Card className="border-primary/5 shadow-sm bg-muted/10 rounded-2xl">
               <CardHeader className="p-3 sm:p-4 pb-1">
                   <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Registry</CardDescription>
                   <CardTitle className="text-xl sm:text-2xl font-black">{stats.total}</CardTitle>
@@ -352,10 +351,10 @@ export default function ManagementConsolePage() {
                   </div>
               </CardContent>
           </Card>
-          <Card className="border-primary/5 shadow-sm bg-green-50/30 rounded-2xl">
+          <Card className="border-primary/5 shadow-sm bg-green-500/5 rounded-2xl">
               <CardHeader className="p-3 sm:p-4 pb-1">
                   <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-green-600">Active Citizens</CardDescription>
-                  <CardTitle className="text-xl sm:text-2xl font-black text-green-700">{stats.active}</CardTitle>
+                  <CardTitle className="text-xl sm:text-2xl font-black text-green-600">{stats.active}</CardTitle>
               </CardHeader>
               <CardContent className="p-3 sm:p-4 pt-0">
                   <div className="flex items-center gap-1.5 text-green-600">
@@ -364,10 +363,10 @@ export default function ManagementConsolePage() {
                   </div>
               </CardContent>
           </Card>
-          <Card className="border-primary/5 shadow-sm bg-red-50/30 rounded-2xl">
+          <Card className="border-primary/5 shadow-sm bg-red-500/5 rounded-2xl">
               <CardHeader className="p-3 sm:p-4 pb-1">
                   <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-red-600">Suspended Nodes</CardDescription>
-                  <CardTitle className="text-xl sm:text-2xl font-black text-red-700">{stats.blocked}</CardTitle>
+                  <CardTitle className="text-xl sm:text-2xl font-black text-red-600">{stats.blocked}</CardTitle>
               </CardHeader>
               <CardContent className="p-3 sm:p-4 pt-0">
                   <div className="flex items-center gap-1.5 text-red-600">
@@ -376,10 +375,10 @@ export default function ManagementConsolePage() {
                   </div>
               </CardContent>
           </Card>
-          <Card className="border-primary/5 shadow-sm bg-amber-50/30 rounded-2xl">
+          <Card className="border-primary/5 shadow-sm bg-amber-500/5 rounded-2xl">
               <CardHeader className="p-3 sm:p-4 pb-1">
                   <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-amber-600">Awaiting Inspection</CardDescription>
-                  <CardTitle className="text-xl sm:text-2xl font-black text-amber-700">{stats.suspicious}</CardTitle>
+                  <CardTitle className="text-xl sm:text-2xl font-black text-amber-600">{stats.suspicious}</CardTitle>
               </CardHeader>
               <CardContent className="p-3 sm:p-4 pt-0">
                   <div className="flex items-center gap-1.5 text-amber-600">
@@ -390,7 +389,7 @@ export default function ManagementConsolePage() {
           </Card>
       </div>
 
-      <Card className="border border-primary/5 shadow-xl rounded-2xl overflow-hidden bg-white">
+      <Card className="border border-primary/5 shadow-xl rounded-2xl overflow-hidden bg-card">
           <CardHeader className="bg-muted/5 border-b border-primary/5 px-4 sm:px-6 py-6">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div className="text-left">
@@ -426,7 +425,7 @@ export default function ManagementConsolePage() {
                               const isProcessing = processingUid === user.uid;
                               
                               return (
-                                <TableRow key={user.uid} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", user.isBlocked && "bg-red-50/10")}>
+                                <TableRow key={user.uid} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", user.isBlocked && "bg-red-500/5")}>
                                     <TableCell className="pl-6 py-4">
                                         <div className="flex items-center gap-3">
                                             <Avatar className="h-10 w-10 border border-primary/10">
@@ -490,7 +489,7 @@ export default function ManagementConsolePage() {
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl border border-primary/5 bg-white">
+                                                <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl border border-primary/5 bg-card">
                                                     <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pb-2">Administrative Tools</DropdownMenuLabel>
                                                     <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
                                                     <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><RotateCcw className="mr-3 h-4 w-4" /> Reset Workspace</DropdownMenuItem>
@@ -499,7 +498,7 @@ export default function ManagementConsolePage() {
                                                             <DropdownMenuSeparator className="my-2" />
                                                             <DropdownMenuItem 
                                                                 onClick={() => handleDeleteUser(user)}
-                                                                className="rounded-lg font-bold text-xs h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
+                                                                className="rounded-lg font-bold text-xs h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-500/10 cursor-pointer"
                                                             >
                                                                 <Trash2 className="mr-3 h-4 w-4" /> Delete Account
                                                             </DropdownMenuItem>
@@ -518,6 +517,7 @@ export default function ManagementConsolePage() {
                           )}
                       </TableBody>
                   </Table>
+                  <ScrollBar orientation="horizontal" />
               </ScrollArea>
           </CardContent>
       </Card>

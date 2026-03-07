@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -9,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -432,7 +431,7 @@ export default function ProfilePage() {
                                 <Button 
                                     size="sm" 
                                     variant="outline" 
-                                    className="h-7 px-3 text-[9px] font-black uppercase tracking-tight text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600 rounded-full animate-pulse"
+                                    className="h-7 px-3 text-[9px] font-black uppercase tracking-tight text-red-500 border-red-200 hover:bg-red-500/10 hover:text-red-600 rounded-full animate-pulse"
                                     onClick={handleVerifySelf}
                                     disabled={isVerifying}
                                 >
@@ -456,7 +455,7 @@ export default function ProfilePage() {
         <div className="grid lg:grid-cols-3 gap-6 items-start">
             <div className="lg:col-span-2 space-y-6">
                 <motion.div variants={itemVariants}>
-                    <Card className="shadow-lg border-primary/5 rounded-2xl overflow-hidden">
+                    <Card className="shadow-lg border-primary/5 rounded-2xl overflow-hidden bg-card">
                         <CardHeader className="pb-4 bg-muted/30">
                             <CardTitle className="font-headline font-black text-lg flex items-center gap-2 tracking-tight">
                                 <User className="h-4 w-4 text-primary" /> Personal details
@@ -467,16 +466,16 @@ export default function ProfilePage() {
                             <div className="grid sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                 <Label htmlFor="firstName" className="text-[11px] font-bold text-muted-foreground">First name</Label>
-                                <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-background/50 h-11 text-sm font-semibold" />
+                                <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-background h-11 text-sm font-semibold" />
                                 </div>
                                 <div className="space-y-2">
                                 <Label htmlFor="lastName" className="text-[11px] font-bold text-muted-foreground">Last name</Label>
-                                <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-background/50 h-11 text-sm font-semibold" />
+                                <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-background h-11 text-sm font-semibold" />
                                 </div>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="phone" className="text-[11px] font-bold text-muted-foreground">Mobile number</Label>
-                                <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="bg-background/50 h-11 text-sm font-semibold" />
+                                <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="bg-background h-11 text-sm font-semibold" />
                             </div>
                             <div className="flex justify-end pt-2">
                                 <Button 
@@ -495,12 +494,12 @@ export default function ProfilePage() {
 
                 {!userProfile?.emailVerified && (
                     <motion.div variants={itemVariants}>
-                        <Card className="border-amber-200 bg-amber-50 rounded-2xl overflow-hidden">
+                        <Card className="border-amber-500/20 bg-amber-500/5 rounded-2xl overflow-hidden">
                             <CardHeader className="pb-2 text-left">
-                                <CardTitle className="text-amber-800 font-headline font-black text-lg flex items-center gap-2">
+                                <CardTitle className="text-amber-600 font-headline font-black text-lg flex items-center gap-2">
                                     <MailCheck className="h-5 w-5" /> Identity Link Verification
                                 </CardTitle>
-                                <CardDescription className="text-amber-700 font-medium text-xs">
+                                <CardDescription className="text-amber-600/80 font-medium text-xs">
                                     Please verify your email to unlock the trusted identity badge.
                                 </CardDescription>
                             </CardHeader>
@@ -509,7 +508,7 @@ export default function ProfilePage() {
                                     onClick={handleSendVerification}
                                     disabled={isResending}
                                     variant="outline" 
-                                    className="border-amber-300 text-amber-800 hover:bg-amber-100 font-bold h-11 px-6 rounded-xl"
+                                    className="border-amber-500/20 text-amber-600 hover:bg-amber-500/10 font-bold h-11 px-6 rounded-xl"
                                 >
                                     {isResending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                     Resend Verification Link
@@ -522,12 +521,12 @@ export default function ProfilePage() {
 
             <div className="space-y-6">
                 <motion.div variants={itemVariants}>
-                    <Card className="shadow-lg border-primary/5 rounded-2xl text-left">
+                    <Card className="shadow-lg border-primary/5 rounded-2xl text-left bg-card">
                         <CardHeader className="pb-4">
                             <CardTitle className="font-headline font-black text-lg tracking-tight">Preferences</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
-                            <div className="flex items-center justify-between p-3 rounded-xl hover:bg-muted/50 transition-colors border border-transparent hover:border-primary/10 cursor-pointer" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+                            <div className="flex items-center justify-between p-3 rounded-xl hover:bg-muted transition-colors border border-transparent hover:border-primary/10 cursor-pointer" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
                                 <div className="flex items-center gap-3">
                                     <div className="bg-muted p-2 rounded-lg"><Moon className="h-4 w-4 text-muted-foreground" /></div>
                                     <span className="font-bold text-[12px]">Dark mode</span>
@@ -573,10 +572,10 @@ export default function ProfilePage() {
                                         <span>Delete account</span>
                                     </Button>
                                 </AlertDialogTrigger>
-                                <AlertDialogContent className="max-w-[90vw] sm:max-w-lg">
+                                <AlertDialogContent className="max-w-[90vw] sm:max-w-lg bg-card">
                                     <AlertDialogHeader>
                                     <AlertDialogTitle className="font-black tracking-tight text-destructive">Are you absolutely sure?</AlertDialogTitle>
-                                    <AlertDialogDescription className="font-medium text-xs sm:text-sm">
+                                    <AlertDialogDescription className="font-medium text-xs sm:text-sm text-muted-foreground">
                                         This action cannot be undone. This will permanently delete your account
                                         and remove your data.
                                     </AlertDialogDescription>

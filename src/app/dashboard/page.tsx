@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -41,26 +40,26 @@ const aiFeatures = [
     {
       href: "/dashboard/strength-analyzer",
       icon: BrainCircuit,
-      title: "Case Strength Analyzer",
-      description: "Get an AI-powered assessment of how strong your case is.",
+      title: "Strength Analyzer",
+      description: "AI-powered case assessment.",
     },
     {
       href: "/dashboard/document-intelligence",
       icon: FileSearch,
-      title: "Document Intelligence",
-      description: "Upload any legal document to understand its content and risks.",
+      title: "Doc Intelligence",
+      description: "AI document risk auditor.",
     },
     {
       href: "/dashboard/document-generator",
       icon: FileText,
-      title: "Document Generator",
-      description: "Instantly create legal documents like complaints and notices.",
+      title: "Doc Generator",
+      description: "Legal notice & complaint drafting.",
     },
     {
       href: "/dashboard/bond-generator",
       icon: FileSignature,
       title: "Bond Generator",
-      description: "Generate various types of legal bonds for your needs.",
+      description: "Official legal bond creation.",
     },
 ];
 
@@ -86,20 +85,20 @@ const resources = [
     {
         href: "/dashboard/learn",
         icon: Library,
-        title: "Legal Knowledge Hub",
-        description: "Browse articles and guides to understand your rights.",
+        title: "Knowledge Hub",
+        description: "Understand your citizen rights.",
     },
     {
         href: "/dashboard/ngo-legal-aid",
         icon: HeartHandshake,
         title: "NGO & Legal Aid",
-        description: "Connect with organizations offering legal support.",
+        description: "Connect with free support.",
     },
     {
         href: "/dashboard/police-guide",
         icon: Library,
-        title: "Police & Court Guides",
-        description: "Your guide to navigating police and court procedures.",
+        title: "Police Guides",
+        description: "Navigate official procedures.",
     },
 ];
 
@@ -142,14 +141,14 @@ export default function DashboardHomePage() {
         <MotionWrapper>
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div>
-                  <h1 className="text-xl sm:text-2xl md:text-4xl font-black font-headline tracking-tighter min-h-[2.5rem] sm:min-h-[3rem] flex items-center leading-none">
+                  <h1 className="text-xl sm:text-2xl md:text-4xl font-black font-headline tracking-tighter min-h-[2rem] sm:min-h-[3rem] flex items-center leading-none">
                       {text}
                       {isTyping && <TypingCaret />}
                   </h1>
                   <p className="text-xs sm:text-sm md:text-base text-muted-foreground mt-1 font-medium">Your AI-powered legal co-pilot.</p>
               </div>
-              <div className="flex items-center gap-2">
-                   <Button size="sm" className="flex-1 sm:flex-none h-10 font-bold shadow-lg shadow-primary/20 text-xs" asChild><Link href="/dashboard/support">Ask AI</Link></Button>
+              <div className="flex items-center gap-2 w-full lg:w-auto">
+                   <Button size="sm" className="flex-1 lg:flex-none h-10 font-bold shadow-lg shadow-primary/20 text-xs rounded-xl" asChild><Link href="/dashboard/support">Ask AI</Link></Button>
               </div>
           </div>
         </MotionWrapper>
@@ -159,9 +158,9 @@ export default function DashboardHomePage() {
               <MotionWrapper delay={0.1}>
                 <SectionTitle>Quick Access</SectionTitle>
               </MotionWrapper>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <MotionWrapper delay={0.2}>
-                    <Card className="hover:border-primary/50 transition-all active:scale-[0.98] border-primary/10 shadow-lg">
+                    <Card className="hover:border-primary/50 transition-all active:scale-[0.98] border-primary/10 shadow-lg bg-card overflow-hidden">
                         <CardContent className="p-4 sm:p-6">
                             <Link href="/dashboard/narrate" className="flex items-center gap-4 group">
                                 <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
@@ -169,14 +168,14 @@ export default function DashboardHomePage() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <h3 className="font-black text-sm sm:text-lg tracking-tight truncate">Speak Your Problem</h3>
-                                    <p className="text-[10px] sm:text-sm text-muted-foreground line-clamp-1 font-medium">Narrate your issue for an AI summary.</p>
+                                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-1 font-medium">Narrate your issue for an AI summary.</p>
                                 </div>
                             </Link>
                         </CardContent>
                     </Card>
                   </MotionWrapper>
                   <MotionWrapper delay={0.3}>
-                      <Card className="hover:border-primary/50 transition-all active:scale-[0.98] border-primary/10 shadow-lg">
+                      <Card className="hover:border-primary/50 transition-all active:scale-[0.98] border-primary/10 shadow-lg bg-card overflow-hidden">
                         <CardContent className="p-4 sm:p-6">
                             <Link href="/dashboard/support" className="flex items-center gap-4 group">
                                 <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
@@ -184,7 +183,7 @@ export default function DashboardHomePage() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <h3 className="font-black text-sm sm:text-lg tracking-tight truncate">AI Legal Chat</h3>
-                                    <p className="text-[10px] sm:text-sm text-muted-foreground line-clamp-1 font-medium">Get answers to legal questions.</p>
+                                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-1 font-medium">Get answers to legal questions.</p>
                                 </div>
                             </Link>
                         </CardContent>
@@ -200,12 +199,12 @@ export default function DashboardHomePage() {
                   {aiFeatures.map((feature, index) => (
                     <MotionWrapper key={feature.href} delay={0.5 + index * 0.1}>
                       <Link href={feature.href} className="block group h-full">
-                          <Card className="h-full p-3 sm:p-4 flex flex-col items-start hover:border-primary/50 transition-all active:scale-[0.97] border-primary/5 shadow-md">
+                          <Card className="h-full p-3 sm:p-4 flex flex-col items-start hover:border-primary/50 transition-all active:scale-[0.97] border-primary/5 shadow-md bg-card">
                               <div className="p-2 rounded-lg bg-primary/10 mb-2 sm:mb-3 group-hover:bg-primary/20 transition-colors">
                                 <feature.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                               </div>
                               <h3 className="font-black text-[11px] sm:text-sm leading-tight tracking-tight">{feature.title}</h3>
-                              <p className="hidden sm:block text-[10px] sm:text-xs text-muted-foreground mt-1.5 line-clamp-2 font-medium">{feature.description}</p>
+                              <p className="hidden md:block text-[10px] sm:text-xs text-muted-foreground mt-1.5 line-clamp-2 font-medium">{feature.description}</p>
                           </Card>
                       </Link>
                     </MotionWrapper>
@@ -221,7 +220,7 @@ export default function DashboardHomePage() {
               {newsItems.map((item, index) => (
                 <MotionWrapper key={item.id} delay={0.7 + index * 0.1}>
                   <Link href="/dashboard/research-analytics" className="block group">
-                    <Card className="overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 border-primary/5">
+                    <Card className="overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 border-primary/5 bg-card">
                       {item.image && (
                         <div className="relative aspect-video">
                           <Image
@@ -252,7 +251,7 @@ export default function DashboardHomePage() {
               {resources.map((resource, index) => (
                 <MotionWrapper key={resource.href} delay={0.9 + index * 0.1}>
                   <Link href={resource.href} className="block group h-full">
-                    <Card className="h-full hover:border-primary/50 transition-all active:scale-[0.98] border-primary/5 shadow-lg">
+                    <Card className="h-full hover:border-primary/50 transition-all active:scale-[0.98] border-primary/5 shadow-lg bg-card">
                       <CardContent className="p-4 sm:p-6">
                         <div className="flex flex-row md:flex-col items-center md:items-start gap-4">
                           <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
@@ -260,7 +259,7 @@ export default function DashboardHomePage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="font-black text-sm sm:text-lg tracking-tight truncate">{resource.title}</h3>
-                            <p className="text-[10px] sm:text-sm text-muted-foreground mt-1 line-clamp-1 md:line-clamp-none font-medium">{resource.description}</p>
+                            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 line-clamp-1 md:line-clamp-none font-medium">{resource.description}</p>
                           </div>
                         </div>
                       </CardContent>

@@ -147,15 +147,15 @@ export default function NarrateProblemPage() {
   const isLoading = state.status === "loading";
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto pb-12">
+    <div className="space-y-8 max-w-6xl mx-auto pb-12 px-2 sm:px-0">
       <PageHeader
         title="Voice Case Narrator"
-        description="Speak your problem naturally. Our AI will transcribe your words and generate a comprehensive legal report instantly."
+        description="Speak your problem naturally. Our AI will generate a comprehensive legal report instantly."
       />
 
-      <div className="grid md:grid-cols-3 gap-8 items-start">
-        <div className="md:col-span-1 space-y-6">
-            <Card className="border-primary/10 shadow-xl overflow-hidden rounded-2xl">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="lg:col-span-1 space-y-6">
+            <Card className="border-primary/10 shadow-xl overflow-hidden rounded-2xl bg-card">
                 <CardHeader className="bg-primary/5 border-b border-primary/10">
                     <CardTitle className="text-lg font-bold flex items-center gap-2">
                         <Mic className="h-5 w-5 text-primary" /> Audio Capture
@@ -172,7 +172,7 @@ export default function NarrateProblemPage() {
                                 <SelectTrigger className="h-11 font-bold bg-background">
                                     <SelectValue />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="bg-card">
                                     <SelectItem value="English" className="font-bold">English</SelectItem>
                                     <SelectItem value="Hindi" className="font-bold">Hindi</SelectItem>
                                 </SelectContent>
@@ -184,16 +184,16 @@ export default function NarrateProblemPage() {
                         <Button
                             onClick={isRecording ? stopRecording : startRecording}
                             disabled={!hasPermission || isLoading}
-                            className={`h-32 w-32 rounded-full shadow-2xl flex flex-col gap-2 transition-all duration-500 relative z-10 ${
+                            className={`h-28 w-28 sm:h-32 sm:w-32 rounded-full shadow-2xl flex flex-col gap-2 transition-all duration-500 relative z-10 ${
                                 isRecording ? 'bg-red-500 hover:bg-red-600 scale-110' : 'bg-primary hover:scale-105'
                             }`}
                         >
                             {isRecording ? (
-                                <div className="h-10 w-10 bg-white rounded-lg animate-pulse" />
+                                <div className="h-8 w-8 sm:h-10 sm:w-10 bg-white rounded-lg animate-pulse" />
                             ) : (
-                                <Mic className="h-12 w-12" />
+                                <Mic className="h-10 w-10 sm:h-12 sm:w-12" />
                             )}
-                            <span className="text-[10px] font-black uppercase tracking-widest">
+                            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">
                                 {isRecording ? "Stop" : "Speak Now"}
                             </span>
                         </Button>
@@ -207,7 +207,7 @@ export default function NarrateProblemPage() {
                     </div>
 
                     <div className="text-center space-y-1">
-                        <p className="text-4xl font-mono font-black tracking-tighter text-primary">{formatTime(timer)}</p>
+                        <p className="text-3xl sm:text-4xl font-mono font-black tracking-tighter text-primary">{formatTime(timer)}</p>
                         <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest animate-pulse">
                             {isRecording ? "Recording Live..." : isLoading ? "AI Processing..." : "Ready to Listen"}
                         </p>
@@ -241,21 +241,21 @@ export default function NarrateProblemPage() {
                     <div className="space-y-1">
                         <p className="text-xs font-bold text-primary">Instructions</p>
                         <p className="text-[10px] text-muted-foreground leading-relaxed font-medium">
-                            Briefly describe the incident, people involved, dates, and your primary concern. Keep it under 5 minutes for the best analysis.
+                            Briefly describe the incident, people involved, dates, and your primary concern.
                         </p>
                     </div>
                 </div>
             </Card>
         </div>
 
-        <div className="md:col-span-2 space-y-6">
-            <Card className="border-primary/10 shadow-2xl min-h-[600px] flex flex-col rounded-2xl overflow-hidden bg-card/40 backdrop-blur-md">
-                <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between space-y-0">
+        <div className="lg:col-span-2 space-y-6">
+            <Card className="border-primary/10 shadow-2xl min-h-[500px] flex flex-col rounded-2xl overflow-hidden bg-card/40 backdrop-blur-md">
+                <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between space-y-0 p-4 sm:p-6">
                     <div className="space-y-1">
-                        <CardTitle className="flex items-center gap-2 text-xl font-black tracking-tight">
-                            <Bot className="h-6 w-6 text-primary" /> AI Case Intelligence
+                        <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-black tracking-tight">
+                            <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-primary" /> AI Intelligence
                         </CardTitle>
-                        <CardDescription className="text-xs font-medium">Comprehensive Legal Analysis Report</CardDescription>
+                        <CardDescription className="text-[10px] sm:text-xs font-medium">Comprehensive Legal Report</CardDescription>
                     </div>
                     {state.status === "success" && state.data && (
                         <AudioAssistant 
@@ -264,7 +264,7 @@ export default function NarrateProblemPage() {
                         />
                     )}
                 </CardHeader>
-                <CardContent className="p-6 flex-1">
+                <CardContent className="p-4 sm:p-6 flex-1">
                     <AnimatePresence mode="wait">
                         {isLoading && (
                             <motion.div 
@@ -272,66 +272,66 @@ export default function NarrateProblemPage() {
                                 className="flex flex-col items-center justify-center h-full py-20 text-center gap-6"
                             >
                                 <div className="relative">
-                                    <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }} className="p-8 rounded-full border-4 border-dashed border-primary/20">
-                                        <Bot className="h-16 w-16 text-primary/40" />
+                                    <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }} className="p-6 sm:p-8 rounded-full border-4 border-dashed border-primary/20">
+                                        <Bot className="h-12 w-12 sm:h-16 sm:w-16 text-primary/40" />
                                     </motion.div>
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                                        <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <p className="font-black text-xl tracking-tight">Transcribing & Analyzing...</p>
-                                    <p className="text-sm text-muted-foreground font-medium max-w-sm mx-auto">Our AI is converting your audio to text and performing a deep forensic legal audit.</p>
+                                    <p className="font-black text-lg sm:text-xl tracking-tight">Transcribing & Analyzing...</p>
+                                    <p className="text-xs sm:text-sm text-muted-foreground font-medium max-w-xs mx-auto leading-relaxed">Our AI is performing a deep forensic legal audit of your narration.</p>
                                 </div>
                             </motion.div>
                         )}
                         
                         {state.status === 'idle' && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-4 opacity-40">
-                                <div className="bg-muted p-8 rounded-full">
-                                    <Mic className="h-16 w-16 text-muted-foreground" />
+                                <div className="bg-muted p-6 sm:p-8 rounded-full">
+                                    <Mic className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground" />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="font-black text-lg tracking-tight">Waiting for Recording</p>
-                                    <p className="text-xs font-medium text-muted-foreground max-w-[250px] mx-auto">Your comprehensive report will appear here once you stop recording or upload a file.</p>
+                                    <p className="font-black text-base sm:text-lg tracking-tight">Waiting for Recording</p>
+                                    <p className="text-[10px] sm:text-xs font-medium text-muted-foreground max-w-[250px] mx-auto">Your comprehensive report will appear here once analysis is complete.</p>
                                 </div>
                             </motion.div>
                         )}
 
                         {state.status === "success" && state.data && (
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 pb-10">
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 sm:space-y-8 pb-10">
                                 {/* Transcription Section */}
                                 <div className="space-y-3">
                                     <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2">
-                                        <Quote className="h-3.5 w-3.5" /> Word-for-Word Transcription
+                                        <Quote className="h-3.5 w-3.5" /> Transcription
                                     </h3>
-                                    <div className="p-5 bg-muted/30 rounded-2xl border border-primary/5 italic text-sm font-medium text-muted-foreground leading-relaxed">
+                                    <div className="p-4 sm:p-5 bg-muted/30 rounded-xl sm:rounded-2xl border border-primary/5 italic text-xs sm:text-sm font-medium text-muted-foreground leading-relaxed">
                                         "{state.data.transcription}"
                                     </div>
                                 </div>
 
                                 {/* Summary & Meta */}
-                                <div className="grid sm:grid-cols-2 gap-4">
-                                    <div className="p-5 bg-primary/5 rounded-2xl border border-primary/10">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="p-4 sm:p-5 bg-primary/5 rounded-xl sm:rounded-2xl border border-primary/10">
                                         <h3 className="text-[10px] font-black text-primary uppercase tracking-widest mb-3 flex items-center gap-2">
-                                            <Bot className="h-3.5 w-3.5" /> Simple Summary
+                                            <Bot className="h-3.5 w-3.5" /> Summary
                                         </h3>
-                                        <p className="text-sm font-bold text-foreground leading-relaxed">{state.data.caseSummary}</p>
+                                        <p className="text-xs sm:text-sm font-bold text-foreground leading-relaxed">{state.data.caseSummary}</p>
                                     </div>
                                     <div className="space-y-4">
                                         <div className="p-4 bg-background rounded-xl border border-primary/10 flex items-center justify-between">
                                             <div className="flex items-center gap-3">
-                                                <Scale className="h-5 w-5 text-primary" />
-                                                <span className="text-xs font-black uppercase tracking-tighter">Case Nature</span>
+                                                <Scale className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                                                <span className="text-[10px] font-black uppercase tracking-tighter">Nature</span>
                                             </div>
-                                            <span className="text-xs font-bold text-primary bg-primary/5 px-3 py-1 rounded-full uppercase">{state.data.caseType}</span>
+                                            <span className="text-[10px] font-bold text-primary bg-primary/5 px-3 py-1 rounded-full uppercase">{state.data.caseType}</span>
                                         </div>
                                         <div className="p-4 bg-background rounded-xl border border-primary/10 flex items-center justify-between">
                                             <div className="flex items-center gap-3">
-                                                <Landmark className="h-5 w-5 text-primary" />
-                                                <span className="text-xs font-black uppercase tracking-tighter">Jurisdiction</span>
+                                                <Landmark className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                                                <span className="text-[10px] font-black uppercase tracking-tighter">Registry</span>
                                             </div>
-                                            <span className="text-[10px] font-bold text-muted-foreground text-right">{state.data.jurisdiction}</span>
+                                            <span className="text-[10px] font-bold text-muted-foreground text-right truncate max-w-[120px]">{state.data.jurisdiction}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -339,33 +339,33 @@ export default function NarrateProblemPage() {
                                 {/* Detailed Analysis */}
                                 <div className="space-y-3">
                                     <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 px-1">
-                                        <FileSearch className="h-3.5 w-3.5" /> Comprehensive Legal Analysis
+                                        <FileSearch className="h-3.5 w-3.5" /> Deep Legal Audit
                                     </h3>
-                                    <div className="p-6 bg-primary/5 rounded-2xl border border-primary/10">
-                                        <div className="text-sm font-medium text-foreground leading-relaxed whitespace-pre-line prose dark:prose-invert max-w-none">
+                                    <div className="p-4 sm:p-6 bg-primary/5 rounded-xl sm:rounded-2xl border border-primary/10">
+                                        <div className="text-xs sm:text-sm font-medium text-foreground leading-relaxed whitespace-pre-line prose dark:prose-invert max-w-none">
                                             {state.data.detailedAnalysis}
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Next Actions & Laws */}
-                                <div className="grid sm:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-3">
                                         <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 px-1">
-                                            <StepForward className="h-3.5 w-3.5" /> Strategy & Next Actions
+                                            <StepForward className="h-3.5 w-3.5" /> Strategy
                                         </h3>
-                                        <div className="p-5 bg-background rounded-2xl border border-primary/10 min-h-24">
-                                            <div className="text-xs font-bold text-muted-foreground leading-relaxed whitespace-pre-line">
+                                        <div className="p-4 sm:p-5 bg-background rounded-xl sm:rounded-2xl border border-primary/10 min-h-24">
+                                            <div className="text-[10px] sm:text-xs font-bold text-muted-foreground leading-relaxed whitespace-pre-line">
                                                 {state.data.nextActions}
                                             </div>
                                         </div>
                                     </div>
                                     <div className="space-y-3">
                                         <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 px-1">
-                                            <FileText className="h-3.5 w-3.5" /> Applicable Statutes
+                                            <FileText className="h-3.5 w-3.5" /> Statutes
                                         </h3>
-                                        <div className="p-5 bg-background rounded-2xl border border-primary/10 min-h-24">
-                                            <p className="text-xs font-bold text-primary leading-relaxed">
+                                        <div className="p-4 sm:p-5 bg-background rounded-xl sm:rounded-2xl border border-primary/10 min-h-24">
+                                            <p className="text-[10px] sm:text-xs font-bold text-primary leading-relaxed">
                                                 {state.data.relevantLaws}
                                             </p>
                                         </div>
