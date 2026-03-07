@@ -4,7 +4,7 @@ import { useActionState, useState, useRef, useEffect, startTransition } from "re
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2, Languages, Headphones, FileSearch, Quote } from "lucide-react";
+import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2, Languages, Headphones, FileSearch, Quote, Upload, FileUp } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -29,6 +29,7 @@ export default function NarrateProblemPage() {
 
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const getMicrophonePermission = async () => {
@@ -116,6 +117,27 @@ export default function NarrateProblemPage() {
     }
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && state.status !== "loading") {
+        if (!file.type.startsWith('audio/')) {
+            toast({
+                variant: "destructive",
+                title: "Invalid File",
+                description: "Please upload an audio recording file.",
+            });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("problemAudio", file);
+        formData.append("language", language);
+        startTransition(() => {
+            formAction(formData);
+        });
+    }
+  };
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
     const secs = (seconds % 60).toString().padStart(2, '0');
@@ -190,6 +212,26 @@ export default function NarrateProblemPage() {
                             {isRecording ? "Recording Live..." : isLoading ? "AI Processing..." : "Ready to Listen"}
                         </p>
                     </div>
+
+                    <div className="w-full pt-4 border-t border-primary/5 flex flex-col items-center gap-3">
+                        <input 
+                            type="file" 
+                            ref={fileInputRef} 
+                            onChange={handleFileUpload} 
+                            accept="audio/*" 
+                            className="hidden" 
+                        />
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isRecording || isLoading}
+                            className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary hover:bg-primary/5 rounded-xl gap-2 transition-all"
+                        >
+                            <Upload className="h-3.5 w-3.5" />
+                            Or upload a recording
+                        </Button>
+                    </div>
                 </CardContent>
             </Card>
             
@@ -239,7 +281,7 @@ export default function NarrateProblemPage() {
                                 </div>
                                 <div className="space-y-2">
                                     <p className="font-black text-xl tracking-tight">Transcribing & Analyzing...</p>
-                                    <p className="text-sm text-muted-foreground font-medium max-w-sm mx-auto">Our AI is converting your voice to text and performing a deep forensic legal audit.</p>
+                                    <p className="text-sm text-muted-foreground font-medium max-w-sm mx-auto">Our AI is converting your audio to text and performing a deep forensic legal audit.</p>
                                 </div>
                             </motion.div>
                         )}
@@ -251,7 +293,7 @@ export default function NarrateProblemPage() {
                                 </div>
                                 <div className="space-y-1">
                                     <p className="font-black text-lg tracking-tight">Waiting for Recording</p>
-                                    <p className="text-xs font-medium text-muted-foreground max-w-[250px] mx-auto">Your comprehensive report will appear here once you stop recording.</p>
+                                    <p className="text-xs font-medium text-muted-foreground max-w-[250px] mx-auto">Your comprehensive report will appear here once you stop recording or upload a file.</p>
                                 </div>
                             </motion.div>
                         )}
