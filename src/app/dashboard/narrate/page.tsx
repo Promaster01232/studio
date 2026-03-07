@@ -1,16 +1,16 @@
-
 "use client";
 
 import { useActionState, useState, useRef, useEffect, startTransition } from "react";
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2, Languages } from "lucide-react";
+import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2, Languages, Headphones, FileSearch, Quote } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { AudioAssistant } from "@/components/audio-assistant";
+import { motion, AnimatePresence } from "framer-motion";
 
 const initialState: CaseSummaryState = {
   status: "idle",
@@ -79,7 +79,6 @@ export default function NarrateProblemPage() {
             if (timerInterval.current) clearInterval(timerInterval.current);
             const blob = new Blob(chunks, { type: "audio/webm" });
             
-            // A small threshold to make sure there's actual audio data
             if (blob.size > 500) {
                 const formData = new FormData();
                 const audioFile = new File([blob], "recording.webm", { type: "audio/webm" });
@@ -126,118 +125,217 @@ export default function NarrateProblemPage() {
   const isLoading = state.status === "loading";
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-6xl mx-auto pb-12">
       <PageHeader
-        title="Speak Your Problem"
-        description="Narrate your issue and get instant AI analysis."
+        title="Voice Case Narrator"
+        description="Speak your problem naturally. Our AI will transcribe your words and generate a comprehensive legal report instantly."
       />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Voice Recorder</CardTitle>
-          <CardDescription>Select your language and record your problem.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center space-y-6 py-6">
-          <div className="w-full max-w-sm space-y-4 mb-4">
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2"><Languages className="h-4 w-4" /> Response Language</Label>
-              <Select value={language} onValueChange={setLanguage} disabled={isRecording || isLoading}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="English">English</SelectItem>
-                  <SelectItem value="Hindi">Hindi</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+      <div className="grid md:grid-cols-3 gap-8 items-start">
+        <div className="md:col-span-1 space-y-6">
+            <Card className="border-primary/10 shadow-xl overflow-hidden rounded-2xl">
+                <CardHeader className="bg-primary/5 border-b border-primary/10">
+                    <CardTitle className="text-lg font-bold flex items-center gap-2">
+                        <Mic className="h-5 w-5 text-primary" /> Audio Capture
+                    </CardTitle>
+                    <CardDescription className="text-[11px] font-medium uppercase tracking-wider">Secure Recording Node</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center justify-center space-y-6 pt-8">
+                    <div className="w-full space-y-4 mb-4">
+                        <div className="space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                <Languages className="h-3 w-3" /> Preferred Language
+                            </Label>
+                            <Select value={language} onValueChange={setLanguage} disabled={isRecording || isLoading}>
+                                <SelectTrigger className="h-11 font-bold bg-background">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="English" className="font-bold">English</SelectItem>
+                                    <SelectItem value="Hindi" className="font-bold">Hindi</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
 
-          <div className="flex w-full max-w-sm flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button
-                  onClick={startRecording}
-                  disabled={!hasPermission || isLoading || isRecording}
-                  className="h-24 w-full rounded-lg shadow-lg flex-col gap-2 sm:w-32"
-              >
-                  <Mic className="h-8 w-8" />
-                  <span>Start Recording</span>
-              </Button>
-              <Button
-                  onClick={stopRecording}
-                  disabled={!isRecording}
-                  className="h-24 w-full rounded-lg shadow-lg flex-col gap-2 sm:w-32"
-                  variant="destructive"
-              >
-                  <div className="h-8 w-8 bg-destructive-foreground rounded-sm"></div>
-                  <span>Stop Recording</span>
-              </Button>
-          </div>
-          <p className="text-4xl font-mono font-bold tracking-wider">{formatTime(timer)}</p>
-          <p className="text-sm text-muted-foreground">
-            {isRecording
-              ? "Recording in progress..."
-              : isLoading
-              ? "Recording submitted. The AI is now analyzing your case..."
-              : "Click 'Start Recording' to begin."}
-          </p>
-        </CardContent>
-      </Card>
+                    <div className="relative group">
+                        <Button
+                            onClick={isRecording ? stopRecording : startRecording}
+                            disabled={!hasPermission || isLoading}
+                            className={`h-32 w-32 rounded-full shadow-2xl flex flex-col gap-2 transition-all duration-500 relative z-10 ${
+                                isRecording ? 'bg-red-500 hover:bg-red-600 scale-110' : 'bg-primary hover:scale-105'
+                            }`}
+                        >
+                            {isRecording ? (
+                                <div className="h-10 w-10 bg-white rounded-lg animate-pulse" />
+                            ) : (
+                                <Mic className="h-12 w-12" />
+                            )}
+                            <span className="text-[10px] font-black uppercase tracking-widest">
+                                {isRecording ? "Stop" : "Speak Now"}
+                            </span>
+                        </Button>
+                        
+                        {isRecording && (
+                            <>
+                                <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping [animation-duration:2s]"></div>
+                                <div className="absolute inset-0 rounded-full bg-red-500/10 animate-ping [animation-duration:3s]"></div>
+                            </>
+                        )}
+                    </div>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0">
-          <div className="space-y-1">
-            <CardTitle className="flex items-center"><Bot className="mr-2" /> AI Analysis</CardTitle>
-            <CardDescription>Your analysis will appear here after recording.</CardDescription>
-          </div>
-          {state.status === "success" && state.data && (
-            <AudioAssistant 
-              text={`${state.data.caseSummary}. This is a ${state.data.caseType} case. Relevant laws: ${state.data.relevantLaws}. Jurisdiction: ${state.data.jurisdiction}. Next actions: ${state.data.nextActions}`} 
-              language={language}
-            />
-          )}
-        </CardHeader>
-        <CardContent className="min-h-48">
-            {isLoading && 
-              <div className="flex flex-col items-center justify-center text-center py-10">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary mb-4"/>
-                  <p className="text-muted-foreground">Analyzing your recording, please wait...</p>
-              </div>
-            }
+                    <div className="text-center space-y-1">
+                        <p className="text-4xl font-mono font-black tracking-tighter text-primary">{formatTime(timer)}</p>
+                        <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest animate-pulse">
+                            {isRecording ? "Recording Live..." : isLoading ? "AI Processing..." : "Ready to Listen"}
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
             
-            {state.status === 'idle' && (
-                <p className="text-center text-muted-foreground py-10">
-                    {hasPermission ? 'Click the microphone to start your recording.' : 'Please enable microphone access.'}
-                </p>
-            )}
-
-            {state.status === "success" && state.data && (
-                <div className="space-y-4 text-sm">
-                  <div className="p-3 bg-background rounded-lg border">
-                    <h3 className="font-semibold mb-1">Simple Summary</h3>
-                    <p className="text-muted-foreground">{state.data.caseSummary}</p>
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                     <div className="p-3 bg-background rounded-lg border">
-                        <h3 className="font-semibold mb-1 flex items-center"><Scale className="mr-2 text-primary" /> Case Type</h3>
-                        <p className="text-lg font-semibold">{state.data.caseType}</p>
+            <Card className="bg-primary/5 border-primary/10 rounded-2xl p-4">
+                <div className="flex gap-3">
+                    <Headphones className="h-5 w-5 text-primary shrink-0" />
+                    <div className="space-y-1">
+                        <p className="text-xs font-bold text-primary">Instructions</p>
+                        <p className="text-[10px] text-muted-foreground leading-relaxed font-medium">
+                            Briefly describe the incident, people involved, dates, and your primary concern. Keep it under 5 minutes for the best analysis.
+                        </p>
                     </div>
-                    <div className="p-3 bg-background rounded-lg border">
-                        <h3 className="font-semibold mb-1 flex items-center"><Landmark className="mr-2 text-primary" /> Jurisdiction</h3>
-                        <p className="text-muted-foreground">{state.data.jurisdiction}</p>
-                    </div>
-                  </div>
-                   <div className="p-3 bg-background rounded-lg border">
-                    <h3 className="font-semibold mb-1 flex items-center"><FileText className="mr-2 text-primary" /> Relevant Laws</h3>
-                    <p className="text-muted-foreground">{state.data.relevantLaws}</p>
-                  </div>
-                  <div className="p-3 bg-background rounded-lg border">
-                    <h3 className="font-semibold mb-1 flex items-center"><StepForward className="mr-2 text-primary" /> Next Actions</h3>
-                    <div className="text-muted-foreground whitespace-pre-line">{state.data.nextActions}</div>
-                  </div>
                 </div>
-              )}
-        </CardContent>
-      </Card>
+            </Card>
+        </div>
+
+        <div className="md:col-span-2 space-y-6">
+            <Card className="border-primary/10 shadow-2xl min-h-[600px] flex flex-col rounded-2xl overflow-hidden bg-card/40 backdrop-blur-md">
+                <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between space-y-0">
+                    <div className="space-y-1">
+                        <CardTitle className="flex items-center gap-2 text-xl font-black tracking-tight">
+                            <Bot className="h-6 w-6 text-primary" /> AI Case Intelligence
+                        </CardTitle>
+                        <CardDescription className="text-xs font-medium">Comprehensive Legal Analysis Report</CardDescription>
+                    </div>
+                    {state.status === "success" && state.data && (
+                        <AudioAssistant 
+                            text={`Report Summary: ${state.data.caseSummary}. Detailed Analysis: ${state.data.detailedAnalysis}. Next Steps: ${state.data.nextActions}`} 
+                            language={language}
+                        />
+                    )}
+                </CardHeader>
+                <CardContent className="p-6 flex-1">
+                    <AnimatePresence mode="wait">
+                        {isLoading && (
+                            <motion.div 
+                                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                                className="flex flex-col items-center justify-center h-full py-20 text-center gap-6"
+                            >
+                                <div className="relative">
+                                    <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }} className="p-8 rounded-full border-4 border-dashed border-primary/20">
+                                        <Bot className="h-16 w-16 text-primary/40" />
+                                    </motion.div>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <p className="font-black text-xl tracking-tight">Transcribing & Analyzing...</p>
+                                    <p className="text-sm text-muted-foreground font-medium max-w-sm mx-auto">Our AI is converting your voice to text and performing a deep forensic legal audit.</p>
+                                </div>
+                            </motion.div>
+                        )}
+                        
+                        {state.status === 'idle' && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-4 opacity-40">
+                                <div className="bg-muted p-8 rounded-full">
+                                    <Mic className="h-16 w-16 text-muted-foreground" />
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="font-black text-lg tracking-tight">Waiting for Recording</p>
+                                    <p className="text-xs font-medium text-muted-foreground max-w-[250px] mx-auto">Your comprehensive report will appear here once you stop recording.</p>
+                                </div>
+                            </motion.div>
+                        )}
+
+                        {state.status === "success" && state.data && (
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 pb-10">
+                                {/* Transcription Section */}
+                                <div className="space-y-3">
+                                    <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2">
+                                        <Quote className="h-3.5 w-3.5" /> Word-for-Word Transcription
+                                    </h3>
+                                    <div className="p-5 bg-muted/30 rounded-2xl border border-primary/5 italic text-sm font-medium text-muted-foreground leading-relaxed">
+                                        "{state.data.transcription}"
+                                    </div>
+                                </div>
+
+                                {/* Summary & Meta */}
+                                <div className="grid sm:grid-cols-2 gap-4">
+                                    <div className="p-5 bg-primary/5 rounded-2xl border border-primary/10">
+                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-widest mb-3 flex items-center gap-2">
+                                            <Bot className="h-3.5 w-3.5" /> Simple Summary
+                                        </h3>
+                                        <p className="text-sm font-bold text-foreground leading-relaxed">{state.data.caseSummary}</p>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <div className="p-4 bg-background rounded-xl border border-primary/10 flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <Scale className="h-5 w-5 text-primary" />
+                                                <span className="text-xs font-black uppercase tracking-tighter">Case Nature</span>
+                                            </div>
+                                            <span className="text-xs font-bold text-primary bg-primary/5 px-3 py-1 rounded-full uppercase">{state.data.caseType}</span>
+                                        </div>
+                                        <div className="p-4 bg-background rounded-xl border border-primary/10 flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <Landmark className="h-5 w-5 text-primary" />
+                                                <span className="text-xs font-black uppercase tracking-tighter">Jurisdiction</span>
+                                            </div>
+                                            <span className="text-[10px] font-bold text-muted-foreground text-right">{state.data.jurisdiction}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Detailed Analysis */}
+                                <div className="space-y-3">
+                                    <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 px-1">
+                                        <FileSearch className="h-3.5 w-3.5" /> Comprehensive Legal Analysis
+                                    </h3>
+                                    <div className="p-6 bg-primary/5 rounded-2xl border border-primary/10">
+                                        <div className="text-sm font-medium text-foreground leading-relaxed whitespace-pre-line prose dark:prose-invert max-w-none">
+                                            {state.data.detailedAnalysis}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Next Actions & Laws */}
+                                <div className="grid sm:grid-cols-2 gap-6">
+                                    <div className="space-y-3">
+                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 px-1">
+                                            <StepForward className="h-3.5 w-3.5" /> Strategy & Next Actions
+                                        </h3>
+                                        <div className="p-5 bg-background rounded-2xl border border-primary/10 min-h-24">
+                                            <div className="text-xs font-bold text-muted-foreground leading-relaxed whitespace-pre-line">
+                                                {state.data.nextActions}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 px-1">
+                                            <FileText className="h-3.5 w-3.5" /> Applicable Statutes
+                                        </h3>
+                                        <div className="p-5 bg-background rounded-2xl border border-primary/10 min-h-24">
+                                            <p className="text-xs font-bold text-primary leading-relaxed">
+                                                {state.data.relevantLaws}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </CardContent>
+            </Card>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 'use server';
 
 /**
- * @fileOverview A flow to generate a simplified summary of a legal case from a voice recording.
+ * @fileOverview A flow to generate a comprehensive legal report from a voice recording.
  *
- * - generateCaseSummary - A function that generates the case summary.
+ * - generateCaseSummary - A function that handles transcription and detailed legal analysis.
  * - GenerateCaseSummaryInput - The input type for the generateCaseSummary function.
  * - GenerateCaseSummaryOutput - The return type for the generateCaseSummary function.
  */
@@ -22,13 +22,15 @@ const GenerateCaseSummaryInputSchema = z.object({
 export type GenerateCaseSummaryInput = z.infer<typeof GenerateCaseSummaryInputSchema>;
 
 const GenerateCaseSummaryOutputSchema = z.object({
-  caseSummary: z.string().describe('A simplified summary of the case.'),
+  transcription: z.string().describe('The word-for-word transcription of the audio recording.'),
+  caseSummary: z.string().describe('A simplified summary of the case for a layman.'),
   caseType: z.string().describe('The type of case (civil or criminal).'),
   relevantLaws: z.string().describe('Relevant laws and sections applicable to the case.'),
   jurisdiction: z
     .string()
     .describe('The jurisdiction where the case should be filed (police station/court).'),
-  nextActions: z.string().describe('The list of next possible actions'),
+  nextActions: z.string().describe('The list of next possible actions.'),
+  detailedAnalysis: z.string().describe('A comprehensive, detailed legal analysis of the situation reported.'),
 });
 export type GenerateCaseSummaryOutput = z.infer<typeof GenerateCaseSummaryOutputSchema>;
 
@@ -40,15 +42,21 @@ const prompt = ai.definePrompt({
   name: 'generateCaseSummaryPrompt',
   input: {schema: GenerateCaseSummaryInputSchema},
   output: {schema: GenerateCaseSummaryOutputSchema},
-  prompt: `You are a legal expert specializing in summarizing legal cases for the common man.
+  prompt: `You are an expert legal forensic analyst specializing in Indian Law.
 
-You will use the user's voice recording of their legal problem to generate a simplified summary of their case. First, transcribe the audio. Then, based on the transcription, extract the case type (civil or criminal), relevant laws and sections, and the jurisdiction where the case should be filed.
+You will use the user's voice recording of their legal problem to generate a comprehensive, professional legal report. 
+
+First, provide a precise word-for-word transcription of the audio provided. 
+Then, provide a simplified summary for a layman.
+Identify the case type (civil/criminal), relevant laws, sections, and the appropriate jurisdiction.
+Crucially, provide a deep, comprehensive legal analysis of the situation, outlining potential legal strategies, strengths, and weaknesses.
+Finally, list the immediate next actions the user should take.
 
 Voice recording of the legal problem: {{media url=problemAudio}}
 
 Output the response in the following language: {{{language}}}.
 
-Output the case summary, case type, relevant laws and sections, jurisdiction, and next actions as JSON. Make the case summary as simple as possible for a layman to understand.
+Output everything as JSON. Be professional, thorough, and precise.
 `,
 });
 
