@@ -164,6 +164,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     router.push('/login');
   };
 
+  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
   const isSuspended = userProfile?.isBlocked === true;
   const isAdmin = userProfile?.email === 'enterspaceindia@gmail.com' || !!userProfile?.isAdmin;
 
@@ -197,8 +198,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
       );
   }
-
-  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
 
   return (
     <SidebarProvider>
