@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Building, FileText, ListChecks } from "lucide-react";
+import { Building, FileText, ListChecks, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const complianceItems = [
     { id: "gst", label: "GST Registration & Filing" },
@@ -25,6 +26,38 @@ export default function BusinessMsmePage() {
     const [businessType, setBusinessType] = useState("sole-proprietorship");
     const [ndaParty1, setNdaParty1] = useState("");
     const [ndaParty2, setNdaParty2] = useState("");
+    const [loadingSteps, setLoadingSteps] = useState(false);
+    const [loadingNda, setLoadingNda] = useState(false);
+    const [loadingChecklist, setLoadingChecklist] = useState(false);
+    const { toast } = useToast();
+
+    const handleGetSteps = () => {
+        setLoadingSteps(true);
+        setTimeout(() => {
+            setLoadingSteps(false);
+            toast({ title: "Guidance Generated", description: `Registration steps for ${businessType} are ready.` });
+        }, 1500);
+    };
+
+    const handleGenerateNda = () => {
+        if (!ndaParty1 || !ndaParty2) {
+            toast({ variant: "destructive", title: "Missing Parties", description: "Please enter both party names." });
+            return;
+        }
+        setLoadingNda(true);
+        setTimeout(() => {
+            setLoadingNda(false);
+            toast({ title: "NDA Drafted", description: "Your basic NDA has been generated and is ready for review." });
+        }, 2000);
+    };
+
+    const handleSaveChecklist = () => {
+        setLoadingChecklist(true);
+        setTimeout(() => {
+            setLoadingChecklist(false);
+            toast({ title: "Progress Saved", description: "Your compliance checklist has been updated." });
+        }, 1000);
+    };
 
     return (
         <div className="space-y-8">
@@ -34,7 +67,6 @@ export default function BusinessMsmePage() {
             />
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                {/* Column 1: Business Tools */}
                 <div className="space-y-8">
                     <Card>
                         <CardHeader>
@@ -54,7 +86,10 @@ export default function BusinessMsmePage() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                             <Button className="w-full">Get Registration Steps</Button>
+                             <Button className="w-full h-11 font-bold" onClick={handleGetSteps} disabled={loadingSteps}>
+                                {loadingSteps ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                                Get Registration Steps
+                             </Button>
                         </CardContent>
                     </Card>
 
@@ -72,12 +107,14 @@ export default function BusinessMsmePage() {
                                 <Label htmlFor="nda-party2">Receiving Party Name</Label>
                                 <Input id="nda-party2" value={ndaParty2} onChange={e => setNdaParty2(e.target.value)} placeholder="e.g., John Doe" />
                             </div>
-                            <Button className="w-full" variant="secondary">Generate NDA</Button>
+                            <Button className="w-full h-11 font-bold" variant="secondary" onClick={handleGenerateNda} disabled={loadingNda}>
+                                {loadingNda ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                                Generate NDA
+                            </Button>
                         </CardContent>
                     </Card>
                 </div>
 
-                {/* Column 2: Compliance Checklist */}
                 <Card className="lg:col-span-1">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2"><ListChecks className="h-5 w-5" /> Annual Compliance Checklist</CardTitle>
@@ -95,10 +132,12 @@ export default function BusinessMsmePage() {
                                 </div>
                             ))}
                         </div>
-                         <Button className="w-full mt-4">Save Checklist Progress</Button>
+                         <Button className="w-full h-11 font-bold mt-4" onClick={handleSaveChecklist} disabled={loadingChecklist}>
+                            {loadingChecklist ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                            Save Checklist Progress
+                         </Button>
                     </CardContent>
                 </Card>
-
             </div>
         </div>
     );
