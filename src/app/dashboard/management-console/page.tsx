@@ -29,7 +29,6 @@ import {
   ShieldHalf,
   UserCheck,
   UserMinus,
-  Ban,
   RotateCcw
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -288,7 +287,7 @@ export default function ManagementConsolePage() {
         return;
     }
     
-    if (!window.confirm(`PERMANENT DELETION: Are you sure you want to completely erase all data for ${user.firstName} ${user.lastName}? This action is irreversible.`)) return;
+    if (!window.confirm(`PERMANENT DELETION: Are you sure you want to completely erase all data for ${user.firstName} ${user.lastName}? This action is irreversible. All verified and unverified data will be removed.`)) return;
 
     setProcessingUid(user.uid);
     const userRef = doc(firestore, "users", user.uid);
