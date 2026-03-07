@@ -500,9 +500,9 @@ export default function ManagementConsolePage() {
                                                             <DropdownMenuSeparator className="my-2" />
                                                             <DropdownMenuItem 
                                                                 onClick={() => handleDeleteUser(user)}
-                                                                className="rounded-lg font-bold text-[10px] h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-50"
+                                                                className="rounded-lg font-bold text-xs h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
                                                             >
-                                                                <Trash2 className="mr-3 h-4 w-4" /> Purge Records (Hard Delete)
+                                                                <Trash2 className="mr-3 h-4 w-4" /> Delete Account
                                                             </DropdownMenuItem>
                                                         </>
                                                     )}
