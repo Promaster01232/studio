@@ -10,15 +10,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "./ui/input";
-import { Search, User, FileText, Gavel } from "lucide-react";
+import { Search, FileText, Gavel, Library } from "lucide-react";
 import { ReactNode, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const suggestions = [
-    { name: "Anjali Sharma", type: "Advocate", icon: User, href: "/dashboard/lawyer-connect/1" },
-    { name: "Siddharth Rao", type: "Advocate", icon: User, href: "/dashboard/lawyer-connect/2" },
-    { name: "Mehra v. Sharma", type: "Case", icon: Gavel, href: "/dashboard/my-cases" },
+    { name: "Legal Knowledge Hub", type: "Resource", icon: Library, href: "/dashboard/learn" },
+    { name: "My Tracked Cases", type: "Tool", icon: Gavel, href: "/dashboard/my-cases" },
     { name: "Generate Legal Notice", type: "Action", icon: FileText, href: "/dashboard/document-generator" },
+    { name: "Document Intelligence", type: "AI Tool", icon: FileText, href: "/dashboard/document-intelligence" },
 ];
 
 export function SearchDialog({ children }: { children: ReactNode }) {
@@ -53,15 +53,15 @@ export function SearchDialog({ children }: { children: ReactNode }) {
             Search
           </DialogTitle>
           <DialogDescription>
-              Search across advocates, cases, documents and more.
+              Search across cases, documents, guides and tools.
           </DialogDescription>
         </DialogHeader>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search..." className="pl-10" />
+          <Input placeholder="Search tools and resources..." className="pl-10" />
         </div>
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-2 px-1">Suggestions</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-2 px-1">Quick Access</h3>
           <div className="flex flex-col space-y-1">
               {suggestions.map((suggestion) => (
                   <button

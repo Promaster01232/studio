@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, Gavel, MapPin, BadgeCheck, Briefcase, Camera, X, User, Sparkles, UserMinus, ImageUp, ShieldAlert, MailCheck, AlertTriangle } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -32,8 +32,6 @@ import {
   AlertDialogTitle, 
   AlertDialogTrigger 
 } from '@/components/ui/alert-dialog';
-import { AdvocateProfileForm } from '@/components/advocate-profile-form';
-import { type Lawyer } from '@/lib/advocates-data';
 import { motion } from 'framer-motion';
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -67,12 +65,10 @@ export default function ProfilePage() {
   const { toast } = useToast();
   
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [advocateDetails, setAdvocateDetails] = useState<Lawyer | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
-  const [showAdvocateDialog, setShowAdvocateDialog] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
 
@@ -111,15 +107,6 @@ export default function ProfilePage() {
           setMobileNumber(data.mobileNumber || '');
           if (data.photoURL) {
             setPhotoURL(data.photoURL);
-          }
-
-          // Fetch professional details if user is a lawyer from Firestore
-          if (data.userType === 'lawyer') {
-              getDoc(doc(firestore, "advocates", data.uid)).then(advDoc => {
-                  if (advDoc.exists()) {
-                      setAdvocateDetails(advDoc.data() as Lawyer);
-                  }
-              });
           }
         } else {
             router.push('/create-profile');
@@ -251,7 +238,7 @@ export default function ProfilePage() {
       setHasCameraPermission(false);
       let msg = 'Please enable camera permissions in your browser settings to use this feature.';
       if (error.name === 'NotFoundError') {
-          msg = 'No camera device found on this machine. Please select "Choose from device" to upload a photo.';
+          msg = 'No camera device found on this machine.';
       }
       toast({
         variant: 'destructive',
@@ -286,56 +273,6 @@ export default function ProfilePage() {
     }
   };
 
-  const handleAdvocateProfileSaved = () => {
-    setShowAdvocateDialog(false);
-    
-    // Refresh states from Firestore
-    if (auth.currentUser) {
-        const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-        getDoc(userDocRef).then(doc => {
-            if (doc.exists()) setUserProfile(doc.data() as UserProfile);
-        });
-        
-        getDoc(doc(firestore, "advocates", auth.currentUser.uid)).then(advDoc => {
-            if (advDoc.exists()) setAdvocateDetails(advDoc.data() as Lawyer);
-        });
-    }
-    
-    toast({
-        title: "Dital Submitted",
-        description: "Professional credentials received. Listing is pending Admin manual verification.",
-    });
-  };
-
-  const handleRemoveAdvocateListing = async () => {
-    if (!auth.currentUser || !userProfile) return;
-    
-    setSaving(true);
-    const advRef = doc(firestore, "advocates", auth.currentUser.uid);
-    const userRef = doc(firestore, "users", auth.currentUser.uid);
-
-    try {
-        await deleteDoc(advRef);
-        await setDoc(userRef, { userType: 'citizen' }, { merge: true });
-        
-        // RTDB sync
-        remove(ref(rtdb, `advocates/${auth.currentUser.uid}`)).catch(() => {});
-        update(ref(rtdb, `users/${auth.currentUser.uid}`), { userType: 'citizen' }).catch(() => {});
-
-        setUserProfile(prev => prev ? { ...prev, userType: 'citizen' } : null);
-        setAdvocateDetails(null);
-
-        toast({
-            title: "Listing removed",
-            description: "Your professional profile has been unlisted and your role reset to Citizen.",
-        });
-    } catch (err) {
-        console.error("Failed to remove listing:", err);
-    } finally {
-        setSaving(false);
-    }
-  };
-
   const handleSaveChanges = () => {
     if (!auth.currentUser || !userProfile) return;
 
@@ -354,7 +291,6 @@ export default function ProfilePage() {
 
     setDoc(userDocRef, updatedProfile, { merge: true })
       .then(() => {
-        // Parallel sync to RTDB
         set(ref(rtdb, `users/${auth.currentUser.uid}`), updatedProfile).catch(() => {});
         setUserProfile(updatedProfile);
         toast({ title: 'Profile updated', description: 'Your personal details have been saved.' });
@@ -389,17 +325,8 @@ export default function ProfilePage() {
     const userDocRef = doc(firestore, "users", user.uid);
 
     try {
-      // Delete professional listing
-      await deleteDoc(doc(firestore, "advocates", user.uid)).catch(() => {});
-      
-      // Delete from Firestore
       await deleteDoc(userDocRef);
-      
-      // Delete from RTDB
       remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
-      remove(ref(rtdb, `advocates/${user.uid}`)).catch(() => {});
-      
-      // Delete Auth user
       await deleteUser(user);
       
       toast({
@@ -412,13 +339,13 @@ export default function ProfilePage() {
         toast({
           variant: "destructive",
           title: "Security action required",
-          description: "For security reasons, please log out and sign back in before deleting your account.",
+          description: "Please log out and sign back in before deleting your account.",
         });
       } else {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Failed to delete account. Please try again later.",
+          description: "Failed to delete account.",
         });
       }
     } finally {
@@ -450,34 +377,6 @@ export default function ProfilePage() {
   };
 
   const isSuperAdmin = ADMIN_EMAILS.includes(email.toLowerCase());
-
-  if (loading || !isMounted) {
-      return (
-        <div className="space-y-8 max-w-5xl mx-auto">
-            <PageHeader
-                title="My Profile"
-                description="Manage your account settings."
-            />
-             <Card className="border-primary/5">
-                <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
-                    <Skeleton className="h-20 w-20 rounded-full" />
-                    <div className="flex-1 space-y-2">
-                        <Skeleton className="h-6 w-48" />
-                        <Skeleton className="h-4 w-64" />
-                    </div>
-                </CardContent>
-            </Card>
-            <div className="grid lg:grid-cols-3 gap-6 items-start">
-                <div className="lg:col-span-2 space-y-6">
-                    <Card><CardHeader><Skeleton className="h-6 w-32" /></CardHeader><CardContent className="space-y-4"><Skeleton className="h-10 w-full" /><Skeleton className="h-10 w-full" /></CardContent></Card>
-                </div>
-                 <div className="space-y-6">
-                    <Card><CardContent className="p-6 space-y-4"><Skeleton className="h-10 w-full" /><Skeleton className="h-10 w-full" /></CardContent></Card>
-                 </div>
-            </div>
-        </div>
-      )
-  }
 
   return (
     <motion.div 
@@ -560,45 +459,9 @@ export default function ProfilePage() {
                     <Card className="shadow-lg border-primary/5 rounded-2xl overflow-hidden">
                         <CardHeader className="pb-4 bg-muted/30">
                             <CardTitle className="font-headline font-black text-lg flex items-center gap-2 tracking-tight">
-                                <Briefcase className="h-4 w-4 text-primary" /> Platform Role
-                            </CardTitle>
-                            <CardDescription className="text-xs font-medium">Choose your status to unlock specialized tools.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4 pt-6 text-left">
-                            <div className="flex items-center justify-between p-4 rounded-xl bg-primary/5 border border-primary/10">
-                                <div className="space-y-0.5">
-                                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Active Role</p>
-                                    <p className="text-lg font-black text-primary capitalize tracking-tighter">{userProfile?.userType || 'Citizen'}</p>
-                                </div>
-                                {userProfile?.userType !== 'lawyer' && (
-                                    <Button 
-                                        onClick={() => setShowAdvocateDialog(true)} 
-                                        size="sm" 
-                                        className="font-bold h-9 px-4 rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all"
-                                    >
-                                        Register as Advocate
-                                    </Button>
-                                )}
-                            </div>
-                            {userProfile?.userType === 'lawyer' && !advocateDetails && (
-                                <Alert className="bg-amber-50 border-amber-200">
-                                    <AlertTriangle className="h-4 w-4 text-amber-600" />
-                                    <AlertDescription className="text-[10px] font-bold text-amber-800 leading-tight">
-                                        Lawyer role selected but professional credentials (Dital) are missing. Complete your setup below to request Admin manual verification.
-                                    </AlertDescription>
-                                </Alert>
-                            )}
-                        </CardContent>
-                    </Card>
-                </motion.div>
-
-                <motion.div variants={itemVariants}>
-                    <Card className="shadow-lg border-primary/5 rounded-2xl overflow-hidden">
-                        <CardHeader className="pb-4 bg-muted/30">
-                            <CardTitle className="font-headline font-black text-lg flex items-center gap-2 tracking-tight">
                                 <User className="h-4 w-4 text-primary" /> Personal details
                             </CardTitle>
-                            <CardDescription className="text-xs font-medium">Your verified account information.</CardDescription>
+                            <CardDescription className="text-xs font-medium">Your account information.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4 pt-6 text-left">
                             <div className="grid sm:grid-cols-2 gap-4">
@@ -620,7 +483,7 @@ export default function ProfilePage() {
                                     onClick={handleSaveChanges} 
                                     disabled={saving || !hasChanges} 
                                     size="sm" 
-                                    className="w-full sm:w-auto shadow-lg shadow-primary/10 h-11 px-10 font-bold active:scale-95 transition-all disabled:opacity-50 disabled:grayscale"
+                                    className="w-full sm:w-auto shadow-lg shadow-primary/10 h-11 px-10 font-bold active:scale-95 transition-all"
                                 >
                                     {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                     Update details
@@ -638,7 +501,7 @@ export default function ProfilePage() {
                                     <MailCheck className="h-5 w-5" /> Identity Link Verification
                                 </CardTitle>
                                 <CardDescription className="text-amber-700 font-medium text-xs">
-                                    Official verification link email se verify kiye hue nahi hona chahie. Please verify your email to unlock the trusted identity badge.
+                                    Please verify your email to unlock the trusted identity badge.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="pt-2 pb-6 text-left">
@@ -651,100 +514,6 @@ export default function ProfilePage() {
                                     {isResending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                     Resend Verification Link
                                 </Button>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
-                )}
-                
-                {userProfile?.userType === 'lawyer' && (
-                    <motion.div variants={itemVariants}>
-                        <Card className="border-primary/10 bg-primary/5 shadow-inner overflow-hidden rounded-2xl">
-                            <CardHeader className="pb-4 text-left">
-                                <CardTitle className="flex items-center gap-2 font-headline font-black text-lg tracking-tight">
-                                    <Gavel className="h-4 w-4 text-primary" />
-                                    Advocate credentials
-                                </CardTitle>
-                                <CardDescription className="text-xs font-medium">Professional listing details awaiting manual audit.</CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-6 text-left">
-                                {advocateDetails ? (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                        <div className="space-y-4">
-                                            <div className="flex items-start gap-3">
-                                                <div className="bg-primary/10 p-2 rounded-lg shrink-0"><Briefcase className="h-3.5 w-3.5 text-primary" /></div>
-                                                <div className="min-w-0">
-                                                    <p className="text-[10px] font-bold text-muted-foreground">Experience</p>
-                                                    <p className="font-bold text-xs text-foreground leading-tight truncate">{advocateDetails.experience}</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-start gap-3">
-                                                <div className="bg-primary/10 p-2 rounded-lg shrink-0"><Gavel className="h-3.5 w-3.5 text-primary" /></div>
-                                                <div className="min-w-0">
-                                                    <p className="text-[10px] font-bold text-muted-foreground">Specialization</p>
-                                                    <p className="font-bold text-xs text-foreground truncate">{advocateDetails.specialty}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="space-y-4">
-                                            <div className="flex items-start gap-3">
-                                                <div className="bg-primary/10 p-2 rounded-lg shrink-0"><MapPin className="h-3.5 w-3.5 text-primary" /></div>
-                                                <div className="min-w-0">
-                                                    <p className="text-[10px] font-bold text-muted-foreground">Location</p>
-                                                    <p className="font-bold text-xs text-foreground leading-tight truncate">{advocateDetails.courtName}</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-start gap-3">
-                                                <div className="bg-primary/10 p-2 rounded-lg shrink-0"><BadgeCheck className="h-3.5 w-3.5 text-primary" /></div>
-                                                <div className="min-w-0">
-                                                    <p className="text-[10px] font-bold text-muted-foreground">Listing Status</p>
-                                                    {advocateDetails.isApproved ? (
-                                                        <p className="font-bold text-xs text-green-600">Verified & Live</p>
-                                                    ) : (
-                                                        <p className="font-bold text-xs text-amber-600">Pending Manual Audit</p>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="flex flex-col items-center py-4 text-center">
-                                        <Sparkles className="h-8 w-8 text-primary/20 mb-2" />
-                                        <p className="text-xs text-muted-foreground font-bold max-w-[200px]">Complete your professional details to request Admin verification.</p>
-                                    </div>
-                                )}
-                                
-                                <div className="pt-2 flex flex-col sm:flex-row gap-3">
-                                    <Button onClick={() => setShowAdvocateDialog(true)} variant={advocateDetails ? "outline" : "default"} size="sm" className="flex-1 font-bold h-11 px-8 shadow-md border-primary/20 active:scale-95 transition-all">
-                                        <Edit className="mr-2 h-4 w-4" />
-                                        {advocateDetails ? "Edit professional dital" : "Fill professional dital"}
-                                    </Button>
-                                    
-                                    {advocateDetails && !isSuperAdmin && (
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="sm" className="flex-1 text-destructive hover:bg-destructive/10 font-bold h-11 active:scale-95 transition-all">
-                                                    <UserMinus className="mr-2 h-4 w-4" />
-                                                    Remove listing
-                                                </Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent className="max-w-[90vw] sm:max-w-lg">
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle className="font-black tracking-tight">Unlist professional profile?</AlertDialogTitle>
-                                                    <AlertDialogDescription className="font-medium text-xs sm:text-sm">
-                                                        This will remove your professional profile from the directory and reset your account to Citizen. All legal tools access will remain active.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-                                                    <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={handleRemoveAdvocateListing} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
-                                                        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                                        Confirm removal
-                                                    </AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    )}
-                                </div>
                             </CardContent>
                         </Card>
                     </motion.div>
@@ -792,7 +561,7 @@ export default function ProfilePage() {
                                     <div className="flex items-start gap-3">
                                         <ShieldAlert className="h-5 w-5 text-destructive shrink-0" />
                                         <p className="text-[10px] font-black uppercase text-destructive tracking-widest leading-relaxed">
-                                            Root Account Locked: System management nodes are immutable and cannot be deleted.
+                                            Root Account Locked: System management nodes are immutable.
                                         </p>
                                     </div>
                                 </div>
@@ -809,13 +578,13 @@ export default function ProfilePage() {
                                     <AlertDialogTitle className="font-black tracking-tight text-destructive">Are you absolutely sure?</AlertDialogTitle>
                                     <AlertDialogDescription className="font-medium text-xs sm:text-sm">
                                         This action cannot be undone. This will permanently delete your account
-                                        and remove your data from our servers. You will not be able to log in again.
+                                        and remove your data.
                                     </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter className="flex-col sm:flex-row gap-2">
                                     <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Cancel</AlertDialogCancel>
                                     <AlertDialogAction onClick={handleDeleteAccount} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
-                                        {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                                        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin mr-2" /> : null}
                                         Delete permanently
                                     </AlertDialogAction>
                                     </AlertDialogFooter>
@@ -827,33 +596,6 @@ export default function ProfilePage() {
                 </motion.div>
             </div>
         </div>
-
-        <Dialog open={showAdvocateDialog} onOpenChange={(open) => {
-            setShowAdvocateDialog(open);
-        }}>
-            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden sm:rounded-2xl h-[100dvh] sm:h-auto" onPointerDownOutside={(e) => {
-                if (userProfile?.userType === 'lawyer' && !advocateDetails) e.preventDefault();
-            }}>
-                <div className="p-6 sm:p-8 h-full overflow-y-auto">
-                    <DialogHeader className="mb-6 text-left">
-                        <DialogTitle className="text-xl sm:text-2xl font-black tracking-tight">Professional registration</DialogTitle>
-                        <DialogDescription className="text-xs sm:text-sm font-medium leading-relaxed">
-                            Fill your professional dital correctly. The Admin will manually verify your Bar certificate before public listing.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <AdvocateProfileForm 
-                        onSave={handleAdvocateProfileSaved}
-                        userProfile={{
-                            firstName,
-                            lastName,
-                            email,
-                            photoURL
-                        }}
-                        initialData={advocateDetails}
-                    />
-                </div>
-            </DialogContent>
-      </Dialog>
 
       <Dialog open={isCameraOpen} onOpenChange={(open) => !open && stopCamera()}>
           <DialogContent className="sm:max-w-md p-0 overflow-hidden sm:rounded-2xl border-none shadow-2xl h-[100dvh] sm:h-auto bg-black">
@@ -874,7 +616,7 @@ export default function ProfilePage() {
                         <div className="space-y-4">
                             <div className="bg-white/10 p-4 rounded-full w-fit mx-auto"><Camera className="h-12 w-12 text-white/50" /></div>
                             <p className="text-sm font-black text-white tracking-tight">Camera access required</p>
-                            <p className="text-xs text-white/60 max-w-[200px] mx-auto font-medium">Please allow camera permissions in your browser settings.</p>
+                            <p className="text-xs text-white/60 max-w-[200px] mx-auto font-medium">Please allow camera permissions.</p>
                         </div>
                     </div>
                   )}

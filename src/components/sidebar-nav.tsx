@@ -14,7 +14,6 @@ import {
   Briefcase,
   CircleUserRound,
   Library,
-  Users,
   BrainCircuit,
   Mic,
   FileSearch,
@@ -63,7 +62,6 @@ const navigationItems = [
     icon: Library,
     items: [
       { href: "/dashboard/my-cases", icon: FolderKanban, label: "Case Management" },
-      { href: "/dashboard/lawyer-connect", icon: Users, label: "Lawyer Connect" },
       { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "NGO & Legal Aid" },
       { href: "/dashboard/learn", icon: Library, label: "Legal Knowledge Hub" },
       { href: "/dashboard/police-guide", icon: Shield, label: "Police & Court Guides" },

@@ -12,7 +12,6 @@ import {
   FileSearch,
   FileText,
   FileSignature,
-  Users,
   BrainCircuit,
   Library,
   HeartHandshake,
@@ -85,12 +84,6 @@ const newsItems = [
 
 const resources = [
     {
-        href: "/dashboard/lawyer-connect",
-        icon: Users,
-        title: "Lawyer Connect",
-        description: "Find and connect with verified legal professionals.",
-    },
-    {
         href: "/dashboard/learn",
         icon: Library,
         title: "Legal Knowledge Hub",
@@ -101,6 +94,12 @@ const resources = [
         icon: HeartHandshake,
         title: "NGO & Legal Aid",
         description: "Connect with organizations offering legal support.",
+    },
+    {
+        href: "/dashboard/police-guide",
+        icon: Library,
+        title: "Police & Court Guides",
+        description: "Your guide to navigating police and court procedures.",
     },
 ];
 
@@ -123,17 +122,15 @@ export default function DashboardHomePage() {
       if (text.length < fullText.length) {
         timeoutId = setTimeout(() => {
           setText(fullText.slice(0, text.length + 1));
-        }, 80); // Typing speed
+        }, 80);
       } else {
-        // Finished typing, pause with caret
         timeoutId = setTimeout(() => setIsTyping(false), 1000);
       }
     } else {
-      // Animation finished, restart after a delay
       timeoutId = setTimeout(() => {
         setText('');
         setIsTyping(true);
-      }, 3000); // 3-second pause before restart
+      }, 3000);
     }
     
     return () => clearTimeout(timeoutId);
@@ -142,7 +139,6 @@ export default function DashboardHomePage() {
 
   return (
     <div className="flex flex-col h-full relative space-y-8 sm:space-y-12 pb-10">
-        {/* Welcome Header */}
         <MotionWrapper>
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div>
@@ -153,14 +149,12 @@ export default function DashboardHomePage() {
                   <p className="text-xs sm:text-sm md:text-base text-muted-foreground mt-1 font-medium">Your AI-powered legal co-pilot.</p>
               </div>
               <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none h-10 font-bold text-xs" asChild><Link href="/dashboard/lawyer-connect">Find a Lawyer</Link></Button>
                    <Button size="sm" className="flex-1 sm:flex-none h-10 font-bold shadow-lg shadow-primary/20 text-xs" asChild><Link href="/dashboard/support">Ask AI</Link></Button>
               </div>
           </div>
         </MotionWrapper>
 
         <div className="space-y-10 sm:space-y-16">
-          {/* Quick Access */}
           <div className="space-y-6">
               <MotionWrapper delay={0.1}>
                 <SectionTitle>Quick Access</SectionTitle>
@@ -198,7 +192,6 @@ export default function DashboardHomePage() {
                   </MotionWrapper>
               </div>
           </div>
-          {/* AI Tools */}
            <div className="space-y-6">
               <MotionWrapper delay={0.4}>
                 <SectionTitle>AI Toolkit</SectionTitle>
@@ -206,7 +199,7 @@ export default function DashboardHomePage() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                   {aiFeatures.map((feature, index) => (
                     <MotionWrapper key={feature.href} delay={0.5 + index * 0.1}>
-                      <Link key={feature.href} href={feature.href} className="block group h-full">
+                      <Link href={feature.href} className="block group h-full">
                           <Card className="h-full p-3 sm:p-4 flex flex-col items-start hover:border-primary/50 transition-all active:scale-[0.97] border-primary/5 shadow-md">
                               <div className="p-2 rounded-lg bg-primary/10 mb-2 sm:mb-3 group-hover:bg-primary/20 transition-colors">
                                 <feature.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
@@ -220,7 +213,6 @@ export default function DashboardHomePage() {
               </div>
           </div>
 
-          {/* Latest News Section */}
           <div className="space-y-6">
             <MotionWrapper delay={0.6}>
               <SectionTitle>Latest Legal News</SectionTitle>
@@ -238,6 +230,7 @@ export default function DashboardHomePage() {
                             fill
                             className="object-cover transition-transform duration-500 group-hover:scale-110"
                             data-ai-hint={item.image.imageHint}
+                            priority={index === 0}
                           />
                         </div>
                       )}
@@ -251,7 +244,6 @@ export default function DashboardHomePage() {
             </div>
           </div>
           
-          {/* Explore Resources Section */}
           <div className="space-y-6">
             <MotionWrapper delay={0.8}>
               <SectionTitle>Explore Resources</SectionTitle>

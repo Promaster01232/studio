@@ -31,7 +31,6 @@
                     "type": "string",
                     "enum": [
                         "citizen",
-                        "lawyer",
                         "businessman",
                         "student"
                     ],
@@ -79,22 +78,6 @@
                 "email",
                 "userType"
             ]
-        },
-        "AdvocateProfile": {
-            "title": "Advocate Profile",
-            "description": "Professional credentials for legal directory.",
-            "type": "object",
-            "properties": {
-                "uid": { "type": "string" },
-                "name": { "type": "string" },
-                "barId": { "type": "string" },
-                "specialty": { "type": "string" },
-                "isVerified": { "type": "boolean" },
-                "isApproved": { "type": "boolean" },
-                "courtName": { "type": "string" },
-                "isBlocked": { "type": "boolean" }
-            },
-            "required": ["uid", "name", "barId"]
         }
     },
     "auth": {
@@ -109,12 +92,6 @@
                 "$ref": "#/entities/UserProfile"
             },
             "description": "Stores public information for each user."
-        },
-        "/advocates/{userId}": {
-            "schema": {
-                "$ref": "#/entities/AdvocateProfile"
-            },
-            "description": "Stores professional credentials for lawyers."
         }
     }
 }
