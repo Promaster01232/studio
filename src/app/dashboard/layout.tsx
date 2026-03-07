@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -163,26 +164,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     router.push('/login');
   };
 
-  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
-  
-  // 48-Hour Automatic Block Enforcement Logic
-  const isSecurityViolation = () => {
-      if (!userProfile) return false;
-      if (userProfile.isBlocked) return true;
-      
-      if (userProfile.securityStatus === 'suspicious' && userProfile.flaggedAt) {
-          const flaggedTime = userProfile.flaggedAt.toMillis ? userProfile.flaggedAt.toMillis() : Number(userProfile.flaggedAt);
-          const fortyEightHours = 48 * 60 * 60 * 1000;
-          if (Date.now() - flaggedTime > fortyEightHours) {
-              return true;
-          }
-      }
-      return false;
-  };
-
+  const isSuspended = userProfile?.isBlocked === true;
   const isAdmin = userProfile?.email === 'enterspaceindia@gmail.com' || !!userProfile?.isAdmin;
 
-  if (showContent && isSecurityViolation()) {
+  if (showContent && isSuspended) {
       return (
         <div className="flex h-screen items-center justify-center bg-muted/30 p-4">
             <Card className="max-w-md w-full border-destructive/20 shadow-2xl overflow-hidden">
@@ -194,16 +179,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         Access Revoked
                     </CardTitle>
                     <CardDescription className="text-sm font-medium pt-2">
-                        {userProfile?.securityStatus === 'suspicious' 
-                            ? "Your account has been automatically disabled following an AI security audit. Suspicious registrations are permanently blocked after 48 hours."
-                            : "Your access to Nyaya Sahayak has been restricted by the system administrator."}
+                        Your account has been deactivated by the system administrator. You no longer have access to Nyaya Sahayak tools or data.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6 pb-8">
                     <div className="p-4 bg-muted/50 rounded-xl flex items-start gap-3 border">
                         <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-                        <p className="text-xs font-medium leading-relaxed">
-                            If you believe this is an error and can provide valid identity documents, please contact our security team at <span className="font-bold text-primary">enterspaceindia@gmail.com</span>
+                        <p className="text-xs font-medium text-left leading-relaxed">
+                            If you believe this is an error, please contact our administrative team at <span className="font-bold text-primary">enterspaceindia@gmail.com</span> to request a restoration audit.
                         </p>
                     </div>
                     <Button onClick={handleLogout} variant="outline" className="w-full h-12 font-bold rounded-xl active:scale-95 transition-all">
@@ -214,6 +197,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
       );
   }
+
+  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
 
   return (
     <SidebarProvider>
