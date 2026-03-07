@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore, useDatabase } from "@/firebase";
-import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { ref, set } from "firebase/database";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { validateUserDetails } from "@/ai/flows/validate-user-details";
+import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 
 export default function RegisterPage() {
   const auth = useAuth();
@@ -75,7 +76,8 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const validation = await validateUserDetails({
+      // Step 1: AI Detail Validation (Gibberish check, fake mobile check)
+      const detailsValidation = await validateUserDetails({
         firstName,
         lastName,
         email,
@@ -83,16 +85,34 @@ export default function RegisterPage() {
         userType
       });
 
-      if (!validation.isValid) {
+      if (!detailsValidation.isValid) {
         toast({
           variant: "destructive",
           title: "Account validation failed",
-          description: validation.reason || "The details provided appear to be invalid.",
+          description: detailsValidation.reason || "The details provided appear to be invalid.",
         });
         setLoading(false);
         return;
       }
 
+      // Step 2: AI Email Authenticity Check (Forensic audit of registration pattern)
+      const emailValidation = await verifyEmailAuthenticity({
+        email,
+        firstName,
+        lastName
+      });
+
+      if (!emailValidation.isAuthentic) {
+        toast({
+          variant: "destructive",
+          title: "Email authenticity failed",
+          description: emailValidation.reason || "This email address was flagged as suspicious by our security systems.",
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Step 3: Firebase Registration (Native Duplicate Email Check happens here)
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -100,6 +120,12 @@ export default function RegisterPage() {
       );
       const user = userCredential.user;
 
+      // Step 4: Automatically trigger verification link
+      await sendEmailVerification(user).catch(err => {
+          console.warn("Auto-verification email failed to send:", err.message);
+      });
+
+      // Step 5: Registry Synchronization
       const userProfile = {
         uid: user.uid,
         firstName,
@@ -109,6 +135,7 @@ export default function RegisterPage() {
         userType,
         photoURL: user.photoURL || '',
         securityStatus: 'verified',
+        emailVerified: user.emailVerified,
         createdAt: serverTimestamp(),
       };
 
@@ -120,17 +147,19 @@ export default function RegisterPage() {
       }).catch(err => console.warn("RTDB sync skipped.", err.message));
 
       toast({
-          title: "Welcome aboard",
-          description: "Your account is active. Explore our legal tools.",
+          title: "Account Created",
+          description: "A verification link has been sent to your inbox. Please verify to obtain your badge.",
       });
       router.push("/dashboard");
 
     } catch (error: any) {
       let errorMessage = "An unknown error occurred. Please try again.";
       if (error.code === 'auth/email-already-in-use') {
-          errorMessage = "This email address is already registered.";
+          errorMessage = "This email address is already registered. Please try logging in.";
       } else if (error.code === 'auth/weak-password') {
-          errorMessage = "The password is too weak.";
+          errorMessage = "The password is too weak. Please use at least 6 characters.";
+      } else if (error.code === 'auth/invalid-email') {
+          errorMessage = "The email address provided is invalid.";
       }
 
       toast({
