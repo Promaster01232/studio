@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, MessageSquare, ShieldAlert, Ban, AlertTriangle, ShieldX } from "lucide-react";
+import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, ShieldAlert, AlertTriangle, ShieldX } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -35,12 +35,11 @@ import {
 import { useTheme } from "@/components/theme-provider";
 import { useLanguage, type Language } from "@/components/language-provider";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
 import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
-import { ChatListDialog } from "@/components/chat-list-dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const languages: { code: Language, name: string }[] = [
@@ -95,12 +94,6 @@ function Header({ userProfile }: { userProfile: any }) {
                                     <Bell className="h-4 w-4" />
                                 </Link>
                             </Button>
-
-                            <ChatListDialog>
-                                <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-primary">
-                                    <MessageSquare className="h-4 w-4" />
-                                </Button>
-                            </ChatListDialog>
                         </div>
                     </>
                 )}
