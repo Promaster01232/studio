@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useState } from "react";
@@ -13,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useLanguage } from "@/components/language-provider";
 import type { Language } from "@/components/language-provider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AudioAssistant } from "@/components/audio-assistant";
 
 const initialState: JargonState = {
     status: 'idle',
@@ -42,9 +44,17 @@ export default function SupportPage() {
             />
 
             <Card>
-                <CardHeader>
-                    <CardTitle>Jargon Simplifier</CardTitle>
-                    <CardDescription>Enter a legal term to get a simple explanation.</CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                    <div className="space-y-1">
+                      <CardTitle>Jargon Simplifier</CardTitle>
+                      <CardDescription>Enter a legal term to get a simple explanation.</CardDescription>
+                    </div>
+                    {state.status === 'success' && state.data && (
+                      <AudioAssistant 
+                        text={`The legal term ${state.data.term} means ${state.data.explanation}.`} 
+                        language={aiLanguage} 
+                      />
+                    )}
                 </CardHeader>
                 <CardContent>
                     <form action={formAction} className="space-y-4">

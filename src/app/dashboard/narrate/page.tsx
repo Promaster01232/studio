@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useState, useRef, useEffect, startTransition } from "react";
@@ -9,6 +10,7 @@ import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { AudioAssistant } from "@/components/audio-assistant";
 
 const initialState: CaseSummaryState = {
   status: "idle",
@@ -182,9 +184,17 @@ export default function NarrateProblemPage() {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center"><Bot className="mr-2" /> AI Analysis</CardTitle>
-          <CardDescription>Your analysis will appear here after recording.</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <div className="space-y-1">
+            <CardTitle className="flex items-center"><Bot className="mr-2" /> AI Analysis</CardTitle>
+            <CardDescription>Your analysis will appear here after recording.</CardDescription>
+          </div>
+          {state.status === "success" && state.data && (
+            <AudioAssistant 
+              text={`${state.data.caseSummary}. This is a ${state.data.caseType} case. Relevant laws: ${state.data.relevantLaws}. Jurisdiction: ${state.data.jurisdiction}. Next actions: ${state.data.nextActions}`} 
+              language={language}
+            />
+          )}
         </CardHeader>
         <CardContent className="min-h-48">
             {isLoading && 

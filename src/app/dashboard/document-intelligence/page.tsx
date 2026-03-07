@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useRef, useState } from "react";
@@ -11,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb, Languages, FileText } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
+import { AudioAssistant } from "@/components/audio-assistant";
 
 const initialState: DocumentIntelligenceState = {
   status: "idle",
@@ -21,6 +23,7 @@ const initialState: DocumentIntelligenceState = {
 export default function DocumentIntelligencePage() {
   const [state, formAction] = useActionState(understandDocumentAction, initialState);
   const [fileName, setFileName] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +78,7 @@ export default function DocumentIntelligencePage() {
                   <Label htmlFor="language" className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                     <Languages className="h-3.5 w-3.5" /> Response Language
                   </Label>
-                  <Select name="language" defaultValue="English" required>
+                  <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
                     <SelectTrigger id="language" className="h-11 bg-background border-primary/10 font-bold">
                       <SelectValue />
                     </SelectTrigger>
@@ -108,11 +111,19 @@ export default function DocumentIntelligencePage() {
 
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
           <Card className="border-primary/10 shadow-xl min-h-[500px] flex flex-col rounded-2xl overflow-hidden bg-card/40 backdrop-blur-md">
-            <CardHeader className="bg-primary/5 border-b border-primary/5">
-              <CardTitle className="flex items-center gap-2 text-xl font-bold tracking-tight">
-                <Bot className="h-5 w-5 text-primary" /> AI Analysis
-              </CardTitle>
-              <CardDescription className="font-medium">The explanation of your document will appear below.</CardDescription>
+            <CardHeader className="bg-primary/5 border-b border-primary/5 flex flex-row items-center justify-between space-y-0">
+              <div className="space-y-1">
+                <CardTitle className="flex items-center gap-2 text-xl font-bold tracking-tight">
+                  <Bot className="h-5 w-5 text-primary" /> AI Analysis
+                </CardTitle>
+                <CardDescription className="font-medium">The explanation will appear below.</CardDescription>
+              </div>
+              {state.status === 'success' && state.data && (
+                <AudioAssistant 
+                  text={`${state.data.summary}. Legal risks: ${state.data.legalRisks}. Deadlines: ${state.data.deadlines}. Required actions: ${state.data.requiredActions}. Consequences: ${state.data.consequences}`} 
+                  language={selectedLanguage} 
+                />
+              )}
             </CardHeader>
             <CardContent className="p-6 flex-1">
               <AnimatePresence mode="wait">

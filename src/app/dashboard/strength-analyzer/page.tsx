@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
@@ -11,6 +12,7 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, Loader2, ShieldAlert, Sparkles } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AudioAssistant } from "@/components/audio-assistant";
 
 const initialState: CaseStrengthState = {
   status: "idle",
@@ -21,6 +23,7 @@ const initialState: CaseStrengthState = {
 export default function StrengthAnalyzerPage() {
   const [state, formAction] = useActionState(analyzeCaseStrengthAction, initialState);
   const [progress, setProgress] = useState(0);
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
 
   useEffect(() => {
     if (state.status === "success" && state.data) {
@@ -60,7 +63,7 @@ export default function StrengthAnalyzerPage() {
             
             <div className="space-y-2">
                 <Label htmlFor="language">Response Language</Label>
-                <Select name="language" defaultValue="English" required>
+                <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
                 <SelectTrigger id="language">
                     <SelectValue />
                 </SelectTrigger>
@@ -105,13 +108,15 @@ export default function StrengthAnalyzerPage() {
 
       {state.status === "success" && state.data && (
         <Card className="mt-8">
-            <CardHeader>
-                <CardTitle>Analysis Result</CardTitle>
-                 <Alert variant="default" className="bg-accent/50 border-accent">
-                    <AlertDescription>
-                    <strong>Disclaimer:</strong> This is an AI-generated analysis for decision support only and does not constitute legal advice.
-                    </AlertDescription>
-                </Alert>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                <div className="space-y-1">
+                  <CardTitle>Analysis Result</CardTitle>
+                  <CardDescription>AI-generated strength assessment.</CardDescription>
+                </div>
+                <AudioAssistant 
+                  text={`${state.data.summary}. The case strength score is ${state.data.strengthScore} percent, which is considered ${getStrengthText(state.data.strengthScore)}. Risk indicators include: ${state.data.riskIndicators.join(', ')}. Recommended actions: ${state.data.recommendedActions.join(', ')}.`} 
+                  language={selectedLanguage} 
+                />
             </CardHeader>
             <CardContent className="space-y-6">
                 <div className="text-center">
