@@ -33,7 +33,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import { motion } from 'framer-motion';
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 type UserProfile = {
   uid: string;
@@ -377,6 +376,14 @@ export default function ProfilePage() {
 
   const isSuperAdmin = ADMIN_EMAILS.includes(email.toLowerCase());
 
+  if (loading) {
+      return (
+          <div className="flex h-full items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+      );
+  }
+
   return (
     <motion.div 
         variants={containerVariants}
@@ -457,10 +464,10 @@ export default function ProfilePage() {
                 <motion.div variants={itemVariants}>
                     <Card className="shadow-lg border-primary/5 rounded-2xl overflow-hidden bg-card">
                         <CardHeader className="pb-4 bg-muted/30">
-                            <CardTitle className="font-headline font-black text-lg flex items-center gap-2 tracking-tight">
+                            <CardTitle className="font-headline font-black text-lg flex items-center gap-2 tracking-tight text-left">
                                 <User className="h-4 w-4 text-primary" /> Personal details
                             </CardTitle>
-                            <CardDescription className="text-xs font-medium">Your account information.</CardDescription>
+                            <CardDescription className="text-xs font-medium text-left">Your account information.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4 pt-6 text-left">
                             <div className="grid sm:grid-cols-2 gap-4">
@@ -547,12 +554,13 @@ export default function ProfilePage() {
                 <motion.div variants={itemVariants}>
                     <Card className="border-destructive/10 bg-destructive/5 shadow-lg rounded-2xl text-left">
                         <CardHeader className="pb-4">
-                            <CardTitle className="text-destructive font-headline font-black text-lg tracking-tight">Account</CardTitle>
+                            <CardTitle className="text-destructive font-headline font-black text-lg tracking-tight">Account Control</CardTitle>
+                            <CardDescription className="text-[10px] font-bold text-destructive/60 uppercase tracking-widest">Permanent Actions</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-2">
                             <Button variant="outline" size="sm" className="w-full justify-start hover:bg-destructive/10 text-foreground border-destructive/5 h-11 px-4 font-bold rounded-xl active:scale-95 transition-all" onClick={handleLogout}>
                                 <LogOut className="mr-3 h-4 w-4 text-muted-foreground" /> 
-                                <span>Logout</span>
+                                <span>Logout Session</span>
                             </Button>
                             
                             {isSuperAdmin ? (
@@ -569,22 +577,21 @@ export default function ProfilePage() {
                                 <AlertDialogTrigger asChild>
                                     <Button variant="destructive" size="sm" className="w-full justify-start font-bold h-11 px-4 rounded-xl active:scale-95 transition-all">
                                         <Trash2 className="mr-3 h-4 w-4" />
-                                        <span>Delete account</span>
+                                        <span>Delete My Account</span>
                                     </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent className="max-w-[90vw] sm:max-w-lg bg-card">
                                     <AlertDialogHeader>
-                                    <AlertDialogTitle className="font-black tracking-tight text-destructive">Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogTitle className="font-black tracking-tight text-destructive">Confirm Permanent Deletion</AlertDialogTitle>
                                     <AlertDialogDescription className="font-medium text-xs sm:text-sm text-muted-foreground">
-                                        This action cannot be undone. This will permanently delete your account
-                                        and remove your data.
+                                        This action is irreversible. Your account and all associated legal records will be permanently erased from Nyaya Sahayak.
                                     </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-                                    <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Cancel</AlertDialogCancel>
+                                    <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Keep My Account</AlertDialogCancel>
                                     <AlertDialogAction onClick={handleDeleteAccount} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
-                                        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin mr-2" /> : null}
-                                        Delete permanently
+                                        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin mr-2" /> : <Trash2 className="mr-2 h-4 w-4" />}
+                                        Yes, Purge Everything
                                     </AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
