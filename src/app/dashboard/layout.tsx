@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, ShieldAlert, AlertTriangle, ShieldX } from "lucide-react";
 import { Logo } from "@/components/logo";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -109,56 +109,74 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
+  
   const [userProfile, setUserProfile] = useState<{firstName: string, lastName: string, email: string, photoURL?: string, isAdmin?: boolean, isBlocked?: boolean, securityStatus?: string, flaggedAt?: any, emailVerified?: boolean} | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
+  
+  const profileUnsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+      // 1. Cleanup any existing profile listener immediately on auth change
+      if (profileUnsubscribeRef.current) {
+        profileUnsubscribeRef.current();
+        profileUnsubscribeRef.current = null;
+      }
+
       if (user) {
         setProfileLoading(true);
         const userDocRef = doc(firestore, "users", user.uid);
         
-        // Sync emailVerified status directly from Auth source
-        await updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(e => {
-            // Silently skip if document doesn't exist yet (handled in onboarding)
-        });
+        // Sync emailVerified status safely
+        await updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(() => {});
 
-        const unsubProfile = onSnapshot(userDocRef, (userDoc) => {
+        profileUnsubscribeRef.current = onSnapshot(userDocRef, (userDoc) => {
             if (userDoc.exists()) {
               setUserProfile(userDoc.data() as any);
             } else {
               if (pathname !== '/create-profile' && pathname !== '/login' && pathname !== '/register') {
-                router.push('/create-profile');
+                router.replace('/create-profile');
               }
             }
             setProfileLoading(false);
         }, (error) => {
-            console.error("Error fetching user profile:", error);
+            console.error("Profile sync error:", error);
             setProfileLoading(false);
         });
-
-        return () => unsubProfile();
       } else {
         setProfileLoading(false);
         setUserProfile(null);
+        // Only redirect if we're not already on a public/auth page
+        if (!['/login', '/register', '/'].includes(pathname)) {
+            router.replace('/login');
+        }
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+        unsubscribeAuth();
+        if (profileUnsubscribeRef.current) {
+            profileUnsubscribeRef.current();
+        }
+    };
   }, [auth, firestore, router, pathname]);
 
   const handleLogout = async () => {
+    if (profileUnsubscribeRef.current) {
+        profileUnsubscribeRef.current();
+        profileUnsubscribeRef.current = null;
+    }
     await signOut(auth);
-    router.push('/login');
+    router.replace('/login');
   };
 
+  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
   const isSuspended = userProfile?.isBlocked === true;
   const isAdmin = userProfile?.email === 'enterspaceindia@gmail.com' || !!userProfile?.isAdmin;
-  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
 
   if (showContent && isSuspended) {
       return (

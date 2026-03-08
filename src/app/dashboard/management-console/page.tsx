@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -177,11 +177,19 @@ export default function ManagementConsolePage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchSearchQuery] = useState("");
   const [processingUid, setProcessingUid] = useState<string | null>(null);
+  
+  const unsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, async (user) => {
+        // Cleanup previous listener immediately on auth change
+        if (unsubscribeRef.current) {
+            unsubscribeRef.current();
+            unsubscribeRef.current = null;
+        }
+
         if (!user) {
-            router.push('/login');
+            router.replace('/login');
             return;
         }
 
@@ -192,12 +200,12 @@ export default function ManagementConsolePage() {
 
         if (!isSuperAdmin && !hasAdminFlag) {
             toast({ variant: "destructive", title: "Access Denied" });
-            router.push('/dashboard');
+            router.replace('/dashboard');
             return;
         }
 
         const usersCol = collection(firestore, "users");
-        const unsubUsers = onSnapshot(usersCol, (snapshot) => {
+        unsubscribeRef.current = onSnapshot(usersCol, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
             setUsers(list.sort((a, b) => {
                 const dateA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : Number(a.createdAt || 0);
@@ -206,21 +214,24 @@ export default function ManagementConsolePage() {
             }));
             setLoading(false);
         }, (serverError) => {
-            if (!auth.currentUser) return;
-            const permissionError = new FirestorePermissionError({
-                path: usersCol.path,
-                operation: 'list',
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
+            // Only emit if user is still logged in
+            if (auth.currentUser) {
+                const permissionError = new FirestorePermissionError({
+                    path: usersCol.path,
+                    operation: 'list',
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+            }
             setLoading(false);
         });
-
-        return () => {
-            unsubUsers();
-        };
     });
 
-    return () => unsubAuth();
+    return () => {
+        unsubAuth();
+        if (unsubscribeRef.current) {
+            unsubscribeRef.current();
+        }
+    };
   }, [firestore, auth, router, toast]);
 
   const handleToggleStatus = async (user: UserRecord, isInactive: boolean) => {
@@ -286,7 +297,7 @@ export default function ManagementConsolePage() {
         return;
     }
     
-    if (!window.confirm(`PERMANENT DELETION: Are you sure you want to completely erase all data for ${user.firstName} ${user.lastName}? This action is irreversible. All verified and unverified data will be removed.`)) return;
+    if (!window.confirm(`PERMANENT DELETION: Are you sure you want to completely erase all data for ${user.firstName} ${user.lastName}? This action is irreversible.`)) return;
 
     setProcessingUid(user.uid);
     const userRef = doc(firestore, "users", user.uid);

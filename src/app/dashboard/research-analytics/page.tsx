@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from "next/image";
@@ -284,7 +283,6 @@ export default function ResearchAnalyticsPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isPosting, setIsPosting] = useState(false);
     
-    // Dialog state
     const [activeTab, setActiveTab] = useState('idea');
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -301,18 +299,18 @@ export default function ResearchAnalyticsPage() {
     const auth = useAuth();
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     
+    const postsUnsubscribeRef = useRef<(() => void) | null>(null);
+    
     useEffect(() => {
         if (!firestore || !auth) return;
-
-        let unsubscribePosts: (() => void) | undefined;
 
         const unsubscribeAuth = onAuthStateChanged(auth, user => {
             setIsAuthenticated(!!user);
 
-            // Clean up existing posts listener if any when auth state changes
-            if (unsubscribePosts) {
-                unsubscribePosts();
-                unsubscribePosts = undefined;
+            // Cleanup immediately on auth state change
+            if (postsUnsubscribeRef.current) {
+                postsUnsubscribeRef.current();
+                postsUnsubscribeRef.current = null;
             }
 
             if (!user) {
@@ -333,23 +331,20 @@ export default function ResearchAnalyticsPage() {
             const postsCollection = collection(firestore, "posts");
             const q = query(postsCollection, orderBy("createdAt", "desc"));
 
-            unsubscribePosts = onSnapshot(q,
+            postsUnsubscribeRef.current = onSnapshot(q,
                 (querySnapshot) => {
                     const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post));
                     setFeed(postsData);
                     setLoading(false);
                 },
                 (serverError) => {
-                    // Suppress permission errors if the user is logging out or session is ending
-                    if (!auth.currentUser) {
-                        return;
+                    if (auth.currentUser) {
+                        const permissionError = new FirestorePermissionError({
+                            path: postsCollection.path,
+                            operation: 'list',
+                        }, serverError);
+                        errorEmitter.emit('permission-error', permissionError);
                     }
-
-                    const permissionError = new FirestorePermissionError({
-                        path: postsCollection.path,
-                        operation: 'list',
-                    }, serverError);
-                    errorEmitter.emit('permission-error', permissionError);
                     setLoading(false);
                     setFeed([]);
                 }
@@ -358,8 +353,8 @@ export default function ResearchAnalyticsPage() {
 
         return () => {
             unsubscribeAuth();
-            if (unsubscribePosts) {
-                unsubscribePosts();
+            if (postsUnsubscribeRef.current) {
+                postsUnsubscribeRef.current();
             }
         };
     }, [auth, firestore]);
