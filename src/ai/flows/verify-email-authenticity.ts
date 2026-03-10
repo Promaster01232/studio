@@ -11,13 +11,11 @@ import { z } from 'genkit';
 
 const VerifyEmailInputSchema = z.object({
   email: z.string().email().describe('The user\'s email address to verify.'),
-  firstName: z.string().describe('The user\'s first name.'),
-  lastName: z.string().describe('The user\'s last name.'),
 });
 export type VerifyEmailInput = z.infer<typeof VerifyEmailInputSchema>;
 
 const VerifyEmailOutputSchema = z.object({
-  isAuthentic: z.boolean().describe('Whether the email and name combination appear genuine.'),
+  isAuthentic: z.boolean().describe('Whether the email appears genuine and not a burner/temp address.'),
   reason: z.string().optional().describe('Explanation for the verification result.'),
   confidenceScore: z.number().min(0).max(100).describe('Confidence score of the AI assessment.'),
 });
@@ -32,19 +30,16 @@ const prompt = ai.definePrompt({
   input: { schema: VerifyEmailInputSchema },
   output: { schema: VerifyEmailOutputSchema },
   prompt: `You are a security analyst for Nyaya Sahayak. 
-Analyze the following user details to determine if the account registration appears to be from a genuine person or a automated/fake bot.
+Analyze the following email address to determine if it appears to be a genuine, personal or professional email, or a automated/fake/disposable address.
 
-User Details:
-- Name: {{{firstName}}} {{{lastName}}}
-- Email: {{{email}}}
+Email: {{{email}}}
 
 Verification Checklist:
-1. Email Pattern: Does the email prefix relate to the name? (e.g. rajesh.k@... for Rajesh Kumar is good).
-2. Domain Authenticity: Is it a common provider (Gmail, Outlook) or a suspicious temporary mail domain?
-3. Gibberish Check: Are the name or email strings random characters (asdfgh, 12345)?
-4. Professionalism: For an Indian legal platform, does the email look like a standard Indian citizen's email?
+1. Domain Authenticity: Is it a common trusted provider (Gmail, Outlook, Yahoo, iCloud) or a known suspicious temporary/disposable mail domain?
+2. Gibberish Check: Is the email prefix random characters (asdfgh123, qwerty)?
+3. Trustworthiness: Does this look like a real person's primary email address?
 
-Set isAuthentic to true ONLY if you are confident it's a real person. 
+Set isAuthentic to true ONLY if you are confident it's a real, non-disposable email. 
 Provide a confidence score (0-100).
 Respond ONLY with the JSON object.`,
 });
@@ -62,9 +57,8 @@ const verifyEmailAuthenticityFlow = ai.defineFlow(
         const { output } = await prompt(input);
         return output!;
       } catch (error: any) {
-        // If it's a 429 Quota error, wait for 35s before retrying
         if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
-          console.warn(`AI Rate Limit hit in verifyEmailAuthenticity. Retrying in 35s (Retries left: ${retries})...`);
+          console.warn(`AI Rate Limit hit in verifyEmailAuthenticity. Retrying in 35s...`);
           await new Promise(resolve => setTimeout(resolve, 35000));
           retries--;
           continue;
@@ -72,6 +66,6 @@ const verifyEmailAuthenticityFlow = ai.defineFlow(
         throw error;
       }
     }
-    throw new Error("AI verification timed out due to quota limits. Please try again in a few minutes.");
+    throw new Error("AI verification timed out due to quota limits.");
   }
 );

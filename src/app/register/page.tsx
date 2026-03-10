@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -16,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff, ShieldCheck, MailCheck, AlertCircle, CheckCircle2, Sparkles } from "lucide-react";
+import { Loader2, Eye, EyeOff, ShieldCheck, MailCheck, AlertCircle, CheckCircle2, Sparkles, Smartphone } from "lucide-react";
 import { Logo } from "@/components/logo";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -45,9 +44,10 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   
   // AI Validation States
-  const [isValidatingEmail, setIsValidatingEmail] = useState(false);
-  const [emailValidationStatus, setEmailValidationStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
-  const [validationReason, setValidationReason] = useState("");
+  const [isValidating, setIsValidating] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
+  const [mobileStatus, setMobileStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
+  const [validationError, setValidationError] = useState("");
 
   const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
@@ -65,7 +65,7 @@ export default function RegisterPage() {
       toast({
         variant: "destructive",
         title: "Information missing",
-        description: "Please fill in all required fields to create your account.",
+        description: "Please fill in all required fields.",
       });
       return;
     }
@@ -80,51 +80,43 @@ export default function RegisterPage() {
     }
 
     setLoading(true);
+    setValidationError("");
+    setEmailStatus('idle');
+    setMobileStatus('idle');
 
     try {
-      // Step 1: AI Detail Validation (Gibberish check, fake mobile check)
+      setIsValidating(true);
+
+      // 1. AI Email Authenticity Check
+      const emailValidation = await verifyEmailAuthenticity({ email });
+      if (!emailValidation.isAuthentic) {
+        setEmailStatus('invalid');
+        setValidationError(emailValidation.reason || "AI detected suspicious email pattern.");
+        setIsValidating(false);
+        setLoading(false);
+        return;
+      }
+      setEmailStatus('valid');
+
+      // 2. AI Mobile & Details Validation (Indian Mobile Check)
       const detailsValidation = await validateUserDetails({
         firstName,
         lastName,
-        email,
         mobileNumber,
         userType
       });
 
       if (!detailsValidation.isValid) {
-        toast({
-          variant: "destructive",
-          title: "Account validation failed",
-          description: detailsValidation.reason || "The details provided appear to be invalid.",
-        });
+        setMobileStatus('invalid');
+        setValidationError(detailsValidation.reason || "Mobile number or details flagged by AI.");
+        setIsValidating(false);
         setLoading(false);
         return;
       }
+      setMobileStatus('valid');
+      setIsValidating(false);
 
-      // Step 2: AI Email Authenticity Check (Forensic audit)
-      setIsValidatingEmail(true);
-      const emailValidation = await verifyEmailAuthenticity({
-        email,
-        firstName,
-        lastName
-      });
-      setIsValidatingEmail(false);
-
-      if (!emailValidation.isAuthentic) {
-        setEmailValidationStatus('invalid');
-        setValidationReason(emailValidation.reason || "AI detected suspicious identity patterns.");
-        toast({
-          variant: "destructive",
-          title: "Email verification failed",
-          description: emailValidation.reason || "This email address was flagged as suspicious by our security systems.",
-        });
-        setLoading(false);
-        return;
-      }
-
-      setEmailValidationStatus('valid');
-
-      // Step 3: Firebase Registration
+      // 3. Firebase Registration
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -132,12 +124,12 @@ export default function RegisterPage() {
       );
       const user = userCredential.user;
 
-      // Step 4: Automatically trigger verification link
+      // 4. Trigger verification link
       await sendEmailVerification(user).catch(err => {
           console.warn("Auto-verification email failed to send:", err.message);
       });
 
-      // Step 5: Registry Synchronization
+      // 5. Registry Synchronization
       const userProfile = {
         uid: user.uid,
         firstName,
@@ -156,22 +148,20 @@ export default function RegisterPage() {
       set(ref(rtdb, `users/${user.uid}`), {
           ...userProfile,
           createdAt: Date.now()
-      }).catch(err => console.warn("RTDB sync skipped.", err.message));
+      }).catch(err => console.warn("RTDB sync issues.", err.message));
 
       toast({
-          title: "Account Created",
-          description: "Welcome! A verification link has been sent to your inbox.",
+          title: "Registry Active",
+          description: "Welcome! A verification link has been sent to your email.",
       });
       router.push("/dashboard");
 
     } catch (error: any) {
       let errorMessage = "An unknown error occurred. Please try again.";
       if (error.code === 'auth/email-already-in-use') {
-          errorMessage = "This email address is already registered. Please try logging in.";
+          errorMessage = "This email is already registered.";
       } else if (error.code === 'auth/weak-password') {
-          errorMessage = "The password is too weak. Please use at least 6 characters.";
-      } else if (error.code === 'auth/invalid-email') {
-          errorMessage = "The email address provided is invalid.";
+          errorMessage = "Password is too weak.";
       }
 
       toast({
@@ -180,6 +170,7 @@ export default function RegisterPage() {
         description: errorMessage,
       });
       setLoading(false);
+      setIsValidating(false);
     }
   };
 
@@ -220,9 +211,9 @@ export default function RegisterPage() {
                   Nyaya Sahayak
               </h1>
           </motion.div>
-          <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Join the community</motion.h2>
+          <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Citizen Registry</motion.h2>
           <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
-          Secure AI-powered legal registry.
+          AI-authenticated legal access.
           </motion.p>
           <CardContent className="p-0">
               <motion.div variants={itemVariants} className="grid gap-4">
@@ -236,13 +227,14 @@ export default function RegisterPage() {
                   <Input id="last-name" placeholder="Kumar" required value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} className="h-11 font-bold bg-background" />
                   </div>
               </div>
+              
               <div className="grid gap-2">
                   <Label htmlFor="email" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
                     <span>Email address</span>
                     <AnimatePresence>
-                        {isValidatingEmail && (
-                            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[10px] text-primary flex items-center gap-1">
-                                <Loader2 className="h-3 w-3 animate-spin" /> AI Validating...
+                        {isValidating && email && (
+                            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[9px] text-primary flex items-center gap-1 font-black">
+                                <Loader2 className="h-2.5 w-2.5 animate-spin" /> AI SCANNING
                             </motion.span>
                         )}
                     </AnimatePresence>
@@ -256,51 +248,79 @@ export default function RegisterPage() {
                         value={email}
                         onChange={(e) => {
                             setEmail(e.target.value);
-                            setEmailValidationStatus('idle');
+                            setEmailStatus('idle');
                         }}
                         disabled={loading}
                         className={cn(
                             "h-11 font-bold bg-background pr-10 transition-colors",
-                            emailValidationStatus === 'valid' && "border-green-500/50 bg-green-500/5",
-                            emailValidationStatus === 'invalid' && "border-red-500/50 bg-red-500/5"
+                            emailStatus === 'valid' && "border-green-500/50 bg-green-500/5",
+                            emailStatus === 'invalid' && "border-red-500/50 bg-red-500/5"
                         )}
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                        {emailValidationStatus === 'valid' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
-                        {emailValidationStatus === 'invalid' && <AlertCircle className="h-4 w-4 text-red-600" />}
-                        {emailValidationStatus === 'idle' && !isValidatingEmail && email && <Sparkles className="h-4 w-4 text-primary opacity-20" />}
+                        {emailStatus === 'valid' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
+                        {emailStatus === 'invalid' && <AlertCircle className="h-4 w-4 text-red-600" />}
+                        {emailStatus === 'idle' && !isValidating && email && <Sparkles className="h-4 w-4 text-primary opacity-20" />}
                     </div>
                   </div>
-                  {emailValidationStatus === 'invalid' && (
-                      <p className="text-[10px] font-bold text-red-600 px-1">{validationReason}</p>
-                  )}
               </div>
+
               <div className="grid gap-2">
-                  <Label htmlFor="mobile-number" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Mobile number</Label>
-                  <Input
-                  id="mobile-number"
-                  type="tel"
-                  placeholder="+91 12345 67890"
-                  required
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                  disabled={loading}
-                  className="h-11 font-bold bg-background"
-                  />
+                  <Label htmlFor="mobile-number" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
+                    <span>Indian Mobile Number</span>
+                    <AnimatePresence>
+                        {isValidating && mobileNumber && (
+                            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[9px] text-primary flex items-center gap-1 font-black">
+                                <Smartphone className="h-2.5 w-2.5 animate-pulse" /> FORMAT AUDIT
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
+                  </Label>
+                  <div className="relative">
+                    <Input
+                        id="mobile-number"
+                        type="tel"
+                        placeholder="+91 98765 43210"
+                        required
+                        value={mobileNumber}
+                        onChange={(e) => {
+                            setMobileNumber(e.target.value);
+                            setMobileStatus('idle');
+                        }}
+                        disabled={loading}
+                        className={cn(
+                            "h-11 font-bold bg-background pr-10 transition-colors",
+                            mobileStatus === 'valid' && "border-green-500/50 bg-green-500/5",
+                            mobileStatus === 'invalid' && "border-red-500/50 bg-red-500/5"
+                        )}
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        {mobileStatus === 'valid' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
+                        {mobileStatus === 'invalid' && <AlertCircle className="h-4 w-4 text-red-600" />}
+                    </div>
+                  </div>
               </div>
+
+              {validationError && (
+                  <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] font-black text-red-600 bg-red-500/10 p-2 rounded-lg border border-red-500/20">
+                      FORENSIC ALERT: {validationError}
+                  </motion.p>
+              )}
+
               <div className="grid gap-2">
-                  <Label htmlFor="userType" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">I am registering as a...</Label>
+                  <Label htmlFor="userType" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Platform Role</Label>
                   <Select value={userType} onValueChange={setUserType} disabled={loading}>
                       <SelectTrigger id="userType" className="h-11 font-bold bg-background">
-                          <SelectValue placeholder="Select your role" />
+                          <SelectValue placeholder="Select role" />
                       </SelectTrigger>
                       <SelectContent>
-                          <SelectItem value="citizen" className="font-bold">General Citizen</SelectItem>
-                          <SelectItem value="businessman" className="font-bold">Business Owner / MSME</SelectItem>
+                          <SelectItem value="citizen" className="font-bold">Citizen</SelectItem>
+                          <SelectItem value="businessman" className="font-bold">Business / MSME</SelectItem>
                           <SelectItem value="student" className="font-bold">Law Student</SelectItem>
                       </SelectContent>
                   </Select>
               </div>
+
               <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
                       <Label htmlFor="password" title="password" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Password</Label>
@@ -349,17 +369,17 @@ export default function RegisterPage() {
                   {loading ? (
                       <span className="flex items-center gap-2">
                         <Loader2 className="animate-spin h-5 w-5" />
-                        {isValidatingEmail ? "AI Forensic Audit..." : "Creating Node..."}
+                        {isValidating ? "FORENSIC AUDIT..." : "CREATING NODE..."}
                       </span>
                   ) : (
                       <span className="flex items-center gap-2">
-                        <ShieldCheck className="h-5 w-5" /> Verify & Sign Up
+                        <ShieldCheck className="h-5 w-5" /> VALIDATE & SIGN UP
                       </span>
                   )}
               </Button>
               </motion.div>
               <motion.div variants={itemVariants} className="mt-6 text-center text-sm font-medium">
-              Already have an account?{" "}
+              Already in registry?{" "}
               <Link href="/login" className="font-bold text-primary hover:underline">
                   Sign in here
               </Link>
