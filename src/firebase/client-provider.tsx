@@ -3,7 +3,13 @@ import { ReactNode, useEffect, useState } from 'react';
 import { FirebaseProvider } from './provider';
 import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
-import { getFirestore, enableIndexedDbPersistence, type Firestore } from 'firebase/firestore';
+import { 
+  getFirestore, 
+  initializeFirestore, 
+  persistentLocalCache, 
+  persistentMultipleTabManager, 
+  type Firestore 
+} from 'firebase/firestore';
 import { getDatabase, type Database } from 'firebase/database';
 import { firebaseConfig } from './config';
 import { Loader2 } from 'lucide-react';
@@ -18,37 +24,36 @@ interface FirebaseInstances {
 // Create singleton instances at the module level
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
-const firestore = getFirestore(app);
+
+// Use the modern localCache settings to replace deprecated enableIndexedDbPersistence
+let firestore: Firestore;
+try {
+  firestore = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+      tabManager: persistentMultipleTabManager(),
+    }),
+  });
+} catch (error) {
+  // If already initialized (e.g. during hot reloading), just get the existing instance
+  firestore = getFirestore(app);
+}
+
 const rtdb = getDatabase(app);
 const instances = { app, auth, firestore, rtdb };
 
 export function FirebaseClientProvider({ children }: { children: ReactNode }) {
-  const [persistenceEnabled, setPersistenceEnabled] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    enableIndexedDbPersistence(firestore)
-      .catch((err) => {
-        if (err.code === 'failed-precondition') {
-          console.warn(
-            'Firestore persistence failed, likely due to multiple tabs being open.'
-          );
-        } else if (err.code === 'unimplemented') {
-          console.warn(
-            'Firestore persistence is not supported in this browser.'
-          );
-        }
-      })
-      .finally(() => {
-        setPersistenceEnabled(true);
-      });
+    // We use a simple ready state to handle hydration properly in Next.js
+    setIsReady(true);
   }, []);
 
-  // Show a loader until persistence has been configured.
-  // This is crucial to prevent Firestore operations before persistence is ready.
-  if (!persistenceEnabled) {
+  // Show a loader until hydration is complete.
+  if (!isReady) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
