@@ -28,7 +28,8 @@ import {
   ShieldHalf,
   UserCheck,
   UserMinus,
-  RotateCcw
+  RotateCcw,
+  CheckCircle2
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -182,7 +183,6 @@ export default function ManagementConsolePage() {
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, async (user) => {
-        // Cleanup previous listener immediately on auth change
         if (unsubscribeRef.current) {
             unsubscribeRef.current();
             unsubscribeRef.current = null;
@@ -214,7 +214,6 @@ export default function ManagementConsolePage() {
             }));
             setLoading(false);
         }, (serverError) => {
-            // Only emit if user is still logged in
             if (auth.currentUser) {
                 const permissionError = new FirestorePermissionError({
                     path: usersCol.path,
@@ -262,9 +261,7 @@ export default function ManagementConsolePage() {
 
       try {
           const verification = await verifyEmailAuthenticity({
-              email: user.email,
-              firstName: user.firstName,
-              lastName: user.lastName
+              email: user.email
           });
 
           if (verification.isAuthentic) {
@@ -275,14 +272,14 @@ export default function ManagementConsolePage() {
                   isBlocked: false 
               });
               
-              toast({ title: "User Authenticated" });
+              toast({ title: "User AI Authenticated" });
           } else {
               const userRef = doc(firestore, "users", user.uid);
               await updateDoc(userRef, { 
                   securityStatus: 'suspicious',
                   flagReason: verification.reason || "AI detected suspicious identity patterns."
               });
-              toast({ variant: "destructive", title: "Verification Failed" });
+              toast({ variant: "destructive", title: "Forensic Audit Failed" });
           }
       } catch (error: any) {
           toast({ variant: "destructive", title: "Process Error" });
@@ -322,7 +319,7 @@ export default function ManagementConsolePage() {
       total: users.length,
       active: users.filter(u => !u.isBlocked).length,
       blocked: users.filter(u => u.isBlocked).length,
-      suspicious: users.filter(u => !u.emailVerified && !ADMIN_EMAILS.includes(u.email.toLowerCase())).length,
+      aiVerified: users.filter(u => u.securityStatus === 'verified').length,
   };
 
   if (loading) {
@@ -340,7 +337,7 @@ export default function ManagementConsolePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
             <Button variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-background active:scale-95 transition-all">
                 <Sparkles className="mr-2 h-4 w-4 text-primary" />
-                <span className="text-[10px] uppercase tracking-wider">Identity Audit</span>
+                <span className="text-[10px] uppercase tracking-wider">Registry Audit</span>
             </Button>
             <Button className="bg-primary text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all">
                 <UserPlus className="mr-2 h-4 w-4" />
@@ -351,50 +348,50 @@ export default function ManagementConsolePage() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <Card className="border-primary/5 shadow-sm bg-muted/10 rounded-2xl">
-              <CardHeader className="p-3 sm:p-4 pb-1">
+              <CardHeader className="p-3 sm:p-4 pb-1 text-left">
                   <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Registry</CardDescription>
                   <CardTitle className="text-xl sm:text-2xl font-black">{stats.total}</CardTitle>
               </CardHeader>
-              <CardContent className="p-3 sm:p-4 pt-0">
+              <CardContent className="p-3 sm:p-4 pt-0 text-left">
                   <div className="flex items-center gap-1.5 text-primary">
                       <Users className="h-3 w-3" />
                       <span className="text-[8px] sm:text-[9px] font-bold">Platform Nodes</span>
                   </div>
               </CardContent>
           </Card>
-          <Card className="border-primary/5 shadow-sm bg-green-500/5 rounded-2xl">
-              <CardHeader className="p-3 sm:p-4 pb-1">
-                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-green-600">Active Citizens</CardDescription>
-                  <CardTitle className="text-xl sm:text-2xl font-black text-green-600">{stats.active}</CardTitle>
+          <Card className="border-primary/5 shadow-sm bg-blue-500/5 rounded-2xl">
+              <CardHeader className="p-3 sm:p-4 pb-1 text-left">
+                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-blue-600">AI Authenticated</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl font-black text-blue-600">{stats.aiVerified}</CardTitle>
               </CardHeader>
-              <CardContent className="p-3 sm:p-4 pt-0">
-                  <div className="flex items-center gap-1.5 text-green-600">
-                      <UserCheck className="h-3 w-3" />
-                      <span className="text-[8px] sm:text-[9px] font-bold">Unrestricted</span>
+              <CardContent className="p-3 sm:p-4 pt-0 text-left">
+                  <div className="flex items-center gap-1.5 text-blue-600">
+                      <ShieldCheck className="h-3 w-3" />
+                      <span className="text-[8px] sm:text-[9px] font-bold">Forensic Approved</span>
                   </div>
               </CardContent>
           </Card>
           <Card className="border-primary/5 shadow-sm bg-red-500/5 rounded-2xl">
-              <CardHeader className="p-3 sm:p-4 pb-1">
-                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-red-600">Suspended Nodes</CardDescription>
+              <CardHeader className="p-3 sm:p-4 pb-1 text-left">
+                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-red-600">Suspended</CardDescription>
                   <CardTitle className="text-xl sm:text-2xl font-black text-red-600">{stats.blocked}</CardTitle>
               </CardHeader>
-              <CardContent className="p-3 sm:p-4 pt-0">
+              <CardContent className="p-3 sm:p-4 pt-0 text-left">
                   <div className="flex items-center gap-1.5 text-red-600">
                       <UserMinus className="h-3 w-3" />
-                      <span className="text-[8px] sm:text-[9px] font-bold">Revoked</span>
+                      <span className="text-[8px] sm:text-[9px] font-bold">Access Revoked</span>
                   </div>
               </CardContent>
           </Card>
-          <Card className="border-primary/5 shadow-sm bg-amber-500/5 rounded-2xl">
-              <CardHeader className="p-3 sm:p-4 pb-1">
-                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-amber-600">Awaiting Inspection</CardDescription>
-                  <CardTitle className="text-xl sm:text-2xl font-black text-amber-600">{stats.suspicious}</CardTitle>
+          <Card className="border-primary/5 shadow-sm bg-green-500/5 rounded-2xl">
+              <CardHeader className="p-3 sm:p-4 pb-1 text-left">
+                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-green-600">Active Citizens</CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl font-black text-green-600">{stats.active}</CardTitle>
               </CardHeader>
-              <CardContent className="p-3 sm:p-4 pt-0">
-                  <div className="flex items-center gap-1.5 text-amber-600">
-                      <ShieldAlert className="h-3 w-3" />
-                      <span className="text-[8px] sm:text-[9px] font-bold">Forensic Audit Required</span>
+              <CardContent className="p-3 sm:p-4 pt-0 text-left">
+                  <div className="flex items-center gap-1.5 text-green-600">
+                      <UserCheck className="h-3 w-3" />
+                      <span className="text-[8px] sm:text-[9px] font-bold">Unrestricted</span>
                   </div>
               </CardContent>
           </Card>
@@ -405,7 +402,7 @@ export default function ManagementConsolePage() {
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div className="text-left">
                       <CardTitle className="font-headline font-black text-xl tracking-tight leading-none">Identity Registry</CardTitle>
-                      <CardDescription className="text-[10px] sm:text-xs font-medium mt-1.5">Real-time control over all registered citizen accounts.</CardDescription>
+                      <CardDescription className="text-[10px] sm:text-xs font-medium mt-1.5">Forensic security and account status oversight.</CardDescription>
                   </div>
                   <div className="relative group w-full md:w-80">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -434,6 +431,7 @@ export default function ManagementConsolePage() {
                           {filteredUsers.length > 0 ? filteredUsers.map((user) => {
                               const isRoot = ADMIN_EMAILS.includes(user.email.toLowerCase());
                               const isProcessing = processingUid === user.uid;
+                              const isAiVerified = user.securityStatus === 'verified';
                               
                               return (
                                 <TableRow key={user.uid} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", user.isBlocked && "bg-red-500/5")}>
@@ -469,27 +467,33 @@ export default function ManagementConsolePage() {
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        {user.emailVerified ? (
-                                            <div className="flex items-center justify-center gap-1.5 text-green-600">
-                                                <BadgeCheck className="h-4 w-4" />
-                                                <span className="text-[9px] font-black uppercase">Identity Verified</span>
-                                            </div>
-                                        ) : (
-                                            <div className="flex flex-col items-center gap-1.5">
-                                                <span className="text-[9px] font-black uppercase text-red-500 tracking-tight animate-pulse">Not Verified</span>
-                                                {!isRoot && (
-                                                    <Button 
-                                                        size="sm" 
-                                                        variant="ghost" 
-                                                        className="h-6 px-3 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full hover:bg-primary hover:text-white transition-all"
-                                                        onClick={() => handleVerifyUser(user)}
-                                                        disabled={isProcessing}
-                                                    >
-                                                        {isProcessing ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : "Verify Identity"}
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        )}
+                                        <div className="flex flex-col items-center gap-1.5">
+                                            {isAiVerified && (
+                                                <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 border-blue-500/20 text-[8px] font-black uppercase flex items-center gap-1">
+                                                    <ShieldCheck className="h-2.5 w-2.5" /> AI Authenticated
+                                                </Badge>
+                                            )}
+                                            {user.emailVerified ? (
+                                                <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[8px] font-black uppercase flex items-center gap-1">
+                                                    <CheckCircle2 className="h-2.5 w-2.5" /> Identity Verified
+                                                </Badge>
+                                            ) : (
+                                                <div className="flex flex-col items-center gap-1.5 mt-1">
+                                                    <span className="text-[8px] font-black uppercase text-red-500 tracking-tight animate-pulse">Link Pending</span>
+                                                    {!isRoot && !isAiVerified && (
+                                                        <Button 
+                                                            size="sm" 
+                                                            variant="ghost" 
+                                                            className="h-6 px-3 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full hover:bg-primary hover:text-white transition-all"
+                                                            onClick={() => handleVerifyUser(user)}
+                                                            disabled={isProcessing}
+                                                        >
+                                                            {isProcessing ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : "Verify Identity"}
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
                                     </TableCell>
                                     <TableCell className="text-right pr-6">
                                         <div className="flex items-center justify-end gap-2">

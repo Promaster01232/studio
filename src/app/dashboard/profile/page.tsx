@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, CheckCircle2 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { motion } from 'framer-motion';
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
+import { Badge } from '@/components/ui/badge';
 
 type UserProfile = {
   uid: string;
@@ -143,9 +144,7 @@ export default function ProfilePage() {
 
     try {
         const verification = await verifyEmailAuthenticity({
-            email: userProfile.email,
-            firstName: userProfile.firstName,
-            lastName: userProfile.lastName
+            email: userProfile.email
         });
 
         if (verification.isAuthentic) {
@@ -159,7 +158,7 @@ export default function ProfilePage() {
             setUserProfile(prev => prev ? { ...prev, securityStatus: 'verified' } : null);
             toast({ 
                 title: "Forensic Check Passed", 
-                description: `AI confirmed registration authenticity. Verified Badge still requires clicking the link in your email.` 
+                description: `AI confirmed registration authenticity. Identity badge updated.` 
             });
         } else {
             const userRef = doc(firestore, "users", userProfile.uid);
@@ -188,7 +187,6 @@ export default function ProfilePage() {
       
       const updateData = { photoURL: newPhotoURL };
       
-      // Update Firestore
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
       setDoc(userDocRef, updateData, { merge: true })
         .then(() => {
@@ -197,7 +195,6 @@ export default function ProfilePage() {
         })
         .catch(err => console.error("Failed to sync photo to Firestore:", err));
 
-      // Update RTDB
       update(ref(rtdb, `users/${auth.currentUser.uid}`), updateData)
         .catch(err => console.warn("RTDB photo sync skipped:", err.message));
   };
@@ -205,7 +202,7 @@ export default function ProfilePage() {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) { // 2MB limit
+      if (file.size > 2 * 1024 * 1024) {
         toast({
           variant: "destructive",
           title: "File too large",
@@ -375,6 +372,7 @@ export default function ProfilePage() {
   };
 
   const isSuperAdmin = ADMIN_EMAILS.includes(email.toLowerCase());
+  const isAiVerified = userProfile?.securityStatus === 'verified';
 
   if (loading) {
       return (
@@ -433,7 +431,13 @@ export default function ProfilePage() {
                         <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter text-foreground truncate">{firstName} {lastName}</h2>
                         <div className="flex items-center gap-2">
                             {userProfile?.emailVerified ? (
-                                <BadgeCheck className="h-4 w-4 text-primary shrink-0" />
+                                <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20 py-0.5 px-3 rounded-full text-[9px] font-black uppercase flex items-center gap-1.5 shadow-sm">
+                                    <BadgeCheck className="h-3 w-3" /> Identity Verified
+                                </Badge>
+                            ) : isAiVerified ? (
+                                <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 border-blue-500/20 py-0.5 px-3 rounded-full text-[9px] font-black uppercase flex items-center gap-1.5 shadow-sm">
+                                    <ShieldCheck className="h-3 w-3" /> AI Authenticated
+                                </Badge>
                             ) : (
                                 <Button 
                                     size="sm" 
@@ -511,15 +515,18 @@ export default function ProfilePage() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="pt-2 pb-6 text-left">
-                                <Button 
-                                    onClick={handleSendVerification}
-                                    disabled={isResending}
-                                    variant="outline" 
-                                    className="border-amber-500/20 text-amber-600 hover:bg-amber-500/10 font-bold h-11 px-6 rounded-xl"
-                                >
-                                    {isResending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                    Resend Verification Link
-                                </Button>
+                                <div className="flex flex-col sm:flex-row items-center gap-3">
+                                    <Button 
+                                        onClick={handleSendVerification}
+                                        disabled={isResending}
+                                        variant="outline" 
+                                        className="border-amber-500/20 text-amber-600 hover:bg-amber-500/10 font-bold h-11 px-6 rounded-xl w-full sm:w-auto"
+                                    >
+                                        {isResending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                                        Resend Verification Link
+                                    </Button>
+                                    <p className="text-[10px] text-muted-foreground font-medium italic">Status: Link Pending</p>
+                                </div>
                             </CardContent>
                         </Card>
                     </motion.div>
