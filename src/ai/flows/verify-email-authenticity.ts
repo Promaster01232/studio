@@ -29,18 +29,22 @@ const prompt = ai.definePrompt({
   name: 'verifyEmailAuthenticityPrompt',
   input: { schema: VerifyEmailInputSchema },
   output: { schema: VerifyEmailOutputSchema },
-  prompt: `You are a security analyst for Nyaya Sahayak. 
-Analyze the following email address to determine if it appears to be a genuine, personal or professional email, or a automated/fake/disposable address.
+  prompt: `You are a specialized Email Deliverability & Security Auditor for Nyaya Sahayak.
+Your task is to perform a simulated SMTP Handshake and Forensic Domain Audit on the provided email address to ensure it is authentic and deliverable.
 
-Email: {{{email}}}
+Email to Audit: {{{email}}}
 
-Verification Checklist:
-1. Domain Authenticity: Is it a common trusted provider (Gmail, Outlook, Yahoo, iCloud) or a known suspicious temporary/disposable mail domain?
-2. Gibberish Check: Is the email prefix random characters (asdfgh123, qwerty)?
-3. Trustworthiness: Does this look like a real person's primary email address?
+Audit Protocol:
+1. **Disposable Email Detection (DEA)**: Check if the domain belongs to known disposable email providers (e.g., mailinator.com, temp-mail.org, guerrilla-mail.com, 10minutemail.com, yopmail.com, sharklasers.com, etc.). Reject if matched.
+2. **Domain Reputation & MX Readiness**: Assess if the domain is a legitimate, high-reputation provider (Gmail, Outlook, Yahoo, Proton, iCloud) or a verified corporate/educational domain. Reject domains that appear to be random strings, gibberish, or low-reputation TLDs frequently used for automated spam.
+3. **Syntax & Forensic Pattern Analysis**: Check for bot-generated patterns in the prefix (e.g., long strings of random hex characters, repetitive numbers, or nonsensical letter sequences).
+4. **Simulated SMTP Handshake**: Based on your knowledge of mail server configurations, determine if this address format is likely to be a "deliverable" active mailbox on its host server.
 
-Set isAuthentic to true ONLY if you are confident it's a real, non-disposable email. 
-Provide a confidence score (0-100).
+Verdict Requirements:
+- Set 'isAuthentic' to 'true' ONLY if the email is a genuine, non-disposable, and deliverable personal or professional address.
+- If the email is suspicious, disposable, or formatted like a bot, set 'isAuthentic' to 'false' and provide a specific, professional 'reason' (e.g., "Disposable email provider detected", "Suspicious bot-pattern prefix", "Invalid domain reputation").
+
+Provide a confidence score (0-100) for your assessment.
 Respond ONLY with the JSON object.`,
 });
 
