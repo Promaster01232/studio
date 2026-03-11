@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -86,9 +85,6 @@ export default function CreateProfilePage() {
 
     try {
       const validation = await validateUserDetails({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
         mobileNumber: data.mobileNumber,
         userType: data.userType,
       });
@@ -97,7 +93,7 @@ export default function CreateProfilePage() {
         toast({
           variant: "destructive",
           title: "Validation failed",
-          description: validation.reason || "The provided details appear to be invalid.",
+          description: validation.reason || "The provided mobile number appear to be invalid.",
         });
         setLoading(false);
         return;

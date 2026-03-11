@@ -87,7 +87,7 @@ export default function RegisterPage() {
     try {
       setIsValidating(true);
 
-      // 1. AI Email Authenticity Check
+      // 1. AI Email Authenticity Check (Exclusive focus on Email ID)
       const emailValidation = await verifyEmailAuthenticity({ email });
       if (!emailValidation.isAuthentic) {
         setEmailStatus('invalid');
@@ -98,17 +98,15 @@ export default function RegisterPage() {
       }
       setEmailStatus('valid');
 
-      // 2. AI Mobile & Details Validation (Indian Mobile Check)
+      // 2. AI Mobile Validation (Exclusive focus on Indian Mobile format)
       const detailsValidation = await validateUserDetails({
-        firstName,
-        lastName,
         mobileNumber,
         userType
       });
 
       if (!detailsValidation.isValid) {
         setMobileStatus('invalid');
-        setValidationError(detailsValidation.reason || "Mobile number or details flagged by AI.");
+        setValidationError(detailsValidation.reason || "Mobile number flagged by AI forensic audit.");
         setIsValidating(false);
         setLoading(false);
         return;
@@ -116,7 +114,7 @@ export default function RegisterPage() {
       setMobileStatus('valid');
       setIsValidating(false);
 
-      // 3. Firebase Registration
+      // 3. Firebase Registration (Independent of AI validation logic)
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -213,7 +211,7 @@ export default function RegisterPage() {
           </motion.div>
           <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Citizen Registry</motion.h2>
           <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
-          AI-authenticated legal access.
+          AI-authenticated contact verification.
           </motion.p>
           <CardContent className="p-0">
               <motion.div variants={itemVariants} className="grid gap-4">
@@ -230,7 +228,7 @@ export default function RegisterPage() {
               
               <div className="grid gap-2">
                   <Label htmlFor="email" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
-                    <span>Email address</span>
+                    <span>Email ID</span>
                     <AnimatePresence>
                         {isValidating && email && (
                             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[9px] text-primary flex items-center gap-1 font-black">
@@ -267,7 +265,7 @@ export default function RegisterPage() {
 
               <div className="grid gap-2">
                   <Label htmlFor="mobile-number" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
-                    <span>Indian Mobile Number</span>
+                    <span>Mobile Number</span>
                     <AnimatePresence>
                         {isValidating && mobileNumber && (
                             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[9px] text-primary flex items-center gap-1 font-black">
@@ -303,7 +301,7 @@ export default function RegisterPage() {
 
               {validationError && (
                   <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] font-black text-red-600 bg-red-500/10 p-2 rounded-lg border border-red-500/20">
-                      FORENSIC ALERT: {validationError}
+                      AI FORENSIC ALERT: {validationError}
                   </motion.p>
               )}
 
@@ -369,11 +367,11 @@ export default function RegisterPage() {
                   {loading ? (
                       <span className="flex items-center gap-2">
                         <Loader2 className="animate-spin h-5 w-5" />
-                        {isValidating ? "FORENSIC AUDIT..." : "CREATING NODE..."}
+                        {isValidating ? "AI VERIFYING..." : "CREATING PROFILE..."}
                       </span>
                   ) : (
                       <span className="flex items-center gap-2">
-                        <ShieldCheck className="h-5 w-5" /> VALIDATE & SIGN UP
+                        <ShieldCheck className="h-5 w-5" /> COMPLETE REGISTRATION
                       </span>
                   )}
               </Button>
