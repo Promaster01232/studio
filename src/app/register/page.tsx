@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -138,6 +139,7 @@ export default function RegisterPage() {
         photoURL: user.photoURL || '',
         securityStatus: 'verified',
         emailVerified: user.emailVerified,
+        isBlocked: false, // EXPLICITLY INITIALIZE AS ACTIVE
         createdAt: serverTimestamp(),
       };
 

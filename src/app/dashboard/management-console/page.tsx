@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -29,7 +30,8 @@ import {
   UserCheck,
   UserMinus,
   RotateCcw,
-  CheckCircle2
+  CheckCircle2,
+  Activity
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -222,6 +224,7 @@ export default function ManagementConsolePage() {
                 errorEmitter.emit('permission-error', permissionError);
             }
             setLoading(false);
+            setUsers([]);
         });
     });
 
@@ -244,9 +247,11 @@ export default function ManagementConsolePage() {
     
     try {
         await updateDoc(userRef, { isBlocked: isInactive });
+        await update(ref(rtdb, `users/${user.uid}`), { isBlocked: isInactive }).catch(() => {});
+        
         toast({ 
-            title: isInactive ? "User Suspended" : "User Restored", 
-            description: `${user.firstName}'s access has been ${isInactive ? 'disabled' : 'enabled'}.` 
+            title: isInactive ? "User Suspended" : "User Activated", 
+            description: `${user.firstName}'s account status has been updated.` 
         });
     } catch (error: any) {
         toast({ variant: "destructive", title: "Update Failed" });
@@ -317,8 +322,8 @@ export default function ManagementConsolePage() {
 
   const stats = {
       total: users.length,
-      active: users.filter(u => !u.isBlocked).length,
-      blocked: users.filter(u => u.isBlocked).length,
+      active: users.filter(u => u.isBlocked === false).length,
+      blocked: users.filter(u => u.isBlocked === true).length,
       aiVerified: users.filter(u => u.securityStatus === 'verified').length,
   };
 
@@ -390,8 +395,8 @@ export default function ManagementConsolePage() {
               </CardHeader>
               <CardContent className="p-3 sm:p-4 pt-0 text-left">
                   <div className="flex items-center gap-1.5 text-green-600">
-                      <UserCheck className="h-3 w-3" />
-                      <span className="text-[8px] sm:text-[9px] font-bold">Unrestricted</span>
+                      <Activity className="h-3 w-3 animate-pulse" />
+                      <span className="text-[8px] sm:text-[9px] font-bold">Live Nodes</span>
                   </div>
               </CardContent>
           </Card>
@@ -432,9 +437,10 @@ export default function ManagementConsolePage() {
                               const isRoot = ADMIN_EMAILS.includes(user.email.toLowerCase());
                               const isProcessing = processingUid === user.uid;
                               const isAiVerified = user.securityStatus === 'verified';
+                              const isActive = user.isBlocked === false || user.isBlocked === undefined;
                               
                               return (
-                                <TableRow key={user.uid} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", user.isBlocked && "bg-red-500/5")}>
+                                <TableRow key={user.uid} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", !isActive && "bg-red-500/5")}>
                                     <TableCell className="pl-6 py-4">
                                         <div className="flex items-center gap-3">
                                             <Avatar className="h-10 w-10 border border-primary/10">
@@ -453,11 +459,14 @@ export default function ManagementConsolePage() {
                                     <TableCell className="text-center">
                                         <div className="flex flex-col items-center gap-1.5">
                                             <div className="flex items-center gap-2">
-                                                <span className={cn("text-[9px] font-black uppercase tracking-tight", user.isBlocked ? "text-red-500" : "text-green-600")}>
-                                                    {user.isBlocked ? "Suspended" : "Active"}
-                                                </span>
+                                                <div className="flex flex-col items-center">
+                                                    <span className={cn("text-[9px] font-black uppercase tracking-tight", !isActive ? "text-red-500" : "text-green-600")}>
+                                                        {!isActive ? "Suspended" : "Active"}
+                                                    </span>
+                                                    {isActive && <div className="h-1 w-1 bg-green-500 rounded-full animate-ping mt-0.5" />}
+                                                </div>
                                                 <Switch 
-                                                    checked={!user.isBlocked} 
+                                                    checked={isActive} 
                                                     onCheckedChange={(checked) => handleToggleStatus(user, !checked)}
                                                     disabled={isProcessing || isRoot}
                                                     className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"

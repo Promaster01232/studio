@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -103,6 +104,7 @@ export default function CreateProfilePage() {
         uid: auth.currentUser.uid,
         photoURL: auth.currentUser.photoURL || '',
         ...data,
+        isBlocked: false, // EXPLICITLY INITIALIZE AS ACTIVE
         createdAt: serverTimestamp(),
       };
       
