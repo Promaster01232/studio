@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useRef } from "react";
@@ -141,7 +142,7 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
             await update(ref(rtdb, `users/${auth.currentUser.uid}`), { userType: 'lawyer' }).catch(() => {});
 
             toast({
-                title: "Professional Dital Saved",
+                title: "Professional Details Saved",
                 description: "The Admin will manually verify your Bar certificate for 100% accuracy before public activation.",
             });
 
@@ -322,9 +323,9 @@ export function AdvocateProfileForm({ onSave, onSkip, userProfile, initialData }
                     {isSaving ? (
                         <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Submitting professional dital...
+                            Submitting professional details...
                         </>
-                    ) : (initialData ? "Update professional dital" : "Register as Legal Professional")}
+                    ) : (initialData ? "Update professional details" : "Register as Legal Professional")}
                 </Button>
                 
                 {onSkip && !initialData && (

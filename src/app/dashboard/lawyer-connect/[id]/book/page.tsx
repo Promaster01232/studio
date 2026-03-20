@@ -17,6 +17,7 @@ import { useDatabase } from "@/firebase";
 import { ref, onValue } from "firebase/database";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const timeSlots = [
     "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "02:00 PM", "02:30 PM", "03:00 PM"
