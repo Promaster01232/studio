@@ -48,11 +48,6 @@ export function Footer() {
                   Contact Hub
                 </Link>
               </li>
-              <li>
-                <Link href="#" className="text-sm font-bold text-foreground/80 hover:text-primary transition-colors">
-                  System Status
-                </Link>
-              </li>
             </ul>
           </div>
 
