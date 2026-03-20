@@ -1,50 +1,72 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { 
-  Scale, 
-  ShieldCheck, 
+  ArrowLeft, 
+  BrainCircuit, 
+  Map, 
+  PenTool, 
+  BarChart3, 
+  GraduationCap, 
   Cpu, 
-  Globe, 
-  Fingerprint, 
-  Zap, 
-  Database, 
-  Users,
+  ShieldCheck, 
+  Lightbulb,
   CheckCircle2,
-  Lock
+  Sparkles
 } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
-const pillars = [
+const features = [
   {
-    title: "Forensic AI Core",
-    desc: "Utilizing advanced LLM nodes to provide real-time document intelligence and case strength assessment with mathematical precision.",
-    icon: Cpu,
+    title: "Instant Doubt Resolver",
+    desc: "Our neural engine processes complex academic queries in milliseconds, providing mathematically flawless and concise explanations.",
+    icon: BrainCircuit,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
   },
   {
-    title: "Citizen Empowerment",
-    desc: "Democratizing legal information across 5+ regional languages, ensuring every citizen has a digital roadmap to justice.",
-    icon: Globe,
+    title: "Precision Roadmap Node",
+    desc: "AI-optimized learning paths that dynamically adjust to your performance, ensuring maximum knowledge retention and velocity.",
+    icon: Map,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
   },
   {
-    title: "Professional Synergy",
-    desc: "Bridging the gap between AI intelligence and human advocacy through a strictly verified registry of legal professionals.",
-    icon: Users,
+    title: "Neural Writing Lab",
+    desc: "Master the art of composition with AI-driven article summarization and sophisticated essay structural outlining.",
+    icon: PenTool,
     color: "text-indigo-500",
     bg: "bg-indigo-500/10",
   },
   {
-    title: "Data Sovereignty",
-    desc: "Implementing AES-256 encryption nodes to ensure that every narration and document remains under absolute user control.",
-    icon: Lock,
+    title: "Enterprise Analytics",
+    desc: "Visualize your academic trajectory with world-class cloud metrics, rank predictions, and topic mastery tracking.",
+    icon: BarChart3,
     color: "text-green-600",
     bg: "bg-green-600/10",
+  }
+];
+
+const leadership = [
+  {
+    name: "Hardy Pie",
+    role: "Founder and Owner",
+    initials: "HP",
+    bio: "As the visionary and primary architect of Gyan Sarathi, Hardy Pie engineered the core neural logic and high-fidelity interfaces that power our ecosystem. With a commitment to technical excellence and precision engineering, he has dedicated thousands of hours to refining the student journey, ensuring every node provides a flawless and empowering experience.",
+    avatar: "https://picsum.photos/seed/hp/200/200"
+  },
+  {
+    name: "Piyush Singh",
+    role: "CEO & Co-founder",
+    initials: "PS",
+    bio: "As the CEO and Co-founder, Piyush Singh steers the strategic trajectory of Gyan Sarathi. His leadership is focused on institutional growth, global partnerships, and the democratization of elite learning tools. By aligning our neural capabilities with real-world academic needs, he ensures that Gyan Sarathi remains the global gold standard for student empowerment.",
+    avatar: "https://picsum.photos/seed/ps/200/200"
   }
 ];
 
@@ -79,54 +101,59 @@ export default function AboutPage() {
       variants={containerVariants}
       className="max-w-6xl mx-auto space-y-12 pb-20 px-2 sm:px-0"
     >
-      <motion.div variants={itemVariants}>
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <PageHeader
-          title="Institutional Identity"
-          description="Understanding the architectural vision and forensic mission behind the Nyaya Sahayak legal ecosystem."
+          title="About Gyan Sarathi"
+          description="The pinnacle of AI-driven academic empowerment, created by IdeaSpark."
         />
+        <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group" asChild>
+          <Link href="/dashboard">
+            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Go Back
+          </Link>
+        </Button>
       </motion.div>
 
-      {/* Hero Mission Section */}
+      {/* Mission Section */}
       <motion.div variants={itemVariants}>
-        <Card className="border-primary/5 shadow-2xl rounded-3xl overflow-hidden bg-card/40 backdrop-blur-md relative">
+        <Card className="border-primary/5 shadow-2xl rounded-3xl overflow-hidden bg-card/40 backdrop-blur-md relative border-none ring-1 ring-primary/10">
           <div className="absolute top-0 right-0 p-8 opacity-5">
-            <Fingerprint className="h-40 w-40" />
+            <GraduationCap className="h-40 w-40" />
           </div>
           <CardContent className="p-8 sm:p-12 space-y-8 relative z-10">
             <div className="flex items-center gap-2 text-primary">
-              <Zap className="h-5 w-5 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">The Strategic Mandate</span>
+              <Sparkles className="h-5 w-5 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Our Academic Mission</span>
             </div>
-            <div className="space-y-4 max-w-3xl">
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-none">
-                The Pinnacle of <span className="text-primary italic">Digital Justice.</span>
+            <div className="space-y-4 max-w-4xl text-left">
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-tight">
+                Democratizing <span className="text-primary italic">Elite Education.</span>
               </h2>
               <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                Nyaya Sahayak is not merely an application; it is a specialized <span className="text-foreground font-bold">Institutional Node</span> designed to bridge the structural gap between complex judicial protocols and everyday citizen needs. By integrating forensic AI verification with human expertise, we create a ecosystem of absolute trust and procedural clarity.
+                Gyan Sarathi is built on the belief that every student deserves <span className="text-foreground font-bold">elite-grade academic assistance.</span> Our mission is to democratize education through precision AI engineering, delivering mathematically perfect doubt resolution and personalized study roadmaps that empower students to navigate complex curricula with absolute confidence.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 pt-4">
-              <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-4 py-1 rounded-full font-bold">Verified Node</Badge>
-              <Badge variant="secondary" className="bg-green-500/5 text-green-600 border-green-500/10 px-4 py-1 rounded-full font-bold">Secure Registry</Badge>
-              <Badge variant="secondary" className="bg-indigo-500/5 text-indigo-600 border-indigo-500/10 px-4 py-1 rounded-full font-bold">AI Forensics</Badge>
+              <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-4 py-1 rounded-full font-bold">Precision AI</Badge>
+              <Badge variant="secondary" className="bg-green-500/5 text-green-600 border-green-500/10 px-4 py-1 rounded-full font-bold">Knowledge Mastery</Badge>
+              <Badge variant="secondary" className="bg-indigo-500/5 text-indigo-600 border-indigo-500/10 px-4 py-1 rounded-full font-bold">Global Access</Badge>
             </div>
           </CardContent>
         </Card>
       </motion.div>
 
-      {/* Strategic Pillars Grid */}
+      {/* Feature Capabilities Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {pillars.map((pillar, idx) => (
+        {features.map((feature, idx) => (
           <motion.div key={idx} variants={itemVariants}>
-            <Card className="h-full border-primary/5 bg-card/20 hover:border-primary/20 transition-all duration-300 group hover:shadow-xl">
-              <CardContent className="p-6 space-y-4">
-                <div className={`${pillar.bg} p-3 rounded-2xl w-fit transition-transform group-hover:scale-110 duration-500`}>
-                  <pillar.icon className={`h-6 w-6 ${pillar.color}`} />
+            <Card className="h-full border-primary/5 bg-card/20 hover:border-primary/20 transition-all duration-300 group hover:shadow-xl rounded-2xl">
+              <CardContent className="p-6 space-y-4 text-left">
+                <div className={`${feature.bg} p-3 rounded-2xl w-fit transition-transform group-hover:scale-110 duration-500`}>
+                  <feature.icon className={`h-6 w-6 ${feature.color}`} />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-lg font-black tracking-tight">{pillar.title}</h3>
+                  <h3 className="text-lg font-black tracking-tight">{feature.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-                    {pillar.desc}
+                    {feature.desc}
                   </p>
                 </div>
               </CardContent>
@@ -135,58 +162,54 @@ export default function AboutPage() {
         ))}
       </div>
 
-      {/* Deep Vision Section */}
-      <motion.div variants={itemVariants} className="grid lg:grid-cols-3 gap-8 items-center">
-        <div className="lg:col-span-2 space-y-6 text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full border border-primary/10">
-            <Scale className="h-3.5 w-3.5 text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Philosophy</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tighter">Engineered for Transparency.</h2>
-          <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-            <p>
-              Our foundation rests on the principles of technological empowerment. We believe that justice should be <span className="text-foreground font-bold">predictable, accessible, and efficient.</span> Every tool in our dashboard is a module in a larger machine aimed at reducing legal friction for individuals and MSMEs alike.
-            </p>
-            <p>
-              Whether it is through the automated generation of legal notices or the simulated cross-examination questions, our nodes provide citizens with the intelligence required to navigate the legal system with confidence and dignity.
-            </p>
-          </div>
+      {/* Leadership Section */}
+      <motion.div variants={itemVariants} className="space-y-8">
+        <div className="text-left border-l-4 border-primary pl-6 py-2">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-1">Institutional Core</h2>
+          <h3 className="text-3xl font-black tracking-tighter">Meet the Leadership</h3>
+          <p className="text-sm text-muted-foreground font-medium mt-1">The visionaries behind the neural engine, dedicated to academic excellence.</p>
         </div>
-        <Card className="bg-primary shadow-2xl shadow-primary/20 rounded-3xl overflow-hidden border-none text-primary-foreground">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-black uppercase tracking-widest opacity-60">Node Integrity</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
-              {[
-                "100% Data Sovereignty",
-                "Verified Professional Hub",
-                "Multi-Lingual NLP Core",
-                "Forensic Document Audit"
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
-                  <span className="font-bold tracking-tight text-sm">{item}</span>
-                </div>
-              ))}
-            </div>
-            <div className="pt-6 border-t border-white/10">
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40">Identity Registry</p>
-              <p className="text-xl font-black tracking-tighter mt-1">NS-NODE-001</p>
-            </div>
-          </CardContent>
-        </Card>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {leadership.map((leader, i) => (
+            <motion.div key={i} variants={itemVariants}>
+              <Card className="border-primary/5 bg-card/30 rounded-3xl overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                <CardHeader className="flex flex-row items-center gap-5 bg-muted/20 border-b border-primary/5 p-6">
+                  <Avatar className="h-16 w-16 border-2 border-background shadow-lg rounded-2xl">
+                    <AvatarImage src={leader.avatar} className="object-cover" />
+                    <AvatarFallback className="font-black text-xl bg-primary/10 text-primary">{leader.initials}</AvatarFallback>
+                  </Avatar>
+                  <div className="text-left">
+                    <CardTitle className="font-black tracking-tight text-xl">{leader.name}</CardTitle>
+                    <CardDescription className="text-xs font-bold text-primary uppercase tracking-widest">{leader.role}</CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6 text-left">
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
+                    {leader.bio}
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
       </motion.div>
 
-      {/* Trust Footer */}
+      {/* Institutional Source */}
       <motion.div variants={itemVariants} className="pt-12 text-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="bg-muted p-4 rounded-full">
-            <ShieldCheck className="h-10 w-10 text-primary opacity-40" />
+        <div className="flex flex-col items-center gap-6">
+          <div className="bg-primary/5 p-6 rounded-full border border-primary/10 animate-background-pan">
+            <Cpu className="h-10 w-10 text-primary opacity-60" />
           </div>
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">
-            Operational Excellence // Secure Registry Control
-          </p>
+          <div className="space-y-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">
+              Institutional Source // Created by IdeaSpark
+            </p>
+            <p className="text-sm italic font-medium text-primary">"Experience the Pinnacle of AI Education. Start your precision journey today."</p>
+          </div>
+          <div className="pt-6 border-t border-primary/5 w-full max-w-xs">
+            <p className="text-[9px] font-black uppercase tracking-widest opacity-40">System ID: GS-NODE-ALPHA</p>
+          </div>
         </div>
       </motion.div>
     </motion.div>
