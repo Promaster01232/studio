@@ -15,6 +15,7 @@ import { useAuth, useFirestore, useDatabase } from '@/firebase';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { ref, set, update, remove } from 'firebase/database';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { signOut, deleteUser, sendEmailVerification } from 'firebase/auth';
 import { errorEmitter } from '@/firebase/error-emitter';
@@ -550,9 +551,11 @@ export default function ProfilePage() {
                                     onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
                                 />
                             </div>
-                            <Button variant="outline" size="sm" className="w-full justify-start font-bold border-primary/5 h-11 px-4 hover:bg-primary/5 hover:text-primary transition-all rounded-xl active:scale-95">
-                                <KeyRound className="mr-3 h-4 w-4 text-muted-foreground" />
-                                <span>Security & privacy</span>
+                            <Button variant="outline" size="sm" className="w-full justify-start font-bold border-primary/5 h-11 px-4 hover:bg-primary/5 hover:text-primary transition-all rounded-xl active:scale-95" asChild>
+                                <Link href="/privacy">
+                                    <KeyRound className="mr-3 h-4 w-4 text-muted-foreground" />
+                                    <span>Security & privacy</span>
+                                </Link>
                             </Button>
                         </CardContent>
                     </Card>
