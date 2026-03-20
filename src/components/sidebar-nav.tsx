@@ -28,8 +28,6 @@ import {
   LifeBuoy,
   ChevronRight,
   Settings,
-  Info,
-  ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -68,15 +66,6 @@ const navigationItems = [
       { href: "/dashboard/learn", icon: Library, label: "Legal Knowledge Hub" },
       { href: "/dashboard/police-guide", icon: Shield, label: "Police & Court Guides" },
       { href: "/dashboard/research-analytics", icon: Newspaper, label: "News & Analytics" },
-    ],
-  },
-  {
-    title: "Institutional",
-    icon: Info,
-    items: [
-      { href: "/about", icon: Info, label: "About Platform" },
-      { href: "/privacy", icon: ShieldCheck, label: "Privacy Protocol" },
-      { href: "/terms", icon: FileText, label: "Terms of Service" },
     ],
   },
   {
