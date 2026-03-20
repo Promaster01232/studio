@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -33,7 +32,7 @@ export default function WelcomePage() {
           <div className="relative mb-10 flex h-32 w-32 items-center justify-center">
             <div className="absolute -inset-3 rounded-full bg-primary/10 animate-pulse [animation-duration:4s] [animation-delay:1s]"></div>
              <div className="absolute -inset-6 rounded-full bg-primary/10 animate-pulse [animation-duration:4s]"></div>
-            <Logo className="h-28 w-28 shadow-2xl" imageClassName="h-20 w-auto" />
+            <Logo className="h-28 w-28 shadow-2xl relative z-10" />
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-black font-headline mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] tracking-tighter">
