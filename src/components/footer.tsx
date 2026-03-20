@@ -39,7 +39,7 @@ export function Footer() {
             </h3>
             <ul className="space-y-4">
               <li>
-                <Link href="/dashboard/about" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
+                <Link href="/about" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
                   <div className="p-1 rounded-md bg-primary/5 text-primary opacity-40 group-hover:opacity-100 transition-opacity">
                     <Info className="h-3 w-3" />
                   </div>
@@ -47,7 +47,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard/contact" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
+                <Link href="/contact" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
                   <div className="p-1 rounded-md bg-primary/5 text-primary opacity-40 group-hover:opacity-100 transition-opacity">
                     <Mail className="h-3 w-3" />
                   </div>
@@ -64,7 +64,7 @@ export function Footer() {
             </h3>
             <ul className="space-y-4">
               <li>
-                <Link href="/dashboard/privacy" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
+                <Link href="/privacy" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
                   <div className="p-1 rounded-md bg-primary/5 text-primary opacity-40 group-hover:opacity-100 transition-opacity">
                     <ShieldCheck className="h-3 w-3" />
                   </div>
@@ -72,7 +72,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard/terms" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
+                <Link href="/terms" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
                   <div className="p-1 rounded-md bg-primary/5 text-primary opacity-40 group-hover:opacity-100 transition-opacity">
                     <FileText className="h-3 w-3" />
                   </div>
@@ -80,7 +80,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard/cookie-policy" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
+                <Link href="/cookie-policy" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
                   <div className="p-1 rounded-md bg-primary/5 text-primary opacity-40 group-hover:opacity-100 transition-opacity">
                     <Cookie className="h-3 w-3" />
                   </div>
@@ -88,7 +88,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard/disclaimer" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
+                <Link href="/disclaimer" className="group flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-foreground/80 hover:text-primary transition-all">
                   <div className="p-1 rounded-md bg-primary/5 text-primary opacity-40 group-hover:opacity-100 transition-opacity">
                     <AlertCircle className="h-3 w-3" />
                   </div>
