@@ -9,45 +9,44 @@ import { Button } from "@/components/ui/button";
 import { 
   ArrowLeft, 
   BrainCircuit, 
-  Map, 
-  PenTool, 
-  BarChart3, 
-  GraduationCap, 
-  Cpu, 
+  Gavel, 
+  FileText, 
   ShieldCheck, 
-  Lightbulb,
-  CheckCircle2,
-  Sparkles
+  Scale, 
+  Cpu, 
+  Sparkles,
+  Search,
+  Users
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
 const features = [
   {
-    title: "Instant Doubt Resolver",
-    desc: "Our neural engine processes complex academic queries in milliseconds, providing mathematically flawless and concise explanations.",
+    title: "Forensic Case Auditor",
+    desc: "Our neural engine processes complex legal narratives in milliseconds, providing mathematically precise forensic reports and summaries.",
     icon: BrainCircuit,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
   },
   {
-    title: "Precision Roadmap Node",
-    desc: "AI-optimized learning paths that dynamically adjust to your performance, ensuring maximum knowledge retention and velocity.",
-    icon: Map,
+    title: "Procedural Roadmap",
+    desc: "AI-optimized legal navigation paths that dynamically guide citizens through the complexities of the Indian judicial system.",
+    icon: Scale,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
   },
   {
-    title: "Neural Writing Lab",
-    desc: "Master the art of composition with AI-driven article summarization and sophisticated essay structural outlining.",
-    icon: PenTool,
+    title: "Legal Drafting Node",
+    desc: "Master the art of legal communication with AI-driven notice generation and sophisticated bond structural drafting.",
+    icon: FileText,
     color: "text-indigo-500",
     bg: "bg-indigo-500/10",
   },
   {
-    title: "Enterprise Analytics",
-    desc: "Visualize your academic trajectory with world-class cloud metrics, rank predictions, and topic mastery tracking.",
-    icon: BarChart3,
+    title: "Registry Intelligence",
+    desc: "Access a strictly verified registry of legal professionals, ensuring identity authenticity through multi-stage forensic audits.",
+    icon: ShieldCheck,
     color: "text-green-600",
     bg: "bg-green-600/10",
   }
@@ -58,14 +57,14 @@ const leadership = [
     name: "Hardy Pie",
     role: "Founder and Owner",
     initials: "HP",
-    bio: "As the visionary and primary architect of Gyan Sarathi, Hardy Pie engineered the core neural logic and high-fidelity interfaces that power our ecosystem. With a commitment to technical excellence and precision engineering, he has dedicated thousands of hours to refining the student journey, ensuring every node provides a flawless and empowering experience.",
+    bio: "As the visionary and primary architect of Nyaya Sahayak, Hardy Pie engineered the core forensic logic and high-fidelity interfaces that power our ecosystem. With a commitment to technical excellence and precision engineering, he has dedicated thousands of hours to refining the citizen journey, ensuring every node provides a flawless and empowering experience.",
     avatar: "https://picsum.photos/seed/hp/200/200"
   },
   {
     name: "Piyush Singh",
     role: "CEO & Co-founder",
     initials: "PS",
-    bio: "As the CEO and Co-founder, Piyush Singh steers the strategic trajectory of Gyan Sarathi. His leadership is focused on institutional growth, global partnerships, and the democratization of elite learning tools. By aligning our neural capabilities with real-world academic needs, he ensures that Gyan Sarathi remains the global gold standard for student empowerment.",
+    bio: "As the CEO and Co-founder, Piyush Singh steers the strategic trajectory of Nyaya Sahayak. His leadership is focused on institutional growth, strategic partnerships, and the democratization of elite legal tools. By aligning our neural capabilities with real-world judicial needs, he ensures that Nyaya Sahayak remains the global gold standard for citizen empowerment.",
     avatar: "https://picsum.photos/seed/ps/200/200"
   }
 ];
@@ -103,8 +102,8 @@ export default function AboutPage() {
     >
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <PageHeader
-          title="About Gyan Sarathi"
-          description="The pinnacle of AI-driven academic empowerment, created by IdeaSpark."
+          title="About Nyaya Sahayak"
+          description="The pinnacle of AI-driven legal empowerment, created by IdeaSpark."
         />
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group" asChild>
           <Link href="/dashboard">
@@ -117,25 +116,25 @@ export default function AboutPage() {
       <motion.div variants={itemVariants}>
         <Card className="border-primary/5 shadow-2xl rounded-3xl overflow-hidden bg-card/40 backdrop-blur-md relative border-none ring-1 ring-primary/10">
           <div className="absolute top-0 right-0 p-8 opacity-5">
-            <GraduationCap className="h-40 w-40" />
+            <Gavel className="h-40 w-40" />
           </div>
           <CardContent className="p-8 sm:p-12 space-y-8 relative z-10">
             <div className="flex items-center gap-2 text-primary">
               <Sparkles className="h-5 w-5 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Our Academic Mission</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Our Legal Mission</span>
             </div>
             <div className="space-y-4 max-w-4xl text-left">
               <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-tight">
-                Democratizing <span className="text-primary italic">Elite Education.</span>
+                Democratizing <span className="text-primary italic">Legal Intelligence.</span>
               </h2>
               <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                Gyan Sarathi is built on the belief that every student deserves <span className="text-foreground font-bold">elite-grade academic assistance.</span> Our mission is to democratize education through precision AI engineering, delivering mathematically perfect doubt resolution and personalized study roadmaps that empower students to navigate complex curricula with absolute confidence.
+                Nyaya Sahayak is built on the belief that every citizen deserves <span className="text-foreground font-bold">elite-grade legal assistance.</span> Our mission is to bridge the gap between complex judicial protocols and citizen needs through precision AI engineering, delivering forensic document audits and personalized roadmaps that empower users to navigate the law with absolute confidence.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 pt-4">
-              <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-4 py-1 rounded-full font-bold">Precision AI</Badge>
-              <Badge variant="secondary" className="bg-green-500/5 text-green-600 border-green-500/10 px-4 py-1 rounded-full font-bold">Knowledge Mastery</Badge>
-              <Badge variant="secondary" className="bg-indigo-500/5 text-indigo-600 border-indigo-500/10 px-4 py-1 rounded-full font-bold">Global Access</Badge>
+              <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-4 py-1 rounded-full font-bold">AI Forensics</Badge>
+              <Badge variant="secondary" className="bg-green-500/5 text-green-600 border-green-500/10 px-4 py-1 rounded-full font-bold">Procedural Clarity</Badge>
+              <Badge variant="secondary" className="bg-indigo-500/5 text-indigo-600 border-indigo-500/10 px-4 py-1 rounded-full font-bold">Institutional Trust</Badge>
             </div>
           </CardContent>
         </Card>
@@ -167,7 +166,7 @@ export default function AboutPage() {
         <div className="text-left border-l-4 border-primary pl-6 py-2">
           <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-1">Institutional Core</h2>
           <h3 className="text-3xl font-black tracking-tighter">Meet the Leadership</h3>
-          <p className="text-sm text-muted-foreground font-medium mt-1">The visionaries behind the neural engine, dedicated to academic excellence.</p>
+          <p className="text-sm text-muted-foreground font-medium mt-1">The visionaries behind the forensic engine, dedicated to legal excellence.</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
@@ -198,17 +197,17 @@ export default function AboutPage() {
       {/* Institutional Source */}
       <motion.div variants={itemVariants} className="pt-12 text-center">
         <div className="flex flex-col items-center gap-6">
-          <div className="bg-primary/5 p-6 rounded-full border border-primary/10 animate-background-pan">
+          <div className="bg-primary/5 p-6 rounded-full border border-primary/10">
             <Cpu className="h-10 w-10 text-primary opacity-60" />
           </div>
           <div className="space-y-2">
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">
               Institutional Source // Created by IdeaSpark
             </p>
-            <p className="text-sm italic font-medium text-primary">"Experience the Pinnacle of AI Education. Start your precision journey today."</p>
+            <p className="text-sm italic font-medium text-primary">"Precision AI for the Modern Legal Ecosystem. Navigate the Law with Dignity."</p>
           </div>
           <div className="pt-6 border-t border-primary/5 w-full max-w-xs">
-            <p className="text-[9px] font-black uppercase tracking-widest opacity-40">System ID: GS-NODE-ALPHA</p>
+            <p className="text-[9px] font-black uppercase tracking-widest opacity-40">System ID: NS-NODE-ALPHA</p>
           </div>
         </div>
       </motion.div>
