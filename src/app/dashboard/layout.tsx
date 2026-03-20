@@ -15,6 +15,7 @@ import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, ShieldAlert, A
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
+import { Footer } from "@/components/footer";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -308,13 +309,22 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <div className="flex flex-col h-screen overflow-hidden">
           <Header userProfile={userProfile} />
           <main
-            className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8"
+            className="flex-1 overflow-y-auto"
           >
-            {showContent ? children : (
-              <div className="flex flex-1 items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            )}
+            <div className="p-4 md:p-6 lg:p-8 min-h-[calc(100vh-64px)] flex flex-col">
+                {showContent ? (
+                    <>
+                        <div className="flex-1">
+                            {children}
+                        </div>
+                        <Footer />
+                    </>
+                ) : (
+                    <div className="flex flex-1 items-center justify-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                )}
+            </div>
           </main>
         </div>
       </SidebarInset>
