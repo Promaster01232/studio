@@ -1,3 +1,4 @@
+
 import { Logo } from "@/components/logo";
 import { Linkedin, Facebook, Twitter } from "lucide-react";
 import Link from "next/link";
@@ -5,20 +6,20 @@ import Link from "next/link";
 export function Footer() {
   return (
     <footer className="w-full border-t bg-card/30 backdrop-blur-md mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 md:gap-8 text-center sm:text-left">
           {/* Brand Section */}
-          <div className="space-y-6">
+          <div className="space-y-6 flex flex-col items-center sm:items-start">
             <div className="flex items-center gap-3">
               <Logo className="h-10 w-10 shadow-xl shadow-primary/10" />
               <span className="text-xl font-black font-headline tracking-tighter text-foreground">
                 Nyaya Sahayak
               </span>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed font-medium">
+            <p className="text-xs text-muted-foreground leading-relaxed font-medium max-w-xs sm:max-w-none mx-auto sm:mx-0">
               Precision AI nodes for the modern legal ecosystem. Delivering clarity through forensic intelligence.
             </p>
-            <div className="flex items-center gap-4 pt-2">
+            <div className="flex items-center justify-center sm:justify-start gap-4 pt-2">
               <Link href="#" className="text-muted-foreground hover:text-primary transition-all active:scale-90">
                 <Linkedin className="h-4 w-4" />
               </Link>
@@ -84,8 +85,8 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-16 pt-8 border-t border-primary/5 text-center">
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
+        <div className="mt-12 sm:mt-16 pt-8 border-t border-primary/5 text-center">
+          <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 leading-relaxed">
             &copy; {new Date().getFullYear()} NYAYA SAHAYAK INSTITUTIONAL NODE. ALL PROTOCOLS RESERVED.
           </p>
         </div>

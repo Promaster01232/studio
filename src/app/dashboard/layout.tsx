@@ -55,7 +55,7 @@ const languages: { code: Language, name: string }[] = [
 function Header({ userProfile }: { userProfile: any }) {
     return (
         <header className={cn(
-            "sticky top-0 z-10 flex h-16 items-center gap-2 border-b px-4 md:px-6 transition-all",
+            "sticky top-0 z-10 flex h-16 items-center gap-2 border-b px-3 sm:px-4 md:px-6 transition-all",
             "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
         )}>
             <div className="flex items-center gap-2 md:hidden">
@@ -63,7 +63,7 @@ function Header({ userProfile }: { userProfile: any }) {
                 <Logo className="h-8 w-8" />
             </div>
             
-            <div className="flex-1 flex items-center justify-end md:justify-start">
+            <div className="flex-1 flex items-center justify-end md:justify-start px-1 sm:px-0">
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
                         <Button variant="outline" className="w-9 h-9 p-0 md:w-full md:max-w-xs md:px-3 md:justify-start gap-2 text-muted-foreground rounded-full md:rounded-lg">
@@ -78,13 +78,13 @@ function Header({ userProfile }: { userProfile: any }) {
                 {!userProfile?.isBlocked && (
                     <>
                         <SosDialog>
-                            <Button variant="destructive" size="sm" className="font-bold gap-1 animate-pulse px-2 sm:px-3 h-9 text-[11px] rounded-full sm:rounded-lg">
+                            <Button variant="destructive" size="sm" className="font-bold gap-1 animate-pulse px-2 sm:px-3 h-9 text-[10px] sm:text-[11px] rounded-full sm:rounded-lg">
                                 <ShieldAlert className="h-4 w-4" />
                                 <span className="hidden sm:inline">SOS</span>
                             </Button>
                         </SosDialog>
                         
-                        <div className="flex items-center gap-0.5 sm:gap-1 border-l pl-1 sm:pl-3 ml-1">
+                        <div className="flex items-center gap-0.5 sm:gap-1 border-l pl-1 sm:pl-3 ml-0.5 sm:ml-1">
                             <Button 
                                 variant="ghost" 
                                 size="icon" 
@@ -280,7 +280,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <main
             className="flex-1 overflow-y-auto"
           >
-            <div className="p-4 md:p-6 lg:p-8 min-h-[calc(100vh-64px)] flex flex-col">
+            <div className="p-3 sm:p-4 md:p-6 lg:p-8 min-h-[calc(100vh-64px)] flex flex-col">
                 {showContent ? (
                     <>
                         <div className="flex-1">
