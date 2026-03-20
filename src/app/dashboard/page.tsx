@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import {
   Mic,
   MessageSquare,
@@ -14,9 +13,10 @@ import {
   BrainCircuit,
   Library,
   HeartHandshake,
+  Landmark,
+  Gavel,
+  ShieldAlert
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { motion, useInView } from "framer-motion";
 
 const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
@@ -67,17 +67,17 @@ const newsItems = [
     {
         id: 1,
         title: "Supreme Court Upholds Environmental Regulations in Landmark Case",
-        image: PlaceHolderImages.find(img => img.id === 'news1'),
+        icon: Landmark,
     },
      {
         id: 2,
         title: "High Court Issues New Guidelines for Digital Evidence",
-        image: PlaceHolderImages.find(img => img.id === 'news2'),
+        icon: Gavel,
     },
     {
         id: 3,
         title: "Plea Challenging Sedition Law Admitted in Supreme Court",
-        image: PlaceHolderImages.find(img => img.id === 'news3'),
+        icon: ShieldAlert,
     }
 ];
 
@@ -221,18 +221,9 @@ export default function DashboardHomePage() {
                 <MotionWrapper key={item.id} delay={0.7 + index * 0.1}>
                   <Link href="/dashboard/research-analytics" className="block group">
                     <Card className="overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 border-primary/5 bg-card">
-                      {item.image && (
-                        <div className="relative aspect-video">
-                          <Image
-                            src={item.image.imageUrl}
-                            alt={item.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-110"
-                            data-ai-hint={item.image.imageHint}
-                            priority={index === 0}
-                          />
-                        </div>
-                      )}
+                      <div className="relative aspect-video bg-primary/5 flex items-center justify-center border-b border-primary/5">
+                        <item.icon className="h-12 w-12 text-primary opacity-40 transition-transform duration-500 group-hover:scale-110" />
+                      </div>
                       <div className="p-4 flex-grow">
                         <h3 className="font-bold text-sm leading-snug group-hover:text-primary transition-colors tracking-tight">{item.title}</h3>
                       </div>

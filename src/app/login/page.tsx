@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff, Scale } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
   signInWithEmailAndPassword,
@@ -22,8 +21,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
 import { Logo } from "@/components/logo";
-import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { motion } from "framer-motion";
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -43,8 +40,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
-
-  const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -291,18 +286,18 @@ export default function LoginPage() {
             </Link>
         </motion.div>
       </motion.div>
-      <div className="hidden md:block relative">
-        {heroImage && (
-            <Image 
-                src={heroImage.imageUrl}
-                alt={heroImage.description}
-                fill
-                className="object-cover"
-                data-ai-hint={heroImage.imageHint}
-                priority
-            />
-        )}
-         <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
+      <div className="hidden md:flex flex-col items-center justify-center relative bg-muted/30 border-l border-primary/5 overflow-hidden">
+        <div className="p-12 text-center space-y-6 relative z-10">
+            <div className="bg-primary/5 p-8 rounded-full inline-block animate-pulse">
+                <Scale className="h-24 w-24 text-primary opacity-40" />
+            </div>
+            <div className="space-y-2">
+                <h3 className="text-2xl font-black tracking-tighter">Legal Forensic Hub</h3>
+                <p className="text-sm text-muted-foreground font-medium max-w-[280px]">Access precision AI nodes for the modern judicial landscape.</p>
+            </div>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50"></div>
+        <div className="absolute bottom-8 left-8 text-[10px] font-black uppercase tracking-widest opacity-20">Nyaya Sahayak Node // NS-ALPHA</div>
       </div>
     </Card>
   );

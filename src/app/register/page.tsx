@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -16,10 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff, ShieldCheck, MailCheck, AlertCircle, CheckCircle2, Sparkles, Smartphone } from "lucide-react";
+import { Loader2, Eye, EyeOff, ShieldCheck, MailCheck, AlertCircle, CheckCircle2, Sparkles, Smartphone, Scale } from "lucide-react";
 import { Logo } from "@/components/logo";
-import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { motion, AnimatePresence } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { validateUserDetails } from "@/ai/flows/validate-user-details";
@@ -49,8 +46,6 @@ export default function RegisterPage() {
   const [emailStatus, setEmailStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
   const [mobileStatus, setMobileStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
   const [validationError, setValidationError] = useState("");
-
-  const heroImage = PlaceHolderImages.find(img => img.id === 'login-hero');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -386,18 +381,18 @@ export default function RegisterPage() {
               </motion.div>
           </CardContent>
       </motion.div>
-      <div className="hidden md:block relative">
-          <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
-          {heroImage && (
-              <Image 
-                  src={heroImage.imageUrl}
-                  alt={heroImage.description}
-                  fill
-                  className="object-cover"
-                  data-ai-hint={heroImage.imageHint}
-                  priority
-              />
-          )}
+      <div className="hidden md:flex flex-col items-center justify-center relative bg-muted/30 border-l border-primary/5 overflow-hidden">
+        <div className="p-12 text-center space-y-6 relative z-10">
+            <div className="bg-primary/5 p-8 rounded-full inline-block animate-pulse">
+                <Scale className="h-24 w-24 text-primary opacity-40" />
+            </div>
+            <div className="space-y-2">
+                <h3 className="text-2xl font-black tracking-tighter">Identity Enrollment</h3>
+                <p className="text-sm text-muted-foreground font-medium max-w-[280px]">Secure your digital presence within the Nyaya Sahayak ecosystem.</p>
+            </div>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50"></div>
+        <div className="absolute bottom-8 left-8 text-[10px] font-black uppercase tracking-widest opacity-20">Nyaya Sahayak Node // NS-REGISTRY</div>
       </div>
     </Card>
   );

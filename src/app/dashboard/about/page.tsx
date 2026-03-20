@@ -1,9 +1,8 @@
-
 "use client";
 
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
@@ -15,7 +14,6 @@ import {
   Scale, 
   Cpu, 
   Sparkles,
-  Search,
   Users
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -58,14 +56,14 @@ const leadership = [
     role: "Founder and Owner",
     initials: "HP",
     bio: "As the visionary and primary architect of Nyaya Sahayak, Hardy Pie engineered the core forensic logic and high-fidelity interfaces that power our ecosystem. With a commitment to technical excellence and precision engineering, he has dedicated thousands of hours to refining the citizen journey, ensuring every node provides a flawless and empowering experience.",
-    avatar: "https://picsum.photos/seed/hp/200/200"
+    icon: Cpu
   },
   {
     name: "Piyush Singh",
     role: "CEO & Co-founder",
     initials: "PS",
     bio: "As the CEO and Co-founder, Piyush Singh steers the strategic trajectory of Nyaya Sahayak. His leadership is focused on institutional growth, strategic partnerships, and the democratization of elite legal tools. By aligning our neural capabilities with real-world judicial needs, he ensures that Nyaya Sahayak remains the global gold standard for citizen empowerment.",
-    avatar: "https://picsum.photos/seed/ps/200/200"
+    icon: ShieldCheck
   }
 ];
 
@@ -175,8 +173,9 @@ export default function AboutPage() {
               <Card className="border-primary/5 bg-card/30 rounded-3xl overflow-hidden group hover:shadow-2xl transition-all duration-500">
                 <CardHeader className="flex flex-row items-center gap-5 bg-muted/20 border-b border-primary/5 p-6">
                   <Avatar className="h-16 w-16 border-2 border-background shadow-lg rounded-2xl">
-                    <AvatarImage src={leader.avatar} className="object-cover" />
-                    <AvatarFallback className="font-black text-xl bg-primary/10 text-primary">{leader.initials}</AvatarFallback>
+                    <AvatarFallback className="font-black text-xl bg-primary/10 text-primary">
+                      <leader.icon className="h-8 w-8" />
+                    </AvatarFallback>
                   </Avatar>
                   <div className="text-left">
                     <CardTitle className="font-black tracking-tight text-xl">{leader.name}</CardTitle>
