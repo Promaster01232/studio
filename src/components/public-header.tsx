@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useState, useEffect } from "react";
-import { LogIn, LayoutDashboard } from "lucide-react";
+import { LogIn, ArrowLeft } from "lucide-react";
 
 export function PublicHeader() {
   const auth = useAuth();
@@ -29,9 +29,9 @@ export function PublicHeader() {
         
         <div className="flex items-center gap-4">
           {user ? (
-            <Button asChild size="sm" className="font-bold rounded-xl shadow-lg shadow-primary/20 h-10 px-6">
+            <Button asChild size="sm" className="font-bold rounded-xl shadow-lg shadow-primary/20 h-10 px-6 group transition-all active:scale-95">
               <Link href="/dashboard">
-                <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+                <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back
               </Link>
             </Button>
           ) : (
