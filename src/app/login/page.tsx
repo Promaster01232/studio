@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -5,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Loader2, Eye, EyeOff, Scale } from "lucide-react";
+import { Loader2, Eye, EyeOff, Scale, ShieldCheck } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
   signInWithEmailAndPassword,
@@ -22,6 +23,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
 import { Logo } from "@/components/logo";
 import { motion } from "framer-motion";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -40,6 +42,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -176,7 +179,7 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl rounded-2xl">
+    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl rounded-2xl border-primary/5 bg-card">
       <motion.div 
         className="p-8 sm:p-12 flex flex-col justify-center"
         variants={containerVariants}
@@ -211,8 +214,8 @@ export default function LoginPage() {
             )}
             
             <div className="space-y-4">
-                <div className="space-y-2">
-                <Label htmlFor="email" className="font-bold opacity-70">Email address</Label>
+                <div className="space-y-2 text-left">
+                <Label htmlFor="email" className="font-bold opacity-70 text-[11px] uppercase tracking-widest">Email address</Label>
                 <Input
                     id="email"
                     type="email"
@@ -224,9 +227,9 @@ export default function LoginPage() {
                     className="font-bold h-11"
                 />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 text-left">
                 <div className="flex items-center">
-                    <Label htmlFor="password" title="password" className="font-bold opacity-70">Password</Label>
+                    <Label htmlFor="password" title="password" className="font-bold opacity-70 text-[11px] uppercase tracking-widest">Password</Label>
                     <button
                         type="button"
                         onClick={handleForgotPassword}
@@ -255,8 +258,26 @@ export default function LoginPage() {
                     </button>
                 </div>
                 </div>
-                <Button type="submit" className="w-full font-bold h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all mt-2" onClick={handleEmailLogin} disabled={loading}>
-                {loading ? <Loader2 className="animate-spin" /> : "Login"}
+
+                <div className="flex items-start space-x-3 text-left p-3 rounded-xl bg-primary/5 border border-primary/10 transition-all hover:bg-primary/10">
+                    <Checkbox 
+                        id="login-terms" 
+                        checked={acceptedTerms} 
+                        onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
+                        className="mt-1 border-primary/30 data-[state=checked]:bg-primary"
+                    />
+                    <div className="grid gap-1 leading-none">
+                        <Label
+                            htmlFor="login-terms"
+                            className="text-[10px] font-bold text-muted-foreground leading-snug cursor-pointer"
+                        >
+                            I acknowledge the <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Protocol</Link>.
+                        </Label>
+                    </div>
+                </div>
+
+                <Button type="submit" className="w-full font-bold h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all mt-2" onClick={handleEmailLogin} disabled={loading || !acceptedTerms}>
+                {loading ? <Loader2 className="animate-spin" /> : "Login Session"}
                 </Button>
             </div>
             
@@ -265,24 +286,24 @@ export default function LoginPage() {
                     <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-[11px] font-bold">
-                    <span className="bg-background px-2 text-muted-foreground">
-                    Or continue with
+                    <span className="bg-background px-2 text-muted-foreground uppercase tracking-widest">
+                    Or secure access with
                     </span>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 gap-2">
-                <Button variant="outline" className="w-full font-bold h-12 active:scale-95 transition-all border-primary/10 hover:border-primary/30" onClick={handleGoogleLogin} disabled={loading}>
+                <Button variant="outline" className="w-full font-bold h-12 active:scale-95 transition-all border-primary/10 hover:border-primary/30" onClick={handleGoogleLogin} disabled={loading || !acceptedTerms}>
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
-                    Google
+                    Google Authorization
                 </Button>
             </div>
             
         </motion.div>
         <motion.div variants={itemVariants} className="mt-6 text-center text-sm font-medium">
-            Don't have an account?{" "}
+            Don't have a registry node?{" "}
             <Link href="/register" className="font-bold text-primary hover:underline">
-                Sign up
+                Register here
             </Link>
         </motion.div>
       </motion.div>

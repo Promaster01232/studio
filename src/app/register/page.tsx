@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -22,6 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { validateUserDetails } from "@/ai/flows/validate-user-details";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { cn } from "@/lib/utils";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function RegisterPage() {
   const auth = useAuth();
@@ -40,6 +42,7 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [userType, setUserType] = useState("citizen");
   const [loading, setLoading] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   
   // AI Validation States
   const [isValidating, setIsValidating] = useState(false);
@@ -213,17 +216,17 @@ export default function RegisterPage() {
           <CardContent className="p-0">
               <motion.div variants={itemVariants} className="grid gap-4">
               <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
+                  <div className="grid gap-2 text-left">
                   <Label htmlFor="first-name" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">First name</Label>
                   <Input id="first-name" placeholder="Rajesh" required value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} className="h-11 font-bold bg-background" />
                   </div>
-                  <div className="grid gap-2">
+                  <div className="grid gap-2 text-left">
                   <Label htmlFor="last-name" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Last name</Label>
                   <Input id="last-name" placeholder="Kumar" required value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} className="h-11 font-bold bg-background" />
                   </div>
               </div>
               
-              <div className="grid gap-2">
+              <div className="grid gap-2 text-left">
                   <Label htmlFor="email" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
                     <span>Email ID</span>
                     <AnimatePresence>
@@ -260,7 +263,7 @@ export default function RegisterPage() {
                   </div>
               </div>
 
-              <div className="grid gap-2">
+              <div className="grid gap-2 text-left">
                   <Label htmlFor="mobile-number" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
                     <span>Mobile Number</span>
                     <AnimatePresence>
@@ -302,7 +305,7 @@ export default function RegisterPage() {
                   </motion.p>
               )}
 
-              <div className="grid gap-2">
+              <div className="grid gap-2 text-left">
                   <Label htmlFor="userType" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Platform Role</Label>
                   <Select value={userType} onValueChange={setUserType} disabled={loading}>
                       <SelectTrigger id="userType" className="h-11 font-bold bg-background">
@@ -317,7 +320,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
+                  <div className="grid gap-2 text-left">
                       <Label htmlFor="password" title="password" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Password</Label>
                       <div className="relative">
                           <Input 
@@ -338,7 +341,7 @@ export default function RegisterPage() {
                           </button>
                       </div>
                   </div>
-                  <div className="grid gap-2">
+                  <div className="grid gap-2 text-left">
                       <Label htmlFor="confirm-password" title="confirm-password" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Confirm</Label>
                       <div className="relative">
                           <Input 
@@ -360,7 +363,25 @@ export default function RegisterPage() {
                       </div>
                   </div>
               </div>
-              <Button type="submit" className="w-full h-12 font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all mt-4" onClick={handleRegister} disabled={loading}>
+
+              <div className="flex items-start space-x-3 text-left p-3 rounded-xl bg-primary/5 border border-primary/10 transition-all hover:bg-primary/10 mt-2">
+                  <Checkbox 
+                      id="register-terms" 
+                      checked={acceptedTerms} 
+                      onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
+                      className="mt-1 border-primary/30 data-[state=checked]:bg-primary"
+                  />
+                  <div className="grid gap-1 leading-none">
+                      <Label
+                          htmlFor="register-terms"
+                          className="text-[10px] font-bold text-muted-foreground leading-snug cursor-pointer"
+                      >
+                          I acknowledge and accept the <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Protocol</Link>.
+                      </Label>
+                  </div>
+              </div>
+
+              <Button type="submit" className="w-full h-12 font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all mt-4" onClick={handleRegister} disabled={loading || !acceptedTerms}>
                   {loading ? (
                       <span className="flex items-center gap-2">
                         <Loader2 className="animate-spin h-5 w-5" />
