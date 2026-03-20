@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
@@ -5,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/language-provider";
 import { FirebaseClientProvider } from "@/firebase/client-provider";
 import { Inter } from 'next/font/google';
+import { CookieBanner } from "@/components/cookie-banner";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -25,6 +27,7 @@ export default function RootLayout({
           <LanguageProvider>
             <FirebaseClientProvider>
               {children}
+              <CookieBanner />
             </FirebaseClientProvider>
             <Toaster />
           </LanguageProvider>
