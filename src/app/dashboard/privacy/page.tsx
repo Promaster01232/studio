@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -168,7 +169,7 @@ export default function PrivacyPage() {
               We notify all registry nodes 30 days prior to protocol amendments.
             </p>
             <div className="h-px w-12 bg-primary/20 mb-4" />
-            <p className="text-xs font-black text-primary">privacy@nyayasahayak.in</p>
+            <p className="text-xs font-black text-primary">nyayasahayakhelp@gmail.com</p>
           </Card>
         </motion.div>
       </div>

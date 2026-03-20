@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -198,7 +199,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <div className="p-4 bg-muted/50 rounded-xl flex items-start gap-3 border border-border">
                         <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
                         <p className="text-xs font-medium text-left leading-relaxed text-muted-foreground">
-                            If you believe this is an error, please contact our administrative team at <span className="font-bold text-primary">enterspaceindia@gmail.com</span> to request a restoration audit.
+                            If you believe this is an error, please contact our administrative team at <span className="font-bold text-primary">nyayasahayakhelp@gmail.com</span> to request a restoration audit.
                         </p>
                     </div>
                     <Button onClick={handleLogout} variant="outline" className="w-full h-12 font-bold rounded-xl active:scale-95 transition-all">
@@ -253,42 +254,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" align="start" className="w-56 mb-2 ml-2 p-2 rounded-2xl shadow-2xl border border-border bg-card">
-                <DropdownMenuLabel className="pb-3 pt-2">
-                    <div className="font-bold text-base font-headline tracking-tighter text-foreground">{userProfile.firstName} {userProfile.lastName}</div>
-                    <div className="text-[10px] text-muted-foreground font-bold truncate opacity-60">{userProfile.email}</div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="mb-2" />
-                <DropdownMenuItem asChild className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
-                    <Link href="/dashboard/profile">
-                        <User className="mr-3 h-4 w-4" />
-                        <span>My Profile</span>
-                    </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
-                        <SunMoon className="mr-3 h-4 w-4" />
-                        <span>Appearance</span>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent className="rounded-xl p-1 shadow-2xl border border-border bg-card">
-                        <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
-                            <DropdownMenuRadioItem value="light" className="rounded-lg h-9 font-bold">Light</DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="dark" className="rounded-lg h-9 font-bold">Dark</DropdownMenuRadioItem>
-                        </DropdownMenuRadioGroup>
-                    </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="rounded-xl h-10 font-bold focus:bg-primary/5 focus:text-primary mb-1">
-                        <Languages className="mr-3 h-4 w-4" />
-                        <span>Language</span>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent className="rounded-xl p-1 shadow-2xl border border-border bg-card max-h-[300px] overflow-y-auto">
-                        <DropdownMenuRadioGroup value={language} onValueChange={(value) => setLanguage(value as Language)}>
-                            {languages.map((lang) => (
-                                <DropdownMenuRadioItem key={lang.code} value={lang.code} className="rounded-lg h-9 font-bold">{lang.name}</DropdownMenuRadioItem>
-                            ))}
-                        </DropdownMenuRadioGroup>
-                    </DropdownMenuSubContent>
-                </DropdownMenuSub>
+                <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
+                    <DropdownMenuRadioItem value="light" className="rounded-lg h-9 font-bold">Light</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="dark" className="rounded-lg h-9 font-bold">Dark</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator className="my-2" />
                 <DropdownMenuItem onClick={handleLogout} className="rounded-xl h-10 font-bold text-destructive focus:bg-destructive/5 focus:text-destructive">
                     <LogOut className="mr-3 h-4 w-4" />

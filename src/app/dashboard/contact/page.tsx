@@ -34,7 +34,7 @@ export default function ContactUsPage() {
     
     // Simulate API delay before opening mailto
     setTimeout(() => {
-        const mailtoLink = `mailto:enterspaceindia@gmail.com?subject=${encodeURIComponent(
+        const mailtoLink = `mailto:nyayasahayakhelp@gmail.com?subject=${encodeURIComponent(
           subject
         )}&body=${encodeURIComponent(
           `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
@@ -111,7 +111,7 @@ export default function ContactUsPage() {
               </div>
               <div className="text-left">
                 <h3 className="font-black text-sm uppercase tracking-widest text-primary mb-1">Email Support</h3>
-                <p className="font-bold text-lg tracking-tight">enterspaceindia@gmail.com</p>
+                <p className="font-bold text-lg tracking-tight">nyayasahayakhelp@gmail.com</p>
               </div>
             </div>
              <div className="flex items-start gap-5 group">

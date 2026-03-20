@@ -1,8 +1,9 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, UserCheck, AlertTriangle, Scale } from "lucide-react";
+import { FileText, UserCheck, AlertTriangle, Scale, Mail } from "lucide-react";
 
 export default function TermsPage() {
   const protocols = [
@@ -49,6 +50,16 @@ export default function TermsPage() {
               </div>
             ))}
           </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-primary/5 shadow-md bg-muted/5">
+        <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Mail className="h-5 w-5 text-primary" />
+            <p className="text-sm font-bold">Contact Support regarding Protocols:</p>
+          </div>
+          <p className="text-sm font-black text-primary">nyayasahayakhelp@gmail.com</p>
         </CardContent>
       </Card>
 
