@@ -1,34 +1,12 @@
 import { Logo } from "@/components/logo";
-import { Linkedin, Facebook, Twitter, Send, Loader2 } from "lucide-react";
+import { Linkedin, Facebook, Twitter } from "lucide-react";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 
 export function Footer() {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setEmail("");
-      toast({
-        title: "Registry Enrollment",
-        description: "You have been successfully added to our institutional update list.",
-      });
-    }, 1200);
-  };
-
   return (
     <footer className="w-full border-t bg-card/30 backdrop-blur-md mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 md:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-8">
           {/* Brand Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
@@ -104,29 +82,6 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
-
-          {/* Accept User / Subscription Section */}
-          <div className="space-y-6">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50">
-              Stay Connected
-            </h3>
-            <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-              Join the institutional mailing list for critical legal alerts and node updates.
-            </p>
-            <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
-              <Input 
-                type="email" 
-                placeholder="Registry Email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-10 text-xs font-bold bg-background/50" 
-                required
-              />
-              <Button size="sm" type="submit" disabled={loading} className="h-10 font-bold active:scale-95 transition-all shadow-lg shadow-primary/20">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="mr-2 h-3.5 w-3.5" /> Enroll Now</>}
-              </Button>
-            </form>
           </div>
         </div>
         <div className="mt-16 pt-8 border-t border-primary/5 text-center">
