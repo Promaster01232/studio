@@ -1,18 +1,22 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { ArrowRight, Lightbulb, Loader2 } from "lucide-react";
+import { ArrowRight, Lightbulb, Loader2, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export default function WelcomePage() {
   const auth = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -23,36 +27,73 @@ export default function WelcomePage() {
   }, [auth]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md overflow-hidden border-none shadow-2xl">
-        <CardContent className="flex flex-col items-center p-10 text-center">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-background">
+      <Card className="w-full max-w-md overflow-hidden border-none shadow-2xl bg-card/50 backdrop-blur-md">
+        <CardContent className="flex flex-col items-center p-8 sm:p-10 text-center">
           <div className="relative mb-10 flex h-32 w-32 items-center justify-center">
             <div className="absolute -inset-3 rounded-full bg-primary/10 animate-pulse [animation-duration:4s] [animation-delay:1s]"></div>
              <div className="absolute -inset-6 rounded-full bg-primary/10 animate-pulse [animation-duration:4s]"></div>
             <Logo className="h-28 w-28 shadow-2xl" imageClassName="h-20 w-auto" />
           </div>
 
-          <h1 className="text-4xl font-black font-headline mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] tracking-tighter">
+          <h1 className="text-3xl sm:text-4xl font-black font-headline mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] tracking-tighter">
             Nyaya Sahayak
           </h1>
 
-          <p className="mb-10 text-sm font-medium text-muted-foreground leading-relaxed">
+          <p className="mb-8 text-sm font-medium text-muted-foreground leading-relaxed">
             Your AI-powered legal assistant for a modern world. Clarity and confidence in navigating the legal system.
           </p>
-          
-          <Button asChild size="lg" className="group w-full h-12 font-bold shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 active:scale-95 rounded-xl">
-            <Link href={loading ? "#" : (user ? "/dashboard" : "/login")}>
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Authenticating...
-                </span>
+
+          <div className="w-full space-y-6">
+            <div className="flex items-start space-x-3 text-left p-4 rounded-xl bg-primary/5 border border-primary/10 transition-all hover:bg-primary/10">
+              <Checkbox 
+                id="terms" 
+                checked={acceptedTerms} 
+                onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
+                className="mt-1 border-primary/30 data-[state=checked]:bg-primary"
+              />
+              <div className="grid gap-1.5 leading-none">
+                <Label
+                  htmlFor="terms"
+                  className="text-[11px] font-bold text-muted-foreground leading-snug cursor-pointer"
+                >
+                  I acknowledge and accept the <Link href="/dashboard/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link href="/dashboard/privacy" className="text-primary hover:underline">Privacy Protocol</Link>.
+                </Label>
+                <p className="text-[9px] text-muted-foreground/60 font-medium">
+                  By proceeding, you agree to our institutional usage protocols.
+                </p>
+              </div>
+            </div>
+            
+            <Button 
+              asChild={acceptedTerms && !loading} 
+              disabled={!acceptedTerms || loading}
+              size="lg" 
+              className={`group w-full h-12 font-bold shadow-xl transition-all duration-300 active:scale-95 rounded-xl ${
+                acceptedTerms 
+                  ? 'shadow-primary/20 hover:shadow-primary/30 bg-primary text-white' 
+                  : 'bg-muted text-muted-foreground shadow-none opacity-50 cursor-not-allowed'
+              }`}
+            >
+              {acceptedTerms ? (
+                <Link href={loading ? "#" : (user ? "/dashboard" : "/login")}>
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" /> Authenticating...
+                    </span>
+                  ) : (
+                    <>
+                      {user ? "Go to Dashboard" : "Get Started"} <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </>
+                  )}
+                </Link>
               ) : (
-                <>
-                  {user ? "Go to Dashboard" : "Get Started"} <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </>
+                <span className="flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4" /> Accept Terms to Proceed
+                </span>
               )}
-            </Link>
-          </Button>
+            </Button>
+          </div>
 
           <Link 
             href="https://ideasparkweb.com" 
