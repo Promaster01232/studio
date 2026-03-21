@@ -104,11 +104,6 @@ export default function AboutPage() {
           title="About Nyaya Sahayak"
           description="The pinnacle of AI-driven legal empowerment, created by IdeaSpark."
         />
-        <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group" asChild>
-          <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to Welcome
-          </Link>
-        </Button>
       </motion.div>
 
       {/* Mission Section */}
