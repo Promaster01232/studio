@@ -45,12 +45,14 @@ export function Footer() {
               <div className="grid grid-cols-2 gap-3">
                 <Link href="/about" className="group flex items-center gap-3 px-4 py-2.5 rounded-2xl glass hover:bg-primary/5 hover:border-primary/20 transition-all text-[11px] font-black uppercase tracking-widest text-foreground/70 active:scale-95">
                   <div className="p-1.5 rounded-lg bg-primary/10 text-primary group-hover:scale-110 transition-transform">
+                    <span className="sr-only">About</span>
                     <Info className="h-3.5 w-3.5" />
                   </div>
                   <span>About</span>
                 </Link>
                 <Link href="/contact" className="group flex items-center gap-3 px-4 py-2.5 rounded-2xl glass hover:bg-primary/5 hover:border-primary/20 transition-all text-[11px] font-black uppercase tracking-widest text-foreground/70 active:scale-95">
                   <div className="p-1.5 rounded-lg bg-primary/10 text-primary group-hover:scale-110 transition-transform">
+                    <span className="sr-only">Contact</span>
                     <Mail className="h-3.5 w-3.5" />
                   </div>
                   <span>Contact</span>

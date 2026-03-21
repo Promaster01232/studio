@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -9,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc } from "firebase/firestore";
-import { ref, remove } from "firebase/database";
+import { ref, remove, update } from "firebase/database";
 import { 
   Users, 
   ShieldCheck, 
@@ -236,7 +235,7 @@ export default function ManagementConsolePage() {
     };
   }, [firestore, auth, router, toast]);
 
-  const handleToggleStatus = async (user: UserRecord, isInactive: boolean) => {
+  const handleToggleStatus = (user: UserRecord, isInactive: boolean) => {
     if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         toast({ variant: "destructive", title: "Root Account Locked", description: "Admin status cannot be modified." });
         return;
@@ -245,19 +244,25 @@ export default function ManagementConsolePage() {
     setProcessingUid(user.uid);
     const userRef = doc(firestore, "users", user.uid);
     
-    try {
-        await updateDoc(userRef, { isBlocked: isInactive });
-        await update(ref(rtdb, `users/${user.uid}`), { isBlocked: isInactive }).catch(() => {});
-        
-        toast({ 
-            title: isInactive ? "User Suspended" : "User Activated", 
-            description: `${user.firstName}'s account status has been updated.` 
+    updateDoc(userRef, { isBlocked: isInactive })
+        .then(() => {
+            update(ref(rtdb, `users/${user.uid}`), { isBlocked: isInactive }).catch(() => {});
+            toast({ 
+                title: isInactive ? "User Suspended" : "User Activated", 
+                description: `${user.firstName}'s account status has been updated.` 
+            });
+        })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: userRef.path,
+                operation: 'update',
+                requestResourceData: { isBlocked: isInactive },
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        })
+        .finally(() => {
+            setProcessingUid(null);
         });
-    } catch (error: any) {
-        toast({ variant: "destructive", title: "Update Failed" });
-    } finally {
-        setProcessingUid(null);
-    }
   };
 
   const handleVerifyUser = async (user: UserRecord) => {
@@ -269,23 +274,27 @@ export default function ManagementConsolePage() {
               email: user.email
           });
 
-          if (verification.isAuthentic) {
-              const userRef = doc(firestore, "users", user.uid);
-              await updateDoc(userRef, { 
-                  securityStatus: 'verified', 
-                  flagReason: "",
-                  isBlocked: false 
-              });
-              
-              toast({ title: "User AI Authenticated" });
-          } else {
-              const userRef = doc(firestore, "users", user.uid);
-              await updateDoc(userRef, { 
-                  securityStatus: 'suspicious',
-                  flagReason: verification.reason || "AI detected suspicious identity patterns."
-              });
-              toast({ variant: "destructive", title: "Forensic Audit Failed" });
-          }
+          const userRef = doc(firestore, "users", user.uid);
+          const updateData = verification.isAuthentic 
+            ? { securityStatus: 'verified', flagReason: "", isBlocked: false } 
+            : { securityStatus: 'suspicious', flagReason: verification.reason || "AI detected suspicious identity patterns." };
+
+          updateDoc(userRef, updateData as any)
+            .then(() => {
+                if (verification.isAuthentic) {
+                    toast({ title: "User AI Authenticated" });
+                } else {
+                    toast({ variant: "destructive", title: "Forensic Audit Failed" });
+                }
+            })
+            .catch(async (serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: userRef.path,
+                    operation: 'update',
+                    requestResourceData: updateData,
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+            });
       } catch (error: any) {
           toast({ variant: "destructive", title: "Process Error" });
       } finally {
@@ -293,7 +302,7 @@ export default function ManagementConsolePage() {
       }
   };
 
-  const handleDeleteUser = async (user: UserRecord) => {
+  const handleDeleteUser = (user: UserRecord) => {
     if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         toast({ variant: "destructive", title: "Root Account Immutable" });
         return;
@@ -304,15 +313,21 @@ export default function ManagementConsolePage() {
     setProcessingUid(user.uid);
     const userRef = doc(firestore, "users", user.uid);
     
-    try {
-        await deleteDoc(userRef);
-        remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
-        toast({ title: "Account Purged", description: "All associated records have been wiped." });
-    } catch (error: any) {
-        toast({ variant: "destructive", title: "Deletion Failed" });
-    } finally {
-        setProcessingUid(null);
-    }
+    deleteDoc(userRef)
+        .then(() => {
+            remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
+            toast({ title: "Account Purged", description: "All associated records have been wiped." });
+        })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: userRef.path,
+                operation: 'delete',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        })
+        .finally(() => {
+            setProcessingUid(null);
+        });
   };
 
   const filteredUsers = users.filter(u => 

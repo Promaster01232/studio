@@ -52,7 +52,7 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
-                        {/* Wrapper div to ensure DialogTrigger only receives a single React element child */}
+                        {/* Wrapper div ensures DialogTrigger receives a single child element */}
                         <div className="w-full max-w-sm">
                             <div className="relative w-full hidden md:block group cursor-pointer active:scale-[0.99] transition-transform">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
