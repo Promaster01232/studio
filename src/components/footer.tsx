@@ -6,10 +6,10 @@ import Link from "next/link";
 export function Footer() {
   return (
     <footer className="w-full border-t bg-card/30 backdrop-blur-md mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           {/* Brand Section */}
-          <div className="lg:col-span-4 space-y-6 flex flex-col items-center lg:items-start text-center lg:text-left">
+          <div className="lg:col-span-4 space-y-4 flex flex-col items-center lg:items-start text-center lg:text-left">
             <div className="flex items-center gap-3">
               <Logo className="h-10 w-10 shadow-xl shadow-primary/10" />
               <span className="text-xl font-black font-headline tracking-tighter text-foreground">
@@ -19,7 +19,7 @@ export function Footer() {
             <p className="text-xs text-muted-foreground leading-relaxed font-medium max-w-xs sm:max-w-none">
               Precision AI nodes for the modern legal ecosystem. Delivering clarity through forensic intelligence and institutional trust.
             </p>
-            <div className="flex items-center justify-center lg:justify-start gap-4 pt-2">
+            <div className="flex items-center justify-center lg:justify-start gap-4 pt-1">
               <Link href="#" className="text-muted-foreground hover:text-primary transition-all active:scale-90">
                 <Linkedin className="h-4 w-4" />
               </Link>
@@ -33,9 +33,9 @@ export function Footer() {
           </div>
 
           {/* Links Section Wrapper */}
-          <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-10">
+          <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-8">
             {/* Institutional Section */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 border-b border-primary/5 pb-2 w-fit mx-auto sm:mx-0">
                 Institutional
               </h3>
@@ -56,7 +56,7 @@ export function Footer() {
             </div>
 
             {/* Protocols Section */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 border-b border-primary/5 pb-2 w-fit mx-auto sm:mx-0">
                 Protocols
               </h3>
@@ -90,7 +90,7 @@ export function Footer() {
           </div>
         </div>
         
-        <div className="mt-12 sm:mt-16 pt-8 border-t border-primary/5 text-center">
+        <div className="mt-8 pt-6 border-t border-primary/5 text-center">
           <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 leading-relaxed">
             &copy; {new Date().getFullYear()} NYAYA SAHAYAK INSTITUTIONAL NODE. ALL PROTOCOLS RESERVED.
           </p>
