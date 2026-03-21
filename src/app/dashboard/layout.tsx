@@ -53,20 +53,22 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
-                        <div className="relative w-full max-w-sm hidden md:block group cursor-pointer active:scale-[0.99] transition-transform">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                            <div className="pl-10 pr-16 h-10 flex items-center font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm">
-                                Search tools, cases, guides...
+                        <div className="w-full max-w-sm">
+                            <div className="relative w-full hidden md:block group cursor-pointer active:scale-[0.99] transition-transform">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                <div className="pl-10 pr-16 h-10 flex items-center font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm">
+                                    Search tools, cases, guides...
+                                </div>
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 shadow-sm">
+                                        <span className="text-xs">⌘</span>K
+                                    </kbd>
+                                </div>
                             </div>
-                            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 shadow-sm">
-                                    <span className="text-xs">⌘</span>K
-                                </kbd>
-                            </div>
+                            <Button variant="outline" size="icon" className="md:hidden h-10 w-10 rounded-xl border-primary/5 bg-muted/40 active:scale-95 transition-all">
+                                <Search className="h-4 w-4 text-muted-foreground" />
+                            </Button>
                         </div>
-                        <Button variant="outline" size="icon" className="md:hidden h-10 w-10 rounded-xl border-primary/5 bg-muted/40 active:scale-95 transition-all">
-                            <Search className="h-4 w-4 text-muted-foreground" />
-                        </Button>
                     </SearchDialog>
                 )}
             </div>
