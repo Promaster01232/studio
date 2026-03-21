@@ -1,98 +1,96 @@
-
 import { Logo } from "@/components/logo";
-import { Linkedin, Facebook, Twitter, ShieldCheck, FileText, Cookie, AlertCircle, Info, Mail } from "lucide-react";
+import { Linkedin, Facebook, Twitter, ShieldCheck, FileText, Cookie, AlertCircle, Info, Mail, Github } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t bg-card/30 backdrop-blur-md mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
-          {/* Brand Section */}
-          <div className="lg:col-span-4 space-y-4 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <div className="flex items-center gap-3">
-              <Logo className="h-10 w-10 shadow-xl shadow-primary/10" />
-              <span className="text-xl font-black font-headline tracking-tighter text-foreground">
+    <footer className="w-full border-t border-primary/5 bg-card/20 backdrop-blur-xl mt-auto transition-all duration-500">
+      <div className="max-w-7xl mx-auto px-6 py-12 lg:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* Brand Hub */}
+          <div className="lg:col-span-5 space-y-6 flex flex-col items-center lg:items-start text-center lg:text-left">
+            <div className="flex items-center gap-4 group cursor-pointer">
+              <div className="relative">
+                  <div className="absolute -inset-2 rounded-full bg-primary/10 animate-pulse group-hover:scale-110 transition-transform"></div>
+                  <Logo className="h-12 w-12 shadow-2xl relative z-10" />
+              </div>
+              <span className="text-2xl font-black font-headline tracking-tighter text-foreground group-hover:text-primary transition-colors">
                 Nyaya Sahayak
               </span>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed font-medium max-w-xs sm:max-w-none">
-              Precision AI nodes for the modern legal ecosystem. Delivering clarity through forensic intelligence and institutional trust.
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-medium max-w-sm">
+              Engineered for the future of justice. Our neural forensic nodes provide mathematically precise legal intelligence and institutional navigational roadmaps.
             </p>
-            <div className="flex items-center justify-center lg:justify-start gap-4 pt-1">
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-all active:scale-90">
-                <Linkedin className="h-4 w-4" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-all active:scale-90">
-                <Facebook className="h-4 w-4" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-all active:scale-90">
-                <Twitter className="h-4 w-4" />
-              </Link>
+            <div className="flex items-center justify-center lg:justify-start gap-5 pt-2">
+              {[
+                { icon: Linkedin, href: "#" },
+                { icon: Twitter, href: "#" },
+                { icon: Github, href: "#" },
+                { icon: Mail, href: "/contact" }
+              ].map((social, i) => (
+                <Link key={i} href={social.href} className="text-muted-foreground hover:text-primary transition-all active:scale-90 p-2 rounded-xl hover:bg-primary/5 border border-transparent hover:border-primary/10">
+                  <social.icon className="h-4 w-4" />
+                </Link>
+              ))}
             </div>
           </div>
 
-          {/* Links Section Wrapper */}
-          <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {/* Institutional Section */}
-            <div className="space-y-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 border-b border-primary/5 pb-2 w-fit mx-auto sm:mx-0">
+          {/* Nav Nodes Wrapper */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-10">
+            {/* Institutional Node */}
+            <div className="space-y-6">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 border-b border-primary/5 pb-3 w-fit mx-auto sm:mx-0">
                 Institutional
               </h3>
-              <div className="grid grid-cols-2 gap-2">
-                <Link href="/about" className="group flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/5 border border-transparent hover:border-primary/10 hover:bg-primary/10 transition-all text-[11px] font-bold text-foreground/80">
-                  <div className="p-1 rounded-md bg-background/50 text-primary shrink-0">
-                    <Info className="h-3 w-3" />
+              <div className="grid grid-cols-2 gap-3">
+                <Link href="/about" className="group flex items-center gap-3 px-4 py-3 rounded-2xl glass hover:bg-primary/5 hover:border-primary/20 transition-all text-[11px] font-black uppercase tracking-widest text-foreground/70 active:scale-95">
+                  <div className="p-1.5 rounded-lg bg-primary/10 text-primary group-hover:scale-110 transition-transform">
+                    <Info className="h-3.5 w-3.5" />
                   </div>
-                  <span className="truncate">About</span>
+                  <span>About</span>
                 </Link>
-                <Link href="/contact" className="group flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/5 border border-transparent hover:border-primary/10 hover:bg-primary/10 transition-all text-[11px] font-bold text-foreground/80">
-                  <div className="p-1 rounded-md bg-background/50 text-primary shrink-0">
-                    <Mail className="h-3 w-3" />
+                <Link href="/contact" className="group flex items-center gap-3 px-4 py-3 rounded-2xl glass hover:bg-primary/5 hover:border-primary/20 transition-all text-[11px] font-black uppercase tracking-widest text-foreground/70 active:scale-95">
+                  <div className="p-1.5 rounded-lg bg-primary/10 text-primary group-hover:scale-110 transition-transform">
+                    <Mail className="h-3.5 w-3.5" />
                   </div>
-                  <span className="truncate">Contact</span>
+                  <span>Contact</span>
                 </Link>
               </div>
             </div>
 
-            {/* Protocols Section */}
-            <div className="space-y-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 border-b border-primary/5 pb-2 w-fit mx-auto sm:mx-0">
+            {/* Protocol Node */}
+            <div className="space-y-6">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 border-b border-primary/5 pb-3 w-fit mx-auto sm:mx-0">
                 Protocols
               </h3>
-              <div className="grid grid-cols-2 gap-2">
-                <Link href="/privacy" className="group flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/5 border border-transparent hover:border-primary/10 hover:bg-primary/10 transition-all text-[11px] font-bold text-foreground/80">
-                  <div className="p-1 rounded-md bg-background/50 text-primary shrink-0">
-                    <ShieldCheck className="h-3 w-3" />
-                  </div>
-                  <span className="truncate">Privacy</span>
-                </Link>
-                <Link href="/terms" className="group flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/5 border border-transparent hover:border-primary/10 hover:bg-primary/10 transition-all text-[11px] font-bold text-foreground/80">
-                  <div className="p-1 rounded-md bg-background/50 text-primary shrink-0">
-                    <FileText className="h-3 w-3" />
-                  </div>
-                  <span className="truncate">Terms</span>
-                </Link>
-                <Link href="/cookie-policy" className="group flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/5 border border-transparent hover:border-primary/10 hover:bg-primary/10 transition-all text-[11px] font-bold text-foreground/80">
-                  <div className="p-1 rounded-md bg-background/50 text-primary shrink-0">
-                    <Cookie className="h-3 w-3" />
-                  </div>
-                  <span className="truncate">Cookies</span>
-                </Link>
-                <Link href="/disclaimer" className="group flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/5 border border-transparent hover:border-primary/10 hover:bg-primary/10 transition-all text-[11px] font-bold text-foreground/80">
-                  <div className="p-1 rounded-md bg-background/50 text-primary shrink-0">
-                    <AlertCircle className="h-3 w-3" />
-                  </div>
-                  <span className="truncate">Disclaimer</span>
-                </Link>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { label: "Privacy", href: "/privacy", icon: ShieldCheck },
+                  { label: "Terms", href: "/terms", icon: FileText },
+                  { label: "Cookies", href: "/cookie-policy", icon: Cookie },
+                  { label: "Disclaim", href: "/disclaimer", icon: AlertCircle }
+                ].map((item) => (
+                  <Link key={item.label} href={item.href} className="group flex items-center gap-3 px-4 py-3 rounded-2xl glass hover:bg-primary/5 hover:border-primary/20 transition-all text-[11px] font-black uppercase tracking-widest text-foreground/70 active:scale-95">
+                    <div className="p-1.5 rounded-lg bg-primary/10 text-primary group-hover:scale-110 transition-transform shrink-0">
+                      <item.icon className="h-3.5 w-3.5" />
+                    </div>
+                    <span className="truncate">{item.label}</span>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
         </div>
         
-        <div className="mt-8 pt-6 border-t border-primary/5 text-center">
-          <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 leading-relaxed">
-            &copy; {new Date().getFullYear()} NYAYA SAHAYAK INSTITUTIONAL NODE. ALL PROTOCOLS RESERVED.
+        <div className="mt-16 pt-8 border-t border-primary/5 text-center space-y-4">
+          <div className="flex items-center justify-center gap-2 text-primary/30">
+              <ShieldCheck className="h-3 w-3" />
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] leading-relaxed">
+                Secure Forensic Registry // NS-NODE-ALPHA-CORE
+              </p>
+          </div>
+          <p className="text-[9px] font-bold text-muted-foreground/30 uppercase tracking-widest">
+            &copy; {new Date().getFullYear()} NYAYA SAHAYAK INSTITUTIONAL ECOSYSTEM. ALL PROTOCOLS RESERVED.
           </p>
         </div>
       </div>

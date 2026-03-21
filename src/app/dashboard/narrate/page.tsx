@@ -4,13 +4,14 @@ import { useActionState, useState, useRef, useEffect, startTransition } from "re
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2, Languages, Headphones, FileSearch, Quote, Upload, FileUp } from "lucide-react";
+import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2, Languages, Headphones, FileSearch, Quote, Upload, Sparkles, Zap, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { AudioAssistant } from "@/components/audio-assistant";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const initialState: CaseSummaryState = {
   status: "idle",
@@ -37,31 +38,19 @@ export default function NarrateProblemPage() {
         await navigator.mediaDevices.getUserMedia({ audio: true });
         setHasPermission(true);
       } catch (error) {
-        console.error("Error accessing microphone:", error);
         setHasPermission(false);
         toast({
           variant: "destructive",
-          title: "Microphone Access Denied",
-          description: "Please enable microphone permissions in your browser settings to use this feature.",
+          title: "Capture Protocol Denied",
+          description: "Enable microphone permissions in browser settings to initialize audio capture.",
         });
       }
     };
     getMicrophonePermission();
   }, [toast]);
 
-  useEffect(() => {
-    if (state.status === "error" && state.error) {
-      toast({
-        variant: "destructive",
-        title: "Analysis Error",
-        description: state.error,
-      });
-    }
-  }, [state, toast]);
-
   const startRecording = async () => {
     if (!hasPermission || state.status === "loading") return;
-
     setIsRecording(true);
     setTimer(0);
     if(timerInterval.current) clearInterval(timerInterval.current);
@@ -72,69 +61,43 @@ export default function NarrateProblemPage() {
         const recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
         mediaRecorder.current = recorder;
         const chunks: Blob[] = [];
-
         recorder.ondataavailable = (e) => e.data.size > 0 && chunks.push(e.data);
-
         recorder.onstop = () => {
             stream.getTracks().forEach((track) => track.stop());
             if (timerInterval.current) clearInterval(timerInterval.current);
             const blob = new Blob(chunks, { type: "audio/webm" });
-            
             if (blob.size > 500) {
                 const formData = new FormData();
-                const audioFile = new File([blob], "recording.webm", { type: "audio/webm" });
-                formData.append("problemAudio", audioFile);
+                formData.append("problemAudio", new File([blob], "narration.webm", { type: "audio/webm" }));
                 formData.append("language", language);
-                startTransition(() => {
-                    formAction(formData);
-                });
+                startTransition(() => formAction(formData));
             } else {
-                 toast({
-                    variant: "destructive",
-                    title: "Recording Too Short",
-                    description: "Please record for at least a few seconds to analyze.",
-                });
+                 toast({ variant: "destructive", title: "Capture Insufficient", description: "Narration must exceed 2 seconds for neural audit." });
             }
             setIsRecording(false);
         };
-
         recorder.start();
     } catch(err) {
-        console.error("Error during recording:", err)
-        toast({
-            variant: "destructive",
-            title: "Recording Error",
-            description: "Could not start recording. Please check your microphone.",
-        });
+        toast({ variant: "destructive", title: "Hardware Failure", description: "Could not initialize microphone node." });
         setIsRecording(false);
-        if (timerInterval.current) clearInterval(timerInterval.current);
     }
   };
 
   const stopRecording = () => {
-    if (mediaRecorder.current && isRecording) {
-      mediaRecorder.current.stop();
-    }
+    if (mediaRecorder.current && isRecording) mediaRecorder.current.stop();
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && state.status !== "loading") {
         if (!file.type.startsWith('audio/')) {
-            toast({
-                variant: "destructive",
-                title: "Invalid File",
-                description: "Please upload an audio recording file.",
-            });
+            toast({ variant: "destructive", title: "Registry Mismatch", description: "Upload compatible audio files only." });
             return;
         }
-
         const formData = new FormData();
         formData.append("problemAudio", file);
         formData.append("language", language);
-        startTransition(() => {
-            formAction(formData);
-        });
+        startTransition(() => formAction(formData));
     }
   };
 
@@ -147,225 +110,260 @@ export default function NarrateProblemPage() {
   const isLoading = state.status === "loading";
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto pb-12 px-2 sm:px-0">
-      <PageHeader
-        title="Voice Case Narrator"
-        description="Speak your problem naturally. Our AI will generate a comprehensive legal report instantly."
-      />
+    <div className="space-y-10 max-w-7xl mx-auto pb-20 px-2 sm:px-0">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+        <PageHeader
+            title="Neural Voice Narrator"
+            description="Institutional-grade audio analysis. Speak naturally to generate a comprehensive forensic legal report."
+        />
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        <div className="lg:col-span-1 space-y-6">
-            <Card className="border-primary/10 shadow-xl overflow-hidden rounded-2xl bg-card">
-                <CardHeader className="bg-primary/5 border-b border-primary/10">
-                    <CardTitle className="text-lg font-bold flex items-center gap-2">
-                        <Mic className="h-5 w-5 text-primary" /> Audio Capture
-                    </CardTitle>
-                    <CardDescription className="text-[11px] font-medium uppercase tracking-wider">Secure Recording Node</CardDescription>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <motion.div 
+            initial={{ opacity: 0, x: -30 }} 
+            animate={{ opacity: 1, x: 0 }}
+            className="lg:col-span-4 space-y-6"
+        >
+            <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
+                <CardHeader className="bg-primary/5 border-b border-primary/10 p-8">
+                    <div className="flex items-center gap-3 mb-2 text-primary">
+                        <Mic className="h-5 w-5" />
+                        <CardTitle className="text-xl font-black tracking-tight leading-none uppercase">Capture Node</CardTitle>
+                    </div>
+                    <CardDescription className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">Secured Registry Protocol</CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col items-center justify-center space-y-6 pt-8">
-                    <div className="w-full space-y-4 mb-4">
-                        <div className="space-y-2">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                                <Languages className="h-3 w-3" /> Preferred Language
+                <CardContent className="flex flex-col items-center justify-center space-y-8 pt-10 pb-10">
+                    <div className="w-full space-y-4 px-2">
+                        <div className="space-y-3">
+                            <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1 flex items-center gap-2">
+                                <Languages className="h-3 w-3" /> Dialect Registry
                             </Label>
                             <Select value={language} onValueChange={setLanguage} disabled={isRecording || isLoading}>
-                                <SelectTrigger className="h-11 font-bold bg-background">
+                                <SelectTrigger className="h-12 glass border-primary/5 font-bold rounded-xl active:scale-95 transition-all">
                                     <SelectValue />
                                 </SelectTrigger>
-                                <SelectContent className="bg-card">
-                                    <SelectItem value="English" className="font-bold">English</SelectItem>
-                                    <SelectItem value="Hindi" className="font-bold">Hindi</SelectItem>
+                                <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
+                                    <SelectItem value="English" className="font-bold rounded-lg">English (Forensic)</SelectItem>
+                                    <SelectItem value="Hindi" className="font-bold rounded-lg">Hindi (Official)</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
                     </div>
 
                     <div className="relative group">
+                        <AnimatePresence>
+                            {isRecording && (
+                                <motion.div 
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1.5, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    className="absolute inset-0 rounded-full bg-red-500/20 blur-2xl -z-10"
+                                />
+                            )}
+                        </AnimatePresence>
+                        
                         <Button
                             onClick={isRecording ? stopRecording : startRecording}
                             disabled={!hasPermission || isLoading}
-                            className={`h-28 w-28 sm:h-32 sm:w-32 rounded-full shadow-2xl flex flex-col gap-2 transition-all duration-500 relative z-10 ${
-                                isRecording ? 'bg-red-500 hover:bg-red-600 scale-110' : 'bg-primary hover:scale-105'
-                            }`}
+                            className={cn(
+                                "h-32 w-32 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col gap-3 transition-all duration-500 relative z-10 active:scale-90",
+                                isRecording ? 'bg-red-500 hover:bg-red-600 scale-110 shadow-red-500/40' : 'bg-primary hover:shadow-primary/40'
+                            )}
                         >
                             {isRecording ? (
-                                <div className="h-8 w-8 sm:h-10 sm:w-10 bg-white rounded-lg animate-pulse" />
+                                <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1 }} className="h-10 w-10 bg-white rounded-xl shadow-lg" />
                             ) : (
-                                <Mic className="h-10 w-10 sm:h-12 sm:w-12" />
+                                <Mic className="h-12 w-12" />
                             )}
-                            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">
-                                {isRecording ? "Stop" : "Speak Now"}
+                            <span className="text-[10px] font-black uppercase tracking-widest">
+                                {isRecording ? "Abort" : "Initialize"}
                             </span>
                         </Button>
-                        
-                        {isRecording && (
-                            <>
-                                <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping [animation-duration:2s]"></div>
-                                <div className="absolute inset-0 rounded-full bg-red-500/10 animate-ping [animation-duration:3s]"></div>
-                            </>
-                        )}
                     </div>
 
-                    <div className="text-center space-y-1">
-                        <p className="text-3xl sm:text-4xl font-mono font-black tracking-tighter text-primary">{formatTime(timer)}</p>
-                        <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest animate-pulse">
-                            {isRecording ? "Recording Live..." : isLoading ? "AI Processing..." : "Ready to Listen"}
+                    <div className="text-center space-y-2">
+                        <p className={cn("text-5xl font-mono font-black tracking-tighter transition-colors duration-500", isRecording ? "text-red-500" : "text-primary")}>
+                            {formatTime(timer)}
                         </p>
+                        <div className="flex items-center justify-center gap-2">
+                            <div className={cn("h-1.5 w-1.5 rounded-full animate-pulse", isRecording ? "bg-red-500" : "bg-primary")}></div>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">
+                                {isRecording ? "Transmission Active" : isLoading ? "AI Processing Unit..." : "Node Ready"}
+                            </p>
+                        </div>
                     </div>
 
-                    <div className="w-full pt-4 border-t border-primary/5 flex flex-col items-center gap-3">
-                        <input 
-                            type="file" 
-                            ref={fileInputRef} 
-                            onChange={handleFileUpload} 
-                            accept="audio/*" 
-                            className="hidden" 
-                        />
+                    <div className="w-full pt-6 border-t border-primary/5 flex flex-col items-center gap-4">
+                        <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="audio/*" className="hidden" />
                         <Button 
                             variant="ghost" 
                             size="sm" 
                             onClick={() => fileInputRef.current?.click()}
                             disabled={isRecording || isLoading}
-                            className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary hover:bg-primary/5 rounded-xl gap-2 transition-all"
+                            className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary hover:bg-primary/5 rounded-xl gap-3 transition-all active:scale-95"
                         >
-                            <Upload className="h-3.5 w-3.5" />
-                            Or upload a recording
+                            <Upload className="h-4 w-4" />
+                            Ingest Registry File
                         </Button>
                     </div>
                 </CardContent>
             </Card>
             
-            <Card className="bg-primary/5 border-primary/10 rounded-2xl p-4">
-                <div className="flex gap-3">
-                    <Headphones className="h-5 w-5 text-primary shrink-0" />
+            <Card className="bg-primary/5 border-primary/10 rounded-[2rem] p-6 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-4 opacity-[0.05] group-hover:scale-110 transition-transform duration-700">
+                    <ShieldCheck className="h-20 w-20" />
+                </div>
+                <div className="flex gap-4 relative z-10">
+                    <div className="p-3 rounded-2xl bg-white/50 dark:bg-black/50 shadow-sm border border-primary/5 shrink-0 h-fit">
+                        <Headphones className="h-5 w-5 text-primary" />
+                    </div>
                     <div className="space-y-1">
-                        <p className="text-xs font-bold text-primary">Instructions</p>
-                        <p className="text-[10px] text-muted-foreground leading-relaxed font-medium">
-                            Briefly describe the incident, people involved, dates, and your primary concern.
+                        <p className="text-xs font-black text-primary uppercase tracking-widest">Protocol Instructions</p>
+                        <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
+                            Briefly outline the incident, involved entities, and core grievance. Clarity maximizes neural audit precision.
                         </p>
                     </div>
                 </div>
             </Card>
-        </div>
+        </motion.div>
 
-        <div className="lg:col-span-2 space-y-6">
-            <Card className="border-primary/10 shadow-2xl min-h-[500px] flex flex-col rounded-2xl overflow-hidden bg-card/40 backdrop-blur-md">
-                <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between space-y-0 p-4 sm:p-6">
+        <motion.div 
+            initial={{ opacity: 0, x: 30 }} 
+            animate={{ opacity: 1, x: 0 }}
+            className="lg:col-span-8 space-y-8"
+        >
+            <Card className="glass shadow-2xl min-h-[600px] flex flex-col rounded-[2.5rem] overflow-hidden border-primary/5">
+                <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8 sm:p-10">
                     <div className="space-y-1">
-                        <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-black tracking-tight">
-                            <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-primary" /> AI Intelligence
-                        </CardTitle>
-                        <CardDescription className="text-[10px] sm:text-xs font-medium">Comprehensive Legal Report</CardDescription>
+                        <div className="flex items-center gap-2 text-primary mb-1">
+                            <Bot className="h-4 w-4" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Institutional AI Node</span>
+                        </div>
+                        <CardTitle className="text-2xl font-black tracking-tight leading-none">Forensic Audit Output</CardTitle>
                     </div>
                     {state.status === "success" && state.data && (
                         <AudioAssistant 
-                            text={`Report Summary: ${state.data.caseSummary}. Detailed Analysis: ${state.data.detailedAnalysis}. Next Steps: ${state.data.nextActions}`} 
+                            text={`Narration Summary: ${state.data.caseSummary}. Detailed Forensic Analysis: ${state.data.detailedAnalysis}. Mandatory Next Steps: ${state.data.nextActions}`} 
                             language={language}
                         />
                     )}
                 </CardHeader>
-                <CardContent className="p-4 sm:p-6 flex-1">
+                <CardContent className="p-8 sm:p-10 flex-1">
                     <AnimatePresence mode="wait">
                         {isLoading && (
                             <motion.div 
                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                className="flex flex-col items-center justify-center h-full py-20 text-center gap-6"
+                                className="flex flex-col items-center justify-center h-full py-20 text-center gap-10"
                             >
                                 <div className="relative">
-                                    <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }} className="p-6 sm:p-8 rounded-full border-4 border-dashed border-primary/20">
-                                        <Bot className="h-12 w-12 sm:h-16 sm:w-16 text-primary/40" />
+                                    <motion.div 
+                                        animate={{ rotate: 360 }} 
+                                        transition={{ repeat: Infinity, duration: 6, ease: "linear" }} 
+                                        className="p-16 rounded-full border-4 border-dashed border-primary/20"
+                                    >
+                                        <Bot className="h-20 w-20 text-primary opacity-20" />
                                     </motion.div>
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
+                                        <Loader2 className="h-10 w-10 animate-spin text-primary" />
                                     </div>
+                                    <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute -top-2 -right-2 p-2 rounded-lg bg-primary text-white shadow-xl">
+                                        <Sparkles className="h-4 w-4" />
+                                    </motion.div>
                                 </div>
-                                <div className="space-y-2">
-                                    <p className="font-black text-lg sm:text-xl tracking-tight">Transcribing & Analyzing...</p>
-                                    <p className="text-xs sm:text-sm text-muted-foreground font-medium max-w-xs mx-auto leading-relaxed">Our AI is performing a deep forensic legal audit of your narration.</p>
+                                <div className="space-y-3">
+                                    <p className="font-black text-3xl tracking-tighter">Deconstructing Narration...</p>
+                                    <p className="text-sm text-muted-foreground font-medium max-w-[320px] mx-auto leading-relaxed">Extracting statutory violations and generating procedural roadmap.</p>
                                 </div>
                             </motion.div>
                         )}
                         
                         {state.status === 'idle' && (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-4 opacity-40">
-                                <div className="bg-muted p-6 sm:p-8 rounded-full">
-                                    <Mic className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground" />
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
+                                <div className="p-10 rounded-[2.5rem] bg-muted/50 border-2 border-dashed border-primary/10 transition-all duration-700 hover:rotate-2">
+                                    <Mic className="h-20 w-20 text-muted-foreground" />
                                 </div>
-                                <div className="space-y-1">
-                                    <p className="font-black text-base sm:text-lg tracking-tight">Waiting for Recording</p>
-                                    <p className="text-[10px] sm:text-xs font-medium text-muted-foreground max-w-[250px] mx-auto">Your comprehensive report will appear here once analysis is complete.</p>
+                                <div className="space-y-2">
+                                    <p className="font-black text-xl tracking-tighter uppercase">Awaiting Registry Transmission</p>
+                                    <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto leading-relaxed italic">Your comprehensive forensic report will materialize here once the neural audit protocol finishes.</p>
                                 </div>
                             </motion.div>
                         )}
 
                         {state.status === "success" && state.data && (
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 sm:space-y-8 pb-10">
-                                {/* Transcription Section */}
-                                <div className="space-y-3">
-                                    <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2">
-                                        <Quote className="h-3.5 w-3.5" /> Transcription
-                                    </h3>
-                                    <div className="p-4 sm:p-5 bg-muted/30 rounded-xl sm:rounded-2xl border border-primary/5 italic text-xs sm:text-sm font-medium text-muted-foreground leading-relaxed">
+                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 pb-10">
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
+                                            <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></div>
+                                            Registry Transcription
+                                        </h3>
+                                        <CheckCircle2 className="h-4 w-4 text-green-600 opacity-40" />
+                                    </div>
+                                    <div className="p-6 sm:p-8 glass rounded-[2rem] border-primary/5 italic text-sm sm:text-base font-medium text-muted-foreground leading-relaxed shadow-inner">
                                         "{state.data.transcription}"
                                     </div>
                                 </div>
 
-                                {/* Summary & Meta */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="p-4 sm:p-5 bg-primary/5 rounded-xl sm:rounded-2xl border border-primary/10">
-                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-widest mb-3 flex items-center gap-2">
-                                            <Bot className="h-3.5 w-3.5" /> Summary
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <Card className="p-8 glass rounded-[2.5rem] border-primary/10 shadow-xl shadow-primary/5">
+                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4 flex items-center gap-3">
+                                            <Bot className="h-4 w-4" /> Case Summary
                                         </h3>
-                                        <p className="text-xs sm:text-sm font-bold text-foreground leading-relaxed">{state.data.caseSummary}</p>
-                                    </div>
+                                        <p className="text-sm sm:text-base font-black leading-relaxed tracking-tight text-foreground">{state.data.caseSummary}</p>
+                                    </Card>
                                     <div className="space-y-4">
-                                        <div className="p-4 bg-background rounded-xl border border-primary/10 flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <Scale className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                                                <span className="text-[10px] font-black uppercase tracking-tighter">Nature</span>
+                                        <div className="p-6 glass rounded-2xl border-primary/10 flex items-center justify-between group transition-all hover:bg-primary/5">
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-2.5 rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform">
+                                                    <Scale className="h-5 w-5" />
+                                                </div>
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Nature</span>
                                             </div>
-                                            <span className="text-[10px] font-bold text-primary bg-primary/5 px-3 py-1 rounded-full uppercase">{state.data.caseType}</span>
+                                            <span className="text-[10px] font-black text-primary bg-primary/5 px-4 py-1.5 rounded-full uppercase border border-primary/10">{state.data.caseType}</span>
                                         </div>
-                                        <div className="p-4 bg-background rounded-xl border border-primary/10 flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <Landmark className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                                                <span className="text-[10px] font-black uppercase tracking-tighter">Registry</span>
+                                        <div className="p-6 glass rounded-2xl border-primary/10 flex items-center justify-between group transition-all hover:bg-primary/5">
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-2.5 rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform">
+                                                    <Landmark className="h-5 w-5" />
+                                                </div>
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Registry</span>
                                             </div>
-                                            <span className="text-[10px] font-bold text-muted-foreground text-right truncate max-w-[120px]">{state.data.jurisdiction}</span>
+                                            <span className="text-[10px] font-bold text-muted-foreground/80 truncate max-w-[140px] text-right">{state.data.jurisdiction}</span>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Detailed Analysis */}
-                                <div className="space-y-3">
-                                    <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 px-1">
-                                        <FileSearch className="h-3.5 w-3.5" /> Deep Legal Audit
+                                <div className="space-y-4">
+                                    <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3 px-2">
+                                        <FileSearch className="h-4 w-4" /> Forensic Statutory Audit
                                     </h3>
-                                    <div className="p-4 sm:p-6 bg-primary/5 rounded-xl sm:rounded-2xl border border-primary/10">
-                                        <div className="text-xs sm:text-sm font-medium text-foreground leading-relaxed whitespace-pre-line prose dark:prose-invert max-w-none">
+                                    <div className="p-8 sm:p-10 glass rounded-[2.5rem] border-primary/10 relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:rotate-12 transition-transform duration-1000">
+                                            <Scale className="h-40 w-40" />
+                                        </div>
+                                        <div className="text-sm sm:text-base font-medium text-foreground leading-relaxed whitespace-pre-line relative z-10 prose dark:prose-invert max-w-none prose-p:font-bold">
                                             {state.data.detailedAnalysis}
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Next Actions & Laws */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-3">
-                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 px-1">
-                                            <StepForward className="h-3.5 w-3.5" /> Strategy
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-4">
+                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3 px-2">
+                                            <StepForward className="h-4 w-4" /> Procedural Roadmap
                                         </h3>
-                                        <div className="p-4 sm:p-5 bg-background rounded-xl sm:rounded-2xl border border-primary/10 min-h-24">
-                                            <div className="text-[10px] sm:text-xs font-bold text-muted-foreground leading-relaxed whitespace-pre-line">
+                                        <div className="p-6 sm:p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 min-h-[120px] shadow-inner">
+                                            <div className="text-[11px] sm:text-xs font-bold text-muted-foreground leading-relaxed whitespace-pre-line italic">
                                                 {state.data.nextActions}
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="space-y-3">
-                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2 px-1">
-                                            <FileText className="h-3.5 w-3.5" /> Statutes
+                                    <div className="space-y-4">
+                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3 px-2">
+                                            <FileText className="h-4 w-4" /> Applicable Statutes
                                         </h3>
-                                        <div className="p-4 sm:p-5 bg-background rounded-xl sm:rounded-2xl border border-primary/10 min-h-24">
-                                            <p className="text-[10px] sm:text-xs font-bold text-primary leading-relaxed">
+                                        <div className="p-6 sm:p-8 bg-muted/20 rounded-[2.5rem] border border-primary/5 min-h-[120px]">
+                                            <p className="text-[11px] sm:text-xs font-black text-primary leading-relaxed uppercase tracking-tighter">
                                                 {state.data.relevantLaws}
                                             </p>
                                         </div>

@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, CheckCircle2 } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, CheckCircle2, UserCheck, Fingerprint, Zap } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -32,7 +32,7 @@ import {
   AlertDialogTitle, 
   AlertDialogTrigger 
 } from '@/components/ui/alert-dialog';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { Badge } from '@/components/ui/badge';
 
@@ -83,7 +83,6 @@ export default function ProfilePage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Computed state for changes
   const hasChanges = userProfile ? (
     firstName !== userProfile.firstName ||
     lastName !== userProfile.lastName ||
@@ -91,11 +90,9 @@ export default function ProfilePage() {
     photoURL !== (userProfile.photoURL || '')
   ) : false;
 
-
   useEffect(() => {
     setIsMounted(true);
     if (auth.currentUser) {
-      setLoading(true);
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
       getDoc(userDocRef).then(userDoc => {
         if (userDoc.exists()) {
@@ -105,9 +102,7 @@ export default function ProfilePage() {
           setLastName(data.lastName);
           setEmail(data.email);
           setMobileNumber(data.mobileNumber || '');
-          if (data.photoURL) {
-            setPhotoURL(data.photoURL);
-          }
+          if (data.photoURL) setPhotoURL(data.photoURL);
         } else {
             router.push('/create-profile');
         }
@@ -123,16 +118,9 @@ export default function ProfilePage() {
       setIsResending(true);
       try {
           await sendEmailVerification(auth.currentUser);
-          toast({
-              title: "Verification email sent",
-              description: "Please check your inbox and follow the link to verify your identity.",
-          });
+          toast({ title: "Verification email sent", description: "Identity link dispatched to your inbox." });
       } catch (error: any) {
-          toast({
-              variant: "destructive",
-              title: "Error",
-              description: error.message || "Failed to send verification email.",
-          });
+          toast({ variant: "destructive", title: "Transmission Failed", description: error.message });
       } finally {
           setIsResending(false);
       }
@@ -141,43 +129,23 @@ export default function ProfilePage() {
   const handleVerifySelf = async () => {
     if (!userProfile || isVerifying) return;
     setIsVerifying(true);
-    toast({ title: "AI Forensic Analysis", description: "Verifying account registration pattern..." });
+    toast({ title: "Forensic Registry Audit", description: "Verifying account registration patterns..." });
 
     try {
-        const verification = await verifyEmailAuthenticity({
-            email: userProfile.email
-        });
-
+        const verification = await verifyEmailAuthenticity({ email: userProfile.email });
         if (verification.isAuthentic) {
             const userRef = doc(firestore, "users", userProfile.uid);
-            await setDoc(userRef, { 
-                securityStatus: 'verified', 
-                flagReason: "",
-                isBlocked: false 
-            }, { merge: true });
-            
+            await setDoc(userRef, { securityStatus: 'verified', flagReason: "", isBlocked: false }, { merge: true });
             setUserProfile(prev => prev ? { ...prev, securityStatus: 'verified' } : null);
-            toast({ 
-                title: "Forensic Check Passed", 
-                description: `AI confirmed registration authenticity. Identity badge updated.` 
-            });
+            toast({ title: "Audit Passed", description: `Forensic identity confirmed. Verified badge active.` });
         } else {
             const userRef = doc(firestore, "users", userProfile.uid);
-            await setDoc(userRef, { 
-                securityStatus: 'suspicious',
-                flagReason: verification.reason || "AI detected suspicious identity patterns."
-            }, { merge: true });
-            
+            await setDoc(userRef, { securityStatus: 'suspicious', flagReason: verification.reason || "AI detected suspicious identity patterns." }, { merge: true });
             setUserProfile(prev => prev ? { ...prev, securityStatus: 'suspicious' } : null);
-            toast({ 
-                variant: "destructive", 
-                title: "Forensic Audit Failed", 
-                description: verification.reason || "The account registration pattern looks incorrect." 
-            });
+            toast({ variant: "destructive", title: "Security Flag Active", description: verification.reason || "Pattern mismatch detected." });
         }
-    } catch (error: any) {
-        console.error("Verification error:", error);
-        toast({ variant: "destructive", title: "Process Error", description: "Could not complete AI audit." });
+    } catch (error) {
+        toast({ variant: "destructive", title: "Audit Error", description: "Could not complete forensic check." });
     } finally {
         setIsVerifying(false);
     }
@@ -185,30 +153,20 @@ export default function ProfilePage() {
 
   const updateUserPhoto = (newPhotoURL: string) => {
       if (!auth.currentUser || !userProfile) return;
-      
-      const updateData = { photoURL: newPhotoURL };
-      
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-      setDoc(userDocRef, updateData, { merge: true })
+      setDoc(userDocRef, { photoURL: newPhotoURL }, { merge: true })
         .then(() => {
-            toast({ title: "Photo updated", description: "Your profile picture has been saved." });
+            toast({ title: "Node Image Updated", description: "Profile photo synchronized with registry." });
             setUserProfile(prev => prev ? { ...prev, photoURL: newPhotoURL } : null);
-        })
-        .catch(err => console.error("Failed to sync photo to Firestore:", err));
-
-      update(ref(rtdb, `users/${auth.currentUser.uid}`), updateData)
-        .catch(err => console.warn("RTDB photo sync skipped:", err.message));
+        });
+      update(ref(rtdb, `users/${auth.currentUser.uid}`), { photoURL: newPhotoURL }).catch(() => {});
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
-        toast({
-          variant: "destructive",
-          title: "File too large",
-          description: "Please select an image smaller than 2MB.",
-        });
+        toast({ variant: "destructive", title: "Registry Rejection", description: "File size exceeds 2MB limit." });
         return;
       }
       const reader = new FileReader();
@@ -226,82 +184,45 @@ export default function ProfilePage() {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       setHasCameraPermission(true);
       setIsCameraOpen(true);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (error: any) {
-      console.error('Error accessing camera:', error);
+      if (videoRef.current) videoRef.current.srcObject = stream;
+    } catch (error) {
       setHasCameraPermission(false);
-      let msg = 'Please enable camera permissions in your browser settings to use this feature.';
-      if (error.name === 'NotFoundError') {
-          msg = 'No camera device found on this machine.';
-      }
-      toast({
-        variant: 'destructive',
-        title: error.name === 'NotFoundError' ? 'Camera not found' : 'Camera access denied',
-        description: msg,
-      });
+      toast({ variant: 'destructive', title: 'Capture Denied', description: 'Enable camera nodes in browser protocols.' });
     }
   };
 
   const stopCamera = () => {
     if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach(track => track.stop());
+      (videoRef.current.srcObject as MediaStream).getTracks().forEach(track => track.stop());
     }
     setIsCameraOpen(false);
   };
 
   const capturePhoto = () => {
     if (videoRef.current && canvasRef.current) {
-      const video = videoRef.current;
       const canvas = canvasRef.current;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const context = canvas.getContext('2d');
-      if (context) {
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL('image/png');
-        setPhotoURL(dataUrl);
-        updateUserPhoto(dataUrl);
-        stopCamera();
-      }
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      canvas.getContext('2d')?.drawImage(videoRef.current, 0, 0);
+      const dataUrl = canvas.toDataURL('image/png');
+      setPhotoURL(dataUrl);
+      updateUserPhoto(dataUrl);
+      stopCamera();
     }
   };
 
   const handleSaveChanges = () => {
     if (!auth.currentUser || !userProfile) return;
-
     setSaving(true);
-    
-    const updatedProfile: UserProfile = {
-        ...userProfile,
-        firstName,
-        lastName,
-        email,
-        mobileNumber,
-        photoURL,
-    };
-
+    const updatedProfile: UserProfile = { ...userProfile, firstName, lastName, email, mobileNumber, photoURL };
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-
     setDoc(userDocRef, updatedProfile, { merge: true })
       .then(() => {
-        set(ref(rtdb, `users/${auth.currentUser.uid}`), updatedProfile).catch(() => {});
+        set(ref(rtdb, `users/${auth.currentUser?.uid}`), updatedProfile).catch(() => {});
         setUserProfile(updatedProfile);
-        toast({ title: 'Profile updated', description: 'Your personal details have been saved.' });
+        toast({ title: 'Registry Synchronized', description: 'Personal dossier updated successfully.' });
       })
-      .catch((serverError) => {
-          const permissionError = new FirestorePermissionError({
-            path: userDocRef.path,
-            operation: 'update',
-            requestResourceData: updatedProfile,
-          }, serverError);
-          errorEmitter.emit('permission-error', permissionError);
-      })
-      .finally(() => {
-        setSaving(false);
-      });
+      .finally(() => setSaving(false));
   };
 
   const handleLogout = async () => {
@@ -312,346 +233,256 @@ export default function ProfilePage() {
   const handleDeleteAccount = async () => {
     if (!auth.currentUser) return;
     if (ADMIN_EMAILS.includes(email.toLowerCase())) {
-        toast({ variant: "destructive", title: "Action Blocked", description: "Root Admin account cannot be deleted." });
+        toast({ variant: "destructive", title: "Node Immutable", description: "Root administration nodes cannot be purged." });
         return;
     }
-    
     setSaving(true);
     const user = auth.currentUser;
-    const userDocRef = doc(firestore, "users", user.uid);
-
     try {
-      await deleteDoc(userDocRef);
+      await deleteDoc(doc(firestore, "users", user.uid));
       remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
       await deleteUser(user);
-      
-      toast({
-        title: "Account deleted",
-        description: "Your account and all associated data have been permanently removed.",
-      });
+      toast({ title: "Registry Purged", description: "All identity records have been permanently erased." });
       router.replace('/');
     } catch (error: any) {
-      if (error.code === 'auth/requires-recent-login') {
-        toast({
-          variant: "destructive",
-          title: "Security action required",
-          description: "Please log out and sign back in before deleting your account.",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to delete account.",
-        });
-      }
+      toast({ variant: "destructive", title: "Purge Failed", description: "Recent authentication required for this protocol." });
     } finally {
       if (auth.currentUser) setSaving(false);
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 15, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15
-      },
-    },
-  };
-
-  const isSuperAdmin = ADMIN_EMAILS.includes(email.toLowerCase());
-  const isAiVerified = userProfile?.securityStatus === 'verified';
-
-  if (loading) {
-      return (
-          <div className="flex h-full items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-      );
-  }
+  if (loading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
   return (
     <motion.div 
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="space-y-6 sm:space-y-8 max-w-5xl mx-auto pb-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0"
     >
-        <motion.div variants={itemVariants}>
-            <PageHeader
-                title="My Profile"
-                description="Manage your account settings and personal information."
-            />
-        </motion.div>
+        <PageHeader
+            title="Registry Dossier"
+            description="Manage your secure identity nodes and institutional platform configurations."
+        />
 
-        <motion.div variants={itemVariants}>
-            <Card className="border-primary/5 overflow-hidden bg-card/40 backdrop-blur-md rounded-2xl shadow-xl">
-                <CardContent className="p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
-                {photoURL ? (
-                    <div className="relative group shrink-0">
-                        <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-background shadow-2xl transition-transform active:scale-95 group-hover:scale-105 duration-300">
-                            <AvatarImage src={photoURL} alt={`${firstName} ${lastName}`} className="object-cover" />
-                        </Avatar>
-                        <div className="absolute -bottom-1 -right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <Button size="icon" variant="secondary" className="rounded-full h-8 w-8 shadow-xl border border-primary/10 hover:bg-primary hover:text-white" onClick={startCamera}>
-                                <Camera className="h-3.5 w-3.5" />
-                            </Button>
-                            <Button size="icon" variant="secondary" className="rounded-full h-8 w-8 shadow-xl border border-primary/10 hover:bg-primary hover:text-white" onClick={() => fileInputRef.current?.click()}>
-                                <ImageUp className="h-3.5 w-3.5" />
-                            </Button>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="shrink-0 flex flex-row gap-3">
-                        <Button variant="outline" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full border-2 border-dashed border-primary/20 flex flex-col gap-1 items-center justify-center text-muted-foreground hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 shadow-inner group" onClick={startCamera}>
-                            <Camera className="h-5 w-5 sm:h-6 sm:w-6 group-hover:scale-110 transition-transform" />
-                            <span className="text-[8px] sm:text-[9px] font-bold opacity-60 leading-none">Camera</span>
-                        </Button>
-                        <Button variant="outline" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full border-2 border-dashed border-primary/20 flex flex-col gap-1 items-center justify-center text-muted-foreground hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 shadow-inner group" onClick={() => fileInputRef.current?.click()}>
-                            <ImageUp className="h-5 w-5 sm:h-6 sm:w-6 group-hover:scale-110 transition-transform" />
-                            <span className="text-[8px] sm:text-[9px] font-bold opacity-60 leading-none">Device</span>
-                        </Button>
-                    </div>
-                )}
-                <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
-                <div className="flex-1 text-center sm:text-left space-y-1.5 min-w-0 w-full">
-                    <div className="flex flex-col sm:flex-row items-center gap-2">
-                        <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter text-foreground truncate">{firstName} {lastName}</h2>
-                        <div className="flex items-center gap-2">
-                            {userProfile?.emailVerified ? (
-                                <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20 py-0.5 px-3 rounded-full text-[9px] font-black uppercase flex items-center gap-1.5 shadow-sm">
-                                    <BadgeCheck className="h-3 w-3" /> Identity Verified
-                                </Badge>
-                            ) : isAiVerified ? (
-                                <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 border-blue-500/20 py-0.5 px-3 rounded-full text-[9px] font-black uppercase flex items-center gap-1.5 shadow-sm">
-                                    <ShieldCheck className="h-3 w-3" /> AI Authenticated
-                                </Badge>
+        <div className="grid lg:grid-cols-12 gap-10 items-start">
+            <div className="lg:col-span-4 space-y-6">
+                <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
+                    <div className="bg-primary/5 p-10 flex flex-col items-center text-center">
+                        <div className="relative group mb-6">
+                            <div className="absolute -inset-4 rounded-[2rem] bg-primary/10 animate-pulse group-hover:scale-110 transition-transform duration-500"></div>
+                            {photoURL ? (
+                                <Avatar className="h-32 w-32 border-4 border-background shadow-2xl rounded-[2rem] relative z-10 transition-all group-hover:rotate-2">
+                                    <AvatarImage src={photoURL} className="object-cover" />
+                                </Avatar>
                             ) : (
-                                <Button 
-                                    size="sm" 
-                                    variant="outline" 
-                                    className="h-7 px-3 text-[9px] font-black uppercase tracking-tight text-red-500 border-red-200 hover:bg-red-500/10 hover:text-red-600 rounded-full animate-pulse"
-                                    onClick={handleVerifySelf}
-                                    disabled={isVerifying}
-                                >
-                                    {isVerifying ? <Loader2 className="h-2.5 w-2.5 animate-spin mr-1" /> : <ShieldCheck className="h-2.5 w-2.5 mr-1" />}
-                                    Forensic Audit
-                                </Button>
+                                <div className="h-32 w-32 rounded-[2rem] bg-white dark:bg-zinc-900 flex items-center justify-center text-primary border-4 border-background shadow-2xl relative z-10">
+                                    <User className="h-12 w-12 opacity-20" />
+                                </div>
                             )}
+                            <div className="absolute -bottom-2 -right-2 flex gap-2 z-20">
+                                <Button size="icon" variant="secondary" className="rounded-xl h-10 w-10 shadow-2xl border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={startCamera}>
+                                    <Camera className="h-4 w-4" />
+                                </Button>
+                                <Button size="icon" variant="secondary" className="rounded-xl h-10 w-10 shadow-2xl border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}>
+                                    <ImageUp className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
+                        <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
+                        
+                        <div className="space-y-2">
+                            <h2 className="text-2xl font-black tracking-tighter leading-tight truncate px-2">{firstName} {lastName}</h2>
+                            <div className="flex flex-col items-center gap-3">
+                                {userProfile?.emailVerified ? (
+                                    <Badge className="bg-green-500/10 text-green-600 border-green-500/20 py-1 px-4 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
+                                        <BadgeCheck className="h-3 w-3 mr-2" /> Identity Verified
+                                    </Badge>
+                                ) : userProfile?.securityStatus === 'verified' ? (
+                                    <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20 py-1 px-4 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
+                                        <ShieldCheck className="h-3 w-3 mr-2" /> AI Authenticated
+                                    </Badge>
+                                ) : (
+                                    <Button 
+                                        size="sm" 
+                                        variant="outline" 
+                                        className="h-9 px-4 text-[10px] font-black uppercase tracking-widest text-red-500 border-red-200 hover:bg-red-500/10 rounded-xl animate-pulse"
+                                        onClick={handleVerifySelf}
+                                        disabled={isVerifying}
+                                    >
+                                        {isVerifying ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <ShieldCheck className="h-3 w-3 mr-2" />}
+                                        Run Forensic Scan
+                                    </Button>
+                                )}
+                                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] opacity-40">System Node: {userProfile?.userType}</span>
+                            </div>
                         </div>
                     </div>
-                    {userProfile?.userType && (
-                        <div className="flex items-center gap-1.5 px-3 py-0.5 bg-primary/5 rounded-full border border-primary/10 w-fit mx-auto sm:mx-0">
-                            <span className="text-[10px] font-bold text-primary capitalize">{userProfile.userType}</span>
+                    <CardContent className="p-8 space-y-4">
+                        <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-primary/5">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-background shadow-sm border border-primary/5">
+                                    <Moon className="h-4 w-4 text-muted-foreground" />
+                                </div>
+                                <span className="text-xs font-bold">Dark Protocol</span>
+                            </div>
+                            <Switch checked={theme === 'dark'} onCheckedChange={(c) => setTheme(c ? 'dark' : 'light')} />
                         </div>
-                    )}
-                    <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate opacity-80">{email}</p>
-                </div>
-                </CardContent>
-            </Card>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-3 gap-6 items-start">
-            <div className="lg:col-span-2 space-y-6">
-                <motion.div variants={itemVariants}>
-                    <Card className="shadow-lg border-primary/5 rounded-2xl overflow-hidden bg-card">
-                        <CardHeader className="pb-4 bg-muted/30">
-                            <CardTitle className="font-headline font-black text-lg flex items-center gap-2 tracking-tight text-left">
-                                <User className="h-4 w-4 text-primary" /> Personal details
-                            </CardTitle>
-                            <CardDescription className="text-xs font-medium text-left">Your account information.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4 pt-6 text-left">
-                            <div className="grid sm:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                <Label htmlFor="firstName" className="text-[11px] font-bold text-muted-foreground">First name</Label>
-                                <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-background h-11 text-sm font-semibold" />
-                                </div>
-                                <div className="space-y-2">
-                                <Label htmlFor="lastName" className="text-[11px] font-bold text-muted-foreground">Last name</Label>
-                                <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-background h-11 text-sm font-semibold" />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="phone" className="text-[11px] font-bold text-muted-foreground">Mobile number</Label>
-                                <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="bg-background h-11 text-sm font-semibold" />
-                            </div>
-                            <div className="flex justify-end pt-2">
-                                <Button 
-                                    onClick={handleSaveChanges} 
-                                    disabled={saving || !hasChanges} 
-                                    size="sm" 
-                                    className="w-full sm:w-auto shadow-lg shadow-primary/10 h-11 px-10 font-bold active:scale-95 transition-all"
-                                >
-                                    {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                    Update details
+                        <Button variant="outline" className="w-full h-12 justify-start font-bold border-primary/5 rounded-2xl hover:bg-primary/5 transition-all" asChild>
+                            <Link href="/privacy">
+                                <KeyRound className="mr-3 h-4 w-4 opacity-40" />
+                                <span className="text-xs">Security Protocols</span>
+                            </Link>
+                        </Button>
+                    </CardContent>
+                </Card>
+                
+                <Card className="border-destructive/10 bg-destructive/5 shadow-xl rounded-[2.5rem] overflow-hidden">
+                    <CardHeader className="p-8 pb-4">
+                        <CardTitle className="text-destructive font-black text-lg tracking-tight flex items-center gap-2">
+                            <ShieldAlert className="h-5 w-5" /> Account Disposal
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-8 pt-0 space-y-3">
+                        <Button variant="outline" className="w-full h-12 justify-start hover:bg-destructive/10 text-foreground border-destructive/5 rounded-2xl font-bold transition-all" onClick={handleLogout}>
+                            <LogOut className="mr-3 h-4 w-4 opacity-40" /> 
+                            <span className="text-xs">Terminate Session</span>
+                        </Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="destructive" className="w-full h-12 justify-start font-black text-xs uppercase tracking-widest rounded-2xl active:scale-95 transition-all shadow-lg shadow-destructive/20">
+                                    <Trash2 className="mr-3 h-4 w-4" />
+                                    Purge Registry Record
                                 </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </motion.div>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="glass border-destructive/20 rounded-[2rem] p-8 max-w-md">
+                                <AlertDialogHeader>
+                                    <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4"><ShieldAlert className="h-10 w-10 text-destructive" /></div>
+                                    <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Permanent Purge</AlertDialogTitle>
+                                    <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
+                                        This protocol is irreversible. All forensic records, case narrations, and identity data will be permanently erased from the Nyaya Sahayak terminal.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6">
+                                    <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1">Abort Protocol</AlertDialogCancel>
+                                    <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-xs">Execute Purge</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </CardContent>
+                </Card>
+            </div>
 
-                {!userProfile?.emailVerified && (
-                    <motion.div variants={itemVariants}>
-                        <Card className="border-amber-500/20 bg-amber-500/5 rounded-2xl overflow-hidden">
-                            <CardHeader className="pb-2 text-left">
-                                <CardTitle className="text-amber-600 font-headline font-black text-lg flex items-center gap-2">
-                                    <MailCheck className="h-5 w-5" /> Identity Link Verification
-                                </CardTitle>
-                                <CardDescription className="text-amber-600/80 font-medium text-xs">
-                                    Please verify your email to unlock the trusted identity badge.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="pt-2 pb-6 text-left">
-                                <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="lg:col-span-8 space-y-8">
+                <Card className="glass shadow-2xl rounded-[2.5rem] border-primary/5 overflow-hidden">
+                    <CardHeader className="p-8 sm:p-10 bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between">
+                        <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-primary">
+                                <Zap className="h-3 w-3" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Registry Information</span>
+                            </div>
+                            <CardTitle className="text-3xl font-black tracking-tight leading-none">Identity Nodes</CardTitle>
+                        </div>
+                        <UserCheck className="h-8 w-8 text-primary opacity-20" />
+                    </CardHeader>
+                    <CardContent className="p-8 sm:p-10 space-y-8">
+                        <div className="grid sm:grid-cols-2 gap-8">
+                            <div className="space-y-3">
+                                <Label htmlFor="firstName" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Given Name</Label>
+                                <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="h-14 glass border-primary/10 rounded-2xl font-bold text-base px-5 focus:border-primary transition-all" />
+                            </div>
+                            <div className="space-y-3">
+                                <Label htmlFor="lastName" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Family Name</Label>
+                                <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} className="h-14 glass border-primary/10 rounded-2xl font-bold text-base px-5 focus:border-primary transition-all" />
+                            </div>
+                        </div>
+                        <div className="space-y-3">
+                            <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Institutional Email</Label>
+                            <Input id="email" value={email} disabled className="h-14 glass border-primary/10 rounded-2xl font-bold text-base px-5 opacity-50" />
+                        </div>
+                        <div className="space-y-3">
+                            <Label htmlFor="phone" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Contact Node (Mobile)</Label>
+                            <div className="relative">
+                                <Input id="phone" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="h-14 glass border-primary/10 rounded-2xl font-bold text-base px-5 focus:border-primary transition-all" />
+                                <Fingerprint className="absolute right-5 top-1/2 -translate-y-1/2 h-5 w-5 opacity-20 text-primary" />
+                            </div>
+                        </div>
+                        
+                        <div className="flex justify-end pt-4">
+                            <Button 
+                                onClick={handleSaveChanges} 
+                                disabled={saving || !hasChanges} 
+                                className="w-full sm:w-auto h-14 px-12 font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary/20 rounded-2xl active:scale-95 transition-all"
+                            >
+                                {saving ? <Loader2 className="mr-3 h-5 w-5 animate-spin" /> : <Edit className="mr-3 h-4 w-4" />}
+                                Synchronize Registry
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <AnimatePresence>
+                    {!userProfile?.emailVerified && (
+                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
+                            <Card className="border-amber-500/20 bg-amber-500/5 rounded-[2.5rem] shadow-xl overflow-hidden relative">
+                                <div className="absolute top-0 right-0 p-8 opacity-[0.05]">
+                                    <MailCheck className="h-32 w-32 text-amber-600" />
+                                </div>
+                                <CardHeader className="p-8 sm:p-10 pb-4">
+                                    <div className="flex items-center gap-2 text-amber-600 mb-2">
+                                        <AlertTriangle className="h-4 w-4 animate-pulse" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">Security Mandate</span>
+                                    </div>
+                                    <CardTitle className="text-2xl font-black tracking-tight leading-none text-amber-700">Identity Link Pending</CardTitle>
+                                    <CardDescription className="text-amber-700/70 font-medium pt-2 max-w-sm">
+                                        Your institutional email is currently unverified. Complete the link protocol to unlock full forensic permissions.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="p-8 sm:p-10 pt-0 flex flex-col sm:flex-row items-center gap-6">
                                     <Button 
                                         onClick={handleSendVerification}
                                         disabled={isResending}
-                                        variant="outline" 
-                                        className="border-amber-500/20 text-amber-600 hover:bg-amber-500/10 font-bold h-11 px-6 rounded-xl w-full sm:w-auto"
+                                        className="bg-amber-600 hover:bg-amber-700 text-white font-black h-14 px-8 rounded-2xl w-full sm:w-auto uppercase tracking-widest text-xs shadow-xl shadow-amber-600/20 active:scale-95 transition-all"
                                     >
-                                        {isResending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                        Resend Verification Link
+                                        {isResending ? <Loader2 className="mr-3 h-5 w-5 animate-spin" /> : <MailCheck className="mr-3 h-5 w-5" />}
+                                        Dispatch Identity Link
                                     </Button>
-                                    <p className="text-[10px] text-muted-foreground font-medium italic">Status: Link Pending</p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
-                )}
-            </div>
-
-            <div className="space-y-6">
-                <motion.div variants={itemVariants}>
-                    <Card className="shadow-lg border-primary/5 rounded-2xl text-left bg-card">
-                        <CardHeader className="pb-4">
-                            <CardTitle className="font-headline font-black text-lg tracking-tight">Preferences</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                            <div className="flex items-center justify-between p-3 rounded-xl hover:bg-muted transition-colors border border-transparent hover:border-primary/10 cursor-pointer" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-muted p-2 rounded-lg"><Moon className="h-4 w-4 text-muted-foreground" /></div>
-                                    <span className="font-bold text-[12px]">Dark mode</span>
-                                </div>
-                                <Switch
-                                    checked={theme === 'dark'}
-                                    onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-                                />
-                            </div>
-                            <Button variant="outline" size="sm" className="w-full justify-start font-bold border-primary/5 h-11 px-4 hover:bg-primary/5 hover:text-primary transition-all rounded-xl active:scale-95" asChild>
-                                <Link href="/privacy">
-                                    <KeyRound className="mr-3 h-4 w-4 text-muted-foreground" />
-                                    <span>Security & privacy</span>
-                                </Link>
-                            </Button>
-                        </CardContent>
-                    </Card>
-                </motion.div>
-
-                <motion.div variants={itemVariants}>
-                    <Card className="border-destructive/10 bg-destructive/5 shadow-lg rounded-2xl text-left">
-                        <CardHeader className="pb-4">
-                            <CardTitle className="text-destructive font-headline font-black text-lg tracking-tight">Account Control</CardTitle>
-                            <CardDescription className="text-[10px] font-bold text-destructive/60 uppercase tracking-widest">Permanent Actions</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                            <Button variant="outline" size="sm" className="w-full justify-start hover:bg-destructive/10 text-foreground border-destructive/5 h-11 px-4 font-bold rounded-xl active:scale-95 transition-all" onClick={handleLogout}>
-                                <LogOut className="mr-3 h-4 w-4 text-muted-foreground" /> 
-                                <span>Logout Session</span>
-                            </Button>
-                            
-                            {isSuperAdmin ? (
-                                <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 mt-2">
-                                    <div className="flex items-start gap-3">
-                                        <ShieldAlert className="h-5 w-5 text-destructive shrink-0" />
-                                        <p className="text-[10px] font-black uppercase text-destructive tracking-widest leading-relaxed">
-                                            Root Account Locked: System management nodes are immutable.
-                                        </p>
+                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-amber-600/60 italic">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-ping"></div>
+                                        Awaiting Transmission
                                     </div>
-                                </div>
-                            ) : (
-                                <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button variant="destructive" size="sm" className="w-full justify-start font-bold h-11 px-4 rounded-xl active:scale-95 transition-all">
-                                        <Trash2 className="mr-3 h-4 w-4" />
-                                        <span>Delete My Account</span>
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent className="max-w-[90vw] sm:max-w-lg bg-card">
-                                    <AlertDialogHeader>
-                                    <AlertDialogTitle className="font-black tracking-tight text-destructive">Confirm Permanent Deletion</AlertDialogTitle>
-                                    <AlertDialogDescription className="font-medium text-xs sm:text-sm text-muted-foreground">
-                                        This action is irreversible. Your account and all associated legal records will be permanently erased from Nyaya Sahayak.
-                                    </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-                                    <AlertDialogCancel className="font-bold h-11 px-6 w-full sm:w-auto">Keep My Account</AlertDialogCancel>
-                                    <AlertDialogAction onClick={handleDeleteAccount} disabled={saving} className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold h-11 px-6 w-full sm:w-auto">
-                                        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin mr-2" /> : <Trash2 className="mr-2 h-4 w-4" />}
-                                        Yes, Purge Everything
-                                    </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                                </AlertDialog>
-                            )}
-                        </CardContent>
-                    </Card>
-                </motion.div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
 
       <Dialog open={isCameraOpen} onOpenChange={(open) => !open && stopCamera()}>
-          <DialogContent className="sm:max-w-md p-0 overflow-hidden sm:rounded-2xl border-none shadow-2xl h-[100dvh] sm:h-auto bg-black">
-              <DialogHeader className="sr-only">
-                  <DialogTitle>Capture profile photo</DialogTitle>
-                  <DialogDescription>Use your camera to take a profile picture.</DialogDescription>
-              </DialogHeader>
-              <div className="relative h-full sm:aspect-square group">
-                  <video 
-                    ref={videoRef} 
-                    className="h-full w-full object-cover transition-opacity" 
-                    autoPlay 
-                    muted 
-                    playsInline
-                  />
-                  {!hasCameraPermission && (
-                    <div className="absolute inset-0 flex items-center justify-center p-8 text-center bg-zinc-900">
-                        <div className="space-y-4">
-                            <div className="bg-white/10 p-4 rounded-full w-fit mx-auto"><Camera className="h-12 w-12 text-white/50" /></div>
-                            <p className="text-sm font-black text-white tracking-tight">Camera access required</p>
-                            <p className="text-xs text-white/60 max-w-[200px] mx-auto font-medium">Please allow camera permissions.</p>
-                        </div>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 pointer-events-none border-[30px] sm:border-[50px] border-black/40 group-hover:border-black/20 transition-all duration-700">
-                      <div className="h-full w-full border-2 border-white/20 rounded-full shadow-[0_0_0_9999px_rgba(0,0,0,0.4)]"></div>
-                  </div>
+          <DialogContent className="p-0 overflow-hidden sm:rounded-[2.5rem] border-none shadow-[0_50px_100px_rgba(0,0,0,0.5)] h-[100dvh] sm:h-auto bg-black max-w-2xl">
+              <div className="relative h-full aspect-video sm:aspect-square group bg-zinc-900">
+                  <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
                   <canvas ref={canvasRef} className="hidden" />
                   
-                  <div className="absolute top-4 right-4 sm:hidden">
-                      <Button variant="ghost" size="icon" className="text-white bg-black/20 rounded-full h-10 w-10" onClick={stopCamera}>
+                  {/* High-fidelity viewfinder overlay */}
+                  <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                      <div className="w-[80%] h-[80%] border-2 border-white/20 rounded-[3rem] relative">
+                          <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-2xl"></div>
+                          <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-2xl"></div>
+                          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-2xl"></div>
+                          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-2xl"></div>
+                      </div>
+                  </div>
+
+                  <div className="absolute top-6 right-6">
+                      <Button variant="ghost" size="icon" className="text-white bg-black/40 backdrop-blur-md rounded-xl h-12 w-12 hover:bg-white/20" onClick={stopCamera}>
                           <X className="h-6 w-6" />
                       </Button>
                   </div>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent sm:relative sm:bg-background sm:from-transparent">
-                  <div className="flex gap-3 max-w-sm mx-auto sm:max-w-none">
-                      <Button variant="secondary" onClick={stopCamera} className="flex-1 font-bold h-12 hidden sm:flex active:scale-95 transition-all">Cancel</Button>
-                      <Button onClick={capturePhoto} className="flex-1 h-12 font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all bg-primary text-white" disabled={!hasCameraPermission}>
-                          <Camera className="mr-2 h-5 w-5" /> Capture
+                  
+                  <div className="absolute bottom-8 left-0 right-0 flex justify-center px-8">
+                      <Button onClick={capturePhoto} className="h-16 w-full max-w-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40 rounded-2xl bg-primary text-white hover:scale-105 active:scale-95 transition-all">
+                          <Camera className="mr-3 h-6 w-6" /> Capture Node
                       </Button>
                   </div>
               </div>

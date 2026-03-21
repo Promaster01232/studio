@@ -15,115 +15,90 @@ import {
   HeartHandshake,
   Landmark,
   Gavel,
-  ShieldAlert
+  ShieldAlert,
+  ArrowRight,
+  Sparkles,
+  Zap
 } from "lucide-react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.2 });
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.5, delay }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{ 
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+        delay 
+      }}
     >
       {children}
     </motion.div>
   );
 };
 
-
 const aiFeatures = [
     {
       href: "/dashboard/strength-analyzer",
       icon: BrainCircuit,
       title: "Strength Analyzer",
-      description: "AI-powered case assessment.",
+      description: "Neural case assessment.",
+      color: "text-blue-500",
+      bg: "bg-blue-500/10"
     },
     {
       href: "/dashboard/document-intelligence",
       icon: FileSearch,
       title: "Doc Intelligence",
-      description: "AI document risk auditor.",
+      description: "Forensic risk auditor.",
+      color: "text-emerald-500",
+      bg: "bg-emerald-500/10"
     },
     {
       href: "/dashboard/document-generator",
       icon: FileText,
       title: "Doc Generator",
-      description: "Legal notice & complaint drafting.",
+      description: "Automated legal drafting.",
+      color: "text-amber-500",
+      bg: "bg-amber-500/10"
     },
     {
       href: "/dashboard/bond-generator",
       icon: FileSignature,
       title: "Bond Generator",
-      description: "Official legal bond creation.",
+      description: "Structural bond creation.",
+      color: "text-purple-500",
+      bg: "bg-purple-500/10"
     },
 ];
-
-const newsItems = [
-    {
-        id: 1,
-        title: "Supreme Court Upholds Environmental Regulations in Landmark Case",
-        icon: Landmark,
-    },
-     {
-        id: 2,
-        title: "High Court Issues New Guidelines for Digital Evidence",
-        icon: Gavel,
-    },
-    {
-        id: 3,
-        title: "Plea Challenging Sedition Law Admitted in Supreme Court",
-        icon: ShieldAlert,
-    }
-];
-
-const resources = [
-    {
-        href: "/dashboard/learn",
-        icon: Library,
-        title: "Knowledge Hub",
-        description: "Understand your citizen rights.",
-    },
-    {
-        href: "/dashboard/ngo-legal-aid",
-        icon: HeartHandshake,
-        title: "NGO & Legal Aid",
-        description: "Connect with free support.",
-    },
-    {
-        href: "/dashboard/police-guide",
-        icon: Library,
-        title: "Police Guides",
-        description: "Navigate official procedures.",
-    },
-];
-
 
 const SectionTitle = ({children}: {children: React.ReactNode}) => (
-    <h2 className="text-lg sm:text-xl md:text-2xl font-black tracking-tighter text-foreground/90">{children}</h2>
+    <div className="flex items-center gap-3 mb-6">
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/10 to-transparent"></div>
+        <h2 className="text-sm font-black uppercase tracking-[0.3em] text-muted-foreground/60">{children}</h2>
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/10 to-transparent"></div>
+    </div>
 )
-
 
 export default function DashboardHomePage() {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
-  const fullText = 'Welcome to Nyaya Sahayak';
+  const fullText = 'Institutional Hub';
   
-  const TypingCaret = () => <span className="ml-1 animate-pulse text-primary">|</span>;
-
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (isTyping) {
       if (text.length < fullText.length) {
-        timeoutId = setTimeout(() => {
-          setText(fullText.slice(0, text.length + 1));
-        }, 80);
+        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 80);
       } else {
-        timeoutId = setTimeout(() => setIsTyping(false), 1000);
+        timeoutId = setTimeout(() => setIsTyping(false), 2000);
       }
     } else {
       timeoutId = setTimeout(() => {
@@ -131,126 +106,124 @@ export default function DashboardHomePage() {
         setIsTyping(true);
       }, 3000);
     }
-    
     return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
 
-
   return (
-    <div className="flex flex-col h-full relative space-y-8 sm:space-y-12 pb-10">
+    <div className="flex flex-col h-full space-y-12 pb-20 max-w-7xl mx-auto px-2 sm:px-0">
         <MotionWrapper>
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div>
-                  <h1 className="text-xl sm:text-2xl md:text-4xl font-black font-headline tracking-tighter min-h-[2rem] sm:min-h-[3rem] flex items-center leading-none">
-                      {text}
-                      {isTyping && <TypingCaret />}
-                  </h1>
-                  <p className="text-xs sm:text-sm md:text-base text-muted-foreground mt-1 font-medium">Your AI-powered legal co-pilot.</p>
+          <div className="relative p-8 sm:p-12 rounded-[2rem] overflow-hidden bg-primary/5 border border-primary/10">
+              <div className="absolute top-0 right-0 p-12 opacity-[0.03]">
+                  <Landmark className="h-64 w-64" />
               </div>
-              <div className="flex items-center gap-2 w-full lg:w-auto">
-                   <Button size="sm" className="flex-1 lg:flex-none h-10 font-bold shadow-lg shadow-primary/20 text-xs rounded-xl" asChild><Link href="/dashboard/support">Ask AI</Link></Button>
+              <div className="relative z-10 space-y-4">
+                  <div className="flex items-center gap-2 text-primary">
+                      <Sparkles className="h-4 w-4 animate-pulse" />
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em]">Neural Terminal Active</span>
+                  </div>
+                  <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-none">
+                      Welcome to the <br />
+                      <span className="text-primary italic">{text}</span>
+                      <span className="animate-pulse ml-1 text-primary">|</span>
+                  </h1>
+                  <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-xl">
+                      Access high-fidelity legal intelligence and forensic tools designed for the modern judicial landscape.
+                  </p>
+                  <div className="flex gap-3 pt-4">
+                      <Button size="lg" className="rounded-2xl font-bold px-8 shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
+                          <Link href="/dashboard/narrate">Start Narration</Link>
+                      </Button>
+                      <Button variant="outline" size="lg" className="rounded-2xl font-bold px-8 border-primary/10 glass hover:bg-primary/5 active:scale-95 transition-all" asChild>
+                          <Link href="/dashboard/support">Support Hub</Link>
+                      </Button>
+                  </div>
               </div>
           </div>
         </MotionWrapper>
 
-        <div className="space-y-10 sm:space-y-16">
-          <div className="space-y-6">
+        <div className="space-y-16">
+          <section>
               <MotionWrapper delay={0.1}>
-                <SectionTitle>Quick Access</SectionTitle>
+                <SectionTitle>Primary Audit Nodes</SectionTitle>
               </MotionWrapper>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <MotionWrapper delay={0.2}>
-                    <Card className="hover:border-primary/50 transition-all active:scale-[0.98] border-primary/10 shadow-lg bg-card overflow-hidden">
-                        <CardContent className="p-4 sm:p-6">
-                            <Link href="/dashboard/narrate" className="flex items-center gap-4 group">
-                                <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
-                                    <Mic className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                    <Link href="/dashboard/narrate" className="block group">
+                        <Card className="h-full glass hover:border-primary/30 transition-all duration-500 overflow-hidden relative group">
+                            <CardContent className="p-8 flex items-center gap-6">
+                                <div className="p-4 rounded-2xl bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-500">
+                                    <Mic className="h-8 w-8" />
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <h3 className="font-black text-sm sm:text-lg tracking-tight truncate">Speak Your Problem</h3>
-                                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-1 font-medium">Narrate your issue for an AI summary.</p>
+                                <div className="space-y-1">
+                                    <h3 className="text-xl font-black tracking-tight">Narrate Case</h3>
+                                    <p className="text-xs text-muted-foreground font-medium">Neural transcription and forensic summary generation.</p>
                                 </div>
-                            </Link>
-                        </CardContent>
-                    </Card>
+                                <ArrowRight className="ml-auto h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
+                            </CardContent>
+                        </Card>
+                    </Link>
                   </MotionWrapper>
                   <MotionWrapper delay={0.3}>
-                      <Card className="hover:border-primary/50 transition-all active:scale-[0.98] border-primary/10 shadow-lg bg-card overflow-hidden">
-                        <CardContent className="p-4 sm:p-6">
-                            <Link href="/dashboard/support" className="flex items-center gap-4 group">
-                                <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
-                                    <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                    <Link href="/dashboard/document-intelligence" className="block group">
+                        <Card className="h-full glass hover:border-primary/30 transition-all duration-500 overflow-hidden relative group">
+                            <CardContent className="p-8 flex items-center gap-6">
+                                <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-500">
+                                    <FileSearch className="h-8 w-8" />
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <h3 className="font-black text-sm sm:text-lg tracking-tight truncate">AI Legal Chat</h3>
-                                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-1 font-medium">Get answers to legal questions.</p>
+                                <div className="space-y-1">
+                                    <h3 className="text-xl font-black tracking-tight">Document Scan</h3>
+                                    <p className="text-xs text-muted-foreground font-medium">Automated risk identification and clause analysis.</p>
                                 </div>
-                            </Link>
-                        </CardContent>
-                    </Card>
+                                <ArrowRight className="ml-auto h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
+                            </CardContent>
+                        </Card>
+                    </Link>
                   </MotionWrapper>
               </div>
-          </div>
-           <div className="space-y-6">
+          </section>
+
+          <section>
               <MotionWrapper delay={0.4}>
-                <SectionTitle>AI Toolkit</SectionTitle>
+                <SectionTitle>Neural AI Toolkit</SectionTitle>
               </MotionWrapper>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                   {aiFeatures.map((feature, index) => (
                     <MotionWrapper key={feature.href} delay={0.5 + index * 0.1}>
                       <Link href={feature.href} className="block group h-full">
-                          <Card className="h-full p-3 sm:p-4 flex flex-col items-start hover:border-primary/50 transition-all active:scale-[0.97] border-primary/5 shadow-md bg-card">
-                              <div className="p-2 rounded-lg bg-primary/10 mb-2 sm:mb-3 group-hover:bg-primary/20 transition-colors">
-                                <feature.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                          <Card className="h-full glass p-6 flex flex-col items-start hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 active:scale-[0.97]">
+                              <div className={cn("p-3 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-500", feature.bg, feature.color)}>
+                                <feature.icon className="h-5 w-5" />
                               </div>
-                              <h3 className="font-black text-[11px] sm:text-sm leading-tight tracking-tight">{feature.title}</h3>
-                              <p className="hidden md:block text-[10px] sm:text-xs text-muted-foreground mt-1.5 line-clamp-2 font-medium">{feature.description}</p>
+                              <h3 className="font-black text-sm tracking-tight">{feature.title}</h3>
+                              <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed font-medium">{feature.description}</p>
                           </Card>
                       </Link>
                     </MotionWrapper>
                   ))}
               </div>
-          </div>
+          </section>
 
-          <div className="space-y-6">
-            <MotionWrapper delay={0.6}>
-              <SectionTitle>Latest Legal News</SectionTitle>
-            </MotionWrapper>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {newsItems.map((item, index) => (
-                <MotionWrapper key={item.id} delay={0.7 + index * 0.1}>
-                  <Link href="/dashboard/research-analytics" className="block group">
-                    <Card className="overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 border-primary/5 bg-card">
-                      <div className="relative aspect-video bg-primary/5 flex items-center justify-center border-b border-primary/5">
-                        <item.icon className="h-12 w-12 text-primary opacity-40 transition-transform duration-500 group-hover:scale-110" />
-                      </div>
-                      <div className="p-4 flex-grow">
-                        <h3 className="font-bold text-sm leading-snug group-hover:text-primary transition-colors tracking-tight">{item.title}</h3>
-                      </div>
-                    </Card>
-                  </Link>
-                </MotionWrapper>
-              ))}
-            </div>
-          </div>
-          
-          <div className="space-y-6">
+          <section>
             <MotionWrapper delay={0.8}>
-              <SectionTitle>Explore Resources</SectionTitle>
+              <SectionTitle>Protocol Resources</SectionTitle>
             </MotionWrapper>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-              {resources.map((resource, index) => (
-                <MotionWrapper key={resource.href} delay={0.9 + index * 0.1}>
-                  <Link href={resource.href} className="block group h-full">
-                    <Card className="h-full hover:border-primary/50 transition-all active:scale-[0.98] border-primary/5 shadow-lg bg-card">
-                      <CardContent className="p-4 sm:p-6">
-                        <div className="flex flex-row md:flex-col items-center md:items-start gap-4">
-                          <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
-                            <resource.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", desc: "Constitutional and statutory guides." },
+                { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, title: "Legal Aid Hub", desc: "Connect with verified aid organizations." },
+                { href: "/dashboard/my-cases", icon: Landmark, title: "Case Registry", desc: "Secure tracking of personal litigations." },
+              ].map((item, index) => (
+                <MotionWrapper key={item.href} delay={0.9 + index * 0.1}>
+                  <Link href={item.href} className="block group">
+                    <Card className="glass group-hover:border-primary/30 transition-all duration-500">
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 rounded-xl bg-muted group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                            <item.icon className="h-5 w-5" />
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-black text-sm sm:text-lg tracking-tight truncate">{resource.title}</h3>
-                            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 line-clamp-1 md:line-clamp-none font-medium">{resource.description}</p>
+                          <div>
+                            <h3 className="font-bold text-sm tracking-tight">{item.title}</h3>
+                            <p className="text-[10px] text-muted-foreground font-medium">{item.desc}</p>
                           </div>
                         </div>
                       </CardContent>
@@ -259,8 +232,7 @@ export default function DashboardHomePage() {
                 </MotionWrapper>
               ))}
             </div>
-          </div>
-
+          </section>
         </div>
     </div>
   );
