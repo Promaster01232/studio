@@ -6,7 +6,6 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import {
   Mic,
-  MessageSquare,
   FileSearch,
   FileText,
   FileSignature,
@@ -15,12 +14,10 @@ import {
   HeartHandshake,
   Landmark,
   Gavel,
-  ShieldAlert,
   ArrowRight,
   Sparkles,
-  Zap
 } from "lucide-react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {

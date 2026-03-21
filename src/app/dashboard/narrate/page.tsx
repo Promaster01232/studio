@@ -4,7 +4,7 @@ import { useActionState, useState, useRef, useEffect, startTransition } from "re
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2, Languages, Headphones, FileSearch, Quote, Upload, Sparkles, Zap, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2, Languages, Headphones, FileSearch, Upload, Sparkles, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -374,7 +374,7 @@ export default function NarrateProblemPage() {
                     </AnimatePresence>
                 </CardContent>
             </Card>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

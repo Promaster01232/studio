@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, SunMoon, Languages, Loader2, User, Search, Bell, ShieldAlert, AlertTriangle, ShieldX, Command, Sparkles } from "lucide-react";
+import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Sparkles } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -30,14 +30,13 @@ import {
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/theme-provider";
-import { useLanguage, type Language } from "@/components/language-provider";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
 import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 function Header({ userProfile }: { userProfile: any }) {
     return (
@@ -180,7 +179,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </div>
                 <CardHeader className="text-center pt-8">
                     <div className="flex items-center justify-center gap-2 text-destructive mb-2">
-                        <AlertTriangle className="h-4 w-4" />
+                        <ShieldAlert className="h-4 w-4" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">Security Alert</span>
                     </div>
                     <CardTitle className="text-3xl font-black tracking-tighter text-destructive leading-none">
