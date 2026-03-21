@@ -311,7 +311,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             <div className="relative">
                                 <Loader2 className="h-12 w-12 animate-spin text-primary opacity-20" />
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <Logo className="h-6 w-6 opacity-40 animate-pulse" />
+                                    <Logo className="h-6 v-6 opacity-40 animate-pulse" />
                                 </div>
                             </div>
                         </div>
