@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -8,6 +7,8 @@ import { Mail, Lightbulb } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function ContactUsPage() {
+  const mailtoLink = "mailto:nyayasahayakhelp@gmail.com?subject=Feedback%20for%20Nyaya%20Sahayak&body=Hello%20Nyaya%20Sahayak%20Team%2C%0D%0A%0D%0AI%20would%20like%20to%20share%20the%20following%20feedback%20regarding%20the%20platform%3A%0D%0A%0D%0A%5BYour%20feedback%20here%5D%0D%0A%0D%0ABest%20regards%2C";
+
   return (
     <div className="space-y-8 sm:space-y-12 max-w-3xl mx-auto pb-16 pt-2 sm:pt-4 px-2 sm:px-0">
       <motion.div 
@@ -49,7 +50,7 @@ export default function ContactUsPage() {
                   For all inquiries, please email us at:
                 </p>
                 <a 
-                  href="mailto:nyayasahayakhelp@gmail.com" 
+                  href={mailtoLink} 
                   className="flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-2xl font-black text-primary hover:opacity-80 transition-opacity break-all px-2"
                 >
                   <Mail className="h-5 w-5 sm:h-7 sm:w-7 shrink-0" />
@@ -81,7 +82,7 @@ export default function ContactUsPage() {
               Designed & Developed by
             </p>
             <div className="flex items-center justify-center gap-2 transition-transform group-hover:scale-105 duration-300">
-                <Lightbulb className="h-6 w-6 sm:h-7 sm:w-7 text-primary fill-primary/10" />
+                <Linkbulb className="h-6 w-6 sm:h-7 sm:w-7 text-primary fill-primary/10" />
                 <h2 className="text-xl sm:text-2xl font-black font-headline text-primary tracking-tighter">
                     IdeaSpark
                 </h2>
