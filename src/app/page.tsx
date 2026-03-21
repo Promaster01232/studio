@@ -5,19 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { ArrowRight, Lightbulb, Loader2, ShieldCheck } from "lucide-react";
+import { ArrowRight, Lightbulb, Loader2 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { Footer } from "@/components/footer";
 
 export default function WelcomePage() {
   const auth = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -47,53 +44,23 @@ export default function WelcomePage() {
             </p>
 
             <div className="w-full space-y-6">
-              <div className="flex items-start space-x-3 text-left p-4 rounded-xl bg-primary/5 border border-primary/10 transition-all hover:bg-primary/10">
-                <Checkbox 
-                  id="terms" 
-                  checked={acceptedTerms} 
-                  onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
-                  className="mt-1 border-primary/30 data-[state=checked]:bg-primary"
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <Label
-                    htmlFor="terms"
-                    className="text-[11px] font-bold text-muted-foreground leading-snug cursor-pointer"
-                  >
-                    I acknowledge and accept the <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Protocol</Link>.
-                  </Label>
-                  <p className="text-[9px] text-muted-foreground/60 font-medium">
-                    By proceeding, you agree to our institutional usage protocols.
-                  </p>
-                </div>
-              </div>
-              
               <Button 
-                asChild={acceptedTerms && !loading} 
-                disabled={!acceptedTerms || loading}
+                asChild={!loading} 
+                disabled={loading}
                 size="lg" 
-                className={`group w-full h-12 font-bold shadow-xl transition-all duration-300 active:scale-95 rounded-xl ${
-                  acceptedTerms 
-                    ? 'shadow-primary/20 hover:shadow-primary/30 bg-primary text-white' 
-                    : 'bg-muted text-muted-foreground shadow-none opacity-50 cursor-not-allowed'
-                }`}
+                className="group w-full h-12 font-bold shadow-xl transition-all duration-300 active:scale-95 rounded-xl shadow-primary/20 hover:shadow-primary/30 bg-primary text-white"
               >
-                {acceptedTerms ? (
-                  <Link href={loading ? "#" : (user ? "/dashboard" : "/login")}>
-                    {loading ? (
-                      <span className="flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" /> Authenticating...
-                      </span>
-                    ) : (
-                      <>
-                        {user ? "Go to Dashboard" : "Get Started"} <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </>
-                    )}
-                  </Link>
-                ) : (
-                  <span className="flex items-center gap-2">
-                    <ShieldCheck className="h-4 w-4" /> Accept Terms to Proceed
-                  </span>
-                )}
+                <Link href={loading ? "#" : (user ? "/dashboard" : "/login")}>
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" /> Authenticating...
+                    </span>
+                  ) : (
+                    <>
+                      {user ? "Go to Dashboard" : "Get Started"} <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </>
+                  )}
+                </Link>
               </Button>
             </div>
 
