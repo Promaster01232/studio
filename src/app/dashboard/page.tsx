@@ -90,7 +90,7 @@ const SectionTitle = ({children}: {children: React.ReactNode}) => (
 export default function DashboardHomePage() {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
-  const fullText = 'Institutional Hub';
+  const fullText = 'Nyaya Sahayak';
   
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -122,7 +122,7 @@ export default function DashboardHomePage() {
                       <span className="text-[10px] font-black uppercase tracking-[0.3em]">Neural Terminal Active</span>
                   </div>
                   <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-none">
-                      Welcome to the <br />
+                      Welcome to <br />
                       <span className="text-primary italic">{text}</span>
                       <span className="animate-pulse ml-1 text-primary">|</span>
                   </h1>
