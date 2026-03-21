@@ -42,6 +42,7 @@ import { cn } from "@/lib/utils";
 import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 const languages: { code: Language, name: string }[] = [
     { code: "en", name: "English" },
@@ -66,9 +67,19 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start px-1 sm:px-0">
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
-                        <Button variant="outline" className="w-9 h-9 p-0 md:w-full md:max-w-xs md:px-3 md:justify-start gap-2 text-muted-foreground rounded-full md:rounded-lg">
-                            <Search className="h-4 w-4" />
-                            <span className="hidden md:inline font-bold text-[11px]">Search...</span>
+                        <div className="relative w-full max-w-sm hidden md:block group cursor-pointer">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                            <div className="pl-10 pr-16 h-10 flex items-center font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 transition-all shadow-sm">
+                                Search tools, cases, guides...
+                            </div>
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 shadow-sm">
+                                    <span className="text-xs">⌘</span>K
+                                </kbd>
+                            </div>
+                        </div>
+                        <Button variant="outline" size="icon" className="md:hidden h-10 w-10 rounded-full border-primary/5 bg-muted/40">
+                            <Search className="h-4 w-4 text-muted-foreground" />
                         </Button>
                     </SearchDialog>
                 )}
@@ -123,7 +134,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      // 1. Cleanup any existing profile listener immediately on auth change
       if (profileUnsubscribeRef.current) {
         profileUnsubscribeRef.current();
         profileUnsubscribeRef.current = null;
@@ -133,7 +143,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         setProfileLoading(true);
         const userDocRef = doc(firestore, "users", user.uid);
         
-        // Sync emailVerified status safely
         await updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(() => {});
 
         profileUnsubscribeRef.current = onSnapshot(userDocRef, (userDoc) => {
@@ -152,7 +161,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       } else {
         setProfileLoading(false);
         setUserProfile(null);
-        // Only redirect if we're not already on a public/auth page
         if (!['/login', '/register', '/'].includes(pathname)) {
             router.replace('/login');
         }
