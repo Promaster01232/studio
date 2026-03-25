@@ -222,7 +222,7 @@ export default function NarrateProblemPage() {
                 <CardContent className="p-8 sm:p-10 flex-1">
                     <AnimatePresence mode="wait">
                         {isLoading && (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-10">
+                            <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-10">
                                 <div className="relative">
                                     <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 6, ease: "linear" }} className="p-16 rounded-full border-4 border-dashed border-primary/20">
                                         <Bot className="h-20 w-20 text-primary opacity-20" />
@@ -239,7 +239,7 @@ export default function NarrateProblemPage() {
                         )}
                         
                         {state.status === 'idle' && (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
+                            <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
                                 <div className="p-10 rounded-[2.5rem] bg-muted/50 border-2 border-dashed border-primary/10">
                                     <Mic className="h-20 w-20 text-muted-foreground" />
                                 </div>
@@ -251,7 +251,7 @@ export default function NarrateProblemPage() {
                         )}
 
                         {state.status === "success" && state.data && (
-                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 pb-10">
+                            <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 pb-10">
                                 <div className="space-y-4">
                                     <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
                                         <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></div>

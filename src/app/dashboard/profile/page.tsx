@@ -54,7 +54,7 @@ const ADMIN_EMAILS = [
   'piyushkumrsingh23399@gmail.com'
 ];
 
-function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, photoURL: string }) {
+export function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, photoURL: string }) {
     if (!user) return null;
 
     const systemID = `NS-${user.uid.substring(0, 4).toUpperCase()}-${user.uid.substring(user.uid.length - 4).toUpperCase()}`;

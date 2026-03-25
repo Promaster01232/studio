@@ -57,6 +57,7 @@ import { Switch } from "@/components/ui/switch";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { Logo } from "@/components/logo";
 import { motion } from "framer-motion";
+import { DigitalIDCard } from "../profile/page";
 
 interface UserRecord {
   uid: string;
@@ -82,96 +83,6 @@ const ADMIN_EMAILS = [
   'piyushkumrsingh23399@gmail.com'
 ];
 
-function DigitalIDCard({ user }: { user: UserRecord }) {
-    const systemID = `NS-${user.uid.substring(0, 4).toUpperCase()}-${user.uid.substring(user.uid.length - 4).toUpperCase()}`;
-    const isVerified = user.emailVerified || user.securityStatus === 'verified';
-
-    return (
-        <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full aspect-[1.6/1] rounded-[2rem] overflow-hidden shadow-2xl group"
-        >
-            <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-[#0D1B2A] to-zinc-900"></div>
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
-            </div>
-            <div className="absolute top-0 right-0 p-4 opacity-5">
-                <Cpu className="h-40 w-40" />
-            </div>
-
-            <div className="relative h-full w-full p-6 flex flex-col justify-between text-white border border-white/10 rounded-[2rem]">
-                <div className="flex justify-between items-start">
-                    <div className="flex items-center gap-3">
-                        <div className="relative p-1 rounded-xl bg-gradient-to-tr from-primary via-accent to-blue-400 p-[1px]">
-                            <div className="bg-[#0D1B2A] rounded-xl p-1.5 backdrop-blur-md">
-                                <Logo className="h-6 w-6 border-none p-0 bg-transparent shadow-none" imageClassName="brightness-0 invert" />
-                            </div>
-                        </div>
-                        <div className="text-left">
-                            <h3 className="text-[11px] font-black tracking-[0.1em] uppercase bg-gradient-to-r from-white via-primary to-accent bg-clip-text text-transparent leading-none">
-                                Nyaya Sahayak
-                            </h3>
-                            <p className="text-[7px] font-black text-primary/60 uppercase tracking-[0.2em] mt-1">Official Registry Node</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-col items-end">
-                        <div className="p-1.5 bg-white rounded-lg shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-                            <QrCode className="h-10 w-10 text-black" />
-                        </div>
-                        <span className="text-[6px] font-mono text-white/20 mt-1">SECURE-BLOCK-ALPHA</span>
-                    </div>
-                </div>
-
-                <div className="flex gap-5 items-center">
-                    <div className="relative">
-                        <div className="absolute -inset-1.5 rounded-2xl bg-primary/20 animate-pulse"></div>
-                        <Avatar className="h-20 w-20 border-2 border-white/20 rounded-2xl shadow-xl relative z-10">
-                            <AvatarImage src={user.photoURL} className="object-cover" />
-                            <AvatarFallback className="font-black bg-primary/10 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        {isVerified && (
-                            <div className="absolute -bottom-1 -right-1 bg-primary text-white p-1 rounded-full border-2 border-[#0D1B2A] shadow-lg z-20">
-                                <ShieldCheck className="h-3 w-3" />
-                            </div>
-                        )}
-                    </div>
-                    
-                    <div className="flex-1 text-left min-w-0">
-                        <h2 className="text-xl font-black tracking-tight leading-tight truncate">
-                            {user.firstName} {user.lastName}
-                        </h2>
-                        <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="bg-white/5 border-white/10 text-[8px] font-black uppercase tracking-widest px-2 text-white/80 h-5">
-                                {user.userType}
-                            </Badge>
-                            <span className="text-[9px] font-black font-mono text-primary tracking-wider uppercase bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20">{systemID}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex justify-between items-end border-t border-white/5 pt-4">
-                    <div className="flex gap-4">
-                        <div className="space-y-0.5">
-                            <p className="text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Security Clearance</p>
-                            <div className="flex items-center gap-1">
-                                <div className={cn("h-1.5 w-1.5 rounded-full", isVerified ? "bg-green-500 animate-ping" : "bg-red-500")}></div>
-                                <p className={cn("text-[8px] font-bold uppercase tracking-widest", isVerified ? "text-green-500" : "text-red-500")}>
-                                    {isVerified ? "Authorized Node" : "Pending Audit"}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
-                        <Fingerprint className="h-3 w-3 text-primary animate-pulse" />
-                        <span className="text-[7px] font-black uppercase tracking-[0.2em]">Biometric Node</span>
-                    </div>
-                </div>
-            </div>
-        </motion.div>
-    );
-}
-
 function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React.ReactNode }) {
     return (
         <Dialog>
@@ -195,7 +106,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     
                     <div className="space-y-8">
                         <div className="px-2">
-                            <DigitalIDCard user={user} />
+                            <DigitalIDCard user={user as any} photoURL={user.photoURL || ""} />
                         </div>
 
                         <ScrollArea className="max-h-[40vh] px-4">
@@ -337,7 +248,7 @@ export default function ManagementConsolePage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 px-2 sm:px-6 pb-12">
+    <div className="max-w-7xl mx-auto space-y-8 px-2 sm:px-6 pb-12 text-left">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
           <h1 className="text-3xl font-black tracking-tighter font-headline text-foreground">Registry Management</h1>
@@ -372,7 +283,7 @@ export default function ManagementConsolePage() {
               </div>
           </CardHeader>
           <CardContent className="p-0">
-              <ScrollArea className="w-full">
+              <ScrollArea className="w-full text-left">
                   <Table className="min-w-[900px]">
                       <TableHeader className="bg-muted/20">
                           <TableRow>

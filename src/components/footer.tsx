@@ -12,7 +12,9 @@ export function Footer() {
               <div className="relative">
                   <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-primary/20 via-accent/20 to-blue-400/20 blur-lg animate-pulse group-hover:scale-125 transition-transform duration-700"></div>
                   <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
-                    <Logo className="h-10 w-10 shadow-2xl relative z-10 border-none bg-white rounded-full p-1.5" />
+                    <div className="bg-white rounded-full p-1.5 shadow-2xl relative z-10">
+                        <Logo className="h-10 w-10 border-none shadow-none p-0" />
+                    </div>
                   </div>
               </div>
               <div className="flex flex-col">

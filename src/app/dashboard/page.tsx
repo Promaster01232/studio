@@ -120,7 +120,7 @@ export default function DashboardHomePage() {
                   </div>
                   <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-none">
                       Welcome to <br />
-                      <span className="text-primary italic">{text}</span>
+                      <span className="bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">{text}</span>
                       <span className="animate-pulse ml-1 text-primary">|</span>
                   </h1>
                   <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-xl">
