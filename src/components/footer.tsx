@@ -1,3 +1,4 @@
+
 import { Logo } from "@/components/logo";
 import { ShieldCheck, FileText, Cookie, AlertCircle, Info, Mail } from "lucide-react";
 import Link from "next/link";

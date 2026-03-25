@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -62,7 +63,6 @@ function ProtocolRestorationDialog() {
             }
 
             const userDoc = querySnapshot.docs[0];
-            const userData = userDoc.data();
             const uid = userDoc.id;
             const expectedId = `NS-${uid.substring(0, 4).toUpperCase()}-${uid.substring(uid.length - 4).toUpperCase()}`;
 
@@ -72,8 +72,7 @@ function ProtocolRestorationDialog() {
                 return;
             }
 
-            // In a real production app, you would use Firebase Admin to change password.
-            // For this institutional prototype, we trigger the official reset and provide a "Protocol Link"
+            // Trigger official reset
             await sendPasswordResetEmail(auth, email);
             
             const mockToken = Math.random().toString(36).substring(2, 15);
@@ -104,7 +103,7 @@ function ProtocolRestorationDialog() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl bg-card">
                 <div className="p-8">
-                    <DialogHeader className="mb-6 border-none">
+                    <DialogHeader className="mb-6 border-none text-left">
                         <div className="flex items-center gap-2 text-primary mb-2">
                             <KeyRound className="h-4 w-4" />
                             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Protocol Restoration</span>
@@ -116,7 +115,7 @@ function ProtocolRestorationDialog() {
                     </DialogHeader>
 
                     {!generatedLink ? (
-                        <div className="space-y-4">
+                        <div className="space-y-4 text-left">
                             <div className="space-y-2">
                                 <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Registry Email</Label>
                                 <Input value={email} onChange={e => setEmail(e.target.value)} placeholder="m@example.com" className="h-11 font-bold" />
@@ -150,7 +149,7 @@ function ProtocolRestorationDialog() {
                                 </Button>
                             </div>
 
-                            <p className="text-[10px] font-bold text-primary animate-pulse">COPY LINK TO OPEN IN CHROME</p>
+                            <p className="text-[10px] font-bold text-primary animate-pulse uppercase">Copy link to open in chrome</p>
                         </motion.div>
                     )}
                 </div>

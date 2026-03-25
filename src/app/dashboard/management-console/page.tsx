@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -95,7 +96,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl bg-card">
                 <div className="p-6 sm:p-8">
-                    <DialogHeader className="mb-6 border-none">
+                    <DialogHeader className="mb-6 border-none text-left">
                         <div className="flex items-center gap-2 text-primary mb-2">
                             <ShieldCheck className="h-4 w-4" />
                             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Official Registry Preview</span>
@@ -110,7 +111,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                         </div>
 
                         <ScrollArea className="max-h-[40vh] px-4">
-                            <div className="space-y-6 pb-4">
+                            <div className="space-y-6 pb-4 text-left">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="p-4 rounded-2xl bg-muted/30 border border-primary/5 space-y-1">
                                         <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">

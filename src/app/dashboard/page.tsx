@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -79,7 +80,7 @@ const aiFeatures = [
 const SectionTitle = ({children}: {children: React.ReactNode}) => (
     <div className="flex items-center gap-3 mb-6">
         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/10 to-transparent"></div>
-        <h2 className="text-sm font-black uppercase tracking-[0.3em] text-muted-foreground/60">{children}</h2>
+        <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">{children}</h2>
         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/10 to-transparent"></div>
     </div>
 )
@@ -93,23 +94,23 @@ export default function DashboardHomePage() {
     let timeoutId: NodeJS.Timeout;
     if (isTyping) {
       if (text.length < fullText.length) {
-        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 80);
+        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 100);
       } else {
-        timeoutId = setTimeout(() => setIsTyping(false), 2000);
+        timeoutId = setTimeout(() => setIsTyping(false), 3000);
       }
     } else {
       timeoutId = setTimeout(() => {
         setText('');
         setIsTyping(true);
-      }, 3000);
+      }, 1000);
     }
     return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
 
   return (
-    <div className="flex flex-col h-full space-y-12 pb-20 max-w-7xl mx-auto px-2 sm:px-0">
+    <div className="flex flex-col h-full space-y-12 pb-20 max-w-7xl mx-auto px-2 sm:px-0 text-left">
         <MotionWrapper>
-          <div className="relative p-8 sm:p-12 rounded-[2rem] overflow-hidden bg-primary/5 border border-primary/10">
+          <div className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden bg-primary/5 border border-primary/10">
               <div className="absolute top-0 right-0 p-12 opacity-[0.03]">
                   <Landmark className="h-64 w-64" />
               </div>
@@ -126,7 +127,7 @@ export default function DashboardHomePage() {
                   <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-xl">
                       Access high-fidelity legal intelligence and forensic tools designed for the modern judicial landscape.
                   </p>
-                  <div className="flex gap-3 pt-4">
+                  <div className="flex flex-wrap gap-3 pt-4">
                       <Button size="lg" className="rounded-2xl font-bold px-8 shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
                           <Link href="/dashboard/narrate">Start Narration</Link>
                       </Button>
@@ -151,11 +152,11 @@ export default function DashboardHomePage() {
                                 <div className="p-4 rounded-2xl bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-500">
                                     <Mic className="h-8 w-8" />
                                 </div>
-                                <div className="space-y-1">
+                                <div className="space-y-1 flex-1">
                                     <h3 className="text-xl font-black tracking-tight">Narrate Case</h3>
-                                    <p className="text-xs text-muted-foreground font-medium">Neural transcription and forensic summary generation.</p>
+                                    <p className="text-[10px] text-muted-foreground font-medium">Neural transcription and forensic summary generation.</p>
                                 </div>
-                                <ArrowRight className="ml-auto h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
+                                <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
                             </CardContent>
                         </Card>
                     </Link>
@@ -167,11 +168,11 @@ export default function DashboardHomePage() {
                                 <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-500">
                                     <FileSearch className="h-8 w-8" />
                                 </div>
-                                <div className="space-y-1">
+                                <div className="space-y-1 flex-1">
                                     <h3 className="text-xl font-black tracking-tight">Document Scan</h3>
-                                    <p className="text-xs text-muted-foreground font-medium">Automated risk identification and clause analysis.</p>
+                                    <p className="text-[10px] text-muted-foreground font-medium">Automated risk identification and clause analysis.</p>
                                 </div>
-                                <ArrowRight className="ml-auto h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
+                                <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
                             </CardContent>
                         </Card>
                     </Link>
@@ -192,7 +193,7 @@ export default function DashboardHomePage() {
                                 <feature.icon className="h-5 w-5" />
                               </div>
                               <h3 className="font-black text-sm tracking-tight">{feature.title}</h3>
-                              <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed font-medium">{feature.description}</p>
+                              <p className="text-[9px] text-muted-foreground mt-2 leading-relaxed font-medium">{feature.description}</p>
                           </Card>
                       </Link>
                     </MotionWrapper>
@@ -218,7 +219,7 @@ export default function DashboardHomePage() {
                           <div className="p-3 rounded-xl bg-muted group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                             <item.icon className="h-5 w-5" />
                           </div>
-                          <div>
+                          <div className="text-left">
                             <h3 className="font-bold text-sm tracking-tight">{item.title}</h3>
                             <p className="text-[10px] text-muted-foreground font-medium">{item.desc}</p>
                           </div>

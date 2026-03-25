@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useState, useRef, useEffect, startTransition } from "react";
@@ -110,7 +111,7 @@ export default function NarrateProblemPage() {
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
         <PageHeader
             title="Neural Voice Narrator"
-            description="Institutional-grade audio analysis. Speak naturally to generate a comprehensive forensic legal report."
+            description="Speak naturally to generate a comprehensive forensic legal report."
         />
       </motion.div>
 
@@ -165,9 +166,9 @@ export default function NarrateProblemPage() {
                             {isRecording ? (
                                 <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1 }} className="h-10 w-10 bg-white rounded-xl shadow-lg" />
                             ) : (
-                                <Mic className="h-12 w-12" />
+                                <Mic className="h-12 w-12 text-white" />
                             )}
-                            <span className="text-[10px] font-black uppercase tracking-widest">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-white">
                                 {isRecording ? "Abort" : "Initialize"}
                             </span>
                         </Button>
@@ -251,7 +252,7 @@ export default function NarrateProblemPage() {
                         )}
 
                         {state.status === "success" && state.data && (
-                            <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 pb-10">
+                            <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 pb-10 text-left">
                                 <div className="space-y-4">
                                     <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
                                         <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></div>

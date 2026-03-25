@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -52,7 +53,7 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
-                        {/* FIX: DialogTrigger requires a single React element child */}
+                        {/* WRAPPER: Ensures ONE child element for DialogTrigger */}
                         <div className="w-full max-w-sm">
                             <div className="relative w-full hidden md:block group cursor-pointer active:scale-[0.99] transition-transform">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -189,7 +190,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         Your account has been deactivated by the system administrator. Node privileges and data access have been suspended.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6 pb-10 px-8">
+                <CardContent className="space-y-6 pb-10 px-8 text-center">
                     <div className="p-4 bg-muted/50 rounded-2xl flex items-start gap-3 border border-border">
                         <p className="text-[11px] font-medium text-left leading-relaxed text-muted-foreground italic">
                             Protocol: Contact <span className="font-bold text-primary">nyayasahayakhelp@gmail.com</span> for a formal restoration audit.
