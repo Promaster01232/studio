@@ -262,6 +262,20 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <DropdownMenuLabel className="px-2 pb-2">
                     <div className="flex items-center gap-2 text-primary mb-1">
                         <Sparkles className="h-3 w-3" />
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em]">Profile Node</span>
+                    </div>
+                </DropdownMenuLabel>
+                <DropdownMenuItem asChild className="rounded-xl h-10 font-bold text-xs gap-3 mb-1 cursor-pointer">
+                    <Link href="/dashboard/profile">
+                        <User className="h-4 w-4 opacity-40" /> My Registry Profile
+                    </Link>
+                </DropdownMenuItem>
+                
+                <DropdownMenuSeparator className="my-2 opacity-5" />
+                
+                <DropdownMenuLabel className="px-2 pb-2">
+                    <div className="flex items-center gap-2 text-primary mb-1">
+                        <Sparkles className="h-3 w-3" />
                         <span className="text-[9px] font-black uppercase tracking-[0.2em]">Appearance Node</span>
                     </div>
                 </DropdownMenuLabel>
