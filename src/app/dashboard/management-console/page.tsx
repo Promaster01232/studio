@@ -102,7 +102,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Official Registry Preview</span>
                         </div>
                         <DialogTitle className="sr-only">User Dossier: {user.firstName} {user.lastName}</DialogTitle>
-                        <DialogDescription className="sr-only">Detailed view of user identity card and forensic records.</DialogDescription>
+                        <DialogDescription className="sr-only">Detailed view of user identity card and forensic records on nyayasahayak.in.</DialogDescription>
                     </DialogHeader>
                     
                     <div className="space-y-8">
@@ -214,16 +214,17 @@ export default function ManagementConsolePage() {
     }
     
     setProcessingUid(user.uid);
-    updateDoc(doc(firestore, "users", user.uid), { isBlocked: isInactive })
+    const updateData = { isBlocked: isInactive };
+    updateDoc(doc(firestore, "users", user.uid), updateData)
         .then(() => {
-            update(ref(rtdb, `users/${user.uid}`), { isBlocked: isInactive }).catch(() => {});
+            update(ref(rtdb, `users/${user.uid}`), updateData).catch(() => {});
             toast({ title: isInactive ? "User Suspended" : "User Activated" });
         })
         .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
                 path: `/users/${user.uid}`,
                 operation: 'update',
-                requestResourceData: { isBlocked: isInactive },
+                requestResourceData: updateData,
             }, serverError);
             errorEmitter.emit('permission-error', permissionError);
         })
@@ -261,7 +262,7 @@ export default function ManagementConsolePage() {
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
           <h1 className="text-2xl sm:text-3xl font-black tracking-tighter font-headline text-foreground">Registry Management</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground font-medium">Institutional oversight of platform nodes and identity records.</p>
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium">Institutional oversight of nyayasahayak.in nodes and identity records.</p>
         </div>
         <div className="flex gap-2 sm:gap-3">
             <Button variant="outline" className="h-10 sm:h-11 px-4 sm:px-6 border-primary/10 rounded-xl font-bold bg-background text-[10px] sm:text-xs">

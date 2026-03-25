@@ -138,7 +138,7 @@ export function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, ph
                             <p className="text-[5px] sm:text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Security Clearance</p>
                             <div className="flex items-center gap-1">
                                 <div className={cn("h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full shadow-[0_0_8px_currentColor]", isVerified ? "bg-green-500 animate-ping" : "bg-red-500")}></div>
-                                <p className={cn("text-[7px] sm:text-[8px] font-bold uppercase tracking-widest", isVerified ? "text-green-500" : "text-red-500")}>
+                                <p className={cn("text-[7px] sm:text-[8px] font-bold uppercase tracking-widest", isVerified ? "text-green-600" : "text-red-500")}>
                                     {isVerified ? "Authorized Node" : "Pending Audit"}
                                 </p>
                             </div>
@@ -476,7 +476,7 @@ export default function ProfilePage() {
                             <Switch checked={theme === 'dark'} onCheckedChange={(c) => setTheme(c ? 'dark' : 'light')} />
                         </div>
                         <Button variant="outline" className="w-full h-12 justify-start font-bold border-primary/5 rounded-2xl hover:bg-primary/5 transition-all" asChild>
-                            <Link href="/privacy">
+                            <Link href="/dashboard/privacy">
                                 <KeyRound className="mr-3 h-4 w-4 opacity-40" />
                                 <span className="text-xs">Security Protocols</span>
                             </Link>

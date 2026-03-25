@@ -23,7 +23,7 @@ const termSections = [
   {
     title: "1. Acceptance of Protocol",
     icon: ShieldCheck,
-    content: "By accessing the Nyaya Sahayak digital node, you explicitly agree to be bound by these Terms of Service. If you do not accept every clause of this institutional agreement, you must immediately terminate your registry session and disconnect from all dashboard modules."
+    content: "By accessing the Nyaya Sahayak digital node at nyayasahayak.in, you explicitly agree to be bound by these Terms of Service. If you do not accept every clause of this institutional agreement, you must immediately terminate your registry session and disconnect from all dashboard modules."
   },
   {
     title: "2. The AI Intelligence Mandate",
@@ -33,32 +33,32 @@ const termSections = [
   {
     title: "3. Human Review Requirement",
     icon: Gavel,
-    content: "CRITICAL: Any legal document generated via our 'Drafting Node' (including Legal Notices, FIR Applications, or Bonds) must be reviewed, edited, and finalized by a qualified human advocate before service or filing in any judicial complex. Reliance on raw AI output for official filing is strictly prohibited."
+    content: "CRITICAL: Any legal document generated via nyayasahayak.in (including Legal Notices, FIR Applications, or Bonds) must be reviewed, edited, and finalized by a qualified human advocate before service or filing in any judicial complex. Reliance on raw AI output for official filing is strictly prohibited."
   },
   {
     title: "4. Registry Identity & Security",
     icon: Fingerprint,
-    content: "Users must provide 100% authentic data during the Citizen Registry enrollment. Submission of fraudulent Bar IDs, false contact details, or deceptive narrations will trigger an immediate and permanent Node Deactivation. You are solely responsible for maintaining the security of your authentication registry."
+    content: "Users must provide 100% authentic data during the Citizen Registry enrollment. Submission of fraudulent Bar IDs, false contact details, or deceptive narrations will trigger an immediate and permanent Node Deactivation on nyayasahayak.in. You are solely responsible for maintaining the security of your authentication registry."
   },
   {
     title: "5. Lawyer Connect Ecosystem",
     icon: Globe,
-    content: "The Advocate Registry is a directory of independent legal professionals. Nyaya Sahayak facilitates connection nodes but does not employ or endorse specific advocates. Any attorney-client relationship formed via this hub is strictly between the user and the professional; Nyaya Sahayak is not a party to such agreements."
+    content: "The Advocate Registry is a directory of independent legal professionals. Nyaya Sahayak facilitates connection nodes but does not employ or endorse specific advocates. Any attorney-client relationship formed via this hub is strictly between the user and the professional; nyayasahayak.in is not a party to such agreements."
   },
   {
     title: "6. Forensic Data Usage",
     icon: Lock,
-    content: "Your data is processed according to our Privacy Protocol. We utilize AES-256 encryption for data at rest. You maintain sovereign authority over your data nodes, including the right to trigger a 'Registry Purge' to permanently erase all associated case logs and document history."
+    content: "Your data is processed according to our Privacy Protocol. We utilize AES-256 encryption for data at rest. You maintain sovereign authority over your data nodes, including the right to trigger a 'Registry Purge' to permanently erase all associated case logs and document history from nyayasahayak.in."
   },
   {
     title: "7. Prohibited Node Activities",
     icon: Ban,
-    content: "Users are prohibited from: (a) Attempting to reverse-engineer AI logic; (b) Submitting malicious code to the registry; (c) Using the 'Narrate' tool to harass or defame individuals; (d) Automating data extraction from the eCourts search node via unauthorized bots."
+    content: "Users are prohibited from: (a) Attempting to reverse-engineer AI logic; (b) Submitting malicious code to the registry; (c) Using the 'Narrate' tool to harass or defame individuals; (d) Automating data extraction from the eCourts search node via unauthorized bots on nyayasahayak.in."
   },
   {
     title: "8. Limitation of Institutional Liability",
     icon: Scale,
-    content: "IdeaSpark and the Nyaya Sahayak institutional nodes are not liable for any direct or indirect damages resulting from the use of this platform. This includes, but is not limited to, legal outcomes, lost data, or errors in judicial procedure navigation provided by the AI assistant."
+    content: "IdeaSpark and the Nyaya Sahayak institutional nodes are not liable for any direct or indirect damages resulting from the use of this platform. This includes, but is not limited to, legal outcomes, lost data, or errors in judicial procedure navigation provided by the AI assistant at nyayasahayak.in."
   }
 ];
 
@@ -89,7 +89,7 @@ export default function TermsPage() {
       >
         <PageHeader
           title="Terms of Service"
-          description="Official institutional protocols governing the usage of Nyaya Sahayak digital nodes."
+          description="Official institutional protocols governing the usage of Nyaya Sahayak digital nodes on nyayasahayak.in."
         />
       </motion.div>
 
@@ -121,7 +121,7 @@ export default function TermsPage() {
             >
               <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 text-destructive shrink-0 mt-0.5" />
               <p className="text-[10px] sm:text-sm font-bold text-destructive/80 leading-relaxed">
-                NOTICE: Nyaya Sahayak is an AI-driven legal intelligence platform. It does NOT provide official legal advice. Every document generated here MUST be reviewed by a human professional.
+                NOTICE: Nyaya Sahayak is an AI-driven legal intelligence platform. It does NOT provide official legal advice. Every document generated on nyayasahayak.in MUST be reviewed by a human professional.
               </p>
             </motion.div>
 
@@ -149,7 +149,7 @@ export default function TermsPage() {
             <History className="h-3 w-3" /> Agreement Persistence: Active
           </div>
           <p className="text-[9px] sm:text-[10px] text-muted-foreground/60 font-medium max-w-2xl mx-auto leading-relaxed italic">
-            "By utilizing the Nyaya Sahayak dashboard, you confirm your understanding that judicial proceedings are inherently complex and that AI intelligence serves as a supplementary navigational node, not a final procedural authority."
+            "By utilizing the nyayasahayak.in dashboard, you confirm your understanding that judicial proceedings are inherently complex and that AI intelligence serves as a supplementary navigational node, not a final procedural authority."
           </p>
         </motion.div>
       </motion.div>

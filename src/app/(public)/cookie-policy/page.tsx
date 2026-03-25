@@ -19,7 +19,7 @@ import { motion } from "framer-motion";
 const cookieNodes = [
   {
     title: "Essential Registry Nodes",
-    desc: "Critical for the secure operation of the Nyaya Sahayak dashboard. These nodes manage your authentication state and ensure that your registry session remains active during navigation.",
+    desc: "Critical for the secure operation of the nyayasahayak.in dashboard. These nodes manage your authentication state and ensure that your registry session remains active during navigation.",
     icon: Lock,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
@@ -27,7 +27,7 @@ const cookieNodes = [
   },
   {
     title: "Forensic Performance Nodes",
-    desc: "Used strictly for internal system auditing. These allow us to monitor AI response times, detect dashboard latency, and optimize node processing speeds without identifying individuals.",
+    desc: "Used strictly for internal system auditing on nyayasahayak.in. These allow us to monitor AI response times, detect dashboard latency, and optimize node processing speeds without identifying individuals.",
     icon: Cpu,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
@@ -43,7 +43,7 @@ const cookieNodes = [
   },
   {
     title: "Security Validation Nodes",
-    desc: "Implemented to prevent unauthorized Cross-Site Request Forgery (CSRF). These nodes verify that actions within the dashboard are initiated strictly by the registered user.",
+    desc: "Implemented to prevent unauthorized Cross-Site Request Forgery (CSRF). These nodes verify that actions within the nyayasahayak.in dashboard are initiated strictly by the registered user.",
     icon: ShieldCheck,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
@@ -78,7 +78,7 @@ export default function CookiePolicyPage() {
       >
         <PageHeader
           title="Cookie Protocol"
-          description="Institutional transparency regarding localized data tracking and session memory nodes."
+          description="Institutional transparency regarding localized data tracking and session memory nodes on nyayasahayak.in."
         />
       </motion.div>
 
@@ -100,7 +100,7 @@ export default function CookiePolicyPage() {
                 Minimalist Tracking for <span className="text-primary italic">Maximum Integrity.</span>
               </h2>
               <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                Nyaya Sahayak utilizes minimalist cookie technology strictly to facilitate secure registry sessions and remember your localized dashboard preferences. We do <span className="text-foreground font-bold">NOT</span> utilize third-party advertising trackers or sell your behavioral data nodes.
+                Nyaya Sahayak utilizes minimalist cookie technology strictly to facilitate secure registry sessions and remember your localized dashboard preferences. We do <span className="text-foreground font-bold">NOT</span> utilize third-party advertising trackers or sell your behavioral data nodes on nyayasahayak.in.
               </p>
             </div>
           </CardContent>
@@ -144,12 +144,12 @@ export default function CookiePolicyPage() {
           </CardHeader>
           <CardContent className="p-6 sm:p-10 space-y-6 text-left">
             <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-              Users maintain sovereign authority over their browser's security settings. You may deactivate any non-essential cookie nodes via your browser's "Privacy & Security" console. 
+              Users of nyayasahayak.in maintain sovereign authority over their browser's security settings. You may deactivate any non-essential cookie nodes via your browser's "Privacy & Security" console. 
             </p>
             <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-4 flex gap-3 items-start">
               <Lock className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
               <p className="text-[10px] sm:text-xs font-bold text-destructive/80 leading-relaxed">
-                WARNING: Deactivating "Essential Registry Nodes" will terminate your secure session and may result in the deactivation of dashboard tools like document generation and case tracking.
+                WARNING: Deactivating "Essential Registry Nodes" will terminate your secure session on nyayasahayak.in and may result in the deactivation of dashboard tools like document generation and case tracking.
               </p>
             </div>
           </CardContent>

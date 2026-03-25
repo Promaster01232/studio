@@ -51,7 +51,6 @@ function ProtocolRestorationDialog() {
 
         setLoading(true);
         try {
-            // Validate user and system ID
             const usersRef = collection(firestore, "users");
             const q = query(usersRef, where("email", "==", email.toLowerCase()));
             const querySnapshot = await getDocs(q);
@@ -72,11 +71,10 @@ function ProtocolRestorationDialog() {
                 return;
             }
 
-            // Trigger official reset
             await sendPasswordResetEmail(auth, email);
             
             const mockToken = Math.random().toString(36).substring(2, 15);
-            const resetLink = `https://nyaya-sahayak.web.app/restore?node=${uid}&token=${mockToken}&verify=true`;
+            const resetLink = `https://nyayasahayak.in/restore?node=${uid}&token=${mockToken}&verify=true`;
             
             setGeneratedLink(resetLink);
             toast({ title: "Protocol Initiated", description: "Institutional reset link generated." });
@@ -110,7 +108,7 @@ function ProtocolRestorationDialog() {
                         </div>
                         <DialogTitle className="text-2xl font-black tracking-tighter">Registry Reset</DialogTitle>
                         <DialogDescription className="font-medium text-xs">
-                            Verify your identity nodes to generate an official restoration link.
+                            Verify your identity nodes on nyayasahayak.in to generate an official restoration link.
                         </DialogDescription>
                     </DialogHeader>
 
@@ -294,7 +292,7 @@ export default function LoginPage() {
         </motion.div>
         <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Welcome back</motion.h2>
         <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
-            Login to access your legal dashboard.
+            Login to access your nyayasahayak.in dashboard.
         </motion.p>
 
         <motion.div variants={itemVariants} className="grid gap-4">
@@ -364,7 +362,7 @@ export default function LoginPage() {
                             htmlFor="login-terms"
                             className="text-[10px] font-bold text-muted-foreground leading-snug cursor-pointer"
                         >
-                            I acknowledge the <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Protocol</Link>.
+                            I acknowledge the <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Protocol</Link> of nyayasahayak.in.
                         </Label>
                     </div>
                 </div>

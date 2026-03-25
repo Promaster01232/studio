@@ -22,7 +22,7 @@ import { motion } from "framer-motion";
 const policySections = [
   {
     title: "Data Collection Nodes",
-    desc: "We capture specific forensic inputs to fuel our AI nodes. This includes your voice narrations (processed as transient audio), legal documents (analyzed via secure OCR), and registry identity data (email and mobile number).",
+    desc: "At nyayasahayak.in, we capture specific forensic inputs to fuel our AI nodes. This includes your voice narrations (processed as transient audio), legal documents (analyzed via secure OCR), and registry identity data (email and mobile number).",
     icon: Database,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
@@ -38,7 +38,7 @@ const policySections = [
   },
   {
     title: "Encryption Standards",
-    desc: "All traffic is tunneled through TLS 1.3 protocol. Sensitive data nodes, including your personal 'My Cases' tracker, are encrypted at rest using industry-standard AES-256 algorithms within our institutional vault.",
+    desc: "All traffic on nyayasahayak.in is tunneled through TLS 1.3 protocol. Sensitive data nodes, including your personal 'My Cases' tracker, are encrypted at rest using industry-standard AES-256 algorithms within our institutional vault.",
     icon: Lock,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
@@ -54,7 +54,7 @@ const policySections = [
   },
   {
     title: "User Sovereignty",
-    desc: "You maintain absolute authority over your digital footprint. The 'Registry Purge' node in your profile settings allows for the instant, permanent deletion of all associated documents, summaries, and chat logs.",
+    desc: "You maintain absolute authority over your digital footprint. The 'Registry Purge' node in your profile settings allows for the instant, permanent deletion of all associated documents, summaries, and chat logs from our ecosystem.",
     icon: Key,
     color: "text-rose-500",
     bg: "bg-rose-500/10",
@@ -96,7 +96,7 @@ export default function PrivacyPage() {
       <motion.div variants={itemVariants}>
         <PageHeader
           title="Privacy Protocol"
-          description="Institutional commitment to data sovereignty, forensic security, and zero-trust architecture."
+          description="Institutional commitment to data sovereignty, forensic security, and zero-trust architecture at nyayasahayak.in."
         />
       </motion.div>
 
@@ -165,7 +165,7 @@ export default function PrivacyPage() {
             <Bell className="h-10 w-10 text-primary mb-4 animate-bounce" />
             <h3 className="font-black text-lg tracking-tight mb-2">Policy Updates</h3>
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-relaxed mb-4">
-              We notify all registry nodes 30 days prior to protocol amendments.
+              We notify all registry nodes 30 days prior to protocol amendments on nyayasahayak.in.
             </p>
             <div className="h-px w-12 bg-primary/20 mb-4" />
             <p className="text-xs font-black text-primary">nyayasahayakhelp@gmail.com</p>
@@ -182,7 +182,7 @@ export default function PrivacyPage() {
               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Compliance Mandate</h4>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-              This Privacy Protocol is engineered to comply with global digital safety standards and regional data protection acts (including the Digital Personal Data Protection Act, 2023). By utilizing Nyaya Sahayak nodes, you acknowledge and consent to the forensic processing logic described herein.
+              This Privacy Protocol is engineered to comply with global digital safety standards and regional data protection acts (including the Digital Personal Data Protection Act, 2023). By utilizing nyayasahayak.in nodes, you acknowledge and consent to the forensic processing logic described herein.
             </p>
           </div>
         </div>

@@ -111,7 +111,7 @@ export default function NarrateProblemPage() {
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
         <PageHeader
             title="Neural Voice Narrator"
-            description="Speak naturally to generate a comprehensive forensic legal report."
+            description="Speak naturally to generate a comprehensive forensic legal report on nyayasahayak.in."
         />
       </motion.div>
 

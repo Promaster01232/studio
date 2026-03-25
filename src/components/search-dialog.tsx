@@ -59,7 +59,7 @@ export function SearchDialog({ children }: { children: ReactNode }) {
       <DialogContent className="sm:max-w-2xl p-0 overflow-hidden border-none shadow-2xl rounded-2xl bg-card">
         <DialogHeader className="sr-only">
           <DialogTitle>Institutional Search Hub</DialogTitle>
-          <DialogDescription>Search for legal tools, resources, or tracked cases within the Nyaya Sahayak ecosystem.</DialogDescription>
+          <DialogDescription>Search for legal tools, resources, or tracked cases within the nyayasahayak.in ecosystem.</DialogDescription>
         </DialogHeader>
         
         <div className="flex items-center border-b p-4 gap-3 bg-muted/20">

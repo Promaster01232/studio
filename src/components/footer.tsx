@@ -23,7 +23,7 @@ export function Footer() {
                   Nyaya Sahayak
                 </span>
                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 leading-none mt-1 group-hover:text-primary transition-colors">
-                  Legal Forensic Terminal
+                  nyayasahayak.in
                 </span>
               </div>
             </Link>
