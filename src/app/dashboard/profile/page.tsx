@@ -89,12 +89,16 @@ function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, photoURL:
                 {/* Header */}
                 <div className="flex justify-between items-start">
                     <div className="flex items-center gap-3">
-                        <div className="p-1.5 bg-white/10 rounded-lg backdrop-blur-md border border-white/5">
-                            <Logo className="h-6 w-6" imageClassName="brightness-0 invert" />
+                        <div className="relative p-1 rounded-xl bg-gradient-to-tr from-primary via-accent to-blue-400 p-[1px]">
+                            <div className="bg-[#0D1B2A] rounded-xl p-1.5 backdrop-blur-md">
+                                <Logo className="h-6 w-6 border-none p-0 bg-transparent shadow-none" imageClassName="brightness-0 invert" />
+                            </div>
                         </div>
                         <div className="text-left">
-                            <h3 className="text-xs font-black tracking-[0.2em] uppercase text-primary leading-none">Nyaya Sahayak</h3>
-                            <p className="text-[8px] font-bold text-white/40 uppercase tracking-widest mt-1">Official Registry Node</p>
+                            <h3 className="text-[11px] font-black tracking-[0.1em] uppercase bg-gradient-to-r from-white via-primary to-accent bg-clip-text text-transparent leading-none">
+                                Nyaya Sahayak
+                            </h3>
+                            <p className="text-[7px] font-black text-primary/60 uppercase tracking-[0.2em] mt-1">Official Registry Node</p>
                         </div>
                     </div>
                     <div className="flex flex-col items-end">

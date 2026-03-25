@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Sparkles } from "lucide-react";
+import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Sparkles, Cpu } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -207,14 +207,19 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <SidebarProvider>
       <Sidebar collapsible="icon" className="border-r border-border glass bg-white/50 dark:bg-black/20">
         <SidebarHeader className="p-6 overflow-hidden">
-          <Link href="/dashboard" className="flex items-center gap-4 transition-all hover:scale-105 active:scale-95 group-data-[collapsible=icon]:justify-center">
+          <Link href="/dashboard" className="flex items-center gap-4 transition-all hover:scale-105 active:scale-95 group-data-[collapsible=icon]:justify-center group">
             <div className="relative">
-                <div className="absolute -inset-2 rounded-full bg-primary/10 animate-pulse group-data-[collapsible=icon]:hidden"></div>
-                <Logo className="h-10 w-10 shadow-lg relative z-10" />
+                <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-primary/20 via-accent/20 to-blue-400/20 blur-md animate-pulse group-data-[collapsible=icon]:hidden"></div>
+                <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
+                  <Logo className="h-10 w-10 shadow-lg relative z-10 border-none bg-white rounded-full p-1.5" />
+                </div>
             </div>
-            <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] truncate group-data-[collapsible=icon]:hidden">
-                Nyaya Sahayak
-            </span>
+            <div className="flex flex-col group-data-[collapsible=icon]:hidden">
+              <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] truncate">
+                  Nyaya Sahayak
+              </span>
+              <span className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 leading-none mt-0.5">Forensic Terminal</span>
+            </div>
           </Link>
         </SidebarHeader>
         <SidebarContent className="pt-2">
