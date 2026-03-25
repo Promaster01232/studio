@@ -10,7 +10,6 @@ import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, CheckCircle2, UserCheck, Fingerprint, Zap, QrCode, Cpu, MoreHorizontal, Sparkles } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { ref, set, update, remove } from 'firebase/database';
@@ -18,8 +17,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { signOut, deleteUser, sendEmailVerification } from 'firebase/auth';
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError } from '@/firebase/errors';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   AlertDialog, 
@@ -69,24 +66,16 @@ function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, photoURL:
             animate={{ opacity: 1, scale: 1 }}
             className="relative w-full max-w-md mx-auto aspect-[1.6/1] rounded-[2rem] overflow-hidden shadow-2xl group active:scale-[0.98] transition-transform cursor-pointer"
         >
-            {/* Holographic Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-[#0D1B2A] to-zinc-900 transition-all duration-700 group-hover:bg-primary/10"></div>
-            
-            {/* Forensic Overlay */}
             <div className="absolute inset-0 opacity-10 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
                 <div className="h-full w-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,100,255,0.1)_0%,transparent_100%)]"></div>
             </div>
-
-            {/* Circuit Lines Decorative */}
             <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
                 <Cpu className="h-40 w-40" />
             </div>
 
-            {/* ID Content */}
             <div className="relative h-full w-full p-6 flex flex-col justify-between text-white border border-white/10 rounded-[2rem]">
-                
-                {/* Header */}
                 <div className="flex justify-between items-start">
                     <div className="flex items-center gap-3">
                         <div className="relative p-1 rounded-xl bg-gradient-to-tr from-primary via-accent to-blue-400 p-[1px]">
@@ -109,7 +98,6 @@ function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, photoURL:
                     </div>
                 </div>
 
-                {/* Main Identity Area */}
                 <div className="flex gap-5 items-center">
                     <div className="relative">
                         <div className="absolute -inset-1.5 rounded-2xl bg-primary/20 animate-pulse group-hover:scale-110 transition-transform"></div>
@@ -142,7 +130,6 @@ function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, photoURL:
                     </div>
                 </div>
 
-                {/* Footer Security Features */}
                 <div className="flex justify-between items-end border-t border-white/5 pt-4">
                     <div className="flex gap-4">
                         <div className="space-y-0.5">
@@ -188,7 +175,6 @@ export default function ProfilePage() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
 
-  // Form state
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -245,19 +231,14 @@ export default function ProfilePage() {
   const handleVerifySelf = async () => {
     if (!userProfile || isVerifying) return;
     setIsVerifying(true);
-    toast({ title: "Forensic Registry Audit", description: "Verifying account registration patterns..." });
-
     try {
         const verification = await verifyEmailAuthenticity({ email: userProfile.email });
         if (verification.isAuthentic) {
             const userRef = doc(firestore, "users", userProfile.uid);
             await setDoc(userRef, { securityStatus: 'verified', flagReason: "", isBlocked: false }, { merge: true });
             setUserProfile(prev => prev ? { ...prev, securityStatus: 'verified' } : null);
-            toast({ title: "Audit Passed", description: `Forensic identity confirmed. Verified badge active.` });
+            toast({ title: "Audit Passed", description: `Forensic identity confirmed.` });
         } else {
-            const userRef = doc(firestore, "users", userProfile.uid);
-            await setDoc(userRef, { securityStatus: 'suspicious', flagReason: verification.reason || "AI detected suspicious identity patterns." }, { merge: true });
-            setUserProfile(prev => prev ? { ...prev, securityStatus: 'suspicious' } : null);
             toast({ variant: "destructive", title: "Security Flag Active", description: verification.reason || "Pattern mismatch detected." });
         }
     } catch (error) {
@@ -269,10 +250,9 @@ export default function ProfilePage() {
 
   const updateUserPhoto = (newPhotoURL: string) => {
       if (!auth.currentUser || !userProfile) return;
-      const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-      setDoc(userDocRef, { photoURL: newPhotoURL }, { merge: true })
+      setDoc(doc(firestore, "users", auth.currentUser.uid), { photoURL: newPhotoURL }, { merge: true })
         .then(() => {
-            toast({ title: "Node Image Updated", description: "Profile photo synchronized with registry." });
+            toast({ title: "Registry Updated", description: "Identity photo synchronized." });
             setUserProfile(prev => prev ? { ...prev, photoURL: newPhotoURL } : null);
         });
       update(ref(rtdb, `users/${auth.currentUser.uid}`), { photoURL: newPhotoURL }).catch(() => {});
@@ -361,7 +341,7 @@ export default function ProfilePage() {
       toast({ title: "Registry Purged", description: "All identity records have been permanently erased." });
       router.replace('/');
     } catch (error: any) {
-      toast({ variant: "destructive", title: "Purge Failed", description: "Recent authentication required for this protocol." });
+      toast({ variant: "destructive", title: "Purge Failed", description: "Recent authentication required." });
     } finally {
       if (auth.currentUser) setSaving(false);
     }
@@ -370,11 +350,7 @@ export default function ProfilePage() {
   if (loading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
   return (
-    <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0"
-    >
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0">
         <PageHeader
             title="Registry Dossier"
             description="Manage your secure identity nodes and institutional platform configurations."
@@ -382,8 +358,6 @@ export default function ProfilePage() {
 
         <div className="grid lg:grid-cols-12 gap-10 items-start">
             <div className="lg:col-span-4 space-y-6">
-                
-                {/* Digital ID Card Node */}
                 <div className="space-y-3">
                     <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1 flex items-center gap-2">
                         <ShieldCheck className="h-3 w-3 text-primary" /> Institutional Identity Card
@@ -394,9 +368,9 @@ export default function ProfilePage() {
                 <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
                     <div className="bg-primary/5 p-10 flex flex-col items-center text-center">
                         <div className="relative group mb-6">
-                            <div className="absolute -inset-4 rounded-[2rem] bg-primary/10 animate-pulse group-hover:scale-110 transition-transform duration-500"></div>
+                            <div className="absolute -inset-4 rounded-[2rem] bg-primary/10 animate-pulse"></div>
                             {photoURL ? (
-                                <Avatar className="h-32 w-32 border-4 border-background shadow-2xl rounded-[2rem] relative z-10 transition-all group-hover:rotate-2">
+                                <Avatar className="h-32 w-32 border-4 border-background shadow-2xl rounded-[2rem] relative z-10 transition-all">
                                     <AvatarImage src={photoURL} className="object-cover" />
                                 </Avatar>
                             ) : (
@@ -484,11 +458,11 @@ export default function ProfilePage() {
                                     <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4"><ShieldAlert className="h-10 w-10 text-destructive" /></div>
                                     <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Permanent Purge</AlertDialogTitle>
                                     <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
-                                        This protocol is irreversible. All forensic records, case narrations, and identity data will be permanently erased from the Nyaya Sahayak terminal.
+                                        This protocol is irreversible. All forensic records, case narrations, and identity data will be permanently erased.
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6">
-                                    <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1">Abort Protocol</AlertDialogCancel>
+                                    <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1">Abort</AlertDialogCancel>
                                     <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-xs">Execute Purge</AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
@@ -571,10 +545,6 @@ export default function ProfilePage() {
                                         {isResending ? <Loader2 className="mr-3 h-5 w-5 animate-spin" /> : <MailCheck className="mr-3 h-5 w-5" />}
                                         Dispatch Identity Link
                                     </Button>
-                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-amber-600/60 italic">
-                                        <div className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-ping"></div>
-                                        Awaiting Transmission
-                                    </div>
                                 </CardContent>
                             </Card>
                         </motion.div>
@@ -588,8 +558,6 @@ export default function ProfilePage() {
               <div className="relative h-full aspect-video sm:aspect-square group bg-zinc-900">
                   <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
                   <canvas ref={canvasRef} className="hidden" />
-                  
-                  {/* High-fidelity viewfinder overlay */}
                   <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
                       <div className="w-[80%] h-[80%] border-2 border-white/20 rounded-[3rem] relative">
                           <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-2xl"></div>
@@ -598,14 +566,11 @@ export default function ProfilePage() {
                           <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-2xl"></div>
                       </div>
                   </div>
-
                   <div className="absolute top-6 right-6">
                       <Button variant="ghost" size="icon" className="text-white bg-black/40 backdrop-blur-md rounded-xl h-12 w-12 hover:bg-white/20" onClick={stopCamera}>
                           <X className="h-6 w-6" />
                       </Button>
                   </div>
-                  
-                  {/* Capture Button Container */}
                   <div className="absolute bottom-8 left-0 right-0 flex justify-center px-8">
                       <Button onClick={capturePhoto} className="h-16 w-full max-w-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40 rounded-2xl bg-primary text-white hover:scale-105 active:scale-95 transition-all">
                           <Camera className="mr-3 h-6 w-6" /> Capture Node

@@ -7,7 +7,6 @@ export function Footer() {
     <footer className="w-full border-t border-primary/5 bg-card/20 backdrop-blur-xl mt-auto transition-all duration-500">
       <div className="max-w-7xl mx-auto px-6 py-6 lg:py-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center lg:items-start">
-          {/* Brand Hub */}
           <div className="lg:col-span-5 space-y-4 flex flex-col items-center lg:items-start text-center lg:text-left">
             <Link href="/" className="flex items-center gap-4 group cursor-pointer transition-transform active:scale-95">
               <div className="relative">
@@ -30,9 +29,7 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Nav Nodes Wrapper */}
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {/* Institutional Node */}
             <div className="space-y-4">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary border-b border-primary/10 pb-2 w-fit mx-auto sm:mx-0">
                 Institutional Nodes
@@ -53,7 +50,6 @@ export function Footer() {
               </div>
             </div>
 
-            {/* Protocol Node */}
             <div className="space-y-4">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary border-b border-primary/10 pb-2 w-fit mx-auto sm:mx-0">
                 Security Protocols

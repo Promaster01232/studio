@@ -30,7 +30,10 @@ import {
   UserMinus,
   RotateCcw,
   CheckCircle2,
-  Activity
+  Activity,
+  QrCode,
+  Fingerprint,
+  Cpu
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -52,6 +55,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
+import { Logo } from "@/components/logo";
+import { motion } from "framer-motion";
 
 interface UserRecord {
   uid: string;
@@ -77,6 +82,96 @@ const ADMIN_EMAILS = [
   'piyushkumrsingh23399@gmail.com'
 ];
 
+function DigitalIDCard({ user }: { user: UserRecord }) {
+    const systemID = `NS-${user.uid.substring(0, 4).toUpperCase()}-${user.uid.substring(user.uid.length - 4).toUpperCase()}`;
+    const isVerified = user.emailVerified || user.securityStatus === 'verified';
+
+    return (
+        <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full aspect-[1.6/1] rounded-[2rem] overflow-hidden shadow-2xl group"
+        >
+            <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-[#0D1B2A] to-zinc-900"></div>
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+            </div>
+            <div className="absolute top-0 right-0 p-4 opacity-5">
+                <Cpu className="h-40 w-40" />
+            </div>
+
+            <div className="relative h-full w-full p-6 flex flex-col justify-between text-white border border-white/10 rounded-[2rem]">
+                <div className="flex justify-between items-start">
+                    <div className="flex items-center gap-3">
+                        <div className="relative p-1 rounded-xl bg-gradient-to-tr from-primary via-accent to-blue-400 p-[1px]">
+                            <div className="bg-[#0D1B2A] rounded-xl p-1.5 backdrop-blur-md">
+                                <Logo className="h-6 w-6 border-none p-0 bg-transparent shadow-none" imageClassName="brightness-0 invert" />
+                            </div>
+                        </div>
+                        <div className="text-left">
+                            <h3 className="text-[11px] font-black tracking-[0.1em] uppercase bg-gradient-to-r from-white via-primary to-accent bg-clip-text text-transparent leading-none">
+                                Nyaya Sahayak
+                            </h3>
+                            <p className="text-[7px] font-black text-primary/60 uppercase tracking-[0.2em] mt-1">Official Registry Node</p>
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-end">
+                        <div className="p-1.5 bg-white rounded-lg shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                            <QrCode className="h-10 w-10 text-black" />
+                        </div>
+                        <span className="text-[6px] font-mono text-white/20 mt-1">SECURE-BLOCK-ALPHA</span>
+                    </div>
+                </div>
+
+                <div className="flex gap-5 items-center">
+                    <div className="relative">
+                        <div className="absolute -inset-1.5 rounded-2xl bg-primary/20 animate-pulse"></div>
+                        <Avatar className="h-20 w-20 border-2 border-white/20 rounded-2xl shadow-xl relative z-10">
+                            <AvatarImage src={user.photoURL} className="object-cover" />
+                            <AvatarFallback className="font-black bg-primary/10 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        {isVerified && (
+                            <div className="absolute -bottom-1 -right-1 bg-primary text-white p-1 rounded-full border-2 border-[#0D1B2A] shadow-lg z-20">
+                                <ShieldCheck className="h-3 w-3" />
+                            </div>
+                        )}
+                    </div>
+                    
+                    <div className="flex-1 text-left min-w-0">
+                        <h2 className="text-xl font-black tracking-tight leading-tight truncate">
+                            {user.firstName} {user.lastName}
+                        </h2>
+                        <div className="flex items-center gap-2 mt-1">
+                            <Badge variant="outline" className="bg-white/5 border-white/10 text-[8px] font-black uppercase tracking-widest px-2 text-white/80 h-5">
+                                {user.userType}
+                            </Badge>
+                            <span className="text-[9px] font-black font-mono text-primary tracking-wider uppercase bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20">{systemID}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex justify-between items-end border-t border-white/5 pt-4">
+                    <div className="flex gap-4">
+                        <div className="space-y-0.5">
+                            <p className="text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Security Clearance</p>
+                            <div className="flex items-center gap-1">
+                                <div className={cn("h-1.5 w-1.5 rounded-full", isVerified ? "bg-green-500 animate-ping" : "bg-red-500")}></div>
+                                <p className={cn("text-[8px] font-bold uppercase tracking-widest", isVerified ? "text-green-500" : "text-red-500")}>
+                                    {isVerified ? "Authorized Node" : "Pending Audit"}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                        <Fingerprint className="h-3 w-3 text-primary animate-pulse" />
+                        <span className="text-[7px] font-black uppercase tracking-[0.2em]">Biometric Node</span>
+                    </div>
+                </div>
+            </div>
+        </motion.div>
+    );
+}
+
 function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React.ReactNode }) {
     return (
         <Dialog>
@@ -87,81 +182,59 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     </button>
                 )}
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-2xl border-none shadow-2xl bg-card">
-                <div className="bg-primary/5 p-6 border-b">
-                    <DialogHeader className="border-none pb-0 mb-0 text-left">
-                        <div className="flex items-center gap-4">
-                            <Avatar className="h-12 w-12 sm:h-16 sm:w-16 border-2 border-background shadow-lg">
-                                <AvatarImage src={user.photoURL} className="object-cover" />
-                                <AvatarFallback className="font-bold text-lg bg-primary/10 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div className="min-w-0">
-                                <div className="flex items-center gap-2">
-                                    <DialogTitle className="text-lg sm:text-xl font-black tracking-tight truncate">{user.firstName} {user.lastName}</DialogTitle>
-                                    {user.emailVerified && <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />}
-                                </div>
-                                <DialogDescription className="text-[10px] sm:text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
-                                    <ShieldCheck className="h-3 w-3 text-primary" /> {user.userType} Account Dossier
-                                </DialogDescription>
-                            </div>
+            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl bg-card">
+                <div className="p-6 sm:p-8">
+                    <DialogHeader className="mb-6 border-none">
+                        <div className="flex items-center gap-2 text-primary mb-2">
+                            <ShieldCheck className="h-4 w-4" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Official Registry Preview</span>
                         </div>
+                        <DialogTitle className="sr-only">User Dossier: {user.firstName} {user.lastName}</DialogTitle>
+                        <DialogDescription className="sr-only">Detailed view of user identity card and forensic records.</DialogDescription>
                     </DialogHeader>
-                </div>
-                <ScrollArea className="max-h-[60vh] p-4 sm:p-6">
-                    <div className="space-y-6">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="p-4 rounded-xl bg-muted/30 border border-primary/5 space-y-1">
-                                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                                    <Mail className="h-3 w-3" /> Email Address
-                                </p>
-                                <p className="font-bold text-xs truncate">{user.email}</p>
-                            </div>
-                            <div className="p-4 rounded-xl bg-muted/30 border border-primary/5 space-y-1">
-                                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                                    <Phone className="h-3 w-3" /> Mobile Number
-                                </p>
-                                <p className="font-bold text-xs">{user.mobileNumber || "Not Provided"}</p>
-                            </div>
-                            <div className="p-4 rounded-xl bg-muted/30 border border-primary/5 space-y-1">
-                                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                                    <Calendar className="h-3 w-3" /> Registration Date
-                                </p>
-                                <p className="font-bold text-xs">
-                                    {user.createdAt ? (user.createdAt.toDate ? user.createdAt.toDate().toLocaleDateString() : new Date(user.createdAt).toLocaleDateString()) : "Legacy Record"}
-                                </p>
-                            </div>
-                            <div className="p-4 rounded-xl bg-muted/30 border border-primary/5 space-y-1">
-                                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                                    <ShieldHalf className="h-3 w-3" /> Verification Status
-                                </p>
-                                <div className="mt-0.5">
-                                    {user.emailVerified ? (
-                                        <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] font-black uppercase">Email Link Verified</Badge>
-                                    ) : (
-                                        <Badge variant="outline" className="text-red-500 border-red-200 text-[9px] font-black uppercase">Awaiting Email Check</Badge>
-                                    )}
-                                </div>
-                            </div>
+                    
+                    <div className="space-y-8">
+                        <div className="px-2">
+                            <DigitalIDCard user={user} />
                         </div>
 
-                        {user.flagReason && (
-                            <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/10 space-y-2">
-                                <div className="flex items-center gap-2 text-red-600">
-                                    <AlertTriangle className="h-4 w-4" />
-                                    <p className="text-[10px] font-black uppercase tracking-wider">AI Forensic Security Flag</p>
+                        <ScrollArea className="max-h-[40vh] px-4">
+                            <div className="space-y-6 pb-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="p-4 rounded-2xl bg-muted/30 border border-primary/5 space-y-1">
+                                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
+                                            <Mail className="h-3 w-3" /> Registry Email
+                                        </p>
+                                        <p className="font-bold text-xs truncate">{user.email}</p>
+                                    </div>
+                                    <div className="p-4 rounded-2xl bg-muted/30 border border-primary/5 space-y-1">
+                                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
+                                            <Phone className="h-3 w-3" /> Contact Node
+                                        </p>
+                                        <p className="font-bold text-xs">{user.mobileNumber || "Not Provided"}</p>
+                                    </div>
                                 </div>
-                                <p className="text-xs font-medium text-red-600 leading-relaxed italic">
-                                    "{user.flagReason}"
-                                </p>
+
+                                {user.flagReason && (
+                                    <div className="p-4 rounded-2xl bg-red-500/5 border border-red-500/10 space-y-2">
+                                        <div className="flex items-center gap-2 text-red-600">
+                                            <AlertTriangle className="h-4 w-4" />
+                                            <p className="text-[10px] font-black uppercase tracking-wider">Forensic Flag</p>
+                                        </div>
+                                        <p className="text-xs font-medium text-red-600 leading-relaxed italic">
+                                            "{user.flagReason}"
+                                        </p>
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </ScrollArea>
                     </div>
-                </ScrollArea>
-                <div className="p-4 sm:p-6 border-t flex flex-col sm:flex-row justify-end gap-3 bg-muted/10">
+                </div>
+                <div className="p-6 border-t flex justify-end gap-3 bg-muted/5">
                     <DialogTrigger asChild>
-                        <Button variant="outline" className="font-bold text-xs h-10 rounded-lg shadow-sm w-full sm:w-auto">Close Dossier</Button>
+                        <Button variant="outline" className="font-bold text-xs h-11 rounded-xl px-8">Close Dossier</Button>
                     </DialogTrigger>
-                    <Button className="font-bold text-xs h-10 rounded-lg shadow-lg shadow-primary/20 w-full sm:w-auto">Official Message</Button>
+                    <Button className="font-bold text-xs h-11 rounded-xl px-8 shadow-lg shadow-primary/20">Official Message</Button>
                 </div>
             </DialogContent>
         </Dialog>
@@ -194,12 +267,11 @@ export default function ManagementConsolePage() {
             return;
         }
 
-        const isSuperAdmin = ADMIN_EMAILS.includes(user.email?.toLowerCase() || '');
         const adminDoc = await getDoc(doc(firestore, "users", user.uid));
         const adminData = adminDoc.data() as any;
-        const hasAdminFlag = !!adminData?.isAdmin;
+        const isAuthorized = ADMIN_EMAILS.includes(user.email?.toLowerCase() || '') || !!adminData?.isAdmin;
 
-        if (!isSuperAdmin && !hasAdminFlag) {
+        if (!isAuthorized) {
             toast({ variant: "destructive", title: "Access Denied" });
             router.replace('/dashboard');
             return;
@@ -214,120 +286,45 @@ export default function ManagementConsolePage() {
                 return dateB - dateA;
             }));
             setLoading(false);
-        }, (serverError) => {
-            if (auth.currentUser) {
-                const permissionError = new FirestorePermissionError({
-                    path: usersCol.path,
-                    operation: 'list',
-                } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
-            }
-            setLoading(false);
-            setUsers([]);
         });
     });
 
     return () => {
         unsubAuth();
-        if (unsubscribeRef.current) {
-            unsubscribeRef.current();
-        }
+        if (unsubscribeRef.current) unsubscribeRef.current();
     };
   }, [firestore, auth, router, toast]);
 
   const handleToggleStatus = (user: UserRecord, isInactive: boolean) => {
     if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
-        toast({ variant: "destructive", title: "Root Account Locked", description: "Admin status cannot be modified." });
+        toast({ variant: "destructive", title: "Root Account Locked" });
         return;
     }
     
     setProcessingUid(user.uid);
-    const userRef = doc(firestore, "users", user.uid);
-    
-    updateDoc(userRef, { isBlocked: isInactive })
+    updateDoc(doc(firestore, "users", user.uid), { isBlocked: isInactive })
         .then(() => {
             update(ref(rtdb, `users/${user.uid}`), { isBlocked: isInactive }).catch(() => {});
-            toast({ 
-                title: isInactive ? "User Suspended" : "User Activated", 
-                description: `${user.firstName}'s account status has been updated.` 
-            });
+            toast({ title: isInactive ? "User Suspended" : "User Activated" });
         })
-        .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: userRef.path,
-                operation: 'update',
-                requestResourceData: { isBlocked: isInactive },
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
-        })
-        .finally(() => {
-            setProcessingUid(null);
-        });
+        .finally(() => setProcessingUid(null));
   };
 
   const handleVerifyUser = async (user: UserRecord) => {
       setProcessingUid(user.uid);
-      toast({ title: "AI Forensic Analysis", description: "Verifying identity authenticity..." });
-
       try {
-          const verification = await verifyEmailAuthenticity({
-              email: user.email
-          });
-
-          const userRef = doc(firestore, "users", user.uid);
+          const verification = await verifyEmailAuthenticity({ email: user.email });
           const updateData = verification.isAuthentic 
             ? { securityStatus: 'verified', flagReason: "", isBlocked: false } 
-            : { securityStatus: 'suspicious', flagReason: verification.reason || "AI detected suspicious identity patterns." };
+            : { securityStatus: 'suspicious', flagReason: verification.reason || "Suspicious identity patterns." };
 
-          updateDoc(userRef, updateData as any)
-            .then(() => {
-                if (verification.isAuthentic) {
-                    toast({ title: "User AI Authenticated" });
-                } else {
-                    toast({ variant: "destructive", title: "Forensic Audit Failed" });
-                }
-            })
-            .catch(async (serverError) => {
-                const permissionError = new FirestorePermissionError({
-                    path: userRef.path,
-                    operation: 'update',
-                    requestResourceData: updateData,
-                } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
-            });
-      } catch (error: any) {
+          await updateDoc(doc(firestore, "users", user.uid), updateData as any);
+          toast({ title: verification.isAuthentic ? "User Authenticated" : "Forensic Audit Failed" });
+      } catch (error) {
           toast({ variant: "destructive", title: "Process Error" });
       } finally {
           setProcessingUid(null);
       }
-  };
-
-  const handleDeleteUser = (user: UserRecord) => {
-    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
-        toast({ variant: "destructive", title: "Root Account Immutable" });
-        return;
-    }
-    
-    if (!window.confirm(`PERMANENT DELETION: Are you sure you want to completely erase all data for ${user.firstName} ${user.lastName}? This action is irreversible.`)) return;
-
-    setProcessingUid(user.uid);
-    const userRef = doc(firestore, "users", user.uid);
-    
-    deleteDoc(userRef)
-        .then(() => {
-            remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
-            toast({ title: "Account Purged", description: "All associated records have been wiped." });
-        })
-        .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: userRef.path,
-                operation: 'delete',
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
-        })
-        .finally(() => {
-            setProcessingUid(null);
-        });
   };
 
   const filteredUsers = users.filter(u => 
@@ -335,100 +332,39 @@ export default function ManagementConsolePage() {
     u.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const stats = {
-      total: users.length,
-      active: users.filter(u => u.isBlocked === false).length,
-      blocked: users.filter(u => u.isBlocked === true).length,
-      aiVerified: users.filter(u => u.securityStatus === 'verified').length,
-  };
-
   if (loading) {
     return <div className="flex h-[70vh] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 px-2 sm:px-6 lg:px-8 pb-12">
+    <div className="max-w-7xl mx-auto space-y-8 px-2 sm:px-6 pb-12">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-headline text-foreground">Registry Management</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground font-medium">Comprehensive control over user access and forensic security.</p>
+          <h1 className="text-3xl font-black tracking-tighter font-headline text-foreground">Registry Management</h1>
+          <p className="text-sm text-muted-foreground font-medium">Institutional oversight of platform nodes and identity records.</p>
         </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
-            <Button variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-background active:scale-95 transition-all">
-                <Sparkles className="mr-2 h-4 w-4 text-primary" />
-                <span className="text-[10px] uppercase tracking-wider">Registry Audit</span>
+        <div className="flex gap-3">
+            <Button variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-background">
+                <Sparkles className="mr-2 h-4 w-4 text-primary" /> Registry Audit
             </Button>
-            <Button className="bg-primary text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all">
-                <UserPlus className="mr-2 h-4 w-4" />
-                <span className="text-[10px] uppercase tracking-wider">Manual Entry</span>
+            <Button className="bg-primary text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-primary/20">
+                <UserPlus className="mr-2 h-4 w-4" /> Manual Entry
             </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <Card className="border-primary/5 shadow-sm bg-muted/10 rounded-2xl">
-              <CardHeader className="p-3 sm:p-4 pb-1 text-left">
-                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Registry</CardDescription>
-                  <CardTitle className="text-xl sm:text-2xl font-black">{stats.total}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-3 sm:p-4 pt-0 text-left">
-                  <div className="flex items-center gap-1.5 text-primary">
-                      <Users className="h-3 w-3" />
-                      <span className="text-[8px] sm:text-[9px] font-bold">Platform Nodes</span>
-                  </div>
-              </CardContent>
-          </Card>
-          <Card className="border-primary/5 shadow-sm bg-blue-500/5 rounded-2xl">
-              <CardHeader className="p-3 sm:p-4 pb-1 text-left">
-                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-blue-600">AI Authenticated</CardDescription>
-                  <CardTitle className="text-xl sm:text-2xl font-black text-blue-600">{stats.aiVerified}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-3 sm:p-4 pt-0 text-left">
-                  <div className="flex items-center gap-1.5 text-blue-600">
-                      <ShieldCheck className="h-3 w-3" />
-                      <span className="text-[8px] sm:text-[9px] font-bold">Forensic Approved</span>
-                  </div>
-              </CardContent>
-          </Card>
-          <Card className="border-primary/5 shadow-sm bg-red-500/5 rounded-2xl">
-              <CardHeader className="p-3 sm:p-4 pb-1 text-left">
-                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-red-600">Suspended</CardDescription>
-                  <CardTitle className="text-xl sm:text-2xl font-black text-red-600">{stats.blocked}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-3 sm:p-4 pt-0 text-left">
-                  <div className="flex items-center gap-1.5 text-red-600">
-                      <UserMinus className="h-3 w-3" />
-                      <span className="text-[8px] sm:text-[9px] font-bold">Access Revoked</span>
-                  </div>
-              </CardContent>
-          </Card>
-          <Card className="border-primary/5 shadow-sm bg-green-500/5 rounded-2xl">
-              <CardHeader className="p-3 sm:p-4 pb-1 text-left">
-                  <CardDescription className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-green-600">Active Citizens</CardDescription>
-                  <CardTitle className="text-xl sm:text-2xl font-black text-green-600">{stats.active}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-3 sm:p-4 pt-0 text-left">
-                  <div className="flex items-center gap-1.5 text-green-600">
-                      <Activity className="h-3 w-3 animate-pulse" />
-                      <span className="text-[8px] sm:text-[9px] font-bold">Live Nodes</span>
-                  </div>
-              </CardContent>
-          </Card>
-      </div>
-
-      <Card className="border border-primary/5 shadow-xl rounded-2xl overflow-hidden bg-card">
-          <CardHeader className="bg-muted/5 border-b border-primary/5 px-4 sm:px-6 py-6">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                  <div className="text-left">
-                      <CardTitle className="font-headline font-black text-xl tracking-tight leading-none">Identity Registry</CardTitle>
-                      <CardDescription className="text-[10px] sm:text-xs font-medium mt-1.5">Forensic security and account status oversight.</CardDescription>
+      <Card className="border border-primary/5 shadow-xl rounded-[2rem] overflow-hidden bg-card">
+          <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                  <div className="text-left w-full">
+                      <CardTitle className="font-headline font-black text-xl tracking-tight">Identity Registry</CardTitle>
+                      <CardDescription className="text-xs font-medium mt-1">Forensic security and account status oversight.</CardDescription>
                   </div>
                   <div className="relative group w-full md:w-80">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                       <Input 
                           placeholder="Filter name or email..." 
-                          className="pl-9 h-11 w-full bg-background border-primary/10 rounded-xl text-xs font-bold focus:border-primary transition-all" 
+                          className="pl-9 h-11 w-full bg-background border-primary/10 rounded-xl text-xs font-bold" 
                           value={searchQuery}
                           onChange={(e) => setSearchSearchQuery(e.target.value)}
                       />
@@ -442,18 +378,15 @@ export default function ManagementConsolePage() {
                           <TableRow>
                               <TableHead className="font-black text-[10px] uppercase tracking-widest pl-6 h-12">User Identity</TableHead>
                               <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Role</TableHead>
-                              <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Account Status</TableHead>
+                              <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Status</TableHead>
                               <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Verification</TableHead>
                               <TableHead className="font-black text-[10px] uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
                           </TableRow>
                       </TableHeader>
                       <TableBody>
-                          {filteredUsers.length > 0 ? filteredUsers.map((user) => {
+                          {filteredUsers.map((user) => {
                               const isRoot = ADMIN_EMAILS.includes(user.email.toLowerCase());
-                              const isProcessing = processingUid === user.uid;
-                              const isAiVerified = user.securityStatus === 'verified';
                               const isActive = user.isBlocked === false || user.isBlocked === undefined;
-                              
                               return (
                                 <TableRow key={user.uid} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", !isActive && "bg-red-500/5")}>
                                     <TableCell className="pl-6 py-4">
@@ -462,60 +395,36 @@ export default function ManagementConsolePage() {
                                                 <AvatarImage src={user.photoURL} className="object-cover" />
                                                 <AvatarFallback className="font-bold text-primary bg-primary/5">{user.firstName.charAt(0)}</AvatarFallback>
                                             </Avatar>
-                                            <div className="flex flex-col min-w-0 text-left">
-                                                <span className="font-bold text-sm tracking-tight truncate">{user.firstName} {user.lastName}</span>
-                                                <span className="text-[10px] text-muted-foreground font-medium truncate">{user.email}</span>
+                                            <div className="flex flex-col text-left">
+                                                <span className="font-bold text-sm tracking-tight">{user.firstName} {user.lastName}</span>
+                                                <span className="text-[10px] text-muted-foreground font-medium">{user.email}</span>
                                             </div>
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <Badge variant="outline" className="font-black text-[8px] uppercase tracking-wider h-5 rounded-md px-2 border-primary/20 text-primary">{user.userType}</Badge>
+                                        <Badge variant="outline" className="font-black text-[8px] uppercase border-primary/20 text-primary">{user.userType}</Badge>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <div className="flex flex-col items-center gap-1.5">
-                                            <div className="flex items-center gap-2">
-                                                <div className="flex flex-col items-center">
-                                                    <span className={cn("text-[9px] font-black uppercase tracking-tight", !isActive ? "text-red-500" : "text-green-600")}>
-                                                        {!isActive ? "Suspended" : "Active"}
-                                                    </span>
-                                                    {isActive && <div className="h-1 w-1 bg-green-500 rounded-full animate-ping mt-0.5" />}
-                                                </div>
-                                                <Switch 
-                                                    checked={isActive} 
-                                                    onCheckedChange={(checked) => handleToggleStatus(user, !checked)}
-                                                    disabled={isProcessing || isRoot}
-                                                    className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
-                                                />
-                                            </div>
-                                            {isProcessing && <Loader2 className="h-2 w-2 animate-spin text-primary" />}
+                                        <div className="flex items-center justify-center gap-2">
+                                            <span className={cn("text-[9px] font-black uppercase", isActive ? "text-green-600" : "text-red-500")}>
+                                                {isActive ? "Active" : "Suspended"}
+                                            </span>
+                                            <Switch 
+                                                checked={isActive} 
+                                                onCheckedChange={(checked) => handleToggleStatus(user, !checked)}
+                                                disabled={isRoot || processingUid === user.uid}
+                                                className="data-[state=checked]:bg-green-500"
+                                            />
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        <div className="flex flex-col items-center gap-1.5">
-                                            {isAiVerified && (
-                                                <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 border-blue-500/20 text-[8px] font-black uppercase flex items-center gap-1">
-                                                    <ShieldCheck className="h-2.5 w-2.5" /> AI Authenticated
-                                                </Badge>
-                                            )}
-                                            {user.emailVerified ? (
-                                                <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[8px] font-black uppercase flex items-center gap-1">
-                                                    <CheckCircle2 className="h-2.5 w-2.5" /> Identity Verified
-                                                </Badge>
+                                        <div className="flex flex-col items-center gap-1">
+                                            {user.securityStatus === 'verified' ? (
+                                                <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20 text-[8px] font-black uppercase">AI Verified</Badge>
                                             ) : (
-                                                <div className="flex flex-col items-center gap-1.5 mt-1">
-                                                    <span className="text-[8px] font-black uppercase text-red-500 tracking-tight animate-pulse">Link Pending</span>
-                                                    {!isRoot && !isAiVerified && (
-                                                        <Button 
-                                                            size="sm" 
-                                                            variant="ghost" 
-                                                            className="h-6 px-3 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full hover:bg-primary hover:text-white transition-all"
-                                                            onClick={() => handleVerifyUser(user)}
-                                                            disabled={isProcessing}
-                                                        >
-                                                            {isProcessing ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : "Verify Identity"}
-                                                        </Button>
-                                                    )}
-                                                </div>
+                                                <Button size="sm" variant="ghost" className="h-6 px-2 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full" onClick={() => handleVerifyUser(user)} disabled={processingUid === user.uid}>
+                                                    Verify Node
+                                                </Button>
                                             )}
                                         </div>
                                     </TableCell>
@@ -524,36 +433,20 @@ export default function ManagementConsolePage() {
                                             <UserDetailsModal user={user} />
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-muted transition-all">
+                                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-muted">
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl border border-primary/5 bg-card">
-                                                    <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pb-2">Administrative Tools</DropdownMenuLabel>
+                                                <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl">
                                                     <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
-                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><RotateCcw className="mr-3 h-4 w-4" /> Reset Workspace</DropdownMenuItem>
-                                                    {!isRoot && (
-                                                        <>
-                                                            <DropdownMenuSeparator className="my-2" />
-                                                            <DropdownMenuItem 
-                                                                onClick={() => handleDeleteUser(user)}
-                                                                className="rounded-lg font-bold text-xs h-10 px-3 text-red-600 focus:text-red-600 focus:bg-red-500/10 cursor-pointer"
-                                                            >
-                                                                <Trash2 className="mr-3 h-4 w-4" /> Delete Account
-                                                            </DropdownMenuItem>
-                                                        </>
-                                                    )}
+                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><RotateCcw className="mr-3 h-4 w-4" /> Reset Node</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </div>
                                     </TableCell>
                                 </TableRow>
                               );
-                          }) : (
-                              <TableRow>
-                                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground font-bold">No identity records matched your search query.</TableCell>
-                              </TableRow>
-                          )}
+                          })}
                       </TableBody>
                   </Table>
                   <ScrollBar orientation="horizontal" />
