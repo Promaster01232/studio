@@ -56,7 +56,6 @@ export function SearchDialog({ children }: { children: ReactNode }) {
         {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-2xl p-0 overflow-hidden border-none shadow-2xl rounded-2xl bg-card">
-        {/* Visually hidden header for accessibility compliance */}
         <DialogHeader className="sr-only">
           <DialogTitle>Institutional Search Hub</DialogTitle>
           <DialogDescription>Search for legal tools, resources, or tracked cases within the Nyaya Sahayak ecosystem.</DialogDescription>

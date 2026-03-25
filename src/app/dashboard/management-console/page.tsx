@@ -350,7 +350,7 @@ export default function ManagementConsolePage() {
     <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 px-2 sm:px-6 lg:px-8 pb-12">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-headline text-foreground">System Registry Console</h1>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-headline text-foreground">Registry Management</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-medium">Comprehensive control over user access and forensic security.</p>
         </div>
         
