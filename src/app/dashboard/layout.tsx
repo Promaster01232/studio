@@ -54,8 +54,8 @@ function Header({ userProfile }: { userProfile: any }) {
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
                         {/* WRAPPER: Ensures ONE child element for DialogTrigger */}
-                        <div className="w-full max-w-sm">
-                            <div className="relative w-full hidden md:block group cursor-pointer active:scale-[0.99] transition-transform">
+                        <div className="w-full max-w-sm cursor-pointer">
+                            <div className="relative w-full hidden md:block group active:scale-[0.99] transition-transform">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                                 <div className="pl-10 pr-16 h-10 flex items-center font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm">
                                     Search tools, cases, guides...

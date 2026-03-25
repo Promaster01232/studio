@@ -94,7 +94,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     </button>
                 )}
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl bg-card">
+            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border-none shadow-2xl bg-card">
                 <div className="p-6 sm:p-8">
                     <DialogHeader className="mb-6 border-none text-left">
                         <div className="flex items-center gap-2 text-primary mb-2">
@@ -219,6 +219,14 @@ export default function ManagementConsolePage() {
             update(ref(rtdb, `users/${user.uid}`), { isBlocked: isInactive }).catch(() => {});
             toast({ title: isInactive ? "User Suspended" : "User Activated" });
         })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: `/users/${user.uid}`,
+                operation: 'update',
+                requestResourceData: { isBlocked: isInactive },
+            }, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        })
         .finally(() => setProcessingUid(null));
   };
 
@@ -252,31 +260,31 @@ export default function ManagementConsolePage() {
     <div className="max-w-7xl mx-auto space-y-8 px-2 sm:px-6 pb-12 text-left">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
-          <h1 className="text-3xl font-black tracking-tighter font-headline text-foreground">Registry Management</h1>
-          <p className="text-sm text-muted-foreground font-medium">Institutional oversight of platform nodes and identity records.</p>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tighter font-headline text-foreground">Registry Management</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium">Institutional oversight of platform nodes and identity records.</p>
         </div>
-        <div className="flex gap-3">
-            <Button variant="outline" className="h-11 px-6 border-primary/10 rounded-xl font-bold bg-background">
-                <Sparkles className="mr-2 h-4 w-4 text-primary" /> Registry Audit
+        <div className="flex gap-2 sm:gap-3">
+            <Button variant="outline" className="h-10 sm:h-11 px-4 sm:px-6 border-primary/10 rounded-xl font-bold bg-background text-[10px] sm:text-xs">
+                <Sparkles className="mr-2 h-3 w-3 sm:h-4 sm:w-4 text-primary" /> Registry Audit
             </Button>
-            <Button className="bg-primary text-white h-11 px-6 rounded-xl font-bold shadow-lg shadow-primary/20">
-                <UserPlus className="mr-2 h-4 w-4" /> Manual Entry
+            <Button className="bg-primary text-white h-10 sm:h-11 px-4 sm:px-6 rounded-xl font-bold shadow-lg shadow-primary/20 text-[10px] sm:text-xs">
+                <UserPlus className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Manual Entry
             </Button>
         </div>
       </div>
 
-      <Card className="border border-primary/5 shadow-xl rounded-[2rem] overflow-hidden bg-card">
-          <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6">
+      <Card className="border border-primary/5 shadow-xl rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden bg-card">
+          <CardHeader className="bg-muted/5 border-b border-primary/5 px-4 sm:px-6 py-6">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="text-left w-full">
-                      <CardTitle className="font-headline font-black text-xl tracking-tight">Identity Registry</CardTitle>
-                      <CardDescription className="text-xs font-medium mt-1">Forensic security and account status oversight.</CardDescription>
+                      <CardTitle className="font-headline font-black text-lg sm:text-xl tracking-tight">Identity Registry</CardTitle>
+                      <CardDescription className="text-[10px] sm:text-xs font-medium mt-1">Forensic security and account status oversight.</CardDescription>
                   </div>
                   <div className="relative group w-full md:w-80">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                       <Input 
                           placeholder="Filter name or email..." 
-                          className="pl-9 h-11 w-full bg-background border-primary/10 rounded-xl text-xs font-bold" 
+                          className="pl-9 h-10 sm:h-11 w-full bg-background border-primary/10 rounded-xl text-[10px] sm:text-xs font-bold" 
                           value={searchQuery}
                           onChange={(e) => setSearchSearchQuery(e.target.value)}
                       />
@@ -288,11 +296,11 @@ export default function ManagementConsolePage() {
                   <Table className="min-w-[900px]">
                       <TableHeader className="bg-muted/20">
                           <TableRow>
-                              <TableHead className="font-black text-[10px] uppercase tracking-widest pl-6 h-12">User Identity</TableHead>
-                              <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Role</TableHead>
-                              <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Status</TableHead>
-                              <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Verification</TableHead>
-                              <TableHead className="font-black text-[10px] uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
+                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest pl-6 h-12">User Identity</TableHead>
+                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Role</TableHead>
+                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Status</TableHead>
+                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Verification</TableHead>
+                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
                           </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -308,8 +316,8 @@ export default function ManagementConsolePage() {
                                                 <AvatarFallback className="font-bold text-primary bg-primary/5">{user.firstName.charAt(0)}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col text-left">
-                                                <span className="font-bold text-sm tracking-tight">{user.firstName} {user.lastName}</span>
-                                                <span className="text-[10px] text-muted-foreground font-medium">{user.email}</span>
+                                                <span className="font-bold text-xs sm:text-sm tracking-tight">{user.firstName} {user.lastName}</span>
+                                                <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium">{user.email}</span>
                                             </div>
                                         </div>
                                     </TableCell>
@@ -318,7 +326,7 @@ export default function ManagementConsolePage() {
                                     </TableCell>
                                     <TableCell className="text-center">
                                         <div className="flex items-center justify-center gap-2">
-                                            <span className={cn("text-[9px] font-black uppercase", isActive ? "text-green-600" : "text-red-500")}>
+                                            <span className={cn("text-[8px] sm:text-[9px] font-black uppercase", isActive ? "text-green-600" : "text-red-500")}>
                                                 {isActive ? "Active" : "Suspended"}
                                             </span>
                                             <Switch 

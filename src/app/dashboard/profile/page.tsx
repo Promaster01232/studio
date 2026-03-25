@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, CheckCircle2, UserCheck, Fingerprint, Zap, QrCode, Cpu, MoreHorizontal, Sparkles } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, CheckCircle2, UserCheck, Fingerprint, Zap, QrCode, Cpu, MoreHorizontal, Sparkles, Globe } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
@@ -65,7 +65,7 @@ export function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, ph
         <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full max-w-md mx-auto aspect-[1.6/1] rounded-[2rem] overflow-hidden shadow-2xl group active:scale-[0.98] transition-transform cursor-pointer"
+            className="relative w-full max-w-md mx-auto aspect-[1.6/1] rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden shadow-2xl group active:scale-[0.98] transition-transform cursor-pointer"
         >
             <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-[#0D1B2A] to-zinc-900 transition-all duration-700 group-hover:bg-primary/10"></div>
             <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -73,85 +73,85 @@ export function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, ph
                 <div className="h-full w-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,100,255,0.1)_0%,transparent_100%)]"></div>
             </div>
             <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
-                <Cpu className="h-40 w-40" />
+                <Cpu className="h-24 w-24 sm:h-40 sm:w-40" />
             </div>
 
-            <div className="relative h-full w-full p-6 flex flex-col justify-between text-white border border-white/10 rounded-[2rem]">
+            <div className="relative h-full w-full p-4 sm:p-6 flex flex-col justify-between text-white border border-white/10 rounded-[1.5rem] sm:rounded-[2rem]">
                 <div className="flex justify-between items-start">
-                    <div className="flex items-center gap-3">
-                        <div className="relative p-1 rounded-xl bg-gradient-to-tr from-primary via-accent to-blue-400 p-[1px]">
-                            <div className="bg-[#0D1B2A] rounded-xl p-1.5 backdrop-blur-md">
-                                <Logo className="h-6 w-6 border-none p-0 bg-transparent shadow-none" imageClassName="brightness-0 invert" />
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="relative p-0.5 sm:p-1 rounded-xl bg-gradient-to-tr from-primary via-accent to-blue-400">
+                            <div className="bg-[#0D1B2A] rounded-xl p-1 sm:p-1.5 backdrop-blur-md">
+                                <Logo className="h-5 w-5 sm:h-6 sm:w-6 border-none p-0 bg-transparent shadow-none" imageClassName="brightness-0 invert" />
                             </div>
                         </div>
                         <div className="text-left">
-                            <h3 className="text-[11px] font-black tracking-[0.1em] uppercase bg-gradient-to-r from-white via-primary to-accent bg-clip-text text-transparent leading-none">
+                            <h3 className="text-[9px] sm:text-[11px] font-black tracking-[0.1em] uppercase bg-gradient-to-r from-white via-primary to-accent bg-clip-text text-transparent leading-none">
                                 Nyaya Sahayak
                             </h3>
-                            <p className="text-[7px] font-black text-primary/60 uppercase tracking-[0.2em] mt-1">Official Registry Node</p>
+                            <p className="text-[6px] sm:text-[7px] font-black text-primary/60 uppercase tracking-[0.2em] mt-1">Official Registry Node</p>
                         </div>
                     </div>
                     <div className="flex flex-col items-end">
-                        <div className="p-1.5 bg-white rounded-lg shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:shadow-primary/40 transition-all duration-500">
-                            <QrCode className="h-10 w-10 text-black" />
+                        <div className="p-1 sm:p-1.5 bg-white rounded-lg shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:shadow-primary/40 transition-all duration-500">
+                            <QrCode className="h-6 w-6 sm:h-10 sm:w-10 text-black" />
                         </div>
-                        <span className="text-[6px] font-mono text-white/20 mt-1 uppercase tracking-tighter">SECURE-BLOCK-ALPHA</span>
+                        <span className="text-[5px] sm:text-[6px] font-mono text-white/20 mt-1 uppercase tracking-tighter">SECURE-BLOCK-ALPHA</span>
                     </div>
                 </div>
 
-                <div className="flex gap-5 items-center">
+                <div className="flex gap-3 sm:gap-5 items-center">
                     <div className="relative">
-                        <div className="absolute -inset-1.5 rounded-2xl bg-primary/20 animate-pulse group-hover:scale-110 transition-transform"></div>
+                        <div className="absolute -inset-1 rounded-xl sm:rounded-2xl bg-primary/20 animate-pulse group-hover:scale-110 transition-transform"></div>
                         {photoURL ? (
-                            <Avatar className="h-20 w-20 border-2 border-white/20 rounded-2xl shadow-xl relative z-10">
+                            <Avatar className="h-14 w-14 sm:h-20 sm:w-20 border-2 border-white/20 rounded-xl sm:rounded-2xl shadow-xl relative z-10">
                                 <AvatarImage src={photoURL} className="object-cover" />
                             </Avatar>
                         ) : (
-                            <div className="h-20 w-20 rounded-2xl bg-white/5 flex items-center justify-center border-2 border-white/10 shadow-xl relative z-10">
-                                <User className="h-8 w-8 opacity-20" />
+                            <div className="h-14 w-14 sm:h-20 sm:w-20 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center border-2 border-white/10 shadow-xl relative z-10">
+                                <User className="h-6 w-6 sm:h-8 sm:w-8 opacity-20" />
                             </div>
                         )}
                         {isVerified && (
-                            <div className="absolute -bottom-1 -right-1 bg-primary text-white p-1 rounded-full border-2 border-[#0D1B2A] shadow-lg z-20">
-                                <ShieldCheck className="h-3 w-3" />
+                            <div className="absolute -bottom-1 -right-1 bg-primary text-white p-0.5 sm:p-1 rounded-full border-2 border-[#0D1B2A] shadow-lg z-20">
+                                <ShieldCheck className="h-2 w-2 sm:h-3 sm:w-3" />
                             </div>
                         )}
                     </div>
                     
                     <div className="flex-1 text-left min-w-0">
-                        <h2 className="text-xl font-black tracking-tight leading-tight truncate">
+                        <h2 className="text-sm sm:text-xl font-black tracking-tight leading-tight truncate">
                             {user.firstName} {user.lastName}
                         </h2>
-                        <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="bg-white/5 border-white/10 text-[8px] font-black uppercase tracking-widest px-2 text-white/80 h-5">
+                        <div className="flex items-center gap-1.5 sm:gap-2 mt-1">
+                            <Badge variant="outline" className="bg-white/5 border-white/10 text-[7px] sm:text-[8px] font-black uppercase tracking-widest px-1.5 sm:px-2 text-white/80 h-4 sm:h-5">
                                 {user.userType}
                             </Badge>
-                            <span className="text-[9px] font-black font-mono text-primary tracking-wider uppercase bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20 shadow-sm">{systemID}</span>
+                            <span className="text-[8px] sm:text-[9px] font-black font-mono text-primary tracking-wider uppercase bg-primary/10 px-1.5 sm:px-2 py-0.5 rounded-md border border-primary/20 shadow-sm">{systemID}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex justify-between items-end border-t border-white/5 pt-4">
-                    <div className="flex gap-4">
+                <div className="flex justify-between items-end border-t border-white/5 pt-3 sm:pt-4">
+                    <div className="flex gap-3 sm:gap-4">
                         <div className="space-y-0.5">
-                            <p className="text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Security Clearance</p>
+                            <p className="text-[5px] sm:text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Security Clearance</p>
                             <div className="flex items-center gap-1">
-                                <div className={cn("h-1.5 w-1.5 rounded-full shadow-[0_0_8px_currentColor]", isVerified ? "bg-green-500 animate-ping" : "bg-red-500")}></div>
-                                <p className={cn("text-[8px] font-bold uppercase tracking-widest", isVerified ? "text-green-500" : "text-red-500")}>
+                                <div className={cn("h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full shadow-[0_0_8px_currentColor]", isVerified ? "bg-green-500 animate-ping" : "bg-red-500")}></div>
+                                <p className={cn("text-[7px] sm:text-[8px] font-bold uppercase tracking-widest", isVerified ? "text-green-500" : "text-red-500")}>
                                     {isVerified ? "Authorized Node" : "Pending Audit"}
                                 </p>
                             </div>
                         </div>
                         <div className="space-y-0.5">
-                            <p className="text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Node Issue Date</p>
-                            <p className="text-[8px] font-bold uppercase tracking-widest text-white/60">
+                            <p className="text-[5px] sm:text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Node Registry</p>
+                            <p className="text-[7px] sm:text-[8px] font-bold uppercase tracking-widest text-white/60">
                                 {new Date().getFullYear()} RE-SYNC
                             </p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
-                        <Fingerprint className="h-3 w-3 text-primary animate-pulse" />
-                        <span className="text-[7px] font-black uppercase tracking-[0.2em]">Biometric Node Active</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                        <Globe className="h-2 w-2 sm:h-3 sm:w-3 text-primary animate-pulse" />
+                        <span className="text-[6px] sm:text-[7px] font-black uppercase tracking-[0.2em]">nyayasahayak.in</span>
                     </div>
                 </div>
             </div>
@@ -367,23 +367,23 @@ export default function ProfilePage() {
                 </div>
 
                 <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
-                    <div className="bg-primary/5 p-10 flex flex-col items-center text-center">
+                    <div className="bg-primary/5 p-8 sm:p-10 flex flex-col items-center text-center">
                         <div className="relative group mb-6">
                             <div className="absolute -inset-4 rounded-[2rem] bg-primary/10 animate-pulse"></div>
                             {photoURL ? (
-                                <Avatar className="h-32 w-32 border-4 border-background shadow-2xl rounded-[2rem] relative z-10 transition-all">
+                                <Avatar className="h-24 w-24 sm:h-32 sm:w-32 border-4 border-background shadow-2xl rounded-[1.5rem] sm:rounded-[2rem] relative z-10 transition-all">
                                     <AvatarImage src={photoURL} className="object-cover" />
                                 </Avatar>
                             ) : (
-                                <div className="h-32 w-32 rounded-[2rem] bg-white dark:bg-zinc-900 flex items-center justify-center text-primary border-4 border-background shadow-2xl relative z-10">
-                                    <User className="h-12 w-12 opacity-20" />
+                                <div className="h-24 w-24 sm:h-32 sm:w-32 rounded-[1.5rem] sm:rounded-[2rem] bg-white dark:bg-zinc-900 flex items-center justify-center text-primary border-4 border-background shadow-2xl relative z-10">
+                                    <User className="h-10 w-10 sm:h-12 sm:w-12 opacity-20" />
                                 </div>
                             )}
                             <div className="absolute -bottom-2 -right-2 flex gap-2 z-20">
-                                <Button size="icon" variant="secondary" className="rounded-xl h-10 w-10 shadow-2xl border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={startCamera}>
+                                <Button size="icon" variant="secondary" className="rounded-xl h-9 w-9 sm:h-10 sm:w-10 shadow-2xl border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={startCamera}>
                                     <Camera className="h-4 w-4" />
                                 </Button>
-                                <Button size="icon" variant="secondary" className="rounded-xl h-10 w-10 shadow-2xl border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}>
+                                <Button size="icon" variant="secondary" className="rounded-xl h-9 w-9 sm:h-10 sm:w-10 shadow-2xl border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}>
                                     <ImageUp className="h-4 w-4" />
                                 </Button>
                             </div>
@@ -391,7 +391,7 @@ export default function ProfilePage() {
                         <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
                         
                         <div className="space-y-2">
-                            <h2 className="text-2xl font-black tracking-tighter leading-tight truncate px-2">{firstName} {lastName}</h2>
+                            <h2 className="text-xl sm:text-2xl font-black tracking-tighter leading-tight truncate px-2">{firstName} {lastName}</h2>
                             <div className="flex flex-col items-center gap-3">
                                 {userProfile?.emailVerified ? (
                                     <Badge className="bg-green-500/10 text-green-600 border-green-500/20 py-1 px-4 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
@@ -417,7 +417,7 @@ export default function ProfilePage() {
                             </div>
                         </div>
                     </div>
-                    <CardContent className="p-8 space-y-4">
+                    <CardContent className="p-6 sm:p-8 space-y-4">
                         <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-primary/5">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 rounded-lg bg-background shadow-sm border border-primary/5">
@@ -436,13 +436,13 @@ export default function ProfilePage() {
                     </CardContent>
                 </Card>
                 
-                <Card className="border-destructive/10 bg-destructive/5 shadow-xl rounded-[2.5rem] overflow-hidden">
-                    <CardHeader className="p-8 pb-4">
+                <Card className="border-destructive/10 bg-destructive/5 shadow-xl rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
+                    <CardHeader className="p-6 sm:p-8 pb-4">
                         <CardTitle className="text-destructive font-black text-lg tracking-tight flex items-center gap-2">
                             <ShieldAlert className="h-5 w-5" /> Account Disposal
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="p-8 pt-0 space-y-3">
+                    <CardContent className="p-6 sm:p-8 pt-0 space-y-3">
                         <Button variant="outline" className="w-full h-12 justify-start hover:bg-destructive/10 text-foreground border-destructive/5 rounded-2xl font-bold transition-all" onClick={handleLogout}>
                             <LogOut className="mr-3 h-4 w-4 opacity-40" /> 
                             <span className="text-xs">Terminate Session</span>
@@ -480,7 +480,7 @@ export default function ProfilePage() {
                                 <Zap className="h-3 w-3" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em]">Registry Information</span>
                             </div>
-                            <CardTitle className="text-3xl font-black tracking-tight leading-none">Identity Nodes</CardTitle>
+                            <CardTitle className="text-2xl sm:text-3xl font-black tracking-tight leading-none">Identity Nodes</CardTitle>
                         </div>
                         <UserCheck className="h-8 w-8 text-primary opacity-20" />
                     </CardHeader>
@@ -560,11 +560,11 @@ export default function ProfilePage() {
                   <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
                   <canvas ref={canvasRef} className="hidden" />
                   <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                      <div className="w-[80%] h-[80%] border-2 border-white/20 rounded-[3rem] relative">
-                          <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-2xl"></div>
-                          <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-2xl"></div>
-                          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-2xl"></div>
-                          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-2xl"></div>
+                      <div className="w-[80%] h-[80%] border-2 border-white/20 rounded-[2rem] sm:rounded-[3rem] relative">
+                          <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-xl sm:rounded-tl-2xl"></div>
+                          <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-xl sm:rounded-tr-2xl"></div>
+                          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-xl sm:rounded-bl-2xl"></div>
+                          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-xl sm:rounded-br-2xl"></div>
                       </div>
                   </div>
                   <div className="absolute top-6 right-6">
