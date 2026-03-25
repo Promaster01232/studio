@@ -5,9 +5,9 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-primary/5 bg-card/20 backdrop-blur-xl mt-auto transition-all duration-500">
-      <div className="max-w-7xl mx-auto px-6 py-6 lg:py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center lg:items-start">
+    <footer className="w-full border-t border-primary/5 bg-card/20 backdrop-blur-xl mt-auto">
+      <div className="max-w-7xl mx-auto px-6 py-6 lg:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center lg:items-start">
           <div className="lg:col-span-5 space-y-4 flex flex-col items-center lg:items-start text-center lg:text-left">
             <Link href="/" className="flex items-center gap-4 group cursor-pointer transition-transform active:scale-95">
               <div className="relative">
@@ -74,18 +74,6 @@ export function Footer() {
               </div>
             </div>
           </div>
-        </div>
-        
-        <div className="mt-12 pt-8 border-t border-primary/5 text-center space-y-3">
-          <div className="flex items-center justify-center gap-3 text-primary/40">
-              <ShieldCheck className="h-4 w-4" />
-              <p className="text-[9px] font-black uppercase tracking-[0.4em] leading-relaxed">
-                Secure Forensic Registry // NS-NODE-ALPHA-CORE-v4.2
-              </p>
-          </div>
-          <p className="text-[9px] font-bold text-muted-foreground/30 uppercase tracking-[0.3em]">
-            &copy; {new Date().getFullYear()} NYAYA SAHAYAK INSTITUTIONAL ECOSYSTEM. ALL PROTOCOLS RESERVED.
-          </p>
         </div>
       </div>
     </footer>
