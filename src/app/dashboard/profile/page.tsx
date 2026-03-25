@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, CheckCircle2, UserCheck, Fingerprint, Zap } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, CheckCircle2, UserCheck, Fingerprint, Zap, QrCode, Cpu, MoreHorizontal, Sparkles } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -35,6 +35,8 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { Badge } from '@/components/ui/badge';
+import { Logo } from '@/components/logo';
+import { cn } from '@/lib/utils';
 
 type UserProfile = {
   uid: string;
@@ -54,6 +56,114 @@ const ADMIN_EMAILS = [
   'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com'
 ];
+
+function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, photoURL: string }) {
+    if (!user) return null;
+
+    const systemID = `NS-${user.uid.substring(0, 4).toUpperCase()}-${user.uid.substring(user.uid.length - 4).toUpperCase()}`;
+    const isVerified = user.emailVerified || user.securityStatus === 'verified';
+
+    return (
+        <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full max-w-md mx-auto aspect-[1.6/1] rounded-[2rem] overflow-hidden shadow-2xl group active:scale-[0.98] transition-transform cursor-pointer"
+        >
+            {/* Holographic Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-[#0D1B2A] to-zinc-900 transition-all duration-700 group-hover:bg-primary/10"></div>
+            
+            {/* Forensic Overlay */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                <div className="h-full w-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,100,255,0.1)_0%,transparent_100%)]"></div>
+            </div>
+
+            {/* Circuit Lines Decorative */}
+            <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
+                <Cpu className="h-40 w-40" />
+            </div>
+
+            {/* ID Content */}
+            <div className="relative h-full w-full p-6 flex flex-col justify-between text-white border border-white/10 rounded-[2rem]">
+                
+                {/* Header */}
+                <div className="flex justify-between items-start">
+                    <div className="flex items-center gap-3">
+                        <div className="p-1.5 bg-white/10 rounded-lg backdrop-blur-md border border-white/5">
+                            <Logo className="h-6 w-6" imageClassName="brightness-0 invert" />
+                        </div>
+                        <div className="text-left">
+                            <h3 className="text-xs font-black tracking-[0.2em] uppercase text-primary leading-none">Nyaya Sahayak</h3>
+                            <p className="text-[8px] font-bold text-white/40 uppercase tracking-widest mt-1">Official Registry Node</p>
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-end">
+                        <QrCode className="h-10 w-10 text-white/20 group-hover:text-primary/40 transition-colors" />
+                        <span className="text-[6px] font-mono text-white/20 mt-1 uppercase tracking-tighter">SECURE-BLOCK-ALPHA</span>
+                    </div>
+                </div>
+
+                {/* Main Identity Area */}
+                <div className="flex gap-5 items-center">
+                    <div className="relative">
+                        <div className="absolute -inset-1.5 rounded-2xl bg-primary/20 animate-pulse group-hover:scale-110 transition-transform"></div>
+                        {photoURL ? (
+                            <Avatar className="h-20 w-20 border-2 border-white/20 rounded-2xl shadow-xl relative z-10">
+                                <AvatarImage src={photoURL} className="object-cover" />
+                            </Avatar>
+                        ) : (
+                            <div className="h-20 w-20 rounded-2xl bg-white/5 flex items-center justify-center border-2 border-white/10 shadow-xl relative z-10">
+                                <User className="h-8 w-8 opacity-20" />
+                            </div>
+                        )}
+                        {isVerified && (
+                            <div className="absolute -bottom-1 -right-1 bg-primary text-white p-1 rounded-full border-2 border-[#0D1B2A] shadow-lg z-20">
+                                <ShieldCheck className="h-3 w-3" />
+                            </div>
+                        )}
+                    </div>
+                    
+                    <div className="flex-1 text-left min-w-0">
+                        <h2 className="text-xl font-black tracking-tight leading-tight truncate">
+                            {user.firstName} {user.lastName}
+                        </h2>
+                        <div className="flex items-center gap-2 mt-1">
+                            <Badge variant="outline" className="bg-white/5 border-white/10 text-[8px] font-black uppercase tracking-widest px-2 text-white/80 h-5">
+                                {user.userType}
+                            </Badge>
+                            <span className="text-[8px] font-mono text-white/40 tracking-tighter uppercase">{systemID}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer Security Features */}
+                <div className="flex justify-between items-end border-t border-white/5 pt-4">
+                    <div className="flex gap-4">
+                        <div className="space-y-0.5">
+                            <p className="text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Security Clearance</p>
+                            <div className="flex items-center gap-1">
+                                <div className={cn("h-1 w-1 rounded-full", isVerified ? "bg-green-500 animate-ping" : "bg-red-500")}></div>
+                                <p className={cn("text-[8px] font-bold uppercase tracking-widest", isVerified ? "text-green-500" : "text-red-500")}>
+                                    {isVerified ? "Authorized" : "Pending Audit"}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="space-y-0.5">
+                            <p className="text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Node Issue Date</p>
+                            <p className="text-[8px] font-bold uppercase tracking-widest text-white/60">
+                                {new Date().getFullYear()} RE-SYNC
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                        <Fingerprint className="h-3 w-3 text-primary animate-pulse" />
+                        <span className="text-[7px] font-black uppercase tracking-[0.2em]">Biometric Node Active</span>
+                    </div>
+                </div>
+            </div>
+        </motion.div>
+    );
+}
 
 export default function ProfilePage() {
   const { theme, setTheme } = useTheme();
@@ -266,6 +376,15 @@ export default function ProfilePage() {
 
         <div className="grid lg:grid-cols-12 gap-10 items-start">
             <div className="lg:col-span-4 space-y-6">
+                
+                {/* Digital ID Card Node */}
+                <div className="space-y-3">
+                    <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1 flex items-center gap-2">
+                        <ShieldCheck className="h-3 w-3 text-primary" /> Institutional Identity Card
+                    </Label>
+                    <DigitalIDCard user={userProfile} photoURL={photoURL} />
+                </div>
+
                 <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
                     <div className="bg-primary/5 p-10 flex flex-col items-center text-center">
                         <div className="relative group mb-6">
@@ -480,6 +599,7 @@ export default function ProfilePage() {
                       </Button>
                   </div>
                   
+                  {/* Capture Button Container */}
                   <div className="absolute bottom-8 left-0 right-0 flex justify-center px-8">
                       <Button onClick={capturePhoto} className="h-16 w-full max-w-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40 rounded-2xl bg-primary text-white hover:scale-105 active:scale-95 transition-all">
                           <Camera className="mr-3 h-6 w-6" /> Capture Node
