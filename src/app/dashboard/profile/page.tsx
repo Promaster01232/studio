@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, CheckCircle2, UserCheck, Fingerprint, Zap, QrCode, Cpu, MoreHorizontal, Sparkles, Globe } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, CheckCircle2, UserCheck, Fingerprint, Zap, QrCode, Cpu, MoreHorizontal, Sparkles, Globe, Download } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
@@ -35,6 +35,7 @@ import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { Badge } from '@/components/ui/badge';
 import { Logo } from '@/components/logo';
 import { cn } from '@/lib/utils';
+import { jsPDF } from "jspdf";
 
 type UserProfile = {
   uid: string;
@@ -149,7 +150,7 @@ export function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, ph
                             </p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                    <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
                         <Globe className="h-2 w-2 sm:h-3 sm:w-3 text-primary animate-pulse" />
                         <span className="text-[6px] sm:text-[7px] font-black uppercase tracking-[0.2em]">nyayasahayak.in</span>
                     </div>
@@ -348,6 +349,45 @@ export default function ProfilePage() {
     }
   };
 
+  const handleDownloadID = () => {
+    if (!userProfile) return;
+    try {
+        const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: [85.6, 54] });
+        const systemID = `NS-${userProfile.uid.substring(0, 4).toUpperCase()}-${userProfile.uid.substring(userProfile.uid.length - 4).toUpperCase()}`;
+        
+        doc.setFillColor(13, 27, 42);
+        doc.rect(0, 0, 85.6, 54, 'F');
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.text("NYAYA SAHAYAK", 10, 10);
+        
+        doc.setFontSize(6);
+        doc.setTextColor(100, 100, 100);
+        doc.text("OFFICIAL REGISTRY NODE", 10, 14);
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(12);
+        doc.text(`${userProfile.firstName} ${userProfile.lastName}`, 10, 30);
+        
+        doc.setFontSize(8);
+        doc.setTextColor(59, 130, 246);
+        doc.text(userProfile.userType.toUpperCase(), 10, 36);
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(7);
+        doc.text(systemID, 10, 42);
+        
+        doc.setFontSize(5);
+        doc.text("nyayasahayak.in", 65, 50);
+        
+        doc.save(`${userProfile.firstName}-Nyaya-ID.pdf`);
+        toast({ title: "Download Initialized", description: "Your Institutional ID has been generated." });
+    } catch (err) {
+        toast({ variant: "destructive", title: "Export Failed", description: "Could not generate identity PDF." });
+    }
+  };
+
   if (loading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
   return (
@@ -363,7 +403,15 @@ export default function ProfilePage() {
                     <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1 flex items-center gap-2">
                         <ShieldCheck className="h-3 w-3 text-primary" /> Institutional Identity Card
                     </Label>
-                    <DigitalIDCard user={userProfile} photoURL={photoURL} />
+                    <div className="space-y-4">
+                        <DigitalIDCard user={userProfile} photoURL={photoURL} />
+                        <Button 
+                            onClick={handleDownloadID}
+                            className="w-full h-12 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-xl shadow-primary/20 active:scale-95 transition-all"
+                        >
+                            <Download className="h-4 w-4" /> Download Official ID
+                        </Button>
+                    </div>
                 </div>
 
                 <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
