@@ -102,7 +102,9 @@ function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, photoURL:
                         </div>
                     </div>
                     <div className="flex flex-col items-end">
-                        <QrCode className="h-10 w-10 text-white/20 group-hover:text-primary/40 transition-colors" />
+                        <div className="p-1.5 bg-white rounded-lg shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:shadow-primary/40 transition-all duration-500">
+                            <QrCode className="h-10 w-10 text-black" />
+                        </div>
                         <span className="text-[6px] font-mono text-white/20 mt-1 uppercase tracking-tighter">SECURE-BLOCK-ALPHA</span>
                     </div>
                 </div>
@@ -135,7 +137,7 @@ function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, photoURL:
                             <Badge variant="outline" className="bg-white/5 border-white/10 text-[8px] font-black uppercase tracking-widest px-2 text-white/80 h-5">
                                 {user.userType}
                             </Badge>
-                            <span className="text-[8px] font-mono text-white/40 tracking-tighter uppercase">{systemID}</span>
+                            <span className="text-[9px] font-black font-mono text-primary tracking-wider uppercase bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20 shadow-sm">{systemID}</span>
                         </div>
                     </div>
                 </div>
@@ -146,9 +148,9 @@ function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, photoURL:
                         <div className="space-y-0.5">
                             <p className="text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Security Clearance</p>
                             <div className="flex items-center gap-1">
-                                <div className={cn("h-1 w-1 rounded-full", isVerified ? "bg-green-500 animate-ping" : "bg-red-500")}></div>
+                                <div className={cn("h-1.5 w-1.5 rounded-full shadow-[0_0_8px_currentColor]", isVerified ? "bg-green-500 animate-ping" : "bg-red-500")}></div>
                                 <p className={cn("text-[8px] font-bold uppercase tracking-widest", isVerified ? "text-green-500" : "text-red-500")}>
-                                    {isVerified ? "Authorized" : "Pending Audit"}
+                                    {isVerified ? "Authorized Node" : "Pending Audit"}
                                 </p>
                             </div>
                         </div>
