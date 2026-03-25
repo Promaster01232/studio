@@ -81,7 +81,7 @@ export function SearchDialog({ children }: { children: ReactNode }) {
             {query.length === 0 ? (
                 <>
                     <section className="space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 px-1 flex items-center gap-2">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 px-1 flex items-center gap-2 text-left">
                             <Zap className="h-3 w-3" /> Recommended Nodes
                         </h3>
                         <div className="grid sm:grid-cols-2 gap-3">
@@ -105,7 +105,7 @@ export function SearchDialog({ children }: { children: ReactNode }) {
                     </section>
 
                     <section className="space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 px-1 flex items-center gap-2">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 px-1 flex items-center gap-2 text-left">
                             <History className="h-3 w-3" /> Recent Activity
                         </h3>
                         <div className="flex flex-col gap-1">

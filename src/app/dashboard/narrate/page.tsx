@@ -160,7 +160,7 @@ export default function NarrateProblemPage() {
                             disabled={!hasPermission || isLoading}
                             className={cn(
                                 "h-32 w-32 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col gap-3 transition-all duration-500 relative z-10",
-                                isRecording ? 'bg-red-500 hover:bg-red-600 scale-110 shadow-red-500/40' : 'bg-primary hover:shadow-primary/40'
+                                isRecording ? 'bg-red-500 hover:bg-red-600 scale-110 shadow-red-500/40 text-white' : 'bg-primary hover:shadow-primary/40 text-white'
                             )}
                         >
                             {isRecording ? (
@@ -206,7 +206,7 @@ export default function NarrateProblemPage() {
         <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-8 space-y-8">
             <Card className="glass shadow-2xl min-h-[600px] flex flex-col rounded-[2.5rem] overflow-hidden border-primary/5">
                 <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8 sm:p-10">
-                    <div className="space-y-1">
+                    <div className="space-y-1 text-left">
                         <div className="flex items-center gap-2 text-primary mb-1">
                             <Bot className="h-4 w-4" />
                             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Institutional AI Node</span>
@@ -215,7 +215,7 @@ export default function NarrateProblemPage() {
                     </div>
                     {state.status === "success" && state.data && (
                         <AudioAssistant 
-                            text={`Narration Summary: ${state.data.caseSummary}. Detailed Forensic Analysis: ${state.data.detailedAnalysis}. Mandatory Next Steps: ${state.data.nextActions}`} 
+                            text={`Summary: ${state.data.caseSummary}. Legal Violations: ${state.data.detailedAnalysis}. Required Next Steps: ${state.data.nextActions}`} 
                             language={language}
                         />
                     )}
@@ -234,7 +234,7 @@ export default function NarrateProblemPage() {
                                 </div>
                                 <div className="space-y-3">
                                     <p className="font-black text-3xl tracking-tighter">Deconstructing Narration...</p>
-                                    <p className="text-sm text-muted-foreground font-medium max-w-[320px] mx-auto">Extracting statutory violations and generating procedural roadmap.</p>
+                                    <p className="text-sm text-muted-foreground font-medium max-w-[320px] mx-auto leading-relaxed">Extracting statutory violations and generating procedural roadmap.</p>
                                 </div>
                             </motion.div>
                         )}
@@ -245,8 +245,8 @@ export default function NarrateProblemPage() {
                                     <Mic className="h-20 w-20 text-muted-foreground" />
                                 </div>
                                 <div className="space-y-2">
-                                    <p className="font-black text-xl tracking-tighter uppercase">Awaiting Registry Transmission</p>
-                                    <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto italic">Your comprehensive forensic report will materialize here.</p>
+                                    <p className="font-black text-xl tracking-tighter uppercase">Awaiting Transmission</p>
+                                    <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto italic">Your forensic report will materialize here.</p>
                                 </div>
                             </motion.div>
                         )}

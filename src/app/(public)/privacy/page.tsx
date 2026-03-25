@@ -91,7 +91,7 @@ export default function PrivacyPage() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="max-w-5xl mx-auto space-y-12 pb-20 px-4"
+      className="max-w-5xl mx-auto space-y-12 pb-20 px-4 text-left"
     >
       <motion.div variants={itemVariants}>
         <PageHeader

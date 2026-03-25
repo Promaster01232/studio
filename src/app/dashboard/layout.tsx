@@ -53,8 +53,9 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
-                        <div className="w-full max-w-sm">
-                            <div className="relative w-full hidden md:block group active:scale-[0.99] transition-transform cursor-pointer">
+                        <div className="w-full max-w-sm cursor-pointer group">
+                            {/* Unified trigger container to prevent React.Children.only error */}
+                            <div className="relative w-full hidden md:block active:scale-[0.99] transition-transform">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                                 <div className="pl-10 pr-16 h-10 flex items-center font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm">
                                     Search tools, cases, guides...
@@ -65,9 +66,11 @@ function Header({ userProfile }: { userProfile: any }) {
                                     </kbd>
                                 </div>
                             </div>
-                            <Button variant="outline" size="icon" className="md:hidden h-10 w-10 rounded-xl border-primary/5 bg-muted/40 active:scale-95 transition-all">
-                                <Search className="h-4 w-4 text-muted-foreground" />
-                            </Button>
+                            <div className="md:hidden">
+                                <Button variant="outline" size="icon" className="h-10 w-10 rounded-xl border-primary/5 bg-muted/40 active:scale-95 transition-all">
+                                    <Search className="h-4 w-4 text-muted-foreground" />
+                                </Button>
+                            </div>
                         </div>
                     </SearchDialog>
                 )}
@@ -79,7 +82,7 @@ function Header({ userProfile }: { userProfile: any }) {
                         <SosDialog>
                             <Button variant="destructive" size="sm" className="font-black gap-2 animate-pulse px-4 h-10 text-[10px] rounded-xl shadow-lg shadow-destructive/20 active:scale-95 transition-all">
                                 <ShieldAlert className="h-4 w-4" />
-                                <span className="hidden sm:inline tracking-widest">EMERGENCY SOS</span>
+                                <span className="hidden sm:inline tracking-widest uppercase">Emergency SOS</span>
                             </Button>
                         </SosDialog>
                         
@@ -147,7 +150,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       } else {
         setProfileLoading(false);
         setUserProfile(null);
-        if (!['/login', '/register', '/'].includes(pathname)) {
+        if (!['/login', '/register', '/', '/about', '/terms', '/privacy', '/cookie-policy', '/disclaimer', '/contact'].includes(pathname)) {
             router.replace('/login');
         }
       }
@@ -261,15 +264,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <DropdownMenuLabel className="px-2 pb-2">
                     <div className="flex items-center gap-2 text-primary mb-1">
                         <Sparkles className="h-3 w-3" />
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em]">Profile Node</span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em]">User Dossier</span>
                     </div>
                 </DropdownMenuLabel>
+                
                 <DropdownMenuItem asChild className="rounded-xl h-10 font-bold text-xs gap-3 mb-1 cursor-pointer">
                     <Link href="/dashboard/profile">
                         <User className="h-4 w-4 opacity-40" /> My Registry Profile
                     </Link>
                 </DropdownMenuItem>
-                
+
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 
                 <DropdownMenuLabel className="px-2 pb-2">
@@ -286,7 +290,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         <SunMoon className="h-4 w-4 opacity-40" /> Dark Protocol
                     </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
+                
                 <DropdownMenuSeparator className="my-2 opacity-5" />
+                
                 <DropdownMenuItem onClick={handleLogout} className="rounded-xl h-11 font-black text-xs text-destructive focus:bg-destructive/10 focus:text-destructive gap-3 active:scale-95 transition-all cursor-pointer">
                     <LogOut className="h-4 w-4" />
                     <span className="tracking-widest uppercase">Terminate Session</span>

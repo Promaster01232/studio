@@ -53,6 +53,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle, 
+  AlertDialogTrigger 
+} from "@/components/ui/alert-dialog";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
@@ -164,6 +175,7 @@ export default function ManagementConsolePage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchSearchQuery] = useState("");
   const [processingUid, setProcessingUid] = useState<string | null>(null);
+  const [userToPurge, setUserToPurge] = useState<UserRecord | null>(null);
   
   const unsubscribeRef = useRef<(() => void) | null>(null);
 
@@ -246,6 +258,36 @@ export default function ManagementConsolePage() {
       } finally {
           setProcessingUid(null);
       }
+  };
+
+  const handleExecutePurge = async () => {
+    if (!userToPurge) return;
+    const user = userToPurge;
+    
+    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+        toast({ variant: "destructive", title: "Node Immutable", description: "Root accounts cannot be purged." });
+        setUserToPurge(null);
+        return;
+    }
+
+    setProcessingUid(user.uid);
+    
+    deleteDoc(doc(firestore, "users", user.uid))
+        .then(() => {
+            remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
+            toast({ title: "Registry Node Purged", description: `Record for ${user.firstName} erased.` });
+        })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: `/users/${user.uid}`,
+                operation: 'delete',
+            }, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        })
+        .finally(() => {
+            setProcessingUid(null);
+            setUserToPurge(null);
+        });
   };
 
   const filteredUsers = users.filter(u => 
@@ -361,6 +403,14 @@ export default function ManagementConsolePage() {
                                                 <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl">
                                                     <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
                                                     <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><RotateCcw className="mr-3 h-4 w-4" /> Reset Node</DropdownMenuItem>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem 
+                                                        className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+                                                        onClick={() => setUserToPurge(user)}
+                                                        disabled={isRoot || processingUid === user.uid}
+                                                    >
+                                                        <Trash2 className="mr-3 h-4 w-4" /> Purge Registry Node
+                                                    </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </div>
@@ -374,6 +424,24 @@ export default function ManagementConsolePage() {
               </ScrollArea>
           </CardContent>
       </Card>
+
+      <AlertDialog open={!!userToPurge} onOpenChange={(open) => !open && setUserToPurge(null)}>
+          <AlertDialogContent className="rounded-[2.5rem] p-8 border-none shadow-2xl glass">
+              <AlertDialogHeader>
+                  <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4">
+                      <ShieldAlert className="h-10 w-10 text-destructive animate-pulse" />
+                  </div>
+                  <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Institutional Purge</AlertDialogTitle>
+                  <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
+                      This protocol will permanently erase <strong>{userToPurge?.firstName} {userToPurge?.lastName}</strong> from the nyayasahayak.in registry. This action is terminal and irreversible.
+                  </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6">
+                  <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort Protocol</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleExecutePurge} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px] shadow-lg shadow-destructive/20">Execute Purge</AlertDialogAction>
+              </AlertDialogFooter>
+          </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

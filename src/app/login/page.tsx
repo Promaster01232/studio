@@ -52,7 +52,7 @@ function ProtocolRestorationDialog() {
         setLoading(true);
         try {
             const usersRef = collection(firestore, "users");
-            const q = query(usersRef, where("email", "==", email.toLowerCase()));
+            const q = query(usersRef, where("email", "==", email.toLowerCase().trim()));
             const querySnapshot = await getDocs(q);
 
             if (querySnapshot.empty) {
@@ -65,14 +65,16 @@ function ProtocolRestorationDialog() {
             const uid = userDoc.id;
             const expectedId = `NS-${uid.substring(0, 4).toUpperCase()}-${uid.substring(uid.length - 4).toUpperCase()}`;
 
-            if (systemId.toUpperCase() !== expectedId) {
+            if (systemId.toUpperCase().trim() !== expectedId) {
                 toast({ variant: "destructive", title: "ID Number Mismatch", description: "The System ID does not match our records." });
                 setLoading(false);
                 return;
             }
 
-            await sendPasswordResetEmail(auth, email);
+            // Trigger Firebase native reset email
+            await sendPasswordResetEmail(auth, email.trim());
             
+            // Generate institutional copyable link for UI
             const mockToken = Math.random().toString(36).substring(2, 15);
             const resetLink = `https://nyayasahayak.in/restore?node=${uid}&token=${mockToken}&verify=true`;
             

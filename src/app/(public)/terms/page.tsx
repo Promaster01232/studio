@@ -81,7 +81,7 @@ const itemVariants = {
 
 export default function TermsPage() {
   return (
-    <div className="max-w-5xl mx-auto space-y-8 sm:space-y-10 pb-20 px-4">
+    <div className="max-w-5xl mx-auto space-y-8 sm:space-y-10 pb-20 px-4 text-left">
       <motion.div 
         initial={{ opacity: 0, y: -10 }} 
         animate={{ opacity: 1, y: 0 }}
@@ -131,7 +131,7 @@ export default function TermsPage() {
                   <div className="bg-muted p-2.5 sm:p-3 h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-sm border border-primary/5">
                     <section.icon className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
-                  <div className="space-y-1 sm:space-y-2 flex-1">
+                  <div className="space-y-1 sm:space-y-2 flex-1 text-left">
                     <h4 className="font-black text-sm sm:text-lg tracking-tight group-hover:text-primary transition-colors">{section.title}</h4>
                     <p className="text-[11px] sm:text-sm text-muted-foreground font-medium leading-relaxed">
                       {section.content}

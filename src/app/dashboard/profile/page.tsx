@@ -355,9 +355,11 @@ export default function ProfilePage() {
         const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: [85.6, 54] });
         const systemID = `NS-${userProfile.uid.substring(0, 4).toUpperCase()}-${userProfile.uid.substring(userProfile.uid.length - 4).toUpperCase()}`;
         
+        // Background
         doc.setFillColor(13, 27, 42);
         doc.rect(0, 0, 85.6, 54, 'F');
         
+        // Brand
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);
         doc.text("NYAYA SAHAYAK", 10, 10);
@@ -366,6 +368,7 @@ export default function ProfilePage() {
         doc.setTextColor(100, 100, 100);
         doc.text("OFFICIAL REGISTRY NODE", 10, 14);
         
+        // User Info
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(12);
         doc.text(`${userProfile.firstName} ${userProfile.lastName}`, 10, 30);
@@ -378,6 +381,7 @@ export default function ProfilePage() {
         doc.setFontSize(7);
         doc.text(systemID, 10, 42);
         
+        // Domain
         doc.setFontSize(5);
         doc.text("nyayasahayak.in", 65, 50);
         
@@ -391,10 +395,10 @@ export default function ProfilePage() {
   if (loading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0 text-left">
         <PageHeader
             title="Registry Dossier"
-            description="Manage your secure identity nodes and institutional platform configurations."
+            description="Manage your secure identity nodes and institutional platform configurations on nyayasahayak.in."
         />
 
         <div className="grid lg:grid-cols-12 gap-10 items-start">
