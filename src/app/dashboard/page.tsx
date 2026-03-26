@@ -32,6 +32,8 @@ import {
   Zap,
   ChevronRight,
   TrendingUp,
+  Newspaper,
+  Link as LinkIcon,
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -60,6 +62,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
@@ -595,7 +599,7 @@ export default function DashboardHomePage() {
               ].map((item, index) => (
                 <MotionWrapper key={item.href} delay={0.9 + index * 0.1}>
                   <Link href={item.href} className="block group h-full">
-                    <Card className="h-full glass group-hover:border-primary/30 transition-all duration-700 rounded-[2.5rem] shadow-xl hover:shadow-2xl border-primary/5 overflow-hidden">
+                    <Card className="h-full glass group-hover:border-primary/30 transition-all duration-500 rounded-[2.5rem] shadow-xl hover:shadow-2xl border-primary/5 overflow-hidden">
                       <CardContent className="p-10 text-left relative">
                         <div className="flex items-center gap-6 relative z-10">
                           <div className="p-5 rounded-2xl bg-muted group-hover:bg-primary/10 group-hover:text-primary transition-all duration-500 shadow-inner ring-1 ring-black/5">
