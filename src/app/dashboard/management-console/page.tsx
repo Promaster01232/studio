@@ -28,7 +28,8 @@ import {
   Activity,
   Cpu,
   Eraser,
-  Lock
+  Lock,
+  QrCode
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { motion } from "framer-motion";
+import { Logo } from "@/components/logo";
 
 interface UserRecord {
   uid: string;
@@ -87,6 +89,61 @@ const ADMIN_EMAILS = [
   'piyushkumrsingh23399@gmail.com'
 ];
 
+function DigitalIdentityCard({ profile }: { profile: UserRecord }) {
+    const systemId = `NS-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
+    return (
+        <div className="relative w-full aspect-[1.586/1] rounded-[1.5rem] overflow-hidden shadow-2xl text-left">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-blue-600"></div>
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+            
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+                <Logo className="h-24 w-24 border-none shadow-none p-0" />
+            </div>
+            
+            <div className="relative h-full flex flex-col p-5 text-white">
+                <div className="flex justify-between items-start mb-auto">
+                    <div className="flex items-center gap-2">
+                        <Logo className="h-6 w-6 border-none shadow-none bg-white p-1" />
+                        <div className="flex flex-col">
+                            <span className="font-black text-[8px] tracking-tighter leading-none">NYAYA SAHAYAK</span>
+                            <span className="text-[5px] font-bold uppercase tracking-[0.2em] opacity-60">Forensic Terminal</span>
+                        </div>
+                    </div>
+                    <div className="bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-md border border-white/10">
+                        <span className="text-[6px] font-black uppercase tracking-widest">Registry Node</span>
+                    </div>
+                </div>
+
+                <div className="flex gap-3 items-end mb-3">
+                    <Avatar className="h-14 w-14 border-2 border-white/20 rounded-xl shadow-lg shrink-0">
+                        <AvatarImage src={profile.photoURL} className="object-cover" />
+                        <AvatarFallback className="bg-white/10 text-white font-black text-xs">{profile.firstName?.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 space-y-0.5 min-w-0">
+                        <h3 className="font-black text-xs sm:text-sm tracking-tight truncate uppercase leading-none">{profile.firstName} {profile.lastName}</h3>
+                        <p className="text-[7px] font-bold uppercase tracking-widest opacity-70 leading-none">{profile.userType}</p>
+                        <p className="text-[9px] font-mono font-bold tracking-wider pt-1">{systemId}</p>
+                    </div>
+                    <div className="bg-white p-1 rounded-lg shadow-xl shrink-0">
+                        <QrCode className="h-8 w-8 text-black" />
+                    </div>
+                </div>
+                
+                <div className="pt-2 border-t border-white/10 flex justify-between items-center">
+                    <div className="space-y-0.5">
+                        <p className="text-[5px] font-bold uppercase opacity-40">Registry Email</p>
+                        <p className="text-[7px] font-bold truncate max-w-[140px]">{profile.email}</p>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-[5px] font-bold uppercase opacity-40">Oversight Status</p>
+                        <p className="text-[7px] font-black uppercase tracking-tighter text-blue-200">Admin Audit Active</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React.ReactNode }) {
     return (
         <Dialog>
@@ -109,19 +166,30 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     </DialogHeader>
                     
                     <div className="space-y-8">
-                        <div className="flex items-center gap-6 p-6 rounded-3xl bg-muted/30 border border-primary/5">
-                            <Avatar className="h-24 w-24 border-4 border-background shadow-xl rounded-[1.5rem]">
-                                <AvatarImage src={user.photoURL} className="object-cover" />
-                                <AvatarFallback className="text-3xl font-black bg-primary/5 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-1">
-                                <h3 className="text-2xl font-black tracking-tight">{user.firstName} {user.lastName}</h3>
-                                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest text-primary border-primary/20">{user.userType}</Badge>
-                                <p className="text-[10px] font-bold text-muted-foreground uppercase mt-2">Node Status: {user.isBlocked ? 'Suspended' : 'Active'}</p>
+                        <div className="grid sm:grid-cols-2 gap-8 items-start">
+                            <DigitalIdentityCard profile={user} />
+                            
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-4 p-4 rounded-2xl bg-muted/30 border border-primary/5">
+                                    <Avatar className="h-16 w-16 border-2 border-background shadow-lg rounded-xl shrink-0">
+                                        <AvatarImage src={user.photoURL} className="object-cover" />
+                                        <AvatarFallback className="text-xl font-black bg-primary/5 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    <div className="space-y-1">
+                                        <Badge variant="outline" className="font-black text-[8px] uppercase tracking-widest text-primary border-primary/20">{user.userType}</Badge>
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase">Status: {user.isBlocked ? 'Suspended' : 'Active'}</p>
+                                    </div>
+                                </div>
+                                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                                    <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-1">Institutional Context</p>
+                                    <p className="text-[10px] font-medium text-muted-foreground leading-relaxed">
+                                        Identity node synchronized with centralized registry. Manual audit status: CLEAR.
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
-                        <ScrollArea className="max-h-[40vh] px-4">
+                        <ScrollArea className="max-h-[30vh] px-4">
                             <div className="space-y-6 pb-4 text-left">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="p-4 rounded-2xl bg-muted/30 border border-primary/5 space-y-1">

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -8,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, UserCheck, Fingerprint, Zap, Cpu } from 'lucide-react';
+import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, UserCheck, Fingerprint, Zap, Cpu, QrCode } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
@@ -33,6 +34,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { Logo } from "@/components/logo";
 
 type UserProfile = {
   uid: string;
@@ -52,6 +54,65 @@ const ADMIN_EMAILS = [
   'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com'
 ];
+
+function DigitalIdentityCard({ profile }: { profile: UserProfile }) {
+    const systemId = `NS-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
+    return (
+        <div className="relative w-full aspect-[1.586/1] rounded-[1.5rem] overflow-hidden shadow-2xl group transition-all hover:scale-[1.02] active:scale-[0.98] text-left">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-blue-600"></div>
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+            
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+                <Logo className="h-32 w-32 border-none shadow-none p-0" />
+            </div>
+            
+            <div className="relative h-full flex flex-col p-6 text-white">
+                <div className="flex justify-between items-start mb-auto">
+                    <div className="flex items-center gap-2">
+                        <Logo className="h-8 w-8 border-none shadow-none bg-white p-1" />
+                        <div className="flex flex-col">
+                            <span className="font-black text-[10px] tracking-tighter leading-none">NYAYA SAHAYAK</span>
+                            <span className="text-[6px] font-bold uppercase tracking-[0.2em] opacity-60">Forensic Terminal</span>
+                        </div>
+                    </div>
+                    <div className="bg-white/20 backdrop-blur-md px-2 py-1 rounded-md border border-white/10">
+                        <span className="text-[8px] font-black uppercase tracking-widest">Active Node</span>
+                    </div>
+                </div>
+
+                <div className="flex gap-4 items-end mb-4">
+                    <div className="relative shrink-0">
+                        <Avatar className="h-16 w-16 border-2 border-white/20 rounded-xl shadow-lg">
+                            <AvatarImage src={profile.photoURL} className="object-cover" />
+                            <AvatarFallback className="bg-white/10 text-white font-black">{profile.firstName?.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="absolute -bottom-1 -right-1 bg-green-500 h-3 w-3 rounded-full border-2 border-primary shadow-sm"></div>
+                    </div>
+                    <div className="flex-1 space-y-0.5 min-w-0">
+                        <h3 className="font-black text-sm sm:text-base tracking-tight truncate uppercase leading-none">{profile.firstName} {profile.lastName}</h3>
+                        <p className="text-[8px] font-bold uppercase tracking-widest opacity-70 leading-none">{profile.userType}</p>
+                        <p className="text-[10px] font-mono font-bold tracking-wider pt-1">{systemId}</p>
+                    </div>
+                    <div className="bg-white p-1.5 rounded-lg shadow-xl shrink-0">
+                        <QrCode className="h-8 w-8 sm:h-10 sm:w-10 text-black" />
+                    </div>
+                </div>
+                
+                <div className="pt-3 border-t border-white/10 flex justify-between items-center">
+                    <div className="space-y-0.5">
+                        <p className="text-[6px] font-bold uppercase opacity-40">Registry Email</p>
+                        <p className="text-[8px] font-bold truncate max-w-[120px] sm:max-w-[180px]">{profile.email}</p>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-[6px] font-bold uppercase opacity-40">Security Status</p>
+                        <p className="text-[8px] font-black uppercase tracking-tighter text-green-300">Verified Identity</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function ProfilePage() {
   const { theme, setTheme } = useTheme();
@@ -285,7 +346,7 @@ export default function ProfilePage() {
                                         <BadgeCheck className="h-3 w-3 mr-2" /> Identity Verified
                                     </Badge>
                                 ) : userProfile?.securityStatus === 'verified' ? (
-                                    <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20 py-1 px-4 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
+                                    <Badge className="bg-blue-500/10 text-blue-600 border-green-500/20 py-1 px-4 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
                                         <ShieldCheck className="h-3 w-3 mr-2" /> AI Authenticated
                                     </Badge>
                                 ) : (
@@ -322,6 +383,13 @@ export default function ProfilePage() {
                         </Button>
                     </CardContent>
                 </Card>
+
+                {userProfile && (
+                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-3">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-4">Digital Identity Node</h3>
+                        <DigitalIdentityCard profile={userProfile} />
+                    </motion.div>
+                )}
                 
                 <Card className="border-destructive/10 bg-destructive/5 shadow-xl rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
                     <CardHeader className="p-6 sm:p-8 pb-4">
