@@ -480,6 +480,14 @@ export default function DashboardHomePage() {
         <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-center gap-4">
             <Link href="/dashboard/research-analytics/new">
                 <motion.button
+                    animate={{
+                        y: [0, -10, 0],
+                    }}
+                    transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className="relative group h-16 w-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center transition-all overflow-hidden"
@@ -492,8 +500,8 @@ export default function DashboardHomePage() {
                     <Bot className="h-8 w-8 relative z-10" />
                     
                     {/* Integrated Action Node (+) */}
-                    <div className="absolute top-2 right-2 bg-accent text-accent-foreground rounded-full p-0.5 shadow-lg z-20 border-2 border-primary group-hover:scale-110 transition-transform">
-                        <Plus className="h-2.5 w-2.5 font-black" />
+                    <div className="absolute top-2 right-2 bg-accent text-accent-foreground rounded-full p-1 shadow-xl z-20 border-2 border-primary group-hover:scale-110 transition-transform">
+                        <Plus className="h-3 w-3 font-black" />
                     </div>
 
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
