@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { Footer } from "@/components/footer";
+import { PublicHeader } from "@/components/public-header";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 
@@ -65,6 +67,8 @@ export default function WelcomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background selection:bg-primary/10 overflow-x-hidden">
+      <PublicHeader />
+      
       <div className="flex-1 flex flex-col items-center justify-center p-4 py-16 sm:py-24 relative">
         <NeuralRain />
         
