@@ -5,7 +5,7 @@ import { useActionState, useState, useRef, useEffect, startTransition } from "re
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Bot, FileText, Scale, Landmark, StepForward, Loader2, Languages, Headphones, FileSearch, Upload, Sparkles, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Mic, Bot, FileText, Landmark, StepForward, Loader2, Languages, FileSearch, Upload, Sparkles, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -107,7 +107,7 @@ export default function NarrateProblemPage() {
   const isLoading = state.status === "loading";
 
   return (
-    <div className="space-y-10 max-w-7xl mx-auto pb-20 px-2 sm:px-0">
+    <div className="space-y-10 max-w-7xl mx-auto pb-20">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
         <PageHeader
             title="Neural Voice Narrator"
@@ -127,7 +127,7 @@ export default function NarrateProblemPage() {
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center space-y-8 pt-10 pb-10">
                     <div className="w-full space-y-4 px-2">
-                        <div className="space-y-3">
+                        <div className="space-y-3 text-left">
                             <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1 flex items-center gap-2">
                                 <Languages className="h-3 w-3" /> Dialect Registry
                             </Label>

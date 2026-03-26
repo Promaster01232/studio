@@ -1,14 +1,14 @@
 
 import { Logo } from "@/components/logo";
-import { ShieldCheck, FileText, Cookie, AlertCircle, Info, Mail } from "lucide-react";
+import { ShieldCheck, FileText, Cookie, AlertCircle, Info, Mail, Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {
   return (
     <footer className="w-full border-t border-primary/5 bg-card/20 backdrop-blur-xl mt-auto">
-      <div className="max-w-7xl mx-auto px-6 py-6 lg:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center lg:items-start">
-          <div className="lg:col-span-5 space-y-4 flex flex-col items-center lg:items-start text-center lg:text-left">
+      <div className="max-w-7xl mx-auto px-6 py-10 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div className="lg:col-span-5 space-y-6 flex flex-col items-center lg:items-start text-center lg:text-left">
             <Link href="/" className="flex items-center gap-4 group cursor-pointer transition-transform active:scale-95">
               <div className="relative">
                   <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-primary/20 via-accent/20 to-blue-400/20 blur-lg animate-pulse group-hover:scale-125 transition-transform duration-700"></div>
@@ -30,10 +30,17 @@ export function Footer() {
             <p className="text-xs text-muted-foreground leading-relaxed font-medium max-w-sm">
               Engineered for the future of justice. Our neural forensic nodes provide mathematically precise legal intelligence and institutional navigational roadmaps.
             </p>
+            <div className="flex items-center gap-4 pt-2">
+                <Link href="https://facebook.com" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Facebook className="h-4 w-4" /></Link>
+                <Link href="https://twitter.com" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Twitter className="h-4 w-4" /></Link>
+                <Link href="https://instagram.com" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Instagram className="h-4 w-4" /></Link>
+                <Link href="https://youtube.com" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Youtube className="h-4 w-4" /></Link>
+                <Link href="https://linkedin.com" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Linkedin className="h-4 w-4" /></Link>
+            </div>
           </div>
 
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <div className="space-y-4">
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className="space-y-6">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary border-b border-primary/10 pb-2 w-fit mx-auto sm:mx-0">
                 Institutional Nodes
               </h3>
@@ -53,7 +60,7 @@ export function Footer() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary border-b border-primary/10 pb-2 w-fit mx-auto sm:mx-0">
                 Security Protocols
               </h3>

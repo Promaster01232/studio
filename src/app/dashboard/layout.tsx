@@ -209,7 +209,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <SidebarProvider>
-      <Sidebar collapsible="icon" className="border-r border-border glass bg-white/50 dark:bg-black/20">
+      <Sidebar collapsible="icon" className="border-r border-border glass bg-white/50 dark:bg-zinc-950/50">
         <SidebarHeader className="p-6 overflow-hidden">
           <Link href="/dashboard" className="flex items-center gap-4 transition-all hover:scale-105 active:scale-95 group-data-[collapsible=icon]:justify-center group">
             <div className="relative">
