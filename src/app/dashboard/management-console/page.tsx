@@ -38,7 +38,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { onAuthStateChanged } from "firebase/auth";
 import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError } from "@/firebase/errors";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -271,15 +271,25 @@ export default function ManagementConsolePage() {
         }
 
         const usersCol = collection(firestore, "users");
-        unsubscribeRef.current = onSnapshot(usersCol, (snapshot) => {
-            const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
-            setUsers(list.sort((a, b) => {
-                const dateA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : Number(a.createdAt || 0);
-                const dateB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : Number(b.createdAt || 0);
-                return dateB - dateA;
-            }));
-            setLoading(false);
-        });
+        unsubscribeRef.current = onSnapshot(usersCol, 
+            (snapshot) => {
+                const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
+                setUsers(list.sort((a, b) => {
+                    const dateA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : Number(a.createdAt || 0);
+                    const dateB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : Number(b.createdAt || 0);
+                    return dateB - dateA;
+                }));
+                setLoading(false);
+            },
+            (serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: usersCol.path,
+                    operation: 'list',
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+                setLoading(false);
+            }
+        );
     });
 
     return () => {
@@ -291,17 +301,19 @@ export default function ManagementConsolePage() {
   const handleToggleStatus = (user: UserRecord, isInactive: boolean) => {
     setProcessingUid(user.uid);
     const updateData = { isBlocked: isInactive };
-    updateDoc(doc(firestore, "users", user.uid), updateData)
+    const userRef = doc(firestore, "users", user.uid);
+
+    updateDoc(userRef, updateData)
         .then(() => {
             update(ref(rtdb, `users/${user.uid}`), updateData).catch(() => {});
             toast({ title: isInactive ? "User Suspended" : "User Activated" });
         })
         .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
-                path: `/users/${user.uid}`,
+                path: userRef.path,
                 operation: 'update',
                 requestResourceData: updateData,
-            }, serverError);
+            } satisfies SecurityRuleContext, serverError);
             errorEmitter.emit('permission-error', permissionError);
         })
         .finally(() => setProcessingUid(null));
@@ -315,7 +327,16 @@ export default function ManagementConsolePage() {
             ? { securityStatus: 'verified', flagReason: "", isBlocked: false } 
             : { securityStatus: 'suspicious', flagReason: verification.reason || "Suspicious identity patterns." };
 
-          await updateDoc(doc(firestore, "users", user.uid), updateData as any);
+          const userRef = doc(firestore, "users", user.uid);
+          updateDoc(userRef, updateData as any)
+            .catch(async (serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: userRef.path,
+                    operation: 'update',
+                    requestResourceData: updateData,
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+            });
           toast({ title: verification.isAuthentic ? "User Authenticated" : "Forensic Audit Failed" });
       } catch (error) {
           toast({ variant: "destructive", title: "Process Error" });
@@ -328,26 +349,34 @@ export default function ManagementConsolePage() {
       const msg = prompt(`Initialize institutional alert for ${targetUser.firstName}:`);
       if (!msg) return;
 
-      try {
-          await addDoc(collection(firestore, "notifications"), {
-              userId: targetUser.uid,
-              type: 'admin_message',
-              title: 'Institutional Alert',
-              description: msg,
-              isRead: false,
-              createdAt: serverTimestamp()
-          });
-          toast({ title: "Alert Dispatched", description: "The citizen has been notified." });
-      } catch (error) {
-          toast({ variant: "destructive", title: "Transmission Failed" });
-      }
+      const notifData = {
+          userId: targetUser.uid,
+          type: 'admin_message',
+          title: 'Institutional Alert',
+          description: msg,
+          isRead: false,
+          createdAt: serverTimestamp()
+      };
+
+      const notifCol = collection(firestore, "notifications");
+      addDoc(notifCol, notifData)
+        .then(() => {
+            toast({ title: "Alert Dispatched", description: "The citizen has been notified." });
+        })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: notifCol.path,
+                operation: 'create',
+                requestResourceData: notifData,
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        });
   };
 
   const handleExecutePurge = async () => {
     if (!userToPurge) return;
     const user = userToPurge;
     
-    // PROTECT ADMIN NODES
     if (ADMIN_EMAILS.includes(user.email.toLowerCase()) || user.isAdmin) {
         toast({ 
             variant: "destructive", 
@@ -359,17 +388,18 @@ export default function ManagementConsolePage() {
     }
     
     setProcessingUid(user.uid);
+    const userRef = doc(firestore, "users", user.uid);
     
-    deleteDoc(doc(firestore, "users", user.uid))
+    deleteDoc(userRef)
         .then(() => {
             remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
             toast({ title: "Registry Node Purged", description: `Record for ${user.firstName} erased permanently.` });
         })
         .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
-                path: `/users/${user.uid}`,
+                path: userRef.path,
                 operation: 'delete',
-            }, serverError);
+            } satisfies SecurityRuleContext, serverError);
             errorEmitter.emit('permission-error', permissionError);
         })
         .finally(() => {
@@ -389,7 +419,13 @@ export default function ManagementConsolePage() {
               remove(ref(rtdb, `users/${u.uid}`)).catch(() => {});
           });
 
-          await batch.commit();
+          await batch.commit().catch(async (serverError) => {
+              const permissionError = new FirestorePermissionError({
+                  path: '/users',
+                  operation: 'delete',
+              } satisfies SecurityRuleContext, serverError);
+              errorEmitter.emit('permission-error', permissionError);
+          });
           toast({ title: "Mass Purge Complete", description: `${citizens.length} citizen nodes erased.` });
       } catch (error) {
           toast({ variant: "destructive", title: "Mass Purge Failed" });
@@ -428,7 +464,7 @@ export default function ManagementConsolePage() {
                             This will permanently delete ALL non-admin citizen accounts from the registry. This action is terminal.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter className="mt-6 gap-3">
+                    <AlertDialogFooter className="mt-6 gap-3 text-left">
                         <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1">Abort</AlertDialogCancel>
                         <AlertDialogAction onClick={handleMassPurgeCitizens} className="bg-destructive text-white font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px]">Confirm Mass Purge</AlertDialogAction>
                     </AlertDialogFooter>
@@ -528,8 +564,8 @@ export default function ManagementConsolePage() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl">
-                                                    <DropdownMenuItem onClick={() => handleSendAdminMessage(user)} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
-                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><RotateCcw className="mr-3 h-4 w-4" /> Reset Node</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleSendAdminMessage(user)} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
+                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><RotateCcw className="mr-3 h-4 w-4" /> Reset Node</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem 
                                                         className={cn("rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10", isProtected && "opacity-50 cursor-not-allowed")}
@@ -564,7 +600,7 @@ export default function ManagementConsolePage() {
                       This protocol will permanently erase <strong>{userToPurge?.firstName} {userToPurge?.lastName}</strong> from the registry. This action is terminal and irreversible.
                   </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6">
+              <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6 text-left">
                   <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort Protocol</AlertDialogCancel>
                   <AlertDialogAction onClick={handleExecutePurge} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px] shadow-lg shadow-destructive/20">Execute Purge</AlertDialogAction>
               </AlertDialogFooter>

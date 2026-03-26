@@ -13,6 +13,8 @@ import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 interface NotificationNode {
     id: string;
@@ -34,38 +36,63 @@ export default function NotificationsPage() {
     if (!auth.currentUser) return;
 
     const notifRef = collection(firestore, "notifications");
-    // Removed orderBy to avoid Firestore composite index requirement. 
-    // We handle sorting in-memory for the forensic dossier.
     const q = query(
         notifRef, 
         where("userId", "==", auth.currentUser.uid)
     );
 
-    const unsubscribe = onSnapshot(q, (snap) => {
-        const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as NotificationNode));
-        
-        // Institutional In-Memory Sorting Node
-        list.sort((a, b) => {
-            const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 
-                         (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
-            const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 
-                         (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
-            return timeB - timeA;
-        });
+    const unsubscribe = onSnapshot(q, 
+        (snap) => {
+            const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as NotificationNode));
+            
+            list.sort((a, b) => {
+                const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 
+                             (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+                const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 
+                             (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+                return timeB - timeA;
+            });
 
-        setNotifications(list);
-        setLoading(false);
-    });
+            setNotifications(list);
+            setLoading(false);
+        },
+        (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: notifRef.path,
+                operation: 'list',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+            setLoading(false);
+        }
+    );
 
     return () => unsubscribe();
   }, [auth, firestore]);
 
   const markAsRead = async (id: string) => {
-      await updateDoc(doc(firestore, "notifications", id), { isRead: true });
+      const notifDoc = doc(firestore, "notifications", id);
+      const updateData = { isRead: true };
+      updateDoc(notifDoc, updateData)
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: notifDoc.path,
+                operation: 'update',
+                requestResourceData: updateData,
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        });
   };
 
   const deleteNotif = async (id: string) => {
-      await deleteDoc(doc(firestore, "notifications", id));
+      const notifDoc = doc(firestore, "notifications", id);
+      deleteDoc(notifDoc)
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: notifDoc.path,
+                operation: 'delete',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        });
   };
 
   const markAllRead = async () => {
@@ -73,7 +100,13 @@ export default function NotificationsPage() {
       notifications.filter(n => !n.isRead).forEach(n => {
           batch.update(doc(firestore, "notifications", n.id), { isRead: true });
       });
-      await batch.commit();
+      batch.commit().catch(async (serverError) => {
+          const permissionError = new FirestorePermissionError({
+              path: '/notifications',
+              operation: 'update',
+          } satisfies SecurityRuleContext, serverError);
+          errorEmitter.emit('permission-error', permissionError);
+      });
   };
 
   const clearRegistry = async () => {
@@ -82,7 +115,13 @@ export default function NotificationsPage() {
       notifications.forEach(n => {
           batch.delete(doc(firestore, "notifications", n.id));
       });
-      await batch.commit();
+      batch.commit().catch(async (serverError) => {
+          const permissionError = new FirestorePermissionError({
+              path: '/notifications',
+              operation: 'delete',
+          } satisfies SecurityRuleContext, serverError);
+          errorEmitter.emit('permission-error', permissionError);
+      });
   };
 
   const getIcon = (type: string) => {

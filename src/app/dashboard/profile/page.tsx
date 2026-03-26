@@ -35,6 +35,8 @@ import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Logo } from "@/components/logo";
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 type UserProfile = {
   uid: string;
@@ -62,7 +64,6 @@ function DigitalIdentityCard({ profile }: { profile: UserProfile }) {
             <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-blue-600"></div>
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
             
-            {/* Background elements */}
             <div className="absolute top-0 right-0 p-4 opacity-10">
                 <Logo className="h-32 w-32 border-none shadow-none p-0" />
             </div>
@@ -191,7 +192,16 @@ export default function ProfilePage() {
         const verification = await verifyEmailAuthenticity({ email: userProfile.email });
         if (verification.isAuthentic) {
             const userRef = doc(firestore, "users", userProfile.uid);
-            await setDoc(userRef, { securityStatus: 'verified', flagReason: "", isBlocked: false }, { merge: true });
+            const updateData = { securityStatus: 'verified', flagReason: "", isBlocked: false };
+            setDoc(userRef, updateData, { merge: true })
+                .catch(async (serverError) => {
+                    const permissionError = new FirestorePermissionError({
+                        path: userRef.path,
+                        operation: 'update',
+                        requestResourceData: updateData,
+                    } satisfies SecurityRuleContext, serverError);
+                    errorEmitter.emit('permission-error', permissionError);
+                });
             setUserProfile(prev => prev ? { ...prev, securityStatus: 'verified' } : null);
             toast({ title: "Audit Passed", description: `Forensic identity confirmed.` });
         } else {
@@ -206,12 +216,23 @@ export default function ProfilePage() {
 
   const updateUserPhoto = (newPhotoURL: string) => {
       if (!auth.currentUser || !userProfile) return;
-      setDoc(doc(firestore, "users", auth.currentUser.uid), { photoURL: newPhotoURL }, { merge: true })
+      const userRef = doc(firestore, "users", auth.currentUser.uid);
+      const updateData = { photoURL: newPhotoURL };
+      
+      setDoc(userRef, updateData, { merge: true })
         .then(() => {
             toast({ title: "Registry Updated", description: "Identity photo synchronized." });
             setUserProfile(prev => prev ? { ...prev, photoURL: newPhotoURL } : null);
+        })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: userRef.path,
+                operation: 'update',
+                requestResourceData: updateData,
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
         });
-      update(ref(rtdb, `users/${auth.currentUser.uid}`), { photoURL: newPhotoURL }).catch(() => {});
+      update(ref(rtdb, `users/${auth.currentUser.uid}`), updateData).catch(() => {});
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -268,11 +289,20 @@ export default function ProfilePage() {
     setSaving(true);
     const updatedProfile: UserProfile = { ...userProfile, firstName, lastName, email, mobileNumber, photoURL };
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+    
     setDoc(userDocRef, updatedProfile, { merge: true })
       .then(() => {
         set(ref(rtdb, `users/${auth.currentUser?.uid}`), updatedProfile).catch(() => {});
         setUserProfile(updatedProfile);
         toast({ title: 'Registry Synchronized', description: 'Personal dossier updated successfully.' });
+      })
+      .catch(async (serverError) => {
+          const permissionError = new FirestorePermissionError({
+              path: userDocRef.path,
+              operation: 'update',
+              requestResourceData: updatedProfile,
+          } satisfies SecurityRuleContext, serverError);
+          errorEmitter.emit('permission-error', permissionError);
       })
       .finally(() => setSaving(false));
   };
@@ -290,17 +320,25 @@ export default function ProfilePage() {
     }
     setSaving(true);
     const user = auth.currentUser;
-    try {
-      await deleteDoc(doc(firestore, "users", user.uid));
-      remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
-      await deleteUser(user);
-      toast({ title: "Registry Purged", description: "All identity records have been permanently erased." });
-      router.replace('/');
-    } catch (error: any) {
-      toast({ variant: "destructive", title: "Purge Failed", description: "Recent authentication required." });
-    } finally {
-      if (auth.currentUser) setSaving(false);
-    }
+    const userDocRef = doc(firestore, "users", user.uid);
+
+    deleteDoc(userDocRef)
+        .then(async () => {
+            remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
+            await deleteUser(user);
+            toast({ title: "Registry Purged", description: "All identity records have been permanently erased." });
+            router.replace('/');
+        })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: userDocRef.path,
+                operation: 'delete',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        })
+        .finally(() => {
+            if (auth.currentUser) setSaving(false);
+        });
   };
 
   if (loading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
@@ -466,7 +504,7 @@ export default function ProfilePage() {
                             <Button 
                                 onClick={handleSaveChanges} 
                                 disabled={saving || !hasChanges} 
-                                className="w-full sm:w-auto h-14 px-12 font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary/20 rounded-2xl active:scale-95 transition-all"
+                                className="w-full sm:w-auto h-14 px-12 font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary/20 rounded-2xl active:scale-[0.98] transition-all"
                             >
                                 {saving ? <Loader2 className="mr-3 h-5 w-5 animate-spin" /> : <Edit className="mr-3 h-4 w-4" />}
                                 Synchronize Registry

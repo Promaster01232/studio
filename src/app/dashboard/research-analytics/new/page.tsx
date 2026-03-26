@@ -33,6 +33,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 interface UserProfile {
     firstName: string;
@@ -144,16 +146,21 @@ export default function NewPostPage() {
             } : undefined
         };
 
-        try {
-            await addDoc(collection(firestore, "posts"), newPostData);
-            toast({ title: "Post Published!", description: "Your new transmission has been added to the registry." });
-            router.push('/dashboard/research-analytics');
-        } catch (error: any) {
-            console.error("Posting error:", error);
-            toast({ variant: 'destructive', title: 'Transmission Failed', description: 'Institutional protocol refused the data entry.' });
-        } finally {
-            setIsPosting(false);
-        }
+        const postsCol = collection(firestore, "posts");
+        addDoc(postsCol, newPostData)
+            .then(() => {
+                toast({ title: "Post Published!", description: "Your new transmission has been added to the registry." });
+                router.push('/dashboard/research-analytics');
+            })
+            .catch(async (serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: postsCol.path,
+                    operation: 'create',
+                    requestResourceData: newPostData,
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+                setIsPosting(false);
+            });
     };
 
     return (

@@ -82,6 +82,8 @@ import {
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { Logo } from "@/components/logo";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -190,7 +192,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     const [isLiking, setIsLiking] = useState(false);
     const [optimisticLikes, setOptimisticLikes] = useState(post.likes);
     const [optimisticLikedBy, setOptimisticLikedBy] = useState(post.likedBy || []);
-    const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
     const isAdmin = currentUser?.email && (ADMIN_EMAILS.includes(currentUser.email.toLowerCase()) || userProfile?.isAdmin);
@@ -202,37 +203,56 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
         setIsLiking(true);
 
         const postRef = doc(firestore, "posts", post.id);
+        const updateData = {
+            likes: increment(userHasLiked ? -1 : 1),
+            likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        };
+
         setOptimisticLikes(prev => userHasLiked ? prev - 1 : prev + 1);
         setOptimisticLikedBy(prev => userHasLiked ? prev.filter(uid => uid !== currentUser.uid) : [...prev, currentUser.uid]);
 
-        updateDoc(postRef, {
-            likes: increment(userHasLiked ? -1 : 1),
-            likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
-        }).then(() => {
-            if (!userHasLiked && post.authorUid !== currentUser.uid) {
-                addDoc(collection(firestore, "notifications"), {
-                    userId: post.authorUid,
-                    type: 'like',
-                    title: 'Transmission Liked',
-                    description: `${userProfile?.firstName || 'A citizen'} liked your post: "${post.title}"`,
-                    isRead: false,
-                    createdAt: serverTimestamp()
-                });
-            }
-        }).catch(() => {
-            setOptimisticLikes(post.likes);
-            setOptimisticLikedBy(post.likedBy || []);
-        }).finally(() => setIsLiking(false));
+        updateDoc(postRef, updateData)
+            .then(() => {
+                if (!userHasLiked && post.authorUid !== currentUser.uid) {
+                    addDoc(collection(firestore, "notifications"), {
+                        userId: post.authorUid,
+                        type: 'like',
+                        title: 'Transmission Liked',
+                        description: `${userProfile?.firstName || 'A citizen'} liked your post: "${post.title}"`,
+                        isRead: false,
+                        createdAt: serverTimestamp()
+                    }).catch(() => {});
+                }
+            })
+            .catch(async (serverError) => {
+                setOptimisticLikes(post.likes);
+                setOptimisticLikedBy(post.likedBy || []);
+                
+                const permissionError = new FirestorePermissionError({
+                    path: postRef.path,
+                    operation: 'update',
+                    requestResourceData: updateData,
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+            })
+            .finally(() => setIsLiking(false));
     };
 
     const handleDelete = async () => {
         if (!confirm("Are you sure you want to purge this transmission from the registry?")) return;
-        try {
-            await deleteDoc(doc(firestore, "posts", post.id));
-            toast({ title: "Transmission Purged", description: "The node has been erased from the official registry." });
-        } catch (error) {
-            toast({ variant: "destructive", title: "Action Refused", description: "Insufficient node permissions." });
-        }
+        const postRef = doc(firestore, "posts", post.id);
+        
+        deleteDoc(postRef)
+            .then(() => {
+                toast({ title: "Transmission Purged", description: "The node has been erased from the official registry." });
+            })
+            .catch(async (serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: postRef.path,
+                    operation: 'delete',
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+            });
     };
 
     const handleReport = () => {
@@ -249,9 +269,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
         }
     };
 
-    const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
-    const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
-
     return (
         <motion.div
             layout
@@ -262,10 +279,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
             className="w-full"
         >
             <Card className="group relative overflow-hidden glass border-primary/10 hover:border-primary/30 transition-all duration-500 shadow-2xl rounded-[2.5rem] flex flex-col sm:flex-row h-full min-h-[320px]">
-                {/* Visual Identity Strip */}
                 <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-400 group-hover:w-2 transition-all duration-500 hidden sm:block"></div>
                 
-                {/* News Image Section (Left) */}
                 <div className="relative w-full sm:w-[300px] md:w-[380px] h-48 sm:h-auto overflow-hidden shrink-0">
                     {post.image ? (
                         <Image
@@ -288,7 +303,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                     </div>
                 </div>
 
-                {/* Content Section (Right) */}
                 <div className="flex-1 flex flex-col p-6 sm:p-10 text-left">
                     <div className="flex items-center justify-between mb-6">
                         <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
@@ -335,7 +349,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                         )}
                     </div>
 
-                    {/* Footer / Interaction Node */}
                     <div className="flex items-center justify-between pt-8 border-t border-primary/5">
                         <div className="flex items-center gap-4">
                             <Button 
@@ -416,7 +429,7 @@ function FloatingActionNodes() {
                                 Ask any question regarding nyayasahayak.in protocols or statutory tools.
                             </DialogDescription>
                         </DialogHeader>
-                        <div className="space-y-6 py-6">
+                        <div className="space-y-6 py-6 text-left">
                             <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 text-xs font-medium leading-relaxed italic text-muted-foreground">
                                 "Initialize question transmission below. Our neural engine will deconstruct your query and provide institutional guidance."
                             </div>
@@ -524,8 +537,12 @@ export default function DashboardHomePage() {
             setLatestPosts(list);
             setPostsLoading(false);
         },
-        (error) => {
-            console.error("Community feed sync error:", error);
+        (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: postsRef.path,
+                operation: 'list',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
             setPostsLoading(false);
         }
     );
@@ -587,7 +604,7 @@ export default function DashboardHomePage() {
                   <div className="flex flex-wrap gap-6 pt-6">
                       <Button size="lg" className="rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[11px] px-10 h-16 shadow-2xl shadow-primary/20 active:scale-95 transition-all group/hero" asChild>
                           <Link href="/dashboard/narrate">
-                            Initialize Narration <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover/hero:translate-x-2" />
+                            Initialize Narration <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hero:translate-x-2" />
                           </Link>
                       </Button>
                       <Button variant="outline" size="lg" className="rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[11px] px-10 h-16 border-primary/10 glass hover:bg-primary/5 active:scale-95 transition-all" asChild>
