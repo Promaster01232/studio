@@ -11,7 +11,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Sparkles } from "lucide-react";
+import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Sparkles, Activity } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -54,12 +54,12 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
                         <div className="w-full max-w-md cursor-pointer group active:scale-[0.99] transition-transform">
-                            <div className="hidden md:flex items-center w-full pl-10 pr-16 h-11 font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm relative">
+                            <div className="hidden md:flex items-center w-full pl-10 pr-16 h-11 font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm relative">
                                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                <span className="tracking-tight">Search tools, cases, guides...</span>
+                                <span className="tracking-[0.1em]">Forensic Search Hub...</span>
                                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-black text-muted-foreground opacity-100 shadow-sm">
-                                        <span className="text-[11px]">⌘</span>K
+                                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[9px] font-black text-muted-foreground opacity-100 shadow-sm">
+                                        <span className="text-[10px]">⌘</span>K
                                     </kbd>
                                 </div>
                             </div>
@@ -74,10 +74,15 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
             </div>
 
             <div className="flex items-center gap-3">
+                <div className="hidden lg:flex items-center gap-2 mr-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10">
+                    <Activity className="h-3 w-3 text-green-500 animate-pulse" />
+                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/60">System: Active</span>
+                </div>
+
                 {!userProfile?.isBlocked && (
                     <>
                         <SosDialog>
-                            <Button variant="destructive" size="sm" className="font-black gap-2 animate-pulse px-5 h-11 text-[10px] rounded-xl shadow-xl shadow-destructive/20 active:scale-95 transition-all">
+                            <Button variant="destructive" size="sm" className="font-black gap-2 animate-pulse px-5 h-11 text-[9px] rounded-xl shadow-xl shadow-destructive/20 active:scale-95 transition-all">
                                 <ShieldAlert className="h-4 w-4" />
                                 <span className="hidden sm:inline tracking-[0.2em] uppercase">Emergency SOS</span>
                             </Button>

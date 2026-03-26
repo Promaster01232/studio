@@ -97,6 +97,13 @@ interface Post {
     isAnonymous?: boolean;
 }
 
+const ForensicLabel = ({ children, className }: { children: React.ReactNode, className?: string }) => (
+    <div className={cn("flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.3em] text-primary/60", className)}>
+        <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
+        {children}
+    </div>
+);
+
 const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
@@ -279,23 +286,26 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Case assessment.", color: "text-blue-500", bg: "bg-blue-500/5" },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5" },
-    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5" },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Affidavits.", color: "text-purple-500", bg: "bg-purple-500/5" },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Case assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "Sector: Forensic" },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "Sector: Statutory" },
+    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "Sector: Civil" },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "Sector: Registry" },
 ];
 
-const SectionTitle = ({children, icon: Icon}: {children: React.ReactNode, icon?: any}) => (
-    <div className="flex items-center gap-3 mb-6">
-        {Icon && <Icon className="h-5 w-5 text-primary opacity-40" />}
-        <h2 className="text-sm font-black uppercase tracking-[0.2em] text-foreground">{children}</h2>
+const SectionHeader = ({ children, icon: Icon, sector }: { children: React.ReactNode, icon?: any, sector?: string }) => (
+    <div className="flex items-center justify-between mb-6 border-b border-primary/5 pb-4">
+        <div className="flex items-center gap-3">
+            {Icon && <Icon className="h-5 w-5 text-primary opacity-40" />}
+            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground">{children}</h2>
+        </div>
+        {sector && <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">{sector}</span>}
     </div>
 )
 
 export default function DashboardHomePage() {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
-  const fullText = 'Nyaya Sahayak';
+  const fullText = 'Sahayak';
   
   const firestore = useFirestore();
   const auth = useAuth();
@@ -307,7 +317,6 @@ export default function DashboardHomePage() {
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-        // Clean up previous listeners if auth state changes
         if (postsUnsubscribeRef.current) {
             postsUnsubscribeRef.current();
             postsUnsubscribeRef.current = null;
@@ -320,13 +329,11 @@ export default function DashboardHomePage() {
             return;
         }
 
-        // Initialize User Profile Sync
         const userDocRef = doc(firestore, "users", user.uid);
         getDoc(userDocRef).then(docSnap => {
             if (docSnap.exists()) setUserProfile(docSnap.data());
         });
 
-        // Initialize Community Feed Sync
         const postsRef = collection(firestore, "posts");
         const q = query(postsRef, orderBy("createdAt", "desc"), limit(5));
         
@@ -372,46 +379,48 @@ export default function DashboardHomePage() {
   return (
     <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
         <MotionWrapper>
-          <div className="relative p-8 sm:p-12 rounded-3xl overflow-hidden bg-primary/5 border border-primary/10 shadow-sm">
-              <div className="relative z-10 space-y-6">
-                  <div className="flex items-center gap-3 text-primary">
-                      <Sparkles className="h-4 w-4 animate-pulse" />
-                      <span className="text-[9px] font-black uppercase tracking-[0.4em]">Node: Alpha-4</span>
+          <Card className="relative p-8 sm:p-12 rounded-[2rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
+                  <Logo className="h-64 w-64 border-none p-0 grayscale" />
+              </div>
+              <div className="relative z-10 space-y-8">
+                  <div className="space-y-2">
+                      <ForensicLabel>Status: Synchronized // Node: Alpha-Primary</ForensicLabel>
+                      <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
+                          Welcome back, <br />
+                          <span className="bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent italic">Nyaya {text}</span>
+                      </h1>
                   </div>
-                  <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
-                      Welcome back, <br />
-                      <span className="bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent italic">{text}</span>
-                  </h1>
-                  <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl">
-                      Access legal intelligence and forensic tools designed for precision.
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium max-w-xl leading-relaxed">
+                      Access high-fidelity legal intelligence nodes and forensic auditing tools designed for statutory precision.
                   </p>
-                  <div className="flex flex-wrap gap-4 pt-4">
-                      <Button size="sm" className="rounded-xl font-black uppercase tracking-widest text-[9px] px-6 h-11" asChild>
+                  <div className="flex flex-wrap gap-4 pt-2">
+                      <Button size="sm" className="rounded-xl font-black uppercase tracking-[0.2em] text-[9px] px-8 h-12 shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
                           <Link href="/dashboard/narrate">Initialize Narration</Link>
                       </Button>
-                      <Button variant="outline" size="sm" className="rounded-xl font-black uppercase tracking-widest text-[9px] px-6 h-11 border-primary/10" asChild>
+                      <Button variant="outline" size="sm" className="rounded-xl font-black uppercase tracking-[0.2em] text-[9px] px-8 h-12 border-primary/10 hover:bg-primary/5 active:scale-95 transition-all" asChild>
                           <Link href="/dashboard/support">Hub Support</Link>
                       </Button>
                   </div>
               </div>
-          </div>
+          </Card>
         </MotionWrapper>
 
         <div className="grid lg:grid-cols-12 gap-10">
           <div className="lg:col-span-8 space-y-10">
               <section>
-                  <SectionTitle icon={TrendingUp}>Live Stream</SectionTitle>
+                  <SectionHeader icon={TrendingUp} sector="Sector: Community">Live Transmission Stream</SectionHeader>
                   <div className="space-y-6">
                       {postsLoading ? (
                           <div className="space-y-4">
                               {[...Array(3)].map((_, i) => (
-                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-2xl" />
+                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-2xl bg-muted/20" />
                               ))}
                           </div>
                       ) : latestPosts.length === 0 ? (
-                          <div className="py-20 text-center glass rounded-3xl border-dashed border-2 opacity-40">
-                              <p className="font-black uppercase tracking-widest text-xs">No active transmissions</p>
-                          </div>
+                          <Card className="py-20 text-center glass rounded-3xl border-dashed border-2 border-primary/10 opacity-40">
+                              <p className="font-black uppercase tracking-[0.2em] text-[10px]">Registry Empty // No active transmissions</p>
+                          </Card>
                       ) : (
                           <div className="space-y-6">
                               {latestPosts.map((post) => (
@@ -425,16 +434,22 @@ export default function DashboardHomePage() {
 
           <div className="lg:col-span-4 space-y-10">
               <section>
-                  <SectionTitle icon={Sparkles}>AI Nodes</SectionTitle>
+                  <SectionHeader icon={Sparkles} sector="Status: Optimized">System Node Matrix</SectionHeader>
                   <div className="grid grid-cols-2 gap-4">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group">
-                            <Card className="h-full glass p-5 rounded-2xl border-primary/5 group-hover:border-primary/20 transition-all text-left">
-                                <div className={cn("p-2.5 rounded-lg w-fit mb-3", f.bg, f.color)}>
+                            <Card className="h-full glass p-5 rounded-2xl border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-2 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                                    <f.icon className="h-8 w-8" />
+                                </div>
+                                <div className={cn("p-2.5 rounded-lg w-fit mb-4 transition-transform group-hover:scale-110", f.bg, f.color)}>
                                     <f.icon className="h-4 w-4" />
                                 </div>
-                                <h3 className="font-black text-xs uppercase tracking-tight">{f.title}</h3>
-                                <p className="text-[10px] text-muted-foreground font-bold mt-1">{f.desc}</p>
+                                <h3 className="font-black text-[10px] uppercase tracking-tighter text-foreground">{f.title}</h3>
+                                <p className="text-[9px] text-muted-foreground font-bold mt-1 leading-tight opacity-60">{f.desc}</p>
+                                <div className="mt-4 pt-3 border-t border-primary/5">
+                                    <span className="text-[7px] font-black uppercase tracking-widest text-primary/40">{f.sector}</span>
+                                </div>
                             </Card>
                         </Link>
                       ))}
@@ -442,18 +457,21 @@ export default function DashboardHomePage() {
               </section>
 
               <section>
-                  <SectionTitle icon={Library}>Registry</SectionTitle>
+                  <SectionHeader icon={Library} sector="Status: Ready">Statutory Registry</SectionHeader>
                   <div className="space-y-3">
                       {[
-                        { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub" },
-                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case Tracker" },
+                        { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", label: "NODE-LERN" },
+                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case Tracker", label: "NODE-CASE" },
                       ].map((item) => (
                         <Link key={item.href} href={item.href} className="block group">
-                            <Card className="glass p-4 rounded-xl border-primary/5 group-hover:bg-primary/5 transition-all flex items-center gap-4">
-                                <div className="p-2 rounded-lg bg-primary/5 text-primary">
-                                    <item.icon className="h-4 w-4" />
+                            <Card className="glass p-4 rounded-xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                                        <item.icon className="h-4 w-4" />
+                                    </div>
+                                    <span className="font-black text-[10px] uppercase tracking-[0.2em]">{item.title}</span>
                                 </div>
-                                <span className="font-black text-xs uppercase tracking-widest">{item.title}</span>
+                                <span className="text-[7px] font-mono font-bold text-muted-foreground opacity-40">{item.label}</span>
                             </Card>
                         </Link>
                       ))}
@@ -463,7 +481,7 @@ export default function DashboardHomePage() {
         </div>
 
         <div className="pt-12 text-center border-t border-primary/5 opacity-30">
-            <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // TERMINAL ACTIVE</p>
+            <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // TERMINAL ACTIVE // PROTOCOL ALPHA-4</p>
         </div>
     </div>
   );
