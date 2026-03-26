@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from "next/image";
@@ -39,7 +40,8 @@ import {
   Flag,
   Activity,
   BadgeCheck,
-  ShieldCheck
+  ShieldCheck,
+  Search
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -806,38 +808,40 @@ export default function ResearchAnalyticsPage() {
             </div>
 
             <div className="grid gap-8 max-w-3xl mx-auto">
-                {!isAuthenticated && !loading ? (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                        <Card className="glass border-primary/10 rounded-[2.5rem] py-20 text-center">
-                            <CardContent className="space-y-4">
-                                <div className="bg-primary/5 p-6 rounded-full w-fit mx-auto mb-4">
-                                    <Flag className="h-12 w-12 text-primary opacity-20" />
-                                </div>
-                                <p className="font-black text-xl tracking-tighter uppercase">Clearance Required</p>
-                                <p className="text-muted-foreground text-xs font-medium max-w-xs mx-auto">Authenticate your registry node to access and contribute to the community feed.</p>
-                                <Button asChild className="mt-4 rounded-xl font-black text-[10px] uppercase tracking-widest h-11 px-8 shadow-xl shadow-primary/20">
-                                    <Link href="/login">Initialize Sign In</Link>
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
-                ) : feed.length === 0 && !loading ? (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                        <Card className="glass border-primary/10 rounded-[2.5rem] py-20 text-center">
-                            <CardContent className="space-y-4">
-                                <div className="bg-primary/5 p-6 rounded-full w-fit mx-auto mb-4">
-                                    <MessageCircle className="h-12 w-12 text-primary opacity-20" />
-                                </div>
-                                <p className="font-black text-xl tracking-tighter uppercase">Registry Empty</p>
-                                <p className="text-muted-foreground text-xs font-medium italic">"No community transmissions have been initialized in this sector."</p>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
-                ) : (
-                    <div className="space-y-10">
-                        {feed.map((item) => <PostCard key={item.id} post={item} userProfile={userProfile} />)}
-                    </div>
-                )}
+                <AnimatePresence>
+                    {!isAuthenticated && !loading ? (
+                        <motion.div key="auth-req" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                            <Card className="glass border-primary/10 rounded-[2.5rem] py-20 text-center">
+                                <CardContent className="space-y-4">
+                                    <div className="bg-primary/5 p-6 rounded-full w-fit mx-auto mb-4">
+                                        <Flag className="h-12 w-12 text-primary opacity-20" />
+                                    </div>
+                                    <p className="font-black text-xl tracking-tighter uppercase">Clearance Required</p>
+                                    <p className="text-muted-foreground text-xs font-medium max-w-xs mx-auto">Authenticate your registry node to access and contribute to the community feed.</p>
+                                    <Button asChild className="mt-4 rounded-xl font-black text-[10px] uppercase tracking-widest h-11 px-8 shadow-xl shadow-primary/20">
+                                        <Link href="/login">Initialize Sign In</Link>
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    ) : feed.length === 0 && !loading ? (
+                        <motion.div key="empty-feed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                            <Card className="glass border-primary/10 rounded-[2.5rem] py-20 text-center">
+                                <CardContent className="space-y-4">
+                                    <div className="bg-primary/5 p-6 rounded-full w-fit mx-auto mb-4">
+                                        <MessageCircle className="h-12 w-12 text-primary opacity-20" />
+                                    </div>
+                                    <p className="font-black text-xl tracking-tighter uppercase">Registry Empty</p>
+                                    <p className="text-muted-foreground text-xs font-medium italic">"No community transmissions have been initialized in this sector."</p>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    ) : (
+                        <div className="space-y-10">
+                            {feed.map((item) => <PostCard key={item.id} post={item} userProfile={userProfile} />)}
+                        </div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );

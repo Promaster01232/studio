@@ -137,9 +137,18 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
       setShowPosts(true);
       try {
           const postsRef = collection(firestore, "posts");
-          const q = query(postsRef, where("authorUid", "==", uid), orderBy("createdAt", "desc"));
+          // IN-MEMORY SORT PROTOCOL: Removed orderBy from Firestore query to bypass the requirement for a composite index.
+          const q = query(postsRef, where("authorUid", "==", uid));
           const snap = await getDocs(q);
           const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
+          
+          // Execute forensic sort in local memory
+          list.sort((a, b) => {
+              const dateA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Number(a.createdAt || 0);
+              const dateB = b.createdAt?.toMillis ? b.createdAt.toMillis() : Number(b.createdAt || 0);
+              return dateB - dateA;
+          });
+
           setUserPosts(list);
           setTimeout(() => postsSectionRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
       } catch (error) {
