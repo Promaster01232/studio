@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore } from "@/firebase";
 import { collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
@@ -23,15 +22,11 @@ import {
   Edit, 
   Send, 
   Link as LinkIcon, 
-  ImageUp, 
   ArrowLeft, 
   ShieldCheck, 
-  Sparkles,
-  Zap,
-  Cpu
+  Zap
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
@@ -58,13 +53,11 @@ export default function NewPostPage() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [link, setLink] = useState('');
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [pollQuestion, setPollQuestion] = useState('');
     const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
     const [postType, setPostType] = useState('Idea');
     const [tags, setTags] = useState('');
     const [isAnonymous, setIsAnonymous] = useState(false);
-    const imageInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (auth.currentUser) {
@@ -79,17 +72,6 @@ export default function NewPostPage() {
         }
     }, [auth, firestore, router]);
 
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-    
     const handleAddPollOption = () => {
         if (pollOptions.length < 4) {
             setPollOptions([...pollOptions, '']);
@@ -139,7 +121,6 @@ export default function NewPostPage() {
             tags: tags.split(',').map(t => t.trim()).filter(Boolean),
             isAnonymous: isAnonymous,
             createdAt: serverTimestamp(),
-            image: !isPoll && imagePreview ? imagePreview : undefined,
             poll: isPoll ? {
                 options: pollOptions.map(opt => opt.trim()).filter(Boolean).map(opt => ({ text: opt, votes: 0 })),
                 voters: []
@@ -254,44 +235,19 @@ export default function NewPostPage() {
                                         <Textarea id="content" value={content} onChange={e => setContent(e.target.value)} placeholder="Elaborate on your institutional insight or query..." rows={8} className="glass border-primary/5 rounded-[2rem] font-medium text-base p-6 resize-none shadow-inner" />
                                     </div>
                                     
-                                    <div className="grid sm:grid-cols-2 gap-8">
-                                        <div className="space-y-3">
-                                            <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Visual Evidence</Label>
-                                            <div className="relative group">
-                                                <div className="absolute inset-0 bg-primary/5 rounded-2xl transition-all group-hover:bg-primary/10 border border-primary/10 border-dashed group-hover:border-primary/30 pointer-events-none"></div>
-                                                <Label htmlFor="thumbnail" className="cursor-pointer flex flex-col items-center justify-center h-40 gap-3 relative z-10">
-                                                    <ImageUp className="h-10 w-10 text-primary/40 group-hover:scale-110 transition-transform duration-500" />
-                                                    <div className="text-center">
-                                                        <p className="text-[11px] font-black text-muted-foreground group-hover:text-primary transition-colors uppercase tracking-widest">Attach Visual Node</p>
-                                                        <p className="text-[9px] font-bold text-muted-foreground/40 mt-1 uppercase">Optional forensic image</p>
-                                                    </div>
-                                                </Label>
-                                                <Input id="thumbnail" type="file" onChange={handleImageChange} ref={imageInputRef} accept="image/*" className="hidden"/>
-                                            </div>
-                                        </div>
-                                        <div className="space-y-3">
-                                            <Label htmlFor="link" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">External Citation</Label>
-                                            <div className="relative h-40">
-                                                <div className="absolute inset-0 bg-primary/5 rounded-2xl border border-primary/10 pointer-events-none"></div>
-                                                <div className="p-6 space-y-4">
-                                                    <div className="flex items-center gap-3 text-primary opacity-40">
-                                                        <LinkIcon className="h-5 w-5" />
-                                                        <span className="text-[10px] font-black uppercase tracking-widest">Reference URL</span>
-                                                    </div>
-                                                    <Input id="link" value={link} onChange={e => setLink(e.target.value)} placeholder="https://statute.gov.in" className="h-12 glass border-primary/5 rounded-xl font-bold px-4" />
+                                    <div className="space-y-3">
+                                        <Label htmlFor="link" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">External Citation</Label>
+                                        <div className="relative">
+                                            <div className="absolute inset-0 bg-primary/5 rounded-2xl border border-primary/10 pointer-events-none"></div>
+                                            <div className="p-6 space-y-4">
+                                                <div className="flex items-center gap-3 text-primary opacity-40">
+                                                    <LinkIcon className="h-5 w-5" />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">Reference URL</span>
                                                 </div>
+                                                <Input id="link" value={link} onChange={e => setLink(e.target.value)} placeholder="https://statute.gov.in" className="h-12 glass border-primary/5 rounded-xl font-bold px-4" />
                                             </div>
                                         </div>
                                     </div>
-
-                                    {imagePreview && (
-                                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="relative rounded-[2rem] overflow-hidden border-2 border-primary/20 shadow-2xl">
-                                            <Image src={imagePreview} alt="Image preview" width={800} height={400} className="object-cover w-full aspect-video" />
-                                            <Button variant="destructive" size="icon" className="absolute top-6 right-6 h-12 w-12 rounded-2xl shadow-2xl" onClick={() => { setImagePreview(null); if(imageInputRef.current) imageInputRef.current.value = ''; }}>
-                                                <X className="h-6 w-6" />
-                                            </Button>
-                                        </motion.div>
-                                    )}
                                 </TabsContent>
                                 
                                 <TabsContent value="poll" key="poll" className="mt-0 space-y-8 focus-visible:ring-0">
