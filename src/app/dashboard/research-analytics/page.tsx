@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useToast } from "@/hooks/use-toast";
@@ -251,7 +252,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     
     return (
         <Card key={post.id} className="overflow-hidden glass border-primary/10 transition-all shadow-lg rounded-[1.5rem] relative group">
-            {/* Colorful Accent Bar */}
             <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-500"></div>
             
             <CardContent className="p-5 sm:p-6 pb-0 ml-1.5">

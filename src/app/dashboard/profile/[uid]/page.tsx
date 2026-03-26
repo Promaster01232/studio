@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
@@ -246,7 +247,7 @@ export default function UserPublicProfilePage(props: {
   }
 
   const currentUser = auth.currentUser;
-  const isAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
+  const isUserAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
 
   return (
     <motion.div 
@@ -478,7 +479,7 @@ export default function UserPublicProfilePage(props: {
                       <div className="grid gap-6">
                           {userPosts.map((post, idx) => {
                               const isAuthor = post.authorUid === currentUser?.uid;
-                              const canDelete = isAuthor || isAdmin;
+                              const canDelete = isAuthor || isUserAdmin;
                               
                               return (
                                 <motion.div 
@@ -488,7 +489,6 @@ export default function UserPublicProfilePage(props: {
                                     transition={{ delay: idx * 0.05 }}
                                 >
                                     <Card className="glass border-primary/10 hover:border-primary/30 transition-all rounded-[2rem] overflow-hidden group relative">
-                                        {/* Post Card Accent */}
                                         <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-500"></div>
                                         
                                         <CardContent className="p-6 sm:p-8 ml-1.5">
@@ -510,7 +510,7 @@ export default function UserPublicProfilePage(props: {
                                                                 <MoreVertical className="h-4 w-4" />
                                                             </Button>
                                                         </DropdownMenuTrigger>
-                                                        <DropdownMenuContent align="end" className="w-44 p-1.5 rounded-xl border-primary/5 shadow-2xl glass">
+                                                        <DropdownMenuContent align="end" className="w-44 p-1.5 rounded-xl shadow-2xl glass border-primary/5">
                                                             {canDelete ? (
                                                                 <DropdownMenuItem onSelect={() => handleDeletePost(post.id)} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                                                     <Trash2 className="h-3.5 w-3.5" /> Purge Node

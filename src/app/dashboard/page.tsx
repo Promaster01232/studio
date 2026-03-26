@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -216,7 +217,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     return (
         <motion.div layout className="w-full">
             <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative">
-                {/* Colorful Accent Bar */}
                 <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-500"></div>
                 
                 <div className="flex-1 flex flex-col p-5 sm:p-6 text-left ml-1.5">
@@ -234,11 +234,11 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-40 p-1.5 rounded-xl border-primary/5">
                                     {(isAuthor || isAdmin) ? (
-                                        <DropdownMenuItem onSelect={handleDelete} className="text-[10px] font-bold text-destructive gap-2">
+                                        <DropdownMenuItem onSelect={handleDelete} className="text-[10px] font-bold text-destructive gap-2 cursor-pointer">
                                             <Trash2 className="h-3 w-3" /> Purge Node
                                         </DropdownMenuItem>
                                     ) : (
-                                        <DropdownMenuItem onSelect={handleReport} className="text-[10px] font-bold gap-2">
+                                        <DropdownMenuItem onSelect={handleReport} className="text-[10px] font-bold gap-2 cursor-pointer">
                                             <Flag className="h-3 w-3" /> Report Content
                                         </DropdownMenuItem>
                                     )}
@@ -476,7 +476,6 @@ export default function DashboardHomePage() {
           </div>
         </div>
 
-        {/* Floating Command Center */}
         <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-center gap-4">
             <Link href="/dashboard/research-analytics/new">
                 <motion.button
