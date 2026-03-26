@@ -1,18 +1,17 @@
 
-# Nyaya Sahayak Institutional Protocol
+# Nyaya Sahayak Institutional AI Protocol
 
-Nyaya Sahayak is an AI-powered legal empowerment platform specializing in Indian Law. 
+Nyaya Sahayak is a premium AI-driven legal intelligence platform designed for the Indian judicial system. 
 
-## Primary AI Nodes:
-- Forensic Case Auditor: Neural transcription and statutory risk mapping.
-- Document Intelligence: AI-driven clause extraction and forensic risk identification.
-- Legal Drafting Hub: Automated generation of notices, bonds, and affidavits.
-- Case Strength Analyzer: Probabilistic assessment of judicial outcomes.
+## Core Capabilities
+- **Forensic Case Auditor**: AI-driven analysis of legal narratives to identify relevant laws and sections.
+- **Document Intelligence**: Clause-by-clause risk assessment and statutory auditing.
+- **Procedural Roadmaps**: Step-by-step guidance for police and court interactions.
+- **Document Generator**: Automated drafting of legal notices, FIR applications, and bonds.
+- **Case Tracking**: Real-time monitoring of eCourts registry data.
 
-## Technical Standards:
-- Domain: https://nyayasahayak.in
-- Security: TLS 1.3 / AES-256
-- Stack: Next.js 15 / Firebase / Genkit AI
+## Official Domain
+https://nyayasahayak.in
 
-## Compliance:
-All AI outputs are navigational and educational. Official legal advice must be obtained from verified human advocates within the Nyaya Sahayak Registry.
+## Institutional Purpose
+Empowering citizens with precision legal tools and connecting them with verified legal professionals.
