@@ -32,7 +32,7 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-4 pt-2">
                 <Link href="https://www.facebook.com/profile.php?id=61578664907514" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Facebook className="h-4 w-4" /></Link>
-                <Link href="https://twitter.com" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Twitter className="h-4 w-4" /></Link>
+                <Link href="https://x.com/nyayasahayak/" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Twitter className="h-4 w-4" /></Link>
                 <Link href="https://www.instagram.com/nyaya_sahayak/" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Instagram className="h-4 w-4" /></Link>
                 <Link href="https://youtube.com" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Youtube className="h-4 w-4" /></Link>
                 <Link href="https://linkedin.com" target="_blank" className="p-2 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"><Linkedin className="h-4 w-4" /></Link>
