@@ -53,6 +53,7 @@ import {
   deleteDoc, 
   addDoc, 
   serverTimestamp,
+  getDoc,
 } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -167,7 +168,7 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
     );
 }
 
-function PostCard({ post }: { post: Post }) {
+function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     const { toast } = useToast();
     const firestore = useFirestore();
     const auth = useAuth();
@@ -179,7 +180,7 @@ function PostCard({ post }: { post: Post }) {
     const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
-    const isAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
+    const isAdmin = currentUser?.email && (ADMIN_EMAILS.includes(currentUser.email.toLowerCase()) || userProfile?.isAdmin);
     const isAuthor = post.authorUid === currentUser?.uid;
     
     const handleLike = () => {
@@ -194,6 +195,17 @@ function PostCard({ post }: { post: Post }) {
         updateDoc(postRef, {
             likes: increment(userHasLiked ? -1 : 1),
             likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        }).then(() => {
+            if (!userHasLiked && post.authorUid !== currentUser.uid) {
+                addDoc(collection(firestore, "notifications"), {
+                    userId: post.authorUid,
+                    type: 'like',
+                    title: 'Transmission Liked',
+                    description: `${userProfile?.firstName || 'A citizen'} liked your post: "${post.title}"`,
+                    isRead: false,
+                    createdAt: serverTimestamp()
+                });
+            }
         }).catch(() => {
             setOptimisticLikes(post.likes);
             setOptimisticLikedBy(post.likedBy || []);
@@ -277,15 +289,15 @@ function PostCard({ post }: { post: Post }) {
                                 <DropdownMenuContent align="end" className="w-56 rounded-[1.5rem] p-3 shadow-2xl glass border-primary/5">
                                     <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-2 px-2">Node Protocols</DropdownMenuLabel>
                                     {(isAuthor || isAdmin) ? (
-                                        <DropdownMenuItem onClick={handleDelete} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
+                                        <DropdownMenuItem onSelect={handleDelete} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
                                             <Trash2 className="h-4 w-4" /> Purge from Registry
                                         </DropdownMenuItem>
                                     ) : (
-                                        <DropdownMenuItem onClick={handleReport} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
+                                        <DropdownMenuItem onSelect={handleReport} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
                                             <Flag className="h-4 w-4" /> Flag for Audit
                                         </DropdownMenuItem>
                                     )}
-                                    <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3" onClick={() => handleShare('copy')}>
+                                    <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3" onSelect={() => handleShare('copy')}>
                                         <Bookmark className="h-4 w-4" /> Save Citation
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
@@ -334,13 +346,13 @@ function PostCard({ post }: { post: Post }) {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="start" className="w-56 rounded-[1.5rem] p-3 shadow-2xl glass border-primary/5">
-                                    <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
+                                    <DropdownMenuItem onSelect={() => handleShare('whatsapp')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
                                         <MessageCircle className="h-4 w-4 text-green-600" /> WhatsApp
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
+                                    <DropdownMenuItem onSelect={() => handleShare('twitter')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
                                         <Twitter className="h-4 w-4 text-blue-500" /> Twitter (X)
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
+                                    <DropdownMenuItem onSelect={() => handleShare('copy')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
                                         <LinkIcon className="h-4 w-4 text-primary" /> Copy Link
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
@@ -414,8 +426,10 @@ export default function DashboardHomePage() {
   const fullText = 'Nyaya Sahayak';
   
   const firestore = useFirestore();
+  const auth = useAuth();
   const [latestPosts, setLatestPosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState<any>(null);
 
   useEffect(() => {
     const postsRef = collection(firestore, "posts");
@@ -429,6 +443,17 @@ export default function DashboardHomePage() {
 
     return () => unsubscribe();
   }, [firestore]);
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+      getDoc(userDocRef).then(docSnap => {
+        if (docSnap.exists()) {
+          setUserProfile(docSnap.data());
+        }
+      });
+    }
+  }, [auth.currentUser, firestore]);
   
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -501,7 +526,7 @@ export default function DashboardHomePage() {
                       <div className="space-y-8">
                           <AnimatePresence mode="popLayout">
                               {latestPosts.map((post, index) => (
-                                  <PostCard key={post.id} post={post} />
+                                  <PostCard key={post.id} post={post} userProfile={userProfile} />
                               ))}
                           </AnimatePresence>
                       </div>

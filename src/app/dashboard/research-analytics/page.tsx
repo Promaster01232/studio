@@ -23,7 +23,8 @@ import {
   Activity,
   BadgeCheck,
   Search,
-  Twitter
+  Twitter,
+  Link as LinkIcon
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -236,6 +237,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     };
 
     const handleDeletePost = () => {
+        if (!confirm("Are you sure you want to purge this transmission?")) return;
         const postRef = doc(firestore, "posts", post.id);
         deleteDoc(postRef)
             .then(() => {
@@ -276,11 +278,11 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl glass border-primary/5">
                                 {(isAuthor || isAdmin) ? (
-                                    <DropdownMenuItem onClick={handleDeletePost} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
+                                    <DropdownMenuItem onSelect={handleDeletePost} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
                                         <Trash2 className="h-4 w-4" /> Purge Post
                                     </DropdownMenuItem>
                                 ) : (
-                                    <DropdownMenuItem onClick={handleReportPost} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                    <DropdownMenuItem onSelect={handleReportPost} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
                                         <Flag className="h-4 w-4" /> Report Content
                                     </DropdownMenuItem>
                                 )}
@@ -379,19 +381,19 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl glass border-primary/5">
-                            <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                            <DropdownMenuItem onSelect={() => handleShare('whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
                                 <div className="bg-green-500/10 p-1.5 rounded-md text-green-600">
                                     <MessageCircle className="h-3.5 w-3.5" />
                                 </div>
                                 WhatsApp
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                            <DropdownMenuItem onSelect={() => handleShare('twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
                                 <div className="bg-blue-500/10 p-1.5 rounded-md text-blue-500">
                                     <Twitter className="h-3.5 w-3.5" />
                                 </div>
                                 Twitter (X)
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                            <DropdownMenuItem onSelect={() => handleShare('copy')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
                                 <div className="bg-primary/10 p-1.5 rounded-md text-primary">
                                     <Bookmark className="h-3.5 w-3.5" />
                                 </div>
