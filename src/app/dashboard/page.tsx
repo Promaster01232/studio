@@ -510,17 +510,28 @@ export default function DashboardHomePage() {
   const [userProfile, setUserProfile] = useState<any>(null);
 
   useEffect(() => {
+    if (!auth.currentUser) {
+        setPostsLoading(false);
+        return;
+    }
+
     const postsRef = collection(firestore, "posts");
     const q = query(postsRef, orderBy("createdAt", "desc"), limit(20));
     
-    const unsubscribe = onSnapshot(q, (snap) => {
-        const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
-        setLatestPosts(list);
-        setPostsLoading(false);
-    });
+    const unsubscribe = onSnapshot(q, 
+        (snap) => {
+            const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
+            setLatestPosts(list);
+            setPostsLoading(false);
+        },
+        (error) => {
+            console.error("Community feed sync error:", error);
+            setPostsLoading(false);
+        }
+    );
 
     return () => unsubscribe();
-  }, [firestore]);
+  }, [firestore, auth.currentUser]);
 
   useEffect(() => {
     if (auth.currentUser) {
