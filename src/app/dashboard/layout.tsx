@@ -10,7 +10,6 @@ import {
   SidebarFooter,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Sparkles } from "lucide-react";
 import { Logo } from "@/components/logo";
@@ -38,11 +37,12 @@ import { cn } from "@/lib/utils";
 import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
 import { AnimatePresence, motion } from "framer-motion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: number }) {
     return (
         <header className={cn(
-            "sticky top-0 z-[40] flex h-16 items-center gap-4 border-b px-4 sm:px-6 transition-all",
+            "sticky top-0 z-[40] flex h-16 items-center gap-4 border-b px-4 sm:px-8 transition-all",
             "bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60"
         )}>
             <div className="flex items-center gap-3 md:hidden">
@@ -53,13 +53,13 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
-                        <div className="w-full max-w-sm cursor-pointer group active:scale-[0.99] transition-transform">
-                            <div className="hidden md:flex items-center w-full pl-10 pr-16 h-10 font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                <span>Search tools, cases, guides...</span>
-                                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 shadow-sm">
-                                        <span className="text-xs">⌘</span>K
+                        <div className="w-full max-w-md cursor-pointer group active:scale-[0.99] transition-transform">
+                            <div className="hidden md:flex items-center w-full pl-10 pr-16 h-11 font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm relative">
+                                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                <span className="tracking-tight">Search tools, cases, guides...</span>
+                                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-black text-muted-foreground opacity-100 shadow-sm">
+                                        <span className="text-[11px]">⌘</span>K
                                     </kbd>
                                 </div>
                             </div>
@@ -73,30 +73,30 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
                 )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
                 {!userProfile?.isBlocked && (
                     <>
                         <SosDialog>
-                            <Button variant="destructive" size="sm" className="font-black gap-2 animate-pulse px-4 h-10 text-[10px] rounded-xl shadow-lg shadow-destructive/20 active:scale-95 transition-all">
+                            <Button variant="destructive" size="sm" className="font-black gap-2 animate-pulse px-5 h-11 text-[10px] rounded-xl shadow-xl shadow-destructive/20 active:scale-95 transition-all">
                                 <ShieldAlert className="h-4 w-4" />
-                                <span className="hidden sm:inline tracking-widest uppercase">Emergency SOS</span>
+                                <span className="hidden sm:inline tracking-[0.2em] uppercase">Emergency SOS</span>
                             </Button>
                         </SosDialog>
                         
-                        <div className="flex items-center gap-1 border-l pl-3 ml-1">
+                        <div className="flex items-center gap-2 border-l pl-4 ml-1">
                             <Button 
                                 variant="ghost" 
                                 size="icon" 
-                                className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all active:scale-95 relative"
+                                className="h-11 w-11 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all active:scale-95 relative group"
                                 asChild
                             >
                                 <Link href="/dashboard/notifications">
-                                    <Bell className="h-4 w-4" />
+                                    <Bell className="h-5 w-5 group-hover:rotate-12 transition-transform" />
                                     {unreadCount > 0 && (
                                         <motion.span 
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
-                                            className="absolute top-2.5 right-2.5 h-2 w-2 bg-red-500 rounded-full border-2 border-background shadow-sm"
+                                            className="absolute top-2.5 right-2.5 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-background shadow-sm"
                                         />
                                     )}
                                 </Link>
@@ -158,7 +158,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             setProfileLoading(false);
         });
 
-        // Notifications Listener
         const notifRef = collection(firestore, "notifications");
         const q = query(notifRef, where("userId", "==", user.uid), where("isRead", "==", false));
         notifUnsubscribeRef.current = onSnapshot(q, (snap) => {
@@ -197,7 +196,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       return (
         <div className="flex h-screen items-center justify-center bg-background p-4 relative overflow-hidden text-left">
             <div className="absolute inset-0 bg-destructive/5 -z-10 animate-pulse"></div>
-            <Card className="max-w-md w-full glass shadow-2xl overflow-hidden rounded-[2rem]">
+            <Card className="max-w-md w-full glass shadow-2xl overflow-hidden rounded-[2.5rem]">
                 <div className="bg-destructive/10 p-10 flex justify-center border-b border-destructive/10">
                     <ShieldX className="h-24 w-24 text-destructive animate-bounce" />
                 </div>
@@ -210,16 +209,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         Access Revoked
                     </CardTitle>
                     <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4">
-                        Your account has been deactivated by the system administrator of nyayasahayak.in. Node privileges and data access have been suspended.
+                        Your account has been deactivated by the system administrator. Node privileges suspended.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6 pb-10 px-8 text-center">
                     <div className="p-4 bg-muted/50 rounded-2xl flex items-start gap-3 border border-border">
                         <p className="text-[11px] font-medium text-left leading-relaxed text-muted-foreground italic">
-                            Protocol: Contact <span className="font-bold text-primary">nyayasahayakhelp@gmail.com</span> for a formal restoration audit.
+                            Protocol: Contact <span className="font-bold text-primary">nyayasahayakhelp@gmail.com</span> for audit.
                         </p>
                     </div>
-                    <Button onClick={handleLogout} variant="outline" className="w-full h-12 font-bold rounded-2xl border-primary/10 hover:bg-primary/5 transition-all">
+                    <Button onClick={handleLogout} variant="outline" className="w-full h-14 font-black text-xs uppercase tracking-widest rounded-2xl border-primary/10 hover:bg-primary/5 transition-all">
                         <LogOut className="mr-3 h-4 w-4" /> Terminate Session
                     </Button>
                 </CardContent>
@@ -239,7 +238,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   <Logo className="h-10 w-10 shadow-lg relative z-10 border-none bg-white rounded-full p-1.5" />
                 </div>
             </div>
-            <div className="flex flex-col group-data-[collapsible=icon]:hidden">
+            <div className="flex flex-col group-data-[collapsible=icon]:hidden text-left">
               <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] truncate">
                   Nyaya Sahayak
               </span>
@@ -281,7 +280,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] border-primary/5 glass animate-in slide-in-from-left-2 duration-300">
+              <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-[1.5rem] shadow-3xl border-primary/5 glass animate-in slide-in-from-left-2 duration-300">
                 <DropdownMenuLabel className="px-2 pb-2">
                     <div className="flex items-center gap-2 text-primary mb-1">
                         <Sparkles className="h-3 w-3" />
@@ -289,7 +288,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     </div>
                 </DropdownMenuLabel>
                 
-                <DropdownMenuItem asChild className="rounded-xl h-10 font-bold text-xs gap-3 mb-1 cursor-pointer">
+                <DropdownMenuItem asChild className="rounded-xl h-11 font-bold text-xs gap-3 mb-1 cursor-pointer hover:bg-primary/5">
                     <Link href="/dashboard/profile">
                         <User className="h-4 w-4 opacity-40" /> My Registry Profile
                     </Link>
@@ -304,19 +303,19 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
-                    <DropdownMenuRadioItem value="light" className="rounded-xl h-10 font-bold text-xs gap-3">
+                    <DropdownMenuRadioItem value="light" className="rounded-xl h-11 font-bold text-xs gap-3 cursor-pointer">
                         <SunMoon className="h-4 w-4 opacity-40" /> Light Protocol
                     </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="dark" className="rounded-xl h-10 font-bold text-xs gap-3">
+                    <DropdownMenuRadioItem value="dark" className="rounded-xl h-11 font-bold text-xs gap-3 cursor-pointer">
                         <SunMoon className="h-4 w-4 opacity-40" /> Dark Protocol
                     </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
                 
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 
-                <DropdownMenuItem onClick={handleLogout} className="rounded-xl h-11 font-black text-xs text-destructive focus:bg-destructive/10 focus:text-destructive gap-3 active:scale-95 transition-all cursor-pointer">
+                <DropdownMenuItem onClick={handleLogout} className="rounded-xl h-12 font-black text-[10px] uppercase tracking-widest text-destructive focus:bg-destructive/10 focus:text-destructive gap-3 active:scale-95 transition-all cursor-pointer">
                     <LogOut className="h-4 w-4" />
-                    <span className="tracking-widest uppercase">Terminate Session</span>
+                    <span>Terminate Session</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -330,12 +329,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </SidebarFooter>
       </Sidebar>
       <SidebarInset className="bg-background relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none -z-10"></div>
+        <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none -z-10"></div>
         
         <div className="flex flex-col h-screen overflow-hidden">
           <Header userProfile={userProfile} unreadCount={unreadCount} />
-          <main className="flex-1 overflow-y-auto">
-            <div className="p-4 sm:p-6 md:p-8 lg:p-10 min-h-[calc(100vh-64px)] flex flex-col">
+          <main className="flex-1 overflow-y-auto custom-scrollbar">
+            <div className="p-4 sm:p-10 min-h-[calc(100vh-64px)] flex flex-col">
                 <AnimatePresence mode="wait">
                     {showContent ? (
                         <motion.div 
@@ -354,9 +353,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     ) : (
                         <div className="flex flex-1 items-center justify-center">
                             <div className="relative">
-                                <Loader2 className="h-12 w-12 animate-spin text-primary opacity-20" />
+                                <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <Logo className="h-6 v-6 opacity-40 animate-pulse" />
+                                    <Logo className="h-8 w-8 opacity-40 animate-pulse" />
                                 </div>
                             </div>
                         </div>
