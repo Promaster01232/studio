@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -24,7 +25,7 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
-    --radius: 1.5rem;
+    --radius: 1rem;
 
     --sidebar-background: 210 40% 98%;
     --sidebar-foreground: 222.2 84% 4.9%;
@@ -74,31 +75,21 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground text-sm leading-snug;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight font-black;
   }
 }
 
 @layer utilities {
   .glass {
-    @apply bg-card/40 backdrop-blur-3xl border border-primary/10;
+    @apply bg-card/40 backdrop-blur-2xl border border-primary/5;
   }
   
-  .glass-dark {
-    @apply dark:bg-black/40 backdrop-blur-3xl border border-white/10;
-  }
-
   .forensic-text {
-    @apply font-black uppercase tracking-[0.2em] text-[10px];
-  }
-
-  [data-sidebar="content"]::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  [data-sidebar="content"]::-webkit-scrollbar-thumb {
-    background: hsl(var(--primary) / 0.1);
-    border-radius: 10px;
+    @apply font-black uppercase tracking-widest text-[9px];
   }
 
   .neural-rain {
@@ -117,7 +108,7 @@
     position: absolute;
     background: linear-gradient(180deg, transparent, hsl(var(--primary)));
     width: 1px;
-    height: 100px;
+    height: 60px;
     opacity: 0.1;
     animation: rain linear infinite;
   }
@@ -126,14 +117,4 @@
     0% { transform: translateY(-100px); }
     100% { transform: translateY(100vh); }
   }
-}
-
-@keyframes animated-gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animate-animated-gradient {
-  animation: animated-gradient 3s ease-in-out infinite;
 }

@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -36,7 +36,6 @@ import {
   Bot,
   Send,
   Cpu,
-  StepForward
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -83,13 +82,6 @@ import Image from "next/image";
 import { Logo } from "@/components/logo";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
-
-const ADMIN_EMAILS = [
-  'enterspaceindia@gmail.com', 
-  'piyushkumarsingh23323@gmail.com',
-  'piyushkumrsingh23323@gmail.com',
-  'piyushkumrsingh23399@gmail.com'
-];
 
 interface Post {
     id: string;
@@ -138,14 +130,9 @@ const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, del
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ 
-        type: "spring",
-        stiffness: 100,
-        damping: 20,
-        delay 
-      }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{ delay }}
     >
       {children}
     </motion.div>
@@ -161,20 +148,20 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
         <Link 
             href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} 
             className={cn(
-                "flex items-center gap-3 group/author transition-all active:scale-[0.98]",
+                "flex items-center gap-2.5",
                 post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer"
             )}
         >
-            <Avatar className="h-11 w-11 border-2 border-background shadow-lg rounded-xl group-hover/author:scale-105 transition-transform">
+            <Avatar className="h-9 w-9 border border-background shadow-md rounded-lg">
                 {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
-                <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
+                <AvatarFallback className="font-black bg-primary/10 text-primary text-[10px]">{fallback}</AvatarFallback>
             </Avatar>
             <div className="flex-1 text-left">
-                <div className="flex items-center gap-1.5">
-                    <p className="font-black text-[14px] tracking-tight group-hover/author:text-primary transition-colors">{authorName}</p>
-                    {isAdmin && <BadgeCheck className="h-4 w-4 text-blue-500" />}
+                <div className="flex items-center gap-1">
+                    <p className="font-black text-xs tracking-tight">{authorName}</p>
+                    {isAdmin && <BadgeCheck className="h-3 w-3 text-blue-500" />}
                 </div>
-                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
+                <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
                     {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
                 </p>
             </div>
@@ -226,7 +213,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
             .catch(async (serverError) => {
                 setOptimisticLikes(post.likes);
                 setOptimisticLikedBy(post.likedBy || []);
-                
                 const permissionError = new FirestorePermissionError({
                     path: postRef.path,
                     operation: 'update',
@@ -239,157 +225,76 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 
     const handleDelete = async () => {
         const postRef = doc(firestore, "posts", post.id);
-        deleteDoc(postRef)
-            .then(() => {
-                toast({ title: "Transmission Purged", description: "The node has been erased from the official registry." });
-            })
-            .catch(async (serverError) => {
-                const permissionError = new FirestorePermissionError({
-                    path: postRef.path,
-                    operation: 'delete',
-                    } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
-            });
-    };
-
-    const handleReport = () => {
-        toast({ title: "Transmission Flagged", description: "Our forensic moderation unit will review this node." });
-    };
-
-    const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
-        const shareText = `Institutional transmission on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
-        if (platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
-        else if (platform === 'twitter') window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
-        else if (platform === 'copy') {
-            navigator.clipboard.writeText(shareText);
-            toast({ title: "Registry Link Copied" });
-        }
+        deleteDoc(postRef).catch((serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: postRef.path,
+                operation: 'delete',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+        });
     };
 
     return (
-        <motion.div
-            layout
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            whileHover={{ y: -4 }}
-            className="w-full"
-        >
-            <Card className="group relative overflow-hidden glass border-primary/10 hover:border-primary/30 transition-all duration-500 shadow-2xl rounded-[2.5rem] flex flex-col sm:flex-row h-full min-h-[320px]">
-                <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-400 group-hover:w-2 transition-all duration-500 hidden sm:block"></div>
-                
-                <div className="relative w-full sm:w-[320px] md:w-[420px] h-56 sm:h-auto overflow-hidden shrink-0">
+        <motion.div layout className="w-full">
+            <Card className="overflow-hidden glass border-primary/10 transition-all rounded-2xl flex flex-col sm:flex-row h-full min-h-[200px]">
+                <div className="relative w-full sm:w-48 h-40 sm:h-auto overflow-hidden shrink-0">
                     {post.image ? (
-                        <Image
-                            src={post.image}
-                            alt={post.title}
-                            fill
-                            className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                        />
+                        <Image src={post.image} alt={post.title} fill className="object-cover" />
                     ) : (
                         <div className="absolute inset-0 bg-primary/5 flex items-center justify-center">
-                            <Logo className="h-24 w-24 opacity-[0.05]" />
-                            <Newspaper className="h-20 w-20 text-primary/10 absolute animate-pulse" />
+                            <Logo className="h-12 w-12 opacity-10" />
                         </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent sm:hidden"></div>
-                    <div className="absolute top-6 left-6">
-                        <Badge className="bg-primary text-white font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl px-5 py-2 rounded-full backdrop-blur-md">
-                            {post.postType || 'Transmission'}
+                    <div className="absolute top-3 left-3">
+                        <Badge className="bg-primary text-white font-black text-[7px] uppercase tracking-widest px-2 py-0.5 rounded-full">
+                            {post.postType || 'TX'}
                         </Badge>
                     </div>
                 </div>
 
-                <div className="flex-1 flex flex-col p-8 sm:p-12 text-left">
-                    <div className="flex items-center justify-between mb-8">
+                <div className="flex-1 flex flex-col p-5 sm:p-6 text-left">
+                    <div className="flex items-center justify-between mb-4">
                         <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
-                        <div className="flex items-center gap-2">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-11 w-11 rounded-2xl hover:bg-primary/5 active:scale-90 transition-all">
-                                        <MoreVertical className="h-6 w-6 text-muted-foreground" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-60 rounded-[1.5rem] p-3 shadow-3xl glass border-primary/5">
-                                    <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-2 px-2">Node Protocols</DropdownMenuLabel>
-                                    {(isAuthor || isAdmin) ? (
-                                        <DropdownMenuItem onSelect={handleDelete} className="rounded-xl font-bold text-xs h-12 px-4 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
-                                            <Trash2 className="h-4 w-4" /> Purge from Registry
-                                        </DropdownMenuItem>
-                                    ) : (
-                                        <DropdownMenuItem onSelect={handleReport} className="rounded-xl font-bold text-xs h-12 px-4 cursor-pointer gap-3">
-                                            <Flag className="h-4 w-4" /> Flag for Audit
-                                        </DropdownMenuItem>
-                                    )}
-                                    <DropdownMenuItem className="rounded-xl font-bold text-xs h-12 px-4 cursor-pointer gap-3" onSelect={() => handleShare('copy')}>
-                                        <Bookmark className="h-4 w-4" /> Save Citation
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/5">
+                                    <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-40 p-1.5 rounded-xl border-primary/5">
+                                {(isAuthor || isAdmin) ? (
+                                    <DropdownMenuItem onSelect={handleDelete} className="text-xs font-bold text-destructive">
+                                        <Trash2 className="h-3 w-3 mr-2" /> Purge
                                     </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
+                                ) : (
+                                    <DropdownMenuItem className="text-xs font-bold">
+                                        <Flag className="h-3 w-3 mr-2" /> Report
+                                    </DropdownMenuItem>
+                                )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
 
-                    <div className="space-y-5 flex-1 mb-10">
-                        <h3 className="text-3xl sm:text-5xl font-black font-headline leading-none tracking-tighter text-foreground group-hover:text-primary transition-colors duration-500 line-clamp-2">
-                            {post.title}
-                        </h3>
-                        <p className="text-muted-foreground text-base sm:text-lg font-medium leading-relaxed line-clamp-3">
-                            {post.content}
-                        </p>
-                        
-                        {post.tags && post.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-2.5 pt-3">
-                                {post.tags.map(tag => (
-                                    <span key={tag} className="text-[11px] font-black text-primary/60 uppercase tracking-widest bg-primary/5 px-4 py-1.5 rounded-xl border border-primary/10">#{tag}</span>
-                                ))}
-                            </div>
-                        )}
+                    <div className="space-y-2 flex-1 mb-6">
+                        <h3 className="text-lg font-black tracking-tight leading-tight line-clamp-1">{post.title}</h3>
+                        <p className="text-xs text-muted-foreground font-medium line-clamp-2">{post.content}</p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-10 border-t border-primary/5">
-                        <div className="flex items-center gap-5">
+                    <div className="flex items-center justify-between pt-4 border-t border-primary/5">
+                        <div className="flex gap-3">
                             <Button 
                                 variant="ghost" 
                                 size="sm" 
-                                className={cn(
-                                    "h-12 px-6 rounded-2xl font-black text-[12px] uppercase tracking-widest gap-3 transition-all active:scale-95 shadow-sm",
-                                    userHasLiked ? "bg-red-500 text-white shadow-red-500/20 hover:bg-red-600" : "bg-primary/5 hover:bg-primary/10 text-primary"
-                                )}
+                                className={cn("h-8 px-3 rounded-lg text-[10px] font-black uppercase tracking-widest gap-2", userHasLiked ? "text-red-500" : "text-primary")}
                                 onClick={handleLike}
                                 disabled={isLiking}
                             >
-                                {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-5 w-5", userHasLiked && "fill-current scale-110")} />}
-                                <span>{optimisticLikes} Impact</span>
+                                {isLiking ? <Loader2 className="h-3 w-3 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />}
+                                <span>{optimisticLikes}</span>
                             </Button>
-
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" className="h-12 w-12 rounded-2xl border-primary/10 hover:bg-primary/5 hover:border-primary/30 transition-all shadow-sm">
-                                        <Share2 className="h-5 w-5 text-primary" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="start" className="w-60 rounded-[1.5rem] p-3 shadow-3xl glass border-primary/5">
-                                    <DropdownMenuItem onSelect={() => handleShare('whatsapp')} className="rounded-xl font-bold text-xs h-12 px-4 cursor-pointer gap-3">
-                                        <MessageCircle className="h-4 w-4 text-green-600" /> WhatsApp
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onSelect={() => handleShare('twitter')} className="rounded-xl font-bold text-xs h-12 px-4 cursor-pointer gap-3">
-                                        <Twitter className="h-4 w-4 text-blue-500" /> Twitter (X)
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onSelect={() => handleShare('copy')} className="rounded-xl font-bold text-xs h-12 px-4 cursor-pointer gap-3">
-                                        <LinkIcon className="h-4 w-4 text-primary" /> Copy Link
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
                         </div>
-
-                        <Button 
-                            variant="ghost" 
-                            className="h-12 px-8 rounded-2xl font-black text-[12px] uppercase tracking-widest gap-3 hover:bg-primary hover:text-white transition-all group/btn shadow-xl hover:shadow-primary/20"
-                            asChild
-                        >
-                            <Link href="/dashboard/research-analytics">
-                                Inspect Node <ChevronRight className="h-5 w-5 transition-transform group-hover/btn:translate-x-1.5" />
-                            </Link>
+                        <Button variant="ghost" size="sm" className="h-8 px-4 text-[10px] font-black uppercase" asChild>
+                            <Link href="/dashboard/research-analytics">View Node</Link>
                         </Button>
                     </div>
                 </div>
@@ -398,115 +303,17 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     );
 }
 
-function FloatingActionNodes() {
-    return (
-        <div className="fixed bottom-10 right-10 flex flex-col gap-5 z-[100]">
-            <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            >
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button 
-                            size="icon" 
-                            className="h-16 w-16 rounded-full shadow-[0_20px_50px_rgba(var(--primary),0.4)] bg-primary text-white hover:scale-110 active:scale-95 transition-all group"
-                        >
-                            <Bot className="h-7 w-7 group-hover:animate-bounce" />
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-lg rounded-[3rem] glass shadow-3xl border-primary/10 p-0 overflow-hidden">
-                        <div className="bg-primary/5 p-8 border-b border-primary/10">
-                            <DialogHeader className="p-0 border-none">
-                                <div className="flex items-center gap-3 mb-2 text-primary">
-                                    <Bot className="h-6 w-6" />
-                                    <span className="text-[11px] font-black uppercase tracking-[0.4em]">Institutional Intelligence Node</span>
-                                </div>
-                                <DialogTitle className="text-3xl font-black tracking-tighter leading-none">AI Assistant Unit</DialogTitle>
-                                <DialogDescription className="font-medium text-sm pt-2">
-                                    Ask any query regarding nyayasahayak.in statutory tools or protocols.
-                                </DialogDescription>
-                            </DialogHeader>
-                        </div>
-                        <div className="p-8 space-y-8 text-left">
-                            <div className="p-6 rounded-[2rem] bg-primary/5 border border-primary/10 text-sm font-medium leading-relaxed italic text-muted-foreground shadow-inner">
-                                "Initialize institutional query transmission below. Our neural engine will deconstruct your input and provide forensic guidance."
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <Input placeholder="Type your statutory query..." className="h-14 glass border-primary/5 rounded-2xl font-bold text-base px-6" />
-                                <Button size="icon" className="h-14 w-14 rounded-2xl shadow-xl shadow-primary/20 active:scale-90 transition-all">
-                                    <Send className="h-5 w-5" />
-                                </Button>
-                            </div>
-                        </div>
-                        <div className="p-4 bg-muted/5 border-t text-center">
-                            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">NS-NODE-GUIDE // SECURE SESSION ACTIVE</p>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            </motion.div>
-
-            <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
-            >
-                <Button 
-                    asChild
-                    size="icon" 
-                    className="h-16 w-16 rounded-full shadow-[0_20px_50px_rgba(var(--accent),0.4)] bg-accent text-white hover:scale-110 active:scale-95 transition-all group"
-                >
-                    <Link href="/dashboard/research-analytics/new">
-                        <Plus className="h-7 w-7 group-hover:rotate-90 transition-transform duration-500" />
-                    </Link>
-                </Button>
-            </motion.div>
-        </div>
-    );
-}
-
 const aiFeatures = [
-    {
-      href: "/dashboard/strength-analyzer",
-      icon: BrainCircuit,
-      title: "Strength Analyzer",
-      description: "Neural case assessment and probability auditing.",
-      color: "text-blue-500",
-      bg: "bg-blue-500/10"
-    },
-    {
-      href: "/dashboard/document-intelligence",
-      icon: Search,
-      title: "Doc Intelligence",
-      description: "Forensic risk auditor for statutory compliance.",
-      color: "text-emerald-500",
-      bg: "bg-emerald-500/10"
-    },
-    {
-      href: "/dashboard/document-generator",
-      icon: FileText,
-      title: "Doc Generator",
-      description: "Automated legal drafting for formal petitions.",
-      color: "text-amber-500",
-      bg: "bg-amber-500/10"
-    },
-    {
-      href: "/dashboard/bond-generator",
-      icon: FileSignature,
-      title: "Bond Generator",
-      description: "Structural bond creation and affidavit drafting.",
-      color: "text-purple-500",
-      bg: "bg-purple-500/10"
-    },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Case assessment.", color: "text-blue-500", bg: "bg-blue-500/5" },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5" },
+    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5" },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Affidavits.", color: "text-purple-500", bg: "bg-purple-500/5" },
 ];
 
 const SectionTitle = ({children, icon: Icon}: {children: React.ReactNode, icon?: any}) => (
-    <div className="flex items-center justify-between mb-10">
-        <div className="flex items-center gap-5">
-            {Icon && <Icon className="h-8 w-8 text-primary opacity-40" />}
-            <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter text-foreground uppercase">{children}</h2>
-        </div>
-        <div className="h-px flex-1 bg-gradient-to-r from-primary/10 to-transparent ml-10 hidden sm:block"></div>
+    <div className="flex items-center gap-3 mb-6">
+        {Icon && <Icon className="h-5 w-5 text-primary opacity-40" />}
+        <h2 className="text-sm font-black uppercase tracking-[0.2em] text-foreground">{children}</h2>
     </div>
 )
 
@@ -529,29 +336,23 @@ export default function DashboardHomePage() {
         }
 
         const postsRef = collection(firestore, "posts");
-        const q = query(postsRef, orderBy("createdAt", "desc"), limit(20));
+        const q = query(postsRef, orderBy("createdAt", "desc"), limit(5));
         
-        const unsubscribe = onSnapshot(q, 
-            (snap) => {
-                const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
-                setLatestPosts(list);
-                setPostsLoading(false);
-            },
-            (serverError) => {
-                const permissionError = new FirestorePermissionError({
-                    path: postsRef.path,
-                    operation: 'list',
-                } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
-                setPostsLoading(false);
-            }
-        );
+        const unsubscribe = onSnapshot(q, (snap) => {
+            const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
+            setLatestPosts(list);
+            setPostsLoading(false);
+        }, (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: postsRef.path,
+                operation: 'list',
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
+            setPostsLoading(false);
+        });
 
-        const userDocRef = doc(firestore, "users", user.uid);
-        getDoc(userDocRef).then(docSnap => {
-            if (docSnap.exists()) {
-                setUserProfile(docSnap.data());
-            }
+        getDoc(doc(firestore, "users", user.uid)).then(docSnap => {
+            if (docSnap.exists()) setUserProfile(docSnap.data());
         });
 
         return () => unsubscribe();
@@ -578,35 +379,26 @@ export default function DashboardHomePage() {
   }, [text, isTyping]);
 
   return (
-    <div className="flex flex-col h-full space-y-24 pb-32 max-w-7xl mx-auto text-left relative">
+    <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
         <MotionWrapper>
-          <div className="relative p-10 sm:p-24 rounded-[4rem] overflow-hidden bg-primary/5 border border-primary/10 shadow-[0_50px_100px_rgba(0,0,0,0.05)] group">
-              <NeuralRain />
-              <div className="absolute top-0 right-0 p-16 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
-                  <Landmark className="h-96 w-96" />
-              </div>
-              <div className="relative z-10 space-y-10">
-                  <div className="flex items-center gap-4 text-primary">
-                      <div className="p-3 rounded-2xl bg-primary/10 animate-pulse ring-1 ring-primary/20 shadow-sm">
-                        <Sparkles className="h-6 w-6" />
-                      </div>
-                      <span className="text-[11px] font-black uppercase tracking-[0.6em] leading-none">Institutional Node Alpha-4</span>
+          <div className="relative p-8 sm:p-12 rounded-3xl overflow-hidden bg-primary/5 border border-primary/10 shadow-sm">
+              <div className="relative z-10 space-y-6">
+                  <div className="flex items-center gap-3 text-primary">
+                      <Sparkles className="h-4 w-4 animate-pulse" />
+                      <span className="text-[9px] font-black uppercase tracking-[0.4em]">Node: Alpha-4</span>
                   </div>
-                  <h1 className="text-6xl sm:text-9xl font-black font-headline tracking-tighter leading-none text-foreground">
-                      Welcome to <br />
-                      <span className="bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">{text}</span>
-                      <span className="animate-pulse ml-1 text-primary">|</span>
+                  <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
+                      Welcome back, <br />
+                      <span className="bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent italic">{text}</span>
                   </h1>
-                  <p className="text-lg sm:text-3xl text-muted-foreground font-medium max-w-3xl leading-relaxed">
-                      Access precision legal intelligence and forensic tools designed for the modern judicial landscape.
+                  <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl">
+                      Access legal intelligence and forensic tools designed for precision.
                   </p>
-                  <div className="flex flex-wrap gap-8 pt-8">
-                      <Button size="lg" className="rounded-[2rem] font-black uppercase tracking-[0.2em] text-[12px] px-12 h-20 shadow-3xl shadow-primary/20 active:scale-95 transition-all group/hero" asChild>
-                          <Link href="/dashboard/narrate">
-                            Initialize Narration <ArrowRight className="ml-4 h-6 w-6 transition-transform group-hero:translate-x-2" />
-                          </Link>
+                  <div className="flex flex-wrap gap-4 pt-4">
+                      <Button size="sm" className="rounded-xl font-black uppercase tracking-widest text-[9px] px-6 h-11" asChild>
+                          <Link href="/dashboard/narrate">Initialize Narration</Link>
                       </Button>
-                      <Button variant="outline" size="lg" className="rounded-[2rem] font-black uppercase tracking-[0.2em] text-[12px] px-12 h-20 border-primary/10 glass hover:bg-primary/5 active:scale-95 transition-all" asChild>
+                      <Button variant="outline" size="sm" className="rounded-xl font-black uppercase tracking-widest text-[9px] px-6 h-11 border-primary/10" asChild>
                           <Link href="/dashboard/support">Hub Support</Link>
                       </Button>
                   </div>
@@ -614,162 +406,70 @@ export default function DashboardHomePage() {
           </div>
         </MotionWrapper>
 
-        <div className="space-y-24">
-          <section id="transmissions">
-              <MotionWrapper delay={0.1}>
-                <SectionTitle icon={TrendingUp}>Community Transmissions</SectionTitle>
-              </MotionWrapper>
-              
-              <div className="grid grid-cols-1 gap-10">
-                  {postsLoading ? (
-                      <div className="space-y-10">
-                          {[...Array(3)].map((_, i) => (
-                              <Card key={i} className="glass rounded-[3rem] h-[360px] animate-pulse border-primary/5" />
-                          ))}
-                      </div>
-                  ) : (
-                      <div className="space-y-10">
-                          <AnimatePresence mode="popLayout">
+        <div className="grid lg:grid-cols-12 gap-10">
+          <div className="lg:col-span-8 space-y-10">
+              <section>
+                  <SectionTitle icon={TrendingUp}>Live Stream</SectionTitle>
+                  <div className="space-y-6">
+                      {postsLoading ? (
+                          <div className="space-y-4">
+                              {[...Array(3)].map((_, i) => (
+                                  <Card key={i} className="h-32 animate-pulse border-primary/5" />
+                              ))}
+                          </div>
+                      ) : (
+                          <div className="space-y-6">
                               {latestPosts.map((post) => (
                                   <PostCard key={post.id} post={post} userProfile={userProfile} />
                               ))}
-                          </AnimatePresence>
-                      </div>
-                  )}
-              </div>
-              
-              <div className="mt-16 flex justify-center">
-                  <Button variant="ghost" className="h-16 px-12 rounded-3xl font-black uppercase tracking-[0.4em] text-[11px] gap-5 hover:bg-primary/5 group transition-all" asChild>
-                      <Link href="/dashboard/research-analytics">
-                          Sync Full Registry <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
-                      </Link>
-                  </Button>
-              </div>
-          </section>
-
-          <section>
-              <MotionWrapper delay={0.3}>
-                <SectionTitle icon={Zap}>Primary Forensic Nodes</SectionTitle>
-              </MotionWrapper>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <MotionWrapper delay={0.4}>
-                    <Link href="/dashboard/narrate" className="block group h-full">
-                        <Card className="h-full glass hover:border-primary/30 transition-all duration-700 overflow-hidden relative group rounded-[3.5rem] shadow-3xl">
-                            <CardContent className="p-12 sm:p-16 flex flex-col sm:flex-row items-center gap-12">
-                                <div className="p-10 rounded-[2.5rem] bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-700 shadow-inner ring-1 ring-primary/20 shrink-0">
-                                    <Mic className="h-14 w-14" />
-                                </div>
-                                <div className="space-y-4 flex-1 text-center sm:text-left">
-                                    <h3 className="text-4xl font-black tracking-tighter">Narrate Case</h3>
-                                    <p className="text-[11px] text-muted-foreground font-black uppercase tracking-[0.4em] opacity-60">Voice Unit NS-V1</p>
-                                    <p className="text-base text-muted-foreground font-medium leading-relaxed max-w-sm">Convert natural speech into a structured statutory report with identified IPC/BNSS violations.</p>
-                                    <div className="flex items-center gap-3 text-primary font-black text-[11px] uppercase tracking-widest pt-4 opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0">
-                                        Initialize Protocol <ArrowRight className="h-4 w-4" />
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </Link>
-                  </MotionWrapper>
-                  <MotionWrapper delay={0.5}>
-                    <Link href="/dashboard/document-intelligence" className="block group h-full">
-                        <Card className="h-full glass hover:border-emerald-500/30 transition-all duration-700 overflow-hidden relative group rounded-[3.5rem] shadow-3xl">
-                            <CardContent className="p-12 sm:p-16 flex flex-col sm:flex-row items-center gap-12">
-                                <div className="p-10 rounded-[2.5rem] bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-700 shadow-inner ring-1 ring-emerald-500/20 shrink-0">
-                                    <Search className="h-14 w-14" />
-                                </div>
-                                <div className="space-y-4 flex-1 text-center sm:text-left">
-                                    <h3 className="text-4xl font-black tracking-tighter">Doc Intelligence</h3>
-                                    <p className="text-[11px] text-muted-foreground font-black uppercase tracking-[0.4em] opacity-60">Risk Node NS-D2</p>
-                                    <p className="text-base text-muted-foreground font-medium leading-relaxed max-w-sm">Perform a deep-layer forensic audit of contracts to detect hidden liabilities and deadlines.</p>
-                                    <div className="flex items-center gap-3 text-emerald-600 font-black text-[11px] uppercase tracking-widest pt-4 opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0">
-                                        Initialize Protocol <ArrowRight className="h-4 w-4" />
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </Link>
-                  </MotionWrapper>
-              </div>
-          </section>
-
-          <section>
-              <MotionWrapper delay={0.6}>
-                <SectionTitle icon={Sparkles}>Institutional AI Toolkit</SectionTitle>
-              </MotionWrapper>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                  {aiFeatures.map((feature, index) => (
-                    <MotionWrapper key={feature.href} delay={0.7 + index * 0.1}>
-                      <Link href={feature.href} className="block group h-full">
-                          <Card className="h-full glass p-10 flex flex-col items-start hover:border-primary/30 hover:shadow-3xl hover:shadow-primary/10 transition-all duration-700 active:scale-[0.97] rounded-[3rem] border-primary/5">
-                              <div className={cn("p-6 rounded-[1.5rem] mb-10 group-hover:scale-110 transition-transform duration-700 shadow-sm ring-1 ring-white/10", feature.bg, feature.color)}>
-                                <feature.icon className="h-8 w-8" />
-                              </div>
-                              <h3 className="font-black text-2xl tracking-tight leading-tight mb-4">{feature.title}</h3>
-                              <p className="text-[11px] text-muted-foreground leading-relaxed font-bold uppercase tracking-widest opacity-60 mb-10">{feature.description}</p>
-                              <div className="mt-auto flex items-center text-[11px] font-black text-primary uppercase tracking-[0.4em] opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
-                                Initialize <ArrowRight className="ml-3 h-4 w-4" />
-                              </div>
-                          </Card>
-                      </Link>
-                    </MotionWrapper>
-                  ))}
-              </div>
-          </section>
-
-          <section>
-            <MotionWrapper delay={0.8}>
-              <SectionTitle icon={Library}>Infrastructure Hub</SectionTitle>
-            </MotionWrapper>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {[
-                { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", desc: "Statutory forensic guides." },
-                { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, title: "Legal Aid Node", desc: "Verified pro-bono orgs." },
-                { href: "/dashboard/my-cases", icon: Landmark, title: "Case Registry", desc: "eCourts synchronization." },
-              ].map((item, index) => (
-                <MotionWrapper key={item.href} delay={0.9 + index * 0.1}>
-                  <Link href={item.href} className="block group h-full">
-                    <Card className="h-full glass group-hover:border-primary/30 transition-all duration-500 rounded-[3rem] shadow-2xl hover:shadow-3xl border-primary/5 overflow-hidden">
-                      <CardContent className="p-12 text-left relative">
-                        <div className="flex items-center gap-8 relative z-10">
-                          <div className="p-6 rounded-2xl bg-muted group-hover:bg-primary/10 group-hover:text-primary transition-all duration-500 shadow-inner ring-1 ring-black/5">
-                            <item.icon className="h-8 w-8" />
                           </div>
-                          <div className="min-w-0 space-y-2">
-                            <h3 className="font-black text-2xl tracking-tight truncate">{item.title}</h3>
-                            <p className="text-[11px] text-muted-foreground font-black truncate uppercase tracking-[0.2em] opacity-60">{item.desc}</p>
-                          </div>
-                        </div>
-                        <div className="absolute top-0 right-0 p-6 opacity-[0.02] group-hover:opacity-[0.08] transition-opacity">
-                            <item.icon className="h-24 w-24" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </MotionWrapper>
-              ))}
-            </div>
-          </section>
+                      )}
+                  </div>
+              </section>
+          </div>
+
+          <div className="lg:col-span-4 space-y-10">
+              <section>
+                  <SectionTitle icon={Sparkles}>AI Nodes</SectionTitle>
+                  <div className="grid grid-cols-2 gap-4">
+                      {aiFeatures.map((f) => (
+                        <Link key={f.href} href={f.href} className="block group">
+                            <Card className="h-full glass p-5 rounded-2xl border-primary/5 group-hover:border-primary/20 transition-all text-left">
+                                <div className={cn("p-2.5 rounded-lg w-fit mb-3", f.bg, f.color)}>
+                                    <f.icon className="h-4 w-4" />
+                                </div>
+                                <h3 className="font-black text-xs uppercase tracking-tight">{f.title}</h3>
+                                <p className="text-[10px] text-muted-foreground font-bold mt-1">{f.desc}</p>
+                            </Card>
+                        </Link>
+                      ))}
+                  </div>
+              </section>
+
+              <section>
+                  <SectionTitle icon={Library}>Registry</SectionTitle>
+                  <div className="space-y-3">
+                      {[
+                        { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub" },
+                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case Tracker" },
+                      ].map((item) => (
+                        <Link key={item.href} href={item.href} className="block group">
+                            <Card className="glass p-4 rounded-xl border-primary/5 group-hover:bg-primary/5 transition-all flex items-center gap-4">
+                                <div className="p-2 rounded-lg bg-primary/5 text-primary">
+                                    <item.icon className="h-4 w-4" />
+                                </div>
+                                <span className="font-black text-xs uppercase tracking-widest">{item.title}</span>
+                            </Card>
+                        </Link>
+                      ))}
+                  </div>
+              </section>
+          </div>
         </div>
 
-        <MotionWrapper delay={1.2}>
-            <div className="pt-24 text-center border-t border-primary/5 flex flex-col items-center gap-8">
-                <div className="bg-primary/5 p-5 rounded-3xl">
-                    <Logo className="h-12 w-12 opacity-40 grayscale" />
-                </div>
-                <div className="space-y-3">
-                    <p className="text-[11px] font-black uppercase tracking-[0.8em] text-muted-foreground/40">Institutional Terminal // NYAYASAHAYAK.IN</p>
-                    <p className="text-sm font-bold text-primary/60 italic">"Engineering Dignity through Precise Neural Legal Intelligence."</p>
-                </div>
-                <div className="flex items-center gap-6 pt-6 opacity-20">
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></div>
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse [animation-delay:0.2s]"></div>
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse [animation-delay:0.4s]"></div>
-                </div>
-            </div>
-        </MotionWrapper>
-
-        <FloatingActionNodes />
+        <div className="pt-12 text-center border-t border-primary/5 opacity-30">
+            <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // TERMINAL ACTIVE</p>
+        </div>
     </div>
   );
 }
