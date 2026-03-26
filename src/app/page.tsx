@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,8 @@ import {
   Lock,
   StepForward,
   CheckCircle2,
-  Fingerprint
+  Fingerprint,
+  Cpu
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
