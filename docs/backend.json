@@ -78,6 +78,21 @@
                 "email",
                 "userType"
             ]
+        },
+        "Notification": {
+            "title": "Notification",
+            "description": "Represents a user notification node.",
+            "type": "object",
+            "properties": {
+                "userId": { "type": "string" },
+                "type": { "type": "string", "enum": ["like", "admin_message", "system"] },
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "link": { "type": "string" },
+                "isRead": { "type": "boolean" },
+                "createdAt": { "type": "object" }
+            },
+            "required": ["userId", "type", "title", "description", "isRead", "createdAt"]
         }
     },
     "auth": {
@@ -92,6 +107,12 @@
                 "$ref": "#/entities/UserProfile"
             },
             "description": "Stores public information for each user."
+        },
+        "/notifications/{notificationId}": {
+            "schema": {
+                "$ref": "#/entities/Notification"
+            },
+            "description": "System and user-triggered notification nodes."
         }
     }
 }

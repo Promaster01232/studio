@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, orderBy, onSnapshot, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove, deleteDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove, deleteDoc, addDoc, serverTimestamp } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Skeleton } from '@/components/ui/skeleton';
 import { errorEmitter } from "@/firebase/error-emitter";
@@ -169,6 +169,18 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
         updateDoc(postRef, {
             likes: increment(userHasLiked ? -1 : 1),
             likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        }).then(() => {
+            // Trigger Notification for Like
+            if (!userHasLiked && post.authorUid !== currentUser.uid) {
+                addDoc(collection(firestore, "notifications"), {
+                    userId: post.authorUid,
+                    type: 'like',
+                    title: 'Transmission Liked',
+                    description: `${userProfile?.firstName || 'A citizen'} liked your post: "${post.title}"`,
+                    isRead: false,
+                    createdAt: serverTimestamp()
+                });
+            }
         }).catch((serverError) => {
             setOptimisticLikes(post.likes);
             setOptimisticLikedBy(post.likedBy || []);

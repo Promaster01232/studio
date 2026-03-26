@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -7,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
-import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, writeBatch } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, writeBatch, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, remove, update } from "firebase/database";
 import { 
   ShieldCheck, 
@@ -255,6 +256,25 @@ export default function ManagementConsolePage() {
       }
   };
 
+  const handleSendAdminMessage = async (targetUser: UserRecord) => {
+      const msg = prompt(`Initialize institutional alert for ${targetUser.firstName}:`);
+      if (!msg) return;
+
+      try {
+          await addDoc(collection(firestore, "notifications"), {
+              userId: targetUser.uid,
+              type: 'admin_message',
+              title: 'Institutional Alert',
+              description: msg,
+              isRead: false,
+              createdAt: serverTimestamp()
+          });
+          toast({ title: "Alert Dispatched", description: "The citizen has been notified." });
+      } catch (error) {
+          toast({ variant: "destructive", title: "Transmission Failed" });
+      }
+  };
+
   const handleExecutePurge = async () => {
     if (!userToPurge) return;
     const user = userToPurge;
@@ -440,7 +460,7 @@ export default function ManagementConsolePage() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl">
-                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleSendAdminMessage(user)} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
                                                     <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><RotateCcw className="mr-3 h-4 w-4" /> Reset Node</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem 

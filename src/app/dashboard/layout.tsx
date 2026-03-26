@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -31,14 +32,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/theme-provider";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc, collection, query, where } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
 import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
 import { AnimatePresence, motion } from "framer-motion";
 
-function Header({ userProfile }: { userProfile: any }) {
+function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: number }) {
     return (
         <header className={cn(
             "sticky top-0 z-[40] flex h-16 items-center gap-4 border-b px-4 sm:px-6 transition-all",
@@ -52,9 +53,7 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
-                        {/* Unified trigger container to ensure DialogTrigger has exactly ONE child element */}
                         <div className="w-full max-w-sm cursor-pointer group active:scale-[0.99] transition-transform">
-                            {/* Desktop Search Bar */}
                             <div className="hidden md:flex items-center w-full pl-10 pr-16 h-10 font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm relative">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                                 <span>Search tools, cases, guides...</span>
@@ -64,7 +63,6 @@ function Header({ userProfile }: { userProfile: any }) {
                                     </kbd>
                                 </div>
                             </div>
-                            {/* Mobile Search Button */}
                             <div className="md:hidden">
                                 <Button variant="outline" size="icon" className="h-10 w-10 rounded-xl border-primary/5 bg-muted/40 active:scale-95 transition-all">
                                     <Search className="h-4 w-4 text-muted-foreground" />
@@ -89,11 +87,18 @@ function Header({ userProfile }: { userProfile: any }) {
                             <Button 
                                 variant="ghost" 
                                 size="icon" 
-                                className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all active:scale-95"
+                                className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all active:scale-95 relative"
                                 asChild
                             >
                                 <Link href="/dashboard/notifications">
                                     <Bell className="h-4 w-4" />
+                                    {unreadCount > 0 && (
+                                        <motion.span 
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            className="absolute top-2.5 right-2.5 h-2 w-2 bg-red-500 rounded-full border-2 border-background shadow-sm"
+                                        />
+                                    )}
                                 </Link>
                             </Button>
                         </div>
@@ -114,8 +119,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   
   const [userProfile, setUserProfile] = useState<any>(null);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
   
   const profileUnsubscribeRef = useRef<(() => void) | null>(null);
+  const notifUnsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -126,6 +133,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       if (profileUnsubscribeRef.current) {
         profileUnsubscribeRef.current();
         profileUnsubscribeRef.current = null;
+      }
+      if (notifUnsubscribeRef.current) {
+        notifUnsubscribeRef.current();
+        notifUnsubscribeRef.current = null;
       }
 
       if (user) {
@@ -146,9 +157,18 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         }, () => {
             setProfileLoading(false);
         });
+
+        // Notifications Listener
+        const notifRef = collection(firestore, "notifications");
+        const q = query(notifRef, where("userId", "==", user.uid), where("isRead", "==", false));
+        notifUnsubscribeRef.current = onSnapshot(q, (snap) => {
+            setUnreadCount(snap.size);
+        });
+
       } else {
         setProfileLoading(false);
         setUserProfile(null);
+        setUnreadCount(0);
         if (!['/login', '/register', '/', '/about', '/terms', '/privacy', '/cookie-policy', '/disclaimer', '/contact'].includes(pathname)) {
             router.replace('/login');
         }
@@ -158,11 +178,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     return () => {
         unsubscribeAuth();
         if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
+        if (notifUnsubscribeRef.current) notifUnsubscribeRef.current();
     };
   }, [auth, firestore, router, pathname]);
 
   const handleLogout = async () => {
     if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
+    if (notifUnsubscribeRef.current) notifUnsubscribeRef.current();
     await signOut(auth);
     router.replace('/login');
   };
@@ -311,7 +333,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none -z-10"></div>
         
         <div className="flex flex-col h-screen overflow-hidden">
-          <Header userProfile={userProfile} />
+          <Header userProfile={userProfile} unreadCount={unreadCount} />
           <main className="flex-1 overflow-y-auto">
             <div className="p-4 sm:p-6 md:p-8 lg:p-10 min-h-[calc(100vh-64px)] flex flex-col">
                 <AnimatePresence mode="wait">
