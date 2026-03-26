@@ -1,10 +1,11 @@
+
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, use, useRef } from "react";
 import { useFirestore } from "@/firebase";
-import { doc, onSnapshot, collection, query, where, getDocs } from "firebase/firestore";
+import { doc, onSnapshot, collection, query, where, getDocs, orderBy, Timestamp } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   ArrowLeft, 
@@ -20,13 +21,19 @@ import {
   BadgeCheck, 
   Gavel, 
   FileText,
-  Heart
+  Heart,
+  MessageCircle,
+  Share2,
+  Bookmark,
+  ChevronDown,
+  ArrowRight
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/logo";
+import { formatDistanceToNow } from "date-fns";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -66,14 +73,28 @@ const achievements: Achievement[] = [
     { title: "Verified Citizen", description: "Passed 100% forensic identity audit.", icon: ShieldCheck, color: "text-green-600", bg: "from-green-500/20 to-green-500/5" },
 ];
 
+interface Post {
+    id: string;
+    title: string;
+    content: string;
+    createdAt: Timestamp;
+    likes: number;
+    comments: number;
+    postType?: string;
+}
+
 export default function UserPublicProfilePage({ params }: { params: Promise<{ uid: string }> }) {
   const unwrappedParams = use(params);
   const uid = unwrappedParams.uid;
   const firestore = useFirestore();
+  const postsSectionRef = useRef<HTMLDivElement>(null);
   
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ posts: 0, likes: 0, impact: 0 });
+  const [userPosts, setUserPosts] = useState<Post[]>([]);
+  const [showPosts, setShowPosts] = useState(false);
+  const [postsLoading, setPostsLoading] = useState(false);
 
   useEffect(() => {
     if (!uid) return;
@@ -86,7 +107,7 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
       setLoading(false);
     });
 
-    // Fetch basic stats for the profile
+    // Fetch basic stats
     const postsRef = collection(firestore, "posts");
     const q = query(postsRef, where("authorUid", "==", uid));
     getDocs(q).then(snap => {
@@ -104,6 +125,29 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
 
     return () => unsubscribe();
   }, [uid, firestore]);
+
+  const fetchUserPosts = async () => {
+      if (userPosts.length > 0 || postsLoading) {
+          setShowPosts(!showPosts);
+          if (!showPosts) setTimeout(() => postsSectionRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+          return;
+      }
+
+      setPostsLoading(true);
+      setShowPosts(true);
+      try {
+          const postsRef = collection(firestore, "posts");
+          const q = query(postsRef, where("authorUid", "==", uid), orderBy("createdAt", "desc"));
+          const snap = await getDocs(q);
+          const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
+          setUserPosts(list);
+          setTimeout(() => postsSectionRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+      } catch (error) {
+          console.error("Failed to fetch user transmissions:", error);
+      } finally {
+          setPostsLoading(false);
+      }
+  };
 
   if (loading) {
     return (
@@ -201,11 +245,26 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
           <div className="lg:col-span-5 space-y-8">
               <motion.div variants={itemVariants} className="grid grid-cols-3 gap-4">
                   {[
-                      { label: "Registry Posts", value: stats.posts, icon: FileText, color: "text-blue-500", bg: "bg-blue-500/10" },
+                      { 
+                          label: "Registry Posts", 
+                          value: stats.posts, 
+                          icon: FileText, 
+                          color: "text-blue-500", 
+                          bg: "bg-blue-500/10",
+                          onClick: fetchUserPosts,
+                          isClickable: true
+                      },
                       { label: "Community Likes", value: stats.likes, icon: Heart, color: "text-red-500", bg: "bg-red-500/10" },
                       { label: "Node Impact", value: stats.impact, icon: Activity, color: "text-amber-500", bg: "bg-amber-500/10" }
                   ].map((stat, i) => (
-                      <Card key={i} className="glass p-4 rounded-2xl text-center space-y-2 border-primary/5 hover:border-primary/20 transition-all cursor-default group">
+                      <Card 
+                        key={i} 
+                        className={cn(
+                            "glass p-4 rounded-2xl text-center space-y-2 border-primary/5 transition-all group",
+                            stat.isClickable ? "cursor-pointer hover:border-primary/30 hover:bg-primary/5 active:scale-95" : "cursor-default"
+                        )}
+                        onClick={stat.onClick}
+                      >
                           <div className={cn("p-2 rounded-lg w-fit mx-auto transition-transform group-hover:scale-110", stat.bg, stat.color)}>
                               <stat.icon className="h-4 w-4" />
                           </div>
@@ -213,6 +272,11 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
                               <p className="text-xl font-black tracking-tight">{stat.value}</p>
                               <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-60 leading-none">{stat.label}</p>
                           </div>
+                          {stat.isClickable && (
+                              <div className="mt-1 flex items-center justify-center">
+                                  <ChevronDown className={cn("h-3 w-3 text-primary transition-transform", showPosts && i === 0 ? "rotate-180" : "")} />
+                              </div>
+                          )}
                       </Card>
                   ))}
               </motion.div>
@@ -294,24 +358,98 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
                                   ))}
                               </div>
                           </div>
-
-                          <div className="pt-6 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-6">
-                              <div className="space-y-1 text-left">
-                                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Identity Authenticator</p>
-                                  <p className="text-xs font-bold text-primary">NS-SECURE-NODE-001</p>
-                              </div>
-                              <Button variant="ghost" className="rounded-xl h-10 px-6 font-bold text-[10px] uppercase tracking-widest text-primary hover:bg-primary/5">
-                                  Request Forensic Verification
-                              </Button>
-                          </div>
                       </CardContent>
                   </Card>
               </motion.div>
-
-              <motion.div variants={itemVariants} className="text-center pt-4 opacity-30">
-                  <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // THE FUTURE OF JUSTICE IS NEURAL</p>
-              </motion.div>
           </div>
+      </div>
+
+      <AnimatePresence>
+          {showPosts && (
+              <motion.div 
+                ref={postsSectionRef}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 40 }}
+                className="space-y-8 pt-8"
+              >
+                  <div className="flex items-center justify-between border-b border-primary/10 pb-4">
+                      <div className="space-y-1">
+                          <h2 className="text-2xl font-black font-headline tracking-tighter">Transmission Registry</h2>
+                          <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Publicly audited community contributions</p>
+                      </div>
+                      <Button variant="ghost" size="icon" onClick={() => setShowPosts(false)} className="rounded-xl hover:bg-destructive/10 hover:text-destructive">
+                          <ChevronDown className="h-6 w-6 rotate-180" />
+                      </Button>
+                  </div>
+
+                  {postsLoading ? (
+                      <div className="flex flex-col items-center justify-center py-20 gap-4">
+                          <Loader2 className="h-8 w-8 animate-spin text-primary opacity-20" />
+                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Syncing User Registry...</p>
+                      </div>
+                  ) : userPosts.length === 0 ? (
+                      <Card className="border-dashed border-2 bg-transparent py-20 rounded-[2.5rem]">
+                          <CardContent className="flex flex-col items-center justify-center text-center gap-4 opacity-40">
+                              <FileText className="h-12 w-12" />
+                              <div className="space-y-1">
+                                  <p className="font-black text-xl tracking-tighter">Empty Transmission Log</p>
+                                  <p className="text-xs font-medium italic">"No institutional ideas have been initialized by this node."</p>
+                              </div>
+                          </CardContent>
+                      </Card>
+                  ) : (
+                      <div className="grid gap-6">
+                          {userPosts.map((post, idx) => (
+                              <motion.div 
+                                key={post.id}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: idx * 0.05 }}
+                              >
+                                  <Card className="glass border-primary/5 hover:border-primary/20 transition-all rounded-[2rem] overflow-hidden group">
+                                      <CardContent className="p-6 sm:p-8">
+                                          <div className="flex justify-between items-start mb-4">
+                                              <div className="space-y-1">
+                                                  <h3 className="text-lg sm:text-xl font-black tracking-tight group-hover:text-primary transition-colors">{post.title}</h3>
+                                                  <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
+                                                      Transmission // {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
+                                                  </p>
+                                              </div>
+                                              <Badge className="bg-primary/10 text-primary border-primary/10 text-[8px] font-black uppercase tracking-widest">
+                                                  {post.postType || 'Idea'}
+                                              </Badge>
+                                          </div>
+                                          <p className="text-sm text-muted-foreground font-medium leading-relaxed line-clamp-3 mb-6">
+                                              {post.content}
+                                          </p>
+                                          <div className="flex items-center justify-between pt-6 border-t border-primary/5">
+                                              <div className="flex items-center gap-4">
+                                                  <div className="flex items-center gap-1.5 text-red-500/60 text-[10px] font-black">
+                                                      <Heart className="h-3.5 w-3.5 fill-current" />
+                                                      {post.likes}
+                                                  </div>
+                                                  <div className="flex items-center gap-1.5 text-primary/60 text-[10px] font-black">
+                                                      <MessageCircle className="h-3.5 w-3.5" />
+                                                      {post.comments}
+                                                  </div>
+                                              </div>
+                                              <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary hover:text-white transition-all">
+                                                  Inspect Node <ArrowRight className="h-3 w-3" />
+                                              </Button>
+                                          </div>
+                                      </CardContent>
+                                  </Card>
+                              </motion.div>
+                          ))}
+                      </div>
+                  )}
+              </motion.div>
+          )}
+      </AnimatePresence>
+
+      <div className="text-center pt-12 opacity-30">
+          <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // THE FUTURE OF JUSTICE IS NEURAL</p>
       </div>
     </motion.div>
   );
