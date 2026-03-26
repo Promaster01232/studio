@@ -102,8 +102,13 @@ interface Post {
     postType?: string;
 }
 
-export default function UserPublicProfilePage(props: { params: Promise<{ uid: string }> }) {
+export default function UserPublicProfilePage(props: { 
+  params: Promise<{ uid: string }>,
+  searchParams: Promise<any>
+}) {
   const unwrappedParams = use(props.params);
+  // Safely unwrap searchParams to satisfy Next.js 15 Proxy enumeration requirements
+  const _searchParams = use(props.searchParams);
   const uid = unwrappedParams.uid;
   const firestore = useFirestore();
   const auth = useAuth();

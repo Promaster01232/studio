@@ -15,8 +15,13 @@ import { motion } from "framer-motion";
 import { useDatabase } from '@/firebase';
 import { ref, get } from 'firebase/database';
 
-export default function LawyerProfilePage(props: { params: Promise<{ id: string }> }) {
+export default function LawyerProfilePage(props: { 
+  params: Promise<{ id: string }>,
+  searchParams: Promise<any>
+}) {
   const unwrappedParams = use(props.params);
+  // Safely unwrap searchParams to avoid Next.js 15 Proxy enumeration errors
+  const _searchParams = use(props.searchParams);
   const id = unwrappedParams.id;
   const rtdb = useDatabase();
   const [lawyer, setLayer] = useState<Lawyer | undefined>();

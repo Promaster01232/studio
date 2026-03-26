@@ -2,7 +2,7 @@
 "use client";
 
 import { use } from "react";
-import { useParams, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,13 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { guides } from "../data";
 
-export default function GuideDetailPage(props: { params: Promise<{ slug: string }> }) {
+export default function GuideDetailPage(props: { 
+  params: Promise<{ slug: string }>,
+  searchParams: Promise<any>
+}) {
     const unwrappedParams = use(props.params);
+    // Unwrap searchParams to prevent enumeration errors in Next.js 15
+    const _searchParams = use(props.searchParams);
     const slug = unwrappedParams.slug;
 
     const guide = guides.find((g) => g.slug === slug);

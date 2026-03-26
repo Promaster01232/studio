@@ -23,8 +23,13 @@ const timeSlots = [
     "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "02:00 PM", "02:30 PM", "03:00 PM"
 ];
 
-export default function BookConsultationPage(props: { params: Promise<{ id: string }> }) {
+export default function BookConsultationPage(props: { 
+  params: Promise<{ id: string }>,
+  searchParams: Promise<any>
+}) {
   const unwrappedParams = use(props.params);
+  // Also unwrap searchParams even if unused to avoid Next.js 15 enumeration errors
+  const _searchParams = use(props.searchParams);
   const id = unwrappedParams.id;
   const rtdb = useDatabase();
   const { toast } = useToast();

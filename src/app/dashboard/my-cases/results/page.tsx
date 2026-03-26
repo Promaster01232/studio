@@ -1,5 +1,5 @@
 
-import React, { Suspense, use } from 'react';
+import React, { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FileText, Calendar, Gavel, User, Users, Search, ExternalLink } from "lucide-react";
@@ -214,11 +214,14 @@ async function SearchResultsComponent({ searchParams }: { searchParams: CaseSear
 }
 
 
-export default function SearchResultsPage(props: { 
+export default async function SearchResultsPage(props: { 
   params: Promise<any>, 
   searchParams: Promise<CaseSearchParams> 
 }) {
-    const searchParams = use(props.searchParams);
+    // In Next.js 15, params and searchParams must be awaited in Server Components
+    const params = await props.params;
+    const searchParams = await props.searchParams;
+    
     return (
         <Suspense fallback={<SearchResultsSkeleton />}>
             <SearchResultsComponent searchParams={searchParams} />

@@ -14,8 +14,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useDatabase } from "@/firebase";
 import { ref, onValue } from "firebase/database";
 
-export default function ChatPage(props: { params: Promise<{ id: string }> }) {
+export default function ChatPage(props: { 
+  params: Promise<{ id: string }>,
+  searchParams: Promise<any>
+}) {
   const unwrappedParams = use(props.params);
+  // Unwrap searchParams to prevent enumeration errors in Next.js 15
+  const _searchParams = use(props.searchParams);
   const id = unwrappedParams.id;
   const rtdb = useDatabase();
   const [lawyer, setLayer] = useState<Lawyer | undefined>();
