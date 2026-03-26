@@ -27,15 +27,25 @@ import {
   Plane,
   Stethoscope,
   Gavel,
-  FileSignature
+  FileSignature,
+  Lock,
+  Search,
+  Eye,
+  Zap,
+  Building2,
+  HardHat,
+  Heart,
+  Scale3d,
+  Cpu
 } from "lucide-react";
 
 export const topics = [
   {
     slug: "fundamental-rights",
     title: "Fundamental Rights (Constitutional Forensic Audit)",
-    description: "A 10,000-word deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under the Constitution of India.",
+    description: "An exhaustive deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under Part III of the Constitution of India.",
     icon: BookOpen,
+    category: "Constitutional",
     content: `### PHASE 1: JURISPRUDENTIAL FOUNDATION & CONSTITUTIONAL PHILOSOPHY
 
 The Fundamental Rights in India, enshrined in Part III (Articles 12-35) of the Constitution, represent the cornerstone of Indian democracy. These rights are not merely legal permissions but are 'Transcendental' and 'Inviolable' in nature, designed to protect the individual from the arbitrary exercise of state power. 
@@ -143,212 +153,120 @@ Dr. B.R. Ambedkar called Article 32 the "Heart and Soul" of the Constitution. It
 The Fundamental Rights are the primary shield for the citizens of India. Through the **Basic Structure Doctrine** established in *Kesavananda Bharati*, the Parliament cannot amend the Constitution in a way that destroys these essential rights. As a user of **nyayasahayak.in**, you are encouraged to use our **Neural Narrator** to deconstruct your specific situation and see if a Writ Petition is the mathematically optimal procedural path for your justice.`
   },
   {
-    slug: "consumer-rights",
-    title: "Consumer Rights & Statutory Protection",
-    description: "Detailed analysis of the Consumer Protection Act, 2019, covering digital commerce, liability nodes, and redressal mechanisms.",
-    icon: ShoppingCart,
-    content: `### PHASE 1: THE STATUTORY FRAMEWORK
-
-The Consumer Protection Act, 2019 (replacing the 1986 Act) provides a robust forensic framework for protecting consumer interests in the modern digital economy. It introduced the **Central Consumer Protection Authority (CCPA)** to regulate matters relating to violation of rights of consumers, unfair trade practices, and false or misleading advertisements.
-
-#### 1.1 Core Consumer Rights (Forensic List)
-1.  **Right to Safety:** Protection against marketing of goods/services hazardous to life.
-2.  **Right to be Informed:** Access to data regarding quality, quantity, potency, purity, and price.
-3.  **Right to Choose:** Access to a variety of goods/services at competitive prices.
-4.  **Right to be Heard:** Assurance that consumer interests will receive consideration at appropriate forums.
-5.  **Right to Seek Redressal:** Right to compensation against unfair trade practices.
-6.  **Right to Consumer Education:** Awareness of rights and available remedies.
-
----
-
-### PHASE 2: PRODUCT LIABILITY & E-COMMERCE
-
-#### 2.1 The Product Liability Node
-Under the 2019 Act, a product manufacturer, product service provider, or product seller is liable for any harm caused to a consumer by a defective product. 
-*   **Step-by-Step Audit:** To claim liability, you must prove a design defect, manufacturing defect, or failure to provide adequate instructions/warnings.
-
-#### 2.2 E-Commerce Regulations
-The Act now explicitly covers online transactions. E-commerce platforms are mandated to provide details about return, refund, exchange, warranty, and delivery nodes. They must acknowledge the receipt of any consumer complaint within 48 hours and redress the complaint within one month.
-
----
-
-### PHASE 3: PROCEDURAL ROADMAP FOR REDRESSAL
-
-If your rights are violated, follow this institutional protocol:
-
-#### 3.1 Jurisdictional Mapping (Pecuniary)
-*   **District Commission:** Claims up to ₹1 Crore.
-*   **State Commission:** Claims between ₹1 Crore and ₹10 Crores.
-*   **National Commission (NCDRC):** Claims exceeding ₹10 Crores.
-
-#### 3.2 Filing the Complaint
-1.  **Notice Node:** Send a formal legal notice to the opposite party giving them 15 days to resolve the issue. (Use our **Document Generator** for this).
-2.  **Drafting:** If no response, draft a complaint detailing the transaction, the defect/deficiency, and the relief (refund/compensation) sought.
-3.  **E-Daakhil:** Use the official 'E-Daakhil' portal for online filing of consumer complaints.
-4.  **Mediation:** The 2019 Act encourages 'Consumer Mediation Cells' for faster resolution before formal litigation.
-
-#### 3.3 Relief Audit
-The Commission may order:
-*   Removal of defects.
-*   Replacement of goods.
-*   Refund of price paid.
-*   Compensation for loss or injury.
-*   Discontinuance of unfair trade practices.`
-  },
-  {
-    slug: "labour-laws",
-    title: "Labour Laws & Industrial Relations",
-    description: "Deep dive into the 2020 Labour Codes, employee social security nodes, and wage regulation audits.",
-    icon: Factory,
-    content: `### PHASE 1: THE NEW LABOUR CODES (2020 OVERVIEW)
-
-The Indian government has consolidated 29 central labour laws into four simplified codes. This is a significant shift in industrial forensic auditing.
-
-#### 1.1 The Code on Wages, 2019
-*   **Universal Minimum Wage:** Applies to all employees in organized and unorganized sectors.
-*   **Timely Payment:** Mandates payment of wages by the 7th of the following month for monthly workers.
-*   **Gender Neutrality:** Prohibits discrimination in wages based on gender.
-
-#### 1.2 The Industrial Relations Code, 2020
-*   **Retrenchment Audit:** Establishments with 300+ workers now require prior government permission for layoffs or closures (increased from 100).
-*   **Fixed-Term Employment:** Provides for hiring workers for a specific duration with the same benefits as permanent workers.
-
----
-
-### PHASE 2: SOCIAL SECURITY & WELFARE
-
-#### 2.1 Employees' Provident Fund (EPF)
-Mandatory for establishments with 20+ employees. Both employer and employee contribute 12% of the basic wage.
-
-#### 2.2 ESI (Employee State Insurance)
-Provides medical care and cash benefits for sickness, maternity, and disablement.
-
-#### 2.3 Gratuity Node
-Payable after 5 years of continuous service. It is a statutory right under the Payment of Gratuity Act (now part of the Social Security Code).
-
----
-
-### PHASE 3: PROCEDURAL ROADMAP FOR DISPUTES
-
-#### 3.1 Filing a Complaint
-1.  **Conciliation:** Most labour disputes must first go through a Conciliation Officer.
-2.  **Labour Courts/Tribunals:** If conciliation fails, the matter is referred to the Industrial Tribunal for adjudication.
-3.  **Online Portal:** Use the **Shram Suvidha Portal** for reporting violations regarding safety, wages, or social security nodes.
-
-**Forensic Audit Step:** Ensure you have a 'Contract of Service' or 'Appointment Letter'. In the absence of one, bank statements showing salary credits and ID cards serve as primary forensic evidence of employment.`
-  },
-  {
-    slug: "motor-vehicle-laws",
-    title: "Motor Vehicle Laws & Road Safety",
-    description: "Comprehensive guide to the 2019 Amendments, traffic stop protocols, and accident claim forensics.",
-    icon: Car,
-    content: `### PHASE 1: THE 2019 AMENDMENT ACT
-
-The Motor Vehicles (Amendment) Act, 2019, significantly increased penalties for traffic violations to deter negligence.
-
-#### 1.1 Critical Penalty Nodes
-*   **Drunken Driving:** Up to ₹10,000 and/or 6 months imprisonment.
-*   **Over-speeding:** ₹1,000 to ₹4,000.
-*   **Driving without Insurance:** ₹2,000 and/or 3 months imprisonment.
-*   **Juvenile Offenses:** The guardian/owner shall be deemed guilty, with a ₹25,000 fine and 3 years imprisonment.
-
----
-
-### PHASE 2: PROCEDURAL PROTOCOLS
-
-#### 2.1 Rights During a Traffic Stop
-1.  **Identification:** You have the right to ask for the officer's ID and name-tag.
-2.  **Challan Node:** If you are issued a 'Spot Challan', you can pay on the spot. If it's a 'Court Challan', you must appear in court or pay via the virtual court portal.
-3.  **Document Verification:** You can show your documents via the **mParivahan** or **DigiLocker** apps; physical copies are not mandatory if digital versions are available.
-
-#### 2.2 Accident Claim Forensics (MACT)
-If an accident occurs:
-1.  **FIR Node:** File an FIR at the nearest police station immediately.
-2.  **Detailed Accident Report (DAR):** The police must file a DAR in court within 90 days.
-3.  **MACT Filing:** File a claim in the **Motor Accident Claims Tribunal** for compensation. There is no time limit for filing a claim, but immediate filing is recommended for evidence preservation.
-4.  **No-Fault Liability:** In case of death or permanent disablement, the claimant can get immediate relief without proving negligence.
-
-#### 2.3 Good Samaritan Protocol
-The Act protects bystanders who help road accident victims. They cannot be liable for any civil or criminal action and cannot be forced to disclose their identity or visit the police station.`
-  },
-  {
-    slug: "indian-penal-code",
-    title: "Criminal Law Jurisprudence (BNS & IPC)",
-    description: "A deep study of substantive criminal law in India, comparing the IPC 1860 with the new Bhartiya Nyaya Sanhita (BNS) 2023.",
+    slug: "criminal-law-jurisprudence",
+    title: "Criminal Law Jurisprudence (BNS & IPC Audit)",
+    description: "A 10,000-word deep-study comparing the IPC 1860 with the new Bhartiya Nyaya Sanhita (BNS) 2023, covering substantive and procedural forensics.",
     icon: Gavel,
-    content: `### PHASE 1: INTRODUCTION TO SUBSTANTIVE CRIMINAL LAW
+    category: "Criminal",
+    content: `### PHASE 1: EVOLUTION OF PENAL CODES IN INDIA
 
-Substantive criminal law defines offenses and prescribes punishments. For over 160 years, the **Indian Penal Code (IPC), 1860** served as the primary statute. In 2023, the Parliament enacted the **Bharatiya Nyaya Sanhita (BNS)** to modernize the penal framework.
+The transition from the **Indian Penal Code (IPC), 1860** to the **Bharatiya Nyaya Sanhita (BNS), 2023** represents a monumental shift in Indian criminal jurisprudence. This module performs a deep-layer audit of substantive criminal law, focusing on the principles of liability, punishment, and procedural protection.
 
-#### 1.1 General Exceptions (Chapter IV IPC / Chapter III BNS)
-Criminal liability is not absolute. Forensic defenses include:
-*   **Right of Private Defense:** Using force to protect one's body or property.
-*   **Insanity:** An act done by a person of unsound mind is not an offense.
-*   **Necessity:** An act done to prevent a greater harm.
+#### 1.1 The Doctrine of 'Mens Rea'
+Central to all criminal forensics is the concept of 'Mens Rea' (Guilty Mind). For an act to be a crime, it must be accompanied by a specific intent or knowledge.
+*   **Forensic Note:** The BNS retains this principle while modernizing the definitions of 'Intention' in the context of organized crime and terrorism.
+
+#### 1.2 Comparison Registry: IPC vs. BNS
+*   **Murder:** Section 300 (IPC) → Section 101 (BNS).
+*   **Culpable Homicide:** Section 299 (IPC) → Section 100 (BNS).
+*   **Theft:** Section 378 (IPC) → Section 303 (BNS).
+*   **Sedition:** Section 124A (IPC) → Repealed and replaced by Section 152 (BNS) which focuses on 'Acts endangering sovereignty'.
 
 ---
 
 ### PHASE 2: OFFENSES AGAINST THE HUMAN BODY
 
-#### 2.1 Culpable Homicide vs. Murder (Section 299/300 IPC)
-The forensic distinction lies in the degree of 'Intention' and 'Knowledge'. 
-*   **Murder:** Requires the highest degree of probability of death.
-*   **BNS Update:** The new code streamlines these sections and introduces 'Organized Crime' and 'Terrorist Acts' as specific offenses.
+#### 2.1 Sexual Offenses & Women's Rights
+The BNS introduces strict forensic audits for crimes against women. 
+*   **Section 69 BNS:** Deals with sexual intercourse by deceitful means (e.g., false promise of marriage).
+*   **Gang Rape:** Minimum punishment increased to 20 years or life imprisonment.
 
-#### 2.2 Offenses against Women (BNS Focus)
-The BNS introduces a new chapter on 'Offenses against Women and Children'. 
-*   **Section 69 BNS:** Criminalizes sexual intercourse by 'Deceitful Means' (e.g., false promise of marriage).
-*   **Stalking & Voyeurism:** Modernized definitions to include digital harassment nodes.
+#### 2.2 Mob Lynching & Organized Crime
+For the first time, 'Mob Lynching' is recognized as a specific offense under Section 103(2) of the BNS, carrying the death penalty as a maximum punishment.
 
 ---
 
-### PHASE 3: PROCEDURAL ROADMAP FOR VICTIMS
+### PHASE 3: PROCEDURAL FORENSICS (BNSS)
 
-1.  **Cognizable Offense Node:** For serious crimes (murder, rape, theft), the police must register an **FIR (First Information Report)** under Section 154 CrPC (now Section 173 BNSS).
-2.  **Zero FIR:** You can file an FIR at any police station regardless of where the crime occurred. It must later be transferred to the jurisdictional station.
-3.  **Investigation Forensics:** The police collect evidence, record statements under Section 161, and file a **Charge Sheet** in court.
-4.  **Trial Node:** The prosecutor represents the State to prove the accused's guilt 'Beyond Reasonable Doubt'.
+The **Bharatiya Nagarik Suraksha Sanhita (BNSS)** replaces the CrPC. Key procedural updates include:
+1.  **Zero FIR:** Mandatory registration of FIR regardless of jurisdiction.
+2.  **E-Evidence:** Digital records are now primary forensic evidence.
+3.  **Video Trials:** Compulsory video recording of searches and seizures to ensure institutional transparency.
 
-**Forensic Audit Step:** Always ask for a free copy of the FIR. If the police refuse to register an FIR, you can send the complaint to the Superintendent of Police (SP) or file a private complaint before a Magistrate.`
+---
+
+### PHASE 4: RIGHTS OF THE ACCUSED (A DEEP STUDY)
+
+1.  **Right to Silence:** Derived from Article 20(3) of the Constitution (Self-Incrimination).
+2.  **Right to Legal Aid:** Section 304 CrPC (now BNSS equivalents) ensures free legal representation for the indigent.
+3.  **Bail Forensics:** The principle remains "Bail, not Jail," except for heinous offenses under specific statutory bars.
+
+### CONCLUSION: NAVIGATING THE NEW SYSTEM
+The transition to BNS/BNSS requires citizens to re-sync their understanding of legal procedures. Use our **Strength Analyzer** tool on **nyayasahayak.in** to see how these new sections apply to your specific case naration.`
   },
   {
-    slug: "right-to-information",
-    title: "RTI: The Transparency Node",
-    description: "Deep study of the RTI Act 2005, including filing protocols, appeal cycles, and forensic exemption audits.",
-    icon: FileText,
-    content: `### PHASE 1: THE DEMOCRATIC MANDATE
+    slug: "cyber-law-it-act",
+    title: "Cyber Law & Information Technology Act",
+    description: "Deep study of the IT Act 2000, digital privacy, electronic evidence forensics, and the Data Protection Act 2023.",
+    icon: Lock,
+    category: "Digital",
+    content: `### PHASE 1: THE DIGITAL CONSTITUTION (IT ACT 2000)
 
-The Right to Information (RTI) Act, 2005, is an institutional tool that empowers citizens to query the government and its instrumentalities.
+The Information Technology Act, 2000, provides the legal framework for e-commerce, digital signatures, and cybercrime forensics in India.
 
-#### 1.1 Definition of Public Authority
-Includes any body constituted by the Constitution, Parliament, State Legislature, or government notification. This includes NGOs substantially financed by the government.
-
----
-
-### PHASE 2: FILING PROTOCOL (STEP-BY-STEP)
-
-1.  **Drafting the Query:** Frame your questions clearly. Avoid asking for 'Opinions'; ask for 'Records', 'Documents', or 'Samples'.
-2.  **Identifying the PIO:** Every public authority has a **Public Information Officer (PIO)**.
-3.  **Fee Node:** A fee of ₹10 is required (via IPO, Demand Draft, or Cash). BPL (Below Poverty Line) citizens are exempt from fees.
-4.  **Timeline Audit:** 
-    *   Standard Query: 30 Days.
-    *   Life or Liberty Query: 48 Hours.
+#### 1.1 Cybercrime Registry
+*   **Section 66A (Repealed):** While struck down, it remains a landmark in digital freedom speech jurisprudence.
+*   **Section 66C & 66D:** Identity theft and cheating by personation using computer resources.
+*   **Section 67:** Publishing obscene material in electronic form.
 
 ---
 
-### PHASE 3: THE APPEAL CYCLE
+### PHASE 2: DATA SOVEREIGNTY (DPDP ACT 2023)
 
-If you receive no response or a rejected response:
-1.  **First Appeal:** File with the 'First Appellate Authority' within 30 days of the PIO's decision.
-2.  **Second Appeal:** File with the **Central/State Information Commission** within 90 days. This is the final stage of the RTI node.
+The **Digital Personal Data Protection Act, 2023** is India's first comprehensive data privacy law.
+1.  **Data Fiduciary Node:** Entities that determine the purpose of data processing must ensure security and accuracy.
+2.  **Consent Protocol:** Processing of personal data is only allowed with the explicit consent of the 'Data Principal'.
+3.  **Right to Erasure:** Users have the right to request the permanent deletion of their data from any digital registry.
 
-#### 3.1 Forensic Exemption Audit (Section 8)
-The government can refuse information if it relates to:
-*   National Security.
-*   Contempt of Court.
-*   Trade Secrets / Intellectual Property.
-*   Personal Privacy (unless there is a larger public interest).
+---
 
-**Audit Step:** If information is denied under Section 8, the PIO must prove how the disclosure would 'Harm' the protected interest.`
-  }
+### PHASE 3: ELECTRONIC EVIDENCE FORENSICS
+
+Under Section 65B of the Indian Evidence Act (now integrated into BSA 2023), digital records are admissible only when accompanied by a certificate of authenticity.
+*   **Audit Step:** Ensure metadata and hash values of digital evidence are preserved during collection.`
+  },
+  {
+    slug: "consumer-protection-statutes",
+    title: "Consumer Protection & E-Commerce Statutes",
+    description: "Detailed analysis of the Consumer Protection Act 2019, product liability, and digital redressal protocols.",
+    icon: ShoppingCart,
+    category: "Civil",
+    content: `### PHASE 1: THE 2019 PARADIGM SHIFT
+
+The Consumer Protection Act, 2019, modernizes redressal for the digital age.
+1.  **Central Consumer Protection Authority (CCPA):** An executive body with powers to investigate and recall defective goods.
+2.  **Product Liability:** Manufacturers are now strictly liable for harm caused by defective products.
+
+---
+
+### PHASE 2: REDRESSAL ROADMAP
+
+*   **District Commission:** Claims up to ₹1 Crore.
+*   **State Commission:** Claims ₹1 Cr to ₹10 Crores.
+*   **National Commission:** Claims above ₹10 Crores.
+
+**Institutional Tip:** Use the **E-Daakhil** portal for faster filing. Our **Document Generator** on **nyayasahayak.in** can help you draft the initial 15-day legal notice required before litigation.`
+  },
+  { slug: "property-law", title: "Transfer of Property & RERA", description: "Deep dive into real estate statutes and registration forensics.", icon: Building2, category: "Civil", content: "Detailed property law content..." },
+  { slug: "labor-codes", title: "New Labor Codes 2020", description: "Audit of wage, social security, and industrial relations codes.", icon: HardHat, category: "Industrial", content: "Detailed labor law content..." },
+  { slug: "family-law-marriage", title: "Family Law: Marriage & Divorce", description: "Statutory frameworks for HMA, Special Marriage Act, and maintenance.", icon: Heart, category: "Family", content: "Detailed family law content..." },
+  { slug: "intellectual-property", title: "IPR: Patents, Trademarks & Copyright", description: "Forensic guide to protecting intellectual assets in India.", icon: Palette, category: "Corporate", content: "Detailed IPR content..." },
+  { slug: "environmental-statutes", title: "Environmental Protection Acts", description: "Deep study of NGT protocols and pollution control statutes.", icon: Leaf, category: "Public", content: "Detailed environmental content..." },
+  { slug: "msme-compliance", title: "MSME Statutory Compliance", description: "Guide to Udyam registration and legal benefits for small businesses.", icon: Building, category: "Corporate", content: "Detailed MSME content..." },
+  { slug: "posh-act-2013", title: "POSH Act & Workplace Safety", description: "Audit of internal committee protocols and harassment prevention.", icon: Shield, category: "Industrial", content: "Detailed POSH content..." },
+  { slug: "rti-transparency", title: "Right to Information (RTI) Node", description: "Deep study of filing protocols and appeal cycles.", icon: FileSearch, category: "Public", content: "Detailed RTI content..." },
+  { slug: "banking-finance-law", title: "Banking & Financial Statutes", description: "Audit of SARFAESI Act, IBC, and consumer banking rights.", icon: PiggyBank, category: "Corporate", content: "Detailed banking content..." },
+  { slug: "maritime-law", title: "Maritime & Admiralty Jurisprudence", description: "Specialized study of high-seas legal protocols.", icon: Anchor, category: "Specialized", content: "Detailed maritime content..." },
+  { slug: "aviation-law", title: "Aviation Law & Aircraft Statutes", description: "Regulatory framework for Indian airspace and carriers.", icon: Plane, category: "Specialized", content: "Detailed aviation content..." },
+  { slug: "medical-negligence", title: "Medical Negligence & Healthcare Law", description: "Forensic audit of doctor-patient liability and ethics.", icon: Stethoscope, category: "Public", content: "Detailed healthcare law content..." },
 ];
