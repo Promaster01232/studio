@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -167,13 +168,13 @@ function PostCard({ post }: { post: Post }) {
     const auth = useAuth();
     const { currentUser } = auth;
     
-    const [isVoting, setIsVoting] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
     const [optimisticLikes, setOptimisticLikes] = useState(post.likes);
     const [optimisticLikedBy, setOptimisticLikedBy] = useState(post.likedBy || []);
     const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
+    const isAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
     const isAuthor = post.authorUid === currentUser?.uid;
     
     const handleLike = () => {
@@ -194,8 +195,22 @@ function PostCard({ post }: { post: Post }) {
         }).finally(() => setIsLiking(false));
     };
 
+    const handleDelete = async () => {
+        if (!confirm("Are you sure you want to purge this transmission from the registry?")) return;
+        try {
+            await deleteDoc(doc(firestore, "posts", post.id));
+            toast({ title: "Transmission Purged", description: "The node has been erased from the official registry." });
+        } catch (error) {
+            toast({ variant: "destructive", title: "Action Refused", description: "Insufficient node permissions." });
+        }
+    };
+
+    const handleReport = () => {
+        toast({ title: "Transmission Flagged", description: "Our forensic moderation unit will review this node." });
+    };
+
     const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
-        const shareText = `Check out this institutional transmission on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
+        const shareText = `Institutional transmission on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
         if (platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
         else if (platform === 'twitter') window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
         else if (platform === 'copy') {
@@ -208,18 +223,38 @@ function PostCard({ post }: { post: Post }) {
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
 
     return (
-        <Card className="glass border-primary/5 hover:border-primary/20 transition-all shadow-lg rounded-[2rem] overflow-hidden">
-            <CardContent className="p-6">
+        <Card className="glass border-primary/5 hover:border-primary/20 transition-all shadow-lg rounded-[2rem] overflow-hidden flex flex-col h-full group">
+            <CardContent className="p-6 flex-1 flex flex-col">
                 <div className="flex items-start justify-between mb-4">
                     <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
-                    {post.postType && (
-                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-3 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest h-5">
-                            {post.postType}
-                        </Badge>
-                    )}
+                    <div className="flex items-center gap-2">
+                        {post.postType && (
+                            <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-3 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest h-5">
+                                {post.postType}
+                            </Badge>
+                        )}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10">
+                                    <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl glass border-primary/5">
+                                {(isAuthor || isAdmin) ? (
+                                    <DropdownMenuItem onClick={handleDelete} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
+                                        <Trash2 className="h-4 w-4" /> Purge Post
+                                    </DropdownMenuItem>
+                                ) : (
+                                    <DropdownMenuItem onClick={handleReport} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                        <Flag className="h-4 w-4" /> Report Content
+                                    </DropdownMenuItem>
+                                )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
-                <div className="space-y-3 text-left">
-                    <h3 className="text-lg font-black font-headline leading-tight tracking-tighter text-foreground">{post.title}</h3>
+                <div className="space-y-3 text-left flex-1">
+                    <h3 className="text-lg font-black font-headline leading-tight tracking-tighter text-foreground group-hover:text-primary transition-colors">{post.title}</h3>
                     {post.content && <p className="text-muted-foreground text-xs font-medium leading-relaxed line-clamp-3">{post.content}</p>}
                 </div>
                 
@@ -237,10 +272,10 @@ function PostCard({ post }: { post: Post }) {
                     </div>
                 )}
             </CardContent>
-            <CardFooter className="px-6 py-4 bg-muted/5 border-t border-primary/5 flex justify-between items-center">
+            <CardFooter className="px-6 py-4 bg-muted/5 border-t border-primary/5 flex justify-between items-center mt-auto">
                 <div className="flex gap-2">
                     <Button variant="ghost" size="sm" className="h-8 px-3 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-red-500/10 hover:text-red-500" onClick={handleLike}>
-                        <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-red-500 text-red-500")} />
+                        <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-red-500 text-red-500 scale-110")} />
                         <span>{optimisticLikes}</span>
                     </Button>
                     <DropdownMenu>
@@ -259,7 +294,7 @@ function PostCard({ post }: { post: Post }) {
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary/10" asChild>
+                <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary/10 active:translate-x-1 transition-all" asChild>
                     <Link href="/dashboard/research-analytics">
                         Inspect <ArrowRight className="h-3 w-3" />
                     </Link>
@@ -370,7 +405,7 @@ export default function DashboardHomePage() {
                       <span className="animate-pulse ml-1 text-primary">|</span>
                   </h1>
                   <p className="text-sm sm:text-xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
-                      Access high-fidelity legal intelligence and forensic tools designed for the modern Indian judicial landscape. Our ecosystem empowers you with mathematically precise statutory audits and procedural navigation roadmaps.
+                      Access high-fidelity legal intelligence and forensic tools designed for the modern Indian judicial landscape.
                   </p>
                   <div className="flex flex-wrap gap-4 pt-4">
                       <Button size="lg" className="rounded-2xl font-black uppercase tracking-widest text-xs px-8 h-14 shadow-2xl shadow-primary/20 active:scale-95 transition-all" asChild>
@@ -387,72 +422,6 @@ export default function DashboardHomePage() {
         <div className="space-y-16">
           <section>
               <MotionWrapper delay={0.1}>
-                <SectionTitle>Primary Forensic Audit Nodes</SectionTitle>
-              </MotionWrapper>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <MotionWrapper delay={0.2}>
-                    <Link href="/dashboard/narrate" className="block group">
-                        <Card className="h-full glass hover:border-primary/30 transition-all duration-500 overflow-hidden relative group rounded-[2.5rem] shadow-xl">
-                            <CardContent className="p-10 flex items-center gap-8">
-                                <div className="p-6 rounded-[1.5rem] bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner ring-1 ring-primary/20">
-                                    <Mic className="h-10 w-10" />
-                                </div>
-                                <div className="space-y-2 flex-1">
-                                    <h3 className="text-2xl font-black tracking-tight">Narrate Case Problem</h3>
-                                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] opacity-60">Forensic Voice Summary Unit</p>
-                                    <p className="text-xs text-muted-foreground font-medium leading-relaxed max-w-xs">Convert natural speech into a structured statutory report with identified IPC/BNSS violations.</p>
-                                </div>
-                                <ArrowRight className="h-6 w-6 text-primary opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
-                            </CardContent>
-                        </Card>
-                    </Link>
-                  </MotionWrapper>
-                  <MotionWrapper delay={0.3}>
-                    <Link href="/dashboard/document-intelligence" className="block group">
-                        <Card className="h-full glass hover:border-emerald-500/30 transition-all duration-500 overflow-hidden relative group rounded-[2.5rem] shadow-xl">
-                            <CardContent className="p-10 flex items-center gap-8">
-                                <div className="p-6 rounded-[1.5rem] bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-500 shadow-inner ring-1 ring-emerald-500/20">
-                                    <Search className="h-10 w-10" />
-                                </div>
-                                <div className="space-y-2 flex-1">
-                                    <h3 className="text-2xl font-black tracking-tight">Document Intelligence</h3>
-                                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] opacity-60">Neural Risk Assessment Node</p>
-                                    <p className="text-xs text-muted-foreground font-medium leading-relaxed max-w-xs">Perform a deep-layer forensic audit of legal contracts to detect hidden liabilities and deadlines.</p>
-                                </div>
-                                <ArrowRight className="h-6 w-6 text-emerald-600 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
-                            </CardContent>
-                        </Card>
-                    </Link>
-                  </MotionWrapper>
-              </div>
-          </section>
-
-          <section>
-              <MotionWrapper delay={0.4}>
-                <SectionTitle>Institutional AI Toolkit</SectionTitle>
-              </MotionWrapper>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                  {aiFeatures.map((feature, index) => (
-                    <MotionWrapper key={feature.href} delay={0.5 + index * 0.1}>
-                      <Link href={feature.href} className="block group h-full">
-                          <Card className="h-full glass p-8 flex flex-col items-start hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 active:scale-[0.97] rounded-[2rem] border-primary/5">
-                              <div className={cn("p-4 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm ring-1 ring-white/10", feature.bg, feature.color)}>
-                                <feature.icon className="h-6 w-6" />
-                              </div>
-                              <h3 className="font-black text-lg tracking-tight leading-tight">{feature.title}</h3>
-                              <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed font-bold uppercase tracking-widest opacity-60">{feature.description}</p>
-                              <div className="mt-6 flex items-center text-[9px] font-black text-primary uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity">
-                                Initialize Node <ArrowRight className="ml-2 h-3 w-3" />
-                              </div>
-                          </Card>
-                      </Link>
-                    </MotionWrapper>
-                  ))}
-              </div>
-          </section>
-
-          <section>
-              <MotionWrapper delay={0.6}>
                 <SectionTitle>Latest Community Transmissions</SectionTitle>
               </MotionWrapper>
               
@@ -480,11 +449,77 @@ export default function DashboardHomePage() {
               )}
               
               <div className="mt-8 flex justify-center">
-                  <Button variant="ghost" className="font-black uppercase tracking-widest text-[10px] gap-3 rounded-xl hover:bg-primary/5" asChild>
+                  <Button variant="ghost" className="font-black uppercase tracking-widest text-[10px] gap-3 rounded-xl hover:bg-primary/5 group" asChild>
                       <Link href="/dashboard/research-analytics">
-                          View All Community Data <ArrowRight className="h-4 w-4" />
+                          View All Community Data <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                       </Link>
                   </Button>
+              </div>
+          </section>
+
+          <section>
+              <MotionWrapper delay={0.3}>
+                <SectionTitle>Primary Forensic Audit Nodes</SectionTitle>
+              </MotionWrapper>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <MotionWrapper delay={0.4}>
+                    <Link href="/dashboard/narrate" className="block group">
+                        <Card className="h-full glass hover:border-primary/30 transition-all duration-500 overflow-hidden relative group rounded-[2.5rem] shadow-xl">
+                            <CardContent className="p-10 flex items-center gap-8">
+                                <div className="p-6 rounded-[1.5rem] bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner ring-1 ring-primary/20">
+                                    <Mic className="h-10 w-10" />
+                                </div>
+                                <div className="space-y-2 flex-1">
+                                    <h3 className="text-2xl font-black tracking-tight">Narrate Case Problem</h3>
+                                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] opacity-60">Forensic Voice Summary Unit</p>
+                                    <p className="text-xs text-muted-foreground font-medium leading-relaxed max-w-xs">Convert natural speech into a structured statutory report with identified IPC/BNSS violations.</p>
+                                </div>
+                                <ArrowRight className="h-6 w-6 text-primary opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
+                            </CardContent>
+                        </Card>
+                    </Link>
+                  </MotionWrapper>
+                  <MotionWrapper delay={0.5}>
+                    <Link href="/dashboard/document-intelligence" className="block group">
+                        <Card className="h-full glass hover:border-emerald-500/30 transition-all duration-500 overflow-hidden relative group rounded-[2.5rem] shadow-xl">
+                            <CardContent className="p-10 flex items-center gap-8">
+                                <div className="p-6 rounded-[1.5rem] bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-500 shadow-inner ring-1 ring-emerald-500/20">
+                                    <Search className="h-10 w-10" />
+                                </div>
+                                <div className="space-y-2 flex-1">
+                                    <h3 className="text-2xl font-black tracking-tight">Document Intelligence</h3>
+                                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] opacity-60">Neural Risk Assessment Node</p>
+                                    <p className="text-xs text-muted-foreground font-medium leading-relaxed max-w-xs">Perform a deep-layer forensic audit of legal contracts to detect hidden liabilities and deadlines.</p>
+                                </div>
+                                <ArrowRight className="h-6 w-6 text-emerald-600 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
+                            </CardContent>
+                        </Card>
+                    </Link>
+                  </MotionWrapper>
+              </div>
+          </section>
+
+          <section>
+              <MotionWrapper delay={0.6}>
+                <SectionTitle>Institutional AI Toolkit</SectionTitle>
+              </MotionWrapper>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                  {aiFeatures.map((feature, index) => (
+                    <MotionWrapper key={feature.href} delay={0.7 + index * 0.1}>
+                      <Link href={feature.href} className="block group h-full">
+                          <Card className="h-full glass p-8 flex flex-col items-start hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 active:scale-[0.97] rounded-[2rem] border-primary/5">
+                              <div className={cn("p-4 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm ring-1 ring-white/10", feature.bg, feature.color)}>
+                                <feature.icon className="h-6 w-6" />
+                              </div>
+                              <h3 className="font-black text-lg tracking-tight leading-tight">{feature.title}</h3>
+                              <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed font-bold uppercase tracking-widest opacity-60">{feature.description}</p>
+                              <div className="mt-6 flex items-center text-[9px] font-black text-primary uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity">
+                                Initialize Node <ArrowRight className="ml-2 h-3 w-3" />
+                              </div>
+                          </Card>
+                      </Link>
+                    </MotionWrapper>
+                  ))}
               </div>
           </section>
 
