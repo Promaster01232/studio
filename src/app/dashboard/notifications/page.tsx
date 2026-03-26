@@ -8,10 +8,11 @@ import { Bell, Mail, Heart, ShieldAlert, CheckCircle2, Clock, ArrowRight, Trash2
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { useAuth, useFirestore } from "@/firebase";
-import { collection, query, where, orderBy, onSnapshot, doc, updateDoc, deleteDoc, writeBatch } from "firebase/firestore";
+import { collection, query, where, onSnapshot, doc, updateDoc, deleteDoc, writeBatch } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface NotificationNode {
     id: string;
@@ -33,14 +34,25 @@ export default function NotificationsPage() {
     if (!auth.currentUser) return;
 
     const notifRef = collection(firestore, "notifications");
+    // Removed orderBy to avoid Firestore composite index requirement. 
+    // We handle sorting in-memory for the forensic dossier.
     const q = query(
         notifRef, 
-        where("userId", "==", auth.currentUser.uid),
-        orderBy("createdAt", "desc")
+        where("userId", "==", auth.currentUser.uid)
     );
 
     const unsubscribe = onSnapshot(q, (snap) => {
         const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as NotificationNode));
+        
+        // Institutional In-Memory Sorting Node
+        list.sort((a, b) => {
+            const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 
+                         (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+            const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 
+                         (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+            return timeB - timeA;
+        });
+
         setNotifications(list);
         setLoading(false);
     });
@@ -159,7 +171,11 @@ export default function NotificationsPage() {
                                         </div>
                                         <div className="flex items-center gap-1 text-muted-foreground text-[9px] font-black uppercase tracking-widest shrink-0">
                                             <Clock className="h-3 w-3" />
-                                            {notif.createdAt ? formatDistanceToNow(notif.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
+                                            {notif.createdAt ? (
+                                                <span>{formatDistanceToNow(notif.createdAt.toDate(), { addSuffix: true })}</span>
+                                            ) : (
+                                                <span>Syncing...</span>
+                                            )}
                                         </div>
                                     </div>
                                     <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
