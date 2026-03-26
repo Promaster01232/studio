@@ -13,7 +13,6 @@ import {
   User, 
   Cpu, 
   Globe, 
-  MessageSquare, 
   Star, 
   Trophy, 
   Zap, 
@@ -21,8 +20,7 @@ import {
   BadgeCheck, 
   Gavel, 
   FileText,
-  Heart,
-  Users
+  Heart
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -192,15 +190,6 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
                           <Zap className="h-4 w-4 animate-pulse" />
                           Official {profile.userType?.toUpperCase()} Node
                       </p>
-                  </div>
-                  
-                  <div className="flex flex-wrap justify-center sm:justify-start gap-3">
-                      <Button className="h-12 px-8 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 active:scale-95 transition-all">
-                          <Users className="mr-2 h-4 w-4" /> Connect Node
-                      </Button>
-                      <Button variant="outline" className="h-12 px-8 rounded-2xl font-black uppercase tracking-widest text-[10px] glass hover:bg-primary/5 active:scale-95 transition-all">
-                          <MessageSquare className="mr-2 h-4 w-4" /> Direct Transmission
-                      </Button>
                   </div>
               </div>
           </div>
