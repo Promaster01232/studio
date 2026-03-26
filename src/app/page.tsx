@@ -63,6 +63,9 @@ export default function WelcomePage() {
   const auth = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [text, setText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
+  const fullText = 'Nyaya Sahayak';
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -71,6 +74,23 @@ export default function WelcomePage() {
     });
     return () => unsubscribe();
   }, [auth]);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (isTyping) {
+      if (text.length < fullText.length) {
+        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 150);
+      } else {
+        timeoutId = setTimeout(() => setIsTyping(false), 3000);
+      }
+    } else {
+      timeoutId = setTimeout(() => {
+        setText('');
+        setIsTyping(true);
+      }, 1000);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [text, isTyping]);
 
   return (
     <div className="flex flex-col min-h-screen bg-background selection:bg-primary/10 overflow-x-hidden text-left font-body">
@@ -116,7 +136,8 @@ export default function WelcomePage() {
                 </div>
                 
                 <h1 className="text-5xl sm:text-6xl font-black font-headline tracking-tighter leading-none text-foreground">
-                  Nyaya <span className="text-primary italic">Sahayak</span>
+                  Nyaya <span className="text-primary italic">{text}</span>
+                  <span className="animate-pulse ml-1 text-primary">|</span>
                 </h1>
                 
                 <div className="max-w-2xl mx-auto space-y-6">
