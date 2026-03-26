@@ -20,7 +20,8 @@ import {
   Cpu,
   Activity,
   Globe,
-  Award
+  Award,
+  BadgeCheck
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
@@ -73,7 +74,7 @@ export default function WelcomePage() {
     <div className="flex flex-col min-h-screen bg-background selection:bg-primary/10 overflow-x-hidden text-left font-body">
       <PublicHeader />
       
-      <div className="flex-1 flex flex-col items-center p-4 py-16 sm:py-24 relative">
+      <div className="flex-1 flex flex-col items-center p-4 py-12 sm:py-16 relative">
         <NeuralRain />
         
         {/* Ambient Forensic Nodes */}
@@ -91,7 +92,7 @@ export default function WelcomePage() {
                 <Landmark className="h-96 w-96" />
             </div>
             
-            <CardContent className="flex flex-col items-center p-8 sm:p-16 text-center relative z-10">
+            <CardContent className="flex flex-col items-center p-8 sm:p-12 text-center relative z-10">
               <motion.div 
                 className="relative mb-10"
                 whileHover={{ scale: 1.02 }}
@@ -112,12 +113,12 @@ export default function WelcomePage() {
                     </Badge>
                 </div>
                 
-                <h1 className="text-5xl sm:text-8xl font-black font-headline tracking-tighter leading-[0.9] text-foreground">
+                <h1 className="text-5xl sm:text-6xl font-black font-headline tracking-tighter leading-none text-foreground">
                   Nyaya <span className="text-primary italic">Sahayak</span>
                 </h1>
                 
                 <div className="max-w-2xl mx-auto space-y-6">
-                    <p className="text-lg sm:text-2xl font-bold text-muted-foreground tracking-tight leading-tight">
+                    <p className="text-lg sm:text-xl font-bold text-muted-foreground tracking-tight leading-tight">
                         The pinnacle of <span className="text-foreground">AI-Powered Legal Intelligence</span> engineered for the modern Indian citizen.
                     </p>
                     <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto"></div>
@@ -133,7 +134,7 @@ export default function WelcomePage() {
                     <Button 
                         asChild 
                         size="lg" 
-                        className="group w-full h-16 sm:h-20 text-xs font-black shadow-3xl shadow-primary/20 transition-all duration-500 active:scale-[0.98] rounded-2xl bg-primary text-white hover:shadow-primary/40 relative overflow-hidden"
+                        className="group w-full h-16 text-xs font-black shadow-3xl shadow-primary/20 transition-all duration-500 active:scale-[0.98] rounded-2xl bg-primary text-white hover:shadow-primary/40 relative overflow-hidden"
                     >
                         <Link href="/dashboard">
                             <span className="relative z-10 tracking-[0.3em] uppercase">Initialize Terminal Node</span>
@@ -147,7 +148,7 @@ export default function WelcomePage() {
                   <Button 
                     disabled
                     size="lg" 
-                    className="w-full h-16 sm:h-20 rounded-2xl bg-primary/20 text-white border-primary/10"
+                    className="w-full h-16 rounded-2xl bg-primary/20 text-white border-primary/10"
                   >
                     <span className="flex items-center gap-4">
                       <Loader2 className="h-5 w-5 animate-spin opacity-40" /> 
