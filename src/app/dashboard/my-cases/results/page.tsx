@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from '@/components/ui/skeleton';
 import { searchEcourts } from '@/ai/flows/search-ecourts';
 
-interface SearchParams {
+interface CaseSearchParams {
   cnr?: string;
   partyName?: string;
   filingNumber?: string;
@@ -24,7 +24,7 @@ interface SearchParams {
   [key: string]: string | string[] | undefined;
 }
 
-const getSearchDescription = (searchParams: SearchParams) => {
+const getSearchDescription = (searchParams: CaseSearchParams) => {
     if (searchParams.cnr) return `Showing results for CNR: ${searchParams.cnr}`;
     if (searchParams.partyName) return `Showing results for Party Name: ${searchParams.partyName}`;
     if (searchParams.filingNumber) return `Showing results for Filing Number: ${searchParams.filingNumber}`;
@@ -64,7 +64,7 @@ const SearchResultsSkeleton = () => (
     </div>
 );
 
-async function SearchResultsComponent({ searchParams }: { searchParams: SearchParams }) {
+async function SearchResultsComponent({ searchParams }: { searchParams: CaseSearchParams }) {
   const cnr = (searchParams.cnr as string) || '';
   const caseDetails = await searchEcourts({ cnr });
   
@@ -214,11 +214,14 @@ async function SearchResultsComponent({ searchParams }: { searchParams: SearchPa
 }
 
 
-export default async function SearchResultsPage(props: { searchParams: Promise<SearchParams> }) {
-    const searchParams = await props.searchParams;
+export default async function SearchResultsPage(props: { 
+  params: Promise<any>, 
+  searchParams: Promise<CaseSearchParams> 
+}) {
+    const resolvedSearchParams = await props.searchParams;
     return (
         <Suspense fallback={<SearchResultsSkeleton />}>
-            <SearchResultsComponent searchParams={searchParams} />
+            <SearchResultsComponent searchParams={resolvedSearchParams} />
         </Suspense>
     );
 }
