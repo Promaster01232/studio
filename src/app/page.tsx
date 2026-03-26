@@ -66,7 +66,7 @@ export default function WelcomePage() {
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
-  const fullText = 'Nyaya Sahayak';
+  const fullText = 'Sahayak';
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -264,7 +264,7 @@ export default function WelcomePage() {
                                             <Zap className="h-3 w-3" /> Era of Digital Justice
                                         </h4>
                                         <p className="text-[11px] text-muted-foreground font-medium leading-relaxed">
-                                            Nyaya Sahayak represents a revolutionary leap in the democratization of legal intelligence. Our platform leverages state-of-the-art neural processing to bridge the gap between complex protocols and everyday citizen needs.
+                                            Nyaya Sahayak represents a revolutionary leap in the democratization of legal intelligence within the Indian judicial ecosystem. Our platform leverages state-of-the-art neural processing to bridge the gap between complex protocols and everyday citizen needs.
                                         </p>
                                     </div>
 
