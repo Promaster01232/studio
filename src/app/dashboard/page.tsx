@@ -34,11 +34,14 @@ import {
   Link as LinkIcon,
   Plus,
   Bot,
-  Send
+  Send,
+  Cpu,
+  StepForward
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import { 
   collection, 
   query, 
@@ -244,7 +247,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                 const permissionError = new FirestorePermissionError({
                     path: postRef.path,
                     operation: 'delete',
-                } satisfies SecurityRuleContext, serverError);
+                    } satisfies SecurityRuleContext, serverError);
                 errorEmitter.emit('permission-error', permissionError);
             });
     };
