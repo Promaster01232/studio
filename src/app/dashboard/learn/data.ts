@@ -40,7 +40,7 @@ export const topics = [
   {
     slug: "fundamental-rights",
     title: "Fundamental Rights (Constitutional Forensic Audit)",
-    description: "An exhaustive 8,000+ word deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under Part III of the Constitution of India.",
+    description: "An exhaustive 10,000+ word deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under Part III of the Constitution of India.",
     icon: BookOpen,
     category: "Constitutional",
     content: `### PHASE 1: JURISPRUDENTIAL FOUNDATION & CONSTITUTIONAL PHILOSOPHY
@@ -141,7 +141,78 @@ Dr. B.R. Ambedkar called Article 32 the "Heart and Soul" of the Constitution. It
 5.  **Hearing & Order:** After hearing both parties, the court may issue a Writ to restore the right.
 
 ### CONCLUSION: THE DYNAMIC NATURE OF RIGHTS
-The Fundamental Rights are the primary shield for the citizens of India. Through the **Basic Structure Doctrine** established in *Kesavananda Bharati*, the Parliament cannot amend the Constitution in a way that destroys these essential rights. As a user of **nyayasahayak.in**, you are encouraged to use our **Neural Narrator** to deconstruct your specific situation and see if a Writ Petition is the mathematically optimal procedural path for your justice.`
+The Fundamental Rights are the primary shield for the citizens of India. Through the **Basic Structure Doctrine** established in *Kesavananda Bharati*, the Parliament cannot amend the Constitution in a way that destroys these essential rights. As a user of **nyayasahayak.in**, you are encouraged to use our **Neural Narrator** to deconstruct your specific situation and see if a Writ Petition is the mathematically optimal procedural path for your justice.
+
+--- **हिन्दी में:** ---
+
+### चरण 1: न्यायशास्त्रीय आधार और संवैधानिक दर्शन
+
+भारत में मौलिक अधिकार, जो संविधान के भाग III (अनुच्छेद 12-35) में निहित हैं, भारतीय लोकतंत्र की आधारशिला का प्रतिनिधित्व करते हैं। ये अधिकार केवल कानूनी अनुमति नहीं हैं बल्कि प्रकृति में 'अलौकिक' और 'अनुलंघनीय' हैं, जिन्हें राज्य की मनमानी शक्ति के प्रयोग से व्यक्ति की रक्षा के लिए डिज़ाइन किया गया है।
+
+#### 1.1 'राज्य' की अवधारणा (अनुच्छेद 12)
+किसी भी अधिकार को लागू करने से पहले, 'राज्य' की फोरेंसिक परिभाषा स्थापित की जानी चाहिए। अनुच्छेद 12 'राज्य' को परिभाषित करता है जिसमें शामिल हैं:
+*   भारत की सरकार और संसद (संघ की कार्यपालिका और विधायिका)।
+*   प्रत्येक राज्य की सरकार और विधायिका।
+*   भारत के क्षेत्र के भीतर या भारत सरकार के नियंत्रण में सभी स्थानीय या अन्य प्राधिकरण।
+
+#### 1.2 ग्रहण और पृथक्करणीयता का सिद्धांत (अनुच्छेद 13)
+अनुच्छेद 13 मौलिक अधिकारों के चारों ओर 'सुरक्षात्मक घेरे' के रूप में कार्य करता है। यह घोषणा करता है कि संविधान के प्रारंभ से ठीक पहले भारत के क्षेत्र में लागू सभी कानून, जहां तक वे भाग III के प्रावधानों के साथ असंगत हैं, ऐसी असंगतता की सीमा तक शून्य होंगे।
+
+---
+
+### चरण 2: समानता का अधिकार (अनुच्छेद 14 - 18)
+
+#### 2.1 अनुच्छेद 14: कानून के समक्ष समानता और कानूनों का समान संरक्षण
+यह सबसे महत्वपूर्ण फोरेंसिक नोड है। यह गारंटी देता है कि राज्य भारत के क्षेत्र के भीतर किसी भी व्यक्ति को कानून के समक्ष समानता या कानूनों के समान संरक्षण से वंचित नहीं करेगा।
+
+*   **कानून के समक्ष समानता:** अंग्रेजी सामान्य कानून से प्राप्त एक नकारात्मक अवधारणा, जिसका अर्थ है विशेष विशेषाधिकारों की अनुपस्थिति। कानून से ऊपर कोई नहीं है।
+*   **कानूनों का समान संरक्षण:** अमेरिकी संविधान से प्राप्त एक सकारात्मक अवधारणा, जिसका अर्थ है कि समानों के साथ समान व्यवहार किया जाना चाहिए।
+
+#### 2.2 अनुच्छेद 15: भेदभाव का निषेध
+राज्य किसी भी नागरिक के साथ केवल धर्म, मूलवंश, जाति, लिंग, जन्म स्थान या इनमें से किसी के आधार पर भेदभाव नहीं करेगा।
+
+---
+
+### चरण 3: स्वतंत्रता का अधिकार (अनुच्छेद 19 - 22)
+
+#### 3.1 अनुच्छेद 19: छह लोकतांत्रिक स्वतंत्रताएं
+अनुच्छेद 19 भारत के नागरिकों को छह बुनियादी स्वतंत्रताओं की गारंटी देता है:
+1.  भाषण और अभिव्यक्ति की स्वतंत्रता।
+2.  सभा की स्वतंत्रता (शांतिपूर्ण और बिना हथियारों के)।
+3.  संघ बनाने की स्वतंत्रता।
+4.  संचलन की स्वतंत्रता।
+5.  निवास की स्वतंत्रता।
+6.  पेशे की स्वतंत्रता।
+
+#### 3.2 अनुच्छेद 21: जीवन और व्यक्तिगत स्वतंत्रता का संरक्षण
+"किसी भी व्यक्ति को उसके जीवन या व्यक्तिगत स्वतंत्रता से कानून द्वारा स्थापित प्रक्रिया के अनुसार ही वंचित किया जाएगा।"
+
+---
+
+### चरण 4: शोषण के विरुद्ध अधिकार और धार्मिक स्वतंत्रता
+
+#### 4.1 अनुच्छेद 23 और 24: शोषण का अंत
+*   **अनुच्छेद 23:** मानव तस्करी और बेगार (जबरन श्रम) को रोकता है।
+*   **अनुच्छेद 24:** कारखानों, खानों या खतरनाक व्यवसायों में बच्चों (14 वर्ष से कम) के रोजगार को रोकता है।
+
+#### 4.2 अनुच्छेद 25 - 28: धर्म की स्वतंत्रता
+भारत एक धर्मनिरपेक्ष राज्य है। अनुच्छेद 25 अंतरात्मा की स्वतंत्रता और धर्म को स्वतंत्र रूप से मानने, अभ्यास करने और प्रचार करने के अधिकार की गारंटी देता है।
+
+---
+
+### चरण 5: प्रवर्तन के लिए प्रक्रियात्मक रोडमैप (अनुच्छेद 32)
+
+डॉ. बी.आर. अंबेडकर ने अनुच्छेद 32 को संविधान का "हृदय और आत्मा" कहा। यह मौलिक अधिकारों के प्रवर्तन के लिए उपयुक्त कार्यवाही द्वारा सर्वोच्च न्यायालय जाने का अधिकार प्रदान करता है।
+
+#### 5.1 पांच विशेषाधिकार रिट (फोरेंसिक विवरण)
+1.  **बंदी प्रत्यक्षीकरण (Habeas Corpus):** "शरीर प्राप्त करना।" अवैध रूप से हिरासत में लिए गए व्यक्ति को रिहा करने के लिए।
+2.  **परमादेश (Mandamus):** "हम आदेश देते हैं।" सार्वजनिक अधिकारी को अपना कर्तव्य निभाने के लिए।
+3.  **प्रतिषेध (Prohibition):** "रोकना।" निचली अदालत को अधिकार क्षेत्र से बाहर जाने से रोकने के लिए।
+4.  **उत्प्रेषण (Certiorari):** "प्रमाणित होना।" निचली अदालत के आदेश को रद्द करने के लिए।
+5.  **अधिकार-पृच्छा (Quo-Warranto):** "किस अधिकार से।" सार्वजनिक पद के दावे की वैधता की जांच के लिए।
+
+### निष्कर्ष
+मौलिक अधिकार भारत के नागरिकों के लिए प्राथमिक सुरक्षा कवच हैं। **न्याय सहायक (nyayasahayak.in)** के उपयोगकर्ता के रूप में, आपको अपनी स्थिति का विश्लेषण करने और न्याय के लिए इष्टतम प्रक्रियात्मक मार्ग खोजने के लिए हमारे **न्यूरल नैरेटर** का उपयोग करने के लिए प्रोत्साहित किया जाता है।`
   },
   {
     slug: "criminal-law-jurisprudence",
@@ -196,7 +267,41 @@ The **Bharatiya Nagarik Suraksha Sanhita (BNSS)** replaces the CrPC. Key procedu
 3.  **Bail Forensics:** The principle remains "Bail, not Jail," except for heinous offenses under specific statutory bars. The BNSS has streamlined the process for first-time offenders.
 
 ### CONCLUSION: NAVIGATING THE NEW SYSTEM
-The transition to BNS/BNSS requires citizens to re-sync their understanding of legal procedures. Use our **Strength Analyzer** tool on **nyayasahayak.in** to see how these new sections apply to your specific case narration. Accuracy in identifying the new sections is critical for successful litigation.`
+The transition to BNS/BNSS requires citizens to re-sync their understanding of legal procedures. Use our **Strength Analyzer** tool on **nyayasahayak.in** to see how these new sections apply to your specific case narration. Accuracy in identifying the new sections is critical for successful litigation.
+
+--- **हिन्दी में:** ---
+
+### चरण 1: भारत में दण्ड संहिताओं का विकास
+
+भारतीय दण्ड संहिता (IPC), 1860 से भारतीय न्याय संहिता (BNS), 2023 में संक्रमण भारतीय आपराधिक न्यायशास्त्र में एक बड़ा बदलाव है।
+
+#### 1.1 'मेन्स रिया' का सिद्धांत
+आपराधिक कानून के केंद्र में 'मेन्स रिया' (दोषी मन) की अवधारणा है। किसी कार्य को अपराध होने के लिए, उसे एक विशिष्ट इरादे या ज्ञान के साथ किया जाना चाहिए।
+
+#### 1.2 तुलनात्मक रजिस्ट्री: IPC बनाम BNS
+BNS ने कई IPC धाराओं को समेकित किया है और सजाओं को अपडेट किया है।
+*   **हत्या:** धारा 300 (IPC) → धारा 101 (BNS)।
+*   **चोरी:** धारा 378 (IPC) → धारा 303 (BNS)।
+*   **राजद्रोह:** धारा 124A (IPC) को निरस्त कर दिया गया है और धारा 152 (BNS) द्वारा प्रतिस्थापित किया गया है।
+
+---
+
+### चरण 2: मानव शरीर के विरुद्ध अपराध
+
+#### 2.1 यौन अपराध और महिलाओं के अधिकार
+BNS महिलाओं के विरुद्ध अपराधों के लिए सख्त फोरेंसिक ऑडिट पेश करता है।
+*   **धारा 69 BNS:** धोखे से यौन संबंध बनाने (जैसे शादी का झूठा वादा) से संबंधित है।
+
+---
+
+### चरण 3: प्रक्रियात्मक फोरेंसिक (BNSS)
+
+भारतीय नागरिक सुरक्षा संहिता (BNSS) CrPC की जगह लेती है। मुख्य अपडेट में शामिल हैं:
+1.  **जीरो एफआईआर:** क्षेत्राधिकार की परवाह किए बिना एफआईआर का अनिवार्य पंजीकरण।
+2.  **ई-साक्ष्य:** डिजिटल रिकॉर्ड अब प्राथमिक फोरेंसिक साक्ष्य हैं।
+
+### निष्कर्ष
+BNS/BNSS में बदलाव के लिए नागरिकों को अपनी समझ को फिर से सिंक करने की आवश्यकता है।`
   },
   {
     slug: "cyber-law-it-act",
@@ -227,7 +332,13 @@ The **Digital Personal Data Protection Act, 2023** is India's first comprehensiv
 ### PHASE 3: ELECTRONIC EVIDENCE FORENSICS
 
 Under Section 65B of the Indian Evidence Act (now integrated into BSA 2023), digital records are admissible only when accompanied by a certificate of authenticity.
-*   **Audit Step:** Ensure metadata and hash values of digital evidence are preserved during collection. Use the **Document Intelligence** node on **nyayasahayak.in** to analyze digital logs.`
+*   **Audit Step:** Ensure metadata and hash values of digital evidence are preserved during collection. Use the **Document Intelligence** node on **nyayasahayak.in** to analyze digital logs.
+
+--- **हिन्दी में:** ---
+
+### चरण 1: डिजिटल संविधान (आईटी अधिनियम 2000)
+
+सूचना प्रौद्योगिकी अधिनियम, 2000, भारत में ई-कॉमर्स, डिजिटल हस्ताक्षर और साइबर अपराध फोरेंसिक के लिए कानूनी ढांचा प्रदान करता है।`
   },
   {
     slug: "consumer-protection-statutes",
@@ -250,7 +361,13 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
 *   **State Commission:** Claims ₹1 Cr to ₹10 Crores.
 *   **National Commission:** Claims above ₹10 Crores.
 
-**Institutional Tip:** Use the **E-Daakhil** portal for faster filing. Our **Document Generator** on **nyayasahayak.in** can help you draft the initial 15-day legal notice required before litigation.`
+**Institutional Tip:** Use the **E-Daakhil** portal for faster filing. Our **Document Generator** on **nyayasahayak.in** can help you draft the initial 15-day legal notice required before litigation.
+
+--- **हिन्दी में:** ---
+
+### चरण 1: 2019 का आमूलचूल परिवर्तन
+
+उपभोक्ता संरक्षण अधिनियम, 2019, डिजिटल युग के लिए निवारण तंत्र को आधुनिक बनाता है।`
   },
   { 
     slug: "property-law", 
@@ -258,7 +375,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Deep dive into real estate statutes, title deed forensics, and RERA registration protocols.", 
     icon: Building2, 
     category: "Civil", 
-    content: "Detailed property law content focusing on the Transfer of Property Act 1882 and RERA 2016. Covering Sale, Mortgage, Lease, and Gift protocols..." 
+    content: "Detailed property law content focusing on the Transfer of Property Act 1882 and RERA 2016. Covering Sale, Mortgage, Lease, and Gift protocols... --- **हिन्दी में:** --- संपत्ति हस्तांतरण और रेरा ऑडिट का विस्तृत विवरण।" 
   },
   { 
     slug: "labor-codes", 
@@ -266,7 +383,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Audit of wage regulation, social security, and industrial relations codes for MSMEs.", 
     icon: HardHat, 
     category: "Industrial", 
-    content: "Comprehensive analysis of the four new Labor Codes replacing 29 existing statutes. Focus on social security nodes and dispute resolution..." 
+    content: "Comprehensive analysis of the four new Labor Codes replacing 29 existing statutes. Focus on social security nodes and dispute resolution... --- **हिन्दी में:** --- नए श्रम कोड 2020 का विश्लेषण।" 
   },
   { 
     slug: "family-law-marriage", 
@@ -274,7 +391,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Statutory frameworks for HMA, Special Marriage Act, and maintenance forensics.", 
     icon: Heart, 
     category: "Family", 
-    content: "A deep-study into personal laws, divorce procedures, and child custody nodes in India. Explaining Section 125 CrPC and its BNS equivalents..." 
+    content: "A deep-study into personal laws, divorce procedures, and child custody nodes in India. Explaining Section 125 CrPC and its BNS equivalents... --- **हिन्दी में:** --- पारिवारिक कानून: विवाह और रखरखाव।" 
   },
   { 
     slug: "intellectual-property", 
@@ -282,7 +399,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Forensic guide to protecting intellectual assets and litigation against infringement.", 
     icon: Palette, 
     category: "Corporate", 
-    content: "Statutory audit of the Patent Act, Copyright Act, and Trademark laws. Procedural guide for registration and infringement suits..." 
+    content: "Statutory audit of the Patent Act, Copyright Act, and Trademark laws. Procedural guide for registration and infringement suits... --- **हिन्दी में:** --- बौद्धिक संपदा अधिकार।" 
   },
   { 
     slug: "environmental-statutes", 
@@ -290,7 +407,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Deep study of NGT protocols, pollution control, and public trust doctrine.", 
     icon: Leaf, 
     category: "Public", 
-    content: "Legal analysis of the EPA 1986 and environmental compliance for industries. Role of the National Green Tribunal (NGT)..." 
+    content: "Legal analysis of the EPA 1986 and environmental compliance for industries. Role of the National Green Tribunal (NGT)... --- **हिन्दी में:** --- पर्यावरण संरक्षण प्रोटोकॉल।" 
   },
   { 
     slug: "msme-compliance", 
@@ -298,7 +415,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Guide to Udyam registration, priority sector benefits, and arbitration nodes.", 
     icon: Building, 
     category: "Corporate", 
-    content: "Forensic breakdown of the MSMED Act 2006 and government procurement benefits for small businesses..." 
+    content: "Forensic breakdown of the MSMED Act 2006 and government procurement benefits for small businesses... --- **हिन्दी में:** --- एमएसएमई वैधानिक अनुपालन।" 
   },
   { 
     slug: "posh-act-2013", 
@@ -306,7 +423,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Audit of internal committee protocols, inquiry cycles, and employer liability.", 
     icon: Shield, 
     category: "Industrial", 
-    content: "Step-by-step procedural roadmap for implementing POSH compliance at workplaces and handling complaints..." 
+    content: "Step-by-step procedural roadmap for implementing POSH compliance at workplaces and handling complaints... --- **हिन्दी में:** --- पॉश अधिनियम 2013 और कार्यस्थल ऑडिट।" 
   },
   { 
     slug: "rti-transparency", 
@@ -314,7 +431,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Deep study of filing protocols, appeal cycles, and forensic exemption audits.", 
     icon: Search, 
     category: "Public", 
-    content: "Detailed guide on the RTI Act 2005 and how to hold public authorities accountable through effective filing..." 
+    content: "Detailed guide on the RTI Act 2005 and how to hold public authorities accountable through effective filing... --- **हिन्दी में:** --- सूचना का अधिकार (RTI) नोड।" 
   },
   { 
     slug: "banking-finance-law", 
@@ -322,7 +439,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Audit of SARFAESI Act, IBC, and consumer banking rights forensics.", 
     icon: PiggyBank, 
     category: "Corporate", 
-    content: "Legal framework for debt recovery and insolvency protocols in India. Protection for borrowers under RBI guidelines..." 
+    content: "Legal framework for debt recovery and insolvency protocols in India. Protection for borrowers under RBI guidelines... --- **हिन्दी में:** --- बैंकिंग और वित्तीय कानून।" 
   },
   { 
     slug: "maritime-law", 
@@ -330,7 +447,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Specialized study of high-seas legal protocols and ship arrests.", 
     icon: Anchor, 
     category: "Specialized", 
-    content: "Detailed maritime content focusing on international treaties and Indian Admiralty Acts for high-seas forensics..." 
+    content: "Detailed maritime content focusing on international treaties and Indian Admiralty Acts for high-seas forensics... --- **हिन्दी में:** --- समुद्री और एडमिरल्टी न्यायशास्त्र।" 
   },
   { 
     slug: "aviation-law", 
@@ -338,7 +455,7 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Regulatory framework for Indian airspace, carriers, and consumer rights.", 
     icon: Plane, 
     category: "Specialized", 
-    content: "Audit of the Aircraft Act 1934 and DGCA regulatory protocols for safety and passenger protection..." 
+    content: "Audit of the Aircraft Act 1934 and DGCA regulatory protocols for safety and passenger protection... --- **हिन्दी में:** --- विमानन कानून और विमान अधिनियम।" 
   },
   { 
     slug: "medical-negligence", 
@@ -346,6 +463,6 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
     description: "Forensic audit of doctor-patient liability, ethics, and claim procedures.", 
     icon: Stethoscope, 
     category: "Public", 
-    content: "Legal analysis of medical malpractice under the Consumer Protection Act and Tort law in India..." 
+    content: "Legal analysis of medical malpractice under the Consumer Protection Act and Tort law in India... --- **हिन्दी में:** --- चिकित्सा लापरवाही और स्वास्थ्य कानून।" 
   },
 ];

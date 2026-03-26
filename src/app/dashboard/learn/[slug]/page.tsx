@@ -6,24 +6,37 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Clock, Globe, ShieldCheck, Share2, Printer, Sparkles, Landmark, FileText, Download, Bookmark, Zap, Scale } from "lucide-react";
+import { 
+  ArrowLeft, 
+  Clock, 
+  Globe, 
+  Share2, 
+  Bookmark, 
+  Landmark, 
+  Download, 
+  Languages,
+  CheckCircle2,
+  Sparkles
+} from "lucide-react";
 import { topics } from "../data";
-import { useLanguage } from "@/components/language-provider";
-import { useMemo } from "react";
-import { motion } from "framer-motion";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export default function LearnTopicDetailPage() {
     const params = useParams<{ slug: string }>();
-    const { language } = useLanguage();
+    const [displayLang, setDisplayLang] = useState<'en' | 'hi'>('en');
 
     const topic = topics.find((t) => t.slug === params.slug);
 
-    const localizedContent = useMemo(() => {
-        if (!topic) return "";
+    const contentData = useMemo(() => {
+        if (!topic) return { en: "", hi: "" };
         const parts = topic.content.split("--- **हिन्दी में:** ---");
-        // Always prioritize forensic English depth as requested by user
-        return parts[0].trim();
+        return {
+            en: parts[0]?.trim() || "",
+            hi: parts[1]?.trim() || "Translation for this module is being processed by the AI Forensic node."
+        };
     }, [topic]);
 
     if (!topic) {
@@ -38,19 +51,34 @@ export default function LearnTopicDetailPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
                 <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group" asChild>
                     <Link href="/dashboard/learn">
-                        <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to Hub Registry
+                        <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to Registry
                     </Link>
                 </Button>
+                
                 <div className="flex items-center gap-3">
+                    <div className="flex items-center bg-muted/30 p-1 rounded-xl border border-primary/5 mr-2">
+                        <Button 
+                            variant={displayLang === 'en' ? 'default' : 'ghost'} 
+                            size="sm" 
+                            onClick={() => setDisplayLang('en')}
+                            className="h-8 px-4 rounded-lg font-black text-[10px] uppercase tracking-widest transition-all"
+                        >
+                            English
+                        </Button>
+                        <Button 
+                            variant={displayLang === 'hi' ? 'default' : 'ghost'} 
+                            size="sm" 
+                            onClick={() => setDisplayLang('hi')}
+                            className="h-8 px-4 rounded-lg font-black text-[10px] uppercase tracking-widest transition-all"
+                        >
+                            हिन्दी
+                        </Button>
+                    </div>
                     <Button variant="outline" size="sm" className="h-10 rounded-xl border-primary/10 hover:bg-primary/5 gap-2 font-bold text-[10px] uppercase">
                         <Download className="h-3.5 w-3.5 text-primary" /> Export Audit
                     </Button>
-                    <div className="h-6 w-px bg-primary/10"></div>
                     <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl border-primary/5 hover:bg-primary/5">
                         <Share2 className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl border-primary/5 hover:bg-primary/5">
-                        <Bookmark className="h-4 w-4 text-muted-foreground" />
                     </Button>
                 </div>
             </div>
@@ -82,15 +110,23 @@ export default function LearnTopicDetailPage() {
                         </div>
                     </CardHeader>
                     <CardContent className="p-8 sm:p-16">
-                        <div className="flex flex-col gap-16">
-                            <div className="flex-1 space-y-12">
-                                <div className="prose dark:prose-invert prose-sm sm:prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-p:font-medium prose-p:leading-relaxed prose-p:text-foreground/80 prose-li:font-medium text-foreground/90 selection:bg-primary/10">
-                                    <div className="whitespace-pre-line leading-loose text-base sm:text-lg font-medium">
-                                        {localizedContent}
-                                    </div>
+                        <AnimatePresence mode="wait">
+                            <motion.div 
+                                key={displayLang}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.3 }}
+                                className="prose dark:prose-invert prose-sm sm:prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-p:font-medium prose-p:leading-relaxed prose-p:text-foreground/80 prose-li:font-medium text-foreground/90 selection:bg-primary/10"
+                            >
+                                <div className={cn(
+                                    "whitespace-pre-line leading-loose text-base sm:text-lg font-medium",
+                                    displayLang === 'hi' ? "font-hindi" : "font-body"
+                                )}>
+                                    {displayLang === 'en' ? contentData.en : contentData.hi}
                                 </div>
-                            </div>
-                        </div>
+                            </motion.div>
+                        </AnimatePresence>
                     </CardContent>
                 </Card>
             </motion.div>
