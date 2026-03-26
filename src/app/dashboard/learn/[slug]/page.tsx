@@ -82,7 +82,7 @@ export default function LearnTopicDetailPage() {
                         </div>
                     </CardHeader>
                     <CardContent className="p-8 sm:p-16">
-                        <div className="flex flex-col lg:flex-row gap-16">
+                        <div className="flex flex-col gap-16">
                             <div className="flex-1 space-y-12">
                                 <div className="p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 shadow-inner text-left relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 p-4 opacity-[0.05]">
@@ -107,43 +107,6 @@ export default function LearnTopicDetailPage() {
                                     </div>
                                 </div>
                             </div>
-
-                            <aside className="lg:w-96 shrink-0 space-y-8">
-                                <Card className="p-8 rounded-[2.5rem] glass border-primary/10 shadow-xl sticky top-24">
-                                    <div className="flex items-center gap-3 text-primary mb-8">
-                                        <FileText className="h-5 w-5" />
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.3em]">Module Dossier</h4>
-                                    </div>
-                                    <div className="space-y-6">
-                                        <div className="space-y-1">
-                                            <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">Word Count</span>
-                                            <p className="text-xl font-black font-mono tracking-tighter text-foreground">{wordCount.toLocaleString()}</p>
-                                        </div>
-                                        <div className="h-px bg-primary/5"></div>
-                                        <div className="space-y-1">
-                                            <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">Institutional ID</span>
-                                            <p className="text-sm font-black font-mono tracking-widest text-primary">NS-RE-00{readingTime}</p>
-                                        </div>
-                                        <div className="h-px bg-primary/5"></div>
-                                        <div className="space-y-1">
-                                            <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">Clearance Level</span>
-                                            <p className="text-sm font-black uppercase tracking-widest text-green-600 flex items-center gap-2">
-                                                <ShieldCheck className="h-3.5 w-3.5" /> Registry Access
-                                            </p>
-                                        </div>
-                                        <div className="h-px bg-primary/5"></div>
-                                        <div className="space-y-4 pt-4">
-                                            <p className="text-[10px] font-bold text-muted-foreground/60 leading-relaxed italic">
-                                                "Precision AI for statutory comprehension. Ensure 100% clarity before procedural initialization."
-                                            </p>
-                                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10 w-fit">
-                                                <Zap className="h-3 w-3 text-primary animate-pulse" />
-                                                <span className="text-[8px] font-black uppercase tracking-widest">Live Registry Sync</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Card>
-                            </aside>
                         </div>
                     </CardContent>
                 </Card>

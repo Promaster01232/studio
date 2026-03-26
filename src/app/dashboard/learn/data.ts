@@ -30,13 +30,10 @@ import {
   FileSignature,
   Lock,
   Search,
-  Eye,
   Zap,
   Building2,
   HardHat,
-  Heart,
-  Scale3d,
-  Cpu
+  Heart
 } from "lucide-react";
 
 export const topics = [
