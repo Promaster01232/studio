@@ -61,7 +61,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
-import { DigitalIDCard } from "../profile/page";
+import Link from "next/link";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -105,60 +105,28 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
     const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
     const fallback = post.isAnonymous ? 'A' : (post.authorName?.charAt(0) || '');
 
-    // Construct mock user for the ID card preview
-    const mockUserForID = {
-        uid: post.authorUid,
-        firstName: post.isAnonymous ? 'Anonymous' : post.authorName.split(' ')[0],
-        lastName: post.isAnonymous ? 'Node' : (post.authorName.split(' ').slice(1).join(' ') || ''),
-        email: post.isAnonymous ? 'Identity Masked' : 'Registry Verified',
-        mobileNumber: post.isAnonymous ? 'Encrypted' : 'Authorized Node',
-        userType: post.isAnonymous ? 'Secure Node' : 'Community Member',
-        securityStatus: 'verified'
-    };
-
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <div className="flex items-start gap-4 cursor-pointer group/author">
-                    <Avatar className="h-12 w-12 border-2 border-background shadow-xl rounded-2xl group-hover/author:scale-105 transition-transform">
-                        {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
-                        <AvatarFallback className="font-black bg-primary/10 text-primary">{fallback}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 text-left">
-                        <div className="flex items-center gap-2">
-                            <p className="font-black text-sm tracking-tight group-hover/author:text-primary transition-colors">{authorName}</p>
-                            {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
-                        </div>
-                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
-                            {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
-                        </p>
-                    </div>
+        <Link 
+            href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} 
+            className={cn(
+                "flex items-start gap-4 group/author transition-all active:scale-[0.98]",
+                post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer"
+            )}
+        >
+            <Avatar className="h-12 w-12 border-2 border-background shadow-xl rounded-2xl group-hover/author:scale-105 transition-transform">
+                {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
+                <AvatarFallback className="font-black bg-primary/10 text-primary">{fallback}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 text-left">
+                <div className="flex items-center gap-2">
+                    <p className="font-black text-sm tracking-tight group-hover/author:text-primary transition-colors underline decoration-primary/0 group-hover/author:decoration-primary/30 underline-offset-4">{authorName}</p>
+                    {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
                 </div>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl bg-card">
-                <div className="p-8">
-                    <DialogHeader className="mb-6 border-none text-left">
-                        <div className="flex items-center gap-2 text-primary mb-2">
-                            <ShieldCheck className="h-4 w-4" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Official Registry Preview</span>
-                        </div>
-                        <DialogTitle className="sr-only">User Dossier: {authorName}</DialogTitle>
-                        <DialogDescription className="sr-only">Institutional identity node details for nyayasahayak.in.</DialogDescription>
-                    </DialogHeader>
-                    
-                    <DigitalIDCard user={mockUserForID as any} photoURL={authorAvatar || ""} />
-                    
-                    <div className="mt-8 pt-6 border-t border-primary/5 text-center">
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest italic opacity-40">
-                            "Institutional identity node verified via nyayasahayak.in"
-                        </p>
-                    </div>
-                </div>
-                <div className="p-4 bg-muted/5 border-t text-center">
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Secure Identity Synchronization Active</span>
-                </div>
-            </DialogContent>
-        </Dialog>
+                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
+                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
+                </p>
+            </div>
+        </Link>
     );
 }
 
@@ -647,7 +615,7 @@ export default function ResearchAnalyticsPage() {
     }
 
     return (
-        <div className="space-y-10 max-w-5xl mx-auto pb-20 px-2 sm:px-0 text-left">
+        <div className="space-y-10 max-w-7xl mx-auto pb-20 px-2 sm:px-0 text-left">
             <PageHeader title="Community Registry Feed" description="Institutional forum for legal news, idea synchronization, and statutory discussions." />
             
             <Dialog open={isDialogOpen} onOpenChange={(open) => {
