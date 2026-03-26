@@ -282,10 +282,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Case assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "Sector: Forensic" },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "Sector: Statutory" },
-    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "Sector: Civil" },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "Sector: Registry" },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Forensic assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "Node: Forensic" },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "Node: Statutory" },
+    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "Node: Civil" },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Legal affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "Node: Registry" },
 ];
 
 const SectionHeader = ({ children, icon: Icon, sector }: { children: React.ReactNode, icon?: any, sector?: string }) => (
@@ -434,16 +434,18 @@ export default function DashboardHomePage() {
                   <div className="grid grid-cols-2 gap-3">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group">
-                            <Card className="h-full glass p-4 rounded-2xl border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden">
+                            <Card className="h-full glass p-3.5 sm:p-4 rounded-[1.25rem] border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden flex flex-col justify-between min-h-[110px]">
                                 <div className="absolute top-0 right-0 p-2 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
                                     <f.icon className="h-6 w-6" />
                                 </div>
-                                <div className={cn("p-2 rounded-lg w-fit mb-3 transition-transform group-hover:scale-110", f.bg, f.color)}>
-                                    <f.icon className="h-3.5 w-3.5" />
+                                <div>
+                                    <div className={cn("p-2 rounded-lg w-fit mb-2.5 transition-transform group-hover:scale-110", f.bg, f.color)}>
+                                        <f.icon className="h-3.5 w-3.5" />
+                                    </div>
+                                    <h3 className="font-black text-[10px] uppercase tracking-[0.12em] text-foreground leading-none">{f.title}</h3>
+                                    <p className="text-[9px] text-muted-foreground font-medium mt-1 leading-tight opacity-70 line-clamp-1">{f.desc}</p>
                                 </div>
-                                <h3 className="font-black text-[9px] uppercase tracking-tighter text-foreground">{f.title}</h3>
-                                <p className="text-[8px] text-muted-foreground font-bold mt-0.5 leading-tight opacity-60">{f.desc}</p>
-                                <div className="mt-3 pt-2 border-t border-primary/5">
+                                <div className="mt-2.5 pt-2 border-t border-primary/5">
                                     <span className="text-[7px] font-black uppercase tracking-widest text-primary/40">{f.sector}</span>
                                 </div>
                             </Card>
