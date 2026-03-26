@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use } from "react";
@@ -32,6 +31,8 @@ import { DigitalIDCard } from "../page";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/logo";
+import { Label } from "@/components/ui/label";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -96,13 +97,16 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
     const q = query(postsRef, where("authorUid", "==", uid));
     getDocs(q).then(snap => {
         let totalLikes = 0;
-        snap.docs.forEach(d => totalLikes += (d.data().likes || 0));
+        snap.docs.forEach(d => {
+            const data = d.data();
+            totalLikes += (data.likes || 0);
+        });
         setStats({
             posts: snap.size,
             likes: totalLikes,
-            impact: snap.size * 5 + totalLikes * 2
+            impact: (snap.size * 5) + (totalLikes * 2)
         });
-    });
+    }).catch(() => {});
 
     return () => unsubscribe();
   }, [uid, firestore]);
@@ -152,7 +156,7 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
         </Button>
         <div className="flex items-center gap-2">
             <Badge variant="outline" className="h-8 border-primary/10 font-bold bg-background shadow-sm px-4 rounded-lg text-[10px] uppercase tracking-widest text-muted-foreground">
-                Node Synced // {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                Node Synced // Active Terminal
             </Badge>
         </div>
       </motion.div>
@@ -258,8 +262,8 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
                               </span>
                           </div>
                           <div className="flex justify-between items-center py-2">
-                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Dossier Created</span>
-                              <span className="text-[10px] font-bold">MARCH 2024</span>
+                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Registry Status</span>
+                              <span className="text-[10px] font-bold uppercase text-primary">Active Member</span>
                           </div>
                       </CardContent>
                   </Card>
