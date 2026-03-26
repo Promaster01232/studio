@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from "next/image";
@@ -19,10 +20,10 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ListPlus, X, Edit, Send, Link as LinkIcon, ImageUp, ArrowRight, User } from "lucide-react";
+import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ListPlus, X, Edit, Send, Link as LinkIcon, ImageUp, ArrowRight, User, MoreVertical, Trash2, Flag } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove, deleteDoc } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Skeleton } from '@/components/ui/skeleton';
 import { errorEmitter } from "@/firebase/error-emitter";
@@ -32,7 +33,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
+const ADMIN_EMAILS = [
+  'enterspaceindia@gmail.com', 
+  'piyushkumarsingh23323@gmail.com',
+  'piyushkumrsingh23323@gmail.com',
+  'piyushkumrsingh23399@gmail.com'
+];
 
 interface Post {
     id: string;
@@ -60,9 +73,11 @@ interface UserProfile {
     firstName: string;
     lastName: string;
     photoURL?: string;
+    email?: string;
+    isAdmin?: boolean;
 }
 
-function PostCard({ post }: { post: Post }) {
+function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile | null }) {
     const { toast } = useToast();
     const firestore = useFirestore();
     const auth = useAuth();
@@ -76,6 +91,8 @@ function PostCard({ post }: { post: Post }) {
     const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
+    const isAuthor = post.authorUid === currentUser?.uid;
+    const isAdmin = currentUser?.email && (ADMIN_EMAILS.includes(currentUser.email.toLowerCase()) || userProfile?.isAdmin);
     
     const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
     const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
@@ -164,67 +181,116 @@ function PostCard({ post }: { post: Post }) {
             });
     };
 
+    const handleDeletePost = () => {
+        const postRef = doc(firestore, "posts", post.id);
+        deleteDoc(postRef)
+            .then(() => {
+                toast({ title: "Post Purged", description: "The content has been erased from the community registry." });
+            })
+            .catch((serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: postRef.path,
+                    operation: 'delete',
+                }, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+            });
+    };
+
+    const handleReportPost = () => {
+        toast({ title: "Post Reported", description: "Our forensic moderation team will review this content for statutory violations." });
+    };
+
     const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     
     return (
-        <Card key={post.id} className="overflow-hidden">
-            <CardContent className="p-4 sm:p-6 pb-0">
-                <div className="flex items-start gap-3 mb-4">
-                    <Avatar className="h-10 w-10 border hover:ring-2 hover:ring-primary transition-all">
-                        {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName}/>}
-                        <AvatarFallback>{fallback}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                        <p className="font-semibold">{authorName}</p>
-                        <p className="text-xs text-muted-foreground">
-                            {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
-                        </p>
+        <Card key={post.id} className="overflow-hidden glass border-primary/5 hover:border-primary/20 transition-all shadow-lg rounded-[2rem]">
+            <CardContent className="p-4 sm:p-8 pb-0">
+                <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-start gap-4">
+                        <Avatar className="h-12 w-12 border-2 border-background shadow-xl rounded-2xl hover:scale-105 transition-transform">
+                            {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
+                            <AvatarFallback className="font-black bg-primary/10 text-primary">{fallback}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 text-left">
+                            <div className="flex items-center gap-2">
+                                <p className="font-black text-sm tracking-tight">{authorName}</p>
+                                {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
+                            </div>
+                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
+                                {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
+                            </p>
+                        </div>
                     </div>
-                     {post.postType && (
-                        <Badge variant="outline" className="hidden sm:inline-flex">{post.postType}</Badge>
-                    )}
+                    <div className="flex items-center gap-2">
+                        {post.postType && (
+                            <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-3 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest h-5">
+                                {post.postType}
+                            </Badge>
+                        )}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-xl hover:bg-primary/5">
+                                    <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl glass border-primary/5">
+                                {(isAuthor || isAdmin) ? (
+                                    <DropdownMenuItem onClick={handleDeletePost} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
+                                        <Trash2 className="h-4 w-4" /> Purge Post
+                                    </DropdownMenuItem>
+                                ) : (
+                                    <DropdownMenuItem onClick={handleReportPost} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                        <Flag className="h-4 w-4" /> Report Content
+                                    </DropdownMenuItem>
+                                )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
 
-                <div className="space-y-3">
-                    <h3 className="text-lg font-bold font-headline leading-snug">{post.title}</h3>
-                    {post.content && <p className="text-muted-foreground text-sm whitespace-pre-line">{post.content}</p>}
+                <div className="space-y-4 text-left">
+                    <h3 className="text-xl sm:text-2xl font-black font-headline leading-tight tracking-tighter text-foreground">{post.title}</h3>
+                    {post.content && <p className="text-muted-foreground text-sm font-medium leading-relaxed whitespace-pre-line">{post.content}</p>}
 
                     {post.tags && post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2 pt-2">
                             {post.tags.map(tag => (
-                                <Badge key={tag} variant="secondary">#{tag}</Badge>
+                                <Badge key={tag} variant="outline" className="bg-muted/30 border-primary/5 text-[9px] font-bold px-3 py-0.5 rounded-lg">#{tag}</Badge>
                             ))}
                         </div>
                     )}
                 </div>
             </CardContent>
 
-            <div className="p-4 sm:px-6 sm:pb-0 sm:pt-4">
+            <div className="p-4 sm:px-8 sm:pb-0 sm:pt-6">
                  {post.link && (
-                    <a href={post.link} target="_blank" rel="noopener noreferrer" className="mt-2 block p-3 rounded-lg border bg-muted/30 hover:bg-muted/70 transition-colors group">
-                        <div className="flex items-center gap-3">
-                            <LinkIcon className="h-5 w-5 text-muted-foreground" />
-                            <div className="flex-1 overflow-hidden">
-                                <p className="text-sm font-semibold truncate text-foreground group-hover:text-primary">{post.link}</p>
+                    <a href={post.link} target="_blank" rel="noopener noreferrer" className="mt-2 block p-4 rounded-2xl border border-primary/5 bg-primary/5 hover:bg-primary/10 transition-all group shadow-inner">
+                        <div className="flex items-center gap-4">
+                            <div className="p-2 rounded-lg bg-background shadow-sm">
+                                <LinkIcon className="h-4 w-4 text-primary" />
                             </div>
+                            <div className="flex-1 overflow-hidden">
+                                <p className="text-xs font-black truncate text-foreground group-hover:text-primary tracking-tight">{post.link}</p>
+                            </div>
+                            <ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
                         </div>
                     </a>
                 )}
                 
                 {post.image && (
-                    <div className="relative aspect-video mt-4 rounded-lg overflow-hidden border">
+                    <div className="relative aspect-video mt-6 rounded-[1.5rem] overflow-hidden border border-primary/5 shadow-2xl">
                         <Image
                             src={post.image}
                             alt={post.title}
                             fill
-                            className="object-cover"
+                            className="object-cover transition-transform duration-700 hover:scale-105"
                         />
                     </div>
                 )}
                 
                 {optimisticPoll && (
-                    <div className="pt-4 space-y-3">
+                    <div className="pt-6 space-y-3">
                        {optimisticPoll.options.map((option, index) => {
                            const votePercentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
                            const userVotedForThis = post.poll?.voters?.includes(currentUser?.uid ?? '');
@@ -232,20 +298,26 @@ function PostCard({ post }: { post: Post }) {
                            return (
                             <Button 
                                 key={index} 
-                                variant={userVotedForThis ? 'secondary' : 'outline'} 
-                                className="w-full justify-start h-auto p-3 flex flex-col items-start relative overflow-hidden"
+                                variant="ghost" 
+                                className={cn(
+                                    "w-full justify-start h-auto p-4 flex flex-col items-start relative overflow-hidden rounded-xl border border-primary/5 transition-all",
+                                    userVotedForThis ? 'bg-primary/5 border-primary/20' : 'bg-muted/20 hover:bg-muted/40'
+                                )}
                                 onClick={() => handleVote(index)}
                                 disabled={userHasVotedOnPoll || isVoting}
                             >
                                 <div className="flex items-center justify-between w-full z-10">
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-medium text-sm">{option.text}</span>
+                                    <div className="flex items-center gap-3">
+                                        <div className={cn("h-4 w-4 rounded-full border-2 flex items-center justify-center transition-all", userVotedForThis ? "border-primary" : "border-muted-foreground/30")}>
+                                            {userVotedForThis && <div className="h-2 w-2 bg-primary rounded-full" />}
+                                        </div>
+                                        <span className="font-black text-sm tracking-tight">{option.text}</span>
                                         {isVoting && userVotedForThis && <Loader2 className="h-3 w-3 animate-spin text-primary" />}
                                     </div>
-                                    {userVotedForThis && <span className="text-xs font-bold">{votePercentage.toFixed(0)}%</span>}
+                                    {userHasVotedOnPoll && <span className="text-xs font-black font-mono text-primary">{votePercentage.toFixed(0)}%</span>}
                                 </div>
-                               {userVotedForThis && (
-                                   <div className="absolute inset-y-0 left-0 bg-primary/10" style={{width: `${votePercentage}%`}}></div>
+                               {userHasVotedOnPoll && (
+                                   <div className="absolute inset-y-0 left-0 bg-primary/10 transition-all duration-1000 ease-out" style={{width: `${votePercentage}%`}}></div>
                                )}
                            </Button>
                        )})}
@@ -253,21 +325,21 @@ function PostCard({ post }: { post: Post }) {
                 )}
             </div>
 
-            <CardFooter className="p-2 sm:p-3 mt-2 flex justify-between items-center">
-                <div className="flex gap-1">
-                    <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={handleLike} disabled={isLiking}>
-                        {isLiking ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-red-500 text-red-500")} />}
-                        <span className="text-xs text-muted-foreground">{optimisticLikes}</span>
+            <CardFooter className="p-4 sm:p-6 mt-4 flex justify-between items-center bg-muted/5 border-t border-primary/5">
+                <div className="flex gap-2">
+                    <Button variant="ghost" size="sm" className="flex items-center gap-2 h-10 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-red-500/10 hover:text-red-500" onClick={handleLike} disabled={isLiking}>
+                        {isLiking ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <Heart className={cn("h-4 w-4 transition-all", userHasLiked && "fill-red-500 text-red-500 scale-110")} />}
+                        <span>{optimisticLikes}</span>
                     </Button>
-                    <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={() => handleAction('Comment')}>
+                    <Button variant="ghost" size="sm" className="flex items-center gap-2 h-10 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-primary/10 hover:text-primary" onClick={() => handleAction('Comment')}>
                         <MessageCircle className="h-4 w-4" />
-                        <span className="text-xs text-muted-foreground">{post.comments}</span>
+                        <span>{post.comments}</span>
                     </Button>
-                    <Button variant="ghost" size="sm" onClick={() => handleAction('Share')}>
+                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-primary/10 transition-all" onClick={() => handleAction('Share')}>
                         <Share2 className="h-4 w-4" />
                     </Button>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => handleAction('Bookmark')}>
+                <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-primary/10 transition-all" onClick={() => handleAction('Bookmark')}>
                     <Bookmark className="h-4 w-4" />
                 </Button>
             </CardFooter>
@@ -509,21 +581,21 @@ export default function ResearchAnalyticsPage() {
     }
 
     return (
-        <div className="space-y-8">
-            <PageHeader title="Community Feed & News" description="Discuss legal topics and stay informed." />
+        <div className="space-y-10 max-w-5xl mx-auto pb-20 px-2 sm:px-0 text-left">
+            <PageHeader title="Community Registry Feed" description="Institutional forum for legal news, idea synchronization, and statutory discussions." />
             
             <Dialog open={isDialogOpen} onOpenChange={(open) => {
                 if(!open) resetDialog();
                 setIsDialogOpen(open);
             }}>
-                <Card>
-                    <CardContent className="p-4">
+                <Card className="glass border-primary/10 shadow-xl rounded-[2rem] overflow-hidden">
+                    <CardContent className="p-6">
                         <div className="flex items-center gap-4">
-                            <Avatar className="h-10 w-10 border">
+                            <Avatar className="h-12 w-12 border-2 border-background shadow-lg rounded-2xl shrink-0">
                                 {userProfile?.photoURL ? (
-                                    <AvatarImage src={userProfile.photoURL} alt={userProfile.firstName} />
+                                    <AvatarImage src={userProfile.photoURL} alt={userProfile.firstName} className="object-cover" />
                                 ) : (
-                                    <AvatarFallback>
+                                    <AvatarFallback className="font-black bg-primary/10 text-primary">
                                         {userProfile ? (
                                             `${userProfile.firstName?.charAt(0) || ''}${userProfile.lastName?.charAt(0) || ''}`
                                         ) : (
@@ -535,164 +607,203 @@ export default function ResearchAnalyticsPage() {
                              <DialogTrigger asChild>
                                 <button 
                                     disabled={!isAuthenticated}
-                                    className="w-full text-left bg-muted hover:bg-muted/90 text-muted-foreground rounded-full px-4 py-3 transition-colors text-sm"
+                                    className="w-full text-left bg-muted/40 hover:bg-muted/60 text-muted-foreground font-bold rounded-2xl px-6 py-4 transition-all text-sm shadow-inner border border-primary/5 active:scale-[0.99]"
                                 >
-                                    What's on your mind? Share news, ideas, or start a poll...
+                                    Initialize new post... Share ideas or start a community poll.
                                 </button>
                             </DialogTrigger>
                              <DialogTrigger asChild>
-                                <Button disabled={!isAuthenticated} size="icon" className="rounded-full flex-shrink-0">
-                                    <PlusCircle className="h-5 w-5"/>
-                                    <span className="sr-only">Create Post</span>
+                                <Button disabled={!isAuthenticated} size="icon" className="h-12 w-12 rounded-2xl shrink-0 shadow-xl shadow-primary/20 active:scale-95 transition-all">
+                                    <PlusCircle className="h-6 w-6"/>
+                                    <span className="sr-only">Initialize Node</span>
                                 </Button>
                             </DialogTrigger>
                         </div>
                     </CardContent>
                 </Card>
 
-                <DialogContent className="sm:max-w-2xl">
-                    <DialogHeader>
-                        <DialogTitle>Create a contribution</DialogTitle>
-                        <DialogDescription>
-                            Share an idea, ask a question, or start a poll to engage with the community.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handlePostSubmit}>
+                <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl bg-card">
+                    <div className="bg-primary/5 p-8 border-b border-primary/5">
+                        <DialogHeader className="p-0 border-none mb-0 text-left">
+                            <div className="flex items-center gap-3 mb-1">
+                                <PlusCircle className="h-5 w-5 text-primary" />
+                                <DialogTitle className="font-headline font-black text-2xl tracking-tighter">Initialize Registry Post</DialogTitle>
+                            </div>
+                            <DialogDescription className="font-medium text-xs">
+                                Disseminate ideas, queries, or suggestions to the institutional community.
+                            </DialogDescription>
+                        </DialogHeader>
+                    </div>
+                    
+                    <form onSubmit={handlePostSubmit} className="p-8 space-y-6">
                         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                            <TabsList className="grid w-full grid-cols-2">
-                                <TabsTrigger value="idea"><Edit className="mr-2 h-4 w-4"/>Share an Idea</TabsTrigger>
-                                <TabsTrigger value="poll"><ListPlus className="mr-2 h-4 w-4"/>Start a Poll</TabsTrigger>
+                            <TabsList className="grid w-full grid-cols-2 h-12 bg-muted/20 p-1 rounded-xl mb-6">
+                                <TabsTrigger value="idea" className="font-black text-[10px] uppercase tracking-widest rounded-lg data-[state=active]:shadow-lg"><Edit className="mr-2 h-3.5 w-3.5"/>Text Entry</TabsTrigger>
+                                <TabsTrigger value="poll" className="font-black text-[10px] uppercase tracking-widest rounded-lg data-[state=active]:shadow-lg"><ListPlus className="mr-2 h-3.5 w-3.5"/>Community Poll</TabsTrigger>
                             </TabsList>
                             
-                            <div className="py-4">
-                                    <div className="flex items-center justify-between rounded-lg border p-4">
-                                    <div className="space-y-0.5">
-                                        <Label htmlFor="anonymous-idea" className="text-base">Post Anonymously</Label>
-                                        <p className="text-xs text-muted-foreground">Your username and avatar will be hidden from the public.</p>
+                            <div className="mb-6">
+                                    <div className="flex items-center justify-between rounded-2xl border border-primary/5 bg-primary/5 p-4 transition-all hover:bg-primary/10">
+                                    <div className="space-y-0.5 text-left">
+                                        <Label htmlFor="anonymous-idea" className="text-sm font-black tracking-tight">Identity Masking</Label>
+                                        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Hide username from public registry.</p>
                                     </div>
-                                    <Switch id="anonymous-idea" checked={isAnonymous} onCheckedChange={setIsAnonymous} />
+                                    <Switch id="anonymous-idea" checked={isAnonymous} onCheckedChange={setIsAnonymous} className="data-[state=checked]:bg-primary" />
                                 </div>
                             </div>
 
-                            <TabsContent value="idea" className="mt-0 space-y-4">
+                            <TabsContent value="idea" className="mt-0 space-y-6 text-left">
                                 <div className="space-y-2">
-                                    <Label htmlFor="postType">Post Type</Label>
+                                    <Label htmlFor="postType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Transmission Type</Label>
                                     <Select value={postType} onValueChange={setPostType}>
-                                        <SelectTrigger id="postType"><SelectValue placeholder="Select a type" /></SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Idea">Idea</SelectItem>
-                                            <SelectItem value="Question">Question</SelectItem>
-                                            <SelectItem value="Suggestion">Suggestion</SelectItem>
+                                        <SelectTrigger id="postType" className="h-12 glass border-primary/5 font-bold rounded-xl active:scale-95 transition-all">
+                                            <SelectValue placeholder="Select type" />
+                                        </SelectTrigger>
+                                        <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
+                                            <SelectItem value="Idea" className="font-bold">Institutional Idea</SelectItem>
+                                            <SelectItem value="Question" className="font-bold">Forensic Query</SelectItem>
+                                            <SelectItem value="Suggestion" className="font-bold">Statutory Suggestion</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="title">Title</Label>
-                                    <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="A short, descriptive title" required />
+                                    <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 text-left">Headlines</Label>
+                                    <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Concise transmission title" required className="h-12 glass border-primary/5 rounded-xl font-bold px-4" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="content">Description (Optional)</Label>
-                                    <Textarea id="content" value={content} onChange={e => setContent(e.target.value)} placeholder="Describe your idea, question, or suggestion in more detail." rows={4} />
+                                    <Label htmlFor="content" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 text-left">Body Narration</Label>
+                                    <Textarea id="content" value={content} onChange={e => setContent(e.target.value)} placeholder="Elaborate on your idea or query..." rows={5} className="glass border-primary/5 rounded-2xl font-medium text-sm p-4 resize-none" />
                                 </div>
                                 
-                                <div className="p-4 border-dashed border-2 rounded-lg text-center">
-                                    <Label htmlFor="thumbnail" className="cursor-pointer">
-                                        <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-                                            <ImageUp className="h-8 w-8" />
-                                            <span className="font-medium">Add a thumbnail (Optional)</span>
-                                            <span className="text-xs">Click to upload</span>
+                                <div className="relative group">
+                                    <div className="absolute inset-0 bg-primary/5 rounded-2xl transition-all group-hover:bg-primary/10 border border-primary/10 border-dashed group-hover:border-primary/30 pointer-events-none"></div>
+                                    <Label htmlFor="thumbnail" className="cursor-pointer flex flex-col items-center justify-center h-32 gap-3 relative z-10">
+                                        <ImageUp className="h-8 w-8 text-primary/40 group-hover:scale-110 transition-transform duration-500" />
+                                        <div className="text-center">
+                                            <p className="text-[11px] font-black text-muted-foreground group-hover:text-primary transition-colors uppercase tracking-widest">Attach Visual Dossier</p>
+                                            <p className="text-[9px] font-bold text-muted-foreground/40 mt-1 uppercase">Optional image node</p>
                                         </div>
                                     </Label>
                                     <Input id="thumbnail" type="file" onChange={handleImageChange} ref={imageInputRef} accept="image/*" className="hidden"/>
                                 </div>
 
                                 {imagePreview && (
-                                    <div className="relative mt-2">
-                                        <Image src={imagePreview} alt="Image preview" width={500} height={300} className="rounded-md object-cover w-full aspect-video" />
-                                        <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => { setImagePreview(null); if(imageInputRef.current) imageInputRef.current.value = ''; }}>
+                                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="relative mt-2 rounded-2xl overflow-hidden border-2 border-primary/20 shadow-2xl">
+                                        <Image src={imagePreview} alt="Image preview" width={500} height={300} className="object-cover w-full aspect-video" />
+                                        <Button variant="destructive" size="icon" className="absolute top-3 right-3 h-8 w-8 rounded-xl shadow-2xl" onClick={() => { setImagePreview(null); if(imageInputRef.current) imageInputRef.current.value = ''; }}>
                                             <X className="h-4 w-4" />
                                         </Button>
-                                    </div>
+                                    </motion.div>
                                 )}
                                     <div className="space-y-2">
-                                    <Label htmlFor="link">Add a link (Optional)</Label>
-                                    <Input id="link" value={link} onChange={e => setLink(e.target.value)} placeholder="https://example.com" />
+                                    <Label htmlFor="link" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 text-left">External Reference</Label>
+                                    <div className="relative">
+                                        <Input id="link" value={link} onChange={e => setLink(e.target.value)} placeholder="https://registry.link" className="h-12 glass border-primary/5 rounded-xl font-bold pl-10" />
+                                        <LinkIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 opacity-20" />
+                                    </div>
                                 </div>
                                     <div className="space-y-2">
-                                    <Label htmlFor="tags">Tags (Optional)</Label>
-                                    <Input id="tags" value={tags} onChange={e => setTags(e.target.value)} placeholder="e.g., saas, ai, fintech" />
-                                    <p className="text-xs text-muted-foreground">Comma-separated tags to help categorize your post.</p>
+                                    <Label htmlFor="tags" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 text-left">Dossier Tags</Label>
+                                    <Input id="tags" value={tags} onChange={e => setTags(e.target.value)} placeholder="policy, statutory, reform" className="h-12 glass border-primary/5 rounded-xl font-bold px-4" />
+                                    <p className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-widest mt-1">Comma-separated registry labels.</p>
                                 </div>
                             </TabsContent>
                             
-                            <TabsContent value="poll" className="mt-0 space-y-4">
+                            <TabsContent value="poll" className="mt-0 space-y-6 text-left">
                                     <div className="space-y-2">
-                                    <Label htmlFor="pollQuestion">Poll Question</Label>
-                                    <Input id="pollQuestion" value={pollQuestion} onChange={e => setPollQuestion(e.target.value)} placeholder="What do you want to ask?" required={activeTab === 'poll'} />
+                                    <Label htmlFor="pollQuestion" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Polling Question</Label>
+                                    <Input id="pollQuestion" value={pollQuestion} onChange={e => setPollQuestion(e.target.value)} placeholder="What is your query for the community?" required={activeTab === 'poll'} className="h-12 glass border-primary/5 rounded-xl font-bold px-4" />
                                 </div>
-                                <div className="space-y-3">
-                                    <Label>Poll Options</Label>
-                                    {pollOptions.map((option, index) => (
-                                        <div key={index} className="flex items-center gap-2">
-                                            <div className="flex-1 relative">
-                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">{index + 1}.</span>
-                                                <Input 
-                                                    placeholder={`Option ${index + 1}`}
-                                                    value={option}
-                                                    onChange={(e) => handlePollOptionChange(index, e.target.value)}
-                                                    required={activeTab === 'poll'}
-                                                    className="pl-8"
-                                                />
+                                <div className="space-y-4">
+                                    <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Response Options</Label>
+                                    <div className="space-y-3">
+                                        {pollOptions.map((option, index) => (
+                                            <div key={index} className="flex items-center gap-3">
+                                                <div className="flex-1 relative">
+                                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-primary/40">{index + 1}</span>
+                                                    <Input 
+                                                        placeholder={`Option protocol ${index + 1}`}
+                                                        value={option}
+                                                        onChange={(e) => handlePollOptionChange(index, e.target.value)}
+                                                        required={activeTab === 'poll'}
+                                                        className="h-12 glass border-primary/5 rounded-xl font-bold pl-10"
+                                                    />
+                                                </div>
+                                                <Button type="button" variant="ghost" size="icon" onClick={() => handleRemovePollOption(index)} disabled={pollOptions.length <= 2} className="h-12 w-12 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all">
+                                                    <X className="h-4 w-4"/>
+                                                </Button>
                                             </div>
-                                            <Button type="button" variant="ghost" size="icon" onClick={() => handleRemovePollOption(index)} disabled={pollOptions.length <= 2}>
-                                                <X className="h-4 w-4 text-muted-foreground"/>
+                                        ))}
+                                        {pollOptions.length < 4 && (
+                                            <Button type="button" size="sm" variant="outline" onClick={handleAddPollOption} className="w-full h-12 rounded-xl border-dashed border-primary/20 font-black text-[10px] uppercase tracking-widest gap-2 hover:bg-primary/5 hover:border-primary/40 transition-all">
+                                                <PlusCircle className="h-4 w-4"/>Add Protocol Node
                                             </Button>
-                                        </div>
-                                    ))}
-                                    {pollOptions.length < 4 && <Button type="button" size="sm" variant="outline" onClick={handleAddPollOption} className="w-full border-dashed"><PlusCircle className="mr-2 h-4 w-4"/>Add Option</Button>}
+                                        )}
+                                    </div>
                                 </div>
-                                    <div className="space-y-2">
-                                    <Label htmlFor="tags-poll">Tags (Optional)</Label>
-                                    <Input id="tags-poll" value={tags} onChange={e => setTags(e.target.value)} placeholder="e.g., policy, reform, technology" />
-                                    <p className="text-xs text-muted-foreground">Comma-separated tags to help categorize your poll.</p>
+                                <div className="space-y-2">
+                                    <Label htmlFor="tags-poll" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Dossier Tags</Label>
+                                    <Input id="tags-poll" value={tags} onChange={e => setTags(e.target.value)} placeholder="vote, reform, technology" className="h-12 glass border-primary/5 rounded-xl font-bold px-4" />
                                 </div>
                             </TabsContent>
                         </Tabs>
-                        <DialogFooter className="pt-4">
-                            <Button type="submit" disabled={isPosting} className="w-full h-12">
-                                {isPosting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
-                                Publish Post
+                        <DialogFooter className="pt-4 flex flex-col sm:flex-row gap-3">
+                            <Button type="submit" disabled={isPosting} className="w-full h-14 font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-primary/20 rounded-2xl active:scale-95 transition-all">
+                                {isPosting ? <Loader2 className="mr-3 h-5 w-5 animate-spin" /> : <Send className="mr-3 h-5 w-5" />}
+                                Initialize Transmission
                             </Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>
             </Dialog>
 
-            <div className="flex items-center justify-between flex-wrap gap-4">
-                <h2 className="text-xl font-semibold">Community Feed</h2>
-                <div className="flex flex-wrap gap-2">
-                    <Button variant="default" size="sm">All</Button>
-                    <Button variant="outline" size="sm">Idea</Button>
-                    <Button variant="outline" size="sm">Poll</Button>
-                    <Button variant="outline" size="sm">Question</Button>
-                    <Button variant="outline" size="sm">Suggestion</Button>
+            <div className="flex items-center justify-between flex-wrap gap-6 border-b border-primary/5 pb-6">
+                <div className="flex items-center gap-3">
+                    <Activity className="h-5 w-5 text-primary" />
+                    <h2 className="text-xl font-black font-headline tracking-tighter">Live Registry Stream</h2>
+                </div>
+                <div className="flex flex-wrap bg-muted/30 p-1 rounded-xl border border-primary/5">
+                    {["All", "Idea", "Poll", "Question", "Suggestion"].map((f) => (
+                        <Button key={f} variant="ghost" size="sm" className="h-8 px-4 rounded-lg font-black text-[9px] uppercase tracking-widest hover:bg-background transition-all">
+                            {f}
+                        </Button>
+                    ))}
                 </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="grid gap-8 max-w-3xl mx-auto">
                 {!isAuthenticated && !loading ? (
-                    <Card>
-                        <CardContent className="py-20 text-center">
-                            <p className="text-muted-foreground">Please log in to view and create posts.</p>
-                        </CardContent>
-                    </Card>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <Card className="glass border-primary/10 rounded-[2.5rem] py-20 text-center">
+                            <CardContent className="space-y-4">
+                                <div className="bg-primary/5 p-6 rounded-full w-fit mx-auto mb-4">
+                                    <Flag className="h-12 w-12 text-primary opacity-20" />
+                                </div>
+                                <p className="font-black text-xl tracking-tighter uppercase">Clearance Required</p>
+                                <p className="text-muted-foreground text-xs font-medium max-w-xs mx-auto">Authenticate your registry node to access and contribute to the community feed.</p>
+                                <Button asChild className="mt-4 rounded-xl font-black text-[10px] uppercase tracking-widest h-11 px-8 shadow-xl shadow-primary/20">
+                                    <Link href="/login">Initialize Sign In</Link>
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
                 ) : feed.length === 0 && !loading ? (
-                    <Card>
-                        <CardContent className="py-20 text-center text-muted-foreground">
-                            No news updates yet. Be the first to post!
-                        </CardContent>
-                    </Card>
-                ) : feed.map((item) => <PostCard key={item.id} post={item} />)}
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <Card className="glass border-primary/10 rounded-[2.5rem] py-20 text-center">
+                            <CardContent className="space-y-4">
+                                <div className="bg-primary/5 p-6 rounded-full w-fit mx-auto mb-4">
+                                    <MessageCircle className="h-12 w-12 text-primary opacity-20" />
+                                </div>
+                                <p className="font-black text-xl tracking-tighter uppercase">Registry Empty</p>
+                                <p className="text-muted-foreground text-xs font-medium italic">"No community transmissions have been initialized in this sector."</p>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                ) : (
+                    <div className="space-y-10">
+                        {feed.map((item) => <PostCard key={item.id} post={item} userProfile={userProfile} />)}
+                    </div>
+                )}
             </div>
         </div>
     );
