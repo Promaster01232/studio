@@ -214,6 +214,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
         });
     };
 
+    const handleGoogleSearch = () => {
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(post.title)}`, '_blank');
+    };
+
     return (
         <motion.div layout className="w-full">
             <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative">
@@ -233,6 +237,9 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-40 p-1.5 rounded-xl border-primary/5">
+                                    <DropdownMenuItem onSelect={handleGoogleSearch} className="text-[10px] font-bold gap-2 cursor-pointer">
+                                        <Search className="h-3 w-3" /> Search on Google
+                                    </DropdownMenuItem>
                                     {(isAuthor || isAdmin) ? (
                                         <DropdownMenuItem onSelect={handleDelete} className="text-[10px] font-bold text-destructive gap-2 cursor-pointer">
                                             <Trash2 className="h-3 w-3" /> Purge Node

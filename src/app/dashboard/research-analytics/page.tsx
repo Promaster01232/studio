@@ -247,6 +247,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
         });
     };
 
+    const handleGoogleSearch = () => {
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(post.title)}`, '_blank');
+    };
+
     const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     
@@ -270,6 +274,9 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-44 p-1.5 rounded-xl shadow-2xl glass border-primary/5">
+                                <DropdownMenuItem onSelect={handleGoogleSearch} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5">
+                                    <Search className="h-3.5 w-3.5" /> Search on Google
+                                </DropdownMenuItem>
                                 {(isAuthor || isAdmin) ? (
                                     <DropdownMenuItem onSelect={handleDeletePost} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                         <Trash2 className="h-3.5 w-3.5" /> Purge Node
