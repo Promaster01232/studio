@@ -108,7 +108,7 @@ export function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, ph
                                 <AvatarImage src={photoURL} className="object-cover" />
                             </Avatar>
                         ) : (
-                            <div className="h-14 w-14 sm:h-20 sm:w-20 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center border-2 border-white/10 shadow-xl relative z-10">
+                            <div className="h-14 w-14 sm:h-20 w-20 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center border-2 border-white/10 shadow-xl relative z-10">
                                 <User className="h-6 w-6 sm:h-8 sm:w-8 opacity-20" />
                             </div>
                         )}
