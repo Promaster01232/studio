@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Sparkles, BookMarked, Search, Filter, Bookmark, Landmark, Scale, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, Search, Bookmark, ShieldCheck } from "lucide-react";
 import { topics } from "./data";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -89,7 +89,7 @@ export default function LearnPage() {
                     </Badge>
                     </div>
                     
-                    <div className="space-y-3 flex-grow">
+                    <div className="space-y-3 flex-grow text-left">
                     <h3 className="text-xl sm:text-2xl font-black font-headline tracking-tighter group-hover:text-primary transition-colors leading-tight min-h-[3rem]">
                         {topic.title}
                     </h3>
