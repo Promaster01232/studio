@@ -385,7 +385,6 @@ export default function DashboardHomePage() {
               </div>
               <div className="relative z-10 space-y-8">
                   <div className="space-y-2">
-                      <ForensicLabel>Status: Synchronized // Node: Alpha-Primary</ForensicLabel>
                       <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
                           Welcome back, <br />
                           <span className="bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent italic">Nyaya {text}</span>
