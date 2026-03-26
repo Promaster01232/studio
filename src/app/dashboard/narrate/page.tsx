@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useActionState, useState, useRef, useEffect, startTransition } from "react";
@@ -147,6 +146,7 @@ export default function NarrateProblemPage() {
                         <AnimatePresence>
                             {isRecording && (
                                 <motion.div 
+                                    key="recording-pulse"
                                     initial={{ scale: 0.8, opacity: 0 }}
                                     animate={{ scale: 1.5, opacity: 1 }}
                                     exit={{ scale: 0.8, opacity: 0 }}
@@ -240,7 +240,7 @@ export default function NarrateProblemPage() {
                         )}
                         
                         {state.status === 'idle' && (
-                            <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
+                            <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
                                 <div className="p-10 rounded-[2.5rem] bg-muted/50 border-2 border-dashed border-primary/10">
                                     <Mic className="h-20 w-20 text-muted-foreground" />
                                 </div>
@@ -252,7 +252,7 @@ export default function NarrateProblemPage() {
                         )}
 
                         {state.status === "success" && state.data && (
-                            <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 pb-10 text-left">
+                            <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-10 pb-10 text-left">
                                 <div className="space-y-4">
                                     <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
                                         <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></div>

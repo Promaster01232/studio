@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -57,6 +56,7 @@ export function SearchDialog({ children }: { children: ReactNode }) {
         {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-2xl p-0 overflow-hidden border-none shadow-2xl rounded-2xl bg-card">
+        {/* Mandatory Accessibility Labels */}
         <DialogHeader className="sr-only">
           <DialogTitle>Institutional Search Hub</DialogTitle>
           <DialogDescription>Search for legal tools, resources, or tracked cases within the nyayasahayak.in ecosystem.</DialogDescription>

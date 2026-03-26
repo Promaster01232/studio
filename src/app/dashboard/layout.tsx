@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import {
   SidebarProvider,
@@ -54,21 +53,24 @@ function Header({ userProfile }: { userProfile: any }) {
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
                         <div className="w-full max-w-sm cursor-pointer group">
-                            <div className="relative w-full hidden md:block active:scale-[0.99] transition-transform">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                <div className="pl-10 pr-16 h-10 flex items-center font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm">
-                                    Search tools, cases, guides...
+                            {/* Unified Trigger Container to ensure DialogTrigger has exactly one child */}
+                            <div className="relative w-full active:scale-[0.99] transition-transform">
+                                {/* Desktop Search Bar */}
+                                <div className="hidden md:flex items-center w-full pl-10 pr-16 h-10 font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                    <span>Search tools, cases, guides...</span>
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 shadow-sm">
+                                            <span className="text-xs">⌘</span>K
+                                        </kbd>
+                                    </div>
                                 </div>
-                                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 shadow-sm">
-                                        <span className="text-xs">⌘</span>K
-                                    </kbd>
+                                {/* Mobile Search Button */}
+                                <div className="md:hidden">
+                                    <Button variant="outline" size="icon" className="h-10 w-10 rounded-xl border-primary/5 bg-muted/40 active:scale-95 transition-all">
+                                        <Search className="h-4 w-4 text-muted-foreground" />
+                                    </Button>
                                 </div>
-                            </div>
-                            <div className="md:hidden">
-                                <Button variant="outline" size="icon" className="h-10 w-10 rounded-xl border-primary/5 bg-muted/40 active:scale-95 transition-all">
-                                    <Search className="h-4 w-4 text-muted-foreground" />
-                                </Button>
                             </div>
                         </div>
                     </SearchDialog>
