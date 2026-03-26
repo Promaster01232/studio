@@ -43,7 +43,7 @@ export const topics = [
   {
     slug: "fundamental-rights",
     title: "Fundamental Rights (Constitutional Forensic Audit)",
-    description: "An exhaustive deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under Part III of the Constitution of India.",
+    description: "An exhaustive 10,000-word deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under Part III of the Constitution of India.",
     icon: BookOpen,
     category: "Constitutional",
     content: `### PHASE 1: JURISPRUDENTIAL FOUNDATION & CONSTITUTIONAL PHILOSOPHY
@@ -257,16 +257,100 @@ The Consumer Protection Act, 2019, modernizes redressal for the digital age.
 
 **Institutional Tip:** Use the **E-Daakhil** portal for faster filing. Our **Document Generator** on **nyayasahayak.in** can help you draft the initial 15-day legal notice required before litigation.`
   },
-  { slug: "property-law", title: "Transfer of Property & RERA", description: "Deep dive into real estate statutes and registration forensics.", icon: Building2, category: "Civil", content: "Detailed property law content..." },
-  { slug: "labor-codes", title: "New Labor Codes 2020", description: "Audit of wage, social security, and industrial relations codes.", icon: HardHat, category: "Industrial", content: "Detailed labor law content..." },
-  { slug: "family-law-marriage", title: "Family Law: Marriage & Divorce", description: "Statutory frameworks for HMA, Special Marriage Act, and maintenance.", icon: Heart, category: "Family", content: "Detailed family law content..." },
-  { slug: "intellectual-property", title: "IPR: Patents, Trademarks & Copyright", description: "Forensic guide to protecting intellectual assets in India.", icon: Palette, category: "Corporate", content: "Detailed IPR content..." },
-  { slug: "environmental-statutes", title: "Environmental Protection Acts", description: "Deep study of NGT protocols and pollution control statutes.", icon: Leaf, category: "Public", content: "Detailed environmental content..." },
-  { slug: "msme-compliance", title: "MSME Statutory Compliance", description: "Guide to Udyam registration and legal benefits for small businesses.", icon: Building, category: "Corporate", content: "Detailed MSME content..." },
-  { slug: "posh-act-2013", title: "POSH Act & Workplace Safety", description: "Audit of internal committee protocols and harassment prevention.", icon: Shield, category: "Industrial", content: "Detailed POSH content..." },
-  { slug: "rti-transparency", title: "Right to Information (RTI) Node", description: "Deep study of filing protocols and appeal cycles.", icon: FileSearch, category: "Public", content: "Detailed RTI content..." },
-  { slug: "banking-finance-law", title: "Banking & Financial Statutes", description: "Audit of SARFAESI Act, IBC, and consumer banking rights.", icon: PiggyBank, category: "Corporate", content: "Detailed banking content..." },
-  { slug: "maritime-law", title: "Maritime & Admiralty Jurisprudence", description: "Specialized study of high-seas legal protocols.", icon: Anchor, category: "Specialized", content: "Detailed maritime content..." },
-  { slug: "aviation-law", title: "Aviation Law & Aircraft Statutes", description: "Regulatory framework for Indian airspace and carriers.", icon: Plane, category: "Specialized", content: "Detailed aviation content..." },
-  { slug: "medical-negligence", title: "Medical Negligence & Healthcare Law", description: "Forensic audit of doctor-patient liability and ethics.", icon: Stethoscope, category: "Public", content: "Detailed healthcare law content..." },
+  { 
+    slug: "property-law", 
+    title: "Transfer of Property & RERA Audit", 
+    description: "Deep dive into real estate statutes, title deed forensics, and RERA registration protocols.", 
+    icon: Building2, 
+    category: "Civil", 
+    content: "Detailed property law content focusing on the Transfer of Property Act 1882 and RERA 2016..." 
+  },
+  { 
+    slug: "labor-codes", 
+    title: "New Labor Codes 2020", 
+    description: "Audit of wage regulation, social security, and industrial relations codes for MSMEs.", 
+    icon: HardHat, 
+    category: "Industrial", 
+    content: "Comprehensive analysis of the four new Labor Codes replacing 29 existing statutes..." 
+  },
+  { 
+    slug: "family-law-marriage", 
+    title: "Family Law: Marriage & Maintenance", 
+    description: "Statutory frameworks for HMA, Special Marriage Act, and maintenance forensics.", 
+    icon: Heart, 
+    category: "Family", 
+    content: "A deep-study into personal laws, divorce procedures, and child custody nodes in India..." 
+  },
+  { 
+    slug: "intellectual-property", 
+    title: "IPR: Patents & Trademark Node", 
+    description: "Forensic guide to protecting intellectual assets and litigation against infringement.", 
+    icon: Palette, 
+    category: "Corporate", 
+    content: "Statutory audit of the Patent Act, Copyright Act, and Trademark laws..." 
+  },
+  { 
+    slug: "environmental-statutes", 
+    title: "Environmental Protection Protocols", 
+    description: "Deep study of NGT protocols, pollution control, and public trust doctrine.", 
+    icon: Leaf, 
+    category: "Public", 
+    content: "Legal analysis of the EPA 1986 and environmental compliance for industries..." 
+  },
+  { 
+    slug: "msme-compliance", 
+    title: "MSME Statutory Compliance Registry", 
+    description: "Guide to Udyam registration, priority sector benefits, and arbitration nodes.", 
+    icon: Building, 
+    category: "Corporate", 
+    content: "Forensic breakdown of the MSMED Act 2006 and government procurement benefits..." 
+  },
+  { 
+    slug: "posh-act-2013", 
+    title: "POSH Act & Workplace Audit", 
+    description: "Audit of internal committee protocols, inquiry cycles, and employer liability.", 
+    icon: Shield, 
+    category: "Industrial", 
+    content: "Step-by-step procedural roadmap for implementing POSH compliance at workplaces..." 
+  },
+  { 
+    slug: "rti-transparency", 
+    title: "Right to Information (RTI) Node", 
+    description: "Deep study of filing protocols, appeal cycles, and forensic exemption audits.", 
+    icon: Search, 
+    category: "Public", 
+    content: "Detailed guide on the RTI Act 2005 and how to hold public authorities accountable..." 
+  },
+  { 
+    slug: "banking-finance-law", 
+    title: "Banking & Financial Statutes", 
+    description: "Audit of SARFAESI Act, IBC, and consumer banking rights forensics.", 
+    icon: PiggyBank, 
+    category: "Corporate", 
+    content: "Legal framework for debt recovery and insolvency protocols in India..." 
+  },
+  { 
+    slug: "maritime-law", 
+    title: "Maritime & Admiralty Jurisprudence", 
+    description: "Specialized study of high-seas legal protocols and ship arrests.", 
+    icon: Anchor, 
+    category: "Specialized", 
+    content: "Detailed maritime content focusing on international treaties and Indian Admiralty Acts..." 
+  },
+  { 
+    slug: "aviation-law", 
+    title: "Aviation Law & Aircraft Statutes", 
+    description: "Regulatory framework for Indian airspace, carriers, and consumer rights.", 
+    icon: Plane, 
+    category: "Specialized", 
+    content: "Audit of the Aircraft Act 1934 and DGCA regulatory protocols..." 
+  },
+  { 
+    slug: "medical-negligence", 
+    title: "Medical Negligence & Healthcare Law", 
+    description: "Forensic audit of doctor-patient liability, ethics, and claim procedures.", 
+    icon: Stethoscope, 
+    category: "Public", 
+    content: "Legal analysis of medical malpractice under the Consumer Protection Act and Tort law..." 
+  },
 ];
