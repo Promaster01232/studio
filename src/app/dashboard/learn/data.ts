@@ -1,4 +1,3 @@
-
 import {
   BookOpen,
   ShoppingCart,
@@ -40,7 +39,7 @@ export const topics = [
   {
     slug: "fundamental-rights",
     title: "Fundamental Rights (Constitutional Forensic Audit)",
-    description: "An exhaustive 10,000+ word deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under Part III of the Constitution of India.",
+    description: "An exhaustive 8,000+ word deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under Part III of the Constitution of India.",
     icon: BookOpen,
     category: "Constitutional",
     content: `### PHASE 1: JURISPRUDENTIAL FOUNDATION & CONSTITUTIONAL PHILOSOPHY

@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from "next/image";
@@ -20,7 +19,27 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share2, Bookmark, PlusCircle, Loader2, ListPlus, X, Edit, Send, Link as LinkIcon, ImageUp, ArrowRight, User, MoreVertical, Trash2, Flag } from "lucide-react";
+import { 
+  Heart, 
+  MessageCircle, 
+  Share2, 
+  Bookmark, 
+  PlusCircle, 
+  Loader2, 
+  ListPlus, 
+  X, 
+  Edit, 
+  Send, 
+  Link as LinkIcon, 
+  ImageUp, 
+  ArrowRight, 
+  User, 
+  MoreVertical, 
+  Trash2, 
+  Flag,
+  Activity,
+  BadgeCheck
+} from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove, deleteDoc } from "firebase/firestore";
@@ -101,13 +120,13 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     const handleAction = (action: string) => {
         toast({
             title: `Action: ${action}`,
-            description: "This feature is for demonstration purposes.",
+            description: "This feature is for institutional demonstration purposes.",
         });
     };
 
     const handleLike = () => {
         if (!currentUser) {
-            toast({ variant: 'destructive', title: 'You must be logged in to like a post.' });
+            toast({ variant: 'destructive', title: 'Registry Access Required', description: 'Authenticate your node to interact with community transmissions.' });
             return;
         }
         if (isLiking) return;
@@ -148,7 +167,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 
         const userHasVoted = optimisticPoll.voters?.includes(currentUser.uid);
         if (userHasVoted) {
-            toast({ title: "You have already voted on this poll." });
+            toast({ title: "Protocol Refused", description: "Your registry node has already submitted a vote for this poll." });
             return;
         }
 
@@ -379,7 +398,6 @@ export default function ResearchAnalyticsPage() {
         const unsubscribeAuth = onAuthStateChanged(auth, user => {
             setIsAuthenticated(!!user);
 
-            // Cleanup immediately on auth state change
             if (postsUnsubscribeRef.current) {
                 postsUnsubscribeRef.current();
                 postsUnsubscribeRef.current = null;
