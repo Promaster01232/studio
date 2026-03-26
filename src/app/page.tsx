@@ -119,39 +119,16 @@ export default function WelcomePage() {
 
               <div className="w-full max-w-xl space-y-4 px-4">
                 {!loading ? (
-                  user ? (
-                    <Button 
-                      asChild 
-                      size="lg" 
-                      className="group w-full h-16 text-lg font-black shadow-2xl transition-all duration-500 active:scale-95 rounded-2xl shadow-primary/20 hover:shadow-primary/40 bg-primary text-white"
-                    >
-                      <Link href="/dashboard">
-                        Enter Dashboard Terminal 
-                        <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1.5" />
-                      </Link>
-                    </Button>
-                  ) : (
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <Button 
-                        asChild 
-                        size="lg" 
-                        className="group flex-1 h-16 text-lg font-black shadow-2xl transition-all duration-500 active:scale-95 rounded-2xl shadow-primary/20 hover:shadow-primary/40 bg-primary text-white"
-                      >
-                        <Link href="/register">
-                          Enroll Now
-                          <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1.5" />
-                        </Link>
-                      </Button>
-                      <Button 
-                        variant="outline"
-                        asChild 
-                        size="lg" 
-                        className="flex-1 h-16 text-lg font-black border-primary/10 glass hover:bg-primary/5 active:scale-95 transition-all rounded-2xl"
-                      >
-                        <Link href="/login">Citizen Login</Link>
-                      </Button>
-                    </div>
-                  )
+                  <Button 
+                    asChild 
+                    size="lg" 
+                    className="group w-full h-16 text-lg font-black shadow-2xl transition-all duration-500 active:scale-95 rounded-2xl shadow-primary/20 hover:shadow-primary/40 bg-primary text-white"
+                  >
+                    <Link href="/dashboard">
+                      Go to Dashboard
+                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1.5" />
+                    </Link>
+                  </Button>
                 ) : (
                   <Button 
                     disabled
@@ -270,7 +247,7 @@ export default function WelcomePage() {
                         <h2 className="text-3xl sm:text-5xl font-black tracking-tighter">Ready to Navigate the Law?</h2>
                         <p className="text-sm sm:text-lg font-bold opacity-90 max-w-xl mx-auto">Initialize your secure registry node today and access the pinnacle of AI legal intelligence.</p>
                         <Button asChild size="lg" className="h-16 px-12 bg-white text-primary hover:bg-white/90 font-black uppercase tracking-widest text-xs rounded-2xl shadow-2xl transition-transform active:scale-95">
-                            <Link href="/register">Initialize Enrollment <ArrowRight className="ml-3 h-5 w-5" /></Link>
+                            <Link href="/dashboard">Initialize Terminal <ArrowRight className="ml-3 h-5 w-5" /></Link>
                         </Button>
                     </div>
                 </div>
