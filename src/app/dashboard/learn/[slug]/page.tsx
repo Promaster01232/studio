@@ -84,23 +84,6 @@ export default function LearnTopicDetailPage() {
                     <CardContent className="p-8 sm:p-16">
                         <div className="flex flex-col gap-16">
                             <div className="flex-1 space-y-12">
-                                <div className="p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 shadow-inner text-left relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-4 opacity-[0.05]">
-                                        <Sparkles className="h-12 w-12 text-primary" />
-                                    </div>
-                                    <div className="flex items-start gap-6 relative z-10">
-                                        <div className="bg-primary/10 p-3 rounded-2xl text-primary shrink-0 shadow-sm border border-primary/20">
-                                            <Zap className="h-6 w-6 animate-pulse" />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Executive Summary Node</p>
-                                            <p className="text-base sm:text-lg font-bold text-foreground/80 leading-relaxed italic">
-                                                {topic.description}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div className="prose dark:prose-invert prose-sm sm:prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-p:font-medium prose-p:leading-relaxed prose-p:text-foreground/80 prose-li:font-medium text-foreground/90 selection:bg-primary/10">
                                     <div className="whitespace-pre-line leading-loose text-base sm:text-lg font-medium">
                                         {localizedContent}
