@@ -106,7 +106,7 @@ interface UserProfile {
 function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
     const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
     const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
-    const fallback = post.isAnonymous ? 'A' : (post.authorName?.charAt(0) || '');
+    const fallback = post.isAnonymous ? 'A' : (authorName?.charAt(0) || '');
 
     return (
         <Link 
@@ -381,10 +381,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                     <Button variant="ghost" size="sm" className="flex items-center gap-2 h-10 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-red-500/10 hover:text-red-500" onClick={handleLike} disabled={isLiking}>
                         {isLiking ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <Heart className={cn("h-4 w-4 transition-all", userHasLiked && "fill-red-500 text-red-500 scale-110")} />}
                         <span>{optimisticLikes}</span>
-                    </Button>
-                    <Button variant="ghost" size="sm" className="flex items-center gap-2 h-10 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-primary/10 hover:text-primary" onClick={() => handleAction('Comment')}>
-                        <MessageCircle className="h-4 w-4" />
-                        <span>{post.comments}</span>
                     </Button>
                     
                     <DropdownMenu>
