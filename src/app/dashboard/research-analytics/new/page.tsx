@@ -107,10 +107,10 @@ export default function NewPostPage() {
         
         setIsPosting(true);
 
-        const newPostData = {
+        // Construction of newPostData node to avoid 'undefined' field errors in Firestore
+        const newPostData: any = {
             authorUid: auth.currentUser.uid,
             authorName: isAnonymous ? 'Anonymous' : `${userProfile.firstName} ${userProfile.lastName}`,
-            authorAvatar: isAnonymous ? undefined : (userProfile.photoURL || ''),
             title: finalTitle,
             content: isPoll ? '' : content,
             link: isPoll ? '' : link,
@@ -121,11 +121,19 @@ export default function NewPostPage() {
             tags: tags.split(',').map(t => t.trim()).filter(Boolean),
             isAnonymous: isAnonymous,
             createdAt: serverTimestamp(),
-            poll: isPoll ? {
+        };
+
+        // Only include optional nodes if they possess valid forensic data
+        if (!isAnonymous && userProfile.photoURL) {
+            newPostData.authorAvatar = userProfile.photoURL;
+        }
+
+        if (isPoll) {
+            newPostData.poll = {
                 options: pollOptions.map(opt => opt.trim()).filter(Boolean).map(opt => ({ text: opt, votes: 0 })),
                 voters: []
-            } : undefined
-        };
+            };
+        }
 
         const postsCol = collection(firestore, "posts");
         addDoc(postsCol, newPostData)
