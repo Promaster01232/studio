@@ -31,6 +31,9 @@ import {
   Plus,
   Zap,
   Cpu,
+  Bot,
+  PlusCircle,
+  User,
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -96,13 +99,6 @@ interface Post {
     tags?: string[];
     isAnonymous?: boolean;
 }
-
-const ForensicLabel = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-    <div className={cn("flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.3em] text-primary/60", className)}>
-        <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
-        {children}
-    </div>
-);
 
 const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
   const ref = useRef(null);
@@ -409,6 +405,34 @@ export default function DashboardHomePage() {
           <div className="lg:col-span-8 space-y-10">
               <section>
                   <SectionHeader icon={TrendingUp} sector="Sector: Community">Live Transmission Stream</SectionHeader>
+                  
+                  {/* Quick Post Card */}
+                  <Card className="mb-8 glass border-primary/10 shadow-xl rounded-2xl overflow-hidden group">
+                    <CardContent className="p-4 sm:p-6">
+                        <div className="flex items-center gap-4">
+                            <Avatar className="h-10 w-10 border border-primary/10 shadow-lg rounded-xl shrink-0">
+                                {userProfile?.photoURL ? (
+                                    <AvatarImage src={userProfile.photoURL} className="object-cover" />
+                                ) : (
+                                    <AvatarFallback className="font-black bg-primary/10 text-primary"><User className="h-5 w-5"/></AvatarFallback>
+                                )}
+                            </Avatar>
+                            <Link 
+                                href="/dashboard/research-analytics/new"
+                                className="flex-1 text-left bg-muted/40 hover:bg-muted/60 text-muted-foreground font-bold rounded-xl px-5 py-3 transition-all text-xs border border-primary/5 active:scale-[0.99] flex items-center justify-between"
+                            >
+                                <span>Initialize transmission...</span>
+                                <PlusCircle className="h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity" />
+                            </Link>
+                            <Button asChild size="icon" className="h-10 w-10 rounded-xl shrink-0 shadow-xl shadow-primary/20 active:scale-95 transition-all">
+                                <Link href="/dashboard/research-analytics/new">
+                                    <Plus className="h-5 w-5"/>
+                                </Link>
+                            </Button>
+                        </div>
+                    </CardContent>
+                  </Card>
+
                   <div className="space-y-6">
                       {postsLoading ? (
                           <div className="space-y-4">
@@ -477,6 +501,26 @@ export default function DashboardHomePage() {
                   </div>
               </section>
           </div>
+        </div>
+
+        {/* Floating AI Robot Button */}
+        <div className="fixed bottom-8 right-8 z-[100]">
+            <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="relative group h-16 w-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center transition-all overflow-hidden"
+            >
+                <motion.div 
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="absolute inset-0 bg-primary rounded-full"
+                />
+                <Bot className="h-8 w-8 relative z-10" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            </motion.button>
+            <div className="absolute -top-10 right-0 bg-background border border-primary/20 px-3 py-1.5 rounded-xl shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Neural Assistant Active</span>
+            </div>
         </div>
 
         <div className="pt-12 text-center border-t border-primary/5 opacity-30">
