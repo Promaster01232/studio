@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import {
   Mic,
-  FileSearch,
+  Search,
   FileText,
   FileSignature,
   BrainCircuit,
@@ -16,9 +16,80 @@ import {
   Gavel,
   ArrowRight,
   Sparkles,
+  Activity,
+  Heart,
+  MessageCircle,
+  Share2,
+  Bookmark,
+  Loader2,
+  BadgeCheck,
+  User,
+  MoreVertical,
+  Flag,
+  Trash2,
+  Twitter,
+  Zap,
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useAuth, useFirestore } from "@/firebase";
+import { 
+  collection, 
+  query, 
+  orderBy, 
+  limit, 
+  onSnapshot, 
+  Timestamp, 
+  doc, 
+  updateDoc, 
+  increment, 
+  arrayUnion, 
+  arrayRemove, 
+  deleteDoc, 
+  addDoc, 
+  serverTimestamp,
+  getDoc
+} from "firebase/firestore";
+import { formatDistanceToNow } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Image from "next/image";
+import { Logo } from "@/components/logo";
+
+const ADMIN_EMAILS = [
+  'enterspaceindia@gmail.com', 
+  'piyushkumarsingh23323@gmail.com',
+  'piyushkumrsingh23323@gmail.com',
+  'piyushkumrsingh23399@gmail.com'
+];
+
+interface Post {
+    id: string;
+    authorUid: string;
+    authorName: string;
+    authorAvatar?: string;
+    createdAt: Timestamp;
+    title: string;
+    content: string;
+    image?: string;
+    link?: string;
+    poll?: {
+        options: { text: string; votes: number }[];
+        voters?: string[];
+    };
+    likes: number;
+    likedBy?: string[];
+    comments: number;
+    postType?: 'Idea' | 'Question' | 'Suggestion' | 'Poll';
+    tags?: string[];
+    isAnonymous?: boolean;
+}
 
 const NeuralRain = () => {
   return (
@@ -59,6 +130,144 @@ const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, del
   );
 };
 
+function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
+    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
+    const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
+    const fallback = post.isAnonymous ? 'A' : (authorName?.charAt(0) || '');
+
+    return (
+        <Link 
+            href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} 
+            className={cn(
+                "flex items-start gap-4 group/author transition-all active:scale-[0.98]",
+                post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer"
+            )}
+        >
+            <Avatar className="h-10 w-10 border-2 border-background shadow-lg rounded-xl group-hover/author:scale-105 transition-transform">
+                {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
+                <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 text-left">
+                <div className="flex items-center gap-1.5">
+                    <p className="font-black text-xs tracking-tight group-hover/author:text-primary transition-colors underline decoration-primary/0 group-hover/author:decoration-primary/30 underline-offset-4">{authorName}</p>
+                    {isAdmin && <BadgeCheck className="h-3 w-3 text-blue-500" />}
+                </div>
+                <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
+                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
+                </p>
+            </div>
+        </Link>
+    );
+}
+
+function PostCard({ post }: { post: Post }) {
+    const { toast } = useToast();
+    const firestore = useFirestore();
+    const auth = useAuth();
+    const { currentUser } = auth;
+    
+    const [isVoting, setIsVoting] = useState(false);
+    const [isLiking, setIsLiking] = useState(false);
+    const [optimisticLikes, setOptimisticLikes] = useState(post.likes);
+    const [optimisticLikedBy, setOptimisticLikedBy] = useState(post.likedBy || []);
+    const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
+
+    const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
+    const isAuthor = post.authorUid === currentUser?.uid;
+    
+    const handleLike = () => {
+        if (!currentUser) return;
+        if (isLiking) return;
+        setIsLiking(true);
+
+        const postRef = doc(firestore, "posts", post.id);
+        setOptimisticLikes(prev => userHasLiked ? prev - 1 : prev + 1);
+        setOptimisticLikedBy(prev => userHasLiked ? prev.filter(uid => uid !== currentUser.uid) : [...prev, currentUser.uid]);
+
+        updateDoc(postRef, {
+            likes: increment(userHasLiked ? -1 : 1),
+            likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        }).catch(() => {
+            setOptimisticLikes(post.likes);
+            setOptimisticLikedBy(post.likedBy || []);
+        }).finally(() => setIsLiking(false));
+    };
+
+    const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
+        const shareText = `Check out this institutional transmission on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
+        if (platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+        else if (platform === 'twitter') window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+        else if (platform === 'copy') {
+            navigator.clipboard.writeText(shareText);
+            toast({ title: "Registry Link Copied" });
+        }
+    };
+
+    const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
+    const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
+
+    return (
+        <Card className="glass border-primary/5 hover:border-primary/20 transition-all shadow-lg rounded-[2rem] overflow-hidden">
+            <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                    <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
+                    {post.postType && (
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-3 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest h-5">
+                            {post.postType}
+                        </Badge>
+                    )}
+                </div>
+                <div className="space-y-3 text-left">
+                    <h3 className="text-lg font-black font-headline leading-tight tracking-tighter text-foreground">{post.title}</h3>
+                    {post.content && <p className="text-muted-foreground text-xs font-medium leading-relaxed line-clamp-3">{post.content}</p>}
+                </div>
+                
+                {optimisticPoll && (
+                    <div className="mt-4 space-y-2">
+                        {optimisticPoll.options.slice(0, 2).map((option, index) => (
+                            <div key={index} className="relative h-10 w-full bg-muted/20 rounded-xl overflow-hidden border border-primary/5">
+                                <div className="absolute inset-y-0 left-0 bg-primary/10 transition-all duration-1000" style={{ width: `${totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0}%` }}></div>
+                                <div className="absolute inset-0 flex items-center justify-between px-4 text-[10px] font-black uppercase tracking-tight">
+                                    <span>{option.text}</span>
+                                    {userHasVotedOnPoll && <span>{totalVotes > 0 ? ((option.votes / totalVotes) * 100).toFixed(0) : 0}%</span>}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </CardContent>
+            <CardFooter className="px-6 py-4 bg-muted/5 border-t border-primary/5 flex justify-between items-center">
+                <div className="flex gap-2">
+                    <Button variant="ghost" size="sm" className="h-8 px-3 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-red-500/10 hover:text-red-500" onClick={handleLike}>
+                        <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-red-500 text-red-500")} />
+                        <span>{optimisticLikes}</span>
+                    </Button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10">
+                                <Share2 className="h-3.5 w-3.5" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl glass border-primary/5">
+                            <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                <MessageCircle className="h-3.5 w-3.5 text-green-600" /> WhatsApp
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                <Twitter className="h-3.5 w-3.5 text-blue-500" /> Twitter
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+                <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary/10" asChild>
+                    <Link href="/dashboard/research-analytics">
+                        Inspect <ArrowRight className="h-3 w-3" />
+                    </Link>
+                </Button>
+            </CardFooter>
+        </Card>
+    );
+}
+
 const aiFeatures = [
     {
       href: "/dashboard/strength-analyzer",
@@ -70,7 +279,7 @@ const aiFeatures = [
     },
     {
       href: "/dashboard/document-intelligence",
-      icon: FileSearch,
+      icon: Search,
       title: "Doc Intelligence",
       description: "Forensic risk auditor for statutory compliance.",
       color: "text-emerald-500",
@@ -106,6 +315,23 @@ export default function DashboardHomePage() {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const fullText = 'Nyaya Sahayak';
+  
+  const firestore = useFirestore();
+  const [latestPosts, setLatestPosts] = useState<Post[]>([]);
+  const [postsLoading, setPostsLoading] = useState(true);
+
+  useEffect(() => {
+    const postsRef = collection(firestore, "posts");
+    const q = query(postsRef, orderBy("createdAt", "desc"), limit(20));
+    
+    const unsubscribe = onSnapshot(q, (snap) => {
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
+        setLatestPosts(list);
+        setPostsLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [firestore]);
   
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -143,7 +369,7 @@ export default function DashboardHomePage() {
                       <span className="animate-pulse ml-1 text-primary">|</span>
                   </h1>
                   <p className="text-sm sm:text-xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
-                      Access high-fidelity legal intelligence and forensic tools designed for the modern Indian judicial landscape. Our ecosystem empowers you with mathematically precise statutory audits and procedural navigation roadmaps on nyayasahayak.in.
+                      Access high-fidelity legal intelligence and forensic tools designed for the modern Indian judicial landscape. Our ecosystem empowers you with mathematically precise statutory audits and procedural navigation roadmaps.
                   </p>
                   <div className="flex flex-wrap gap-4 pt-4">
                       <Button size="lg" className="rounded-2xl font-black uppercase tracking-widest text-xs px-8 h-14 shadow-2xl shadow-primary/20 active:scale-95 transition-all" asChild>
@@ -185,7 +411,7 @@ export default function DashboardHomePage() {
                         <Card className="h-full glass hover:border-emerald-500/30 transition-all duration-500 overflow-hidden relative group rounded-[2.5rem] shadow-xl">
                             <CardContent className="p-10 flex items-center gap-8">
                                 <div className="p-6 rounded-[1.5rem] bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-500 shadow-inner ring-1 ring-emerald-500/20">
-                                    <FileSearch className="h-10 w-10" />
+                                    <Search className="h-10 w-10" />
                                 </div>
                                 <div className="space-y-2 flex-1">
                                     <h3 className="text-2xl font-black tracking-tight">Document Intelligence</h3>
@@ -221,6 +447,43 @@ export default function DashboardHomePage() {
                       </Link>
                     </MotionWrapper>
                   ))}
+              </div>
+          </section>
+
+          <section>
+              <MotionWrapper delay={0.6}>
+                <SectionTitle>Latest Community Transmissions</SectionTitle>
+              </MotionWrapper>
+              
+              {postsLoading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {[...Array(6)].map((_, i) => (
+                          <Card key={i} className="glass rounded-[2rem] h-48 animate-pulse border-primary/5" />
+                      ))}
+                  </div>
+              ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <AnimatePresence>
+                          {latestPosts.map((post, index) => (
+                              <motion.div
+                                  key={post.id}
+                                  initial={{ opacity: 0, scale: 0.95 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ delay: index * 0.05 }}
+                              >
+                                  <PostCard post={post} />
+                              </motion.div>
+                          ))}
+                      </AnimatePresence>
+                  </div>
+              )}
+              
+              <div className="mt-8 flex justify-center">
+                  <Button variant="ghost" className="font-black uppercase tracking-widest text-[10px] gap-3 rounded-xl hover:bg-primary/5" asChild>
+                      <Link href="/dashboard/research-analytics">
+                          View All Community Data <ArrowRight className="h-4 w-4" />
+                      </Link>
+                  </Button>
               </div>
           </section>
 
