@@ -12,7 +12,9 @@ import {
   MousePointer2, 
   History,
   Info,
-  Mail
+  Mail,
+  Zap,
+  Activity
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -28,7 +30,7 @@ const cookieNodes = [
   {
     title: "Forensic Performance Nodes",
     desc: "Used strictly for internal system auditing on nyayasahayak.in. These allow us to monitor AI response times, detect dashboard latency, and optimize node processing speeds without identifying individuals.",
-    icon: Cpu,
+    icon: Activity,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
     border: "border-emerald-500/20"
@@ -70,25 +72,25 @@ const itemVariants = {
 
 export default function CookiePolicyPage() {
   return (
-    <div className="max-w-5xl mx-auto space-y-8 sm:space-y-12 pb-20 px-4">
+    <div className="max-w-5xl mx-auto space-y-10 pb-20 px-4 text-left">
       <motion.div 
         initial={{ opacity: 0, y: -10 }} 
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
         <PageHeader
-          title="Cookie Protocol"
+          title="Cookie Usage Protocol"
           description="Institutional transparency regarding localized data tracking and session memory nodes on nyayasahayak.in."
         />
       </motion.div>
 
       {/* Hero Transparency Card */}
       <motion.div variants={itemVariants} initial="hidden" animate="visible">
-        <Card className="border-none ring-1 ring-primary/10 shadow-2xl rounded-3xl overflow-hidden bg-card/40 backdrop-blur-xl">
-          <div className="absolute top-0 right-0 p-12 opacity-[0.03]">
+        <Card className="border-none ring-1 ring-primary/10 shadow-2xl rounded-[2.5rem] overflow-hidden bg-card/40 backdrop-blur-xl relative">
+          <div className="absolute top-0 right-0 p-16 opacity-[0.03]">
             <Cookie className="h-64 w-64" />
           </div>
-          <CardContent className="p-6 sm:p-12 relative z-10 text-left">
+          <CardContent className="p-8 sm:p-16 relative z-10 text-left">
             <div className="flex items-center gap-3 text-primary mb-6">
               <div className="bg-primary/10 p-2 rounded-lg">
                 <Info className="h-6 w-6" />
@@ -96,14 +98,15 @@ export default function CookiePolicyPage() {
               <span className="text-[10px] font-black uppercase tracking-[0.3em]">Protocol Transparency</span>
             </div>
             <div className="space-y-6 max-w-3xl">
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-none">
+              <h2 className="text-3xl sm:text-6xl font-black tracking-tighter leading-none">
                 Minimalist Tracking for <span className="text-primary italic">Maximum Integrity.</span>
               </h2>
-              <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+              <p className="text-sm sm:text-xl text-muted-foreground font-medium leading-relaxed">
                 Nyaya Sahayak utilizes minimalist cookie technology strictly to facilitate secure registry sessions and remember your localized dashboard preferences. We do <span className="text-foreground font-bold">NOT</span> utilize third-party advertising trackers or sell your behavioral data nodes on nyayasahayak.in.
               </p>
             </div>
           </CardContent>
+          <div className="h-1.5 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
         </Card>
       </motion.div>
 
@@ -116,13 +119,13 @@ export default function CookiePolicyPage() {
       >
         {cookieNodes.map((node, idx) => (
           <motion.div key={idx} variants={itemVariants}>
-            <Card className={`h-full border-none ring-1 ${node.border} bg-card/30 hover:bg-card/50 transition-all duration-500 group rounded-2xl`}>
-              <CardContent className="p-6 space-y-4 text-left">
-                <div className={`${node.bg} p-3 rounded-xl w-fit transition-transform group-hover:scale-110 duration-500`}>
+            <Card className={`h-full border-none ring-1 ${node.border} bg-card/30 hover:bg-card/50 transition-all duration-500 group rounded-[2rem] shadow-lg`}>
+              <CardContent className="p-8 space-y-5 text-left">
+                <div className={`${node.bg} p-4 rounded-2xl w-fit transition-transform group-hover:scale-110 duration-500 shadow-inner`}>
                   <node.icon className={`h-6 w-6 ${node.color}`} />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-black tracking-tight">{node.title}</h3>
+                <div className="space-y-3">
+                  <h3 className="text-xl font-black tracking-tight">{node.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                     {node.desc}
                   </p>
@@ -135,20 +138,24 @@ export default function CookiePolicyPage() {
 
       {/* Node Management Section */}
       <motion.div variants={itemVariants} initial="hidden" animate="visible">
-        <Card className="border-primary/5 shadow-xl rounded-2xl bg-muted/30 overflow-hidden">
-          <CardHeader className="bg-primary/5 border-b border-primary/5 p-6 sm:p-8 text-left">
-            <div className="flex items-center gap-3">
-              <MousePointer2 className="h-5 w-5 text-primary" />
-              <CardTitle className="text-xl font-black tracking-tight">User Authority over Nodes</CardTitle>
+        <Card className="border-primary/5 shadow-2xl rounded-[2rem] bg-muted/30 overflow-hidden border">
+          <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-2xl bg-white shadow-sm border border-primary/5 text-primary">
+                <MousePointer2 className="h-6 w-6" />
+              </div>
+              <CardTitle className="text-2xl font-black tracking-tight leading-none">User Authority over Nodes</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="p-6 sm:p-10 space-y-6 text-left">
-            <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+          <CardContent className="p-8 sm:p-12 space-y-8 text-left">
+            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
               Users of nyayasahayak.in maintain sovereign authority over their browser's security settings. You may deactivate any non-essential cookie nodes via your browser's "Privacy & Security" console. 
             </p>
-            <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-4 flex gap-3 items-start">
-              <Lock className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-              <p className="text-[10px] sm:text-xs font-bold text-destructive/80 leading-relaxed">
+            <div className="bg-destructive/5 border border-destructive/20 rounded-2xl p-6 flex gap-5 items-start shadow-inner">
+              <div className="p-2.5 rounded-xl bg-destructive/10">
+                <Lock className="h-6 w-6 text-destructive shrink-0" />
+              </div>
+              <p className="text-xs sm:text-sm font-bold text-destructive/80 leading-relaxed">
                 WARNING: Deactivating "Essential Registry Nodes" will terminate your secure session on nyayasahayak.in and may result in the deactivation of dashboard tools like document generation and case tracking.
               </p>
             </div>

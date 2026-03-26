@@ -15,7 +15,9 @@ import {
   Bell,
   Fingerprint,
   Mic,
-  FileText
+  FileText,
+  Zap,
+  Activity
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -59,6 +61,14 @@ const policySections = [
     color: "text-rose-500",
     bg: "bg-rose-500/10",
     border: "border-rose-500/20"
+  },
+  {
+    title: "Forensic Integrity",
+    desc: "We utilize multi-stage identity audits to ensure all users in our Advocate Registry are legitimate legal professionals. This ensures the integrity of the institutional connection nodes on nyayasahayak.in.",
+    icon: ShieldCheck,
+    color: "text-indigo-500",
+    bg: "bg-indigo-500/10",
+    border: "border-indigo-500/20"
   }
 ];
 
@@ -95,18 +105,18 @@ export default function PrivacyPage() {
     >
       <motion.div variants={itemVariants}>
         <PageHeader
-          title="Privacy Protocol"
+          title="Privacy & Security Protocol"
           description="Institutional commitment to data sovereignty, forensic security, and zero-trust architecture at nyayasahayak.in."
         />
       </motion.div>
 
       {/* Hero Security Card */}
       <motion.div variants={itemVariants}>
-        <Card className="border-none ring-1 ring-primary/10 shadow-2xl rounded-3xl overflow-hidden bg-gradient-to-br from-card/80 to-background/40 backdrop-blur-xl">
+        <Card className="border-none ring-1 ring-primary/10 shadow-2xl rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-card/80 to-background/40 backdrop-blur-xl relative">
           <div className="absolute top-0 right-0 p-12 opacity-[0.03]">
             <ShieldCheck className="h-64 w-64" />
           </div>
-          <CardContent className="p-8 sm:p-12 relative z-10">
+          <CardContent className="p-8 sm:p-16 relative z-10">
             <div className="flex items-center gap-3 text-primary mb-6">
               <div className="bg-primary/10 p-2 rounded-lg">
                 <Fingerprint className="h-6 w-6" />
@@ -114,28 +124,29 @@ export default function PrivacyPage() {
               <span className="text-[10px] font-black uppercase tracking-[0.3em]">Institutional Grade Security</span>
             </div>
             <div className="space-y-6 max-w-3xl">
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-none">
+              <h2 className="text-3xl sm:text-6xl font-black tracking-tighter leading-none">
                 Your Data is Your <span className="text-primary italic">Sovereign Asset.</span>
               </h2>
-              <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+              <p className="text-sm sm:text-xl text-muted-foreground font-medium leading-relaxed">
                 Nyaya Sahayak operates on a <span className="text-foreground font-bold">Zero-Sale Commitment.</span> Unlike traditional platforms, we do not monetize user data. Our revenue nodes are driven by institutional efficiency, ensuring your legal narratives remain strictly confidential and cryptographically secure.
               </p>
-              <div className="flex flex-wrap gap-4 pt-4">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/5 border border-green-500/10">
-                  <Mic className="h-4 w-4 text-green-600" />
-                  <span className="text-[10px] font-black uppercase text-green-600">Audio Encrypted</span>
+              <div className="flex flex-wrap gap-4 pt-6">
+                <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-green-500/5 border border-green-500/10 shadow-inner">
+                  <Activity className="h-4 w-4 text-green-600 animate-pulse" />
+                  <span className="text-[10px] font-black uppercase text-green-600 tracking-widest">TLS 1.3 Active</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/5 border border-blue-500/10">
-                  <FileText className="h-4 w-4 text-blue-600" />
-                  <span className="text-[10px] font-black uppercase text-blue-600">OCR Sandboxed</span>
+                <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-blue-500/5 border border-blue-500/10 shadow-inner">
+                  <Zap className="h-4 w-4 text-blue-600" />
+                  <span className="text-[10px] font-black uppercase text-blue-600 tracking-widest">AES-256 REST</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/5 border border-purple-500/10">
+                <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-purple-500/5 border border-purple-500/10 shadow-inner">
                   <UserCheck className="h-4 w-4 text-purple-600" />
-                  <span className="text-[10px] font-black uppercase text-purple-600">Identity Galled</span>
+                  <span className="text-[10px] font-black uppercase text-purple-600 tracking-widest">Isolated Nodes</span>
                 </div>
               </div>
             </div>
           </CardContent>
+          <div className="h-1.5 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
         </Card>
       </motion.div>
 
@@ -143,13 +154,13 @@ export default function PrivacyPage() {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {policySections.map((section, idx) => (
           <motion.div key={idx} variants={itemVariants}>
-            <Card className={`h-full border-none ring-1 ${section.border} bg-card/30 hover:bg-card/50 transition-all duration-500 group rounded-2xl`}>
-              <CardContent className="p-6 space-y-4 text-left">
-                <div className={`${section.bg} p-3 rounded-xl w-fit transition-transform group-hover:scale-110 duration-500`}>
+            <Card className={`h-full border-none ring-1 ${section.border} bg-card/30 hover:bg-card/50 transition-all duration-500 group rounded-[2rem] shadow-lg`}>
+              <CardContent className="p-8 space-y-5 text-left">
+                <div className={`${section.bg} p-4 rounded-2xl w-fit transition-transform group-hover:scale-110 duration-500 shadow-inner`}>
                   <section.icon className={`h-6 w-6 ${section.color}`} />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-black tracking-tight">{section.title}</h3>
+                <div className="space-y-3">
+                  <h3 className="text-xl font-black tracking-tight">{section.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                     {section.desc}
                   </p>
@@ -161,13 +172,13 @@ export default function PrivacyPage() {
         
         {/* Contact/Support Node */}
         <motion.div variants={itemVariants}>
-          <Card className="h-full border-none ring-1 ring-primary/20 bg-primary/5 rounded-2xl flex flex-col justify-center items-center p-6 text-center group transition-all hover:bg-primary/10">
-            <Bell className="h-10 w-10 text-primary mb-4 animate-bounce" />
-            <h3 className="font-black text-lg tracking-tight mb-2">Policy Updates</h3>
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-relaxed mb-4">
-              We notify all registry nodes 30 days prior to protocol amendments on nyayasahayak.in.
+          <Card className="h-full border-none ring-1 ring-primary/20 bg-primary/5 rounded-[2rem] flex flex-col justify-center items-center p-8 text-center group transition-all hover:bg-primary/10 shadow-lg">
+            <Bell className="h-12 w-12 text-primary mb-6 animate-bounce" />
+            <h3 className="font-black text-xl tracking-tight mb-3">Policy Registry</h3>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-relaxed mb-6">
+              We notify all registry nodes 30 days prior to any protocol amendments on nyayasahayak.in.
             </p>
-            <div className="h-px w-12 bg-primary/20 mb-4" />
+            <div className="h-px w-16 bg-primary/20 mb-6" />
             <p className="text-xs font-black text-primary">nyayasahayakhelp@gmail.com</p>
           </Card>
         </motion.div>
@@ -175,15 +186,25 @@ export default function PrivacyPage() {
 
       {/* Legal Mandate Footer */}
       <motion.div variants={itemVariants} className="pt-12 text-left border-t border-primary/5">
-        <div className="flex flex-col md:flex-row gap-8 items-start">
+        <div className="flex flex-col md:flex-row gap-10 items-start">
           <div className="space-y-4 flex-1">
             <div className="flex items-center gap-2">
               <Scale className="h-5 w-5 text-primary" />
               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Compliance Mandate</h4>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-              This Privacy Protocol is engineered to comply with global digital safety standards and regional data protection acts (including the Digital Personal Data Protection Act, 2023). By utilizing nyayasahayak.in nodes, you acknowledge and consent to the forensic processing logic described herein.
+            <p className="text-xs text-muted-foreground leading-relaxed font-medium max-w-3xl">
+              This Privacy Protocol is engineered to comply with global digital safety standards and regional data protection acts, including the Digital Personal Data Protection Act (DPDP), 2023. By utilizing nyayasahayak.in nodes, you acknowledge and consent to the forensic processing logic described herein.
             </p>
+          </div>
+          <div className="grid grid-cols-2 gap-10 shrink-0">
+            <div className="space-y-1">
+              <p className="text-[9px] font-black uppercase text-muted-foreground opacity-40 tracking-widest">Version</p>
+              <p className="text-xs font-bold font-mono">v4.2.0-Statutory</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-[9px] font-black uppercase text-muted-foreground opacity-40 tracking-widest">Registry ID</p>
+              <p className="text-xs font-bold font-mono">NS-PRIV-001</p>
+            </div>
           </div>
         </div>
       </motion.div>
