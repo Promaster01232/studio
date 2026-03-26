@@ -1,4 +1,3 @@
-
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -13,8 +12,10 @@ import {
   Landmark, 
   Users, 
   History, 
-  Fingerprint,
-  Mail
+  Fingerprint, 
+  Mail,
+  Zap,
+  Cpu
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -37,7 +38,7 @@ const disclaimerNodes = [
   },
   {
     title: "Jurisdictional Limitations",
-    desc: "The platform's intelligence nodes are primarily trained on the Indian Judicial System. Use of these tools on nyayasahayak.in for legal matters in foreign jurisdictions is not recommended and is done at the user's sole risk.",
+    desc: "The platform's intelligence nodes are primarily trained on the Indian Judicial System. Use of nyayasahayak.in for legal matters in foreign jurisdictions is not recommended and is done at the user's sole risk.",
     icon: Landmark,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
@@ -72,14 +73,14 @@ const itemVariants = {
 
 export default function DisclaimerPage() {
   return (
-    <div className="max-w-5xl mx-auto space-y-8 sm:space-y-12 pb-20 px-2 sm:px-0">
+    <div className="max-w-5xl mx-auto space-y-10 pb-20 px-2 sm:px-6 text-left">
       <motion.div 
         initial={{ opacity: 0, y: -10 }} 
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
         <PageHeader
-          title="Legal Disclaimer"
+          title="Legal Disclaimer & AI Mandate"
           description="Mandatory institutional disclosure regarding AI intelligence and human advocacy at nyayasahayak.in."
         />
       </motion.div>
@@ -89,18 +90,21 @@ export default function DisclaimerPage() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid gap-6 sm:grid-cols-2"
+        className="grid gap-8 sm:grid-cols-2"
       >
         <motion.div variants={itemVariants}>
-          <Card className="border-none ring-1 ring-destructive/20 bg-destructive/5 rounded-3xl overflow-hidden shadow-xl h-full">
-            <CardContent className="p-6 sm:p-8 space-y-4 text-left">
-              <div className="flex items-center gap-3 text-destructive">
-                <div className="bg-destructive/10 p-2 rounded-xl">
-                  <Gavel className="h-6 w-6" />
+          <Card className="border-none ring-1 ring-destructive/20 bg-destructive/5 rounded-[2.5rem] overflow-hidden shadow-2xl h-full relative">
+            <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
+                <ShieldAlert className="h-32 w-32" />
+            </div>
+            <CardContent className="p-8 sm:p-10 space-y-5 text-left relative z-10">
+              <div className="flex items-center gap-4 text-destructive">
+                <div className="bg-destructive/10 p-3 rounded-2xl shadow-inner">
+                  <Gavel className="h-7 w-7" />
                 </div>
-                <h3 className="font-black uppercase tracking-tighter text-sm sm:text-base leading-none">Non-Official Node</h3>
+                <h3 className="font-black uppercase tracking-tighter text-lg leading-none">Non-Official Node</h3>
               </div>
-              <p className="text-xs sm:text-sm font-bold leading-relaxed text-destructive/80">
+              <p className="text-xs sm:text-base font-bold leading-relaxed text-destructive/80">
                 The AI Nyaya Mitra Assistant at nyayasahayak.in is <span className="underline decoration-2 underline-offset-4">NOT</span> a law firm or a government entity. We do not provide official legal advice, only AI-driven forensic intelligence and procedural roadmaps.
               </p>
             </CardContent>
@@ -108,15 +112,18 @@ export default function DisclaimerPage() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Card className="border-none ring-1 ring-amber-500/20 bg-amber-500/5 rounded-3xl overflow-hidden shadow-xl h-full">
-            <CardContent className="p-6 sm:p-8 space-y-4 text-left">
-              <div className="flex items-center gap-3 text-amber-600">
-                <div className="bg-amber-500/10 p-2 rounded-xl">
-                  <Scale className="h-6 w-6" />
+          <Card className="border-none ring-1 ring-amber-500/20 bg-amber-500/5 rounded-[2.5rem] overflow-hidden shadow-2xl h-full relative">
+            <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
+                <Zap className="h-32 w-32" />
+            </div>
+            <CardContent className="p-8 sm:p-10 space-y-5 text-left relative z-10">
+              <div className="flex items-center gap-4 text-amber-600">
+                <div className="bg-amber-500/10 p-3 rounded-2xl shadow-inner">
+                  <Scale className="h-7 w-7" />
                 </div>
-                <h3 className="font-black uppercase tracking-tighter text-sm sm:text-base leading-none">The Human Mandate</h3>
+                <h3 className="font-black uppercase tracking-tighter text-lg leading-none">The Human Mandate</h3>
               </div>
-              <p className="text-xs sm:text-sm font-bold leading-relaxed text-amber-600/80">
+              <p className="text-xs sm:text-base font-bold leading-relaxed text-amber-600/80">
                 All documents generated by AI nodes on nyayasahayak.in <span className="underline decoration-2 underline-offset-4">MUST</span> be reviewed, edited, and finalized by a qualified human advocate before service or filing in any official court of law.
               </p>
             </CardContent>
@@ -133,13 +140,13 @@ export default function DisclaimerPage() {
       >
         {disclaimerNodes.map((node, idx) => (
           <motion.div key={idx} variants={itemVariants}>
-            <Card className={`h-full border-none ring-1 ${node.border} bg-card/30 hover:bg-card/50 transition-all duration-500 group rounded-2xl`}>
-              <CardContent className="p-6 space-y-4 text-left">
-                <div className={`${node.bg} p-3 rounded-xl w-fit transition-transform group-hover:scale-110 duration-500`}>
+            <Card className={`h-full border-none ring-1 ${node.border} bg-card/30 hover:bg-card/50 transition-all duration-500 group rounded-[2rem] shadow-lg`}>
+              <CardContent className="p-8 space-y-5 text-left">
+                <div className={`${node.bg} p-4 rounded-2xl w-fit transition-transform group-hover:scale-110 duration-500 shadow-inner`}>
                   <node.icon className={`h-6 w-6 ${node.color}`} />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-black tracking-tight">{node.title}</h3>
+                <div className="space-y-3">
+                  <h3 className="text-xl font-black tracking-tight">{node.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                     {node.desc}
                   </p>
@@ -152,41 +159,39 @@ export default function DisclaimerPage() {
 
       {/* Full Disclosure Body */}
       <motion.div variants={itemVariants} initial="hidden" animate="visible">
-        <Card className="border-none ring-1 ring-primary/10 shadow-2xl rounded-3xl overflow-hidden bg-card/40 backdrop-blur-xl">
-          <div className="absolute top-0 right-0 p-12 opacity-[0.03]">
+        <Card className="border-none ring-1 ring-primary/10 shadow-2xl rounded-[2.5rem] overflow-hidden bg-card/40 backdrop-blur-xl relative">
+          <div className="absolute top-0 right-0 p-16 opacity-[0.02]">
             <Fingerprint className="h-64 w-64" />
           </div>
-          <CardHeader className="p-6 sm:p-10 pb-0 border-none text-left">
+          <CardHeader className="p-8 sm:p-12 pb-0 border-none text-left">
             <div className="flex items-center gap-3 text-primary mb-4">
               <div className="bg-primary/10 p-2 rounded-lg">
                 <Info className="h-6 w-6" />
               </div>
-              <CardTitle className="text-xl sm:text-2xl font-black tracking-tight leading-none">Full Disclosure Agreement</CardTitle>
+              <CardTitle className="text-2xl sm:text-4xl font-black tracking-tight leading-none">Full Disclosure Agreement</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="p-6 sm:p-10 pt-4 space-y-6 text-left relative z-10">
-            <div className="space-y-6 text-sm text-muted-foreground font-medium leading-relaxed max-w-4xl">
+          <CardContent className="p-8 sm:p-12 pt-6 space-y-8 text-left relative z-10">
+            <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed max-w-4xl">
               <p>
                 By utilizing any dashboard modules on nyayasahayak.in, you acknowledge that the system operates on probabilistic AI nodes. Our mission is to democratize legal information, not to replace the nuanced strategy required for complex litigation. While we strive for 100% forensic accuracy, discrepancies in relevant laws, sections, or procedural timelines may occur due to the dynamic nature of judicial amendments.
               </p>
               <p>
                 Nyaya Sahayak institutional nodes serve as <span className="font-bold text-foreground">navigational facilitators.</span> We highly recommend connecting with our <span className="font-bold text-primary italic">Verified Advocate Registry</span> for personalized consultations. Only a human professional can provide the empathy and strategic foresight required to navigate the intricacies of the law.
               </p>
-              <div className="pt-8 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-6">
+            </div>
+            <div className="pt-10 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8">
                 <div className="space-y-1">
                   <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Institutional ID</p>
-                  <p className="text-xs font-bold text-primary">NS-NODE-001 // SECURE REGISTRY CLEARANCE REQUIRED</p>
+                  <p className="text-xs font-bold text-primary font-mono">NS-NODE-ALPHA // SECURE REGISTRY CLEARANCE ACTIVE</p>
                 </div>
-                <a 
-                  href="mailto:nyayasahayakhelp@gmail.com" 
-                  className="flex items-center gap-2 text-primary font-black text-xs hover:opacity-80 transition-opacity"
-                >
+                <div className="flex items-center gap-2 text-primary font-black text-xs">
                   <Mail className="h-4 w-4" />
                   nyayasahayakhelp@gmail.com
-                </a>
-              </div>
+                </div>
             </div>
           </CardContent>
+          <div className="h-1.5 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
         </Card>
       </motion.div>
 
@@ -195,7 +200,7 @@ export default function DisclaimerPage() {
         <div className="flex items-center justify-center gap-2 text-muted-foreground/40 font-black uppercase tracking-[0.2em] text-[9px] sm:text-[10px]">
           <History className="h-3 w-3" /> Agreement Persistence: Active
         </div>
-        <p className="text-[9px] sm:text-[10px] text-muted-foreground/60 font-medium max-w-2xl mx-auto leading-relaxed italic px-4">
+        <p className="text-[9px] sm:text-[11px] text-muted-foreground/60 font-medium max-w-2xl mx-auto leading-relaxed italic px-4">
           "By accessing nyayasahayak.in, you explicitly waive any claims against the developers regarding the performance of AI nodes. Accuracy verification rests entirely with the user and their authorized legal counsel."
         </p>
       </motion.div>

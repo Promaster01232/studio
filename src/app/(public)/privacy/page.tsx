@@ -1,4 +1,3 @@
-
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -11,13 +10,12 @@ import {
   Database, 
   Cpu, 
   UserCheck, 
-  Scale, 
-  Bell,
+  Activity, 
   Fingerprint,
   Mic,
   FileText,
   Zap,
-  Activity
+  Info
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -101,7 +99,7 @@ export default function PrivacyPage() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="max-w-5xl mx-auto space-y-12 pb-20 px-4 text-left"
+      className="max-w-5xl mx-auto space-y-12 pb-20 px-4 sm:px-6 text-left"
     >
       <motion.div variants={itemVariants}>
         <PageHeader
@@ -128,7 +126,7 @@ export default function PrivacyPage() {
                 Your Data is Your <span className="text-primary italic">Sovereign Asset.</span>
               </h2>
               <p className="text-sm sm:text-xl text-muted-foreground font-medium leading-relaxed">
-                Nyaya Sahayak operates on a <span className="text-foreground font-bold">Zero-Sale Commitment.</span> Unlike traditional platforms, we do not monetize user data. Our revenue nodes are driven by institutional efficiency, ensuring your legal narratives remain strictly confidential and cryptographically secure.
+                Nyaya Sahayak operates on a <span className="text-foreground font-bold">Zero-Sale Commitment.</span> Unlike traditional platforms, we do not monetize user data. Our revenue nodes are driven by institutional efficiency, ensuring your legal narratives remain confidential.
               </p>
               <div className="flex flex-wrap gap-4 pt-6">
                 <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-green-500/5 border border-green-500/10 shadow-inner">
@@ -169,45 +167,31 @@ export default function PrivacyPage() {
             </Card>
           </motion.div>
         ))}
-        
-        {/* Contact/Support Node */}
-        <motion.div variants={itemVariants}>
-          <Card className="h-full border-none ring-1 ring-primary/20 bg-primary/5 rounded-[2rem] flex flex-col justify-center items-center p-8 text-center group transition-all hover:bg-primary/10 shadow-lg">
-            <Bell className="h-12 w-12 text-primary mb-6 animate-bounce" />
-            <h3 className="font-black text-xl tracking-tight mb-3">Policy Registry</h3>
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-relaxed mb-6">
-              We notify all registry nodes 30 days prior to any protocol amendments on nyayasahayak.in.
-            </p>
-            <div className="h-px w-16 bg-primary/20 mb-6" />
-            <p className="text-xs font-black text-primary">nyayasahayakhelp@gmail.com</p>
-          </Card>
-        </motion.div>
       </div>
 
-      {/* Legal Mandate Footer */}
-      <motion.div variants={itemVariants} className="pt-12 text-left border-t border-primary/5">
-        <div className="flex flex-col md:flex-row gap-10 items-start">
-          <div className="space-y-4 flex-1">
-            <div className="flex items-center gap-2">
-              <Scale className="h-5 w-5 text-primary" />
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Compliance Mandate</h4>
-            </div>
-            <p className="text-xs text-muted-foreground leading-relaxed font-medium max-w-3xl">
-              This Privacy Protocol is engineered to comply with global digital safety standards and regional data protection acts, including the Digital Personal Data Protection Act (DPDP), 2023. By utilizing nyayasahayak.in nodes, you acknowledge and consent to the forensic processing logic described herein.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-10 shrink-0">
-            <div className="space-y-1">
-              <p className="text-[9px] font-black uppercase text-muted-foreground opacity-40 tracking-widest">Version</p>
-              <p className="text-xs font-bold font-mono">v4.2.0-Statutory</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-[9px] font-black uppercase text-muted-foreground opacity-40 tracking-widest">Registry ID</p>
-              <p className="text-xs font-bold font-mono">NS-PRIV-001</p>
-            </div>
-          </div>
-        </div>
+      {/* Compliance Mandate */}
+      <motion.div variants={itemVariants} className="pt-12 border-t border-primary/5">
+        <Card className="border-none bg-muted/30 rounded-[2rem] overflow-hidden">
+            <CardContent className="p-8 flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
+                <div className="p-4 rounded-[1.5rem] bg-background shadow-xl border border-primary/5">
+                    <ShieldCheck className="h-12 w-12 text-primary" />
+                </div>
+                <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-center md:justify-start gap-2 text-primary mb-1">
+                        <Info className="h-4 w-4" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">Compliance Protocol</span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
+                        This Privacy Protocol is engineered to comply with global digital safety standards and regional data protection acts, including the Digital Personal Data Protection Act (DPDP), 2023. By utilizing nyayasahayak.in nodes, you acknowledge and consent to the forensic processing logic described herein.
+                    </p>
+                </div>
+            </CardContent>
+        </Card>
       </motion.div>
+
+      <div className="text-center pt-8 opacity-30">
+          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // PRIVACY PROTOCOL NS-PRIV-001</p>
+      </div>
     </motion.div>
   );
 }
