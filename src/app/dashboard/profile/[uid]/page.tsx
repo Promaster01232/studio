@@ -313,7 +313,7 @@ export default function UserPublicProfilePage(props: {
 
       <div className="grid lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-5 space-y-8">
-              <motion.div variants={itemVariants} className="grid grid-cols-3 gap-4">
+              <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
                   {[
                       { 
                           label: "Registry Posts", 
@@ -324,8 +324,7 @@ export default function UserPublicProfilePage(props: {
                           onClick: fetchUserPosts,
                           isClickable: true
                       },
-                      { label: "Community Likes", value: stats.likes, icon: Heart, color: "text-red-500", bg: "bg-red-500/10" },
-                      { label: "Node Impact", value: stats.impact, icon: Activity, color: "text-amber-500", bg: "bg-amber-500/10" }
+                      { label: "Community Likes", value: stats.likes, icon: Heart, color: "text-red-500", bg: "bg-red-500/10" }
                   ].map((stat, i) => (
                       <Card 
                         key={i} 
