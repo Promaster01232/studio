@@ -218,10 +218,11 @@ export default async function SearchResultsPage(props: {
   params: Promise<any>, 
   searchParams: Promise<CaseSearchParams> 
 }) {
-    const resolvedSearchParams = await props.searchParams;
+    const params = await props.params;
+    const searchParams = await props.searchParams;
     return (
         <Suspense fallback={<SearchResultsSkeleton />}>
-            <SearchResultsComponent searchParams={resolvedSearchParams} />
+            <SearchResultsComponent searchParams={searchParams} />
         </Suspense>
     );
 }

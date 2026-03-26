@@ -23,12 +23,13 @@ const timeSlots = [
     "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "02:00 PM", "02:30 PM", "03:00 PM"
 ];
 
-export default function BookConsultationPage({ params }: { params: Promise<{ id: string }> }) {
-  const unwrappedParams = use(params);
+export default function BookConsultationPage(props: { params: Promise<{ id: string }> }) {
+  const unwrappedParams = use(props.params);
+  const id = unwrappedParams.id;
   const rtdb = useDatabase();
   const { toast } = useToast();
   
-  const [lawyer, setLawyer] = useState<Lawyer | undefined>();
+  const [lawyer, setLayer] = useState<Lawyer | undefined>();
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState(false);
 
@@ -37,23 +38,22 @@ export default function BookConsultationPage({ params }: { params: Promise<{ id:
   const [consultationType, setConsultationType] = useState("Video Call");
   
   useEffect(() => {
-    const advocateRef = ref(rtdb, `advocates/${unwrappedParams.id}`);
+    const advocateRef = ref(rtdb, `advocates/${id}`);
     
     const unsubscribe = onValue(advocateRef, (snapshot) => {
         if (snapshot.exists()) {
             const data = snapshot.val() as Lawyer;
-            // SECURITY: Strict filter for public access
             if (data.isApproved) {
-                setLawyer(data);
+                setLayer(data);
             } else {
-                setLawyer(undefined);
+                setLayer(undefined);
             }
         }
         setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [unwrappedParams.id, rtdb]);
+  }, [id, rtdb]);
 
   const handleBook = () => {
       if (!selectedTime) {

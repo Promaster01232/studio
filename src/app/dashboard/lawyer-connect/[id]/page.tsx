@@ -15,21 +15,22 @@ import { motion } from "framer-motion";
 import { useDatabase } from '@/firebase';
 import { ref, get } from 'firebase/database';
 
-export default function LawyerProfilePage({ params }: { params: Promise<{ id: string }> }) {
-  const unwrappedParams = use(params);
+export default function LawyerProfilePage(props: { params: Promise<{ id: string }> }) {
+  const unwrappedParams = use(props.params);
+  const id = unwrappedParams.id;
   const rtdb = useDatabase();
-  const [lawyer, setLawyer] = useState<Lawyer | undefined>();
+  const [lawyer, setLayer] = useState<Lawyer | undefined>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLawyer = async () => {
         try {
-            const advocateRef = ref(rtdb, `advocates/${unwrappedParams.id}`);
+            const advocateRef = ref(rtdb, `advocates/${id}`);
             const snapshot = await get(advocateRef);
             if (snapshot.exists()) {
                 const data = snapshot.val() as Lawyer;
                 if (data.isApproved) {
-                    setLawyer(data);
+                    setLayer(data);
                 }
             }
         } catch (error) {
@@ -40,7 +41,7 @@ export default function LawyerProfilePage({ params }: { params: Promise<{ id: st
     };
     
     fetchLawyer();
-  }, [unwrappedParams.id, rtdb]);
+  }, [id, rtdb]);
 
   if (loading) {
       return (

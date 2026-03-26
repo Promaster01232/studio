@@ -14,30 +14,30 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useDatabase } from "@/firebase";
 import { ref, onValue } from "firebase/database";
 
-export default function ChatPage({ params }: { params: Promise<{ id: string }> }) {
-  const unwrappedParams = use(params);
+export default function ChatPage(props: { params: Promise<{ id: string }> }) {
+  const unwrappedParams = use(props.params);
+  const id = unwrappedParams.id;
   const rtdb = useDatabase();
-  const [lawyer, setLawyer] = useState<Lawyer | undefined>();
+  const [lawyer, setLayer] = useState<Lawyer | undefined>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const advocateRef = ref(rtdb, `advocates/${unwrappedParams.id}`);
+    const advocateRef = ref(rtdb, `advocates/${id}`);
     
     const unsubscribe = onValue(advocateRef, (snapshot) => {
         if (snapshot.exists()) {
             const data = snapshot.val() as Lawyer;
-            // SECURITY: Ensure unapproved profiles are inaccessible via direct URL
             if (data.isApproved) {
-                setLawyer(data);
+                setLayer(data);
             } else {
-                setLawyer(undefined);
+                setLayer(undefined);
             }
         }
         setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [unwrappedParams.id, rtdb]);
+  }, [id, rtdb]);
 
   if (loading) {
     return (

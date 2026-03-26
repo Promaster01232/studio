@@ -102,8 +102,8 @@ interface Post {
     postType?: string;
 }
 
-export default function UserPublicProfilePage({ params }: { params: Promise<{ uid: string }> }) {
-  const unwrappedParams = use(params);
+export default function UserPublicProfilePage(props: { params: Promise<{ uid: string }> }) {
+  const unwrappedParams = use(props.params);
   const uid = unwrappedParams.uid;
   const firestore = useFirestore();
   const auth = useAuth();
@@ -128,7 +128,6 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
       setLoading(false);
     });
 
-    // Fetch basic stats
     const postsRef = collection(firestore, "posts");
     const q = query(postsRef, where("authorUid", "==", uid));
     getDocs(q).then(snap => {
@@ -257,7 +256,6 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
         </div>
       </motion.div>
 
-      {/* Hero Header */}
       <motion.div variants={itemVariants} className="relative rounded-[2.5rem] overflow-hidden border-none shadow-2xl bg-card">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/5 -z-10"></div>
           <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
@@ -299,7 +297,6 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
       </motion.div>
 
       <div className="grid lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column */}
           <div className="lg:col-span-5 space-y-8">
               <motion.div variants={itemVariants} className="grid grid-cols-3 gap-4">
                   {[
@@ -367,7 +364,6 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
               </motion.div>
           </div>
 
-          {/* Right Column */}
           <div className="lg:col-span-7 space-y-8">
               <motion.div variants={itemVariants}>
                   <Card className="glass border-primary/5 rounded-[2.5rem] overflow-hidden shadow-2xl relative">
