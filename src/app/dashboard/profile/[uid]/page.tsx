@@ -2,8 +2,8 @@
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
-import { useFirestore } from "@/firebase";
-import { doc, onSnapshot, collection, query, where, getDocs, orderBy, Timestamp } from "firebase/firestore";
+import { useFirestore, useAuth } from "@/firebase";
+import { doc, onSnapshot, collection, query, where, getDocs, orderBy, Timestamp, deleteDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,7 +26,8 @@ import {
   Share2,
   Bookmark,
   ChevronDown,
-  ArrowRight
+  ArrowRight,
+  Trash2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -34,6 +35,14 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/logo";
 import { formatDistanceToNow } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
+
+const ADMIN_EMAILS = [
+  'enterspaceindia@gmail.com', 
+  'piyushkumarsingh23323@gmail.com',
+  'piyushkumrsingh23323@gmail.com',
+  'piyushkumrsingh23399@gmail.com'
+];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -75,9 +84,12 @@ const achievements: Achievement[] = [
 
 interface Post {
     id: string;
+    authorUid: string;
+    authorName: string;
+    authorAvatar?: string;
+    createdAt: Timestamp;
     title: string;
     content: string;
-    createdAt: Timestamp;
     likes: number;
     comments: number;
     postType?: string;
@@ -87,6 +99,8 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
   const unwrappedParams = use(params);
   const uid = unwrappedParams.uid;
   const firestore = useFirestore();
+  const auth = useAuth();
+  const { toast } = useToast();
   const postsSectionRef = useRef<HTMLDivElement>(null);
   
   const [profile, setProfile] = useState<any>(null);
@@ -137,12 +151,10 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
       setShowPosts(true);
       try {
           const postsRef = collection(firestore, "posts");
-          // IN-MEMORY SORT PROTOCOL: Removed orderBy from Firestore query to bypass the requirement for a composite index.
           const q = query(postsRef, where("authorUid", "==", uid));
           const snap = await getDocs(q);
           const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
           
-          // Execute forensic sort in local memory
           list.sort((a, b) => {
               const dateA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Number(a.createdAt || 0);
               const dateB = b.createdAt?.toMillis ? b.createdAt.toMillis() : Number(b.createdAt || 0);
@@ -155,6 +167,20 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
           console.error("Failed to fetch user transmissions:", error);
       } finally {
           setPostsLoading(false);
+      }
+  };
+
+  const handleDeletePost = async (postId: string) => {
+      if (!confirm("Confirm Transmission Purge: This action will permanently erase the node from the community registry.")) return;
+      
+      try {
+          await deleteDoc(doc(firestore, "posts", postId));
+          setUserPosts(prev => prev.filter(p => p.id !== postId));
+          setStats(prev => ({ ...prev, posts: Math.max(0, prev.posts - 1) }));
+          toast({ title: "Transmission Purged", description: "The node has been erased from the official registry." });
+      } catch (error) {
+          console.error("Delete failed:", error);
+          toast({ variant: "destructive", title: "Action Refused", description: "Registry permissions insufficient for this operation." });
       }
   };
 
@@ -187,6 +213,9 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
       </div>
     );
   }
+
+  const currentUser = auth.currentUser;
+  const isAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
 
   return (
     <motion.div 
@@ -409,48 +438,65 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
                       </Card>
                   ) : (
                       <div className="grid gap-6">
-                          {userPosts.map((post, idx) => (
-                              <motion.div 
-                                key={post.id}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: idx * 0.05 }}
-                              >
-                                  <Card className="glass border-primary/5 hover:border-primary/20 transition-all rounded-[2rem] overflow-hidden group">
-                                      <CardContent className="p-6 sm:p-8">
-                                          <div className="flex justify-between items-start mb-4">
-                                              <div className="space-y-1">
-                                                  <h3 className="text-lg sm:text-xl font-black tracking-tight group-hover:text-primary transition-colors">{post.title}</h3>
-                                                  <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
-                                                      Transmission // {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
-                                                  </p>
-                                              </div>
-                                              <Badge className="bg-primary/10 text-primary border-primary/10 text-[8px] font-black uppercase tracking-widest">
-                                                  {post.postType || 'Idea'}
-                                              </Badge>
-                                          </div>
-                                          <p className="text-sm text-muted-foreground font-medium leading-relaxed line-clamp-3 mb-6">
-                                              {post.content}
-                                          </p>
-                                          <div className="flex items-center justify-between pt-6 border-t border-primary/5">
-                                              <div className="flex items-center gap-4">
-                                                  <div className="flex items-center gap-1.5 text-red-500/60 text-[10px] font-black">
-                                                      <Heart className="h-3.5 w-3.5 fill-current" />
-                                                      {post.likes}
-                                                  </div>
-                                                  <div className="flex items-center gap-1.5 text-primary/60 text-[10px] font-black">
-                                                      <MessageCircle className="h-3.5 w-3.5" />
-                                                      {post.comments}
-                                                  </div>
-                                              </div>
-                                              <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary hover:text-white transition-all">
-                                                  Inspect Node <ArrowRight className="h-3 w-3" />
-                                              </Button>
-                                          </div>
-                                      </CardContent>
-                                  </Card>
-                              </motion.div>
-                          ))}
+                          {userPosts.map((post, idx) => {
+                              const isAuthor = post.authorUid === currentUser?.uid;
+                              const canDelete = isAuthor || isAdmin;
+                              
+                              return (
+                                <motion.div 
+                                    key={post.id}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: idx * 0.05 }}
+                                >
+                                    <Card className="glass border-primary/5 hover:border-primary/20 transition-all rounded-[2rem] overflow-hidden group">
+                                        <CardContent className="p-6 sm:p-8">
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div className="space-y-1">
+                                                    <h3 className="text-lg sm:text-xl font-black tracking-tight group-hover:text-primary transition-colors">{post.title}</h3>
+                                                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
+                                                        Transmission // {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
+                                                    </p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Badge className="bg-primary/10 text-primary border-primary/10 text-[8px] font-black uppercase tracking-widest">
+                                                        {post.postType || 'Idea'}
+                                                    </Badge>
+                                                    {canDelete && (
+                                                        <Button 
+                                                            variant="ghost" 
+                                                            size="icon" 
+                                                            onClick={() => handleDeletePost(post.id)}
+                                                            className="h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/5 active:scale-90 transition-all"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <p className="text-sm text-muted-foreground font-medium leading-relaxed line-clamp-3 mb-6">
+                                                {post.content}
+                                            </p>
+                                            <div className="flex items-center justify-between pt-6 border-t border-primary/5">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="flex items-center gap-1.5 text-red-500/60 text-[10px] font-black">
+                                                        <Heart className="h-3.5 w-3.5 fill-current" />
+                                                        {post.likes}
+                                                    </div>
+                                                    <div className="flex items-center gap-1.5 text-primary/60 text-[10px] font-black">
+                                                        <MessageCircle className="h-3.5 w-3.5" />
+                                                        {post.comments}
+                                                    </div>
+                                                </div>
+                                                <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary hover:text-white transition-all">
+                                                    Inspect Node <ArrowRight className="h-3 w-3" />
+                                                </Button>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </motion.div>
+                              );
+                          })}
                       </div>
                   )}
               </motion.div>
