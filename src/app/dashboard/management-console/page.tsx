@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -11,29 +10,21 @@ import { useFirestore, useDatabase, useAuth } from "@/firebase";
 import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, writeBatch } from "firebase/firestore";
 import { ref, remove, update } from "firebase/database";
 import { 
-  Users, 
   ShieldCheck, 
   Loader2, 
   Search, 
   AlertTriangle, 
   ShieldAlert, 
-  Sparkles, 
   BadgeCheck, 
   Eye, 
   MoreHorizontal,
   Mail,
   UserPlus,
   Trash2,
-  Calendar,
   Phone,
-  ShieldHalf,
   UserCheck,
-  UserMinus,
   RotateCcw,
-  CheckCircle2,
   Activity,
-  QrCode,
-  Fingerprint,
   Cpu,
   Eraser,
   Lock
@@ -45,7 +36,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { onAuthStateChanged } from "firebase/auth";
 import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
+import { FirestorePermissionError } from "@/firebase/errors";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -69,9 +60,7 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
-import { Logo } from "@/components/logo";
 import { motion } from "framer-motion";
-import { DigitalIDCard } from "../profile/page";
 
 interface UserRecord {
   uid: string;
@@ -114,13 +103,21 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                             <ShieldCheck className="h-4 w-4" />
                             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Official Registry Preview</span>
                         </div>
-                        <DialogTitle className="sr-only">User Dossier: {user.firstName} {user.lastName}</DialogTitle>
-                        <DialogDescription className="sr-only">Detailed view of user identity card and forensic records on nyayasahayak.in.</DialogDescription>
+                        <DialogTitle className="text-xl font-black">User Dossier: {user.firstName} {user.lastName}</DialogTitle>
+                        <DialogDescription className="font-medium text-xs">Detailed view of registry identity and forensic records.</DialogDescription>
                     </DialogHeader>
                     
                     <div className="space-y-8">
-                        <div className="px-2">
-                            <DigitalIDCard user={user as any} photoURL={user.photoURL || ""} />
+                        <div className="flex items-center gap-6 p-6 rounded-3xl bg-muted/30 border border-primary/5">
+                            <Avatar className="h-24 w-24 border-4 border-background shadow-xl rounded-[1.5rem]">
+                                <AvatarImage src={user.photoURL} className="object-cover" />
+                                <AvatarFallback className="text-3xl font-black bg-primary/5 text-primary">{user.firstName.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div className="space-y-1">
+                                <h3 className="text-2xl font-black tracking-tight">{user.firstName} {user.lastName}</h3>
+                                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest text-primary border-primary/20">{user.userType}</Badge>
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase mt-2">Node Status: {user.isBlocked ? 'Suspended' : 'Active'}</p>
+                            </div>
                         </div>
 
                         <ScrollArea className="max-h-[40vh] px-4">

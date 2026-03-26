@@ -8,12 +8,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   ArrowLeft, 
-  Mail, 
   ShieldCheck, 
   Loader2, 
   User, 
   Cpu, 
-  Fingerprint, 
   Globe, 
   MessageSquare, 
   Star, 
@@ -26,13 +24,11 @@ import {
   Heart,
   Users
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { DigitalIDCard } from "../page";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/logo";
-import { Label } from "@/components/ui/label";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -186,7 +182,7 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
 
               <div className="flex-1 text-center sm:text-left space-y-4">
                   <div className="space-y-1">
-                      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                      <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
                           <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none">
                               {profile.firstName} {profile.lastName}
                           </h1>
@@ -214,16 +210,6 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
       <div className="grid lg:grid-cols-12 gap-8 items-start">
           {/* Left Column */}
           <div className="lg:col-span-5 space-y-8">
-              <motion.div variants={itemVariants} className="space-y-3">
-                  <div className="flex items-center justify-between px-1">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
-                        <Fingerprint className="h-3 w-3" /> Identity Matrix
-                    </Label>
-                    <span className="text-[9px] font-bold text-primary/40">SECURE-BLOCK-ALPHA</span>
-                  </div>
-                  <DigitalIDCard user={profile} photoURL={profile.photoURL || ""} />
-              </motion.div>
-
               <motion.div variants={itemVariants} className="grid grid-cols-3 gap-4">
                   {[
                       { label: "Registry Posts", value: stats.posts, icon: FileText, color: "text-blue-500", bg: "bg-blue-500/10" },
