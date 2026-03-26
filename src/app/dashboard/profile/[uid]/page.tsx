@@ -27,7 +27,8 @@ import {
   Bookmark,
   ChevronDown,
   ArrowRight,
-  Trash2
+  Trash2,
+  Twitter
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -36,6 +37,12 @@ import { cn } from "@/lib/utils";
 import { Logo } from "@/components/logo";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -182,6 +189,19 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
           console.error("Delete failed:", error);
           toast({ variant: "destructive", title: "Action Refused", description: "Registry permissions insufficient for this operation." });
       }
+  };
+
+  const handleShare = (post: Post, platform: 'whatsapp' | 'twitter' | 'copy') => {
+    const shareText = `Check out this institutional transmission on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
+    
+    if (platform === 'whatsapp') {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+    } else if (platform === 'twitter') {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+    } else if (platform === 'copy') {
+        navigator.clipboard.writeText(shareText);
+        toast({ title: "Registry Link Copied", description: "Transmission data saved to clipboard." });
+    }
   };
 
   if (loading) {
@@ -488,9 +508,38 @@ export default function UserPublicProfilePage({ params }: { params: Promise<{ ui
                                                         {post.comments}
                                                     </div>
                                                 </div>
-                                                <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary hover:text-white transition-all">
-                                                    Inspect Node <ArrowRight className="h-3 w-3" />
-                                                </Button>
+                                                <div className="flex items-center gap-2">
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-muted-foreground hover:bg-primary/5 hover:text-primary transition-all">
+                                                                <Share2 className="h-4 w-4" />
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl glass border-primary/5">
+                                                            <DropdownMenuItem onClick={() => handleShare(post, 'whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                                                <div className="bg-green-500/10 p-1.5 rounded-md text-green-600">
+                                                                    <MessageCircle className="h-3.5 w-3.5" />
+                                                                </div>
+                                                                WhatsApp
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem onClick={() => handleShare(post, 'twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                                                <div className="bg-blue-500/10 p-1.5 rounded-md text-blue-500">
+                                                                    <Twitter className="h-3.5 w-3.5" />
+                                                                </div>
+                                                                Twitter (X)
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem onClick={() => handleShare(post, 'copy')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                                                <div className="bg-primary/10 p-1.5 rounded-md text-primary">
+                                                                    <Bookmark className="h-3.5 w-3.5" />
+                                                                </div>
+                                                                Copy Registry Link
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                    <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary hover:text-white transition-all">
+                                                        Inspect Node <ArrowRight className="h-3 w-3" />
+                                                    </Button>
+                                                </div>
                                             </div>
                                         </CardContent>
                                     </Card>
