@@ -61,7 +61,9 @@ export default function NarrateProblemPage() {
         const recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
         mediaRecorder.current = recorder;
         const chunks: Blob[] = [];
-        recorder.ondataavailable = (e) => e.data.size > 0 && chunks.push(e.data);
+        recorder.ondataavailable = (e) => {
+            if (e.data.size > 0) chunks.push(e.data);
+        };
         recorder.onstop = () => {
             stream.getTracks().forEach((track) => track.stop());
             if (timerInterval.current) clearInterval(timerInterval.current);
@@ -222,7 +224,7 @@ export default function NarrateProblemPage() {
                 </CardHeader>
                 <CardContent className="p-8 sm:p-10 flex-1">
                     <AnimatePresence mode="wait">
-                        {isLoading && (
+                        {isLoading ? (
                             <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-10">
                                 <div className="relative">
                                     <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 6, ease: "linear" }} className="p-16 rounded-full border-4 border-dashed border-primary/20">
@@ -237,9 +239,7 @@ export default function NarrateProblemPage() {
                                     <p className="text-sm text-muted-foreground font-medium max-w-[320px] mx-auto leading-relaxed">Extracting statutory violations and generating procedural roadmap.</p>
                                 </div>
                             </motion.div>
-                        )}
-                        
-                        {state.status === 'idle' && (
+                        ) : state.status === 'idle' ? (
                             <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
                                 <div className="p-10 rounded-[2.5rem] bg-muted/50 border-2 border-dashed border-primary/10">
                                     <Mic className="h-20 w-20 text-muted-foreground" />
@@ -249,9 +249,7 @@ export default function NarrateProblemPage() {
                                     <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto italic">Your forensic report will materialize here.</p>
                                 </div>
                             </motion.div>
-                        )}
-
-                        {state.status === "success" && state.data && (
+                        ) : state.status === "success" && state.data ? (
                             <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-10 pb-10 text-left">
                                 <div className="space-y-4">
                                     <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
@@ -314,7 +312,7 @@ export default function NarrateProblemPage() {
                                     </div>
                                 </div>
                             </motion.div>
-                        )}
+                        ) : null}
                     </AnimatePresence>
                 </CardContent>
             </Card>

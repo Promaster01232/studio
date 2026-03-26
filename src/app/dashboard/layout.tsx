@@ -52,25 +52,23 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
-                        <div className="w-full max-w-sm cursor-pointer group">
-                            {/* Unified Trigger Container to ensure DialogTrigger has exactly one child */}
-                            <div className="relative w-full active:scale-[0.99] transition-transform">
-                                {/* Desktop Search Bar */}
-                                <div className="hidden md:flex items-center w-full pl-10 pr-16 h-10 font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                    <span>Search tools, cases, guides...</span>
-                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 shadow-sm">
-                                            <span className="text-xs">⌘</span>K
-                                        </kbd>
-                                    </div>
+                        {/* Unified trigger container to ensure DialogTrigger has exactly ONE child element */}
+                        <div className="w-full max-w-sm cursor-pointer group active:scale-[0.99] transition-transform">
+                            {/* Desktop Search Bar */}
+                            <div className="hidden md:flex items-center w-full pl-10 pr-16 h-10 font-bold text-[11px] text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                <span>Search tools, cases, guides...</span>
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 shadow-sm">
+                                        <span className="text-xs">⌘</span>K
+                                    </kbd>
                                 </div>
-                                {/* Mobile Search Button */}
-                                <div className="md:hidden">
-                                    <Button variant="outline" size="icon" className="h-10 w-10 rounded-xl border-primary/5 bg-muted/40 active:scale-95 transition-all">
-                                        <Search className="h-4 w-4 text-muted-foreground" />
-                                    </Button>
-                                </div>
+                            </div>
+                            {/* Mobile Search Button */}
+                            <div className="md:hidden">
+                                <Button variant="outline" size="icon" className="h-10 w-10 rounded-xl border-primary/5 bg-muted/40 active:scale-95 transition-all">
+                                    <Search className="h-4 w-4 text-muted-foreground" />
+                                </Button>
                             </div>
                         </div>
                     </SearchDialog>
@@ -175,7 +173,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   if (showContent && isSuspended) {
       return (
-        <div className="flex h-screen items-center justify-center bg-background p-4 relative overflow-hidden">
+        <div className="flex h-screen items-center justify-center bg-background p-4 relative overflow-hidden text-left">
             <div className="absolute inset-0 bg-destructive/5 -z-10 animate-pulse"></div>
             <Card className="max-w-md w-full glass shadow-2xl overflow-hidden rounded-[2rem]">
                 <div className="bg-destructive/10 p-10 flex justify-center border-b border-destructive/10">
