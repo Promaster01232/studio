@@ -62,7 +62,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from "next/image";
 import { Logo } from "@/components/logo";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
@@ -210,65 +209,64 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 
     return (
         <motion.div layout className="w-full">
-            <Card className="overflow-hidden glass border-primary/5 transition-all rounded-[1.5rem] flex flex-col sm:flex-row h-full">
-                <div className="relative w-full sm:w-40 h-32 sm:h-auto overflow-hidden shrink-0">
-                    {post.image ? (
-                        <Image src={post.image} alt={post.title} fill className="object-cover" />
-                    ) : (
-                        <div className="absolute inset-0 bg-primary/5 flex items-center justify-center">
-                            <Logo className="h-10 w-10 opacity-10" />
-                        </div>
-                    )}
-                    <div className="absolute top-2 left-2">
-                        <Badge className="bg-primary text-white font-black text-[7px] uppercase tracking-widest px-2 py-0.5 rounded-full">
-                            {post.postType || 'TX'}
-                        </Badge>
-                    </div>
-                </div>
-
-                <div className="flex-1 flex flex-col p-4 sm:p-5 text-left">
-                    <div className="flex items-center justify-between mb-3">
+            <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative">
+                {/* Colorful Accent Bar */}
+                <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-500"></div>
+                
+                <div className="flex-1 flex flex-col p-5 sm:p-6 text-left ml-1.5">
+                    <div className="flex items-center justify-between mb-4">
                         <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary/5">
-                                    <MoreVertical className="h-3.5 w-3.5 text-muted-foreground" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-40 p-1.5 rounded-xl border-primary/5">
-                                {(isAuthor || isAdmin) ? (
-                                    <DropdownMenuItem onSelect={handleDelete} className="text-[10px] font-bold text-destructive">
-                                        <Trash2 className="h-3 w-3 mr-2" /> Purge Node
-                                    </DropdownMenuItem>
-                                ) : (
-                                    <DropdownMenuItem className="text-[10px] font-bold">
-                                        <Flag className="h-3 w-3 mr-2" /> Report
-                                    </DropdownMenuItem>
-                                )}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="flex items-center gap-2">
+                            <Badge className="bg-primary/10 text-primary border-primary/10 font-black text-[7px] uppercase tracking-widest px-2 py-0.5 rounded-full">
+                                {post.postType || 'TX'}
+                            </Badge>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary/5">
+                                        <MoreVertical className="h-3.5 w-3.5 text-muted-foreground" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-40 p-1.5 rounded-xl border-primary/5">
+                                    {(isAuthor || isAdmin) ? (
+                                        <DropdownMenuItem onSelect={handleDelete} className="text-[10px] font-bold text-destructive">
+                                            <Trash2 className="h-3 w-3 mr-2" /> Purge Node
+                                        </DropdownMenuItem>
+                                    ) : (
+                                        <DropdownMenuItem className="text-[10px] font-bold">
+                                            <Flag className="h-3 w-3 mr-2" /> Report
+                                        </DropdownMenuItem>
+                                    )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     </div>
 
-                    <div className="space-y-1 flex-1 mb-4">
-                        <h3 className="text-sm font-black tracking-tight leading-tight line-clamp-1">{post.title}</h3>
-                        <p className="text-[11px] text-muted-foreground font-medium line-clamp-2 leading-relaxed">{post.content}</p>
+                    <div className="space-y-2 flex-1 mb-5">
+                        <h3 className="text-base sm:text-lg font-black tracking-tight leading-tight text-foreground">{post.title}</h3>
+                        <p className="text-[11px] sm:text-xs text-muted-foreground font-medium line-clamp-3 leading-relaxed">{post.content}</p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-primary/5">
+                    <div className="flex items-center justify-between pt-4 border-t border-primary/5">
                         <div className="flex gap-2">
                             <Button 
                                 variant="ghost" 
                                 size="sm" 
-                                className={cn("h-7 px-2.5 rounded-lg text-[9px] font-black uppercase tracking-widest gap-1.5", userHasLiked ? "text-red-500" : "text-primary")}
+                                className={cn("h-8 px-3 rounded-lg text-[10px] font-black uppercase tracking-widest gap-2 transition-all", userHasLiked ? "text-red-500 bg-red-500/5" : "text-primary hover:bg-primary/5")}
                                 onClick={handleLike}
                                 disabled={isLiking}
                             >
-                                {isLiking ? <Loader2 className="h-3 w-3 animate-spin" /> : <Heart className={cn("h-3 w-3", userHasLiked && "fill-current")} />}
+                                {isLiking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />}
                                 <span>{optimisticLikes}</span>
                             </Button>
+                            <Button variant="ghost" size="sm" className="h-8 px-3 rounded-lg text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
+                                <MessageCircle className="h-3.5 w-3.5 mr-2" /> {post.comments}
+                            </Button>
                         </div>
-                        <Button variant="ghost" size="sm" className="h-7 px-3 text-[9px] font-black uppercase tracking-widest" asChild>
-                            <Link href="/dashboard/research-analytics">Initialize Audit</Link>
+                        <Button variant="ghost" size="sm" className="h-8 px-4 rounded-xl font-black text-[9px] uppercase tracking-widest text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm" asChild>
+                            <Link href="/dashboard/research-analytics">
+                                <span>Analyze Node</span>
+                                <ArrowRight className="ml-2 h-3 w-3" />
+                            </Link>
                         </Button>
                     </div>
                 </div>
@@ -326,7 +324,6 @@ export default function DashboardHomePage() {
             if (docSnap.exists()) setUserProfile(docSnap.data());
         });
 
-        // FORENSIC AUDIT: Only initialize listener if user has clearance
         const postsRef = collection(firestore, "posts");
         const q = query(postsRef, orderBy("createdAt", "desc"), limit(5));
         

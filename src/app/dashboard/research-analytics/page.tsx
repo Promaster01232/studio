@@ -1,11 +1,10 @@
 
 'use client';
 
-import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import React, { useState, useEffect, useRef } from "react";
 import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
@@ -245,8 +244,11 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     
     return (
-        <Card key={post.id} className="overflow-hidden glass border-primary/5 hover:border-primary/20 transition-all shadow-lg rounded-[1.5rem]">
-            <CardContent className="p-5 sm:p-6 pb-0">
+        <Card key={post.id} className="overflow-hidden glass border-primary/10 transition-all shadow-lg rounded-[1.5rem] relative group">
+            {/* Colorful Accent Bar */}
+            <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-500"></div>
+            
+            <CardContent className="p-5 sm:p-6 pb-0 ml-1.5">
                 <div className="flex items-start justify-between mb-5">
                     <AuthorIdentityNode post={post} isAdmin={isAdmin || false} />
                     <div className="flex items-center gap-2">
@@ -276,7 +278,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                     </div>
                 </div>
 
-                <div className="space-y-3 text-left">
+                <div className="space-y-2.5 text-left">
                     <h3 className="text-base sm:text-lg font-black tracking-tight text-foreground leading-snug">{post.title}</h3>
                     {post.content && <p className="text-muted-foreground text-[11px] font-medium leading-relaxed whitespace-pre-line">{post.content}</p>}
 
@@ -290,21 +292,15 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                 </div>
             </CardContent>
 
-            <div className="px-5 sm:px-6 pb-0 pt-4">
+            <div className="px-5 sm:px-6 pb-0 pt-4 ml-1.5">
                  {post.link && (
-                    <a href={post.link} target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-primary/5 bg-primary/5 hover:bg-primary/10 transition-all group">
+                    <a href={post.link} target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-primary/5 bg-primary/5 hover:bg-primary/10 transition-all group/link">
                         <div className="flex items-center gap-3">
                             <Search className="h-3 w-3 text-primary opacity-40" />
-                            <p className="text-[9px] font-black truncate text-foreground group-hover:text-primary tracking-tight flex-1">{post.link}</p>
-                            <ArrowRight className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all" />
+                            <p className="text-[9px] font-black truncate text-foreground group-hover/link:text-primary tracking-tight flex-1">{post.link}</p>
+                            <ArrowRight className="h-3 w-3 text-primary opacity-0 group-hover/link:opacity-100 -translate-x-1 group-hover/link:translate-x-0 transition-all" />
                         </div>
                     </a>
-                )}
-                
-                {post.image && (
-                    <div className="relative aspect-video mt-4 rounded-2xl overflow-hidden border border-primary/5 shadow-xl">
-                        <Image src={post.image} alt={post.title} fill className="object-cover" />
-                    </div>
                 )}
                 
                 {optimisticPoll && (
@@ -342,10 +338,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                 )}
             </div>
 
-            <CardFooter className="p-4 sm:px-6 mt-4 flex justify-between items-center bg-muted/5 border-t border-primary/5">
+            <CardFooter className="p-4 sm:px-6 mt-4 flex justify-between items-center bg-muted/5 border-t border-primary/5 ml-1.5">
                 <div className="flex gap-1.5">
                     <Button variant="ghost" size="sm" className="flex items-center gap-1.5 h-8 px-3 rounded-lg font-black text-[9px] uppercase tracking-widest hover:text-red-500" onClick={handleLike} disabled={isLiking}>
-                        {isLiking ? <Loader2 className="h-3 w-3 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5 transition-all", userHasLiked && "fill-red-500 text-red-500 scale-110")} />}
+                        {isLiking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5 transition-all", userHasLiked && "fill-red-500 text-red-500 scale-110")} />}
                         <span>{optimisticLikes}</span>
                     </Button>
                     

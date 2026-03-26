@@ -107,7 +107,6 @@ export default function UserPublicProfilePage(props: {
   searchParams: Promise<any>
 }) {
   const unwrappedParams = use(props.params);
-  // Safely unwrap searchParams to satisfy Next.js 15 Proxy enumeration requirements
   const _searchParams = use(props.searchParams);
   const uid = unwrappedParams.uid;
   const firestore = useFirestore();
@@ -262,8 +261,8 @@ export default function UserPublicProfilePage(props: {
       </motion.div>
 
       <motion.div variants={itemVariants} className="relative rounded-[2.5rem] overflow-hidden border-none shadow-2xl bg-card">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/5 -z-10"></div>
-          <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-white/5 to-accent/10 dark:from-primary/10 dark:via-black/5 dark:to-accent/5 -z-10"></div>
+          <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
               <Logo className="h-64 w-64 border-none p-0 bg-transparent shadow-none" />
           </div>
           <div className="p-8 sm:p-12 flex flex-col sm:flex-row items-center sm:items-start gap-8 relative z-10">
@@ -286,7 +285,7 @@ export default function UserPublicProfilePage(props: {
               <div className="flex-1 text-center sm:text-left space-y-4">
                   <div className="space-y-1">
                       <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-                          <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none">
+                          <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
                               {profile.firstName} {profile.lastName}
                           </h1>
                           <BadgeCheck className="h-6 w-6 text-blue-500" />
@@ -295,6 +294,17 @@ export default function UserPublicProfilePage(props: {
                           <Zap className="h-4 w-4 animate-pulse" />
                           Official {profile.userType?.toUpperCase()} Node
                       </p>
+                  </div>
+                  
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background/50 border border-primary/10 shadow-sm">
+                          <Activity className="h-3.5 w-3.5 text-primary" />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Dossier Impact: {stats.impact}</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background/50 border border-primary/10 shadow-sm">
+                          <Globe className="h-3.5 w-3.5 text-blue-500" />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Registry Status: Active</span>
+                      </div>
                   </div>
               </div>
           </div>
@@ -470,8 +480,11 @@ export default function UserPublicProfilePage(props: {
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: idx * 0.05 }}
                                 >
-                                    <Card className="glass border-primary/5 hover:border-primary/20 transition-all rounded-[2rem] overflow-hidden group">
-                                        <CardContent className="p-6 sm:p-8">
+                                    <Card className="glass border-primary/10 hover:border-primary/30 transition-all rounded-[2rem] overflow-hidden group relative">
+                                        {/* Post Card Accent */}
+                                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-500"></div>
+                                        
+                                        <CardContent className="p-6 sm:p-8 ml-1.5">
                                             <div className="flex justify-between items-start mb-4">
                                                 <div className="space-y-1">
                                                     <h3 className="text-lg sm:text-xl font-black tracking-tight group-hover:text-primary transition-colors">{post.title}</h3>
