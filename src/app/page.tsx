@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,8 @@ import {
   Activity,
   Globe,
   Award,
-  BadgeCheck
+  BadgeCheck,
+  Mic
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
