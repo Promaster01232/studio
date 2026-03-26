@@ -108,37 +108,60 @@ export default function WelcomePage() {
                 
                 <div className="max-w-3xl mx-auto space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed px-2 text-left sm:text-center">
                   <p>
-                    Nyaya Sahayak is India's premier AI legal assistant, meticulously engineered to bridge the gap between complex judicial protocols and citizen needs. In an era where legal clarity is often obscured by jargon and procedural friction, our ecosystem provides high-fidelity forensic tools that empower you to navigate the law with absolute dignity and confidence. Our mission is centered on the democratization of legal intelligence, ensuring every citizen has the capability to protect their rights via elite neural technology.
-                  </p>
-                  <p className="hidden sm:block">
-                    Our platform utilizes state-of-the-art neural processing nodes to deconstruct statutory clauses, analyze case narratives in real-time, and generate legally sound drafting nodes. Whether you are a citizen seeking justice, a business managing compliance, or a legal professional optimizing research, nyayasahayak.in serves as your institutional co-pilot. We integrate IPC, CrPC, and the new BNSS/BNS statutory frameworks to provide mathematically precise case auditing and procedural roadmap generation.
+                    Nyaya Sahayak is India's premier AI legal assistant, meticulously engineered to bridge the gap between complex judicial protocols and citizen needs. In an era where legal clarity is often obscured by jargon and procedural friction, our ecosystem provides high-fidelity forensic tools that empower you to navigate the law with absolute dignity and confidence.
                   </p>
                 </div>
               </div>
 
-              <div className="w-full max-w-md space-y-4 px-4">
-                <Button 
-                  asChild={!loading} 
-                  disabled={loading}
-                  size="lg" 
-                  className="group w-full h-16 text-lg font-black shadow-2xl transition-all duration-500 active:scale-95 rounded-2xl shadow-primary/20 hover:shadow-primary/40 bg-primary text-white"
-                >
-                  <Link href={loading ? "#" : (user ? "/dashboard" : "/login")}>
-                    {loading ? (
-                      <span className="flex items-center gap-3">
-                        <Loader2 className="h-5 w-5 animate-spin" /> 
-                        <span className="text-xs uppercase tracking-widest">Registry Sync...</span>
-                      </span>
-                    ) : (
-                      <>
-                        {user ? "Enter Dashboard Terminal" : "Initialize Enrollment Protocol"} 
+              <div className="w-full max-w-xl space-y-4 px-4">
+                {!loading ? (
+                  user ? (
+                    <Button 
+                      asChild 
+                      size="lg" 
+                      className="group w-full h-16 text-lg font-black shadow-2xl transition-all duration-500 active:scale-95 rounded-2xl shadow-primary/20 hover:shadow-primary/40 bg-primary text-white"
+                    >
+                      <Link href="/dashboard">
+                        Enter Dashboard Terminal 
                         <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1.5" />
-                      </>
-                    )}
-                  </Link>
-                </Button>
+                      </Link>
+                    </Button>
+                  ) : (
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <Button 
+                        asChild 
+                        size="lg" 
+                        className="group flex-1 h-16 text-lg font-black shadow-2xl transition-all duration-500 active:scale-95 rounded-2xl shadow-primary/20 hover:shadow-primary/40 bg-primary text-white"
+                      >
+                        <Link href="/register">
+                          Enroll Now
+                          <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1.5" />
+                        </Link>
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        asChild 
+                        size="lg" 
+                        className="flex-1 h-16 text-lg font-black border-primary/10 glass hover:bg-primary/5 active:scale-95 transition-all rounded-2xl"
+                      >
+                        <Link href="/login">Citizen Login</Link>
+                      </Button>
+                    </div>
+                  )
+                ) : (
+                  <Button 
+                    disabled
+                    size="lg" 
+                    className="w-full h-16 text-lg font-black rounded-2xl bg-primary/50 text-white"
+                  >
+                    <span className="flex items-center gap-3">
+                      <Loader2 className="h-5 w-5 animate-spin" /> 
+                      <span className="text-xs uppercase tracking-widest">Registry Sync...</span>
+                    </span>
+                  </Button>
+                )}
                 
-                <div className="flex items-center justify-center gap-4 pt-2">
+                <div className="flex items-center justify-center gap-4 pt-4">
                     <div className="flex items-center gap-1.5">
                         <Lock className="h-3 w-3 text-primary/60" />
                         <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-widest">AES-256 Encrypted</span>
@@ -169,7 +192,7 @@ export default function WelcomePage() {
                     </div>
                     <h2 className="text-xl font-black tracking-tight mb-4">Forensic Case Auditor</h2>
                     <p className="text-sm text-muted-foreground leading-relaxed font-medium mb-4">
-                        Our neural engine processes complex legal narratives in milliseconds. By utilizing advanced LLM nodes, Nyaya Sahayak identifies relevant laws, sections (IPC, CrPC, BNSS), and jurisdictional requirements with mathematically precise accuracy. This tool allows citizens to record their problems naturally, receiving a structured forensic summary that highlights legal violations and suggests procedural next steps.
+                        Our neural engine processes complex legal narratives in milliseconds. By utilizing advanced LLM nodes, Nyaya Sahayak identifies relevant laws, sections (IPC, CrPC, BNSS), and jurisdictional requirements with mathematically precise accuracy.
                     </p>
                     <ul className="text-[11px] font-bold text-primary/80 space-y-2 uppercase tracking-wide">
                         <li className="flex items-center gap-2"><Fingerprint className="h-3 w-3" /> Narrative Reconstruction</li>
@@ -183,7 +206,7 @@ export default function WelcomePage() {
                     </div>
                     <h2 className="text-xl font-black tracking-tight mb-4">Document Risk Scanner</h2>
                     <p className="text-sm text-muted-foreground leading-relaxed font-medium mb-4">
-                        Upload any legal document for a deep-layer statutory audit. Our AI deconstructs complex clauses to reveal hidden legal risks, time-sensitive deadlines, and potential procedural consequences within the Indian legal framework. Whether it's a rental agreement, an employment contract, or a court summon, the Document Intelligence node extracts critical intent and provides a simplified layman's summary alongside forensic risk indicators.
+                        Upload any legal document for a deep-layer statutory audit. Our AI deconstructs complex clauses to reveal hidden legal risks, time-sensitive deadlines, and potential procedural consequences within the Indian legal framework.
                     </p>
                     <ul className="text-[11px] font-bold text-emerald-600/80 space-y-2 uppercase tracking-wide">
                         <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3" /> Clause Extraction</li>
@@ -197,7 +220,7 @@ export default function WelcomePage() {
                     </div>
                     <h2 className="text-xl font-black tracking-tight mb-4">AI Procedural Roadmap</h2>
                     <p className="text-sm text-muted-foreground leading-relaxed font-medium mb-4">
-                        Navigate the Indian judicial system with an AI-generated personalized roadmap. We provide step-by-step guides on filing FIRs, responding to legal notices, and understanding court etiquette with high-fidelity clarity. Our roadmap generation node adapts to the specific details of your case, providing a dynamic list of milestones that ensure you are never lost in the bureaucratic friction of legal procedures.
+                        Navigate the Indian judicial system with an AI-generated personalized roadmap. We provide step-by-step guides on filing FIRs, responding to legal notices, and understanding court etiquette with high-fidelity clarity.
                     </p>
                     <ul className="text-[11px] font-bold text-amber-600/80 space-y-2 uppercase tracking-wide">
                         <li className="flex items-center gap-2"><StepForward className="h-3 w-3" /> Actionable Milestones</li>
@@ -207,7 +230,7 @@ export default function WelcomePage() {
             </div>
         </div>
 
-        {/* Detailed Content for SEO Ranking */}
+        {/* Detailed Content Section */}
         <div className="w-full max-w-4xl mt-32 space-y-20 px-6">
             <section className="space-y-8">
                 <div className="flex items-center gap-4 mb-2">
@@ -222,7 +245,7 @@ export default function WelcomePage() {
                             <Logo className="h-6 w-6 border-none shadow-none" /> The Nyaya Sahayak Vision
                         </h3>
                         <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                            Access to justice should not be a privilege of the elite. At Nyaya Sahayak, we believe that technology can serve as a powerful equalizer. By providing citizens with the tools to understand their rights and the procedures required to enforce them, we are building a more transparent and equitable judicial ecosystem for 1.4 billion people. Our vision is to eliminate the information asymmetry that currently exists between citizens and the judicial complex.
+                            Access to justice should not be a privilege of the elite. At Nyaya Sahayak, we believe that technology can serve as a powerful equalizer. By providing citizens with the tools to understand their rights, we are building a more transparent and equitable judicial ecosystem.
                         </p>
                     </div>
                     <div className="space-y-4">
@@ -230,98 +253,8 @@ export default function WelcomePage() {
                             <ShieldCheck className="h-6 w-6 text-primary" /> Institutional Reliability
                         </h3>
                         <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                            Our system is built on a foundation of trust. Every AI-generated output is accompanied by relevant legal citations and recommendations for human advocate review. We bridge the gap between automated intelligence and expert professional advice, ensuring that you receive the most accurate navigational support possible. Nyaya Sahayak nodes are regularly updated to reflect the latest judicial amendments and precedents from the Supreme Court and various High Courts.
+                            Our system is built on a foundation of trust. Every AI-generated output is accompanied by relevant legal citations and recommendations for human advocate review. We bridge the gap between automated intelligence and expert professional advice.
                         </p>
-                    </div>
-                </div>
-            </section>
-
-            <section className="bg-primary/5 rounded-[3rem] p-8 sm:p-16 border border-primary/10 relative overflow-hidden text-left">
-                <div className="absolute top-0 right-0 p-12 opacity-[0.03]">
-                    <Fingerprint className="h-64 w-64" />
-                </div>
-                <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
-                    <div className="space-y-6">
-                        <h2 className="text-3xl sm:text-4xl font-black tracking-tighter leading-none">Your Data is a <br/><span className="text-primary italic">Sovereign Asset.</span></h2>
-                        <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                            Nyaya Sahayak operates on a strict **Zero-Sale Commitment**. Unlike traditional data-driven platforms, we do not monetize your personal legal narratives or document nodes. Your case details remain cryptographically secure within our institutional vault, used solely for providing you with real-time forensic insights. We maintain an isolated session protocol, meaning your data is never used to train global LLM models.
-                        </p>
-                        <div className="flex flex-wrap gap-3">
-                            <Badge variant="secondary" className="bg-white/50 border-primary/10 text-primary font-bold px-4 py-1 rounded-full uppercase text-[10px]">No Data Training</Badge>
-                            <Badge variant="secondary" className="bg-white/50 border-primary/10 text-primary font-bold px-4 py-1 rounded-full uppercase text-[10px]">Isolated Sessions</Badge>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <Card className="p-6 glass border-primary/10 text-center space-y-2 rounded-2xl">
-                            <div className="text-2xl font-black text-primary">100%</div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Privacy Sync</p>
-                        </Card>
-                        <Card className="p-6 glass border-primary/10 text-center space-y-2 rounded-2xl">
-                            <div className="text-2xl font-black text-primary">TLS 1.3</div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Encryption</p>
-                        </Card>
-                        <Card className="p-6 glass border-primary/10 text-center space-y-2 rounded-2xl">
-                            <div className="text-2xl font-black text-primary">Zero</div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Knowledge Policy</p>
-                        </Card>
-                        <Card className="p-6 glass border-primary/10 text-center space-y-2 rounded-2xl">
-                            <div className="text-2xl font-black text-primary">256-bit</div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Data Vault</p>
-                        </Card>
-                    </div>
-                </div>
-            </section>
-
-            <section className="space-y-12">
-                <div className="text-center space-y-4">
-                    <h2 className="text-3xl sm:text-4xl font-black tracking-tighter">Why Choose Nyaya Sahayak?</h2>
-                    <div className="h-1 w-20 bg-primary mx-auto rounded-full"></div>
-                </div>
-                
-                <div className="grid sm:grid-cols-2 gap-10 text-left">
-                    <div className="flex gap-5">
-                        <div className="shrink-0 pt-1">
-                            <div className="bg-primary/10 p-3 rounded-xl"><ShieldCheck className="h-6 w-6 text-primary" /></div>
-                        </div>
-                        <div className="space-y-2">
-                            <h3 className="font-black text-lg">Institutional Trust Hub</h3>
-                            <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
-                                Every node on nyayasahayak.in is engineered for absolute reliability. We connect citizens with a strictly verified Advocate Registry, ensuring that you only receive professional advice from audited legal practitioners who have cleared our manual Bar certification audit.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex gap-5">
-                        <div className="shrink-0 pt-1">
-                            <div className="bg-primary/10 p-3 rounded-xl"><Globe className="h-6 w-6 text-primary" /></div>
-                        </div>
-                        <div className="space-y-2">
-                            <h3 className="font-black text-lg">Multi-Lingual Protocol</h3>
-                            <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
-                                Justice should not have a language barrier. Our platform supports major Indian languages, including Hindi and English, allowing you to narrate problems and receive summaries in your native dialect, ensuring 100% comprehension of complex legal jargon and procedural requirements.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex gap-5">
-                        <div className="shrink-0 pt-1">
-                            <div className="bg-primary/10 p-3 rounded-xl"><Landmark className="h-6 w-6 text-primary" /></div>
-                        </div>
-                        <div className="space-y-2">
-                            <h3 className="font-black text-lg">Real-time Case Registry</h3>
-                            <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
-                                Stay synchronized with the official eCourts database. Monitor hearing dates, court orders, and case status changes directly from your secure dashboard with automated notification nodes. Our integration provides a seamless way to track multiple litigations in one institutional interface.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex gap-5">
-                        <div className="shrink-0 pt-1">
-                            <div className="bg-red-500/10 p-3 rounded-xl"><ShieldAlert className="h-6 w-6 text-red-600" /></div>
-                        </div>
-                        <div className="space-y-2">
-                            <h3 className="font-black text-lg">Emergency SOS Response</h3>
-                            <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
-                                Our integrated SOS node provides instantaneous access to national emergency helplines (112, 100, 1091). In situations of immediate legal or physical threat, initiate the protocol for direct connection to authoritative assistance, ensuring your safety is prioritized during judicial distress.
-                            </p>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -331,7 +264,7 @@ export default function WelcomePage() {
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
                     <div className="relative z-10 space-y-6">
                         <h2 className="text-3xl sm:text-5xl font-black tracking-tighter">Ready to Navigate the Law?</h2>
-                        <p className="text-sm sm:text-lg font-bold opacity-90 max-w-xl mx-auto">Initialize your secure registry node today and access the pinnacle of AI legal intelligence. Join thousands of citizens who are already navigating the Indian judicial system with dignity.</p>
+                        <p className="text-sm sm:text-lg font-bold opacity-90 max-w-xl mx-auto">Initialize your secure registry node today and access the pinnacle of AI legal intelligence.</p>
                         <Button asChild size="lg" className="h-16 px-12 bg-white text-primary hover:bg-white/90 font-black uppercase tracking-widest text-xs rounded-2xl shadow-2xl transition-transform active:scale-95">
                             <Link href="/register">Initialize Enrollment <ArrowRight className="ml-3 h-5 w-5" /></Link>
                         </Button>
