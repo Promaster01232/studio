@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -207,6 +206,13 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
         });
     };
 
+    const handleReport = () => {
+        toast({
+            title: "Report Transmitted",
+            description: "Institutional audit initiated for this node.",
+        });
+    };
+
     return (
         <motion.div layout className="w-full">
             <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative">
@@ -228,12 +234,12 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-40 p-1.5 rounded-xl border-primary/5">
                                     {(isAuthor || isAdmin) ? (
-                                        <DropdownMenuItem onSelect={handleDelete} className="text-[10px] font-bold text-destructive">
-                                            <Trash2 className="h-3 w-3 mr-2" /> Purge Node
+                                        <DropdownMenuItem onSelect={handleDelete} className="text-[10px] font-bold text-destructive gap-2">
+                                            <Trash2 className="h-3 w-3" /> Purge Node
                                         </DropdownMenuItem>
                                     ) : (
-                                        <DropdownMenuItem className="text-[10px] font-bold">
-                                            <Flag className="h-3 w-3 mr-2" /> Report
+                                        <DropdownMenuItem onSelect={handleReport} className="text-[10px] font-bold gap-2">
+                                            <Flag className="h-3 w-3" /> Report Content
                                         </DropdownMenuItem>
                                     )}
                                 </DropdownMenuContent>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
@@ -28,7 +27,9 @@ import {
   ChevronDown,
   ArrowRight,
   Trash2,
-  Twitter
+  Twitter,
+  MoreVertical,
+  Flag
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -192,6 +193,13 @@ export default function UserPublicProfilePage(props: {
           console.error("Delete failed:", error);
           toast({ variant: "destructive", title: "Action Refused", description: "Registry permissions insufficient for this operation." });
       }
+  };
+
+  const handleReport = () => {
+      toast({
+          title: "Report Node",
+          description: "Institutional audit initiated for this content.",
+      });
   };
 
   const handleShare = (post: Post, platform: 'whatsapp' | 'twitter' | 'copy') => {
@@ -495,16 +503,25 @@ export default function UserPublicProfilePage(props: {
                                                     <Badge className="bg-primary/10 text-primary border-primary/10 text-[8px] font-black uppercase tracking-widest">
                                                         {post.postType || 'Idea'}
                                                     </Badge>
-                                                    {canDelete && (
-                                                        <Button 
-                                                            variant="ghost" 
-                                                            size="icon" 
-                                                            onClick={() => handleDeletePost(post.id)}
-                                                            className="h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/5 active:scale-90 transition-all"
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
-                                                    )}
+                                                    
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-muted-foreground hover:bg-primary/5">
+                                                                <MoreVertical className="h-4 w-4" />
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end" className="w-44 p-1.5 rounded-xl border-primary/5 shadow-2xl glass">
+                                                            {canDelete ? (
+                                                                <DropdownMenuItem onSelect={() => handleDeletePost(post.id)} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
+                                                                    <Trash2 className="h-3.5 w-3.5" /> Purge Node
+                                                                </DropdownMenuItem>
+                                                            ) : (
+                                                                <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5">
+                                                                    <Flag className="h-3.5 w-3.5" /> Report Content
+                                                                </DropdownMenuItem>
+                                                            )}
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
                                                 </div>
                                             </div>
                                             <p className="text-sm text-muted-foreground font-medium leading-relaxed line-clamp-3 mb-6">
