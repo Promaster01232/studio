@@ -30,6 +30,8 @@ import {
   Trash2,
   Twitter,
   Zap,
+  ChevronRight,
+  TrendingUp,
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -49,7 +51,6 @@ import {
   deleteDoc, 
   addDoc, 
   serverTimestamp,
-  getDoc
 } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -141,7 +142,7 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
         <Link 
             href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} 
             className={cn(
-                "flex items-start gap-4 group/author transition-all active:scale-[0.98]",
+                "flex items-center gap-3 group/author transition-all active:scale-[0.98]",
                 post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer"
             )}
         >
@@ -151,7 +152,7 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
             </Avatar>
             <div className="flex-1 text-left">
                 <div className="flex items-center gap-1.5">
-                    <p className="font-black text-sm tracking-tight group-hover/author:text-primary transition-colors underline decoration-primary/0 group-hover/author:decoration-primary/30 underline-offset-4">{authorName}</p>
+                    <p className="font-black text-[13px] tracking-tight group-hover/author:text-primary transition-colors">{authorName}</p>
                     {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
                 </div>
                 <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
@@ -223,84 +224,138 @@ function PostCard({ post }: { post: Post }) {
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
 
     return (
-        <Card className="glass border-primary/5 hover:border-primary/20 transition-all shadow-lg rounded-[2rem] overflow-hidden flex flex-col h-full group">
-            <CardContent className="p-6 flex-1 flex flex-col">
-                <div className="flex items-start justify-between mb-4">
-                    <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
-                    <div className="flex items-center gap-2">
-                        {post.postType && (
-                            <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-3 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest h-5">
-                                {post.postType}
-                            </Badge>
-                        )}
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10">
-                                    <MoreVertical className="h-4 w-4 text-muted-foreground" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl glass border-primary/5">
-                                {(isAuthor || isAdmin) ? (
-                                    <DropdownMenuItem onClick={handleDelete} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
-                                        <Trash2 className="h-4 w-4" /> Purge Post
-                                    </DropdownMenuItem>
-                                ) : (
-                                    <DropdownMenuItem onClick={handleReport} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
-                                        <Flag className="h-4 w-4" /> Report Content
-                                    </DropdownMenuItem>
-                                )}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                </div>
-                <div className="space-y-3 text-left flex-1">
-                    <h3 className="text-lg font-black font-headline leading-tight tracking-tighter text-foreground group-hover:text-primary transition-colors">{post.title}</h3>
-                    {post.content && <p className="text-muted-foreground text-xs font-medium leading-relaxed line-clamp-3">{post.content}</p>}
-                </div>
+        <motion.div
+            layout
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            whileHover={{ y: -4 }}
+            className="w-full"
+        >
+            <Card className="group relative overflow-hidden glass border-primary/10 hover:border-primary/30 transition-all duration-500 shadow-2xl rounded-[2.5rem] flex flex-col sm:flex-row h-full min-h-[320px]">
+                {/* Visual Identity Strip */}
+                <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-400 group-hover:w-2 transition-all duration-500 hidden sm:block"></div>
                 
-                {optimisticPoll && (
-                    <div className="mt-4 space-y-2">
-                        {optimisticPoll.options.slice(0, 2).map((option, index) => (
-                            <div key={index} className="relative h-10 w-full bg-muted/20 rounded-xl overflow-hidden border border-primary/5">
-                                <div className="absolute inset-y-0 left-0 bg-primary/10 transition-all duration-1000" style={{ width: `${totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0}%` }}></div>
-                                <div className="absolute inset-0 flex items-center justify-between px-4 text-[10px] font-black uppercase tracking-tight">
-                                    <span>{option.text}</span>
-                                    {userHasVotedOnPoll && <span>{totalVotes > 0 ? ((option.votes / totalVotes) * 100).toFixed(0) : 0}%</span>}
-                                </div>
-                            </div>
-                        ))}
+                {/* News Image Section (Left) */}
+                <div className="relative w-full sm:w-[300px] md:w-[380px] h-48 sm:h-auto overflow-hidden shrink-0">
+                    {post.image ? (
+                        <Image
+                            src={post.image}
+                            alt={post.title}
+                            fill
+                            className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 bg-primary/5 flex items-center justify-center">
+                            <Logo className="h-20 w-20 opacity-[0.05]" />
+                            <Newspaper className="h-16 w-16 text-primary/10 absolute animate-pulse" />
+                        </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent sm:hidden"></div>
+                    <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
+                        <Badge className="bg-primary text-white font-black text-[9px] uppercase tracking-[0.2em] shadow-2xl px-4 py-1.5 rounded-full backdrop-blur-md">
+                            {post.postType || 'Transmission'}
+                        </Badge>
                     </div>
-                )}
-            </CardContent>
-            <CardFooter className="px-6 py-4 bg-muted/5 border-t border-primary/5 flex justify-between items-center mt-auto">
-                <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" className="h-8 px-3 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-red-500/10 hover:text-red-500" onClick={handleLike}>
-                        <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-red-500 text-red-500 scale-110")} />
-                        <span>{optimisticLikes}</span>
-                    </Button>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10">
-                                <Share2 className="h-3.5 w-3.5" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl glass border-primary/5">
-                            <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
-                                <MessageCircle className="h-3.5 w-3.5 text-green-600" /> WhatsApp
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
-                                <Twitter className="h-3.5 w-3.5 text-blue-500" /> Twitter
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
                 </div>
-                <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary/10 active:translate-x-1 transition-all" asChild>
-                    <Link href="/dashboard/research-analytics">
-                        Inspect <ArrowRight className="h-3 w-3" />
-                    </Link>
-                </Button>
-            </CardFooter>
-        </Card>
+
+                {/* Content Section (Right) */}
+                <div className="flex-1 flex flex-col p-6 sm:p-10 text-left">
+                    <div className="flex items-center justify-between mb-6">
+                        <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
+                        <div className="flex items-center gap-2">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-2xl hover:bg-primary/5 active:scale-90 transition-all">
+                                        <MoreVertical className="h-5 w-5 text-muted-foreground" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-56 rounded-[1.5rem] p-3 shadow-2xl glass border-primary/5">
+                                    <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-2 px-2">Node Protocols</DropdownMenuLabel>
+                                    {(isAuthor || isAdmin) ? (
+                                        <DropdownMenuItem onClick={handleDelete} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
+                                            <Trash2 className="h-4 w-4" /> Purge from Registry
+                                        </DropdownMenuItem>
+                                    ) : (
+                                        <DropdownMenuItem onClick={handleReport} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
+                                            <Flag className="h-4 w-4" /> Flag for Audit
+                                        </DropdownMenuItem>
+                                    )}
+                                    <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3" onClick={() => handleShare('copy')}>
+                                        <Bookmark className="h-4 w-4" /> Save Citation
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4 flex-1 mb-8">
+                        <h3 className="text-2xl sm:text-4xl font-black font-headline leading-none tracking-tighter text-foreground group-hover:text-primary transition-colors duration-500 line-clamp-2">
+                            {post.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm sm:text-base font-medium leading-relaxed line-clamp-3">
+                            {post.content}
+                        </p>
+                        
+                        {post.tags && post.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-2 pt-2">
+                                {post.tags.map(tag => (
+                                    <span key={tag} className="text-[10px] font-black text-primary/60 uppercase tracking-widest bg-primary/5 px-3 py-1 rounded-lg border border-primary/10">#{tag}</span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Footer / Interaction Node */}
+                    <div className="flex items-center justify-between pt-8 border-t border-primary/5">
+                        <div className="flex items-center gap-4">
+                            <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className={cn(
+                                    "h-11 px-5 rounded-2xl font-black text-[11px] uppercase tracking-widest gap-3 transition-all active:scale-95 shadow-sm",
+                                    userHasLiked ? "bg-red-500 text-white shadow-red-500/20 hover:bg-red-600" : "bg-primary/5 hover:bg-primary/10 text-primary"
+                                )}
+                                onClick={handleLike}
+                                disabled={isLiking}
+                            >
+                                {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-current scale-110")} />}
+                                <span>{optimisticLikes} Impact</span>
+                            </Button>
+
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="h-11 w-11 rounded-2xl border-primary/10 hover:bg-primary/5 hover:border-primary/30 transition-all shadow-sm">
+                                        <Share2 className="h-4 w-4 text-primary" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start" className="w-56 rounded-[1.5rem] p-3 shadow-2xl glass border-primary/5">
+                                    <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
+                                        <MessageCircle className="h-4 w-4 text-green-600" /> WhatsApp
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
+                                        <Twitter className="h-4 w-4 text-blue-500" /> Twitter (X)
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
+                                        <LinkIcon className="h-4 w-4 text-primary" /> Copy Link
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+
+                        <Button 
+                            variant="ghost" 
+                            className="h-11 px-6 rounded-2xl font-black text-[11px] uppercase tracking-widest gap-3 hover:bg-primary hover:text-white transition-all group/btn shadow-xl hover:shadow-primary/20 active:translate-x-1"
+                            asChild
+                        >
+                            <Link href="/dashboard/research-analytics">
+                                Inspect Node <ChevronRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                            </Link>
+                        </Button>
+                    </div>
+                </div>
+            </Card>
+        </motion.div>
     );
 }
 
@@ -339,11 +394,13 @@ const aiFeatures = [
     },
 ];
 
-const SectionTitle = ({children}: {children: React.ReactNode}) => (
-    <div className="flex items-center gap-3 mb-6">
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/10 to-transparent"></div>
-        <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">{children}</h2>
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/10 to-transparent"></div>
+const SectionTitle = ({children, icon: Icon}: {children: React.ReactNode, icon?: any}) => (
+    <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+            {Icon && <Icon className="h-6 w-6 text-primary opacity-40" />}
+            <h2 className="text-xl sm:text-3xl font-black font-headline tracking-tighter text-foreground uppercase">{children}</h2>
+        </div>
+        <div className="h-px flex-1 bg-gradient-to-r from-primary/10 to-transparent ml-8 hidden sm:block"></div>
     </div>
 )
 
@@ -387,71 +444,70 @@ export default function DashboardHomePage() {
   }, [text, isTyping]);
 
   return (
-    <div className="flex flex-col h-full space-y-12 pb-20 max-w-7xl mx-auto px-2 sm:px-0 text-left">
+    <div className="flex flex-col h-full space-y-20 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
         <MotionWrapper>
-          <div className="relative p-8 sm:p-16 rounded-[2.5rem] overflow-hidden bg-primary/5 border border-primary/10 shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
+          <div className="relative p-8 sm:p-20 rounded-[3rem] overflow-hidden bg-primary/5 border border-primary/10 shadow-[0_50px_100px_rgba(0,0,0,0.05)] group">
               <NeuralRain />
-              <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
-                  <Landmark className="h-64 w-64" />
+              <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
+                  <Landmark className="h-80 w-80" />
               </div>
-              <div className="relative z-10 space-y-6">
-                  <div className="flex items-center gap-2 text-primary">
-                      <Sparkles className="h-4 w-4 animate-pulse" />
-                      <span className="text-[10px] font-black uppercase tracking-[0.3em]">Neural Terminal Active</span>
+              <div className="relative z-10 space-y-8">
+                  <div className="flex items-center gap-3 text-primary">
+                      <div className="p-2 rounded-xl bg-primary/10 animate-pulse">
+                        <Sparkles className="h-5 w-5" />
+                      </div>
+                      <span className="text-xs font-black uppercase tracking-[0.5em] leading-none">Institutional Node Alpha-4</span>
                   </div>
-                  <h1 className="text-4xl sm:text-7xl font-black font-headline tracking-tighter leading-none text-foreground">
+                  <h1 className="text-5xl sm:text-8xl font-black font-headline tracking-tighter leading-none text-foreground">
                       Welcome to <br />
                       <span className="bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">{text}</span>
                       <span className="animate-pulse ml-1 text-primary">|</span>
                   </h1>
-                  <p className="text-sm sm:text-xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
+                  <p className="text-base sm:text-2xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
                       Access high-fidelity legal intelligence and forensic tools designed for the modern Indian judicial landscape.
                   </p>
-                  <div className="flex flex-wrap gap-4 pt-4">
-                      <Button size="lg" className="rounded-2xl font-black uppercase tracking-widest text-xs px-8 h-14 shadow-2xl shadow-primary/20 active:scale-95 transition-all" asChild>
-                          <Link href="/dashboard/narrate">Initialize Narration</Link>
+                  <div className="flex flex-wrap gap-6 pt-6">
+                      <Button size="lg" className="rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[11px] px-10 h-16 shadow-2xl shadow-primary/20 active:scale-95 transition-all group/hero" asChild>
+                          <Link href="/dashboard/narrate">
+                            Initialize Narration <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover/hero:translate-x-2" />
+                          </Link>
                       </Button>
-                      <Button variant="outline" size="lg" className="rounded-2xl font-black uppercase tracking-widest text-xs px-8 h-14 border-primary/10 glass hover:bg-primary/5 active:scale-95 transition-all" asChild>
-                          <Link href="/dashboard/support">Institutional Support</Link>
+                      <Button variant="outline" size="lg" className="rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[11px] px-10 h-16 border-primary/10 glass hover:bg-primary/5 active:scale-95 transition-all" asChild>
+                          <Link href="/dashboard/support">Hub Support</Link>
                       </Button>
                   </div>
               </div>
           </div>
         </MotionWrapper>
 
-        <div className="space-y-16">
-          <section>
+        <div className="space-y-24">
+          <section id="transmissions">
               <MotionWrapper delay={0.1}>
-                <SectionTitle>Latest Community Transmissions</SectionTitle>
+                <SectionTitle icon={TrendingUp}>Latest Community Transmissions</SectionTitle>
               </MotionWrapper>
               
-              {postsLoading ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {[...Array(6)].map((_, i) => (
-                          <Card key={i} className="glass rounded-[2rem] h-48 animate-pulse border-primary/5" />
-                      ))}
-                  </div>
-              ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <AnimatePresence>
-                          {latestPosts.map((post, index) => (
-                              <motion.div
-                                  key={post.id}
-                                  initial={{ opacity: 0, scale: 0.95 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{ delay: index * 0.05 }}
-                              >
-                                  <PostCard post={post} />
-                              </motion.div>
+              <div className="grid grid-cols-1 gap-8">
+                  {postsLoading ? (
+                      <div className="space-y-8">
+                          {[...Array(3)].map((_, i) => (
+                              <Card key={i} className="glass rounded-[2.5rem] h-[320px] animate-pulse border-primary/5" />
                           ))}
-                      </AnimatePresence>
-                  </div>
-              )}
+                      </div>
+                  ) : (
+                      <div className="space-y-8">
+                          <AnimatePresence mode="popLayout">
+                              {latestPosts.map((post, index) => (
+                                  <PostCard key={post.id} post={post} />
+                              ))}
+                          </AnimatePresence>
+                      </div>
+                  )}
+              </div>
               
-              <div className="mt-8 flex justify-center">
-                  <Button variant="ghost" className="font-black uppercase tracking-widest text-[10px] gap-3 rounded-xl hover:bg-primary/5 group" asChild>
+              <div className="mt-12 flex justify-center">
+                  <Button variant="ghost" className="h-14 px-10 rounded-2xl font-black uppercase tracking-[0.3em] text-[11px] gap-4 hover:bg-primary/5 group transition-all" asChild>
                       <Link href="/dashboard/research-analytics">
-                          View All Community Data <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                          Sync Full Registry <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-2" />
                       </Link>
                   </Button>
               </div>
@@ -459,39 +515,43 @@ export default function DashboardHomePage() {
 
           <section>
               <MotionWrapper delay={0.3}>
-                <SectionTitle>Primary Forensic Audit Nodes</SectionTitle>
+                <SectionTitle icon={Zap}>Primary Forensic Audit Nodes</SectionTitle>
               </MotionWrapper>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <MotionWrapper delay={0.4}>
-                    <Link href="/dashboard/narrate" className="block group">
-                        <Card className="h-full glass hover:border-primary/30 transition-all duration-500 overflow-hidden relative group rounded-[2.5rem] shadow-xl">
-                            <CardContent className="p-10 flex items-center gap-8">
-                                <div className="p-6 rounded-[1.5rem] bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner ring-1 ring-primary/20">
-                                    <Mic className="h-10 w-10" />
+                    <Link href="/dashboard/narrate" className="block group h-full">
+                        <Card className="h-full glass hover:border-primary/30 transition-all duration-700 overflow-hidden relative group rounded-[3rem] shadow-2xl">
+                            <CardContent className="p-12 flex flex-col sm:flex-row items-center gap-10">
+                                <div className="p-8 rounded-[2rem] bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-700 shadow-inner ring-1 ring-primary/20 shrink-0">
+                                    <Mic className="h-12 w-12" />
                                 </div>
-                                <div className="space-y-2 flex-1">
-                                    <h3 className="text-2xl font-black tracking-tight">Narrate Case Problem</h3>
-                                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] opacity-60">Forensic Voice Summary Unit</p>
-                                    <p className="text-xs text-muted-foreground font-medium leading-relaxed max-w-xs">Convert natural speech into a structured statutory report with identified IPC/BNSS violations.</p>
+                                <div className="space-y-3 flex-1 text-center sm:text-left">
+                                    <h3 className="text-3xl font-black tracking-tighter">Narrate Case Problem</h3>
+                                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.3em] opacity-60">Voice Summary Unit NS-V1</p>
+                                    <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-sm">Convert natural speech into a structured statutory report with identified IPC/BNSS violations.</p>
+                                    <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest pt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        Initialize Protocol <ArrowRight className="h-3 w-3" />
+                                    </div>
                                 </div>
-                                <ArrowRight className="h-6 w-6 text-primary opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
                             </CardContent>
                         </Card>
                     </Link>
                   </MotionWrapper>
                   <MotionWrapper delay={0.5}>
-                    <Link href="/dashboard/document-intelligence" className="block group">
-                        <Card className="h-full glass hover:border-emerald-500/30 transition-all duration-500 overflow-hidden relative group rounded-[2.5rem] shadow-xl">
-                            <CardContent className="p-10 flex items-center gap-8">
-                                <div className="p-6 rounded-[1.5rem] bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-500 shadow-inner ring-1 ring-emerald-500/20">
-                                    <Search className="h-10 w-10" />
+                    <Link href="/dashboard/document-intelligence" className="block group h-full">
+                        <Card className="h-full glass hover:border-emerald-500/30 transition-all duration-700 overflow-hidden relative group rounded-[3rem] shadow-2xl">
+                            <CardContent className="p-12 flex flex-col sm:flex-row items-center gap-10">
+                                <div className="p-8 rounded-[2rem] bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-700 shadow-inner ring-1 ring-emerald-500/20 shrink-0">
+                                    <Search className="h-12 w-12" />
                                 </div>
-                                <div className="space-y-2 flex-1">
-                                    <h3 className="text-2xl font-black tracking-tight">Document Intelligence</h3>
-                                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] opacity-60">Neural Risk Assessment Node</p>
-                                    <p className="text-xs text-muted-foreground font-medium leading-relaxed max-w-xs">Perform a deep-layer forensic audit of legal contracts to detect hidden liabilities and deadlines.</p>
+                                <div className="space-y-3 flex-1 text-center sm:text-left">
+                                    <h3 className="text-3xl font-black tracking-tighter">Document Intelligence</h3>
+                                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.3em] opacity-60">Risk Audit Node NS-D2</p>
+                                    <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-sm">Perform a deep-layer forensic audit of legal contracts to detect hidden liabilities and deadlines.</p>
+                                    <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest pt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        Initialize Protocol <ArrowRight className="h-3 w-3" />
+                                    </div>
                                 </div>
-                                <ArrowRight className="h-6 w-6 text-emerald-600 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
                             </CardContent>
                         </Card>
                     </Link>
@@ -501,20 +561,20 @@ export default function DashboardHomePage() {
 
           <section>
               <MotionWrapper delay={0.6}>
-                <SectionTitle>Institutional AI Toolkit</SectionTitle>
+                <SectionTitle icon={Sparkles}>Institutional AI Toolkit</SectionTitle>
               </MotionWrapper>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                   {aiFeatures.map((feature, index) => (
                     <MotionWrapper key={feature.href} delay={0.7 + index * 0.1}>
                       <Link href={feature.href} className="block group h-full">
-                          <Card className="h-full glass p-8 flex flex-col items-start hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 active:scale-[0.97] rounded-[2rem] border-primary/5">
-                              <div className={cn("p-4 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm ring-1 ring-white/10", feature.bg, feature.color)}>
-                                <feature.icon className="h-6 w-6" />
+                          <Card className="h-full glass p-8 sm:p-10 flex flex-col items-start hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-700 active:scale-[0.97] rounded-[2.5rem] border-primary/5">
+                              <div className={cn("p-5 rounded-2xl mb-8 group-hover:scale-110 transition-transform duration-700 shadow-sm ring-1 ring-white/10", feature.bg, feature.color)}>
+                                <feature.icon className="h-7 w-7" />
                               </div>
-                              <h3 className="font-black text-lg tracking-tight leading-tight">{feature.title}</h3>
-                              <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed font-bold uppercase tracking-widest opacity-60">{feature.description}</p>
-                              <div className="mt-6 flex items-center text-[9px] font-black text-primary uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity">
-                                Initialize Node <ArrowRight className="ml-2 h-3 w-3" />
+                              <h3 className="font-black text-xl tracking-tight leading-tight mb-3">{feature.title}</h3>
+                              <p className="text-[10px] text-muted-foreground leading-relaxed font-bold uppercase tracking-widest opacity-60 mb-8">{feature.description}</p>
+                              <div className="mt-auto flex items-center text-[10px] font-black text-primary uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-opacity">
+                                Initialize <ArrowRight className="ml-3 h-3.5 w-3.5" />
                               </div>
                           </Card>
                       </Link>
@@ -525,26 +585,29 @@ export default function DashboardHomePage() {
 
           <section>
             <MotionWrapper delay={0.8}>
-              <SectionTitle>Platform Infrastructure & Resources</SectionTitle>
+              <SectionTitle icon={Library}>Platform Infrastructure</SectionTitle>
             </MotionWrapper>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
               {[
-                { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", desc: "Constitutional and statutory forensic guides." },
-                { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, title: "Legal Aid Node", desc: "Connect with verified pro-bono organizations." },
-                { href: "/dashboard/my-cases", icon: Landmark, title: "Case Registry", desc: "Secure synchronization with official eCourts." },
+                { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", desc: "Statutory forensic guides." },
+                { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, title: "Legal Aid Node", desc: "Verified pro-bono orgs." },
+                { href: "/dashboard/my-cases", icon: Landmark, title: "Case Registry", desc: "eCourts synchronization." },
               ].map((item, index) => (
                 <MotionWrapper key={item.href} delay={0.9 + index * 0.1}>
-                  <Link href={item.href} className="block group">
-                    <Card className="glass group-hover:border-primary/30 transition-all duration-500 rounded-[2rem] shadow-lg hover:shadow-2xl border-primary/5">
-                      <CardContent className="p-8 text-left">
-                        <div className="flex items-center gap-5">
-                          <div className="p-4 rounded-2xl bg-muted group-hover:bg-primary/10 group-hover:text-primary transition-colors shadow-inner ring-1 ring-black/5">
-                            <item.icon className="h-6 w-6" />
+                  <Link href={item.href} className="block group h-full">
+                    <Card className="h-full glass group-hover:border-primary/30 transition-all duration-700 rounded-[2.5rem] shadow-xl hover:shadow-2xl border-primary/5 overflow-hidden">
+                      <CardContent className="p-10 text-left relative">
+                        <div className="flex items-center gap-6 relative z-10">
+                          <div className="p-5 rounded-2xl bg-muted group-hover:bg-primary/10 group-hover:text-primary transition-all duration-500 shadow-inner ring-1 ring-black/5">
+                            <item.icon className="h-7 w-7" />
                           </div>
-                          <div className="min-w-0 space-y-1">
-                            <h3 className="font-black text-base tracking-tight truncate">{item.title}</h3>
+                          <div className="min-w-0 space-y-1.5">
+                            <h3 className="font-black text-xl tracking-tight truncate">{item.title}</h3>
                             <p className="text-[10px] text-muted-foreground font-bold truncate uppercase tracking-widest opacity-60">{item.desc}</p>
                           </div>
+                        </div>
+                        <div className="absolute top-0 right-0 p-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
+                            <item.icon className="h-20 w-20" />
                         </div>
                       </CardContent>
                     </Card>
@@ -556,9 +619,19 @@ export default function DashboardHomePage() {
         </div>
 
         <MotionWrapper delay={1.2}>
-            <div className="pt-12 text-center border-t border-primary/5">
-                <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/40 mb-2">Institutional System ID: NS-ALPHA-NODE-001</p>
-                <p className="text-[10px] font-bold text-primary/60 italic">"Engineering Dignity through Precise Legal Intelligence."</p>
+            <div className="pt-20 text-center border-t border-primary/5 flex flex-col items-center gap-6">
+                <div className="bg-primary/5 p-4 rounded-2xl">
+                    <Logo className="h-10 w-10 opacity-40 grayscale" />
+                </div>
+                <div className="space-y-2">
+                    <p className="text-[10px] font-black uppercase tracking-[0.6em] text-muted-foreground/40">Institutional Terminal // NYAYASAHAYAK.IN</p>
+                    <p className="text-xs font-bold text-primary/60 italic">"Engineering Dignity through Precise Neural Legal Intelligence."</p>
+                </div>
+                <div className="flex items-center gap-4 pt-4 opacity-20">
+                    <div className="h-1 w-1 rounded-full bg-primary"></div>
+                    <div className="h-1 w-1 rounded-full bg-primary"></div>
+                    <div className="h-1 w-1 rounded-full bg-primary"></div>
+                </div>
             </div>
         </MotionWrapper>
     </div>
