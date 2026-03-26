@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
-import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, writeBatch } from "firebase/firestore";
 import { ref, remove, update } from "firebase/database";
 import { 
   Users, 
@@ -34,7 +34,8 @@ import {
   Activity,
   QrCode,
   Fingerprint,
-  Cpu
+  Cpu,
+  Eraser
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -176,6 +177,7 @@ export default function ManagementConsolePage() {
   const [searchQuery, setSearchSearchQuery] = useState("");
   const [processingUid, setProcessingUid] = useState<string | null>(null);
   const [userToPurge, setUserToPurge] = useState<UserRecord | null>(null);
+  const [isMassPurging, setIsMassPurging] = useState(false);
   
   const unsubscribeRef = useRef<(() => void) | null>(null);
 
@@ -220,11 +222,6 @@ export default function ManagementConsolePage() {
   }, [firestore, auth, router, toast]);
 
   const handleToggleStatus = (user: UserRecord, isInactive: boolean) => {
-    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
-        toast({ variant: "destructive", title: "Root Account Locked" });
-        return;
-    }
-    
     setProcessingUid(user.uid);
     const updateData = { isBlocked: isInactive };
     updateDoc(doc(firestore, "users", user.uid), updateData)
@@ -264,18 +261,12 @@ export default function ManagementConsolePage() {
     if (!userToPurge) return;
     const user = userToPurge;
     
-    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
-        toast({ variant: "destructive", title: "Node Immutable", description: "Root accounts cannot be purged." });
-        setUserToPurge(null);
-        return;
-    }
-
     setProcessingUid(user.uid);
     
     deleteDoc(doc(firestore, "users", user.uid))
         .then(() => {
             remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
-            toast({ title: "Registry Node Purged", description: `Record for ${user.firstName} erased.` });
+            toast({ title: "Registry Node Purged", description: `Record for ${user.firstName} erased permanently.` });
         })
         .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -289,6 +280,26 @@ export default function ManagementConsolePage() {
             setUserToPurge(null);
         });
   };
+
+  const handleMassPurgeCitizens = async () => {
+      setIsMassPurging(true);
+      try {
+          const batch = writeBatch(firestore);
+          const citizens = users.filter(u => u.userType === 'citizen' && !ADMIN_EMAILS.includes(u.email.toLowerCase()));
+          
+          citizens.forEach(u => {
+              batch.delete(doc(firestore, "users", u.uid));
+              remove(ref(rtdb, `users/${u.uid}`)).catch(() => {});
+          });
+
+          await batch.commit();
+          toast({ title: "Mass Purge Complete", description: `${citizens.length} citizen nodes erased.` });
+      } catch (error) {
+          toast({ variant: "destructive", title: "Mass Purge Failed" });
+      } finally {
+          setIsMassPurging(false);
+      }
+  }
 
   const filteredUsers = users.filter(u => 
     `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -307,9 +318,25 @@ export default function ManagementConsolePage() {
           <p className="text-xs sm:text-sm text-muted-foreground font-medium">Institutional oversight of nyayasahayak.in nodes and identity records.</p>
         </div>
         <div className="flex gap-2 sm:gap-3">
-            <Button variant="outline" className="h-10 sm:h-11 px-4 sm:px-6 border-primary/10 rounded-xl font-bold bg-background text-[10px] sm:text-xs">
-                <Sparkles className="mr-2 h-3 w-3 sm:h-4 sm:w-4 text-primary" /> Registry Audit
-            </Button>
+            <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button variant="outline" className="h-10 sm:h-11 px-4 sm:px-6 border-destructive/20 text-destructive rounded-xl font-bold bg-destructive/5 text-[10px] sm:text-xs">
+                        <Eraser className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Mass Purge Citizens
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="rounded-[2.5rem] p-8 border-none shadow-2xl glass">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Execute Mass Decommission?</AlertDialogTitle>
+                        <AlertDialogDescription className="text-center text-sm font-medium">
+                            This will permanently delete ALL non-admin citizen accounts from the registry. This action is terminal.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="mt-6 gap-3">
+                        <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1">Abort</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleMassPurgeCitizens} className="bg-destructive text-white font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px]">Confirm Mass Purge</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
             <Button className="bg-primary text-white h-10 sm:h-11 px-4 sm:px-6 rounded-xl font-bold shadow-lg shadow-primary/20 text-[10px] sm:text-xs">
                 <UserPlus className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Manual Entry
             </Button>
@@ -348,7 +375,6 @@ export default function ManagementConsolePage() {
                       </TableHeader>
                       <TableBody>
                           {filteredUsers.map((user) => {
-                              const isRoot = ADMIN_EMAILS.includes(user.email.toLowerCase());
                               const isActive = user.isBlocked === false || user.isBlocked === undefined;
                               return (
                                 <TableRow key={user.uid} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", !isActive && "bg-red-500/5")}>
@@ -375,7 +401,7 @@ export default function ManagementConsolePage() {
                                             <Switch 
                                                 checked={isActive} 
                                                 onCheckedChange={(checked) => handleToggleStatus(user, !checked)}
-                                                disabled={isRoot || processingUid === user.uid}
+                                                disabled={processingUid === user.uid}
                                                 className="data-[state=checked]:bg-green-500"
                                             />
                                         </div>
@@ -407,7 +433,7 @@ export default function ManagementConsolePage() {
                                                     <DropdownMenuItem 
                                                         className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
                                                         onClick={() => setUserToPurge(user)}
-                                                        disabled={isRoot || processingUid === user.uid}
+                                                        disabled={processingUid === user.uid}
                                                     >
                                                         <Trash2 className="mr-3 h-4 w-4" /> Purge Registry Node
                                                     </DropdownMenuItem>
@@ -433,7 +459,7 @@ export default function ManagementConsolePage() {
                   </div>
                   <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Institutional Purge</AlertDialogTitle>
                   <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
-                      This protocol will permanently erase <strong>{userToPurge?.firstName} {userToPurge?.lastName}</strong> from the nyayasahayak.in registry. This action is terminal and irreversible.
+                      This protocol will permanently erase <strong>{userToPurge?.firstName} {userToPurge?.lastName}</strong> from the registry. This action is terminal and irreversible.
                   </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6">
