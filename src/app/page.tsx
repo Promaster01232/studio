@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ import { PublicHeader } from "@/components/public-header";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const NeuralRain = () => {
   return (
@@ -296,15 +298,83 @@ export default function WelcomePage() {
                 >
                     <div className="absolute -inset-10 bg-primary/5 rounded-full blur-[100px] animate-pulse"></div>
                     <Card className="glass rounded-[3.5rem] p-1 border-primary/10 shadow-3xl relative z-10 overflow-hidden">
-                        <div className="bg-muted/30 aspect-square rounded-[3.2rem] flex items-center justify-center relative group overflow-hidden">
-                            <Logo className="h-48 w-48 opacity-[0.05] grayscale group-hover:scale-110 transition-transform duration-1000" />
-                            <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center space-y-6">
-                                <BadgeCheck className="h-16 w-16 text-primary mb-2" />
-                                <p className="text-xl font-black font-headline tracking-tighter leading-tight italic">
-                                    "Engineering Dignity through Precise Neural Legal Intelligence."
-                                </p>
-                                <div className="h-px w-12 bg-primary/20"></div>
-                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Registry Certified Node</p>
+                        <div className="bg-muted/30 min-h-[600px] rounded-[3.2rem] flex flex-col items-center relative group overflow-hidden">
+                            <Logo className="h-48 w-48 opacity-[0.05] grayscale group-hover:scale-110 transition-transform duration-1000 mt-12" />
+                            
+                            <div className="absolute inset-0 flex flex-col p-8 sm:p-12 text-left space-y-6">
+                                <div className="flex items-center justify-between border-b border-primary/10 pb-4 mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <BadgeCheck className="h-8 w-8 text-primary" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Registry Certified Overview</span>
+                                    </div>
+                                    <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                                </div>
+
+                                <ScrollArea className="flex-1 pr-4 custom-scrollbar">
+                                    <div className="prose dark:prose-invert prose-sm max-w-none space-y-8 pb-10">
+                                        <p className="text-xl font-black font-headline tracking-tighter leading-tight italic text-foreground border-l-4 border-primary pl-6 py-2 bg-primary/5 rounded-r-xl">
+                                            "Engineering Dignity through Precise Neural Legal Intelligence. We are deconstructing the judicial barriers of the past."
+                                        </p>
+
+                                        <div className="space-y-4">
+                                            <h4 className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                                <Zap className="h-3 w-3" /> The Era of Digital Justice
+                                            </h4>
+                                            <p className="text-muted-foreground font-medium leading-relaxed">
+                                                Nyaya Sahayak represents a revolutionary leap in the democratization of legal intelligence within the Indian judicial ecosystem. Founded on the principle that justice should not be a commodity reserved for those with extensive resources, our platform leverages state-of-the-art neural processing to bridge the profound gap between complex statutory protocols and the everyday needs of the Indian citizen. At its core, Nyaya Sahayak is an institutional forensic terminal—a sophisticated digital node engineered to deconstruct the intricacies of the law into actionable, high-fidelity guidance.
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <h4 className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                                <Mic className="h-3 w-3" /> Neural Voice Narration (Node NS-V1)
+                                            </h4>
+                                            <p className="text-muted-foreground font-medium leading-relaxed">
+                                                One of our primary pillars of intelligence is the Neural Voice Narrator. This system transforms natural speech into structured forensic reports. By speaking directly to the terminal, users can narrate their legal grievances in their native tongue. Our engine then performs a deep-layer audit, identifying relevant sections of the Indian Penal Code (IPC) or the newly enacted Bharatiya Nyaya Sanhita (BNS), providing a word-for-word transcription alongside a simplified layman's summary. This removes the primary barrier to entry for many citizens: the ability to articulate a legal problem in formal statutory terms.
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <h4 className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                                <FileSearch className="h-3 w-3" /> Document Risk Node (Node NS-D2)
+                                            </h4>
+                                            <p className="text-muted-foreground font-medium leading-relaxed">
+                                                In a landscape where legal instruments are often laden with opaque clauses and hidden liabilities, our OCR-powered scanner provides a multi-stage forensic audit. By uploading a contract, notice, or petition, citizens receive an instantaneous breakdown of potential risks, critical deadlines, and mandated procedural actions. This node ensures that no individual is ever forced to sign or respond to a document they do not fully comprehend, effectively mitigating the power imbalance inherent in many legal transactions.
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <h4 className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                                <BrainCircuit className="h-3 w-3" /> Case Strength Matrix
+                                            </h4>
+                                            <p className="text-muted-foreground font-medium leading-relaxed">
+                                                The third pillar of our intelligence suite is the Case Strength Matrix. This probabilistic assessment engine evaluates ongoing or potential litigation by analyzing historical precedents, evidence availability, and jurisdictional factors. The resulting strength score is not merely a number; it is accompanied by a comprehensive list of risk indicators and recommended strategies to improve the case's standing. This allows citizens to make informed decisions about whether to pursue litigation or seek alternative dispute resolution, potentially saving thousands of hours and significant financial resources.
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <h4 className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                                <StepForward className="h-3 w-3" /> Procedural Roadmap Protocols
+                                            </h4>
+                                            <p className="text-muted-foreground font-medium leading-relaxed">
+                                                The Indian judicial complex is notoriously difficult to navigate, with a labyrinth of filing requirements, court etiquette, and jurisdictional nuances. Nyaya Sahayak generates personalized, step-by-step navigation cycles that guide the user from the initial police complaint to the final courtroom decree. These roadmaps are dynamic, updating in real-time as new information becomes available, and are paired with extensive guides on courtroom decorum and police interaction protocols.
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <h4 className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                                <Fingerprint className="h-3 w-3" /> Technical Sovereignty & Security
+                                            </h4>
+                                            <p className="text-muted-foreground font-medium leading-relaxed">
+                                                Security and data sovereignty are the cornerstones of our operational protocol. We operate on a 'Zero-Knowledge' and 'Zero-Sale' commitment. User data, including sensitive voice narrations and legal documents, are encrypted at rest using industry-standard AES-256 algorithms and tunneled through TLS 1.3. We do not monetize user behavior or train global LLM models on private citizen data. We are fully compliant with the Digital Personal Data Protection Act (DPDP), 2023, ensuring that your data remains your sovereign asset, protected within our institutional vault.
+                                            </p>
+                                        </div>
+
+                                        <div className="pt-6 border-t border-primary/5">
+                                            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 text-center">End of Transmission // Node Active</p>
+                                        </div>
+                                    </div>
+                                </ScrollArea>
                             </div>
                         </div>
                     </Card>
