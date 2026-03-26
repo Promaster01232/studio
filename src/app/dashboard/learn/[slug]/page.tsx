@@ -105,31 +105,6 @@ export default function LearnTopicDetailPage() {
                                     <div className="whitespace-pre-line leading-loose text-base sm:text-lg font-medium">
                                         {localizedContent}
                                     </div>
-                                    
-                                    <div className="mt-20 pt-16 border-t border-primary/5 bg-primary/5 rounded-[3rem] p-10 sm:p-16 relative overflow-hidden">
-                                        <div className="absolute top-0 right-0 p-12 opacity-[0.03]">
-                                            <Scale className="h-40 w-40" />
-                                        </div>
-                                        <div className="relative z-10 text-center sm:text-left space-y-8">
-                                            <div className="space-y-4">
-                                                <h3 className="text-3xl font-black tracking-tighter flex items-center justify-center sm:justify-start gap-4">
-                                                    <ShieldCheck className="h-8 w-8 text-green-600 animate-bounce" />
-                                                    Compliance Mandate
-                                                </h3>
-                                                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed font-medium max-w-3xl">
-                                                    The information provided in this module is for institutional education and navigational purposes on **nyayasahayak.in**. While audited for forensic accuracy, judicial amendments are dynamic. Users are mandated to connect with our **Verified Advocate Registry** for personalized litigation strategy.
-                                                </p>
-                                            </div>
-                                            <div className="flex flex-col sm:flex-row gap-4">
-                                                <Button asChild size="lg" className="h-16 px-10 rounded-[1.5rem] font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary/20 active:scale-95 transition-all">
-                                                    <Link href="/dashboard/lawyer-connect">Connect with Verified Advocate</Link>
-                                                </Button>
-                                                <Button variant="outline" asChild size="lg" className="h-16 px-10 rounded-[1.5rem] font-black uppercase tracking-widest text-xs border-primary/10 glass hover:bg-primary/5 active:scale-95 transition-all">
-                                                    <Link href="/dashboard/narrate">Initialize Case Narrator</Link>
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 

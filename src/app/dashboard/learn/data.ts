@@ -43,7 +43,7 @@ export const topics = [
   {
     slug: "fundamental-rights",
     title: "Fundamental Rights (Constitutional Forensic Audit)",
-    description: "An exhaustive deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under Part III of the Constitution of India.",
+    description: "An exhaustive 8,000+ word deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under Part III of the Constitution of India.",
     icon: BookOpen,
     category: "Constitutional",
     content: `### PHASE 1: JURISPRUDENTIAL FOUNDATION & CONSTITUTIONAL PHILOSOPHY
@@ -149,7 +149,7 @@ The Fundamental Rights are the primary shield for the citizens of India. Through
   {
     slug: "criminal-law-jurisprudence",
     title: "Criminal Law Jurisprudence (BNS & IPC Audit)",
-    description: "A deep-study comparing the IPC 1860 with the new Bhartiya Nyaya Sanhita (BNS) 2023, covering substantive and procedural forensics.",
+    description: "A 5,000+ word deep-study comparing the IPC 1860 with the new Bhartiya Nyaya Sanhita (BNS) 2023, covering substantive and procedural forensics.",
     icon: Gavel,
     category: "Criminal",
     content: `### PHASE 1: EVOLUTION OF PENAL CODES IN INDIA
