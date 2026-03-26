@@ -406,32 +406,32 @@ export default function DashboardHomePage() {
               <section>
                   <SectionHeader icon={TrendingUp} sector="Sector: Community">Live Transmission Stream</SectionHeader>
                   
-                  {/* Quick Post Card */}
-                  <Card className="mb-8 glass border-primary/10 shadow-xl rounded-2xl overflow-hidden group">
-                    <CardContent className="p-4 sm:p-6">
-                        <div className="flex items-center gap-4">
-                            <Avatar className="h-10 w-10 border border-primary/10 shadow-lg rounded-xl shrink-0">
-                                {userProfile?.photoURL ? (
-                                    <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                                ) : (
-                                    <AvatarFallback className="font-black bg-primary/10 text-primary"><User className="h-5 w-5"/></AvatarFallback>
-                                )}
-                            </Avatar>
-                            <Link 
-                                href="/dashboard/research-analytics/new"
-                                className="flex-1 text-left bg-muted/40 hover:bg-muted/60 text-muted-foreground font-bold rounded-xl px-5 py-3 transition-all text-xs border border-primary/5 active:scale-[0.99] flex items-center justify-between"
-                            >
-                                <span>Initialize transmission...</span>
-                                <PlusCircle className="h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity" />
-                            </Link>
-                            <Button asChild size="icon" className="h-10 w-10 rounded-xl shrink-0 shadow-xl shadow-primary/20 active:scale-95 transition-all">
-                                <Link href="/dashboard/research-analytics/new">
-                                    <Plus className="h-5 w-5"/>
-                                </Link>
-                            </Button>
-                        </div>
-                    </CardContent>
-                  </Card>
+                  {/* Community Ingest Node (Quick Post) */}
+                  <MotionWrapper delay={0.1}>
+                    <Link href="/dashboard/research-analytics/new" className="block mb-8">
+                        <Card className="glass border-primary/10 shadow-xl rounded-[1.5rem] overflow-hidden group hover:border-primary/30 transition-all cursor-pointer active:scale-[0.99]">
+                            <CardContent className="p-5 flex items-center gap-5">
+                                <div className="relative shrink-0">
+                                    <Avatar className="h-12 w-12 border-2 border-background shadow-lg rounded-xl group-hover:rotate-3 transition-transform duration-500">
+                                        {userProfile?.photoURL ? (
+                                            <AvatarImage src={userProfile.photoURL} className="object-cover" />
+                                        ) : (
+                                            <AvatarFallback className="font-black bg-primary/10 text-primary uppercase">{userProfile?.firstName?.charAt(0) || 'U'}</AvatarFallback>
+                                        )}
+                                    </Avatar>
+                                    <div className="absolute -bottom-1 -right-1 bg-green-500 h-3.5 w-3.5 rounded-full border-2 border-background shadow-sm"></div>
+                                </div>
+                                <div className="flex-1 text-left min-w-0">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1 leading-none">Community Node</p>
+                                    <p className="text-sm font-bold text-muted-foreground group-hover:text-foreground transition-colors truncate">Initialize a new transmission or institutional poll...</p>
+                                </div>
+                                <div className="h-12 w-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-all">
+                                    <Plus className="h-6 w-6" />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </Link>
+                  </MotionWrapper>
 
                   <div className="space-y-6">
                       {postsLoading ? (
