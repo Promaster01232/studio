@@ -34,6 +34,10 @@ import {
   TrendingUp,
   Newspaper,
   Link as LinkIcon,
+  Plus,
+  Bot,
+  X,
+  Send
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -67,6 +71,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { Logo } from "@/components/logo";
 
@@ -375,6 +388,71 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     );
 }
 
+function FloatingActionNodes() {
+    return (
+        <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-[100]">
+            <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            >
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button 
+                            size="icon" 
+                            className="h-14 w-14 rounded-full shadow-2xl shadow-primary/40 bg-primary text-white hover:scale-110 active:scale-95 transition-all group"
+                        >
+                            <Bot className="h-6 w-6 group-hover:animate-bounce" />
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md rounded-[2.5rem] glass shadow-2xl border-primary/10">
+                        <DialogHeader>
+                            <div className="flex items-center gap-3 mb-2 text-primary">
+                                <Bot className="h-6 w-6" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em]">AI Platform Assistant</span>
+                            </div>
+                            <DialogTitle className="text-2xl font-black tracking-tighter leading-none">Institutional Query Unit</DialogTitle>
+                            <DialogDescription className="font-medium text-xs">
+                                Ask any question regarding nyayasahayak.in protocols or statutory tools.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-6 py-6">
+                            <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 text-xs font-medium leading-relaxed italic text-muted-foreground">
+                                "Initialize question transmission below. Our neural engine will deconstruct your query and provide institutional guidance."
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Input placeholder="Type your institutional query..." className="h-12 glass border-primary/5 rounded-xl font-bold" />
+                                <Button size="icon" className="h-12 w-12 rounded-xl shadow-lg shadow-primary/20">
+                                    <Send className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="flex justify-center border-t border-primary/5 pt-4">
+                            <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">NS-NODE-GUIDE // SECURE SESSION ACTIVE</p>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            </motion.div>
+
+            <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+            >
+                <Button 
+                    asChild
+                    size="icon" 
+                    className="h-14 w-14 rounded-full shadow-2xl shadow-accent/40 bg-accent text-white hover:scale-110 active:scale-95 transition-all group"
+                >
+                    <Link href="/dashboard/research-analytics/new">
+                        <Plus className="h-6 w-6 group-hover:rotate-90 transition-transform duration-500" />
+                    </Link>
+                </Button>
+            </motion.div>
+        </div>
+    );
+}
+
 const aiFeatures = [
     {
       href: "/dashboard/strength-analyzer",
@@ -473,7 +551,7 @@ export default function DashboardHomePage() {
   }, [text, isTyping]);
 
   return (
-    <div className="flex flex-col h-full space-y-20 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
+    <div className="flex flex-col h-full space-y-20 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left relative">
         <MotionWrapper>
           <div className="relative p-8 sm:p-20 rounded-[3rem] overflow-hidden bg-primary/5 border border-primary/10 shadow-[0_50px_100px_rgba(0,0,0,0.05)] group">
               <NeuralRain />
@@ -663,6 +741,8 @@ export default function DashboardHomePage() {
                 </div>
             </div>
         </MotionWrapper>
+
+        <FloatingActionNodes />
     </div>
   );
 }
