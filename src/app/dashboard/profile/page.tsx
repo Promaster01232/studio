@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -64,7 +63,7 @@ export function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, ph
 
     return (
         <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="relative w-full max-w-md mx-auto aspect-[1.6/1] rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden shadow-2xl group active:scale-[0.98] transition-transform cursor-pointer"
         >
@@ -101,14 +100,14 @@ export function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, ph
                 </div>
 
                 <div className="flex gap-3 sm:gap-5 items-center">
-                    <div className="relative">
+                    <div className="relative shrink-0">
                         <div className="absolute -inset-1 rounded-xl sm:rounded-2xl bg-primary/20 animate-pulse group-hover:scale-110 transition-transform"></div>
                         {photoURL ? (
-                            <Avatar className="h-14 w-14 sm:h-20 w-20 border-2 border-white/20 rounded-xl sm:rounded-2xl shadow-xl relative z-10">
+                            <Avatar className="h-12 w-12 sm:h-20 w-20 border-2 border-white/20 rounded-xl sm:rounded-2xl shadow-xl relative z-10">
                                 <AvatarImage src={photoURL} className="object-cover" />
                             </Avatar>
                         ) : (
-                            <div className="h-14 w-14 sm:h-20 w-20 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center border-2 border-white/10 shadow-xl relative z-10">
+                            <div className="h-12 w-12 sm:h-20 w-20 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center border-2 border-white/10 shadow-xl relative z-10">
                                 <User className="h-6 w-6 sm:h-8 sm:w-8 opacity-20" />
                             </div>
                         )}
@@ -120,39 +119,39 @@ export function DigitalIDCard({ user, photoURL }: { user: UserProfile | null, ph
                     </div>
                     
                     <div className="flex-1 text-left min-w-0">
-                        <h2 className="text-sm sm:text-xl font-black tracking-tight leading-tight truncate">
+                        <h2 className="text-xs sm:text-xl font-black tracking-tight leading-tight truncate">
                             {user.firstName} {user.lastName}
                         </h2>
                         <div className="flex items-center gap-1.5 sm:gap-2 mt-1">
-                            <Badge variant="outline" className="bg-white/5 border-white/10 text-[7px] sm:text-[8px] font-black uppercase tracking-widest px-1.5 sm:px-2 text-white/80 h-4 sm:h-5">
+                            <Badge variant="outline" className="bg-white/5 border-white/10 text-[6px] sm:text-[8px] font-black uppercase tracking-widest px-1 sm:px-2 text-white/80 h-3.5 sm:h-5">
                                 {user.userType}
                             </Badge>
-                            <span className="text-[8px] sm:text-[9px] font-black font-mono text-primary tracking-wider uppercase bg-primary/10 px-1.5 sm:px-2 py-0.5 rounded-md border border-primary/20 shadow-sm">{systemID}</span>
+                            <span className="text-[7px] sm:text-[9px] font-black font-mono text-primary tracking-wider uppercase bg-primary/10 px-1 sm:px-2 py-0.5 rounded-md border border-primary/20 shadow-sm">{systemID}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex justify-between items-end border-t border-white/5 pt-3 sm:pt-4">
-                    <div className="flex gap-3 sm:gap-4">
+                <div className="flex justify-between items-end border-t border-white/5 pt-2 sm:pt-4">
+                    <div className="flex gap-2 sm:gap-4">
                         <div className="space-y-0.5">
-                            <p className="text-[5px] sm:text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Security Clearance</p>
+                            <p className="text-[4px] sm:text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Security Clearance</p>
                             <div className="flex items-center gap-1">
                                 <div className={cn("h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full shadow-[0_0_8px_currentColor]", isVerified ? "bg-green-500 animate-ping" : "bg-red-500")}></div>
-                                <p className={cn("text-[7px] sm:text-[8px] font-bold uppercase tracking-widest", isVerified ? "text-green-600" : "text-red-500")}>
+                                <p className={cn("text-[6px] sm:text-[8px] font-bold uppercase tracking-widest", isVerified ? "text-green-600" : "text-red-500")}>
                                     {isVerified ? "Authorized Node" : "Pending Audit"}
                                 </p>
                             </div>
                         </div>
                         <div className="space-y-0.5">
-                            <p className="text-[5px] sm:text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Node Registry</p>
-                            <p className="text-[7px] sm:text-[8px] font-bold uppercase tracking-widest text-white/60">
+                            <p className="text-[4px] sm:text-[6px] font-black text-white/30 uppercase tracking-[0.2em]">Node Registry</p>
+                            <p className="text-[6px] sm:text-[8px] font-bold uppercase tracking-widest text-white/60">
                                 {new Date().getFullYear()} RE-SYNC
                             </p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                    <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
                         <Globe className="h-2 w-2 sm:h-3 sm:w-3 text-primary animate-pulse" />
-                        <span className="text-[6px] sm:text-[7px] font-black uppercase tracking-[0.2em]">nyayasahayak.in</span>
+                        <span className="text-[5px] sm:text-[7px] font-black uppercase tracking-[0.2em]">nyayasahayak.in</span>
                     </div>
                 </div>
             </div>
@@ -442,8 +441,8 @@ export default function ProfilePage() {
                         </div>
                         <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
                         
-                        <div className="space-y-2">
-                            <h2 className="text-xl sm:text-2xl font-black tracking-tighter leading-tight truncate px-2">{firstName} {lastName}</h2>
+                        <div className="space-y-2 max-w-full px-2">
+                            <h2 className="text-xl sm:text-2xl font-black tracking-tighter leading-tight truncate">{firstName} {lastName}</h2>
                             <div className="flex flex-col items-center gap-3">
                                 {userProfile?.emailVerified ? (
                                     <Badge className="bg-green-500/10 text-green-600 border-green-500/20 py-1 px-4 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">

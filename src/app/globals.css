@@ -98,4 +98,40 @@
     background: hsl(var(--primary) / 0.1);
     border-radius: 10px;
   }
+
+  .neural-rain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 0%, rgba(var(--primary), 0.05) 100%);
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .rain-drop {
+    position: absolute;
+    background: linear-gradient(180deg, transparent, hsl(var(--primary)));
+    width: 1px;
+    height: 100px;
+    opacity: 0.1;
+    animation: rain linear infinite;
+  }
+
+  @keyframes rain {
+    0% { transform: translateY(-100px); }
+    100% { transform: translateY(100vh); }
+  }
+}
+
+@keyframes animated-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-animated-gradient {
+  animation: animated-gradient 3s ease-in-out infinite;
 }

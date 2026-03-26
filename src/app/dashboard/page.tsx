@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -18,8 +17,26 @@ import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+
+const NeuralRain = () => {
+  return (
+    <div className="neural-rain opacity-20">
+      {Array.from({ length: 20 }).map((_, i) => (
+        <div
+          key={i}
+          className="rain-drop"
+          style={{
+            left: `${Math.random() * 100}%`,
+            animationDuration: `${Math.random() * 2 + 1}s`,
+            animationDelay: `${Math.random() * 5}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
   const ref = useRef(null);
@@ -94,7 +111,7 @@ export default function DashboardHomePage() {
     let timeoutId: NodeJS.Timeout;
     if (isTyping) {
       if (text.length < fullText.length) {
-        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 100);
+        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 150);
       } else {
         timeoutId = setTimeout(() => setIsTyping(false), 3000);
       }
@@ -110,28 +127,29 @@ export default function DashboardHomePage() {
   return (
     <div className="flex flex-col h-full space-y-12 pb-20 max-w-7xl mx-auto px-2 sm:px-0 text-left">
         <MotionWrapper>
-          <div className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden bg-primary/5 border border-primary/10">
-              <div className="absolute top-0 right-0 p-12 opacity-[0.03]">
+          <div className="relative p-8 sm:p-16 rounded-[2.5rem] overflow-hidden bg-primary/5 border border-primary/10">
+              <NeuralRain />
+              <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
                   <Landmark className="h-64 w-64" />
               </div>
-              <div className="relative z-10 space-y-4">
+              <div className="relative z-10 space-y-6">
                   <div className="flex items-center gap-2 text-primary">
                       <Sparkles className="h-4 w-4 animate-pulse" />
                       <span className="text-[10px] font-black uppercase tracking-[0.3em]">Neural Terminal Active</span>
                   </div>
-                  <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-none">
+                  <h1 className="text-4xl sm:text-7xl font-black font-headline tracking-tighter leading-none">
                       Welcome to <br />
                       <span className="bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">{text}</span>
                       <span className="animate-pulse ml-1 text-primary">|</span>
                   </h1>
-                  <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-xl">
-                      Access high-fidelity legal intelligence and forensic tools designed for the modern judicial landscape.
+                  <p className="text-sm sm:text-xl text-muted-foreground font-medium max-w-xl leading-relaxed">
+                      Access high-fidelity legal intelligence and forensic tools designed for the modern Indian judicial landscape.
                   </p>
-                  <div className="flex flex-wrap gap-3 pt-4">
-                      <Button size="lg" className="rounded-2xl font-bold px-8 shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
+                  <div className="flex flex-wrap gap-4 pt-4">
+                      <Button size="lg" className="rounded-2xl font-black uppercase tracking-widest text-xs px-8 h-14 shadow-2xl shadow-primary/20 active:scale-95 transition-all" asChild>
                           <Link href="/dashboard/narrate">Start Narration</Link>
                       </Button>
-                      <Button variant="outline" size="lg" className="rounded-2xl font-bold px-8 border-primary/10 glass hover:bg-primary/5 active:scale-95 transition-all" asChild>
+                      <Button variant="outline" size="lg" className="rounded-2xl font-black uppercase tracking-widest text-xs px-8 h-14 border-primary/10 glass hover:bg-primary/5 active:scale-95 transition-all" asChild>
                           <Link href="/dashboard/support">Support Hub</Link>
                       </Button>
                   </div>
@@ -147,14 +165,14 @@ export default function DashboardHomePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <MotionWrapper delay={0.2}>
                     <Link href="/dashboard/narrate" className="block group">
-                        <Card className="h-full glass hover:border-primary/30 transition-all duration-500 overflow-hidden relative group">
+                        <Card className="h-full glass hover:border-primary/30 transition-all duration-500 overflow-hidden relative group rounded-[2rem]">
                             <CardContent className="p-8 flex items-center gap-6">
-                                <div className="p-4 rounded-2xl bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-500">
+                                <div className="p-5 rounded-2xl bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
                                     <Mic className="h-8 w-8" />
                                 </div>
                                 <div className="space-y-1 flex-1">
                                     <h3 className="text-xl font-black tracking-tight">Narrate Case</h3>
-                                    <p className="text-[10px] text-muted-foreground font-medium">Neural transcription and forensic summary generation.</p>
+                                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-60">Forensic Summary Unit</p>
                                 </div>
                                 <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
                             </CardContent>
@@ -163,14 +181,14 @@ export default function DashboardHomePage() {
                   </MotionWrapper>
                   <MotionWrapper delay={0.3}>
                     <Link href="/dashboard/document-intelligence" className="block group">
-                        <Card className="h-full glass hover:border-primary/30 transition-all duration-500 overflow-hidden relative group">
+                        <Card className="h-full glass hover:border-primary/30 transition-all duration-500 overflow-hidden relative group rounded-[2rem]">
                             <CardContent className="p-8 flex items-center gap-6">
-                                <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-500">
+                                <div className="p-5 rounded-2xl bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-500 shadow-inner">
                                     <FileSearch className="h-8 w-8" />
                                 </div>
                                 <div className="space-y-1 flex-1">
                                     <h3 className="text-xl font-black tracking-tight">Document Scan</h3>
-                                    <p className="text-[10px] text-muted-foreground font-medium">Automated risk identification and clause analysis.</p>
+                                    <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-60">Statutory Risk Auditor</p>
                                 </div>
                                 <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500" />
                             </CardContent>
@@ -188,12 +206,12 @@ export default function DashboardHomePage() {
                   {aiFeatures.map((feature, index) => (
                     <MotionWrapper key={feature.href} delay={0.5 + index * 0.1}>
                       <Link href={feature.href} className="block group h-full">
-                          <Card className="h-full glass p-6 flex flex-col items-start hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 active:scale-[0.97]">
-                              <div className={cn("p-3 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-500", feature.bg, feature.color)}>
+                          <Card className="h-full glass p-6 flex flex-col items-start hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 active:scale-[0.97] rounded-[1.5rem]">
+                              <div className={cn("p-3 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-500 shadow-sm", feature.bg, feature.color)}>
                                 <feature.icon className="h-5 w-5" />
                               </div>
                               <h3 className="font-black text-sm tracking-tight">{feature.title}</h3>
-                              <p className="text-[9px] text-muted-foreground mt-2 leading-relaxed font-medium">{feature.description}</p>
+                              <p className="text-[9px] text-muted-foreground mt-2 leading-relaxed font-medium uppercase tracking-tighter opacity-60">{feature.description}</p>
                           </Card>
                       </Link>
                     </MotionWrapper>
@@ -213,15 +231,15 @@ export default function DashboardHomePage() {
               ].map((item, index) => (
                 <MotionWrapper key={item.href} delay={0.9 + index * 0.1}>
                   <Link href={item.href} className="block group">
-                    <Card className="glass group-hover:border-primary/30 transition-all duration-500">
-                      <CardContent className="p-6">
+                    <Card className="glass group-hover:border-primary/30 transition-all duration-500 rounded-[1.5rem]">
+                      <CardContent className="p-6 text-left">
                         <div className="flex items-center gap-4">
-                          <div className="p-3 rounded-xl bg-muted group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                          <div className="p-3 rounded-xl bg-muted group-hover:bg-primary/10 group-hover:text-primary transition-colors shadow-inner">
                             <item.icon className="h-5 w-5" />
                           </div>
-                          <div className="text-left">
-                            <h3 className="font-bold text-sm tracking-tight">{item.title}</h3>
-                            <p className="text-[10px] text-muted-foreground font-medium">{item.desc}</p>
+                          <div className="min-w-0">
+                            <h3 className="font-bold text-sm tracking-tight truncate">{item.title}</h3>
+                            <p className="text-[10px] text-muted-foreground font-medium truncate opacity-60">{item.desc}</p>
                           </div>
                         </div>
                       </CardContent>
