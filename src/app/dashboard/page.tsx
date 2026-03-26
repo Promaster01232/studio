@@ -25,15 +25,11 @@ import {
   MoreVertical,
   Flag,
   Trash2,
-  Twitter,
   TrendingUp,
-  ChevronRight,
   Plus,
   Zap,
   Cpu,
   Bot,
-  PlusCircle,
-  User,
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -129,13 +125,13 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
                 post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer"
             )}
         >
-            <Avatar className="h-9 w-9 border border-background shadow-md rounded-lg">
+            <Avatar className="h-8 w-8 border border-background shadow-md rounded-lg">
                 {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
                 <AvatarFallback className="font-black bg-primary/10 text-primary text-[10px]">{fallback}</AvatarFallback>
             </Avatar>
             <div className="flex-1 text-left">
                 <div className="flex items-center gap-1">
-                    <p className="font-black text-xs tracking-tight">{authorName}</p>
+                    <p className="font-black text-[11px] tracking-tight">{authorName}</p>
                     {isAdmin && <BadgeCheck className="h-3 w-3 text-blue-500" />}
                 </div>
                 <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
@@ -214,38 +210,38 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 
     return (
         <motion.div layout className="w-full">
-            <Card className="overflow-hidden glass border-primary/10 transition-all rounded-2xl flex flex-col sm:flex-row h-full min-h-[200px]">
-                <div className="relative w-full sm:w-48 h-40 sm:h-auto overflow-hidden shrink-0">
+            <Card className="overflow-hidden glass border-primary/5 transition-all rounded-[1.5rem] flex flex-col sm:flex-row h-full">
+                <div className="relative w-full sm:w-40 h-32 sm:h-auto overflow-hidden shrink-0">
                     {post.image ? (
                         <Image src={post.image} alt={post.title} fill className="object-cover" />
                     ) : (
                         <div className="absolute inset-0 bg-primary/5 flex items-center justify-center">
-                            <Logo className="h-12 w-12 opacity-10" />
+                            <Logo className="h-10 w-10 opacity-10" />
                         </div>
                     )}
-                    <div className="absolute top-3 left-3">
+                    <div className="absolute top-2 left-2">
                         <Badge className="bg-primary text-white font-black text-[7px] uppercase tracking-widest px-2 py-0.5 rounded-full">
                             {post.postType || 'TX'}
                         </Badge>
                     </div>
                 </div>
 
-                <div className="flex-1 flex flex-col p-5 sm:p-6 text-left">
-                    <div className="flex items-center justify-between mb-4">
+                <div className="flex-1 flex flex-col p-4 sm:p-5 text-left">
+                    <div className="flex items-center justify-between mb-3">
                         <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/5">
-                                    <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                                <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary/5">
+                                    <MoreVertical className="h-3.5 w-3.5 text-muted-foreground" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40 p-1.5 rounded-xl border-primary/5">
                                 {(isAuthor || isAdmin) ? (
-                                    <DropdownMenuItem onSelect={handleDelete} className="text-xs font-bold text-destructive">
-                                        <Trash2 className="h-3 w-3 mr-2" /> Purge
+                                    <DropdownMenuItem onSelect={handleDelete} className="text-[10px] font-bold text-destructive">
+                                        <Trash2 className="h-3 w-3 mr-2" /> Purge Node
                                     </DropdownMenuItem>
                                 ) : (
-                                    <DropdownMenuItem className="text-xs font-bold">
+                                    <DropdownMenuItem className="text-[10px] font-bold">
                                         <Flag className="h-3 w-3 mr-2" /> Report
                                     </DropdownMenuItem>
                                 )}
@@ -253,26 +249,26 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                         </DropdownMenu>
                     </div>
 
-                    <div className="space-y-2 flex-1 mb-6">
-                        <h3 className="text-lg font-black tracking-tight leading-tight line-clamp-1">{post.title}</h3>
-                        <p className="text-xs text-muted-foreground font-medium line-clamp-2">{post.content}</p>
+                    <div className="space-y-1 flex-1 mb-4">
+                        <h3 className="text-sm font-black tracking-tight leading-tight line-clamp-1">{post.title}</h3>
+                        <p className="text-[11px] text-muted-foreground font-medium line-clamp-2 leading-relaxed">{post.content}</p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-primary/5">
-                        <div className="flex gap-3">
+                    <div className="flex items-center justify-between pt-3 border-t border-primary/5">
+                        <div className="flex gap-2">
                             <Button 
                                 variant="ghost" 
                                 size="sm" 
-                                className={cn("h-8 px-3 rounded-lg text-[10px] font-black uppercase tracking-widest gap-2", userHasLiked ? "text-red-500" : "text-primary")}
+                                className={cn("h-7 px-2.5 rounded-lg text-[9px] font-black uppercase tracking-widest gap-1.5", userHasLiked ? "text-red-500" : "text-primary")}
                                 onClick={handleLike}
                                 disabled={isLiking}
                             >
-                                {isLiking ? <Loader2 className="h-3 w-3 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />}
+                                {isLiking ? <Loader2 className="h-3 w-3 animate-spin" /> : <Heart className={cn("h-3 w-3", userHasLiked && "fill-current")} />}
                                 <span>{optimisticLikes}</span>
                             </Button>
                         </div>
-                        <Button variant="ghost" size="sm" className="h-8 px-4 text-[10px] font-black uppercase" asChild>
-                            <Link href="/dashboard/research-analytics">View Node</Link>
+                        <Button variant="ghost" size="sm" className="h-7 px-3 text-[9px] font-black uppercase tracking-widest" asChild>
+                            <Link href="/dashboard/research-analytics">Initialize Audit</Link>
                         </Button>
                     </div>
                 </div>
@@ -289,9 +285,9 @@ const aiFeatures = [
 ];
 
 const SectionHeader = ({ children, icon: Icon, sector }: { children: React.ReactNode, icon?: any, sector?: string }) => (
-    <div className="flex items-center justify-between mb-6 border-b border-primary/5 pb-4">
-        <div className="flex items-center gap-3">
-            {Icon && <Icon className="h-5 w-5 text-primary opacity-40" />}
+    <div className="flex items-center justify-between mb-5 border-b border-primary/5 pb-3">
+        <div className="flex items-center gap-2.5">
+            {Icon && <Icon className="h-4 w-4 text-primary opacity-40" />}
             <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground">{children}</h2>
         </div>
         {sector && <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">{sector}</span>}
@@ -330,6 +326,7 @@ export default function DashboardHomePage() {
             if (docSnap.exists()) setUserProfile(docSnap.data());
         });
 
+        // FORENSIC AUDIT: Only initialize listener if user has clearance
         const postsRef = collection(firestore, "posts");
         const q = query(postsRef, orderBy("createdAt", "desc"), limit(5));
         
@@ -373,27 +370,27 @@ export default function DashboardHomePage() {
   }, [text, isTyping]);
 
   return (
-    <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
+    <div className="flex flex-col h-full space-y-10 pb-20 max-w-6xl mx-auto text-left relative">
         <MotionWrapper>
-          <Card className="relative p-8 sm:p-12 rounded-[2rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
+          <Card className="relative p-6 sm:p-10 rounded-[2rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
               <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
-                  <Logo className="h-64 w-64 border-none p-0 grayscale" />
+                  <Logo className="h-48 w-48 border-none p-0 grayscale" />
               </div>
-              <div className="relative z-10 space-y-8">
-                  <div className="space-y-2">
-                      <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
+              <div className="relative z-10 space-y-6">
+                  <div className="space-y-1">
+                      <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none text-foreground">
                           Welcome back, <br />
                           <span className="bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent italic">Nyaya {text}</span>
                       </h1>
                   </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground font-medium max-w-xl leading-relaxed">
+                  <p className="text-[11px] sm:text-xs text-muted-foreground font-medium max-w-lg leading-relaxed">
                       Access high-fidelity legal intelligence nodes and forensic auditing tools designed for statutory precision.
                   </p>
-                  <div className="flex flex-wrap gap-4 pt-2">
-                      <Button size="sm" className="rounded-xl font-black uppercase tracking-[0.2em] text-[9px] px-8 h-12 shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
+                  <div className="flex flex-wrap gap-3 pt-1">
+                      <Button size="sm" className="rounded-xl font-black uppercase tracking-[0.2em] text-[8px] px-6 h-10 shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
                           <Link href="/dashboard/narrate">Initialize Narration</Link>
                       </Button>
-                      <Button variant="outline" size="sm" className="rounded-xl font-black uppercase tracking-[0.2em] text-[9px] px-8 h-12 border-primary/10 hover:bg-primary/5 active:scale-95 transition-all" asChild>
+                      <Button variant="outline" size="sm" className="rounded-xl font-black uppercase tracking-[0.2em] text-[8px] px-6 h-10 border-primary/10 hover:bg-primary/5 active:scale-95 transition-all" asChild>
                           <Link href="/dashboard/support">Hub Support</Link>
                       </Button>
                   </div>
@@ -401,24 +398,24 @@ export default function DashboardHomePage() {
           </Card>
         </MotionWrapper>
 
-        <div className="grid lg:grid-cols-12 gap-10">
-          <div className="lg:col-span-8 space-y-10">
+        <div className="grid lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-8 space-y-8">
               <section>
                   <SectionHeader icon={TrendingUp} sector="Sector: Community">Live Transmission Stream</SectionHeader>
                   
-                  <div className="space-y-6">
+                  <div className="space-y-5">
                       {postsLoading ? (
                           <div className="space-y-4">
                               {[...Array(3)].map((_, i) => (
-                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-2xl bg-muted/20" />
+                                  <Card key={i} className="h-24 animate-pulse border-primary/5 rounded-2xl bg-muted/20" />
                               ))}
                           </div>
                       ) : latestPosts.length === 0 ? (
-                          <Card className="py-20 text-center glass rounded-3xl border-dashed border-2 border-primary/10 opacity-40">
-                              <p className="font-black uppercase tracking-[0.2em] text-[10px]">Registry Empty // No active transmissions</p>
+                          <Card className="py-16 text-center glass rounded-[2rem] border-dashed border-2 border-primary/10 opacity-40">
+                              <p className="font-black uppercase tracking-[0.2em] text-[9px]">Registry Empty // No active transmissions</p>
                           </Card>
                       ) : (
-                          <div className="space-y-6">
+                          <div className="space-y-5">
                               {latestPosts.map((post) => (
                                   <PostCard key={post.id} post={post} userProfile={userProfile} />
                               ))}
@@ -428,22 +425,22 @@ export default function DashboardHomePage() {
               </section>
           </div>
 
-          <div className="lg:col-span-4 space-y-10">
+          <div className="lg:col-span-4 space-y-8">
               <section>
                   <SectionHeader icon={Sparkles} sector="Status: Optimized">System Node Matrix</SectionHeader>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-3">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group">
-                            <Card className="h-full glass p-5 rounded-2xl border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden">
+                            <Card className="h-full glass p-4 rounded-2xl border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-2 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                                    <f.icon className="h-8 w-8" />
+                                    <f.icon className="h-6 w-6" />
                                 </div>
-                                <div className={cn("p-2.5 rounded-lg w-fit mb-4 transition-transform group-hover:scale-110", f.bg, f.color)}>
-                                    <f.icon className="h-4 w-4" />
+                                <div className={cn("p-2 rounded-lg w-fit mb-3 transition-transform group-hover:scale-110", f.bg, f.color)}>
+                                    <f.icon className="h-3.5 w-3.5" />
                                 </div>
-                                <h3 className="font-black text-[10px] uppercase tracking-tighter text-foreground">{f.title}</h3>
-                                <p className="text-[9px] text-muted-foreground font-bold mt-1 leading-tight opacity-60">{f.desc}</p>
-                                <div className="mt-4 pt-3 border-t border-primary/5">
+                                <h3 className="font-black text-[9px] uppercase tracking-tighter text-foreground">{f.title}</h3>
+                                <p className="text-[8px] text-muted-foreground font-bold mt-0.5 leading-tight opacity-60">{f.desc}</p>
+                                <div className="mt-3 pt-2 border-t border-primary/5">
                                     <span className="text-[7px] font-black uppercase tracking-widest text-primary/40">{f.sector}</span>
                                 </div>
                             </Card>
@@ -454,18 +451,18 @@ export default function DashboardHomePage() {
 
               <section>
                   <SectionHeader icon={Library} sector="Status: Ready">Statutory Registry</SectionHeader>
-                  <div className="space-y-3">
+                  <div className="space-y-2.5">
                       {[
                         { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", label: "NODE-LERN" },
                         { href: "/dashboard/my-cases", icon: Landmark, title: "Case Tracker", label: "NODE-CASE" },
                       ].map((item) => (
                         <Link key={item.href} href={item.href} className="block group">
-                            <Card className="glass p-4 rounded-xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
-                                        <item.icon className="h-4 w-4" />
+                            <Card className="glass p-3.5 rounded-xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                                        <item.icon className="h-3.5 w-3.5" />
                                     </div>
-                                    <span className="font-black text-[10px] uppercase tracking-[0.2em]">{item.title}</span>
+                                    <span className="font-black text-[9px] uppercase tracking-[0.2em]">{item.title}</span>
                                 </div>
                                 <span className="text-[7px] font-mono font-bold text-muted-foreground opacity-40">{item.label}</span>
                             </Card>
@@ -476,45 +473,44 @@ export default function DashboardHomePage() {
           </div>
         </div>
 
-        {/* Floating AI Robot & Action Node */}
-        <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-center gap-4">
+        {/* Floating Command Center */}
+        <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-center gap-4">
             <Link href="/dashboard/research-analytics/new">
                 <motion.button
                     animate={{
-                        y: [0, -10, 0],
+                        y: [0, -8, 0],
                     }}
                     transition={{
                         duration: 4,
                         repeat: Infinity,
                         ease: "easeInOut"
                     }}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="relative group h-16 w-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center transition-all overflow-hidden"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative group h-14 w-14 bg-primary text-white rounded-2xl shadow-2xl flex items-center justify-center transition-all overflow-hidden"
                 >
                     <motion.div 
-                        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
+                        animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.1, 0.2] }}
                         transition={{ repeat: Infinity, duration: 2 }}
-                        className="absolute inset-0 bg-primary rounded-full"
+                        className="absolute inset-0 bg-primary rounded-2xl"
                     />
-                    <Bot className="h-8 w-8 relative z-10" />
+                    <Bot className="h-7 w-7 relative z-10" />
                     
-                    {/* Integrated Action Node (+) */}
-                    <div className="absolute top-2 right-2 bg-accent text-accent-foreground rounded-full p-1 shadow-xl z-20 border-2 border-primary group-hover:scale-110 transition-transform">
-                        <Plus className="h-3 w-3 font-black" />
+                    <div className="absolute top-1.5 right-1.5 bg-accent text-accent-foreground rounded-full p-0.5 shadow-xl z-20 border-2 border-primary group-hover:scale-110 transition-transform">
+                        <Plus className="h-2.5 w-2.5 font-black" />
                     </div>
 
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 </motion.button>
             </Link>
             
-            <div className="absolute -top-10 right-0 bg-background border border-primary/20 px-3 py-1.5 rounded-xl shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Neural Assistant Active // Initialize Post</span>
+            <div className="absolute -top-8 right-0 bg-background border border-primary/20 px-2 py-1 rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <span className="text-[8px] font-black uppercase tracking-widest text-primary">Neural Assistant Active</span>
             </div>
         </div>
 
-        <div className="pt-12 text-center border-t border-primary/5 opacity-30">
-            <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // TERMINAL ACTIVE // PROTOCOL ALPHA-4</p>
+        <div className="pt-10 text-center border-t border-primary/5 opacity-30">
+            <p className="text-[7px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // TERMINAL ACTIVE // PROTOCOL ALPHA-4</p>
         </div>
     </div>
   );
