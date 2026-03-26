@@ -53,6 +53,7 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -149,8 +150,8 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
             </Avatar>
             <div className="flex-1 text-left">
                 <div className="flex items-center gap-1.5">
-                    <p className="font-black text-xs tracking-tight group-hover/author:text-primary transition-colors underline decoration-primary/0 group-hover/author:decoration-primary/30 underline-offset-4">{authorName}</p>
-                    {isAdmin && <BadgeCheck className="h-3 w-3 text-blue-500" />}
+                    <p className="font-black text-sm tracking-tight group-hover/author:text-primary transition-colors underline decoration-primary/0 group-hover/author:decoration-primary/30 underline-offset-4">{authorName}</p>
+                    {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
                 </div>
                 <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
                     {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
