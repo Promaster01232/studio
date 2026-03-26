@@ -41,7 +41,8 @@ import {
   Activity,
   BadgeCheck,
   ShieldCheck,
-  Search
+  Search,
+  Twitter
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -154,6 +155,19 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
             title: `Action: ${action}`,
             description: "This feature is for institutional demonstration purposes.",
         });
+    };
+
+    const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
+        const shareText = `Check out this institutional transmission on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
+        
+        if (platform === 'whatsapp') {
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+        } else if (platform === 'twitter') {
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+        } else if (platform === 'copy') {
+            navigator.clipboard.writeText(shareText);
+            toast({ title: "Registry Link Copied", description: "Transmission data saved to clipboard." });
+        }
     };
 
     const handleLike = () => {
@@ -372,9 +386,34 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                         <MessageCircle className="h-4 w-4" />
                         <span>{post.comments}</span>
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-primary/10 transition-all" onClick={() => handleAction('Share')}>
-                        <Share2 className="h-4 w-4" />
-                    </Button>
+                    
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-primary/10 transition-all">
+                                <Share2 className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl glass border-primary/5">
+                            <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                <div className="bg-green-500/10 p-1.5 rounded-md text-green-600">
+                                    <MessageCircle className="h-3.5 w-3.5" />
+                                </div>
+                                WhatsApp
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                <div className="bg-blue-500/10 p-1.5 rounded-md text-blue-500">
+                                    <Twitter className="h-3.5 w-3.5" />
+                                </div>
+                                Twitter (X)
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                <div className="bg-primary/10 p-1.5 rounded-md text-primary">
+                                    <Bookmark className="h-3.5 w-3.5" />
+                                </div>
+                                Copy Registry Link
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
                 <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-primary/10 transition-all" onClick={() => handleAction('Bookmark')}>
                     <Bookmark className="h-4 w-4" />
@@ -808,7 +847,7 @@ export default function ResearchAnalyticsPage() {
             </div>
 
             <div className="grid gap-8 max-w-3xl mx-auto">
-                <AnimatePresence>
+                <AnimatePresence mode="popLayout">
                     {!isAuthenticated && !loading ? (
                         <motion.div key="auth-req" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                             <Card className="glass border-primary/10 rounded-[2.5rem] py-20 text-center">
