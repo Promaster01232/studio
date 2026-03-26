@@ -12,7 +12,6 @@ import {
   FileSignature,
   BrainCircuit,
   Library,
-  HeartHandshake,
   Landmark,
   ArrowRight,
   Sparkles,
@@ -27,14 +26,10 @@ import {
   Flag,
   Trash2,
   Twitter,
-  Zap,
-  ChevronRight,
   TrendingUp,
-  Newspaper,
-  Link as LinkIcon,
+  ChevronRight,
   Plus,
-  Bot,
-  Send,
+  Zap,
   Cpu,
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
@@ -66,22 +61,19 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { Logo } from "@/components/logo";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
+
+const ADMIN_EMAILS = [
+  'enterspaceindia@gmail.com', 
+  'piyushkumarsingh23323@gmail.com',
+  'piyushkumrsingh23323@gmail.com',
+  'piyushkumrsingh23399@gmail.com'
+];
 
 interface Post {
     id: string;
@@ -104,24 +96,6 @@ interface Post {
     tags?: string[];
     isAnonymous?: boolean;
 }
-
-const NeuralRain = () => {
-  return (
-    <div className="neural-rain opacity-20">
-      {Array.from({ length: 25 }).map((_, i) => (
-        <div
-          key={i}
-          className="rain-drop"
-          style={{
-            left: `${Math.random() * 100}%`,
-            animationDuration: `${Math.random() * 2 + 1}s`,
-            animationDelay: `${Math.random() * 5}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-};
 
 const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
   const ref = useRef(null);
@@ -224,6 +198,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     };
 
     const handleDelete = async () => {
+        if (!confirm("Confirm node deletion from community registry?")) return;
         const postRef = doc(firestore, "posts", post.id);
         deleteDoc(postRef).catch((serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -328,37 +303,53 @@ export default function DashboardHomePage() {
   const [postsLoading, setPostsLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<any>(null);
 
+  const postsUnsubscribeRef = useRef<(() => void) | null>(null);
+
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+        // Clean up previous listeners if auth state changes
+        if (postsUnsubscribeRef.current) {
+            postsUnsubscribeRef.current();
+            postsUnsubscribeRef.current = null;
+        }
+
         if (!user) {
             setPostsLoading(false);
+            setUserProfile(null);
+            setLatestPosts([]);
             return;
         }
 
+        // Initialize User Profile Sync
+        const userDocRef = doc(firestore, "users", user.uid);
+        getDoc(userDocRef).then(docSnap => {
+            if (docSnap.exists()) setUserProfile(docSnap.data());
+        });
+
+        // Initialize Community Feed Sync
         const postsRef = collection(firestore, "posts");
         const q = query(postsRef, orderBy("createdAt", "desc"), limit(5));
         
-        const unsubscribe = onSnapshot(q, (snap) => {
+        postsUnsubscribeRef.current = onSnapshot(q, (snap) => {
             const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
             setLatestPosts(list);
             setPostsLoading(false);
         }, (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: postsRef.path,
-                operation: 'list',
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
+            if (auth.currentUser) {
+                const permissionError = new FirestorePermissionError({
+                    path: postsRef.path,
+                    operation: 'list',
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+            }
             setPostsLoading(false);
         });
-
-        getDoc(doc(firestore, "users", user.uid)).then(docSnap => {
-            if (docSnap.exists()) setUserProfile(docSnap.data());
-        });
-
-        return () => unsubscribe();
     });
 
-    return () => unsubscribeAuth();
+    return () => {
+        unsubscribeAuth();
+        if (postsUnsubscribeRef.current) postsUnsubscribeRef.current();
+    };
   }, [firestore, auth]);
   
   useEffect(() => {
@@ -414,8 +405,12 @@ export default function DashboardHomePage() {
                       {postsLoading ? (
                           <div className="space-y-4">
                               {[...Array(3)].map((_, i) => (
-                                  <Card key={i} className="h-32 animate-pulse border-primary/5" />
+                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-2xl" />
                               ))}
+                          </div>
+                      ) : latestPosts.length === 0 ? (
+                          <div className="py-20 text-center glass rounded-3xl border-dashed border-2 opacity-40">
+                              <p className="font-black uppercase tracking-widest text-xs">No active transmissions</p>
                           </div>
                       ) : (
                           <div className="space-y-6">
