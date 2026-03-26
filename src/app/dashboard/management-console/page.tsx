@@ -35,7 +35,8 @@ import {
   QrCode,
   Fingerprint,
   Cpu,
-  Eraser
+  Eraser,
+  Lock
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -261,6 +262,17 @@ export default function ManagementConsolePage() {
     if (!userToPurge) return;
     const user = userToPurge;
     
+    // PROTECT ADMIN NODES
+    if (ADMIN_EMAILS.includes(user.email.toLowerCase()) || user.isAdmin) {
+        toast({ 
+            variant: "destructive", 
+            title: "Action Prohibited", 
+            description: "Administrative nodes are immutable and cannot be purged from the registry." 
+        });
+        setUserToPurge(null);
+        return;
+    }
+    
     setProcessingUid(user.uid);
     
     deleteDoc(doc(firestore, "users", user.uid))
@@ -285,7 +297,7 @@ export default function ManagementConsolePage() {
       setIsMassPurging(true);
       try {
           const batch = writeBatch(firestore);
-          const citizens = users.filter(u => u.userType === 'citizen' && !ADMIN_EMAILS.includes(u.email.toLowerCase()));
+          const citizens = users.filter(u => u.userType === 'citizen' && !ADMIN_EMAILS.includes(u.email.toLowerCase()) && !u.isAdmin);
           
           citizens.forEach(u => {
               batch.delete(doc(firestore, "users", u.uid));
@@ -376,6 +388,7 @@ export default function ManagementConsolePage() {
                       <TableBody>
                           {filteredUsers.map((user) => {
                               const isActive = user.isBlocked === false || user.isBlocked === undefined;
+                              const isProtected = ADMIN_EMAILS.includes(user.email.toLowerCase()) || user.isAdmin;
                               return (
                                 <TableRow key={user.uid} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", !isActive && "bg-red-500/5")}>
                                     <TableCell className="pl-6 py-4">
@@ -385,7 +398,10 @@ export default function ManagementConsolePage() {
                                                 <AvatarFallback className="font-bold text-primary bg-primary/5">{user.firstName.charAt(0)}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col text-left">
-                                                <span className="font-bold text-xs sm:text-sm tracking-tight">{user.firstName} {user.lastName}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-bold text-xs sm:text-sm tracking-tight">{user.firstName} {user.lastName}</span>
+                                                    {isProtected && <BadgeCheck className="h-3 w-3 text-primary" />}
+                                                </div>
                                                 <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium">{user.email}</span>
                                             </div>
                                         </div>
@@ -401,7 +417,7 @@ export default function ManagementConsolePage() {
                                             <Switch 
                                                 checked={isActive} 
                                                 onCheckedChange={(checked) => handleToggleStatus(user, !checked)}
-                                                disabled={processingUid === user.uid}
+                                                disabled={processingUid === user.uid || isProtected}
                                                 className="data-[state=checked]:bg-green-500"
                                             />
                                         </div>
@@ -431,11 +447,12 @@ export default function ManagementConsolePage() {
                                                     <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer"><RotateCcw className="mr-3 h-4 w-4" /> Reset Node</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem 
-                                                        className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
-                                                        onClick={() => setUserToPurge(user)}
-                                                        disabled={processingUid === user.uid}
+                                                        className={cn("rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10", isProtected && "opacity-50 cursor-not-allowed")}
+                                                        onClick={() => !isProtected && setUserToPurge(user)}
+                                                        disabled={processingUid === user.uid || isProtected}
                                                     >
-                                                        <Trash2 className="mr-3 h-4 w-4" /> Purge Registry Node
+                                                        {isProtected ? <Lock className="mr-3 h-4 w-4" /> : <Trash2 className="mr-3 h-4 w-4" />}
+                                                        Purge Registry Node
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
