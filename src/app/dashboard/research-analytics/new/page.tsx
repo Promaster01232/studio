@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useRef } from "react";
@@ -164,7 +165,7 @@ export default function NewPostPage() {
             <div className="flex items-center justify-between">
                 <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group" asChild>
                     <Link href="/dashboard/research-analytics">
-                        <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Hub Registry
+                        <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Go Back
                     </Link>
                 </Button>
                 <Badge variant="outline" className="h-8 border-primary/10 font-bold bg-background shadow-sm px-4 rounded-lg text-[10px] uppercase tracking-widest text-muted-foreground">
