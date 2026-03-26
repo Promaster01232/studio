@@ -17,25 +17,30 @@ import {
   StepForward,
   CheckCircle2,
   Fingerprint,
-  Cpu
+  Cpu,
+  Activity,
+  Globe,
+  Award
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { Footer } from "@/components/footer";
 import { PublicHeader } from "@/components/public-header";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const NeuralRain = () => {
   return (
-    <div className="neural-rain opacity-10">
-      {Array.from({ length: 30 }).map((_, i) => (
+    <div className="neural-rain opacity-[0.08]">
+      {Array.from({ length: 40 }).map((_, i) => (
         <div
           key={i}
           className="rain-drop"
           style={{
             left: `${Math.random() * 100}%`,
-            animationDuration: `${Math.random() * 3 + 2}s`,
+            animationDuration: `${Math.random() * 2 + 2}s`,
             animationDelay: `${Math.random() * 5}s`,
           }}
         />
@@ -43,6 +48,13 @@ const NeuralRain = () => {
     </div>
   );
 };
+
+const ForensicLabel = ({ children, className }: { children: React.ReactNode, className?: string }) => (
+    <div className={cn("flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.4em] text-primary/60", className)}>
+        <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
+        {children}
+    </div>
+);
 
 export default function WelcomePage() {
   const auth = useAuth();
@@ -58,194 +70,280 @@ export default function WelcomePage() {
   }, [auth]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background selection:bg-primary/10 overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-background selection:bg-primary/10 overflow-x-hidden text-left font-body">
       <PublicHeader />
       
-      <div className="flex-1 flex flex-col items-center justify-center p-4 py-12 sm:py-16 relative">
+      <div className="flex-1 flex flex-col items-center p-4 py-16 sm:py-24 relative">
         <NeuralRain />
         
-        {/* Ambient Background Elements */}
-        <div className="absolute top-0 left-1/4 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-primary/5 rounded-full blur-[80px] sm:blur-[150px] -z-10 animate-pulse"></div>
-        <div className="absolute bottom-0 right-1/4 w-[250px] sm:w-[500px] h-[250px] sm:h-[500px] bg-accent/5 rounded-full blur-[70px] sm:blur-[120px] -z-10 animate-pulse [animation-delay:2s]"></div>
+        {/* Ambient Forensic Nodes */}
+        <div className="absolute top-0 left-1/4 w-[400px] sm:w-[800px] h-[400px] sm:h-[800px] bg-primary/5 rounded-full blur-[120px] -z-10"></div>
+        <div className="absolute bottom-0 right-1/4 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-accent/5 rounded-full blur-[100px] -z-10 [animation-delay:2s]"></div>
 
         <motion.div 
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 50, damping: 20 }}
-          className="w-full max-w-4xl"
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full max-w-5xl"
         >
-          <Card className="overflow-hidden border-none shadow-[0_50px_100px_rgba(0,0,0,0.15)] bg-card/40 backdrop-blur-3xl rounded-[3rem] relative">
-            <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
-                <Landmark className="h-64 w-64" />
+          <Card className="overflow-hidden border-primary/5 shadow-[0_50px_100px_rgba(0,0,0,0.1)] bg-card/30 backdrop-blur-3xl rounded-[3.5rem] relative group">
+            <div className="absolute top-0 right-0 p-12 opacity-[0.01] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
+                <Landmark className="h-96 w-96" />
             </div>
             
-            <CardContent className="flex flex-col items-center p-6 sm:p-12 text-center relative z-10">
+            <CardContent className="flex flex-col items-center p-8 sm:p-16 text-center relative z-10">
               <motion.div 
-                className="relative mb-6 sm:mb-10"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
+                className="relative mb-10"
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 200 }}
               >
-                <div className="absolute -inset-4 rounded-full bg-primary/10 animate-ping [animation-duration:4s]"></div>
-                <div className="absolute -inset-8 rounded-full bg-primary/5 animate-pulse [animation-duration:6s]"></div>
-                <div className="relative p-1.5 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
-                    <Logo className="h-20 w-20 sm:h-28 sm:w-28 shadow-2xl relative z-10 border-none bg-white rounded-full p-1.5" />
+                <div className="absolute -inset-6 rounded-full bg-primary/5 animate-pulse [animation-duration:4s]"></div>
+                <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary/20 via-accent/20 to-blue-400/20">
+                    <div className="bg-white rounded-full p-2 shadow-2xl relative z-10">
+                        <Logo className="h-16 w-16 sm:h-20 sm:w-20 border-none p-0" />
+                    </div>
                 </div>
               </motion.div>
 
-              <div className="space-y-6 mb-8 sm:mb-10">
-                <div className="flex items-center justify-center gap-3 text-primary">
-                    <Sparkles className="h-4 w-4 animate-pulse" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] leading-none">Institutional Forensic Terminal</span>
+              <div className="space-y-8 mb-12">
+                <div className="flex flex-col items-center gap-4">
+                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-inner">
+                        Node: Terminal-Entry // NS-ALPHA
+                    </Badge>
                 </div>
-                <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-none text-foreground">
-                  Nyaya Sahayak
-                </h1>
-                <p className="text-base sm:text-xl font-bold text-primary italic max-w-2xl mx-auto px-4 leading-tight">
-                  The Pinnacle of AI-Powered Legal Empowerment <br className="hidden sm:block"/> for the Modern Indian Citizen.
-                </p>
                 
-                <div className="max-w-2xl mx-auto space-y-4 text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed px-4">
-                  <p>
-                    Nyaya Sahayak is India's premier AI legal assistant, meticulously engineered to bridge the gap between complex judicial protocols and citizen needs. We provide high-fidelity forensic tools that empower you to navigate the law with absolute dignity.
-                  </p>
+                <h1 className="text-5xl sm:text-8xl font-black font-headline tracking-tighter leading-[0.9] text-foreground">
+                  Nyaya <span className="text-primary italic">Sahayak</span>
+                </h1>
+                
+                <div className="max-w-2xl mx-auto space-y-6">
+                    <p className="text-lg sm:text-2xl font-bold text-muted-foreground tracking-tight leading-tight">
+                        The pinnacle of <span className="text-foreground">AI-Powered Legal Intelligence</span> engineered for the modern Indian citizen.
+                    </p>
+                    <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto"></div>
+                    <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed max-w-xl mx-auto opacity-80">
+                        Bridging the gap between complex judicial protocols and citizen rights with mathematically precise forensic auditing tools and high-fidelity procedural roadmaps.
+                    </p>
                 </div>
               </div>
 
-              <div className="w-full max-w-md space-y-6 px-4">
+              <div className="w-full max-w-md space-y-8">
                 {!loading ? (
-                  <Button 
-                    asChild 
-                    size="lg" 
-                    className="group w-full h-14 sm:h-16 text-base font-black shadow-[0_20px_50px_rgba(var(--primary),0.3)] transition-all duration-500 active:scale-95 rounded-2xl bg-primary text-white hover:shadow-primary/50"
-                  >
-                    <Link href="/dashboard">
-                      <span className="tracking-[0.1em] uppercase">Initialize Terminal</span>
-                      <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover:translate-x-2" />
-                    </Link>
-                  </Button>
+                  <div className="space-y-4">
+                    <Button 
+                        asChild 
+                        size="lg" 
+                        className="group w-full h-16 sm:h-20 text-xs font-black shadow-3xl shadow-primary/20 transition-all duration-500 active:scale-[0.98] rounded-2xl bg-primary text-white hover:shadow-primary/40 relative overflow-hidden"
+                    >
+                        <Link href="/dashboard">
+                            <span className="relative z-10 tracking-[0.3em] uppercase">Initialize Terminal Node</span>
+                            <ArrowRight className="relative z-10 ml-4 h-5 w-5 transition-transform group-hover:translate-x-2" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        </Link>
+                    </Button>
+                    <p className="text-[9px] font-black text-primary/40 uppercase tracking-[0.5em]">Secure Registry Access Required</p>
+                  </div>
                 ) : (
                   <Button 
                     disabled
                     size="lg" 
-                    className="w-full h-14 sm:h-16 text-base font-black rounded-2xl bg-primary/50 text-white"
+                    className="w-full h-16 sm:h-20 rounded-2xl bg-primary/20 text-white border-primary/10"
                   >
-                    <span className="flex items-center gap-3">
-                      <Loader2 className="h-5 w-5 animate-spin" /> 
-                      <span className="text-[10px] uppercase tracking-widest font-black">Registry Sync active...</span>
+                    <span className="flex items-center gap-4">
+                      <Loader2 className="h-5 w-5 animate-spin opacity-40" /> 
+                      <span className="text-[10px] uppercase tracking-[0.4em] font-black opacity-40">Syncing Registry Nodes...</span>
                     </span>
                   </Button>
                 )}
                 
-                <div className="flex items-center justify-center gap-6 pt-2">
-                    <div className="flex items-center gap-2">
-                        <Lock className="h-3.5 w-3.5 text-primary/60" />
-                        <span className="text-[9px] font-black text-muted-foreground/60 uppercase tracking-widest">AES-256 REST</span>
+                <div className="flex items-center justify-center gap-8 pt-4">
+                    <div className="flex flex-col items-center gap-2">
+                        <Lock className="h-4 w-4 text-primary/40" />
+                        <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest">AES-256 Vault</span>
                     </div>
-                    <div className="h-1 w-1 rounded-full bg-muted-foreground/20"></div>
-                    <div className="flex items-center gap-2">
-                        <ShieldCheck className="h-3.5 w-3.5 text-primary/60" />
-                        <span className="text-[9px] font-black text-muted-foreground/60 uppercase tracking-widest">TLS 1.3 SECURE</span>
+                    <div className="h-8 w-px bg-primary/10"></div>
+                    <div className="flex flex-col items-center gap-2">
+                        <ShieldCheck className="h-4 w-4 text-primary/40" />
+                        <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest">TLS 1.3 Active</span>
+                    </div>
+                    <div className="h-8 w-px bg-primary/10"></div>
+                    <div className="flex flex-col items-center gap-2">
+                        <Activity className="h-4 w-4 text-primary/40" />
+                        <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest">99.8% Uptime</span>
                     </div>
                 </div>
               </div>
             </CardContent>
-            <div className="h-1.5 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+            <div className="h-1 w-full bg-gradient-to-r from-primary/20 via-accent/40 to-blue-400/20"></div>
           </Card>
         </motion.div>
 
-        {/* Forensic Capabilities Section */}
-        <div className="w-full max-w-6xl mt-24 space-y-16">
-            <div className="text-center space-y-4 px-4">
-                <h2 className="text-[11px] font-black uppercase tracking-[0.6em] text-primary">Institutional Capabilities</h2>
-                <h3 className="text-3xl sm:text-5xl font-black tracking-tighter leading-none">Forensic AI Intelligence</h3>
-                <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-2xl mx-auto">Access elite legal nodes designed for statutory precision and speed.</p>
+        {/* High-Fidelity Capability Grid */}
+        <div className="w-full max-w-6xl mt-32 space-y-20 px-4 sm:px-6">
+            <div className="flex flex-col items-center text-center space-y-4">
+                <Badge variant="outline" className="border-primary/20 text-primary px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.4em]">
+                    Sector: Capabilities
+                </Badge>
+                <h2 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-none">Institutional <span className="text-primary italic">Intelligence</span></h2>
+                <div className="h-1 w-12 bg-primary/20 rounded-full mt-4"></div>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-6">
-                <Card className="glass p-8 sm:p-10 rounded-[3rem] border-primary/5 hover:border-primary/20 transition-all duration-500 text-left group hover:shadow-2xl">
-                    <div className="bg-primary/10 p-5 rounded-2xl w-fit mb-8 text-primary shadow-inner group-hover:scale-110 transition-transform duration-700 ring-1 ring-primary/20">
-                        <BrainCircuit className="h-8 w-8" />
-                    </div>
-                    <h2 className="text-2xl font-black tracking-tight mb-4 leading-none">Forensic Case Auditor</h2>
-                    <p className="text-sm text-muted-foreground leading-relaxed font-medium mb-6">
-                        Our neural engine processes complex legal narratives in milliseconds, identifying relevant IPC/BNSS sections with mathematically precise accuracy.
-                    </p>
-                    <ul className="text-[11px] font-black text-primary/80 space-y-3 uppercase tracking-widest">
-                        <li className="flex items-center gap-3"><Fingerprint className="h-4 w-4" /> Narrative Reconstruction</li>
-                        <li className="flex items-center gap-3"><Landmark className="h-4 w-4" /> Jurisdictional Mapping</li>
-                    </ul>
-                </Card>
-
-                <Card className="glass p-8 sm:p-10 rounded-[3rem] border-emerald-500/5 hover:border-emerald-500/20 transition-all duration-500 text-left group hover:shadow-2xl">
-                    <div className="bg-emerald-500/10 p-5 rounded-2xl w-fit mb-8 text-emerald-600 shadow-inner group-hover:scale-110 transition-transform duration-700 ring-1 ring-emerald-500/20">
-                        <FileSearch className="h-8 w-8" />
-                    </div>
-                    <h2 className="text-2xl font-black tracking-tight mb-4 leading-none">Document Risk Scanner</h2>
-                    <p className="text-sm text-muted-foreground leading-relaxed font-medium mb-6">
-                        Upload legal contracts for a deep-layer statutory audit. Detect hidden liabilities and potential procedural consequences instantly.
-                    </p>
-                    <ul className="text-[11px] font-black text-emerald-600/80 space-y-3 uppercase tracking-widest">
-                        <li className="flex items-center gap-3"><CheckCircle2 className="h-4 w-4" /> Clause Extraction</li>
-                        <li className="flex items-center gap-3"><ShieldCheck className="h-4 w-4" /> Risk Mitigation</li>
-                    </ul>
-                </Card>
-
-                <Card className="glass p-8 sm:p-10 rounded-[3rem] border-amber-500/5 hover:border-amber-500/20 transition-all duration-500 text-left group hover:shadow-2xl">
-                    <div className="bg-amber-500/10 p-5 rounded-2xl w-fit mb-8 text-amber-600 shadow-inner group-hover:scale-110 transition-transform duration-700 ring-1 ring-amber-500/20">
-                        <Zap className="h-8 w-8" />
-                    </div>
-                    <h2 className="text-2xl font-black tracking-tight mb-4 leading-none">AI Procedural Roadmap</h2>
-                    <p className="text-sm text-muted-foreground leading-relaxed font-medium mb-6">
-                        Navigate the judicial system with an AI-generated personalized roadmap. Step-by-step guides on filing and etiquette with absolute clarity.
-                    </p>
-                    <ul className="text-[11px] font-black text-amber-600/80 space-y-3 uppercase tracking-widest">
-                        <li className="flex items-center gap-3"><StepForward className="h-4 w-4" /> Actionable Milestones</li>
-                        <li className="flex items-center gap-3"><Cpu className="h-4 w-4" /> Real-time Updates</li>
-                    </ul>
-                </Card>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                {[
+                    {
+                        title: "Forensic Case Auditor",
+                        desc: "Neural narrative reconstruction and statutory violation mapping with institutional precision.",
+                        icon: BrainCircuit,
+                        color: "text-blue-500",
+                        bg: "bg-blue-500/5",
+                        border: "border-blue-500/10",
+                        points: ["IPC/BNSS Cross-Referencing", "Jurisdictional Audit"]
+                    },
+                    {
+                        title: "Document Risk Node",
+                        desc: "Deep-layer scanning of legal instruments to detect hidden statutory liabilities and deadlines.",
+                        icon: FileSearch,
+                        color: "text-emerald-500",
+                        bg: "bg-emerald-500/5",
+                        border: "border-emerald-500/10",
+                        points: ["Statutory Compliance Check", "Risk Mitigation Mapping"]
+                    },
+                    {
+                        title: "Procedural Roadmap",
+                        desc: "AI-optimized navigation cycles for the Indian judicial system with real-time Etiquette guidance.",
+                        icon: Zap,
+                        color: "text-amber-500",
+                        bg: "bg-amber-500/5",
+                        border: "border-amber-500/10",
+                        points: ["Milestone Tracking", "Protocol Optimization"]
+                    }
+                ].map((item, idx) => (
+                    <motion.div 
+                        key={idx}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.1 }}
+                    >
+                        <Card className={cn("glass p-10 rounded-[3rem] border-primary/5 hover:border-primary/30 transition-all duration-700 text-left group hover:shadow-3xl relative overflow-hidden h-full")}>
+                            <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:scale-110 transition-transform duration-700">
+                                <item.icon className="h-32 w-32" />
+                            </div>
+                            <div className={cn("p-5 rounded-2xl w-fit mb-10 shadow-inner group-hover:scale-110 transition-transform duration-700 ring-1 ring-white/10", item.bg, item.color)}>
+                                <item.icon className="h-8 w-8" />
+                            </div>
+                            <div className="space-y-4 relative z-10">
+                                <h3 className="text-2xl font-black tracking-tight leading-none uppercase">{item.title}</h3>
+                                <p className="text-sm text-muted-foreground leading-relaxed font-medium opacity-80 min-h-[4rem]">
+                                    {item.desc}
+                                </p>
+                                <div className="pt-6 space-y-3">
+                                    {item.points.map((pt, i) => (
+                                        <div key={i} className="flex items-center gap-3 text-[10px] font-black text-primary/60 uppercase tracking-widest">
+                                            <div className="h-1 w-1 rounded-full bg-primary/40" />
+                                            {pt}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </Card>
+                    </motion.div>
+                ))}
             </div>
         </div>
 
-        {/* Detailed Mission Section */}
-        <div className="w-full max-w-4xl mt-32 space-y-20 px-6 pb-20">
-            <section className="space-y-8">
-                <div className="flex items-center gap-6 mb-4">
-                    <div className="h-px flex-1 bg-primary/10"></div>
-                    <span className="text-[11px] font-black uppercase tracking-[0.5em] text-primary">Statutory Mandate</span>
-                    <div className="h-px flex-1 bg-primary/10"></div>
-                </div>
-                <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-center">Democratizing Intelligence</h2>
-                <div className="grid md:grid-cols-2 gap-12 text-left">
+        {/* Editorial Mandate Node */}
+        <div className="w-full max-w-5xl mt-40 space-y-32 px-6 pb-32">
+            <section className="grid lg:grid-cols-2 gap-20 items-center">
+                <motion.div 
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="space-y-10"
+                >
                     <div className="space-y-4">
-                        <h3 className="text-xl font-black tracking-tight flex items-center gap-4">
-                            <Logo className="h-6 w-6 border-none shadow-none" /> The Vision
-                        </h3>
-                        <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-                            Access to justice should not be a privilege of the elite. Technology can serve as a powerful equalizer, building a more transparent and equitable judicial ecosystem for every citizen.
-                        </p>
+                        <ForensicLabel>Protocol: Statutory-Mandate</ForensicLabel>
+                        <h2 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-none">Democratizing <br /> <span className="text-primary italic">Intelligence</span></h2>
                     </div>
-                    <div className="space-y-4">
-                        <h3 className="text-xl font-black tracking-tight flex items-center gap-4">
-                            <ShieldCheck className="h-6 w-6 text-primary" /> Institutional Trust
-                        </h3>
-                        <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-                            Every AI output is accompanied by relevant legal citations. We bridge the gap between automated intelligence and expert professional advice.
-                        </p>
+                    <div className="space-y-8">
+                        <div className="flex gap-6 items-start">
+                            <div className="p-4 rounded-2xl bg-primary/5 text-primary shrink-0 border border-primary/10">
+                                <Globe className="h-6 w-6" />
+                            </div>
+                            <div className="space-y-2">
+                                <h3 className="text-xl font-black tracking-tight">The Vision Protocol</h3>
+                                <p className="text-sm text-muted-foreground leading-relaxed font-medium">Access to justice should not be a privilege of the elite. Technology serves as the ultimate equalizer in the Indian judicial ecosystem.</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-6 items-start">
+                            <div className="p-4 rounded-2xl bg-primary/5 text-primary shrink-0 border border-primary/10">
+                                <Award className="h-6 w-6" />
+                            </div>
+                            <div className="space-y-2">
+                                <h3 className="text-xl font-black tracking-tight">Institutional Trust</h3>
+                                <p className="text-sm text-muted-foreground leading-relaxed font-medium">Every AI output is audited against current amendments and accompanied by statutory citations for 100% forensic transparency.</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </motion.div>
+                
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    className="relative"
+                >
+                    <div className="absolute -inset-10 bg-primary/5 rounded-full blur-[100px] animate-pulse"></div>
+                    <Card className="glass rounded-[3.5rem] p-1 border-primary/10 shadow-3xl relative z-10 overflow-hidden">
+                        <div className="bg-muted/30 aspect-square rounded-[3.2rem] flex items-center justify-center relative group overflow-hidden">
+                            <Logo className="h-48 w-48 opacity-[0.05] grayscale group-hover:scale-110 transition-transform duration-1000" />
+                            <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center space-y-6">
+                                <BadgeCheck className="h-16 w-16 text-primary mb-2" />
+                                <p className="text-xl font-black font-headline tracking-tighter leading-tight italic">
+                                    "Engineering Dignity through Precise Neural Legal Intelligence."
+                                </p>
+                                <div className="h-px w-12 bg-primary/20"></div>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Registry Certified Node</p>
+                            </div>
+                        </div>
+                    </Card>
+                </motion.div>
             </section>
 
-            <section className="text-center pt-6">
-                <div className="p-10 sm:p-16 rounded-[3rem] bg-gradient-to-br from-primary via-accent to-blue-400 text-white shadow-3xl relative overflow-hidden group">
+            {/* Terminal Activation Block */}
+            <section className="text-center pt-10">
+                <motion.div 
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="p-12 sm:p-24 rounded-[4rem] bg-primary text-white shadow-[0_50px_100px_rgba(var(--primary),0.3)] relative overflow-hidden group"
+                >
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-                    <div className="relative z-10 space-y-6">
-                        <h2 className="text-3xl sm:text-5xl font-black tracking-tighter">Initialize Your Node</h2>
-                        <p className="text-base sm:text-xl font-bold opacity-90 max-w-xl mx-auto italic">"Ready to Navigate the Law with Absolute Confidence?"</p>
-                        <Button asChild size="lg" className="h-16 px-12 bg-white text-primary hover:bg-white/90 font-black uppercase tracking-[0.2em] text-xs rounded-2xl shadow-3xl transition-transform active:scale-95">
-                            <Link href="/dashboard">Initialize Terminal <ArrowRight className="ml-4 h-5 w-5" /></Link>
-                        </Button>
+                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary via-primary to-blue-600"></div>
+                    
+                    <div className="relative z-10 space-y-10">
+                        <div className="flex justify-center">
+                            <div className="bg-white/10 backdrop-blur-xl p-4 rounded-3xl border border-white/20 animate-bounce">
+                                <Cpu className="h-10 w-10 text-white" />
+                            </div>
+                        </div>
+                        <div className="space-y-4">
+                            <h2 className="text-4xl sm:text-7xl font-black font-headline tracking-tighter leading-none">Initialize <span className="text-blue-200">Your Node</span></h2>
+                            <p className="text-lg sm:text-2xl font-bold opacity-80 max-w-xl mx-auto italic tracking-tight">"Ready to Navigate the Law with Absolute Confidence?"</p>
+                        </div>
+                        <div className="flex justify-center">
+                            <Button asChild size="lg" className="h-20 px-16 bg-white text-primary hover:bg-white/90 font-black uppercase tracking-[0.3em] text-[12px] rounded-[2rem] shadow-3xl transition-all active:scale-95 group/btn">
+                                <Link href="/dashboard">
+                                    Access Terminal <ArrowRight className="ml-4 h-6 w-6 transition-transform group-btn:translate-x-2" />
+                                </Link>
+                            </Button>
+                        </div>
+                        <div className="flex items-center justify-center gap-4 opacity-40">
+                            <div className="h-1 w-1 rounded-full bg-white animate-ping"></div>
+                            <span className="text-[9px] font-black uppercase tracking-[0.6em]">System: Active // Sync: Optimized</span>
+                        </div>
                     </div>
-                </div>
+                </motion.div>
             </section>
         </div>
       </div>
