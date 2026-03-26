@@ -38,7 +38,8 @@ import {
   Trash2, 
   Flag,
   Activity,
-  BadgeCheck
+  BadgeCheck,
+  ShieldCheck
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -60,6 +61,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
+import { DigitalIDCard } from "../profile/page";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -98,6 +100,68 @@ interface UserProfile {
     isAdmin?: boolean;
 }
 
+function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
+    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
+    const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
+    const fallback = post.isAnonymous ? 'A' : (post.authorName?.charAt(0) || '');
+
+    // Construct mock user for the ID card preview
+    const mockUserForID = {
+        uid: post.authorUid,
+        firstName: post.isAnonymous ? 'Anonymous' : post.authorName.split(' ')[0],
+        lastName: post.isAnonymous ? 'Node' : (post.authorName.split(' ').slice(1).join(' ') || ''),
+        email: post.isAnonymous ? 'Identity Masked' : 'Registry Verified',
+        mobileNumber: post.isAnonymous ? 'Encrypted' : 'Authorized Node',
+        userType: post.isAnonymous ? 'Secure Node' : 'Community Member',
+        securityStatus: 'verified'
+    };
+
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <div className="flex items-start gap-4 cursor-pointer group/author">
+                    <Avatar className="h-12 w-12 border-2 border-background shadow-xl rounded-2xl group-hover/author:scale-105 transition-transform">
+                        {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
+                        <AvatarFallback className="font-black bg-primary/10 text-primary">{fallback}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 text-left">
+                        <div className="flex items-center gap-2">
+                            <p className="font-black text-sm tracking-tight group-hover/author:text-primary transition-colors">{authorName}</p>
+                            {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
+                            {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
+                        </p>
+                    </div>
+                </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl bg-card">
+                <div className="p-8">
+                    <DialogHeader className="mb-6 border-none text-left">
+                        <div className="flex items-center gap-2 text-primary mb-2">
+                            <ShieldCheck className="h-4 w-4" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Official Registry Preview</span>
+                        </div>
+                        <DialogTitle className="sr-only">User Dossier: {authorName}</DialogTitle>
+                        <DialogDescription className="sr-only">Institutional identity node details for nyayasahayak.in.</DialogDescription>
+                    </DialogHeader>
+                    
+                    <DigitalIDCard user={mockUserForID as any} photoURL={authorAvatar || ""} />
+                    
+                    <div className="mt-8 pt-6 border-t border-primary/5 text-center">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest italic opacity-40">
+                            "Institutional identity node verified via nyayasahayak.in"
+                        </p>
+                    </div>
+                </div>
+                <div className="p-4 bg-muted/5 border-t text-center">
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Secure Identity Synchronization Active</span>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
 function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile | null }) {
     const { toast } = useToast();
     const firestore = useFirestore();
@@ -114,10 +178,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
     const isAuthor = post.authorUid === currentUser?.uid;
     const isAdmin = currentUser?.email && (ADMIN_EMAILS.includes(currentUser.email.toLowerCase()) || userProfile?.isAdmin);
-    
-    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
-    const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
-    const fallback = post.isAnonymous ? 'A' : (post.authorName?.charAt(0) || '');
     
     const handleAction = (action: string) => {
         toast({
@@ -228,21 +288,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
         <Card key={post.id} className="overflow-hidden glass border-primary/5 hover:border-primary/20 transition-all shadow-lg rounded-[2rem]">
             <CardContent className="p-4 sm:p-8 pb-0">
                 <div className="flex items-start justify-between mb-6">
-                    <div className="flex items-start gap-4">
-                        <Avatar className="h-12 w-12 border-2 border-background shadow-xl rounded-2xl hover:scale-105 transition-transform">
-                            {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
-                            <AvatarFallback className="font-black bg-primary/10 text-primary">{fallback}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 text-left">
-                            <div className="flex items-center gap-2">
-                                <p className="font-black text-sm tracking-tight">{authorName}</p>
-                                {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
-                            </div>
-                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
-                                {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
-                            </p>
-                        </div>
-                    </div>
+                    <AuthorIdentityNode post={post} isAdmin={isAdmin || false} />
                     <div className="flex items-center gap-2">
                         {post.postType && (
                             <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-3 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest h-5">
