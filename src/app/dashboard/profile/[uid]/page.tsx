@@ -246,7 +246,7 @@ export default function UserPublicProfilePage(props: { params: Promise<{ uid: st
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10" asChild>
           <Link href="/dashboard/research-analytics">
-            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Go Back
+            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Click to back only
           </Link>
         </Button>
         <div className="flex items-center gap-2">
