@@ -406,33 +406,6 @@ export default function DashboardHomePage() {
               <section>
                   <SectionHeader icon={TrendingUp} sector="Sector: Community">Live Transmission Stream</SectionHeader>
                   
-                  {/* Community Ingest Node (Quick Post) */}
-                  <MotionWrapper delay={0.1}>
-                    <Link href="/dashboard/research-analytics/new" className="block mb-8">
-                        <Card className="glass border-primary/10 shadow-xl rounded-[1.5rem] overflow-hidden group hover:border-primary/30 transition-all cursor-pointer active:scale-[0.99]">
-                            <CardContent className="p-5 flex items-center gap-5">
-                                <div className="relative shrink-0">
-                                    <Avatar className="h-12 w-12 border-2 border-background shadow-lg rounded-xl group-hover:rotate-3 transition-transform duration-500">
-                                        {userProfile?.photoURL ? (
-                                            <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                                        ) : (
-                                            <AvatarFallback className="font-black bg-primary/10 text-primary uppercase">{userProfile?.firstName?.charAt(0) || 'U'}</AvatarFallback>
-                                        )}
-                                    </Avatar>
-                                    <div className="absolute -bottom-1 -right-1 bg-green-500 h-3.5 w-3.5 rounded-full border-2 border-background shadow-sm"></div>
-                                </div>
-                                <div className="flex-1 text-left min-w-0">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1 leading-none">Community Node</p>
-                                    <p className="text-sm font-bold text-muted-foreground group-hover:text-foreground transition-colors truncate">Initialize a new transmission or institutional poll...</p>
-                                </div>
-                                <div className="h-12 w-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-all">
-                                    <Plus className="h-6 w-6" />
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </Link>
-                  </MotionWrapper>
-
                   <div className="space-y-6">
                       {postsLoading ? (
                           <div className="space-y-4">
@@ -503,23 +476,32 @@ export default function DashboardHomePage() {
           </div>
         </div>
 
-        {/* Floating AI Robot Button */}
-        <div className="fixed bottom-8 right-8 z-[100]">
-            <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="relative group h-16 w-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center transition-all overflow-hidden"
-            >
-                <motion.div 
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    className="absolute inset-0 bg-primary rounded-full"
-                />
-                <Bot className="h-8 w-8 relative z-10" />
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-            </motion.button>
+        {/* Floating AI Robot & Action Node */}
+        <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-center gap-4">
+            <Link href="/dashboard/research-analytics/new">
+                <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="relative group h-16 w-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center transition-all overflow-hidden"
+                >
+                    <motion.div 
+                        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 2 }}
+                        className="absolute inset-0 bg-primary rounded-full"
+                    />
+                    <Bot className="h-8 w-8 relative z-10" />
+                    
+                    {/* Integrated Action Node (+) */}
+                    <div className="absolute top-2 right-2 bg-accent text-accent-foreground rounded-full p-0.5 shadow-lg z-20 border-2 border-primary group-hover:scale-110 transition-transform">
+                        <Plus className="h-2.5 w-2.5 font-black" />
+                    </div>
+
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                </motion.button>
+            </Link>
+            
             <div className="absolute -top-10 right-0 bg-background border border-primary/20 px-3 py-1.5 rounded-xl shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Neural Assistant Active</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Neural Assistant Active // Initialize Post</span>
             </div>
         </div>
 
