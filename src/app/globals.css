@@ -1,120 +1,124 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Sophisticated Slate-White for Light Mode */
+    /* Institutional Slate-White with Saffron/Green Accents */
     --background: 210 20% 98%;
     --foreground: 224 71% 4%;
     --card: 0 0% 100%;
     --card-foreground: 224 71% 4%;
     --popover: 210 20% 98%;
     --popover-foreground: 224 71% 4%;
-    --primary: 221.2 83.2% 45%;
+    --primary: 28 100% 55%; /* Saffron */
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 115 60% 94%; /* Light Green Wash */
+    --secondary-foreground: 115 100% 20%;
     --muted: 210 40% 94%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 35.4 100% 50%;
+    --accent: 115 80% 30%; /* Indian Green */
     --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 28 100% 55%;
     --radius: 1rem;
 
     --sidebar-background: 210 40% 98%;
     --sidebar-foreground: 222.2 84% 4.9%;
-    --sidebar-primary: 221.2 83.2% 53.3%;
+    --sidebar-primary: 28 100% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 96.1%;
-    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
+    --sidebar-accent: 115 60% 96%;
+    --sidebar-accent-foreground: 115 100% 20%;
     --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-ring: 221.2 83.2% 53.3%;
+    --sidebar-ring: 28 100% 55%;
   }
  
   .dark {
-    /* Deep Forensic Charcoal for Dark Mode */
+    /* Deep Forensic Charcoal with Tricolor Neon Accents */
     --background: 222 47% 6%;
     --foreground: 210 40% 98%;
     --card: 222 47% 8%;
     --card-foreground: 210 40% 98%;
     --popover: 222 47% 6%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
+    --primary: 28 100% 60%; /* Saffron Glow */
     --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 115 40% 12%;
+    --secondary-foreground: 115 100% 80%;
     --muted: 217.2 32.6% 14%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 35.4 100% 50%;
+    --accent: 115 100% 35%; /* Green Glow */
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --ring: 28 100% 60%;
 
     --sidebar-background: 222 47% 4%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 217.2 91.2% 59.8%;
+    --sidebar-primary: 28 100% 60%;
     --sidebar-primary-foreground: 222.2 47.4% 11.2%;
-    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent: 115 40% 12%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-ring: 224.3 76.3% 48%;
+    --sidebar-ring: 28 100% 60%;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  * { @apply border-border; }
   body {
     @apply bg-background text-foreground text-sm leading-snug;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-  h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight font-black;
-  }
+  h1, h2, h3, h4, h5, h6 { @apply tracking-tight font-black; }
 }
 
 @layer utilities {
-  .glass {
-    @apply bg-card/40 backdrop-blur-2xl border border-primary/5;
-  }
-  
-  .forensic-text {
-    @apply font-black uppercase tracking-widest text-[9px];
+  .glass { @apply bg-card/40 backdrop-blur-2xl border border-primary/5; }
+  .forensic-text { @apply font-black uppercase tracking-widest text-[9px]; }
+
+  .tricolor-gradient {
+    background: linear-gradient(135deg, 
+      rgba(255, 153, 51, 0.05) 0%, 
+      rgba(255, 255, 255, 0.02) 50%, 
+      rgba(18, 136, 7, 0.05) 100%
+    );
   }
 
-  .neural-rain {
+  .tricolor-pulse {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    background: linear-gradient(180deg, transparent 0%, rgba(var(--primary), 0.05) 100%);
+    inset: 0;
     overflow: hidden;
+    pointer-events: none;
     z-index: 0;
   }
 
-  .rain-drop {
+  .tricolor-glow {
     position: absolute;
-    background: linear-gradient(180deg, transparent, hsl(var(--primary)));
-    width: 1px;
-    height: 60px;
-    opacity: 0.1;
-    animation: rain linear infinite;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    animation: tricolor-move 20s infinite alternate ease-in-out;
   }
 
-  @keyframes rain {
-    0% { transform: translateY(-100px); }
-    100% { transform: translateY(100vh); }
+  @keyframes tricolor-move {
+    0% { transform: translate(-10%, -10%); }
+    100% { transform: translate(20%, 20%); }
+  }
+
+  .ashoka-rotate {
+    animation: ashoka-spin 60s linear infinite;
+  }
+
+  @keyframes ashoka-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 }
