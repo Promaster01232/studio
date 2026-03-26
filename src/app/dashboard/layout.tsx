@@ -357,10 +357,34 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         </motion.div>
                     ) : (
                         <div className="flex flex-1 items-center justify-center">
-                            <div className="relative">
-                                <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <Logo className="h-8 w-8 opacity-40 animate-pulse" />
+                            <div className="flex flex-col items-center gap-8">
+                                <div className="relative">
+                                    <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+                                        className="absolute -inset-12 border border-primary/5 rounded-full"
+                                    />
+                                    <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
+                                        <Logo className="h-16 w-16 border-none bg-white rounded-full p-2" />
+                                    </div>
+                                    <motion.div
+                                        animate={{
+                                            scale: [1, 1.2, 1],
+                                            opacity: [0.5, 0.2, 0.5],
+                                        }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                        className="absolute inset-0 bg-primary/20 rounded-full blur-xl -z-10"
+                                    />
+                                </div>
+                                <div className="flex flex-col items-center gap-3">
+                                    <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
+                                        <Activity className="h-3 w-3 text-primary animate-pulse" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Node Synchronization</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                        <span>Authenticating Hub Access...</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
