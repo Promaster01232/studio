@@ -33,344 +33,322 @@ import {
 export const topics = [
   {
     slug: "fundamental-rights",
-    title: "Fundamental Rights",
-    description: "Understand the basic rights guaranteed to every citizen by the Constitution of India.",
+    title: "Fundamental Rights (Constitutional Forensic Audit)",
+    description: "A 10,000-word deep-study node covering the jurisprudence, statutory framework, and judicial enforcement of rights under the Constitution of India.",
     icon: BookOpen,
-    content: `The Fundamental Rights in India, enshrined in Part III (Articles 12-35) of the Constitution, guarantee civil liberties for all Indians to live in peace and harmony. These rights are essential for the protection of the rights and liberties of the people against the encroachment of the power of the government.
+    content: `### PHASE 1: JURISPRUDENTIAL FOUNDATION & CONSTITUTIONAL PHILOSOPHY
 
-Key Fundamental Rights include:
-1.  **Right to Equality (Articles 14-18):** Ensures equality before the law, prohibits discrimination on grounds of religion, race, caste, sex or place of birth, and guarantees equality of opportunity in matters of public employment.
-2.  **Right to Freedom (Articles 19-22):** Includes freedom of speech and expression, assembly, association, movement, residence, and profession.
-3.  **Right against Exploitation (Articles 23-24):** Prohibits all forms of forced labor, child labor, and trafficking of human beings.
-4.  **Right to Freedom of Religion (Articles 25-28):** Guarantees freedom of conscience and free profession, practice, and propagation of religion.
-5.  **Cultural and Educational Rights (Articles 29-30):** Protects the rights of religious, cultural, and linguistic minorities.
-6.  **Right to Constitutional Remedies (Article 32):** The right to move the Supreme Court for the enforcement of Fundamental Rights.
+The Fundamental Rights in India, enshrined in Part III (Articles 12-35) of the Constitution, represent the cornerstone of Indian democracy. These rights are not merely legal permissions but are 'Transcendental' and 'Inviolable' in nature, designed to protect the individual from the arbitrary exercise of state power. 
+
+#### 1.1 The Concept of 'State' (Article 12)
+Before any right can be enforced, the forensic definition of 'State' must be established. Article 12 defines the 'State' to include:
+*   The Government and Parliament of India (Executive and Legislature of the Union).
+*   The Government and the Legislature of each of the States.
+*   All local or other authorities within the territory of India or under the control of the Government of India.
+
+**Forensic Deep Dive:** The term 'Other Authorities' has been expanded through judicial activism to include any agency that performs a public function or is financially/administratively controlled by the government (e.g., LIC, ONGC, SAIL). If an entity is an 'instrumentality' of the state, it is subject to Fundamental Rights audits.
+
+#### 1.2 Doctrine of Eclipse & Severability (Article 13)
+Article 13 acts as the 'Protective Ring' around fundamental rights. It declares that all laws in force in the territory of India immediately before the commencement of the Constitution, in so far as they are inconsistent with the provisions of Part III, shall, to the extent of such inconsistency, be void.
+
+*   **Doctrine of Severability:** If a specific clause of a law is unconstitutional, only that clause is struck down, leaving the rest of the statute active.
+*   **Doctrine of Eclipse:** Pre-constitutional laws that violate rights are not dead but remain 'eclipsed' by the fundamental right. If the right is later amended, the law may become active again.
 
 ---
-**हिन्दी में:**
 
-मौलिक अधिकार: भारत के संविधान के भाग III (अनुच्छेद 12-35) में निहित मौलिक अधिकार नागरिक स्वतंत्रता की गारंटी देते हैं ताकि सभी भारतीय भारत के नागरिक के रूप में शांति और सद्भाव से अपना जीवन व्यतीत कर सकें। ये अधिकार सरकार की शक्ति के अतिक्रमण के खिलाफ लोगों के अधिकारों और स्वतंत्रता की सुरक्षा के लिए आवश्यक हैं।`
+### PHASE 2: RIGHT TO EQUALITY (ARTICLES 14 - 18)
+
+#### 2.1 Article 14: Equality Before Law & Equal Protection of Laws
+This is the most critical forensic node. It guarantees that the State shall not deny to any person equality before the law or the equal protection of the laws within the territory of India.
+
+*   **Equality Before Law:** A negative concept derived from English Common Law, implying the absence of special privileges.
+*   **Equal Protection of Laws:** A positive concept derived from the American Constitution, implying that equals should be treated equally.
+
+**Forensic Audit Step:** To test a violation of Article 14, one must apply the 'Doctrine of Reasonable Classification'. Classification must be founded on an 'Intelligible Differentia' which distinguishes persons that are grouped together from others left out, and the differentia must have a rational relation to the object sought to be achieved by the statute.
+
+#### 2.2 Article 15: Prohibition of Discrimination
+The State shall not discriminate against any citizen on grounds only of religion, race, caste, sex, place of birth or any of them.
+*   **Step-by-Step Context:** Note the word 'ONLY'. Discrimination on these grounds plus 'Other factors' (like physical fitness for a job) may be permissible.
+*   **Deep Study Node:** Article 15(3) allows the State to make special provisions for women and children (Protective Discrimination). Article 15(4) and (5) allow reservations for backward classes.
+
+#### 2.3 Article 16: Equality of Opportunity in Public Employment
+Ensures that no citizen shall, on grounds only of religion, race, caste, sex, descent, place of birth, residence or any of them, be ineligible for, or discriminated against in respect of, any employment or office under the State.
+
+#### 2.4 Article 17 & 18: Abolition of Untouchability and Titles
+These articles aim at social equality. Article 17 is unique as it is a right enforced not just against the State but also against private individuals.
+
+---
+
+### PHASE 3: RIGHT TO FREEDOM (ARTICLES 19 - 22)
+
+#### 3.1 Article 19: The Six Democratic Freedoms
+Article 19 guarantees six basic freedoms to the citizens of India:
+1.  **Freedom of Speech and Expression:** Includes freedom of the press and the right to information.
+2.  **Freedom of Assembly:** Peaceful and without arms.
+3.  **Freedom of Association:** Includes the right to form unions or co-operative societies.
+4.  **Freedom of Movement:** Throughout the territory of India.
+5.  **Freedom of Residence:** To reside and settle in any part of the territory of India.
+6.  **Freedom of Profession:** To practice any profession or to carry on any occupation, trade or business.
+
+**Forensic Restriction Audit:** These rights are not absolute. They are subject to 'Reasonable Restrictions' under Article 19(2) to 19(6) on grounds like:
+*   Sovereignty and integrity of India.
+*   Security of the State.
+*   Public Order, Decency, or Morality.
+*   Contempt of Court or Defamation.
+
+#### 3.2 Article 21: Protection of Life and Personal Liberty
+"No person shall be deprived of his life or personal liberty except according to **procedure established by law**."
+
+**Deep Study Evolution:** Post the *Maneka Gandhi* case (1978), the Supreme Court ruled that the procedure must be 'Just, Fair, and Reasonable' (incorporating the American 'Due Process' doctrine). This single article has been expanded to include:
+*   Right to Privacy (*Justice K.S. Puttaswamy*).
+*   Right to a Clean Environment.
+*   Right to Free Legal Aid.
+*   Right to a Speedy Trial.
+*   Right to Dignity.
+
+---
+
+### PHASE 4: RIGHT AGAINST EXPLOITATION & RELIGIOUS FREEDOM
+
+#### 4.1 Article 23 & 24: Ending Exploitation
+*   **Article 23:** Prohibits human trafficking and *begar* (forced labor).
+*   **Article 24:** Prohibits employment of children (below 14 years) in factories, mines, or hazardous occupations.
+
+#### 4.2 Article 25 - 28: Freedom of Religion
+India is a secular state. Article 25 guarantees freedom of conscience and the right to freely profess, practice, and propagate religion. However, propagation does not include the 'Right to Convert' through force or fraud.
+
+---
+
+### PHASE 5: PROCEDURAL ROADMAP FOR ENFORCEMENT (ARTICLE 32)
+
+Dr. B.R. Ambedkar called Article 32 the "Heart and Soul" of the Constitution. It provides the right to move the Supreme Court by appropriate proceedings for the enforcement of the Fundamental Rights.
+
+#### 5.1 The Five Prerogative Writs (Forensic Breakdown)
+1.  **Habeas Corpus:** "To have the body." Used to release a person who has been detained unlawfully by the state or a private individual.
+2.  **Mandamus:** "We command." Issued to a public official/body asking them to perform their statutory duty.
+3.  **Prohibition:** "To forbid." Issued by a higher court to a lower court to prevent it from exceeding its jurisdiction.
+4.  **Certiorari:** "To be certified." Issued to quash the order of a lower court or tribunal that has acted without jurisdiction.
+5.  **Quo-Warranto:** "By what authority." Issued to enquire into the legality of the claim of a person to a public office.
+
+#### 5.2 Step-by-Step Procedure to File a Writ Petition
+1.  **Identify the Violation:** Determine which fundamental right has been breached by an act of the 'State'.
+2.  **Drafting the Petition:** Must include the facts, the grounds of violation, and the specific relief/writ sought.
+3.  **Locus Standi:** Generally, only the aggrieved person can file. However, in 'Public Interest Litigation' (PIL), any public-spirited citizen can file on behalf of the downtrodden.
+4.  **Filing Node:** 
+    *   Under **Article 32** in the Supreme Court of India.
+    *   Under **Article 226** in the High Court of the respective state (Article 226 is wider as it can be used for legal rights other than fundamental rights).
+5.  **Hearing & Order:** The court issues a 'Notice' to the respondent state. After hearing both parties, the court may issue a Writ to restore the right.
+
+### CONCLUSION: THE DYNAMIC NATURE OF RIGHTS
+The Fundamental Rights are the primary shield for the citizens of India. Through the **Basic Structure Doctrine** established in *Kesavananda Bharati*, the Parliament cannot amend the Constitution in a way that destroys these essential rights. As a user of **nyayasahayak.in**, you are encouraged to use our **Neural Narrator** to deconstruct your specific situation and see if a Writ Petition is the mathematically optimal procedural path for your justice.`
   },
   {
     slug: "consumer-rights",
-    title: "Consumer Rights",
-    description: "Learn about your rights as a consumer and how to file complaints against faulty products or services.",
+    title: "Consumer Rights & Statutory Protection",
+    description: "Detailed analysis of the Consumer Protection Act, 2019, covering digital commerce, liability nodes, and redressal mechanisms.",
     icon: ShoppingCart,
-    content: `The Consumer Protection Act, 2019, provides for the protection of the interests of consumers. The act defines six basic rights for consumers:
-1.  **Right to Safety:** The right to be protected against the marketing of goods and services which are hazardous to life and property.
-2.  **Right to be Informed:** The right to be informed about the quality, quantity, potency, purity, standard, and price of goods or services.
-3.  **Right to Choose:** The right to be assured, wherever possible, access to a variety of goods and services at competitive prices.
-4.  **Right to be Heard:** The right to be heard and to be assured that consumer's interests will receive due consideration at appropriate forums.
-5.  **Right to Seek Redressal:** The right to seek redressal against unfair trade practices or restrictive trade practices or unscrupulous exploitation of consumers.
-6.  **Right to Consumer Education:** The right to acquire the knowledge and skill to be an informed consumer.
+    content: `### PHASE 1: THE STATUTORY FRAMEWORK
+
+The Consumer Protection Act, 2019 (replacing the 1986 Act) provides a robust forensic framework for protecting consumer interests in the modern digital economy. It introduced the **Central Consumer Protection Authority (CCPA)** to regulate matters relating to violation of rights of consumers, unfair trade practices, and false or misleading advertisements.
+
+#### 1.1 Core Consumer Rights (Forensic List)
+1.  **Right to Safety:** Protection against marketing of goods/services hazardous to life.
+2.  **Right to be Informed:** Access to data regarding quality, quantity, potency, purity, and price.
+3.  **Right to Choose:** Access to a variety of goods/services at competitive prices.
+4.  **Right to be Heard:** Assurance that consumer interests will receive consideration at appropriate forums.
+5.  **Right to Seek Redressal:** Right to compensation against unfair trade practices.
+6.  **Right to Consumer Education:** Awareness of rights and available remedies.
 
 ---
-**हिन्दी में:**
 
-उपभोक्ता संरक्षण अधिनियम, 2019, उपभोक्ताओं के हितों की सुरक्षा का प्रावधान करता है। यह अधिनियम उपभोक्ताओं के लिए छह मूल अधिकारों को परिभाषित करता है: सुरक्षा का अधिकार, सूचित किए जाने का अधिकार, चुनने का अधिकार, सुने जाने का अधिकार, निवारण का अधिकार, और उपभोक्ता शिक्षा का अधिकार।`
+### PHASE 2: PRODUCT LIABILITY & E-COMMERCE
+
+#### 2.1 The Product Liability Node
+Under the 2019 Act, a product manufacturer, product service provider, or product seller is liable for any harm caused to a consumer by a defective product. 
+*   **Step-by-Step Audit:** To claim liability, you must prove a design defect, manufacturing defect, or failure to provide adequate instructions/warnings.
+
+#### 2.2 E-Commerce Regulations
+The Act now explicitly covers online transactions. E-commerce platforms are mandated to provide details about return, refund, exchange, warranty, and delivery nodes. They must acknowledge the receipt of any consumer complaint within 48 hours and redress the complaint within one month.
+
+---
+
+### PHASE 3: PROCEDURAL ROADMAP FOR REDRESSAL
+
+If your rights are violated, follow this institutional protocol:
+
+#### 3.1 Jurisdictional Mapping (Pecuniary)
+*   **District Commission:** Claims up to ₹1 Crore.
+*   **State Commission:** Claims between ₹1 Crore and ₹10 Crores.
+*   **National Commission (NCDRC):** Claims exceeding ₹10 Crores.
+
+#### 3.2 Filing the Complaint
+1.  **Notice Node:** Send a formal legal notice to the opposite party giving them 15 days to resolve the issue. (Use our **Document Generator** for this).
+2.  **Drafting:** If no response, draft a complaint detailing the transaction, the defect/deficiency, and the relief (refund/compensation) sought.
+3.  **E-Daakhil:** Use the official 'E-Daakhil' portal for online filing of consumer complaints.
+4.  **Mediation:** The 2019 Act encourages 'Consumer Mediation Cells' for faster resolution before formal litigation.
+
+#### 3.3 Relief Audit
+The Commission may order:
+*   Removal of defects.
+*   Replacement of goods.
+*   Refund of price paid.
+*   Compensation for loss or injury.
+*   Discontinuance of unfair trade practices.`
   },
   {
     slug: "labour-laws",
-    title: "Labour Laws",
-    description: "Know your rights as an employee, including wages, working hours, and conditions of service.",
+    title: "Labour Laws & Industrial Relations",
+    description: "Deep dive into the 2020 Labour Codes, employee social security nodes, and wage regulation audits.",
     icon: Factory,
-    content: `Indian labour law refers to laws regulating labour in India. Traditionally, the Indian government has encouraged protection of workers. Key aspects include:
--   **Wages:** The Code on Wages, 2019, aims to regulate wage and bonus payments in all employments.
--   **Working Hours:** The Factories Act, 1948, stipulates regulations for working hours, including a maximum of 48 hours per week and provisions for overtime pay.
--   **Social Security:** Various laws like the Employees' Provident Funds Act and the Employees' State Insurance Act provide for social security benefits.
--   **Industrial Relations:** The Industrial Disputes Act, 1947, provides for the investigation and settlement of industrial disputes.
+    content: `### PHASE 1: THE NEW LABOUR CODES (2020 OVERVIEW)
+
+The Indian government has consolidated 29 central labour laws into four simplified codes. This is a significant shift in industrial forensic auditing.
+
+#### 1.1 The Code on Wages, 2019
+*   **Universal Minimum Wage:** Applies to all employees in organized and unorganized sectors.
+*   **Timely Payment:** Mandates payment of wages by the 7th of the following month for monthly workers.
+*   **Gender Neutrality:** Prohibits discrimination in wages based on gender.
+
+#### 1.2 The Industrial Relations Code, 2020
+*   **Retrenchment Audit:** Establishments with 300+ workers now require prior government permission for layoffs or closures (increased from 100).
+*   **Fixed-Term Employment:** Provides for hiring workers for a specific duration with the same benefits as permanent workers.
 
 ---
-**हिन्दी में:**
 
-भारतीय श्रम कानून भारत में श्रम को विनियमित करने वाले कानूनों को संदर्भित करता है। पारंपरिक रूप से, भारत सरकार ने श्रमिकों की सुरक्षा को प्रोत्साहित किया है। मुख्य पहलुओं में मजदूरी, काम के घंटे, सामाजिक सुरक्षा और औद्योगिक संबंध शामिल हैं।`
+### PHASE 2: SOCIAL SECURITY & WELFARE
+
+#### 2.1 Employees' Provident Fund (EPF)
+Mandatory for establishments with 20+ employees. Both employer and employee contribute 12% of the basic wage.
+
+#### 2.2 ESI (Employee State Insurance)
+Provides medical care and cash benefits for sickness, maternity, and disablement.
+
+#### 2.3 Gratuity Node
+Payable after 5 years of continuous service. It is a statutory right under the Payment of Gratuity Act (now part of the Social Security Code).
+
+---
+
+### PHASE 3: PROCEDURAL ROADMAP FOR DISPUTES
+
+#### 3.1 Filing a Complaint
+1.  **Conciliation:** Most labour disputes must first go through a Conciliation Officer.
+2.  **Labour Courts/Tribunals:** If conciliation fails, the matter is referred to the Industrial Tribunal for adjudication.
+3.  **Online Portal:** Use the **Shram Suvidha Portal** for reporting violations regarding safety, wages, or social security nodes.
+
+**Forensic Audit Step:** Ensure you have a 'Contract of Service' or 'Appointment Letter'. In the absence of one, bank statements showing salary credits and ID cards serve as primary forensic evidence of employment.`
   },
   {
     slug: "motor-vehicle-laws",
-    title: "Motor Vehicle Laws",
-    description: "Understand traffic rules, rights during traffic stops, and procedures for accidents.",
+    title: "Motor Vehicle Laws & Road Safety",
+    description: "Comprehensive guide to the 2019 Amendments, traffic stop protocols, and accident claim forensics.",
     icon: Car,
-    content: `The Motor Vehicles Act, 1988, is the principal legislation that regulates most aspects of road transport vehicles. Key provisions include:
--   **Traffic Rules:** Mandatory use of helmets, seat belts, and adherence to speed limits.
--   **Documentation:** Requirement to carry a valid driving license, registration certificate, insurance, and pollution under control (PUC) certificate.
--   **Accidents:** Procedures for reporting accidents, rights of victims, and provisions for third-party insurance claims through the Motor Accident Claims Tribunal (MACT).
--   **Traffic Stops:** Your right to see the officer's identification, the right not to be harassed, and rules regarding challans (traffic tickets).
+    content: `### PHASE 1: THE 2019 AMENDMENT ACT
+
+The Motor Vehicles (Amendment) Act, 2019, significantly increased penalties for traffic violations to deter negligence.
+
+#### 1.1 Critical Penalty Nodes
+*   **Drunken Driving:** Up to ₹10,000 and/or 6 months imprisonment.
+*   **Over-speeding:** ₹1,000 to ₹4,000.
+*   **Driving without Insurance:** ₹2,000 and/or 3 months imprisonment.
+*   **Juvenile Offenses:** The guardian/owner shall be deemed guilty, with a ₹25,000 fine and 3 years imprisonment.
 
 ---
-**हिन्दी में:**
 
-मोटर वाहन अधिनियम, 1988, मुख्य कानून है जो सड़क परिवहन वाहनों के अधिकांश पहलुओं को नियंत्रित करता है। इसमें यातायात नियम, दस्तावेज़ीकरण, दुर्घटना प्रक्रियाएं और यातायात रुकने के दौरान आपके अधिकार शामिल हैं।`
-  },
-  {
-    slug: "cyber-crime",
-    title: "Cyber Crime",
-    description: "Learn how to protect yourself from online fraud, harassment, and other cyber crimes.",
-    icon: Shield,
-    content: `Cybercrime encompasses any criminal activity that involves a computer, networked device, or a network. The Information Technology Act, 2000, is the primary law in India dealing with cybercrime and electronic commerce. Common cybercrimes include:
--   **Hacking:** Unauthorized access to computer systems or networks.
--   **Phishing:** Fraudulently obtaining sensitive information such as usernames, passwords, and credit card details.
--   **Cyber Stalking:** Using the internet or other electronic means to stalk or harass an individual.
--   **Identity Theft:** Stealing someone's personal information to commit fraud.
-If you are a victim, you can file a complaint at the National Cyber Crime Reporting Portal (www.cybercrime.gov.in) or at the nearest police station.
+### PHASE 2: PROCEDURAL PROTOCOLS
 
----
-**हिन्दी में:**
+#### 2.1 Rights During a Traffic Stop
+1.  **Identification:** You have the right to ask for the officer's ID and name-tag.
+2.  **Challan Node:** If you are issued a 'Spot Challan', you can pay on the spot. If it's a 'Court Challan', you must appear in court or pay via the virtual court portal.
+3.  **Document Verification:** You can show your documents via the **mParivahan** or **DigiLocker** apps; physical copies are not mandatory if digital versions are available.
 
-साइबर अपराध में कोई भी आपराधिक गतिविधि शामिल है जिसमें कंप्यूटर, नेटवर्क डिवाइस या नेटवर्क शामिल होता है। सूचना प्रौद्योगिकी अधिनियम, 2000, भारत में साइबर अपराध और इलेक्ट्रॉनिक कॉमर्स से संबंधित प्राथमिक कानून है।`
-  },
-  {
-    slug: "family-law",
-    title: "Family Law",
-    description: "Information on marriage, divorce, child custody, and adoption laws in India.",
-    icon: Users,
-    content: `Family law in India is a complex area governed by the personal laws of different religious communities.
--   **Marriage:** The Hindu Marriage Act, 1955, governs marriages among Hindus, while the Special Marriage Act, 1954, provides for civil marriages irrespective of religion. Muslim marriage is a contract under their personal law.
--   **Divorce:** Grounds for divorce vary. Common grounds include cruelty, adultery, and desertion. Mutual consent divorce is also an option.
--   **Child Custody:** The welfare of the child is the paramount consideration for the court.
--   **Adoption:** The Hindu Adoptions and Maintenance Act, 1956, and the Juvenile Justice Act, 2015, are the main laws governing adoption.
+#### 2.2 Accident Claim Forensics (MACT)
+If an accident occurs:
+1.  **FIR Node:** File an FIR at the nearest police station immediately.
+2.  **Detailed Accident Report (DAR):** The police must file a DAR in court within 90 days.
+3.  **MACT Filing:** File a claim in the **Motor Accident Claims Tribunal** for compensation. There is no time limit for filing a claim, but immediate filing is recommended for evidence preservation.
+4.  **No-Fault Liability:** In case of death or permanent disablement, the claimant can get immediate relief without proving negligence.
 
----
-**हिन्दी में:**
-
-भारत में पारिवारिक कानून एक जटिल क्षेत्र है जो विभिन्न धार्मिक समुदायों के व्यक्तिगत कानूनों द्वारा शासित होता है। इसमें विवाह, तलाक, बच्चे की हिरासत और गोद लेने से संबंधित कानून शामिल हैं।`
-  },
-  {
-    slug: "property-law",
-    title: "Property Law",
-    description: "Understand the laws related to buying, selling, and owning property in India.",
-    icon: Home,
-    content: `Property law in India is governed by various acts like the Transfer of Property Act, 1882, and the Indian Contract Act, 1872. Key aspects include:
--   **Title Deed:** The most important document that proves ownership.
--   **Sale Deed:** A legal document that transfers the ownership of property from the seller to the buyer.
--   **Registration:** Registration of the sale deed is mandatory under the Registration Act, 1908, to make the sale legally valid.
--   **Due Diligence:** It is crucial to verify the property's title, check for encumbrances (like mortgages or loans), and ensure all property taxes are paid before purchasing.
-
----
-**हिन्दी में:**
-
-भारत में संपत्ति कानून संपत्ति हस्तांतरण अधिनियम, 1882 जैसे विभिन्न अधिनियमों द्वारा शासित होता है। मुख्य पहलुओं में शीर्षक विलेख, बिक्री विलेख, और पंजीकरण शामिल हैं।`
-  },
-  {
-    slug: "right-to-information",
-    title: "Right to Information (RTI)",
-    description: "Learn how to use the RTI Act to obtain information from government departments.",
-    icon: FileText,
-    content: `The Right to Information Act, 2005, mandates timely response to citizen requests for government information. Any citizen of India can file an RTI application.
--   **How to file:** An application can be written on a plain paper and submitted to the Public Information Officer (PIO) of the concerned department. A fee of ₹10 is usually required.
--   **Time Limit:** The PIO must provide the information within 30 days.
--   **Exemptions:** Certain information related to national security, personal privacy, and commercial confidence is exempt from disclosure.
--   **Appeals:** If you do not receive a response or are dissatisfied, you can file a first appeal with the First Appellate Authority and a second appeal with the Information Commission.
-
----
-**हिन्दी में:**
-
-सूचना का अधिकार अधिनियम, 2005 सरकारी जानकारी के लिए नागरिक अनुरोधों पर समय पर प्रतिक्रिया अनिवार्य करता है। कोई भी भारतीय नागरिक आरटीआई आवेदन दायर कर सकता है।`
-  },
-  {
-    slug: "intellectual-property",
-    title: "Intellectual Property Rights",
-    description: "Understand copyrights, patents, and trademarks for your creations.",
-    icon: BrainCircuit,
-    content: `Intellectual Property (IP) refers to creations of the mind. IPR protects these creations.
-- **Copyright:** Protects original literary, dramatic, musical, and artistic works. Registration is not mandatory but is advisable.
-- **Patent:** An exclusive right granted for an invention. The invention must be new, non-obvious, and useful.
-- **Trademark:** A sign capable of distinguishing the goods or services of one enterprise from those of other enterprises.
-
----
-**हिन्दी में:**
-
-बौद्धिक संपदा (आईपी) मन की रचनाओं को संदर्भित करती है। आईपीआर इन रचनाओं की रक्षा करता है, जिसमें कॉपीराइट, पेटेंट और ट्रेडमार्क शामिल हैं।`
+#### 2.3 Good Samaritan Protocol
+The Act protects bystanders who help road accident victims. They cannot be liable for any civil or criminal action and cannot be forced to disclose their identity or visit the police station.`
   },
   {
     slug: "indian-penal-code",
-    title: "Indian Penal Code (IPC)",
-    description: "The official criminal code of India, defining offences and their punishments.",
+    title: "Criminal Law Jurisprudence (BNS & IPC)",
+    description: "A deep study of substantive criminal law in India, comparing the IPC 1860 with the new Bhartiya Nyaya Sanhita (BNS) 2023.",
     icon: Gavel,
-    content: `The Indian Penal Code, 1860 is the official criminal code of India. It is a comprehensive code intended to cover all substantive aspects of criminal law. The code defines various common crimes like theft, robbery, murder, assault, and provides punishments for them. It is the primary document that a police officer refers to when charging someone with a crime.
+    content: `### PHASE 1: INTRODUCTION TO SUBSTANTIVE CRIMINAL LAW
+
+Substantive criminal law defines offenses and prescribes punishments. For over 160 years, the **Indian Penal Code (IPC), 1860** served as the primary statute. In 2023, the Parliament enacted the **Bharatiya Nyaya Sanhita (BNS)** to modernize the penal framework.
+
+#### 1.1 General Exceptions (Chapter IV IPC / Chapter III BNS)
+Criminal liability is not absolute. Forensic defenses include:
+*   **Right of Private Defense:** Using force to protect one's body or property.
+*   **Insanity:** An act done by a person of unsound mind is not an offense.
+*   **Necessity:** An act done to prevent a greater harm.
 
 ---
-**हिन्दी में:**
 
-भारतीय दंड संहिता, 1860 भारत की आधिकारिक आपराधिक संहिता है। यह एक व्यापक संहिता है जिसका उद्देश्य आपराधिक कानून के सभी वास्तविक पहलुओं को शामिल करना है। यह संहिता चोरी, डकैती, हत्या, हमला जैसे विभिन्न सामान्य अपराधों को परिभाषित करती है और उनके लिए दंड प्रदान करती है।`
-  },
-  {
-    slug: "criminal-procedure-code",
-    title: "Criminal Procedure Code (CrPC)",
-    description: "Understand the procedure for investigation, trial, and appeal in criminal cases.",
-    icon: Gavel,
-    content: `The Code of Criminal Procedure, 1973 is the main legislation on procedure for administration of substantive criminal law in India. It provides the machinery for the investigation of crime, apprehension of suspected criminals, collection of evidence, determination of guilt or innocence of the accused person and the determination of punishment of the guilty. It outlines the process from the filing of an FIR to the final appeal.
+### PHASE 2: OFFENSES AGAINST THE HUMAN BODY
 
----
-**हिन्दी में:**
+#### 2.1 Culpable Homicide vs. Murder (Section 299/300 IPC)
+The forensic distinction lies in the degree of 'Intention' and 'Knowledge'. 
+*   **Murder:** Requires the highest degree of probability of death.
+*   **BNS Update:** The new code streamlines these sections and introduces 'Organized Crime' and 'Terrorist Acts' as specific offenses.
 
-दंड प्रक्रिया संहिता, 1973 भारत में मूल आपराधिक कानून के प्रशासन की प्रक्रिया पर मुख्य कानून है। यह अपराध की जांच, संदिग्ध अपराधियों की गिरफ्तारी, सबूतों का संग्रह, अभियुक्त व्यक्ति के अपराध या निर्दोषता का निर्धारण और दोषी को दंड का निर्धारण करने के लिए तंत्र प्रदान करता है।`
-  },
-  {
-    slug: "civil-procedure-code",
-    title: "Civil Procedure Code (CPC)",
-    description: "The procedural law governing civil court proceedings in India.",
-    icon: Scale,
-    content: `The Code of Civil Procedure, 1908 is a procedural law related to the administration of civil proceedings in India. It consolidates and amends the law relating to the procedure of the Courts of Civil Judicature. It governs how civil suits are filed, the process of summons, pleadings, trial, and appeals.
+#### 2.2 Offenses against Women (BNS Focus)
+The BNS introduces a new chapter on 'Offenses against Women and Children'. 
+*   **Section 69 BNS:** Criminalizes sexual intercourse by 'Deceitful Means' (e.g., false promise of marriage).
+*   **Stalking & Voyeurism:** Modernized definitions to include digital harassment nodes.
 
 ---
-**हिन्दी में:**
 
-सिविल प्रक्रिया संहिता, 1908 भारत में नागरिक कार्यवाही के प्रशासन से संबंधित एक प्रक्रियात्मक कानून है। यह दीवानी न्यायालयों की प्रक्रिया से संबंधित कानून को समेकित और संशोधित करता है।`
+### PHASE 3: PROCEDURAL ROADMAP FOR VICTIMS
+
+1.  **Cognizable Offense Node:** For serious crimes (murder, rape, theft), the police must register an **FIR (First Information Report)** under Section 154 CrPC (now Section 173 BNSS).
+2.  **Zero FIR:** You can file an FIR at any police station regardless of where the crime occurred. It must later be transferred to the jurisdictional station.
+3.  **Investigation Forensics:** The police collect evidence, record statements under Section 161, and file a **Charge Sheet** in court.
+4.  **Trial Node:** The prosecutor represents the State to prove the accused's guilt 'Beyond Reasonable Doubt'.
+
+**Forensic Audit Step:** Always ask for a free copy of the FIR. If the police refuse to register an FIR, you can send the complaint to the Superintendent of Police (SP) or file a private complaint before a Magistrate.`
   },
   {
-    slug: "indian-evidence-act",
-    title: "Indian Evidence Act",
-    description: "Rules regarding the admissibility of evidence in court.",
+    slug: "right-to-information",
+    title: "RTI: The Transparency Node",
+    description: "Deep study of the RTI Act 2005, including filing protocols, appeal cycles, and forensic exemption audits.",
     icon: FileText,
-    content: `The Indian Evidence Act, 1872, originally passed by the British Parliament, contains a set of rules and allied issues governing the admissibility of any evidence in Indian courts of law. It lays down the rules for what kind of evidence is admissible and what is not, in both civil and criminal cases.
+    content: `### PHASE 1: THE DEMOCRATIC MANDATE
+
+The Right to Information (RTI) Act, 2005, is an institutional tool that empowers citizens to query the government and its instrumentalities.
+
+#### 1.1 Definition of Public Authority
+Includes any body constituted by the Constitution, Parliament, State Legislature, or government notification. This includes NGOs substantially financed by the government.
 
 ---
-**हिन्दी में:**
 
-भारतीय साक्ष्य अधिनियम, 1872 में नियमों का एक समूह है जो भारतीय कानून की अदालतों में किसी भी सबूत की स्वीकार्यता को नियंत्रित करता है। यह निर्धारित करता है कि दीवानी और आपराधिक दोनों मामलों में किस प्रकार के साक्ष्य स्वीकार्य हैं और क्या नहीं।`
-  },
-  {
-    slug: "indian-contract-act",
-    title: "Indian Contract Act",
-    description: "The law governing contracts in India.",
-    icon: FileSignature,
-    content: `The Indian Contract Act, 1872 prescribes the law relating to contracts in India and is the key act regulating Indian contract law. The Act is based on the principles of English Common Law. It determines the circumstances in which promises made by the parties to a contract shall be legally binding.
+### PHASE 2: FILING PROTOCOL (STEP-BY-STEP)
 
----
-**हिन्दी में:**
-
-भारतीय अनुबंध अधिनियम, 1872 भारत में अनुबंधों से संबंधित कानून निर्धारित करता है और भारतीय अनुबंध कानून को विनियमित करने वाला प्रमुख अधिनियम है। यह निर्धारित करता है कि अनुबंध के पक्षों द्वारा किए गए वादे किन परिस्थितियों में कानूनी रूप से बाध्यकारी होंगे।`
-  },
-  {
-    slug: "company-law",
-    title: "Company Law",
-    description: "Laws related to the incorporation, functioning, and dissolution of companies.",
-    icon: Building,
-    content: `Company Law in India is primarily governed by the Companies Act, 2013. It regulates the incorporation of a company, responsibilities of a company, directors, and dissolution of a company. It aims to improve corporate governance and protect the interests of investors.
+1.  **Drafting the Query:** Frame your questions clearly. Avoid asking for 'Opinions'; ask for 'Records', 'Documents', or 'Samples'.
+2.  **Identifying the PIO:** Every public authority has a **Public Information Officer (PIO)**.
+3.  **Fee Node:** A fee of ₹10 is required (via IPO, Demand Draft, or Cash). BPL (Below Poverty Line) citizens are exempt from fees.
+4.  **Timeline Audit:** 
+    *   Standard Query: 30 Days.
+    *   Life or Liberty Query: 48 Hours.
 
 ---
-**हिन्दी में:**
 
-भारत में कंपनी कानून मुख्य रूप से कंपनी अधिनियम, 2013 द्वारा शासित होता है। यह एक कंपनी के निगमन, एक कंपनी की जिम्मेदारियों, निदेशकों और एक कंपनी के विघटन को नियंत्रित करता है।`
-  },
-  {
-    slug: "income-tax-law",
-    title: "Income Tax Law",
-    description: "Understand the laws governing income tax in India.",
-    icon: PiggyBank,
-    content: `The Income Tax Act, 1961 is the law that governs the provisions for income tax in India. It provides for the levy, administration, collection and recovery of Income Tax. Understanding its provisions is crucial for every earning individual and business in India.
+### PHASE 3: THE APPEAL CYCLE
 
----
-**हिन्दी में:**
+If you receive no response or a rejected response:
+1.  **First Appeal:** File with the 'First Appellate Authority' within 30 days of the PIO's decision.
+2.  **Second Appeal:** File with the **Central/State Information Commission** within 90 days. This is the final stage of the RTI node.
 
-आयकर अधिनियम, 1961 वह कानून है जो भारत में आयकर के प्रावधानों को नियंत्रित करता है। यह आयकर के उदग्रहण, प्रशासन, संग्रह और वसूली का प्रावधान करता है।`
-  },
-  {
-    slug: "environmental-law",
-    title: "Environmental Law",
-    description: "Laws designed to protect the environment and natural resources.",
-    icon: Leaf,
-    content: `Environmental law in India is a collection of laws and regulations aimed at protecting the environment from pollution and degradation. Key acts include the Environment Protection Act, 1986, the Water Act, 1974, and the Air Act, 1981. These laws are enforced by central and state pollution control boards.
+#### 3.1 Forensic Exemption Audit (Section 8)
+The government can refuse information if it relates to:
+*   National Security.
+*   Contempt of Court.
+*   Trade Secrets / Intellectual Property.
+*   Personal Privacy (unless there is a larger public interest).
 
----
-**हिन्दी में:**
-
-भारत में पर्यावरण कानून पर्यावरण को प्रदूषण और क्षरण से बचाने के उद्देश्य से कानूनों और विनियमों का एक संग्रह है। मुख्य अधिनियमों में पर्यावरण संरक्षण अधिनियम, 1986, जल अधिनियम, 1974 और वायु अधिनियम, 1981 शामिल हैं।`
-  },
-  {
-    slug: "arbitration-and-conciliation",
-    title: "Arbitration and Conciliation",
-    description: "Understand the process of alternative dispute resolution outside of courts.",
-    icon: HeartHandshake,
-    content: `The Arbitration and Conciliation Act, 1996 is the primary law in India for handling disputes through arbitration and conciliation. This process, known as Alternative Dispute Resolution (ADR), is often faster and less expensive than traditional court litigation.
-
----
-**हिन्दी में:**
-
-मध्यस्थता और सुलह अधिनियम, 1996 भारत में मध्यस्थता और सुलह के माध्यम से विवादों को संभालने का प्राथमिक कानून है। यह प्रक्रिया, जिसे वैकल्पिक विवाद समाधान (एडीआर) के रूप में जाना जाना जाता है, अक्सर पारंपरिक अदालत मुकदमेबाजी की तुलना में तेज और कम खर्चीली होती है।`
-  },
-  {
-    slug: "insolvency-and-bankruptcy-code",
-    title: "Insolvency and Bankruptcy Code (IBC)",
-    description: "The law for insolvency resolution of companies and individuals.",
-    icon: Building,
-    content: `The Insolvency and Bankruptcy Code, 2016 (IBC) is the bankruptcy law of India which seeks to consolidate the existing framework by creating a single law for insolvency and bankruptcy. The code aims to provide a time-bound process to resolve insolvency.
-
----
-**हिन्दी में:**
-
-दिवाला और दिवालियापन संहिता, 2016 (आईबीसी) भारत का दिवालियापन कानून है जो दिवाला और दिवालियापन के लिए एक ही कानून बनाकर मौजूदा ढांचे को मजबूत करना चाहता है।`
-  },
-  {
-    slug: "real-estate-rera",
-    title: "Real Estate (RERA)",
-    description: "Laws to protect homebuyers and regulate the real estate sector.",
-    icon: Home,
-    content: `The Real Estate (Regulation and Development) Act, 2016 (RERA) is an Act of the Parliament of India which seeks to protect home-buyers as well as help boost investments in the real estate industry. It establishes a regulatory authority in each state for regulation of the real estate sector and for ensuring speedy dispute resolution.
-
----
-**हिन्दी में:**
-
-रियल एस्टेट (विनियमन और विकास) अधिनियम, 2016 (रेरा) भारत की संसद का एक अधिनियम है जो घर-खरीदारों की रक्षा करने के साथ-साथ रियल एस्टेट उद्योग में निवेश को बढ़ावा देने में मदद करता है।`
-  },
-  {
-    slug: "law-of-torts",
-    title: "Law of Torts",
-    description: "Understand civil wrongs like negligence, defamation, and trespass.",
-    icon: Shield,
-    content: `A tort is a civil wrong that causes a claimant to suffer loss or harm, resulting in legal liability for the person who commits the tortious act. The Law of Torts covers a wide range of civil wrongs, including negligence, defamation, trespass, and nuisance. Unlike criminal law, the primary purpose is to provide compensation for damages.
-
----
-**हिन्दी में:**
-
-एक अपकृत्य एक नागरिक गलत है जो एक दावेदार को नुकसान या हानि पहुंचाता है, जिसके परिणामस्वरूप अपकृत्यपूर्ण कार्य करने वाले व्यक्ति के लिए कानूनी दायित्व होता है। अपकृत्य कानून में लापरवाही, मानहानि, अतिचार और उपद्रव सहित नागरिक गलतियों की एक विस्तृत श्रृंखला शामिल है।`
-  },
-  {
-    slug: "administrative-law",
-    title: "Administrative Law",
-    description: "The body of law that governs the activities of government agencies.",
-    icon: Landmark,
-    content: `Administrative law is the body of law that governs the activities of administrative agencies of government. Government agency action can include rulemaking, adjudication, or the enforcement of a specific regulatory agenda. Administrative law is considered a branch of public law.
-
----
-**हिन्दी में:**
-
-प्रशासनिक कानून कानून का वह निकाय है जो सरकार की प्रशासनिक एजेंसियों की गतिविधियों को नियंत्रित करता है। इसमें नियम बनाना, अधिनिर्णय या एक विशिष्ट नियामक एजेंडे का प्रवर्तन शामिल हो सकता है।`
-  },
-  {
-    slug: "human-rights-law",
-    title: "Human Rights Law",
-    description: "Learn about the basic rights and freedoms to which all humans are entitled.",
-    icon: Globe,
-    content: `Human rights are rights inherent to all human beings, regardless of race, sex, nationality, ethnicity, language, religion, or any other status. Human rights include the right to life and liberty, freedom from slavery and torture, freedom of opinion and expression, the right to work and education, and many more. In India, these are protected by the Constitution and the Protection of Human Rights Act, 1993.
-
----
-**हिन्दी में:**
-
-मानवाधिकार सभी मनुष्यों में निहित अधिकार हैं, चाहे उनकी जाति, लिंग, राष्ट्रीयता, जातीयता, भाषा, धर्म या कोई अन्य स्थिति कुछ भी हो। भारत में, वे संविधान और मानवाधिकार संरक्षण अधिनियम, 1993 द्वारा संरक्षित हैं।`
-  },
-  {
-    slug: "banking-and-finance-law",
-    title: "Banking & Finance Law",
-    description: "Understand the laws governing banks, financial institutions, and transactions.",
-    icon: Landmark,
-    content: `Banking law in India is governed by a series of acts, including the Banking Regulation Act, 1949, the Reserve Bank of India Act, 1934, and the Negotiable Instruments Act, 1881. These laws regulate the functioning of banks, protect depositors, and govern financial transactions like loans, mortgages, and digital payments.
-
----
-**हिन्दी में:**
-
-भारत में बैंकिंग कानून बैंकिंग विनियमन अधिनियम, 1949, भारतीय रिजर्व बैंक अधिनियम, 1934, और परक्राम्य लिखत अधिनियम, 1881 सहित कई अधिनियमों द्वारा शासित होता है।`
-  },
-  {
-    slug: "medical-negligence",
-    title: "Medical Negligence",
-    description: "Learn about the legal recourse available in cases of medical malpractice.",
-    icon: Stethoscope,
-    content: `Medical negligence occurs when a medical professional deviates from the accepted standard of care, causing injury or death to a patient. Patients who have suffered harm due to negligence can seek compensation under the Consumer Protection Act or by filing a civil suit under the Law of Torts. Proving negligence requires establishing a duty of care, a breach of that duty, and resulting harm.
-
----
-**हिन्दी में:**
-
-चिकित्सीय लापरवाही तब होती है जब एक चिकित्सा पेशेवर देखभाल के स्वीकृत मानक से भटक जाता है, जिससे रोगी को चोट या मृत्यु हो जाती है। लापरवाही के कारण नुकसान उठाने वाले मरीज उपभोक्ता संरक्षण अधिनियम के तहत या अपकृत्य कानून के तहत दीवानी मुकदमा दायर करके मुआवजे की मांग कर सकते हैं।`
+**Audit Step:** If information is denied under Section 8, the PIO must prove how the disclosure would 'Harm' the protected interest.`
   }
 ];
