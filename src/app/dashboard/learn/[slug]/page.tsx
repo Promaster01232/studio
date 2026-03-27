@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useParams, notFound } from "next/navigation";
@@ -87,11 +86,11 @@ export default function LearnTopicDetailPage() {
 
             <motion.div initial={{ opacity: 0, scale: 0.99 }} animate={{ opacity: 1, scale: 1 }}>
                 <Card className="glass shadow-[0_50px_100px_rgba(0,0,0,0.1)] rounded-[3rem] border-primary/5 overflow-hidden">
-                    <CardHeader className="p-8 sm:p-16 bg-primary/5 border-b border-primary/10 relative overflow-hidden">
+                    <CardHeader className="p-8 sm:p-12 bg-primary/5 border-b border-primary/10 relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-16 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-700">
                             <Landmark className="h-64 w-64" />
                         </div>
-                        <div className="relative z-10 space-y-8 max-w-4xl">
+                        <div className="relative z-10 space-y-6 max-w-4xl">
                             <div className="flex flex-wrap items-center gap-4">
                                 <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-5 py-1 rounded-full font-black text-[10px] uppercase tracking-widest shadow-inner">
                                     Forensic Study Node
@@ -110,18 +109,18 @@ export default function LearnTopicDetailPage() {
                             </div>
                             <div className="space-y-3">
                                 <h1 className={cn(
-                                    "text-4xl sm:text-7xl font-black font-headline tracking-tighter leading-none text-foreground bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text",
+                                    "text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-tight text-foreground bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text",
                                     displayLang === 'hi' && "leading-tight"
                                 )}>
                                     {topic.title}
                                 </h1>
-                                <p className="text-xl sm:text-2xl text-primary font-bold tracking-tight italic opacity-80">
+                                <p className="text-lg sm:text-xl text-primary font-bold tracking-tight italic opacity-80">
                                     Institutional Statutory Registry // NS-NODE-{topic.slug.toUpperCase().substring(0, 4)}
                                 </p>
                             </div>
                         </div>
                     </CardHeader>
-                    <CardContent className="p-8 sm:p-16">
+                    <CardContent className="p-8 sm:p-12">
                         <AnimatePresence mode="wait">
                             <motion.div 
                                 key={displayLang}
