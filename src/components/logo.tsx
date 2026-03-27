@@ -13,7 +13,8 @@ export function Logo({ className, imageClassName, priority = false }: { classNam
         alt="Nyaya Sahayak Institutional Identity" 
         width={128}
         height={128}
-        className={cn("object-cover transition-transform group-hover:scale-110 duration-700", imageClassName)} 
+        sizes="(max-width: 768px) 96px, 128px"
+        className={cn("object-cover transition-transform group-hover:scale-110 duration-700 w-full h-full", imageClassName)} 
         priority={priority}
       />
     </div>

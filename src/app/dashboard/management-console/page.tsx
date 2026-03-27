@@ -332,7 +332,7 @@ export default function ManagementConsolePage() {
     if (!userToPurge) return;
     const user = userToPurge;
     
-    // Absolute power: can delete any account except current root admin list to prevent lockout
+    // Absolute Power: Delete ANY account except root administrators
     if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         toast({ 
             variant: "destructive", 
@@ -373,12 +373,12 @@ export default function ManagementConsolePage() {
     <div className="max-w-7xl mx-auto space-y-8 px-2 sm:px-6 pb-12 text-left">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tighter font-headline text-foreground">Registry Management</h1>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tighter font-headline text-foreground lowercase first-letter:uppercase">Registry management</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-medium">Institutional oversight of nyayasahayak.in records and identity data.</p>
         </div>
         <div className="flex gap-2 sm:gap-3">
             <Button className="bg-primary text-white h-10 sm:h-11 px-4 sm:px-6 rounded-xl font-bold shadow-lg shadow-primary/20 text-[10px] sm:text-xs">
-                <UserPlus className="mr-2 h-3 w-3 sm:h-4 w-4" /> Manual Entry
+                <UserPlus className="mr-2 h-3 w-3 sm:h-4 w-4" /> manual entry
             </Button>
         </div>
       </div>
@@ -387,7 +387,7 @@ export default function ManagementConsolePage() {
           <CardHeader className="bg-muted/5 border-b border-primary/5 px-4 sm:px-6 py-6">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="text-left w-full">
-                      <CardTitle className="font-headline font-black text-lg sm:text-xl tracking-tight">Identity Registry</CardTitle>
+                      <CardTitle className="font-headline font-black text-lg sm:text-xl tracking-tight">Identity registry</CardTitle>
                       <CardDescription className="text-[10px] sm:text-xs font-medium mt-1">Forensic security and account status oversight.</CardDescription>
                   </div>
                   <div className="relative group w-full md:w-80">
@@ -406,7 +406,7 @@ export default function ManagementConsolePage() {
                   <Table className="min-w-[900px]">
                       <TableHeader className="bg-muted/20">
                           <TableRow>
-                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest pl-6 h-12">User Identity</TableHead>
+                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest pl-6 h-12">User identity</TableHead>
                               <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Role</TableHead>
                               <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Status</TableHead>
                               <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Audit</TableHead>
@@ -471,8 +471,8 @@ export default function ManagementConsolePage() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl">
-                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
-                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><RotateCcw className="mr-3 h-4 w-4" /> Reset Profile</DropdownMenuItem>
+                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><Mail className="mr-3 h-4 w-4" /> message citizen</DropdownMenuItem>
+                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><RotateCcw className="mr-3 h-4 w-4" /> reset profile</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem 
                                                         className={cn("rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10", isProtected && "opacity-50 cursor-not-allowed")}
@@ -480,7 +480,7 @@ export default function ManagementConsolePage() {
                                                         disabled={processingUid === user.uid || isProtected}
                                                     >
                                                         {isProtected ? <Lock className="mr-3 h-4 w-4" /> : <Trash2 className="mr-3 h-4 w-4" />}
-                                                        Purge Registry Record
+                                                        purge record
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -502,14 +502,14 @@ export default function ManagementConsolePage() {
                   <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4">
                       <ShieldAlert className="h-10 w-10 text-destructive animate-pulse" />
                   </div>
-                  <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Institutional Purge</AlertDialogTitle>
+                  <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm purge protocol</AlertDialogTitle>
                   <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
                       This protocol will permanently erase <strong>{userToPurge?.firstName} {userToPurge?.lastName}</strong> from the registry. This action is terminal and irreversible.
                   </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6 text-left">
-                  <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort Protocol</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleExecutePurge} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px] shadow-lg shadow-destructive/20">Execute Purge</AlertDialogAction>
+                  <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort protocol</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleExecutePurge} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px] shadow-lg shadow-destructive/20">Execute purge</AlertDialogAction>
               </AlertDialogFooter>
           </AlertDialogContent>
       </AlertDialog>

@@ -260,12 +260,12 @@ export default function UserPublicProfilePage(props: {
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10" asChild>
           <Link href="/dashboard/research-analytics">
-            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to Stream
+            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> back to stream
           </Link>
         </Button>
         <div className="flex items-center gap-2">
             <Badge variant="outline" className="h-8 border-primary/10 font-bold bg-background shadow-sm px-4 rounded-lg text-[10px] uppercase tracking-widest text-muted-foreground">
-                Registry Synced // Active Terminal
+                registry synced // active terminal
             </Badge>
         </div>
       </motion.div>
@@ -302,18 +302,18 @@ export default function UserPublicProfilePage(props: {
                       </div>
                       <p className="text-lg sm:text-xl text-primary font-bold tracking-tight flex items-center justify-center sm:justify-start gap-2">
                           <Zap className="h-4 w-4 animate-pulse" />
-                          Official {profile.userType?.toUpperCase()}
+                          official {profile.userType?.toUpperCase()}
                       </p>
                   </div>
                   
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
                       <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background/50 border border-primary/10 shadow-sm">
                           <Activity className="h-3.5 w-3.5 text-primary" />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Registry Synchronized</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">registry synchronized</span>
                       </div>
                       <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background/50 border border-primary/10 shadow-sm">
                           <Globe className="h-3.5 w-3.5 text-blue-500" />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Registry Status: Active</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">registry status: active</span>
                       </div>
                   </div>
               </div>
@@ -326,7 +326,7 @@ export default function UserPublicProfilePage(props: {
               <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
                   {[
                       { 
-                          label: "Registry Posts", 
+                          label: "Registry posts", 
                           value: stats.posts, 
                           icon: FileText, 
                           color: "text-blue-500", 
@@ -334,7 +334,7 @@ export default function UserPublicProfilePage(props: {
                           onClick: fetchUserPosts,
                           isClickable: true
                       },
-                      { label: "Community Likes", value: stats.likes, icon: Heart, color: "text-red-500", bg: "bg-red-500/10" }
+                      { label: "Community likes", value: stats.likes, icon: Heart, color: "text-red-500", bg: "bg-red-500/10" }
                   ].map((stat, i) => (
                       <Card 
                         key={i} 
@@ -364,20 +364,20 @@ export default function UserPublicProfilePage(props: {
                   <Card className="glass border-primary/5 rounded-[2rem] overflow-hidden shadow-xl">
                       <CardHeader className="bg-primary/5 border-b border-primary/5 p-6 text-left">
                           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                              <Cpu className="h-4 w-4 text-primary" /> Technical Specifications
+                              <Cpu className="h-4 w-4 text-primary" /> Technical specifications
                           </CardTitle>
                       </CardHeader>
                       <CardContent className="p-6 space-y-4">
-                          <div className="flex justify-between items-center py-2 border-b border-primary/5">
-                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Network Access</span>
+                          <div className="flex justify-between items-center py-2">
+                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Network access</span>
                               <span className="flex items-center gap-1.5 text-green-600 text-[10px] font-black uppercase">
                                   <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-ping"></div>
-                                  High Performance
+                                  High performance
                               </span>
                           </div>
-                          <div className="flex justify-between items-center py-2">
-                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Registry Status</span>
-                              <span className="text-[10px] font-bold uppercase text-primary">Active Member</span>
+                          <div className="flex justify-between items-center py-2 border-t border-primary/5">
+                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Registry status</span>
+                              <span className="text-[10px] font-bold uppercase text-primary">Active member</span>
                           </div>
                       </CardContent>
                   </Card>
@@ -393,9 +393,9 @@ export default function UserPublicProfilePage(props: {
                       <CardHeader className="p-8 sm:p-10 pb-0 border-none text-left">
                           <div className="flex items-center gap-3 text-primary mb-2">
                               <Globe className="h-4 w-4" />
-                              <span className="text-[10px] font-black uppercase tracking-[0.3em]">Forensic Dossier</span>
+                              <span className="text-[10px] font-black uppercase tracking-[0.3em]">Forensic dossier</span>
                           </div>
-                          <CardTitle className="text-2xl sm:text-3xl font-black tracking-tighter">Bio & Registry Profile</CardTitle>
+                          <CardTitle className="text-2xl sm:text-3xl font-black tracking-tighter">Bio & registry profile</CardTitle>
                       </CardHeader>
                       <CardContent className="p-8 sm:p-10 space-y-10">
                           <div className="p-6 rounded-3xl bg-muted/20 border border-primary/5 text-sm font-medium leading-relaxed text-foreground/80 italic shadow-inner text-left">
@@ -405,9 +405,9 @@ export default function UserPublicProfilePage(props: {
                           <div className="space-y-6">
                               <div className="flex items-center justify-between border-b border-primary/5 pb-2">
                                   <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
-                                      <Star className="h-3.5 w-3.5" /> Institutional Badges
+                                      <Star className="h-3.5 w-3.5" /> institutional badges
                                   </h3>
-                                  <span className="text-[9px] font-bold text-muted-foreground uppercase">Earned Protocols</span>
+                                  <span className="text-[9px] font-bold text-muted-foreground uppercase">earned protocols</span>
                               </div>
                               
                               <div className="grid sm:grid-cols-2 gap-4">
@@ -449,7 +449,7 @@ export default function UserPublicProfilePage(props: {
               >
                   <div className="flex items-center justify-between border-b border-primary/10 pb-4">
                       <div className="space-y-1">
-                          <h2 className="text-2xl font-black font-headline tracking-tighter">Transmission Registry</h2>
+                          <h2 className="text-2xl font-black font-headline tracking-tighter">Transmission registry</h2>
                           <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Publicly audited community contributions</p>
                       </div>
                       <Button variant="ghost" size="icon" onClick={() => setShowPosts(false)} className="rounded-xl hover:bg-destructive/10 hover:text-destructive">
@@ -467,7 +467,7 @@ export default function UserPublicProfilePage(props: {
                           <CardContent className="flex flex-col items-center justify-center text-center gap-4 opacity-40">
                               <FileText className="h-12 w-12" />
                               <div className="space-y-1">
-                                  <p className="font-black text-xl tracking-tighter">Empty Transmission Log</p>
+                                  <p className="font-black text-xl tracking-tighter">Empty transmission log</p>
                                   <p className="text-xs font-medium italic">"No institutional ideas have been initialized by this node."</p>
                               </div>
                           </CardContent>
@@ -487,12 +487,12 @@ export default function UserPublicProfilePage(props: {
                                     <Card className="glass border-primary/10 hover:border-primary/30 transition-all rounded-[2rem] overflow-hidden group relative">
                                         <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-500"></div>
                                         
-                                        <CardContent className="p-6 sm:p-8 ml-1.5">
+                                        <CardContent className="p-6 sm:p-8 ml-1.5 text-left">
                                             <div className="flex justify-between items-start mb-4">
                                                 <div className="space-y-1">
                                                     <h3 className="text-lg sm:text-xl font-black tracking-tight group-hover:text-primary transition-colors">{post.title}</h3>
                                                     <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
-                                                        Transmission // {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
+                                                        transmission // {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-2">
@@ -510,12 +510,12 @@ export default function UserPublicProfilePage(props: {
                                                             {isAuthor ? (
                                                                 <DropdownMenuItem onSelect={() => handleDeletePost(post.id)} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                                                     <Trash2 className="h-3.5 w-3.5" /> 
-                                                                    <span>Purge record</span>
+                                                                    <span>purge record</span>
                                                                 </DropdownMenuItem>
                                                             ) : (
                                                                 <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
                                                                     <Flag className="h-3.5 w-3.5" /> 
-                                                                    <span>Report breach</span>
+                                                                    <span>report breach</span>
                                                                 </DropdownMenuItem>
                                                             )}
                                                         </DropdownMenuContent>
@@ -540,28 +540,28 @@ export default function UserPublicProfilePage(props: {
                                                             </Button>
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl glass border-primary/5">
-                                                            <DropdownMenuItem onClick={() => handleShare(post, 'whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                                            <DropdownMenuItem onClick={() => handleShare(post, 'whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3 text-left">
                                                                 <div className="bg-green-500/10 p-1.5 rounded-md text-green-600">
                                                                     <MessageCircle className="h-3.5 w-3.5" />
                                                                 </div>
                                                                 WhatsApp
                                                             </DropdownMenuItem>
-                                                            <DropdownMenuItem onClick={() => handleShare(post, 'twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                                            <DropdownMenuItem onClick={() => handleShare(post, 'twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3 text-left">
                                                                 <div className="bg-blue-500/10 p-1.5 rounded-md text-blue-500">
                                                                     <Twitter className="h-3.5 w-3.5" />
                                                                 </div>
                                                                 Twitter (X)
                                                             </DropdownMenuItem>
-                                                            <DropdownMenuItem onClick={() => handleShare(post, 'copy')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                                            <DropdownMenuItem onClick={() => handleShare(post, 'copy')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3 text-left">
                                                                 <div className="bg-primary/10 p-1.5 rounded-md text-primary">
                                                                     <Bookmark className="h-3.5 w-3.5" />
                                                                 </div>
-                                                                Copy Registry Link
+                                                                copy registry link
                                                             </DropdownMenuItem>
                                                         </DropdownMenuContent>
                                                     </DropdownMenu>
                                                     <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary hover:text-white transition-all">
-                                                        Inspect <ArrowRight className="h-3 w-3" />
+                                                        inspect <ArrowRight className="h-3 w-3" />
                                                     </Button>
                                                 </div>
                                             </div>

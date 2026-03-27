@@ -532,7 +532,7 @@ export default function DashboardHomePage() {
                                     <div className={cn("p-2.5 rounded-xl w-fit mb-3 transition-transform group-hover:scale-110 shadow-sm", f.bg, f.color)}>
                                         <f.icon className="h-4 w-4" />
                                     </div>
-                                    <h3 className="font-black text-[12px] tracking-tight text-foreground leading-none">{f.title}</h3>
+                                    <h3 className="font-black text-[12px] tracking-tight text-foreground leading-none lowercase first-letter:uppercase">{f.title}</h3>
                                     <p className="text-[11px] text-muted-foreground font-medium mt-1.5 leading-snug opacity-70 line-clamp-2">{f.desc}</p>
                                 </div>
                                 <div className="mt-3.5 pt-3 border-t border-primary/5">
@@ -557,7 +557,7 @@ export default function DashboardHomePage() {
                                     <div className="p-2 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
                                         <item.icon className="h-4 w-4" />
                                     </div>
-                                    <span className="font-bold text-sm tracking-tight">{item.title}</span>
+                                    <span className="font-bold text-sm tracking-tight lowercase first-letter:uppercase">{item.title}</span>
                                 </div>
                                 <span className="text-[10px] font-bold text-muted-foreground/30 px-3 py-1 rounded-lg bg-muted/30">{item.label}</span>
                             </Card>

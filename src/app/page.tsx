@@ -50,13 +50,6 @@ const TricolorBackground = () => {
   );
 };
 
-const ForensicLabel = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-    <div className={cn("flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.3em] text-primary", className)}>
-        <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
-        {children}
-    </div>
-);
-
 export default function WelcomePage() {
   const auth = useAuth();
   const [user, setUser] = useState<User | null>(null);
@@ -120,18 +113,24 @@ export default function WelcomePage() {
                   <span className="animate-pulse ml-1 text-primary">|</span>
                 </h1>
                 
-                <div className="max-w-xl mx-auto space-y-6">
-                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+                <div className="max-w-2xl mx-auto space-y-6">
+                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed text-center sm:text-left">
                         Nyaya Sahayak represents the definitive leap forward in AI-powered legal empowerment for the Indian citizenry. In a landscape where the judicial system is often perceived as a dense thicket of complex statutes and intimidating procedural protocols, our platform serves as a high-fidelity navigational beacon. We have engineered this ecosystem to bridge the gap between statutory complexity and the fundamental rights of every individual, providing mathematically precise forensic tools that were previously reserved for elite legal institutions.
                     </p>
+                    
+                    <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground border-l-4 border-primary pl-4">Forensic Case Auditor</h2>
                     <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
                         At the core of the Nyaya Sahayak terminal is the Forensic Case Auditor. This neural engine is specifically trained on the nuances of the Bharatiya Nyaya Sanhita (BNS) and the Bharatiya Sakshya Adhiniyam (BSA). When a citizen narrates their legal problem, our AI performs a deep-layer deconstruction of the narrative, identifying potential statutory violations, mapping relevant sections of the law, and generating a professional case summary. This process transforms a confusing series of events into a structured legal dossier, empowering the user to approach law enforcement or legal counsel with absolute clarity and dignity.
                     </p>
+
+                    <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground border-l-4 border-accent pl-4">Document Risk Scanner</h2>
                     <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                        Furthermore, our Document Risk Scanner provides an institutional-grade audit of legal instruments. Whether it is a legal notice, a contract, or an FIR application, the AI node performs a comprehensive forensic scan to identify non-compliance markers, hidden liabilities, and critical procedural deadlines. By automating the risk assessment process, we ensure that no citizen is caught off-guard by the fine print of legal documentation.
+                        Furthermore, our Document Risk Scanner provides an institutional-grade audit of legal instruments. Whether it is a legal notice, a contract, or an FIR application, the AI node performs a comprehensive forensic scan to identify non-compliance markers, hidden liabilities, and critical procedural deadlines. By automating the risk assessment process, we ensure that no citizen is caught off-guard by the fine print of legal documentation. The system operates on a zero-trust architecture, ensuring that your sensitive data nodes are processed in isolated, transient environments.
                     </p>
+
+                    <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground border-l-4 border-orange-400 pl-4">Procedural Roadmap Intelligence</h2>
                     <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                        The Procedural Roadmap Intelligence is another critical pillar of our mission. Navigating the Bharatiya Nagarik Suraksha Sanhita (BNSS) requires a step-by-step understanding of judicial cycles. Nyaya Sahayak provides dynamic, personalized roadmaps that guide users through the intricacies of filing complaints, understanding writ jurisdictions under Articles 32 and 226, and maintaining proper courtroom decorum. We are building a more transparent and equitable legal landscape for 1.4 billion people.
+                        The Procedural Roadmap Intelligence is another critical pillar of our mission. Navigating the Bharatiya Nagarik Suraksha Sanhita (BNSS) requires a step-by-step understanding of judicial cycles. Nyaya Sahayak provides dynamic, personalized roadmaps that guide users through the intricacies of filing complaints, understanding writ jurisdictions under Articles 32 and 226, and maintaining proper courtroom decorum. We are building a more transparent and equitable legal landscape for 1.4 billion people, ensuring that technology serves as a bridge to justice rather than a barrier.
                     </p>
                 </div>
               </div>
@@ -212,6 +211,39 @@ export default function WelcomePage() {
                             </div>
                         </Card>
                     ))}
+                </div>
+            </section>
+
+            <section className="space-y-12">
+                <div className="flex flex-col items-center text-center space-y-3">
+                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em]">
+                        External Connectivity
+                    </Badge>
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter text-foreground">Official <span className="text-primary italic">Judicial Resources</span></h2>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                    <a href="https://services.ecourts.gov.in/" target="_blank" rel="noopener noreferrer" className="group">
+                        <Card className="glass p-6 rounded-2xl border-primary/5 hover:border-primary/30 transition-all flex items-center justify-between shadow-lg">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                                    <Globe className="h-5 w-5" />
+                                </div>
+                                <span className="font-bold text-sm">eCourts Services</span>
+                            </div>
+                            <ExternalLink className="h-4 w-4 opacity-20 group-hover:opacity-100 transition-all" />
+                        </Card>
+                    </a>
+                    <a href="https://www.india.gov.in/" target="_blank" rel="noopener noreferrer" className="group">
+                        <Card className="glass p-6 rounded-2xl border-primary/5 hover:border-primary/30 transition-all flex items-center justify-between shadow-lg">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 rounded-xl bg-accent/5 text-accent group-hover:bg-accent group-hover:text-white transition-all">
+                                    <Scale className="h-5 w-5" />
+                                </div>
+                                <span className="font-bold text-sm">National Portal India</span>
+                            </div>
+                            <ExternalLink className="h-4 w-4 opacity-20 group-hover:opacity-100 transition-all" />
+                        </Card>
+                    </a>
                 </div>
             </section>
         </div>
