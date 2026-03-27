@@ -68,6 +68,7 @@ import {
 import { Logo } from "@/components/logo";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
+import { useSoundEffect } from "@/hooks/use-sound-effect";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -146,6 +147,7 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
 
 function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     const { toast } = useToast();
+    const { playSound } = useSoundEffect();
     const firestore = useFirestore();
     const auth = useAuth();
     const { currentUser } = auth;
@@ -178,6 +180,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 
         updateDoc(postRef, updateData)
             .then(() => {
+                playSound(userHasLiked ? 'click' : 'success');
                 if (!userHasLiked && post.authorUid !== currentUser.uid) {
                     addDoc(collection(firestore, "notifications"), {
                         userId: post.authorUid,
@@ -205,6 +208,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     const handleVote = (optionIndex: number) => {
         if (!currentUser || !optimisticPoll || isVoting || userHasVotedOnPoll) return;
         setIsVoting(true);
+        playSound('success');
 
         const postRef = doc(firestore, "posts", post.id);
         const newOptions = [...optimisticPoll.options];
@@ -264,7 +268,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                     {(isAuthor || isAdmin) ? (
                                         <DropdownMenuItem onSelect={handleDelete} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                             <Trash2 className="h-3.5 w-3.5" /> 
-                                            <span>Purge Identity</span>
+                                            <span>Purge Identity Record</span>
                                         </DropdownMenuItem>
                                     ) : (
                                         <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
@@ -290,10 +294,11 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                     <button
                                         key={idx}
                                         onClick={() => handleVote(idx)}
+                                        onMouseEnter={() => playSound('hover')}
                                         disabled={userHasVotedOnPoll || isVoting}
                                         className={cn(
                                             "w-full relative h-11 rounded-xl border border-primary/5 overflow-hidden transition-all text-left px-4 group/option",
-                                            userHasVotedOnPoll ? "bg-muted/10 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/30"
+                                            userHasVotedOnPoll ? "bg-muted/10 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/30 active:scale-[0.98]"
                                         )}
                                     >
                                         <AnimatePresence>
@@ -347,7 +352,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                         </div>
                         <Button variant="ghost" size="sm" className="h-8 px-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
                             <Link href="/dashboard/research-analytics">
-                                <span>Analyze</span>
+                                <span>Analyze Node</span>
                                 <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover/btn:translate-x-1" />
                             </Link>
                         </Button>
@@ -379,6 +384,7 @@ export default function DashboardHomePage() {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const fullText = 'Sahayak';
+  const { playSound } = useSoundEffect();
   
   const firestore = useFirestore();
   const auth = useAuth();
@@ -510,8 +516,8 @@ export default function DashboardHomePage() {
                   <SectionHeader icon={Sparkles} sector="Status: Optimized">System Matrix</SectionHeader>
                   <div className="grid grid-cols-2 gap-3">
                       {aiFeatures.map((f) => (
-                        <Link key={f.href} href={f.href} className="block group">
-                            <Card className="h-full glass p-3.5 sm:p-4 rounded-[1.25rem] border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden flex flex-col justify-between min-h-[110px]">
+                        <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
+                            <Card className="h-full glass p-3.5 sm:p-4 rounded-[1.25rem] border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden flex flex-col justify-between min-h-[110px] group-hover:scale-[1.02] group-active:scale-[0.98]">
                                 <div className="absolute top-0 right-0 p-2 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
                                     <f.icon className="h-6 w-6" />
                                 </div>
@@ -538,8 +544,8 @@ export default function DashboardHomePage() {
                         { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", label: "LERN" },
                         { href: "/dashboard/my-cases", icon: Landmark, title: "Case Tracker", label: "CASE" },
                       ].map((item) => (
-                        <Link key={item.href} href={item.href} className="block group">
-                            <Card className="glass p-3.5 rounded-xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between">
+                        <Link key={item.href} href={item.href} className="block group" onMouseEnter={() => playSound('hover')}>
+                            <Card className="glass p-3.5 rounded-xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between group-hover:scale-[1.01] group-active:scale-[0.99]">
                                 <div className="flex items-center gap-3">
                                     <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                                         <item.icon className="h-3.5 w-3.5" />
@@ -558,6 +564,8 @@ export default function DashboardHomePage() {
         <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-center gap-4">
             <Link href="/dashboard/research-analytics/new">
                 <motion.button
+                    onMouseEnter={() => playSound('hover')}
+                    onClick={() => playSound('click')}
                     animate={{
                         y: [0, -8, 0],
                     }}
