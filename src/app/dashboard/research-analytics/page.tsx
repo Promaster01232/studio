@@ -253,12 +253,12 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                 {isAuthor ? (
                                     <DropdownMenuItem onSelect={handleDeletePost} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                         <Trash2 className="h-3.5 w-3.5" /> 
-                                        <span>Purge Identity Record</span>
+                                        <span>Purge record</span>
                                     </DropdownMenuItem>
                                 ) : (
                                     <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
                                         <Flag className="h-3.5 w-3.5" /> 
-                                        <span>Report Forensic Breach</span>
+                                        <span>Report breach</span>
                                     </DropdownMenuItem>
                                 )}
                             </DropdownMenuContent>
@@ -347,8 +347,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                        )})}
                        {userHasVotedOnPoll && (
                             <div className="flex items-center gap-2 px-1 text-[8px] font-black uppercase tracking-[0.2em] text-[#128807] animate-in fade-in slide-in-from-left-2">
-                                <CheckCircle2 className="h-3 w-3" />
-                                Consensus Captured // Registry Secure
+                                <CheckCircle2 className="h-3.5 w-3.5" />
+                                consensus captured // registry secure
                             </div>
                         )}
                     </div>
