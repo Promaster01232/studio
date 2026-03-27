@@ -131,7 +131,7 @@ export default function CourtAssistantPage() {
                             {isRecording ? <Waveform /> : transcript.length === 0 && <p className="text-cyan-200/30 text-center pt-12 text-xs font-bold uppercase tracking-widest">Awaiting Capture Signal</p>}
                             <div className="mt-6 space-y-2 text-sm font-mono text-cyan-100/80 text-left">
                                 {transcript.map((line, i) => (
-                                    <p key={i} className="animate-in fade-in slide-in-from-left-2">{"{"}{">"}{"}"} {line}</p>
+                                    <p key={i} className="animate-in fade-in slide-in-from-left-2">{"{"}{'>'}{"}"} {line}</p>
                                 ))}
                             </div>
                         </div>
