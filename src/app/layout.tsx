@@ -1,5 +1,4 @@
-
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -11,17 +10,22 @@ import Script from "next/script";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+};
+
 export const metadata: Metadata = {
   title: "Nyaya Sahayak | AI Legal Assistant & Forensic Case Auditor",
   description: "Empowering Indian citizens with elite AI legal intelligence. Use our Forensic Case Auditor, Document Risk Scanner, and Procedural Roadmap tools to navigate the Indian judicial system with 100% confidence. Get instant summaries and legal drafting support on nyayasahayak.in.",
   keywords: ["AI Legal Assistant India", "Forensic Case Auditor", "Legal Document Risk Assessment", "Indian Law AI", "Legal Notice Generator India", "Nyaya Sahayak", "Online FIR Guide India", "Legal Jargon Simplifier", "Indian Court Assistant"],
   authors: [{ name: "IdeaSpark Institutional Tech" }],
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   referrer: "origin-when-cross-origin",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-  ],
   alternates: {
     canonical: "https://nyayasahayak.in",
   },
