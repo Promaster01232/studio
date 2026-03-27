@@ -16,7 +16,8 @@ import {
   Download, 
   Languages,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  Bot
 } from "lucide-react";
 import { topics } from "../data";
 import { useState, useMemo } from "react";
@@ -56,6 +57,10 @@ export default function LearnTopicDetailPage() {
                 </Button>
                 
                 <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 mr-4 bg-primary/5 px-3 py-1.5 rounded-full border border-primary/10">
+                        <Languages className="h-3.5 w-3.5 text-primary" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Dialect Node</span>
+                    </div>
                     <div className="flex items-center bg-muted/30 p-1 rounded-xl border border-primary/5 mr-2">
                         <Button 
                             variant={displayLang === 'en' ? 'default' : 'ghost'} 
@@ -77,9 +82,6 @@ export default function LearnTopicDetailPage() {
                     <Button variant="outline" size="sm" className="h-10 rounded-xl border-primary/10 hover:bg-primary/5 gap-2 font-bold text-[10px] uppercase">
                         <Download className="h-3.5 w-3.5 text-primary" /> Export Audit
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl border-primary/5 hover:bg-primary/5">
-                        <Share2 className="h-4 w-4 text-muted-foreground" />
-                    </Button>
                 </div>
             </div>
 
@@ -98,9 +100,19 @@ export default function LearnTopicDetailPage() {
                                     <span className="flex items-center gap-2 bg-background/50 px-3 py-1.5 rounded-lg border border-primary/5"><Clock className="h-3.5 w-3.5 text-primary" /> {readingTime} Min Audit</span>
                                     <span className="flex items-center gap-2 bg-background/50 px-3 py-1.5 rounded-lg border border-primary/5"><Globe className="h-3.5 w-3.5 text-primary" /> Worldwide Access</span>
                                 </div>
+                                {displayLang === 'hi' && (
+                                    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
+                                        <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
+                                            <Bot className="h-3 w-3" /> AI Translation Protocol
+                                        </Badge>
+                                    </motion.div>
+                                )}
                             </div>
                             <div className="space-y-3">
-                                <h1 className="text-4xl sm:text-7xl font-black font-headline tracking-tighter leading-none text-foreground bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text">
+                                <h1 className={cn(
+                                    "text-4xl sm:text-7xl font-black font-headline tracking-tighter leading-none text-foreground bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text",
+                                    displayLang === 'hi' && "leading-tight"
+                                )}>
                                     {topic.title}
                                 </h1>
                                 <p className="text-xl sm:text-2xl text-primary font-bold tracking-tight italic opacity-80">
