@@ -111,10 +111,8 @@ export default function WelcomePage() {
           <Card className="overflow-hidden border-primary/10 shadow-2xl bg-card/40 backdrop-blur-3xl rounded-[2.5rem] relative group">
             <CardContent className="flex flex-col items-center p-6 sm:p-12 text-center relative z-10">
               <div className="relative mb-8">
-                <div className="absolute -inset-4 rounded-full bg-primary/10 animate-pulse group-hover:scale-110 transition-transform"></div>
-                <div className="bg-white rounded-full p-2 shadow-2xl relative z-10 border border-primary/10">
-                    <Logo className="h-12 w-12 sm:h-16 sm:w-16 border-none p-0" />
-                </div>
+                <div className="absolute -inset-6 rounded-full bg-primary/10 animate-pulse group-hover:scale-110 transition-transform"></div>
+                <Logo className="h-20 w-20 sm:h-28 sm:w-28 relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.2)]" />
               </div>
 
               <div className="space-y-6 mb-10">
@@ -154,7 +152,7 @@ export default function WelcomePage() {
                 ) : (
                   <Button disabled className="w-full h-14 rounded-2xl bg-primary/20 text-white border-primary/10">
                     <Loader2 className="h-4 w-4 animate-spin opacity-40 mr-2" /> 
-                    <span className="text-[8px] uppercase tracking-[0.3em] font-black opacity-40">Syncing...</span>
+                    <span className="text-[8px] uppercase tracking-[0.3em] font-black opacity-40">Syncing Registry...</span>
                   </Button>
                 )}
               </div>

@@ -58,27 +58,29 @@ const ADMIN_EMAILS = [
 ];
 
 function DigitalIdentityCard({ profile }: { profile: UserProfile }) {
-    const systemId = `NS-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
+    const systemId = `NS-REG-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
     return (
         <div className="relative w-full aspect-[1.586/1] rounded-[1.5rem] overflow-hidden shadow-2xl group transition-all hover:scale-[1.02] active:scale-[0.98] text-left">
             <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-blue-600"></div>
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
             
             <div className="absolute top-0 right-0 p-4 opacity-10">
-                <Logo className="h-32 w-32 border-none shadow-none p-0" />
+                <Logo className="h-32 w-32 shadow-none" />
             </div>
             
             <div className="relative h-full flex flex-col p-6 text-white">
                 <div className="flex justify-between items-start mb-auto">
                     <div className="flex items-center gap-2">
-                        <Logo className="h-8 w-8 border-none shadow-none bg-white p-1" />
+                        <div className="bg-white rounded-full p-1 shadow-xl">
+                            <Logo className="h-8 w-8 shadow-none" />
+                        </div>
                         <div className="flex flex-col">
                             <span className="font-black text-[10px] tracking-tighter leading-none">NYAYA SAHAYAK</span>
                             <span className="text-[6px] font-bold uppercase tracking-[0.2em] opacity-60">Forensic Terminal</span>
                         </div>
                     </div>
                     <div className="bg-white/20 backdrop-blur-md px-2 py-1 rounded-md border border-white/10">
-                        <span className="text-[8px] font-black uppercase tracking-widest">Active Node</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest">Active Registry</span>
                     </div>
                 </div>
 
@@ -260,7 +262,7 @@ export default function ProfilePage() {
       if (videoRef.current) videoRef.current.srcObject = stream;
     } catch (error) {
       setHasCameraPermission(false);
-      toast({ variant: 'destructive', title: 'Capture Denied', description: 'Enable camera nodes in browser protocols.' });
+      toast({ variant: 'destructive', title: 'Capture Denied', description: 'Enable camera node in browser protocols.' });
     }
   };
 
@@ -315,7 +317,7 @@ export default function ProfilePage() {
   const handleDeleteAccount = async () => {
     if (!auth.currentUser) return;
     if (ADMIN_EMAILS.includes(email.toLowerCase())) {
-        toast({ variant: "destructive", title: "Node Immutable", description: "Root administration nodes cannot be purged." });
+        toast({ variant: "destructive", title: "Immutable Protocol", description: "Root administration accounts cannot be purged." });
         return;
     }
     setSaving(true);
@@ -347,7 +349,7 @@ export default function ProfilePage() {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0 text-left">
         <PageHeader
             title="Registry Dossier"
-            description="Manage your secure identity nodes and institutional platform configurations on nyayasahayak.in."
+            description="Manage your secure identity and institutional platform configurations on nyayasahayak.in."
         />
 
         <div className="grid lg:grid-cols-12 gap-10 items-start">
@@ -399,7 +401,7 @@ export default function ProfilePage() {
                                         Run Forensic Scan
                                     </Button>
                                 )}
-                                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] opacity-40">System Node: {userProfile?.userType}</span>
+                                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] opacity-40">System Protocol: {userProfile?.userType}</span>
                             </div>
                         </div>
                     </div>
@@ -424,7 +426,7 @@ export default function ProfilePage() {
 
                 {userProfile && (
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-4">Digital Identity Node</h3>
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-4">Digital Identity Terminal</h3>
                         <DigitalIdentityCard profile={userProfile} />
                     </motion.div>
                 )}
@@ -473,7 +475,7 @@ export default function ProfilePage() {
                                 <Zap className="h-3 w-3" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em]">Registry Information</span>
                             </div>
-                            <CardTitle className="text-2xl sm:text-3xl font-black tracking-tight leading-none">Identity Nodes</CardTitle>
+                            <CardTitle className="text-2xl sm:text-3xl font-black tracking-tight leading-none">Identity Protocols</CardTitle>
                         </div>
                         <UserCheck className="h-8 w-8 text-primary opacity-20" />
                     </CardHeader>
@@ -567,7 +569,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="absolute bottom-8 left-0 right-0 flex justify-center px-8">
                       <Button onClick={capturePhoto} className="h-16 w-full max-w-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40 rounded-2xl bg-primary text-white hover:scale-105 active:scale-95 transition-all">
-                          <Camera className="mr-3 h-6 w-6" /> Capture Node
+                          <Camera className="mr-3 h-6 w-6" /> Capture Identity
                       </Button>
                   </div>
               </div>

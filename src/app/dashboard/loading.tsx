@@ -24,7 +24,7 @@ export default function Loading() {
           
           <div className="relative">
             <div className="p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400 shadow-2xl">
-              <Logo className="h-16 w-16 border-none bg-white rounded-full p-2" />
+              <Logo className="h-16 w-16 shadow-none" />
             </div>
             
             {/* Pulsing Tricolor Glow */}
@@ -47,7 +47,7 @@ export default function Loading() {
           <div className="flex flex-col items-center gap-3">
             <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 shadow-sm">
               <Activity className="h-3 w-3 text-primary animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Node Synchronization</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Protocol Synchronization</span>
             </div>
             <h3 className="text-xl font-black font-headline tracking-tighter text-foreground">
               Initialising Forensic Terminal...
