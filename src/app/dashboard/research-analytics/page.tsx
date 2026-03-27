@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useToast } from "@/hooks/use-toast";
@@ -126,7 +125,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
     const isAuthor = post.authorUid === currentUser?.uid;
-    const isAdmin = currentUser?.email && (ADMIN_EMAILS.includes(currentUser.email.toLowerCase()) || userProfile?.isAdmin);
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
     

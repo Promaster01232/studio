@@ -1,4 +1,3 @@
-
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
@@ -14,7 +13,7 @@ export function Logo({ className, imageClassName }: { className?: string, imageC
         alt="Nyaya Sahayak Institutional Identity" 
         width={400} 
         height={400} 
-        className={cn("h-full w-full object-cover scale-[1.05] transition-transform group-hover:scale-110 duration-700", imageClassName)} 
+        className={cn("h-full w-full object-cover transition-transform group-hover:scale-110 duration-700", imageClassName)} 
         priority
       />
     </div>

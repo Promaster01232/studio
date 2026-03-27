@@ -158,7 +158,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
-    const isAdmin = currentUser?.email && (ADMIN_EMAILS.includes(currentUser.email.toLowerCase()) || userProfile?.isAdmin);
     const isAuthor = post.authorUid === currentUser?.uid;
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
@@ -552,8 +551,8 @@ export default function DashboardHomePage() {
                                     <span className="font-bold text-sm tracking-tight">{item.title}</span>
                                 </div>
                                 <span className="text-[10px] font-bold text-muted-foreground/30 px-3 py-1 rounded-lg bg-muted/30">{item.label}</span>
-                            </Link>
-                        </Card>
+                            </Card>
+                        </Link>
                       ))}
                   </div>
               </section>
