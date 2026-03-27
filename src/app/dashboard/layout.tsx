@@ -162,7 +162,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               }
             }
             setProfileLoading(false);
-        }, () => {
+        }, (error) => {
+            console.error("Profile snapshot error:", error);
             setProfileLoading(false);
         });
 
@@ -170,7 +171,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         const q = query(notifRef, where("userId", "==", user.uid), where("isRead", "==", false));
         notifUnsubscribeRef.current = onSnapshot(q, (snap) => {
             setUnreadCount(snap.size);
-        }, () => {
+        }, (error) => {
+            console.warn("Notification listener error:", error);
             setUnreadCount(0);
         });
 

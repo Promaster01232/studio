@@ -391,7 +391,7 @@ const SectionHeader = ({ children, icon: Icon, sector }: { children: React.React
     <div className="flex items-center justify-between mb-6 border-b border-primary/5 pb-4">
         <div className="flex items-center gap-3">
             {Icon && <Icon className="h-5 w-5 text-primary/40" />}
-            <h2 className="text-[13px] font-black tracking-tight text-foreground/80">{children}</h2>
+            <h2 className="text-[13px] font-black tracking-tight text-foreground/80 lowercase first-letter:uppercase">{children}</h2>
         </div>
         {sector && <span className="text-[11px] font-bold text-muted-foreground/40">{sector}</span>}
     </div>
@@ -438,13 +438,7 @@ export default function DashboardHomePage() {
             setLatestPosts(list);
             setPostsLoading(false);
         }, (serverError) => {
-            if (auth.currentUser) {
-                const permissionError = new FirestorePermissionError({
-                    path: postsRef.path,
-                    operation: 'list',
-                } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
-            }
+            console.error("Feed error:", serverError);
             setPostsLoading(false);
         });
     });

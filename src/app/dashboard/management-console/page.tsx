@@ -281,11 +281,7 @@ export default function ManagementConsolePage() {
                 setLoading(false);
             },
             (serverError) => {
-                const permissionError = new FirestorePermissionError({
-                    path: usersCol.path,
-                    operation: 'list',
-                } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
+                console.error("Management Console list error:", serverError);
                 setLoading(false);
             }
         );
@@ -308,12 +304,8 @@ export default function ManagementConsolePage() {
             toast({ title: isInactive ? "User Suspended" : "User Activated" });
         })
         .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: userRef.path,
-                operation: 'update',
-                requestResourceData: updateData,
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
+            console.error("Status update error:", serverError);
+            toast({ variant: "destructive", title: "Action Denied" });
         })
         .finally(() => setProcessingUid(null));
   };
@@ -327,49 +319,13 @@ export default function ManagementConsolePage() {
             : { securityStatus: 'suspicious', flagReason: verification.reason || "Suspicious identity patterns." };
 
           const userRef = doc(firestore, "users", user.uid);
-          updateDoc(userRef, updateData as any)
-            .catch(async (serverError) => {
-                const permissionError = new FirestorePermissionError({
-                    path: userRef.path,
-                    operation: 'update',
-                    requestResourceData: updateData,
-                } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
-            });
+          await updateDoc(userRef, updateData as any);
           toast({ title: verification.isAuthentic ? "User Authenticated" : "Forensic Audit Failed" });
       } catch (error) {
           toast({ variant: "destructive", title: "Process Error" });
       } finally {
           setProcessingUid(null);
       }
-  };
-
-  const handleSendAdminMessage = async (targetUser: UserRecord) => {
-      const msg = prompt(`Initialize institutional alert for ${targetUser.firstName}:`);
-      if (!msg) return;
-
-      const notifData = {
-          userId: targetUser.uid,
-          type: 'admin_message',
-          title: 'Institutional Alert',
-          description: msg,
-          isRead: false,
-          createdAt: serverTimestamp()
-      };
-
-      const notifCol = collection(firestore, "notifications");
-      addDoc(notifCol, notifData)
-        .then(() => {
-            toast({ title: "Alert Dispatched", description: "The citizen has been notified." });
-        })
-        .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: notifCol.path,
-                operation: 'create',
-                requestResourceData: notifData,
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
-        });
   };
 
   const handleExecutePurge = async () => {
@@ -395,43 +351,14 @@ export default function ManagementConsolePage() {
             toast({ title: "Registry Record Purged", description: `Record for ${user.firstName} erased permanently.` });
         })
         .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: userRef.path,
-                operation: 'delete',
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
+            console.error("Purge error:", serverError);
+            toast({ variant: "destructive", title: "Action Denied" });
         })
         .finally(() => {
             setProcessingUid(null);
             setUserToPurge(null);
         });
   };
-
-  const handleMassPurgeCitizens = async () => {
-      setIsMassPurging(true);
-      try {
-          const batch = writeBatch(firestore);
-          const citizens = users.filter(u => u.userType === 'citizen' && !ADMIN_EMAILS.includes(u.email.toLowerCase()) && !u.isAdmin);
-          
-          citizens.forEach(u => {
-              batch.delete(doc(firestore, "users", u.uid));
-              remove(ref(rtdb, `users/${u.uid}`)).catch(() => {});
-          });
-
-          await batch.commit().catch(async (serverError) => {
-              const permissionError = new FirestorePermissionError({
-                  path: '/users',
-                  operation: 'delete',
-              } satisfies SecurityRuleContext, serverError);
-              errorEmitter.emit('permission-error', permissionError);
-          });
-          toast({ title: "Mass Purge Complete", description: `${citizens.length} citizen records erased.` });
-      } catch (error) {
-          toast({ variant: "destructive", title: "Mass Purge Failed" });
-      } finally {
-          setIsMassPurging(false);
-      }
-  }
 
   const filteredUsers = users.filter(u => 
     `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -450,25 +377,6 @@ export default function ManagementConsolePage() {
           <p className="text-xs sm:text-sm text-muted-foreground font-medium">Institutional oversight of nyayasahayak.in records and identity data.</p>
         </div>
         <div className="flex gap-2 sm:gap-3">
-            <AlertDialog>
-                <AlertDialogTrigger asChild>
-                    <Button variant="outline" className="h-10 sm:h-11 px-4 sm:px-6 border-destructive/20 text-destructive rounded-xl font-bold bg-destructive/5 text-[10px] sm:text-xs">
-                        <Eraser className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Mass Purge Citizens
-                    </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="rounded-[2.5rem] p-8 border-none shadow-2xl glass">
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Execute Mass Decommission?</AlertDialogTitle>
-                        <AlertDialogDescription className="text-center text-sm font-medium">
-                            This will permanently delete ALL non-admin citizen accounts from the registry. This action is terminal.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter className="mt-6 gap-3 text-left">
-                        <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1">Abort</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleMassPurgeCitizens} className="bg-destructive text-white font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px]">Confirm Mass Purge</AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
             <Button className="bg-primary text-white h-10 sm:h-11 px-4 sm:px-6 rounded-xl font-bold shadow-lg shadow-primary/20 text-[10px] sm:text-xs">
                 <UserPlus className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Manual Entry
             </Button>
@@ -563,7 +471,7 @@ export default function ManagementConsolePage() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl">
-                                                    <DropdownMenuItem onClick={() => handleSendAdminMessage(user)} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
+                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
                                                     <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><RotateCcw className="mr-3 h-4 w-4" /> Reset Protocol</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem 

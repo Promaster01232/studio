@@ -81,6 +81,7 @@ export default function RegisterPage() {
     try {
       setIsValidating(true);
 
+      // AI Audit: Only validate email authenticity
       const emailValidation = await verifyEmailAuthenticity({ email });
       if (!emailValidation.isAuthentic) {
         setEmailStatus('invalid');
