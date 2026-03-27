@@ -1,27 +1,18 @@
 "use client";
 
 import { useParams, notFound } from "next/navigation";
-import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { 
   ArrowLeft, 
-  Clock, 
-  Globe, 
-  Share2, 
-  Bookmark, 
   Landmark, 
   Download, 
-  Languages,
-  CheckCircle2,
-  Sparkles,
-  Bot
+  Languages
 } from "lucide-react";
 import { topics } from "../data";
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export default function LearnTopicDetailPage() {
@@ -42,9 +33,6 @@ export default function LearnTopicDetailPage() {
     if (!topic) {
         notFound();
     }
-
-    const wordCount = topic.content.split(/\s+/).length;
-    const readingTime = Math.ceil(wordCount / 200);
 
     return (
         <div className="max-w-6xl mx-auto pb-20 space-y-10 text-left px-2 sm:px-0">
@@ -91,22 +79,6 @@ export default function LearnTopicDetailPage() {
                             <Landmark className="h-64 w-64" />
                         </div>
                         <div className="relative z-10 space-y-6 max-w-4xl">
-                            <div className="flex flex-wrap items-center gap-4">
-                                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-5 py-1 rounded-full font-black text-[10px] uppercase tracking-widest shadow-inner">
-                                    Forensic Study Node
-                                </Badge>
-                                <div className="flex items-center gap-6 text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest">
-                                    <span className="flex items-center gap-2 bg-background/50 px-3 py-1.5 rounded-lg border border-primary/5"><Clock className="h-3.5 w-3.5 text-primary" /> {readingTime} Min Audit</span>
-                                    <span className="flex items-center gap-2 bg-background/50 px-3 py-1.5 rounded-lg border border-primary/5"><Globe className="h-3.5 w-3.5 text-primary" /> Worldwide Access</span>
-                                </div>
-                                {displayLang === 'hi' && (
-                                    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-                                        <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
-                                            <Bot className="h-3 w-3" /> AI Translation Protocol
-                                        </Badge>
-                                    </motion.div>
-                                )}
-                            </div>
                             <div className="space-y-3">
                                 <h1 className={cn(
                                     "text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-tight text-foreground bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text",
