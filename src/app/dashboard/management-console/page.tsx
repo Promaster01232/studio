@@ -332,7 +332,7 @@ export default function ManagementConsolePage() {
     if (!userToPurge) return;
     const user = userToPurge;
     
-    // Absolute Power: Delete ANY account except root administrators
+    // Core protection only for root administrators
     if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         toast({ 
             variant: "destructive", 
