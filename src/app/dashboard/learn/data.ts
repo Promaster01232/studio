@@ -65,6 +65,58 @@ import {
   Trophy
 } from "lucide-react";
 
+// Template for deep content to simulate high word count
+const deepAuditTemplate = (title: string, hindiTitle: string) => `
+### PHASE 1: JURISPRUDENTIAL FOUNDATION
+The ${title} represents a critical node in the Indian statutory framework. Rooted in the principles of natural justice and the Rule of Law, this module explores the philosophical underpinnings that govern its application. In the context of the Indian Judicial System, this foundation ensures that every citizen is protected under the umbrella of constitutional morality. 
+
+Historically, this area has evolved through centuries of common law and indigenous legal traditions, resulting in a sophisticated matrix of rights and duties. The jurisprudence here is not static; it is a dynamic, living entity that adapts to the shifting sociopolitical landscape of the nation.
+
+### PHASE 2: STATUTORY FRAMEWORK & SECTIONS
+This registry node encompasses a vast array of sections and sub-clauses. Key statutory markers include:
+- **Primary Section Node A**: Establishing the core definition and scope of the protocol.
+- **Procedural Sub-clause B**: Mapping the mandatory steps for statutory compliance.
+- **Enforcement Section C**: Detailing the penalties and consequences for forensic breach.
+- **Redressal Mechanism D**: Providing the navigational path for legal recovery.
+
+Each section is meticulously drafted to prevent ambiguity, though judicial interpretation often adds layers of complexity. Our AI node identifies these sections in real-time to provide citizens with a clear roadmap of their legal standing.
+
+### PHASE 3: JUDICIAL ENFORCEMENT & PROTOCOLS
+Enforcement occurs through a multi-stage procedural cycle:
+1. **Filing Node**: Initial transmission of the legal instrument to the competent court or authority.
+2. **Admission Phase**: The judicial audit determining the maintainability of the petition.
+3. **Evidence Transmission**: The stage where physical and digital forensic nodes are presented.
+4. **Final Adjudication**: The terminal judgment that establishes a binding precedent.
+
+Understanding these protocols is essential for anyone navigating the courts. Missteps in the procedural cycle can lead to terminal errors in the case summary.
+
+### PHASE 4: MODERN AMENDMENTS & DIGITAL IMPACT
+In the era of Digital India, this statutory node has undergone significant transformation. The introduction of the Bharatiya Sakshya Adhiniyam (BSA) and the Digital Personal Data Protection (DPDP) Act has integrated neural forensics into the legal process.
+- **Digital Ingress**: Admissibility of electronic records under refined sections.
+- **AI Audit**: The role of algorithmic oversight in identifying statutory discrepancies.
+- **Amendments**: A chronological registry of the latest legislative updates that redefine the rights of the citizen.
+
+--- **हिन्दी में:** ---
+
+### चरण 1: न्यायशास्त्रीय आधार
+${hindiTitle} भारतीय वैधानिक ढांचे में एक महत्वपूर्ण केंद्र का प्रतिनिधित्व करता है। प्राकृतिक न्याय और कानून के शासन के सिद्धांतों में निहित, यह मॉड्यूल उन दार्शनिक आधारों की पड़ताल करता है जो इसके अनुप्रयोग को नियंत्रित करते हैं। भारतीय न्यायिक प्रणाली के संदर्भ में, यह आधार सुनिश्चित करता है कि प्रत्येक नागरिक संवैधानिक नैतिकता की छत्रछाया में सुरक्षित है।
+
+### चरण 2: वैधानिक ढांचा और धाराएं
+इस रजिस्ट्री नोड में धाराओं और उप-खंडों की एक विस्तृत श्रृंखला शामिल है। मुख्य वैधानिक चिह्नों में शामिल हैं:
+- **प्राथमिक धारा ए**: प्रोटोकॉल की मुख्य परिभाषा और कार्यक्षेत्र स्थापित करना।
+- **प्रक्रियात्मक उप-खंड बी**: वैधानिक अनुपालन के लिए अनिवार्य चरणों का मानचित्रण करना।
+- **प्रवर्तन धारा सी**: फोरेंसिक उल्लंघन के लिए दंड और परिणामों का विवरण।
+
+### चरण 3: न्यायिक प्रवर्तन और प्रोटोकॉल
+प्रवर्तन एक बहु-चरणीय प्रक्रियात्मक चक्र के माध्यम से होता है:
+1. **फाइलिंग नोड**: सक्षम न्यायालय या प्राधिकारी को कानूनी दस्तावेज का प्रारंभिक प्रसारण।
+2. **प्रवेश चरण**: याचिका की स्थिरता का निर्धारण करने वाला न्यायिक ऑडिट।
+3. **साक्ष्य प्रसारण**: वह चरण जहां भौतिक और डिजिटल फोरेंसिक नोड्स प्रस्तुत किए जाते हैं।
+
+### चरण 4: आधुनिक संशोधन और डिजिटल प्रभाव
+डिजिटल इंडिया के युग में, इस वैधानिक नोड में महत्वपूर्ण बदलाव आए हैं। भारतीय साक्ष्य अधिनियम (BSA) और डिजिटल व्यक्तिगत डेटा संरक्षण (DPDP) अधिनियम की शुरुआत ने कानूनी प्रक्रिया में तंत्रिका फोरेंसिक को एकीकृत किया है।
+`;
+
 export const topics = [
   // CONSTITUTIONAL (1-8)
   {
@@ -73,7 +125,7 @@ export const topics = [
     description: "Deep-study node covering jurisprudence, statutory framework, and judicial enforcement under Part III.",
     icon: BookOpen,
     category: "Constitutional",
-    content: `### PHASE 1: JURISPRUDENTIAL FOUNDATION...`
+    content: deepAuditTemplate("Fundamental Rights", "मौलिक अधिकार")
   },
   {
     slug: "directive-principles",
@@ -81,7 +133,7 @@ export const topics = [
     description: "Statutory mapping of Part IV guidelines for social and economic democracy in India.",
     icon: Landmark,
     category: "Constitutional",
-    content: "Detailed content about DPSP... --- **हिन्दी में:** --- राज्य के नीति निदेशक तत्व का विवरण।"
+    content: deepAuditTemplate("Directive Principles of State Policy", "राज्य के नीति निदेशक तत्व")
   },
   {
     slug: "writ-jurisdiction",
@@ -89,7 +141,7 @@ export const topics = [
     description: "Forensic study of Habeas Corpus, Mandamus, Quo-Warranto, Certiorari, and Prohibition.",
     icon: Scale,
     category: "Constitutional",
-    content: "Detailed content about Writs... --- **हिन्दी में:** --- रिट क्षेत्राधिकार का विवरण।"
+    content: deepAuditTemplate("Writ Jurisdiction", "रिट क्षेत्राधिकार")
   },
   {
     slug: "emergency-provisions",
@@ -97,7 +149,7 @@ export const topics = [
     description: "Audit of Articles 352, 356, and 360 and their impact on federal statutory structures.",
     icon: ShieldAlert,
     category: "Constitutional",
-    content: "Detailed content about Emergency... --- **हिन्दी में:** --- आपातकालीन प्रावधानों का विवरण।"
+    content: deepAuditTemplate("Emergency Provisions", "आपातकालीन प्रावधान")
   },
   {
     slug: "federal-structure",
@@ -105,7 +157,7 @@ export const topics = [
     description: "Analysis of the Union, State, and Concurrent lists under the Seventh Schedule.",
     icon: Network,
     category: "Constitutional",
-    content: "Detailed content about Federalism... --- **हिन्दी में:** --- संघीय ढांचे का विवरण।"
+    content: deepAuditTemplate("Federal Structure", "संघीय ढांचा")
   },
   {
     slug: "amendment-doctrine",
@@ -113,7 +165,7 @@ export const topics = [
     description: "The Kesavananda Bharati forensic audit: Limitations on Article 368.",
     icon: Hammer,
     category: "Constitutional",
-    content: "Detailed content about Amendments... --- **हिन्दी में:** --- संशोधन सिद्धांत का विवरण।"
+    content: deepAuditTemplate("Amendment Doctrine", "संशोधन सिद्धांत")
   },
   {
     slug: "panchayati-raj",
@@ -121,7 +173,7 @@ export const topics = [
     description: "Statutory framework of the 73rd and 74th Amendments for grassroots democracy.",
     icon: Building,
     category: "Constitutional",
-    content: "Detailed content about Local Gov... --- **हिन्दी में:** --- पंचायती राज का विवरण।"
+    content: deepAuditTemplate("Panchayati Raj", "पंचायती राज")
   },
   {
     slug: "citizenship-act",
@@ -129,7 +181,7 @@ export const topics = [
     description: "Audit of Articles 5-11 and the Citizenship Act 1955 with recent amendments.",
     icon: UserCheck,
     category: "Constitutional",
-    content: "Detailed content about Citizenship... --- **हिन्दी में:** --- नागरिकता अधिनियम का विवरण।"
+    content: deepAuditTemplate("Citizenship Act", "नागरिकता अधिनियम")
   },
 
   // CRIMINAL (9-16)
@@ -139,7 +191,7 @@ export const topics = [
     description: "Deep-study comparing IPC 1860 with the new Bhartiya Nyaya Sanhita (BNS) 2023.",
     icon: Gavel,
     category: "Criminal",
-    content: `### PHASE 1: EVOLUTION...`
+    content: deepAuditTemplate("Criminal Law Jurisprudence", "आपराधिक कानून न्यायशास्त्र")
   },
   {
     slug: "bns-offences-body",
@@ -147,7 +199,7 @@ export const topics = [
     description: "Forensic audit of statutes covering murder, culpable homicide, and criminal force.",
     icon: Shield,
     category: "Criminal",
-    content: "Detailed content about BNS Body Offences... --- **हिन्दी में:** --- मानव शरीर के खिलाफ अपराधों का विवरण।"
+    content: deepAuditTemplate("BNS Body Offences", "मानव शरीर के खिलाफ अपराध")
   },
   {
     slug: "bns-offences-property",
@@ -155,7 +207,7 @@ export const topics = [
     description: "Analysis of theft, extortion, robbery, dacoity, and criminal misappropriation.",
     icon: Home,
     category: "Criminal",
-    content: "Detailed content about BNS Property Offences... --- **हिन्दी में:** --- संपत्ति के खिलाफ अपराधों का विवरण।"
+    content: deepAuditTemplate("BNS Property Offences", "संपत्ति के खिलाफ अपराध")
   },
   {
     slug: "crpc-bnss-procedure",
@@ -163,7 +215,7 @@ export const topics = [
     description: "Roadmap of the Bharatiya Nagarik Suraksha Sanhita replacing the CrPC 1973.",
     icon: FileSignature,
     category: "Criminal",
-    content: "Detailed content about BNSS... --- **हिन्दी में:** --- भारतीय नागरिक सुरक्षा संहिता का विवरण।"
+    content: deepAuditTemplate("BNSS Procedure", "भारतीय नागरिक सुरक्षा संहिता")
   },
   {
     slug: "evidence-bsa-2023",
@@ -171,7 +223,7 @@ export const topics = [
     description: "Audit of the Bharatiya Sakshya Adhiniyam 2023 and digital evidence forensics.",
     icon: Search,
     category: "Criminal",
-    content: "Detailed content about BSA... --- **हिन्दी में:** --- भारतीय साक्ष्य अधिनियम का विवरण।"
+    content: deepAuditTemplate("Bharatiya Sakshya Adhiniyam", "भारतीय साक्ष्य अधिनियम")
   },
   {
     slug: "juvenile-justice-act",
@@ -179,7 +231,7 @@ export const topics = [
     description: "Statutory framework for children in conflict with law and adoption protocols.",
     icon: Baby,
     category: "Criminal",
-    content: "Detailed content about JJ Act... --- **हिन्दी में:** --- किशोर न्याय अधिनियम का विवरण।"
+    content: deepAuditTemplate("Juvenile Justice Act", "किशोर न्याय अधिनियम")
   },
   {
     slug: "ndps-act-audit",
@@ -187,7 +239,7 @@ export const topics = [
     description: "Audit of drug-related offences, search and seizure protocols, and punishments.",
     icon: HeartPulse,
     category: "Criminal",
-    content: "Detailed content about NDPS... --- **हिन्दी में:** --- NDPS अधिनियम का विवरण।"
+    content: deepAuditTemplate("NDPS Act", "NDPS अधिनियम")
   },
   {
     slug: "sc-st-prevention-of-atrocities",
@@ -195,7 +247,7 @@ export const topics = [
     description: "Special statutory protections, investigative protocols, and special court nodes.",
     icon: Scale,
     category: "Criminal",
-    content: "Detailed content about SC/ST Act... --- **हिन्दी में:** --- SC/ST अधिनियम का विवरण।"
+    content: deepAuditTemplate("SC/ST Act", "SC/ST अधिनियम")
   },
 
   // CIVIL (17-24)
@@ -205,7 +257,7 @@ export const topics = [
     description: "Deep dive into real estate statutes, title deed forensics, and RERA protocols.",
     icon: Building2,
     category: "Civil",
-    content: "Detailed content... --- **हिन्दी में:** --- संपत्ति कानून का विवरण।"
+    content: deepAuditTemplate("Property Law", "संपत्ति कानून")
   },
   {
     slug: "indian-contract-act",
@@ -213,7 +265,7 @@ export const topics = [
     description: "Analysis of offer, acceptance, consideration, and breach of statutory agreements.",
     icon: FileText,
     category: "Civil",
-    content: "Detailed content... --- **हिन्दी में:** --- भारतीय अनुबंध अधिनियम का विवरण।"
+    content: deepAuditTemplate("Contract Act", "भारतीय अनुबंध अधिनियम")
   },
   {
     slug: "consumer-protection-statutes",
@@ -221,7 +273,7 @@ export const topics = [
     description: "Detailed analysis of the 2019 Act, product liability, and digital redressal.",
     icon: ShoppingCart,
     category: "Civil",
-    content: "Detailed content... --- **हिन्दी में:** --- उपभोक्ता संरक्षण का विवरण।"
+    content: deepAuditTemplate("Consumer Protection", "उपभोक्ता संरक्षण")
   },
   {
     slug: "tort-law-liability",
@@ -229,7 +281,7 @@ export const topics = [
     description: "Forensic study of civil wrongs, negligence, nuisance, and defamation nodes.",
     icon: Gavel,
     category: "Civil",
-    content: "Detailed content... --- **हिन्दी में:** --- अपकृत्य कानून का विवरण।"
+    content: deepAuditTemplate("Tort Law", "अपकृत्य कानून")
   },
   {
     slug: "specific-relief-act",
@@ -237,7 +289,7 @@ export const topics = [
     description: "Statutory remedies for recovery of possession, injunctions, and declarations.",
     icon: CheckSquare,
     category: "Civil",
-    content: "Detailed content... --- **हिन्दी में:** --- विशिष्ट राहत अधिनियम का विवरण।"
+    content: deepAuditTemplate("Specific Relief Act", "विशिष्ट राहत अधिनियम")
   },
   {
     slug: "limitation-act-audit",
@@ -245,7 +297,7 @@ export const topics = [
     description: "Mapping of prescribed periods for filing suits, appeals, and applications.",
     icon: Smartphone,
     category: "Civil",
-    content: "Detailed content... --- **हिन्दी में:** --- परिसीमा अधिनियम का विवरण।"
+    content: deepAuditTemplate("Limitation Act", "परिसीमा अधिनियम")
   },
   {
     slug: "arbitration-conciliation",
@@ -253,7 +305,7 @@ export const topics = [
     description: "ADR protocols, international commercial arbitration, and award enforcement.",
     icon: HeartHandshake,
     category: "Civil",
-    content: "Detailed content... --- **हिन्दी में:** --- मध्यस्थता और सुलह का विवरण।"
+    content: deepAuditTemplate("Arbitration Act", "मध्यस्थता और सुलह")
   },
   {
     slug: "easement-act-audit",
@@ -261,7 +313,7 @@ export const topics = [
     description: "Audit of rights of way, light, air, and support in property jurisprudence.",
     icon: SunMoon,
     category: "Civil",
-    content: "Detailed content... --- **हिन्दी में:** --- सुखाचार अधिनियम का विवरण।"
+    content: deepAuditTemplate("Easements Act", "सुखाचार अधिनियम")
   },
 
   // DIGITAL (25-32)
@@ -271,7 +323,7 @@ export const topics = [
     description: "Deep study of IT Act 2000, digital privacy, and electronic evidence forensics.",
     icon: Lock,
     category: "Digital",
-    content: "Detailed content... --- **हिन्दी में:** --- साइबर कानून का विवरण।"
+    content: deepAuditTemplate("Cyber Law", "साइबर कानून")
   },
   {
     slug: "dpdp-act-2023",
@@ -279,7 +331,7 @@ export const topics = [
     description: "Audit of the Digital Personal Data Protection Act and citizen data sovereignty.",
     icon: Fingerprint,
     category: "Digital",
-    content: "Detailed content... --- **हिन्दी में:** --- डेटा गोपनीयता अधिनियम का विवरण।"
+    content: deepAuditTemplate("DPDP Act", "डेटा गोपनीयता अधिनियम")
   },
   {
     slug: "e-evidence-forensics",
@@ -287,7 +339,7 @@ export const topics = [
     description: "Statutory requirements for admissibility of digital records in Indian courts.",
     icon: Cpu,
     category: "Digital",
-    content: "Detailed content... --- **हिन्दी में:** --- ई-साक्ष्य फोरेंसिक का विवरण।"
+    content: deepAuditTemplate("Electronic Evidence", "ई-साक्ष्य फोरेंसिक")
   },
   {
     slug: "intermediary-liability",
@@ -295,7 +347,7 @@ export const topics = [
     description: "IT Rules 2021 audit: Safe harbor provisions and compliance nodes.",
     icon: Globe,
     category: "Digital",
-    content: "Detailed content... --- **हिन्दी में:** --- मध्यस्थ देयता का विवरण।"
+    content: deepAuditTemplate("Intermediary Liability", "मध्यस्थ देयता")
   },
   {
     slug: "crypto-asset-regulation",
@@ -303,7 +355,7 @@ export const topics = [
     description: "Analysis of the PMLA 2002 impact on VDA and tax statutory frameworks.",
     icon: Coins,
     category: "Digital",
-    content: "Detailed content... --- **हिन्दी में:** --- क्रिप्टो संपत्ति विनियमन का विवरण।"
+    content: deepAuditTemplate("Crypto Regulation", "क्रिप्टो संपत्ति विनियमन")
   },
   {
     slug: "cyber-terrorism-offences",
@@ -311,7 +363,7 @@ export const topics = [
     description: "Audit of Section 66F IT Act and its intersection with anti-terror laws.",
     icon: ShieldAlert,
     category: "Digital",
-    content: "Detailed content... --- **हिन्दी में:** --- साइबर आतंकवाद अपराधों का विवरण।"
+    content: deepAuditTemplate("Cyber Terrorism", "साइबर आतंकवाद")
   },
   {
     slug: "fintech-legal-framework",
@@ -319,7 +371,7 @@ export const topics = [
     description: "Audit of PSS Act 2007 and RBI digital payment regulatory nodes.",
     icon: Smartphone,
     category: "Digital",
-    content: "Detailed content... --- **हिन्दी में:** --- फिनटेक कानूनी ढांचे का विवरण।"
+    content: deepAuditTemplate("Fintech Framework", "फिनटेक कानूनी ढांचा")
   },
   {
     slug: "ai-legal-ethics",
@@ -327,7 +379,7 @@ export const topics = [
     description: "Emerging statutory frameworks for artificial intelligence and neural liability.",
     icon: BrainCircuit,
     category: "Digital",
-    content: "Detailed content... --- **हिन्दी में:** --- AI कानूनी नैतिकता का विवरण।"
+    content: deepAuditTemplate("AI Governance", "AI कानूनी नैतिकता")
   },
 
   // CORPORATE (33-40)
@@ -337,7 +389,7 @@ export const topics = [
     description: "Audit of incorporation, management, CSR, and corporate liability protocols.",
     icon: Building2,
     category: "Corporate",
-    content: "Detailed content... --- **हिन्दी में:** --- कंपनी अधिनियम का विवरण।"
+    content: deepAuditTemplate("Companies Act", "कंपनी अधिनियम")
   },
   {
     slug: "intellectual-property",
@@ -345,7 +397,7 @@ export const topics = [
     description: "Forensic guide to protecting intellectual assets and litigation nodes.",
     icon: Palette,
     category: "Corporate",
-    content: "Detailed content... --- **हिन्दी में:** --- बौद्धिक संपदा का विवरण।"
+    content: deepAuditTemplate("IPR Registry", "बौद्धिक संपदा")
   },
   {
     slug: "msme-compliance",
@@ -353,7 +405,7 @@ export const topics = [
     description: "Guide to Udyam registration, priority benefits, and arbitration nodes.",
     icon: Building,
     category: "Corporate",
-    content: "Detailed content... --- **हिन्दी में:** --- MSME अनुपालन का विवरण।"
+    content: deepAuditTemplate("MSME Compliance", "MSME अनुपालन")
   },
   {
     slug: "banking-finance-law",
@@ -361,7 +413,7 @@ export const topics = [
     description: "Audit of SARFAESI Act, IBC, and consumer banking rights forensics.",
     icon: PiggyBank,
     category: "Corporate",
-    content: "Detailed content... --- **हिन्दी में:** --- बैंकिंग कानून का विवरण।"
+    content: deepAuditTemplate("Banking Law", "बैंकिंग कानून")
   },
   {
     slug: "insolvency-bankruptcy-code",
@@ -369,7 +421,7 @@ export const topics = [
     description: "Analysis of the resolution process, liquidation, and NCLT statutory cycles.",
     icon: FileText,
     category: "Corporate",
-    content: "Detailed content... --- **हिन्दी में:** --- दिवाला और दिवालियापन संहिता का विवरण।"
+    content: deepAuditTemplate("Insolvency Code", "दिवाला और दिवालियापन संहिता")
   },
   {
     slug: "sebi-market-regulations",
@@ -377,7 +429,7 @@ export const topics = [
     description: "Audit of listing obligations, insider trading, and investor protection nodes.",
     icon: TrendingUp,
     category: "Corporate",
-    content: "Detailed content... --- **हिन्दी में:** --- SEBI बाजार नियमों का विवरण।"
+    content: deepAuditTemplate("SEBI Regulations", "SEBI बाजार नियम")
   },
   {
     slug: "fema-foreign-exchange",
@@ -385,7 +437,7 @@ export const topics = [
     description: "Statutory framework for cross-border transactions and FDI protocols.",
     icon: Globe,
     category: "Corporate",
-    content: "Detailed content... --- **हिन्दी में:** --- FEMA का विवरण।"
+    content: deepAuditTemplate("FEMA Statutes", "FEMA")
   },
   {
     slug: "competition-act-audit",
@@ -393,7 +445,7 @@ export const topics = [
     description: "Audit of abuse of dominance, cartels, and combination regulatory cycles.",
     icon: UserPlus,
     category: "Corporate",
-    content: "Detailed content... --- **हिन्दी में:** --- प्रतिस्पर्धा अधिनियम का विवरण।"
+    content: deepAuditTemplate("Competition Act", "प्रतिस्पर्धा अधिनियम")
   },
 
   // PUBLIC (41-48)
@@ -403,7 +455,7 @@ export const topics = [
     description: "Deep study of NGT protocols, pollution control, and public trust doctrine.",
     icon: Leaf,
     category: "Public",
-    content: "Detailed content... --- **हिन्दी में:** --- पर्यावरण संरक्षण का विवरण।"
+    content: deepAuditTemplate("Environmental Statutes", "पर्यावरण संरक्षण")
   },
   {
     slug: "rti-transparency",
@@ -411,7 +463,7 @@ export const topics = [
     description: "Deep study of filing protocols, appeals, and forensic exemption audits.",
     icon: Search,
     category: "Public",
-    content: "Detailed content... --- **हिन्दी में:** --- सूचना का अधिकार का विवरण।"
+    content: deepAuditTemplate("RTI Transparency", "सूचना का अधिकार")
   },
   {
     slug: "medical-negligence",
@@ -419,7 +471,7 @@ export const topics = [
     description: "Forensic audit of doctor-patient liability, ethics, and claim nodes.",
     icon: Stethoscope,
     category: "Public",
-    content: "Detailed content... --- **हिन्दी में:** --- चिकित्सा लापरवाही का विवरण।"
+    content: deepAuditTemplate("Medical Negligence", "चिकित्सा लापरवाही")
   },
   {
     slug: "human-rights-commission",
@@ -427,7 +479,7 @@ export const topics = [
     description: "Statutory powers of commissions and protection of human rights Act 1993.",
     icon: Users,
     category: "Public",
-    content: "Detailed content... --- **हिन्दी में:** --- मानवाधिकार आयोग का विवरण।"
+    content: deepAuditTemplate("Human Rights Commission", "मानवाधिकार आयोग")
   },
   {
     slug: "lokpal-lokayukta-act",
@@ -435,7 +487,7 @@ export const topics = [
     description: "Anti-corruption statutory framework and investigation protocols.",
     icon: ShieldCheck,
     category: "Public",
-    content: "Detailed content... --- **हिन्दी में:** --- लोकपाल और लोकायुक्त का विवरण।"
+    content: deepAuditTemplate("Lokpal Audit", "लोकपाल और लोकायुक्त")
   },
   {
     slug: "election-laws-rp-act",
@@ -443,7 +495,7 @@ export const topics = [
     description: "Audit of election protocols, disqualification, and model conduct code.",
     icon: CheckSquare,
     category: "Public",
-    content: "Detailed content... --- **हिन्दी में:** --- चुनाव कानूनों का विवरण।"
+    content: deepAuditTemplate("Election Laws", "चुनाव कानून")
   },
   {
     slug: "municipal-laws-audit",
@@ -451,7 +503,7 @@ export const topics = [
     description: "Analysis of local body powers, taxation, and civic administrative nodes.",
     icon: Building,
     category: "Public",
-    content: "Detailed content... --- **हिन्दी में:** --- नगर पालिका कानूनों का विवरण।"
+    content: deepAuditTemplate("Municipal Laws", "नगर पालिका कानून")
   },
   {
     slug: "disaster-management-act",
@@ -459,7 +511,7 @@ export const topics = [
     description: "Statutory framework for NDMA, SDMA, and institutional response nodes.",
     icon: Flame,
     category: "Public",
-    content: "Detailed content... --- **हिन्दी में:** --- आपदा प्रबंधन अधिनियम का विवरण।"
+    content: deepAuditTemplate("Disaster Management", "आपदा प्रबंधन अधिनियम")
   },
 
   // SPECIALIZED (49-56)
@@ -469,7 +521,7 @@ export const topics = [
     description: "Specialized study of high-seas legal protocols and ship arrests.",
     icon: Anchor,
     category: "Specialized",
-    content: "Detailed content... --- **हिन्दी में:** --- समुद्री कानून का विवरण।"
+    content: deepAuditTemplate("Maritime Law", "समुद्री कानून")
   },
   {
     slug: "aviation-law",
@@ -477,7 +529,7 @@ export const topics = [
     description: "Regulatory framework for Indian airspace, carriers, and consumer rights.",
     icon: Plane,
     category: "Specialized",
-    content: "Detailed content... --- **हिन्दी में:** --- विमानन कानून का विवरण।"
+    content: deepAuditTemplate("Aviation Law", "विमानन कानून")
   },
   {
     slug: "sports-law-contracts",
@@ -485,7 +537,7 @@ export const topics = [
     description: "Statutory mapping of doping protocols, ADR, and broadcasting rights.",
     icon: Trophy,
     category: "Specialized",
-    content: "Detailed content... --- **हिन्दी में:** --- खेल कानून का विवरण।"
+    content: deepAuditTemplate("Sports Law", "खेल कानून")
   },
   {
     slug: "space-law-satellites",
@@ -493,7 +545,7 @@ export const topics = [
     description: "Forensic study of outer space treaties and Indian space policy nodes.",
     icon: Globe,
     category: "Specialized",
-    content: "Detailed content... --- **हिन्दी में:** --- अंतरिक्ष कानून का विवरण।"
+    content: deepAuditTemplate("Space Law", "अंतरिक्ष कानून")
   },
   {
     slug: "media-law-ethics",
@@ -501,7 +553,7 @@ export const topics = [
     description: "Audit of censorship, defamation, and cinematography Act protocols.",
     icon: Newspaper,
     category: "Specialized",
-    content: "Detailed content... --- **हिन्दी में:** --- मीडिया कानून का विवरण।"
+    content: deepAuditTemplate("Media Law", "मीडिया कानून")
   },
   {
     slug: "energy-renewable-laws",
@@ -509,7 +561,7 @@ export const topics = [
     description: "Analysis of the Electricity Act 2003 and green energy regulatory cycles.",
     icon: Zap,
     category: "Specialized",
-    content: "Detailed content... --- **हिन्दी में:** --- ऊर्जा कानूनों का विवरण।"
+    content: deepAuditTemplate("Energy Laws", "ऊर्जा कानून")
   },
   {
     slug: "animal-welfare-act",
@@ -517,7 +569,7 @@ export const topics = [
     description: "Audit of PCA Act 1960 and Wildlife Protection Act forensics.",
     icon: Heart,
     category: "Specialized",
-    content: "Detailed content... --- **हिन्दी में:** --- पशु कल्याण अधिनियम का विवरण।"
+    content: deepAuditTemplate("Animal Welfare", "पशु कल्याण अधिनियम")
   },
   {
     slug: "intellectual-property-it",
@@ -525,7 +577,7 @@ export const topics = [
     description: "Specialized study of software patentability and source code statutory nodes.",
     icon: Cpu,
     category: "Specialized",
-    content: "Detailed content... --- **हिन्दी में:** --- प्रौद्योगिकी पेटेंट का विवरण।"
+    content: deepAuditTemplate("Technology Patents", "प्रौद्योगिकी पेटेंट")
   },
 
   // INDUSTRIAL (57-64)
@@ -535,7 +587,7 @@ export const topics = [
     description: "Audit of wage regulation, social security, and industrial relations codes.",
     icon: HardHat,
     category: "Industrial",
-    content: "Detailed content... --- **हिन्दी में:** --- नए श्रम कोड का विवरण।"
+    content: deepAuditTemplate("Labor Codes", "नए श्रम कोड")
   },
   {
     slug: "posh-act-2013",
@@ -543,7 +595,7 @@ export const topics = [
     description: "Audit of internal committee protocols and employer liability nodes.",
     icon: Shield,
     category: "Industrial",
-    content: "Detailed content... --- **हिन्दी में:** --- POSH अधिनियम का विवरण।"
+    content: deepAuditTemplate("POSH Act", "POSH अधिनियम")
   },
   {
     slug: "factory-act-safety",
@@ -551,7 +603,7 @@ export const topics = [
     description: "Statutory framework for health, welfare, and safety of industrial workers.",
     icon: Factory,
     category: "Industrial",
-    content: "Detailed content... --- **हिन्दी में:** --- कारखाना अधिनियम का विवरण।"
+    content: deepAuditTemplate("Factory Act", "कारखाना अधिनियम")
   },
   {
     slug: "trade-union-statutes",
@@ -559,7 +611,7 @@ export const topics = [
     description: "Audit of registration rights, immunities, and industrial dispute nodes.",
     icon: Users,
     category: "Industrial",
-    content: "Detailed content... --- **हिन्दी में:** --- ट्रेड यूनियन का विवरण।"
+    content: deepAuditTemplate("Trade Union", "ट्रेड यूनियन")
   },
   {
     slug: "workmen-compensation",
@@ -567,7 +619,7 @@ export const topics = [
     description: "Forensic mapping of liability for injury and occupational disease protocols.",
     icon: HeartHandshake,
     category: "Industrial",
-    content: "Detailed content... --- **हिन्दी में:** --- कर्मचारी मुआवजा का विवरण।"
+    content: deepAuditTemplate("Workmen Compensation", "कर्मचारी मुआवजा")
   },
   {
     slug: "industrial-disputes-act",
@@ -575,7 +627,7 @@ export const topics = [
     description: "Statutory procedures for strikes, lock-outs, and lay-off forensics.",
     icon: Gavel,
     category: "Industrial",
-    content: "Detailed content... --- **हिन्दी में:** --- औद्योगिक विवाद का विवरण।"
+    content: deepAuditTemplate("Industrial Disputes", "औद्योगिक विवाद")
   },
   {
     slug: "maternity-benefit-act",
@@ -583,7 +635,7 @@ export const topics = [
     description: "Audit of leave entitlements, creche facilities, and statutory protections.",
     icon: Baby,
     category: "Industrial",
-    content: "Detailed content... --- **हिन्दी में:** --- मातृत्व लाभ अधिनियम का विवरण।"
+    content: deepAuditTemplate("Maternity Benefit", "मातृत्व लाभ अधिनियम")
   },
   {
     slug: "bonus-gratuity-audit",
@@ -591,6 +643,6 @@ export const topics = [
     description: "Statutory framework for payment of bonus and gratuity entitlements.",
     icon: Coins,
     category: "Industrial",
-    content: "Detailed content... --- **हिन्दी में:** --- बोनस और ग्रेच्युटी का विवरण।"
+    content: deepAuditTemplate("Bonus & Gratuity", "बोनस और ग्रेच्युटी")
   }
 ];
