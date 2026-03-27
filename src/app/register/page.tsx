@@ -42,7 +42,6 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   
-  // AI Validation States
   const [isValidating, setIsValidating] = useState(false);
   const [emailStatus, setEmailStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
   const [validationError, setValidationError] = useState("");
@@ -82,7 +81,6 @@ export default function RegisterPage() {
     try {
       setIsValidating(true);
 
-      // AI Email Authenticity Check (Exclusive AI focus)
       const emailValidation = await verifyEmailAuthenticity({ email });
       if (!emailValidation.isAuthentic) {
         setEmailStatus('invalid');
@@ -94,7 +92,6 @@ export default function RegisterPage() {
       setEmailStatus('valid');
       setIsValidating(false);
 
-      // Proceed with Registration
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -102,12 +99,10 @@ export default function RegisterPage() {
       );
       const user = userCredential.user;
 
-      // Trigger verification link
       await sendEmailVerification(user).catch(err => {
           console.warn("Auto-verification email failed to send:", err.message);
       });
 
-      // Registry Synchronization
       const userProfile = {
         uid: user.uid,
         firstName,

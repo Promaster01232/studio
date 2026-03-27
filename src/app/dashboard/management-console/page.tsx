@@ -89,7 +89,7 @@ const ADMIN_EMAILS = [
 ];
 
 function DigitalIdentityCard({ profile }: { profile: UserRecord }) {
-    const systemId = `NS-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
+    const systemId = `NS-REG-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
     return (
         <div className="relative w-full aspect-[1.586/1] rounded-[1.5rem] overflow-hidden shadow-2xl text-left">
             <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-blue-600"></div>

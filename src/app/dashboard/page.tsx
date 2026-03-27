@@ -238,7 +238,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     };
 
     const handleDelete = async () => {
-        if (!confirm("Confirm identity record purge from community registry?")) return;
+        if (!confirm("Confirm record purge from community registry?")) return;
         const postRef = doc(firestore, "posts", post.id);
         deleteDoc(postRef).catch((serverError) => {
             const permissionError = new FirestorePermissionError({
