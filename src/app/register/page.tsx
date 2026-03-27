@@ -20,7 +20,6 @@ import { Loader2, Eye, EyeOff, ShieldCheck, MailCheck, AlertCircle, CheckCircle2
 import { Logo } from "@/components/logo";
 import { motion, AnimatePresence } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { validateUserDetails } from "@/ai/flows/validate-user-details";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -47,7 +46,6 @@ export default function RegisterPage() {
   // AI Validation States
   const [isValidating, setIsValidating] = useState(false);
   const [emailStatus, setEmailStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
-  const [mobileStatus, setMobileStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
   const [validationError, setValidationError] = useState("");
 
   useEffect(() => {
@@ -81,12 +79,11 @@ export default function RegisterPage() {
     setLoading(true);
     setValidationError("");
     setEmailStatus('idle');
-    setMobileStatus('idle');
 
     try {
       setIsValidating(true);
 
-      // 1. AI Email Authenticity Check (Exclusive focus on Email ID)
+      // AI Email Authenticity Check (Exclusive AI focus)
       const emailValidation = await verifyEmailAuthenticity({ email });
       if (!emailValidation.isAuthentic) {
         setEmailStatus('invalid');
@@ -96,24 +93,9 @@ export default function RegisterPage() {
         return;
       }
       setEmailStatus('valid');
-
-      // 2. AI Mobile Validation (Exclusive focus on Indian Mobile format)
-      const detailsValidation = await validateUserDetails({
-        mobileNumber,
-        userType
-      });
-
-      if (!detailsValidation.isValid) {
-        setMobileStatus('invalid');
-        setValidationError(detailsValidation.reason || "Mobile number flagged by AI forensic audit.");
-        setIsValidating(false);
-        setLoading(false);
-        return;
-      }
-      setMobileStatus('valid');
       setIsValidating(false);
 
-      // 3. Firebase Registration (Independent of AI validation logic)
+      // Proceed with Registration
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -121,12 +103,12 @@ export default function RegisterPage() {
       );
       const user = userCredential.user;
 
-      // 4. Trigger verification link
+      // Trigger verification link
       await sendEmailVerification(user).catch(err => {
           console.warn("Auto-verification email failed to send:", err.message);
       });
 
-      // 5. Registry Synchronization
+      // Registry Synchronization
       const userProfile = {
         uid: user.uid,
         firstName,
@@ -137,7 +119,7 @@ export default function RegisterPage() {
         photoURL: user.photoURL || '',
         securityStatus: 'verified',
         emailVerified: user.emailVerified,
-        isBlocked: false, // EXPLICITLY INITIALIZE AS ACTIVE
+        isBlocked: false,
         createdAt: serverTimestamp(),
       };
 
@@ -211,7 +193,7 @@ export default function RegisterPage() {
           </motion.div>
           <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Citizen Registry</motion.h2>
           <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
-          AI-authenticated contact verification.
+          AI-authenticated email verification.
           </motion.p>
           <CardContent className="p-0">
               <motion.div variants={itemVariants} className="grid gap-4">
@@ -230,7 +212,7 @@ export default function RegisterPage() {
                   <Label htmlFor="email" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
                     <span>Email ID</span>
                     <AnimatePresence>
-                        {isValidating && email && (
+                        {isValidating && (
                             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[9px] text-primary flex items-center gap-1 font-black">
                                 <Loader2 className="h-2.5 w-2.5 animate-spin" /> AI SCANNING
                             </motion.span>
@@ -264,39 +246,19 @@ export default function RegisterPage() {
               </div>
 
               <div className="grid gap-2 text-left">
-                  <Label htmlFor="mobile-number" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
-                    <span>Mobile Number</span>
-                    <AnimatePresence>
-                        {isValidating && mobileNumber && (
-                            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[9px] text-primary flex items-center gap-1 font-black">
-                                <Smartphone className="h-2.5 w-2.5 animate-pulse" /> FORMAT AUDIT
-                            </motion.span>
-                        )}
-                    </AnimatePresence>
+                  <Label htmlFor="mobile-number" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                    Mobile Number
                   </Label>
-                  <div className="relative">
-                    <Input
-                        id="mobile-number"
-                        type="tel"
-                        placeholder="+91 98765 43210"
-                        required
-                        value={mobileNumber}
-                        onChange={(e) => {
-                            setMobileNumber(e.target.value);
-                            setMobileStatus('idle');
-                        }}
-                        disabled={loading}
-                        className={cn(
-                            "h-11 font-bold bg-background pr-10 transition-colors",
-                            mobileStatus === 'valid' && "border-green-500/50 bg-green-500/5",
-                            mobileStatus === 'invalid' && "border-red-500/50 bg-red-500/5"
-                        )}
-                    />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                        {mobileStatus === 'valid' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
-                        {mobileStatus === 'invalid' && <AlertCircle className="h-4 w-4 text-red-600" />}
-                    </div>
-                  </div>
+                  <Input
+                      id="mobile-number"
+                      type="tel"
+                      placeholder="+91 98765 43210"
+                      required
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value)}
+                      disabled={loading}
+                      className="h-11 font-bold bg-background"
+                  />
               </div>
 
               {validationError && (
@@ -376,7 +338,7 @@ export default function RegisterPage() {
                           htmlFor="register-terms"
                           className="text-[10px] font-bold text-muted-foreground leading-snug cursor-pointer"
                       >
-                          I acknowledge and accept the <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Protocol</Link>.
+                          I acknowledge the <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Protocol</Link>.
                       </Label>
                   </div>
               </div>
@@ -385,7 +347,7 @@ export default function RegisterPage() {
                   {loading ? (
                       <span className="flex items-center gap-2">
                         <Loader2 className="animate-spin h-5 w-5" />
-                        {isValidating ? "AI VERIFYING..." : "CREATING PROFILE..."}
+                        {isValidating ? "AI SCANNING..." : "CREATING PROFILE..."}
                       </span>
                   ) : (
                       <span className="flex items-center gap-2">
@@ -413,7 +375,7 @@ export default function RegisterPage() {
             </div>
         </div>
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50"></div>
-        <div className="absolute bottom-8 left-8 text-[10px] font-black uppercase tracking-widest opacity-20">Nyaya Sahayak Node // NS-REGISTRY</div>
+        <div className="absolute bottom-8 left-8 text-[10px] font-black uppercase tracking-widest opacity-20">Nyaya Sahayak Terminal // NS-REGISTRY</div>
       </div>
     </Card>
   );

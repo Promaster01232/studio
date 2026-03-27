@@ -146,7 +146,7 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
                   className="h-11 px-4 hover:bg-primary/5"
                 >
                   <item.icon className="h-5 w-5" />
-                  <span className="font-semibold flex-1">{item.title}</span>
+                  <span className="font-semibold flex-1 lowercase first-letter:uppercase">{item.title}</span>
                   <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
@@ -161,7 +161,7 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
                       >
                         <Link href={subItem.href} className="flex items-center gap-3">
                           <subItem.icon className="h-4 w-4 opacity-70" />
-                          <span className="text-sm font-medium">{subItem.label}</span>
+                          <span className="text-sm font-medium lowercase first-letter:uppercase">{subItem.label}</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
