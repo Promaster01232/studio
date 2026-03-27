@@ -537,10 +537,6 @@ export default function UserPublicProfilePage(props: {
                                                         <Heart className="h-3.5 w-3.5 fill-current" />
                                                         {post.likes}
                                                     </div>
-                                                    <div className="flex items-center gap-1.5 text-primary/60 text-[10px] font-black">
-                                                        <MessageCircle className="h-3.5 w-3.5" />
-                                                        {post.comments}
-                                                    </div>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <DropdownMenu>

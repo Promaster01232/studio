@@ -61,8 +61,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Logo } from "@/components/logo";
 import { errorEmitter } from "@/firebase/error-emitter";
@@ -342,9 +343,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                             >
                                 {isLiking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />}
                                 <span>{optimisticLikes}</span>
-                            </Button>
-                            <Button variant="ghost" size="sm" className="h-8 px-3 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all">
-                                <MessageCircle className="h-3.5 w-3.5 mr-2" /> {post.comments}
                             </Button>
                         </div>
                         <Button variant="ghost" size="sm" className="h-8 px-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
