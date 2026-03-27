@@ -352,7 +352,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                         </div>
                         <Button variant="ghost" size="sm" className="h-9 px-5 rounded-xl font-bold text-[11px] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
                             <Link href="/dashboard/research-analytics">
-                                <span>Analyze Node</span>
+                                <span>Analyze node</span>
                                 <ArrowRight className="ml-2.5 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                             </Link>
                         </Button>
@@ -374,7 +374,7 @@ const SectionHeader = ({ children, icon: Icon, sector }: { children: React.React
     <div className="flex items-center justify-between mb-6 border-b border-primary/5 pb-4">
         <div className="flex items-center gap-3">
             {Icon && <Icon className="h-5 w-5 text-primary/40" />}
-            <h2 className="text-[14px] font-black tracking-tight text-foreground/80">{children}</h2>
+            <h2 className="text-[13px] font-black tracking-tight text-foreground/80">{children}</h2>
         </div>
         {sector && <span className="text-[11px] font-bold text-muted-foreground/40">{sector}</span>}
     </div>
@@ -474,10 +474,10 @@ export default function DashboardHomePage() {
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
                       <Button size="sm" className="rounded-xl font-bold px-8 h-12 shadow-xl shadow-primary/20 active:scale-95 transition-all text-xs" asChild>
-                          <Link href="/dashboard/narrate">Initialize Narration</Link>
+                          <Link href="/dashboard/narrate">Initialize narration</Link>
                       </Button>
                       <Button variant="outline" size="sm" className="rounded-xl font-bold px-8 h-12 border-primary/10 hover:bg-primary/5 active:scale-95 transition-all text-xs" asChild>
-                          <Link href="/dashboard/support">Hub Support</Link>
+                          <Link href="/dashboard/support">Hub support</Link>
                       </Button>
                   </div>
               </div>
@@ -487,7 +487,7 @@ export default function DashboardHomePage() {
         <div className="grid lg:grid-cols-12 gap-10">
           <div className="lg:col-span-8 space-y-10">
               <section>
-                  <SectionHeader icon={TrendingUp} sector="sector: community">Live Transmission Stream</SectionHeader>
+                  <SectionHeader icon={TrendingUp} sector="sector: community">Live transmission stream</SectionHeader>
                   
                   <div className="space-y-6">
                       {postsLoading ? (
@@ -513,7 +513,7 @@ export default function DashboardHomePage() {
 
           <div className="lg:col-span-4 space-y-10">
               <section>
-                  <SectionHeader icon={Sparkles} sector="status: optimized">System Matrix</SectionHeader>
+                  <SectionHeader icon={Sparkles} sector="status: optimized">System matrix</SectionHeader>
                   <div className="grid grid-cols-2 gap-4">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
@@ -525,11 +525,11 @@ export default function DashboardHomePage() {
                                     <div className={cn("p-2.5 rounded-xl w-fit mb-3 transition-transform group-hover:scale-110 shadow-sm", f.bg, f.color)}>
                                         <f.icon className="h-4 w-4" />
                                     </div>
-                                    <h3 className="font-black text-sm tracking-tight text-foreground leading-none">{f.title}</h3>
+                                    <h3 className="font-black text-[12px] tracking-tight text-foreground leading-none">{f.title}</h3>
                                     <p className="text-[11px] text-muted-foreground font-medium mt-1.5 leading-snug opacity-70 line-clamp-2">{f.desc}</p>
                                 </div>
                                 <div className="mt-3.5 pt-3 border-t border-primary/5">
-                                    <span className="text-[9px] font-bold text-primary/40 uppercase tracking-wider">{f.sector}</span>
+                                    <span className="text-[9px] font-bold text-primary/40 tracking-wider">{f.sector}</span>
                                 </div>
                             </Card>
                         </Link>
@@ -538,11 +538,11 @@ export default function DashboardHomePage() {
               </section>
 
               <section>
-                  <SectionHeader icon={Library} sector="status: ready">Statutory Registry</SectionHeader>
+                  <SectionHeader icon={Library} sector="status: ready">Statutory registry</SectionHeader>
                   <div className="space-y-3.5">
                       {[
-                        { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", label: "Registry" },
-                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case Tracker", label: "Archive" },
+                        { href: "/dashboard/learn", icon: Library, title: "Knowledge hub", label: "Lern" },
+                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case tracker", label: "Case" },
                       ].map((item) => (
                         <Link key={item.href} href={item.href} className="block group" onMouseEnter={() => playSound('hover')}>
                             <Card className="glass p-4 rounded-2xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between group-hover:scale-[1.01] group-active:scale-[0.99] shadow-sm">
@@ -594,7 +594,7 @@ export default function DashboardHomePage() {
             </Link>
             
             <div className="absolute -top-10 right-0 bg-background/80 backdrop-blur-md border border-primary/20 px-3 py-1.5 rounded-xl shadow-2xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                <span className="text-[10px] font-black tracking-widest text-primary">Neural Assistant Active</span>
+                <span className="text-[10px] font-black tracking-widest text-primary">Neural assistant active</span>
             </div>
         </div>
 
