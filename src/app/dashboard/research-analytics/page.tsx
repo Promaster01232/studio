@@ -118,6 +118,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     
     const [isVoting, setIsVoting] = useState(false);
     const [isLiking, setIsLiking] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
     
     const [optimisticLikes, setOptimisticLikes] = useState(post.likes);
     const [optimisticLikedBy, setOptimisticLikedBy] = useState(post.likedBy || []);
@@ -128,6 +129,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
     
+    const contentLimit = 200;
+    const shouldShowReadMore = post.content && post.content.length > contentLimit;
+    const displayedContent = isExpanded ? post.content : (post.content?.slice(0, contentLimit) + (shouldShowReadMore ? "..." : ""));
+
     const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
         const shareText = `Check out this institutional transmission on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
         
@@ -263,7 +268,21 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 
                 <div className="space-y-2.5 text-left">
                     <h3 className="text-base sm:text-lg font-black tracking-tight text-foreground leading-snug">{post.title}</h3>
-                    {post.content && <p className="text-[11px] sm:text-xs text-muted-foreground font-medium leading-relaxed whitespace-pre-line">{post.content}</p>}
+                    {post.content && (
+                        <div className="space-y-2">
+                            <p className="text-[11px] sm:text-xs text-muted-foreground font-medium leading-relaxed whitespace-pre-line">
+                                {displayedContent}
+                            </p>
+                            {shouldShowReadMore && (
+                                <button 
+                                    onClick={() => setIsExpanded(!isExpanded)}
+                                    className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                                >
+                                    {isExpanded ? "Show Less" : "Read More"}
+                                </button>
+                            )}
+                        </div>
+                    )}
 
                     {post.tags && post.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 pt-1">

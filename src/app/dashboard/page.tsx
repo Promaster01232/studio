@@ -153,6 +153,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     
     const [isLiking, setIsLiking] = useState(false);
     const [isVoting, setIsVoting] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
     const [optimisticLikes, setOptimisticLikes] = useState(post.likes);
     const [optimisticLikedBy, setOptimisticLikedBy] = useState(post.likedBy || []);
     const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
@@ -162,6 +163,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
     
+    const contentLimit = 200;
+    const shouldShowReadMore = post.content && post.content.length > contentLimit;
+    const displayedContent = isExpanded ? post.content : (post.content?.slice(0, contentLimit) + (shouldShowReadMore ? "..." : ""));
+
     const handleLike = () => {
         if (!currentUser) return;
         if (isLiking) return;
@@ -281,7 +286,21 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 
                     <div className="space-y-2 flex-1 mb-6">
                         <h3 className="text-lg sm:text-xl font-black tracking-tight leading-tight text-foreground/90">{post.title}</h3>
-                        {post.content && <p className="text-sm text-muted-foreground font-medium leading-relaxed">{post.content}</p>}
+                        {post.content && (
+                            <div className="space-y-2">
+                                <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                                    {displayedContent}
+                                </p>
+                                {shouldShowReadMore && (
+                                    <button 
+                                        onClick={() => setIsExpanded(!isExpanded)}
+                                        className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                                    >
+                                        {isExpanded ? "Show Less" : "Read More"}
+                                    </button>
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     {optimisticPoll && (
