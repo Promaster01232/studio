@@ -247,7 +247,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <div className="relative">
                 <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-primary/20 via-accent/20 to-blue-400/20 blur-md animate-pulse group-data-[collapsible=icon]:hidden"></div>
                 <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
-                  <Logo className="h-10 w-10 shadow-lg relative z-10 border-none bg-white rounded-full p-1.5" />
+                  <div className="bg-white rounded-full p-1.5 shadow-lg relative z-10">
+                    <Logo className="h-7 w-7 border-none shadow-none p-0" />
+                  </div>
                 </div>
             </div>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden text-left">
@@ -372,7 +374,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                                         className="absolute -inset-12 border border-primary/5 rounded-full"
                                     />
                                     <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
-                                        <Logo className="h-16 w-16 border-none bg-white rounded-full p-2" />
+                                        <div className="bg-white rounded-full p-2 shadow-2xl">
+                                            <Logo className="h-12 w-12 border-none shadow-none p-0" />
+                                        </div>
                                     </div>
                                     <motion.div
                                         animate={{

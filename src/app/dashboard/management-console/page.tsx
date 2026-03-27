@@ -102,7 +102,9 @@ function DigitalIdentityCard({ profile }: { profile: UserRecord }) {
             <div className="relative h-full flex flex-col p-5 text-white">
                 <div className="flex justify-between items-start mb-auto">
                     <div className="flex items-center gap-2">
-                        <Logo className="h-6 w-6 border-none shadow-none bg-white p-1" />
+                        <div className="bg-white rounded-full p-1 shadow-xl">
+                            <Logo className="h-6 w-6 border-none shadow-none p-0" />
+                        </div>
                         <div className="flex flex-col">
                             <span className="font-black text-[8px] tracking-tighter leading-none">NYAYA SAHAYAK</span>
                             <span className="text-[5px] font-bold uppercase tracking-[0.2em] opacity-60">Forensic Terminal</span>
@@ -330,8 +332,8 @@ export default function ManagementConsolePage() {
     if (!userToPurge) return;
     const user = userToPurge;
     
-    // Safety check: Don't allow purging root admins
-    if (ADMIN_EMAILS.includes(user.email.toLowerCase()) || user.isAdmin) {
+    // Absolute power: can delete any account except current root admin list to prevent lockout
+    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         toast({ 
             variant: "destructive", 
             title: "Action Prohibited", 
@@ -414,7 +416,7 @@ export default function ManagementConsolePage() {
                       <TableBody>
                           {filteredUsers.map((user) => {
                               const isActive = user.isBlocked === false || user.isBlocked === undefined;
-                              const isProtected = ADMIN_EMAILS.includes(user.email.toLowerCase()) || user.isAdmin;
+                              const isProtected = ADMIN_EMAILS.includes(user.email.toLowerCase());
                               return (
                                 <TableRow key={user.uid} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", !isActive && "bg-red-500/5")}>
                                     <TableCell className="pl-6 py-4">

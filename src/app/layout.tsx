@@ -85,12 +85,7 @@ export default function RootLayout({
       "addressRegion": "Delhi",
       "postalCode": "110001",
       "addressCountry": "IN"
-    },
-    "sameAs": [
-      "https://facebook.com/profile.php?id=61578664907514",
-      "https://twitter.com/nyayasahayak",
-      "https://instagram.com/nyaya_sahayak/"
-    ]
+    }
   };
 
   return (
@@ -101,18 +96,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=G-GTCT653LHY`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-GTCT653LHY');
-          `}
-        </Script>
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>
         <ThemeProvider>

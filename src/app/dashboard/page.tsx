@@ -25,6 +25,7 @@ import {
   Flag,
   Trash2,
   TrendingUp,
+  BadgeCheck,
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -281,7 +282,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                         <h3 className="text-lg sm:text-xl font-black tracking-tight leading-tight text-foreground/90">{post.title}</h3>
                         {post.content && (
                             <div className="space-y-2">
-                                <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                                <p className="text-sm text-muted-foreground font-medium leading-relaxed whitespace-pre-line">
                                     {displayedContent}
                                 </p>
                                 {shouldShowReadMore && (
@@ -374,10 +375,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "analyzer", desc: "Forensic assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "sector: forensic" },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "doc intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "sector: statutory" },
-    { href: "/dashboard/document-generator", icon: FileText, title: "drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "sector: civil" },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "bonds", desc: "Legal affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "sector: registry" },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "analyzer", desc: "Forensic assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "Sector: Forensic" },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "doc intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "Sector: Statutory" },
+    { href: "/dashboard/document-generator", icon: FileText, title: "drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "Sector: Civil" },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "bonds", desc: "Legal affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "Sector: Registry" },
 ];
 
 const SectionHeader = ({ children, icon: Icon, sector }: { children: React.ReactNode, icon?: any, sector?: string }) => (
@@ -464,7 +465,9 @@ export default function DashboardHomePage() {
         <MotionWrapper>
           <Card className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
               <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none">
-                  <Logo className="h-56 w-56 border-none p-0 grayscale" />
+                  <div className="bg-white rounded-full p-10 grayscale">
+                    <Logo className="h-56 w-56 border-none p-0 shadow-none" />
+                  </div>
               </div>
               <div className="relative z-10 space-y-8">
                   <div className="space-y-2">
@@ -491,7 +494,7 @@ export default function DashboardHomePage() {
         <div className="grid lg:grid-cols-12 gap-10">
           <div className="lg:col-span-8 space-y-10">
               <section>
-                  <SectionHeader icon={TrendingUp} sector="sector: community">live transmission stream</SectionHeader>
+                  <SectionHeader icon={TrendingUp} sector="Sector: Community">live transmission stream</SectionHeader>
                   
                   <div className="space-y-6">
                       {postsLoading ? (
@@ -517,7 +520,7 @@ export default function DashboardHomePage() {
 
           <div className="lg:col-span-4 space-y-10">
               <section>
-                  <SectionHeader icon={Sparkles} sector="status: optimized">system matrix</SectionHeader>
+                  <SectionHeader icon={Sparkles} sector="Status: Optimized">system matrix</SectionHeader>
                   <div className="grid grid-cols-2 gap-4">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
@@ -542,7 +545,7 @@ export default function DashboardHomePage() {
               </section>
 
               <section>
-                  <SectionHeader icon={Library} sector="status: ready">statutory registry</SectionHeader>
+                  <SectionHeader icon={Library} sector="Status: Ready">statutory registry</SectionHeader>
                   <div className="space-y-3.5">
                       {[
                         { href: "/dashboard/learn", icon: Library, title: "knowledge hub", label: "learn" },

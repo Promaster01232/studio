@@ -11,8 +11,8 @@ export function Logo({ className, imageClassName, priority = false }: { classNam
       <Image 
         src="/Logo.png" 
         alt="Nyaya Sahayak Institutional Identity" 
-        fill
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        width={128}
+        height={128}
         className={cn("object-cover transition-transform group-hover:scale-110 duration-700", imageClassName)} 
         priority={priority}
       />

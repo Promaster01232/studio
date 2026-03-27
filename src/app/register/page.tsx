@@ -81,7 +81,7 @@ export default function RegisterPage() {
     try {
       setIsValidating(true);
 
-      // Forensic Audit Protocol: Only validate email authenticity
+      // Forensic Audit Protocol: Only validate email authenticity as per mandate
       const emailValidation = await verifyEmailAuthenticity({ email });
       if (!emailValidation.isAuthentic) {
         setEmailStatus('invalid');

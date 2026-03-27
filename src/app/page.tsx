@@ -107,25 +107,31 @@ export default function WelcomePage() {
             <CardContent className="flex flex-col items-center p-6 sm:p-12 text-center relative z-10">
               <div className="relative mb-8">
                 <div className="absolute -inset-6 rounded-full bg-primary/10 animate-pulse group-hover:scale-110 transition-transform"></div>
-                <Logo className="h-24 w-24 sm:h-32 sm:w-32 relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.2)]" priority />
+                <Logo className="h-24 w-24 sm:h-32 sm:w-32 relative z-10" priority />
               </div>
 
-              <div className="space-y-6 mb-10">
-                <Badge variant="outline" className="border-primary/20 text-primary px-5 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em] bg-primary/5">
-                    Terminal // NYAYASAHAYAK.IN
+              <div className="space-y-6 mb-10 text-left">
+                <Badge variant="outline" className="border-primary/20 text-primary px-5 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em] bg-primary/5 mx-auto block w-fit">
+                    Institutional Terminal // NYAYASAHAYAK.IN
                 </Badge>
                 
-                <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
-                  Nyaya Sahayak: Your Elite AI <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Legal Assistant</span>
+                <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground text-center">
+                  Nyaya Sahayak: Elite AI <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Legal Assistant</span>
                   <span className="animate-pulse ml-1 text-primary">|</span>
                 </h1>
                 
-                <div className="max-w-xl mx-auto space-y-4">
-                    <p className="text-base sm:text-lg font-bold text-muted-foreground tracking-tight leading-tight">
-                        Advanced AI Legal Assistant & Forensic Case Auditor for the Modern Indian Citizen.
+                <div className="max-w-xl mx-auto space-y-6">
+                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+                        Nyaya Sahayak represents the definitive leap forward in AI-powered legal empowerment for the Indian citizenry. In a landscape where the judicial system is often perceived as a dense thicket of complex statutes and intimidating procedural protocols, our platform serves as a high-fidelity navigational beacon. We have engineered this ecosystem to bridge the gap between statutory complexity and the fundamental rights of every individual, providing mathematically precise forensic tools that were previously reserved for elite legal institutions.
                     </p>
-                    <p className="text-[11px] sm:text-xs text-muted-foreground font-medium leading-relaxed max-w-lg mx-auto opacity-80">
-                        Bridging the gap between the complex Indian judicial system and fundamental citizen rights with precision forensic tools, automated document risk scanners, and high-fidelity procedural roadmaps.
+                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+                        At the core of the Nyaya Sahayak terminal is the Forensic Case Auditor. This neural engine is specifically trained on the nuances of the Bharatiya Nyaya Sanhita (BNS) and the Bharatiya Sakshya Adhiniyam (BSA). When a citizen narrates their legal problem, our AI performs a deep-layer deconstruction of the narrative, identifying potential statutory violations, mapping relevant sections of the law, and generating a professional case summary. This process transforms a confusing series of events into a structured legal dossier, empowering the user to approach law enforcement or legal counsel with absolute clarity and dignity.
+                    </p>
+                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+                        Furthermore, our Document Risk Scanner provides an institutional-grade audit of legal instruments. Whether it is a legal notice, a contract, or an FIR application, the AI node performs a comprehensive forensic scan to identify non-compliance markers, hidden liabilities, and critical procedural deadlines. By automating the risk assessment process, we ensure that no citizen is caught off-guard by the fine print of legal documentation.
+                    </p>
+                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+                        The Procedural Roadmap Intelligence is another critical pillar of our mission. Navigating the Bharatiya Nagarik Suraksha Sanhita (BNSS) requires a step-by-step understanding of judicial cycles. Nyaya Sahayak provides dynamic, personalized roadmaps that guide users through the intricacies of filing complaints, understanding writ jurisdictions under Articles 32 and 226, and maintaining proper courtroom decorum. We are building a more transparent and equitable legal landscape for 1.4 billion people.
                     </p>
                 </div>
               </div>
@@ -155,44 +161,7 @@ export default function WelcomePage() {
           </Card>
         </motion.div>
 
-        {/* Informational Content for SEO & Depth (300+ words) */}
         <div className="w-full max-w-5xl mt-24 space-y-24 px-4 relative z-10 text-left">
-            <section className="space-y-8">
-                <div className="space-y-3 text-center">
-                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em]">
-                        Statutory Mandate
-                    </Badge>
-                    <h2 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter">AI Legal Assistant: Deconstructing the <span className="text-primary italic">Indian Judicial System</span></h2>
-                </div>
-                <div className="grid md:grid-cols-2 gap-12 items-start">
-                    <div className="space-y-6">
-                        <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                            Nyaya Sahayak represents the pinnacle of AI legal intelligence designed specifically for the unique complexities of the <span className="text-foreground font-bold">Indian judicial system</span>. Our mission is to empower every citizen with elite-grade legal forensic tools that were previously accessible only to high-tier legal firms. By leveraging state-of-the-art neural processing, we provide a mathematical approach to legal navigation.
-                        </p>
-                        <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                            Our platform integrates several high-performance modules, including the <span className="text-foreground font-bold">Forensic Case Auditor</span>, which analyzes legal narratives under the context of the Bharatiya Nyaya Sanhita (BNS) and the Bharatiya Sakshya Adhiniyam (BSA). We utilize advanced OCR-powered engines to dissect contracts, legal notices, and FIR applications to surface hidden liabilities and critical deadlines instantly.
-                        </p>
-                        <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                            Through the <span className="text-foreground font-bold">Document Risk Scanner</span>, users can upload statutory instruments for a real-time audit. The AI identifies non-compliance markers and provides recommended procedural actions based on current amendments. This ensures that every citizen can navigate the law with absolute confidence, reducing the barrier between complex legal jargon and everyday accessibility.
-                        </p>
-                    </div>
-                    <Card className="glass p-8 rounded-[2.5rem] border-primary/10 shadow-xl relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-6 opacity-[0.05]">
-                            <Scale className="h-24 w-24 text-primary" />
-                        </div>
-                        <h3 className="text-xl font-black tracking-tight mb-4">Procedural Roadmap Intelligence</h3>
-                        <p className="text-xs text-muted-foreground leading-relaxed font-medium mb-6">
-                            Navigating Indian courts and police complexes requires a precise understanding of the Bharatiya Nagarik Suraksha Sanhita (BNSS). Nyaya Sahayak generates automated <span className="text-primary font-bold">Procedural Roadmaps</span> that guide users step-by-step through filing complaints, understanding writ jurisdictions (Articles 32 and 226), and maintaining courtroom decorum.
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">BNS Forensic Audit</Badge>
-                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">BSA Evidence Scan</Badge>
-                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">BNSS Roadmap</Badge>
-                        </div>
-                    </Card>
-                </div>
-            </section>
-
             <section className="space-y-12">
                 <div className="flex flex-col items-center text-center space-y-3">
                     <Badge variant="secondary" className="bg-accent/10 text-accent border-accent/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em]">
@@ -205,27 +174,27 @@ export default function WelcomePage() {
                     {[
                         {
                             title: "Forensic Case Auditor",
-                            desc: "Utilize neural violation mapping to deconstruct complex legal problems with institutional precision and statutory accuracy across criminal and civil domains.",
+                            desc: "Utilize neural violation mapping to deconstruct complex legal problems with institutional precision and statutory accuracy.",
                             icon: BrainCircuit,
                             color: "text-primary",
                             bg: "bg-primary/5",
-                            sector: "Sector: NS-V1"
+                            sector: "Sector: Forensic"
                         },
                         {
                             title: "Document Risk Scanner",
-                            desc: "Initialize high-fidelity scans of legal instruments to identify hidden statutory liabilities, non-compliance risks, and mandated procedural actions.",
+                            desc: "Initialize high-fidelity scans of legal instruments to identify hidden statutory liabilities and non-compliance risks.",
                             icon: FileSearch,
                             color: "text-accent",
                             bg: "bg-accent/5",
-                            sector: "Sector: NS-D2"
+                            sector: "Sector: Statutory"
                         },
                         {
                             title: "AI Procedural Roadmap",
-                            desc: "Access dynamic, step-by-step navigation cycles designed to guide citizens through the intricacies of FIR filing and courtroom appearances.",
+                            desc: "Access step-by-step navigation cycles designed to guide citizens through the intricacies of the judicial system.",
                             icon: Zap,
                             color: "text-orange-500",
                             bg: "bg-orange-500/5",
-                            sector: "Sector: NS-Z4"
+                            sector: "Sector: Navigational"
                         }
                     ].map((item, idx) => (
                         <Card key={idx} className="glass p-8 rounded-[2rem] border-primary/10 text-left group hover:border-primary/30 transition-all h-full shadow-xl">
@@ -243,37 +212,6 @@ export default function WelcomePage() {
                             </div>
                         </Card>
                     ))}
-                </div>
-            </section>
-
-            <section className="bg-primary/5 rounded-[3rem] p-8 sm:p-16 border border-primary/10 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
-                    <Globe className="h-64 w-64" />
-                </div>
-                <div className="max-w-3xl space-y-8 relative z-10">
-                    <ForensicLabel>Protocol: Digital-Justice-Era</ForensicLabel>
-                    <h2 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-tight">Engineering Dignity Through <span className="text-primary italic">Neural Intelligence</span></h2>
-                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                        In the era of Digital India, legal empowerment must be accessible at the click of a button. Nyaya Sahayak serves as a supplementary navigational node, providing citizens with the tools to understand their legal standing before they even step into a courtroom. By deconstructing judicial barriers, we are building a more transparent and equitable legal landscape for 1.4 billion people.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-6">
-                        <div className="flex-1 space-y-2">
-                            <h4 className="text-xs font-black uppercase text-primary">Official Resources</h4>
-                            <div className="space-y-2">
-                                <a href="https://services.ecourts.gov.in/" target="_blank" className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors">
-                                    <ExternalLink className="h-3 w-3" /> eCourts Services India
-                                </a>
-                                <a href="https://india.gov.in/" target="_blank" className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors">
-                                    <ExternalLink className="h-3 w-3" /> National Portal of India
-                                </a>
-                            </div>
-                        </div>
-                        <div className="flex-1 flex items-end">
-                            <Button variant="outline" className="rounded-xl font-bold h-12 px-8 border-primary/20 hover:bg-primary/5 active:scale-95 transition-all text-xs" asChild>
-                                <Link href="/about">Learn Our Vision</Link>
-                            </Button>
-                        </div>
-                    </div>
                 </div>
             </section>
         </div>
