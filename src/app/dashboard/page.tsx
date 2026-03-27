@@ -30,6 +30,7 @@ import {
   Zap,
   Cpu,
   Bot,
+  CheckCircle2,
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -149,12 +150,16 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     const { currentUser } = auth;
     
     const [isLiking, setIsLiking] = useState(false);
+    const [isVoting, setIsVoting] = useState(false);
     const [optimisticLikes, setOptimisticLikes] = useState(post.likes);
     const [optimisticLikedBy, setOptimisticLikedBy] = useState(post.likedBy || []);
+    const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
     const isAdmin = currentUser?.email && (ADMIN_EMAILS.includes(currentUser.email.toLowerCase()) || userProfile?.isAdmin);
     const isAuthor = post.authorUid === currentUser?.uid;
+    const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
+    const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
     
     const handleLike = () => {
         if (!currentUser) return;
@@ -196,6 +201,34 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
             .finally(() => setIsLiking(false));
     };
 
+    const handleVote = (optionIndex: number) => {
+        if (!currentUser || !optimisticPoll || isVoting || userHasVotedOnPoll) return;
+        setIsVoting(true);
+
+        const postRef = doc(firestore, "posts", post.id);
+        const newOptions = [...optimisticPoll.options];
+        newOptions[optionIndex] = { ...newOptions[optionIndex], votes: newOptions[optionIndex].votes + 1 };
+        
+        const newPollState = {
+            ...optimisticPoll,
+            options: newOptions,
+            voters: [...(optimisticPoll.voters || []), currentUser.uid]
+        };
+
+        setOptimisticPoll(newPollState);
+
+        updateDoc(postRef, { poll: newPollState })
+            .catch((serverError) => {
+                setOptimisticPoll(post.poll);
+                const permissionError = new FirestorePermissionError({
+                    path: postRef.path,
+                    operation: 'update',
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+            })
+            .finally(() => setIsVoting(false));
+    };
+
     const handleDelete = async () => {
         if (!confirm("Confirm identity node purge from community registry?")) return;
         const postRef = doc(firestore, "posts", post.id);
@@ -208,20 +241,13 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
         });
     };
 
-    const handleReport = () => {
-        toast({
-            title: "Transmission Reported",
-            description: "Institutional audit initiated for forensic compliance.",
-        });
-    };
-
     return (
         <motion.div layout className="w-full">
-            <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative">
-                <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-500"></div>
+            <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_rgba(255,153,51,0.05)]">
+                <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-[#FF9933] via-white to-[#128807]"></div>
                 
-                <div className="flex-1 flex flex-col p-5 sm:p-6 text-left ml-1.5">
-                    <div className="flex items-center justify-between mb-4">
+                <div className="flex-1 flex flex-col p-5 sm:p-6 text-left ml-1">
+                    <div className="flex items-center justify-between mb-5">
                         <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
                         <div className="flex items-center gap-2">
                             <Badge className="bg-primary/10 text-primary border-primary/10 font-black text-[7px] uppercase tracking-widest px-2 py-0.5 rounded-full">
@@ -240,7 +266,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                             <span>Purge Identity Node</span>
                                         </DropdownMenuItem>
                                     ) : (
-                                        <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
+                                        <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
                                             <Flag className="h-3.5 w-3.5" /> 
                                             <span>Report Forensic Breach</span>
                                         </DropdownMenuItem>
@@ -252,29 +278,79 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 
                     <div className="space-y-2 flex-1 mb-5">
                         <h3 className="text-base sm:text-lg font-black tracking-tight leading-tight text-foreground">{post.title}</h3>
-                        <p className="text-[11px] sm:text-xs text-muted-foreground font-medium line-clamp-3 leading-relaxed">{post.content}</p>
+                        {post.content && <p className="text-[11px] sm:text-xs text-muted-foreground font-medium leading-relaxed">{post.content}</p>}
                     </div>
+
+                    {optimisticPoll && (
+                        <div className="space-y-2.5 mb-6">
+                            {optimisticPoll.options.map((option, idx) => {
+                                const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleVote(idx)}
+                                        disabled={userHasVotedOnPoll || isVoting}
+                                        className={cn(
+                                            "w-full relative h-11 rounded-xl border border-primary/5 overflow-hidden transition-all text-left px-4 group/option",
+                                            userHasVotedOnPoll ? "bg-muted/10 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/30"
+                                        )}
+                                    >
+                                        <AnimatePresence>
+                                            {userHasVotedOnPoll && (
+                                                <motion.div 
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: `${percentage}%` }}
+                                                    className="absolute inset-y-0 left-0 bg-primary/10 border-r border-primary/20"
+                                                />
+                                            )}
+                                        </AnimatePresence>
+                                        <div className="relative z-10 flex items-center justify-between h-full">
+                                            <div className="flex items-center gap-3">
+                                                <div className={cn(
+                                                    "h-2 w-2 rounded-full border border-primary/30 transition-all",
+                                                    userHasVotedOnPoll ? "opacity-0" : "group-hover/option:scale-125"
+                                                )} />
+                                                <span className="font-bold text-[11px] tracking-tight">{option.text}</span>
+                                            </div>
+                                            {userHasVotedOnPoll && (
+                                                <span className="font-black text-[10px] text-primary">{percentage.toFixed(0)}%</span>
+                                            )}
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                            {userHasVotedOnPoll && (
+                                <div className="flex items-center gap-2 px-1 text-[8px] font-black uppercase tracking-[0.2em] text-[#128807] animate-in fade-in slide-in-from-left-2">
+                                    <CheckCircle2 className="h-3 w-3" />
+                                    Consensus Captured // Registry Secure
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     <div className="flex items-center justify-between pt-4 border-t border-primary/5">
                         <div className="flex gap-2">
                             <Button 
                                 variant="ghost" 
                                 size="sm" 
-                                className={cn("h-8 px-3 rounded-lg text-[10px] font-black uppercase tracking-widest gap-2 transition-all", userHasLiked ? "text-red-500 bg-red-500/5" : "text-primary hover:bg-primary/5")}
+                                className={cn(
+                                    "h-8 px-3 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] gap-2 transition-all", 
+                                    userHasLiked ? "text-red-500 bg-red-500/5" : "text-primary hover:bg-primary/5"
+                                )}
                                 onClick={handleLike}
                                 disabled={isLiking}
                             >
                                 {isLiking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />}
                                 <span>{optimisticLikes}</span>
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-8 px-3 rounded-lg text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
+                            <Button variant="ghost" size="sm" className="h-8 px-3 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all">
                                 <MessageCircle className="h-3.5 w-3.5 mr-2" /> {post.comments}
                             </Button>
                         </div>
-                        <Button variant="ghost" size="sm" className="h-8 px-4 rounded-xl font-black text-[9px] uppercase tracking-widest text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm" asChild>
+                        <Button variant="ghost" size="sm" className="h-8 px-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
                             <Link href="/dashboard/research-analytics">
                                 <span>Analyze Node</span>
-                                <ArrowRight className="ml-2 h-3 w-3" />
+                                <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover/btn:translate-x-1" />
                             </Link>
                         </Button>
                     </div>
@@ -386,7 +462,7 @@ export default function DashboardHomePage() {
                   <div className="space-y-1">
                       <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none text-foreground">
                           Welcome back, <br />
-                          <span className="bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent italic">Nyaya {text}</span>
+                          <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Nyaya {text}</span>
                       </h1>
                   </div>
                   <p className="text-[11px] sm:text-xs text-muted-foreground font-medium max-w-lg leading-relaxed">

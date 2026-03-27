@@ -23,6 +23,7 @@ import {
   BadgeCheck,
   Search,
   Twitter,
+  CheckCircle2,
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -126,14 +127,9 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
     const isAuthor = post.authorUid === currentUser?.uid;
     const isAdmin = currentUser?.email && (ADMIN_EMAILS.includes(currentUser.email.toLowerCase()) || userProfile?.isAdmin);
+    const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
+    const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
     
-    const handleAction = (action: string) => {
-        toast({
-            title: `Action: ${action}`,
-            description: "Feature operational node active.",
-        });
-    };
-
     const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
         const shareText = `Check out this institutional transmission on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
         
@@ -148,10 +144,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     };
 
     const handleLike = () => {
-        if (!currentUser) {
-            toast({ variant: 'destructive', title: 'Registry Access Required', description: 'Authenticate your node to interact.' });
-            return;
-        }
+        if (!currentUser) return;
         if (isLiking) return;
         setIsLiking(true);
 
@@ -189,14 +182,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 
 
     const handleVote = (optionIndex: number) => {
-        if (!currentUser || !optimisticPoll || isVoting) return;
-
-        const userHasVoted = optimisticPoll.voters?.includes(currentUser.uid);
-        if (userHasVoted) {
-            toast({ title: "Protocol Refused", description: "Already voted." });
-            return;
-        }
-
+        if (!currentUser || !optimisticPoll || isVoting || userHasVotedOnPoll) return;
         setIsVoting(true);
 
         const postRef = doc(firestore, "posts", post.id);
@@ -226,7 +212,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     };
 
     const handleDeletePost = () => {
-        if (!confirm("Are you sure you want to purge this transmission identity node?")) return;
+        if (!confirm("Confirm Transmission Purge: This action will permanently erase the node from the community registry.")) return;
         const postRef = doc(firestore, "posts", post.id);
         deleteDoc(postRef)
             .then(() => {
@@ -241,23 +227,13 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
             });
     };
 
-    const handleReport = () => {
-        toast({
-            title: "Forensic Audit Initiated",
-            description: "Transmission node flagged for administrative review.",
-        });
-    };
-
-    const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
-    const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
-    
     return (
         <Card key={post.id} className="overflow-hidden glass border-primary/10 transition-all shadow-lg rounded-[1.5rem] relative group">
-            <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-primary via-accent to-blue-500"></div>
+            <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-[#FF9933] via-white to-[#128807]"></div>
             
-            <CardContent className="p-5 sm:p-6 pb-0 ml-1.5">
+            <CardContent className="p-5 sm:p-6 pb-0 ml-1">
                 <div className="flex items-start justify-between mb-5">
-                    <AuthorIdentityNode post={post} isAdmin={isAdmin || false} />
+                    <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
                     <div className="flex items-center gap-2">
                         {post.postType && (
                             <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 px-2 py-0.5 rounded-full text-[7px] font-black uppercase tracking-widest h-4">
@@ -277,7 +253,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                         <span>Purge Identity Node</span>
                                     </DropdownMenuItem>
                                 ) : (
-                                    <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
+                                    <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
                                         <Flag className="h-3.5 w-3.5" /> 
                                         <span>Report Forensic Breach</span>
                                     </DropdownMenuItem>
@@ -289,7 +265,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 
                 <div className="space-y-2.5 text-left">
                     <h3 className="text-base sm:text-lg font-black tracking-tight text-foreground leading-snug">{post.title}</h3>
-                    {post.content && <p className="text-muted-foreground text-[11px] font-medium leading-relaxed whitespace-pre-line">{post.content}</p>}
+                    {post.content && <p className="text-[11px] sm:text-xs text-muted-foreground font-medium leading-relaxed whitespace-pre-line">{post.content}</p>}
 
                     {post.tags && post.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 pt-1">
@@ -301,7 +277,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                 </div>
             </CardContent>
 
-            <div className="px-5 sm:px-6 pb-0 pt-4 ml-1.5">
+            <div className="px-5 sm:px-6 pb-0 pt-4 ml-1">
                  {post.link && (
                     <a href={post.link} target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-primary/5 bg-primary/5 hover:bg-primary/10 transition-all group/link">
                         <div className="flex items-center gap-3">
@@ -313,44 +289,59 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                 )}
                 
                 {optimisticPoll && (
-                    <div className="pt-4 space-y-2">
+                    <div className="pt-4 space-y-2.5">
                        {optimisticPoll.options.map((option, index) => {
-                           const votePercentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
+                           const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
                            const userVotedForThis = post.poll?.voters?.includes(currentUser?.uid ?? '');
 
                            return (
-                            <Button 
+                            <button 
                                 key={index} 
-                                variant="ghost" 
-                                className={cn(
-                                    "w-full justify-start h-auto p-3 flex flex-col items-start relative overflow-hidden rounded-lg border border-primary/5 transition-all",
-                                    userVotedForThis ? 'bg-primary/5 border-primary/20' : 'bg-muted/20 hover:bg-muted/40'
-                                )}
                                 onClick={() => handleVote(index)}
                                 disabled={userHasVotedOnPoll || isVoting}
+                                className={cn(
+                                    "w-full relative h-11 rounded-xl border border-primary/5 overflow-hidden transition-all text-left px-4 group/option",
+                                    userHasVotedOnPoll ? "bg-muted/10 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/30"
+                                )}
                             >
-                                <div className="flex items-center justify-between w-full z-10">
-                                    <div className="flex items-center gap-2.5">
-                                        <div className={cn("h-3 w-3 rounded-full border flex items-center justify-center transition-all", userVotedForThis ? "border-primary" : "border-muted-foreground/30")}>
-                                            {userVotedForThis && <div className="h-1.5 w-1.5 bg-primary rounded-full" />}
-                                        </div>
-                                        <span className="font-black text-[11px] tracking-tight">{option.text}</span>
+                                <AnimatePresence>
+                                    {userHasVotedOnPoll && (
+                                        <motion.div 
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${percentage}%` }}
+                                            className="absolute inset-y-0 left-0 bg-primary/10 border-r border-primary/20"
+                                        />
+                                    )}
+                                </AnimatePresence>
+                                <div className="relative z-10 flex items-center justify-between h-full">
+                                    <div className="flex items-center gap-3">
+                                        <div className={cn(
+                                            "h-2 w-2 rounded-full border border-primary/30 transition-all",
+                                            userHasVotedOnPoll && !userVotedForThis ? "opacity-0" : "group-hover/option:scale-125",
+                                            userVotedForThis && "bg-primary border-primary shadow-[0_0_10px_rgba(255,153,51,0.5)]"
+                                        )} />
+                                        <span className="font-bold text-[11px] tracking-tight">{option.text}</span>
                                     </div>
-                                    {userHasVotedOnPoll && <span className="text-[9px] font-black font-mono text-primary">{votePercentage.toFixed(0)}%</span>}
+                                    {userHasVotedOnPoll && (
+                                        <span className="font-black text-[10px] text-primary">{percentage.toFixed(0)}%</span>
+                                    )}
                                 </div>
-                               {userHasVotedOnPoll && (
-                                   <div className="absolute inset-y-0 left-0 bg-primary/10 transition-all duration-700 ease-out" style={{width: `${votePercentage}%`}}></div>
-                               )}
-                           </Button>
+                            </button>
                        )})}
+                       {userHasVotedOnPoll && (
+                            <div className="flex items-center gap-2 px-1 text-[8px] font-black uppercase tracking-[0.2em] text-[#128807] animate-in fade-in slide-in-from-left-2">
+                                <CheckCircle2 className="h-3 w-3" />
+                                Consensus Captured // Registry Secure
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
 
-            <CardFooter className="p-4 sm:px-6 mt-4 flex justify-between items-center bg-muted/5 border-t border-primary/5 ml-1.5">
+            <CardFooter className="p-4 sm:px-6 mt-4 flex justify-between items-center bg-muted/5 border-t border-primary/5 ml-1">
                 <div className="flex gap-1.5">
-                    <Button variant="ghost" size="sm" className="flex items-center gap-1.5 h-8 px-3 rounded-lg font-black text-[9px] uppercase tracking-widest hover:text-red-500" onClick={handleLike} disabled={isLiking}>
-                        {isLiking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5 transition-all", userHasLiked && "fill-red-500 text-red-500 scale-110")} />}
+                    <Button variant="ghost" size="sm" className={cn("flex items-center gap-1.5 h-8 px-3 rounded-lg font-black text-[9px] uppercase tracking-[0.2em] hover:text-red-500", userHasLiked && "text-red-500")} onClick={handleLike} disabled={isLiking}>
+                        {isLiking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5 transition-all", userHasLiked && "fill-current scale-110")} />}
                         <span>{optimisticLikes}</span>
                     </Button>
                     
@@ -373,9 +364,14 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10" onClick={() => handleAction('Bookmark')}>
-                    <Bookmark className="h-3.5 w-3.5 text-muted-foreground" />
-                </Button>
+                <div className="flex gap-2">
+                    <Button variant="ghost" size="sm" className="h-8 px-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
+                        <Link href="/dashboard/research-analytics">
+                            <span>Analyze Node</span>
+                            <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover/btn:translate-x-1" />
+                        </Link>
+                    </Button>
+                </div>
             </CardFooter>
         </Card>
     );
