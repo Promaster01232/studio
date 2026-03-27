@@ -12,21 +12,18 @@ import {
   BrainCircuit,
   FileSearch,
   Zap,
-  BadgeCheck,
   Globe,
-  Award,
-  Mic,
   Scale,
   ExternalLink
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { Footer } from "@/components/footer";
 import { PublicHeader } from "@/components/public-header";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Footer } from "@/components/footer";
 
 const TricolorBackground = () => {
   return (
@@ -110,12 +107,12 @@ export default function WelcomePage() {
             <CardContent className="flex flex-col items-center p-6 sm:p-12 text-center relative z-10">
               <div className="relative mb-8">
                 <div className="absolute -inset-6 rounded-full bg-primary/10 animate-pulse group-hover:scale-110 transition-transform"></div>
-                <Logo className="h-20 w-20 sm:h-28 sm:w-28 relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.2)]" />
+                <Logo className="h-24 w-24 sm:h-32 sm:w-32 relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.2)]" priority />
               </div>
 
               <div className="space-y-6 mb-10">
                 <Badge variant="outline" className="border-primary/20 text-primary px-5 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em] bg-primary/5">
-                    Terminal // NS-ALPH-4
+                    Terminal // NYAYASAHAYAK.IN
                 </Badge>
                 
                 <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
@@ -158,7 +155,7 @@ export default function WelcomePage() {
           </Card>
         </motion.div>
 
-        {/* Informational Content for SEO & Depth */}
+        {/* Informational Content for SEO & Depth (300+ words) */}
         <div className="w-full max-w-5xl mt-24 space-y-24 px-4 relative z-10 text-left">
             <section className="space-y-8">
                 <div className="space-y-3 text-center">
@@ -174,6 +171,9 @@ export default function WelcomePage() {
                         </p>
                         <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
                             Our platform integrates several high-performance modules, including the <span className="text-foreground font-bold">Forensic Case Auditor</span>, which analyzes legal narratives under the context of the Bharatiya Nyaya Sanhita (BNS) and the Bharatiya Sakshya Adhiniyam (BSA). We utilize advanced OCR-powered engines to dissect contracts, legal notices, and FIR applications to surface hidden liabilities and critical deadlines instantly.
+                        </p>
+                        <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
+                            Through the <span className="text-foreground font-bold">Document Risk Scanner</span>, users can upload statutory instruments for a real-time audit. The AI identifies non-compliance markers and provides recommended procedural actions based on current amendments. This ensures that every citizen can navigate the law with absolute confidence, reducing the barrier between complex legal jargon and everyday accessibility.
                         </p>
                     </div>
                     <Card className="glass p-8 rounded-[2.5rem] border-primary/10 shadow-xl relative overflow-hidden">

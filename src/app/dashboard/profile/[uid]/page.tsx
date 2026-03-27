@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
@@ -238,7 +237,7 @@ export default function UserPublicProfilePage(props: {
             <User className="h-16 w-16 text-muted-foreground opacity-20" />
         </div>
         <div className="text-center space-y-2">
-            <h2 className="text-2xl font-black font-headline tracking-tighter uppercase">Registry Node Not Found</h2>
+            <h2 className="text-2xl font-black font-headline tracking-tighter uppercase">Registry Record Not Found</h2>
             <p className="text-sm text-muted-foreground max-w-xs">The requested identity has been purged or never existed in the official database.</p>
         </div>
         <Button variant="outline" asChild className="rounded-xl font-bold h-11 px-8">
@@ -266,7 +265,7 @@ export default function UserPublicProfilePage(props: {
         </Button>
         <div className="flex items-center gap-2">
             <Badge variant="outline" className="h-8 border-primary/10 font-bold bg-background shadow-sm px-4 rounded-lg text-[10px] uppercase tracking-widest text-muted-foreground">
-                Node Synced // Active Terminal
+                Registry Synced // Active Terminal
             </Badge>
         </div>
       </motion.div>
@@ -303,7 +302,7 @@ export default function UserPublicProfilePage(props: {
                       </div>
                       <p className="text-lg sm:text-xl text-primary font-bold tracking-tight flex items-center justify-center sm:justify-start gap-2">
                           <Zap className="h-4 w-4 animate-pulse" />
-                          Official {profile.userType?.toUpperCase()} Node
+                          Official {profile.userType?.toUpperCase()}
                       </p>
                   </div>
                   
@@ -369,10 +368,6 @@ export default function UserPublicProfilePage(props: {
                           </CardTitle>
                       </CardHeader>
                       <CardContent className="p-6 space-y-4">
-                          <div className="flex justify-between items-center py-2 border-b border-primary/5">
-                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Registry ID</span>
-                              <span className="text-[9px] font-mono font-bold text-primary bg-primary/5 px-2 py-1 rounded">NS-NODE-{uid.substring(0,8).toUpperCase()}</span>
-                          </div>
                           <div className="flex justify-between items-center py-2 border-b border-primary/5">
                               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Network Access</span>
                               <span className="flex items-center gap-1.5 text-green-600 text-[10px] font-black uppercase">
@@ -465,7 +460,7 @@ export default function UserPublicProfilePage(props: {
                   {postsLoading ? (
                       <div className="flex flex-col items-center justify-center py-20 gap-4">
                           <Loader2 className="h-8 w-8 animate-spin text-primary opacity-20" />
-                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Syncing User Registry...</p>
+                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Syncing Registry...</p>
                       </div>
                   ) : userPosts.length === 0 ? (
                       <Card className="border-dashed border-2 bg-transparent py-20 rounded-[2.5rem]">
@@ -515,12 +510,12 @@ export default function UserPublicProfilePage(props: {
                                                             {isAuthor ? (
                                                                 <DropdownMenuItem onSelect={() => handleDeletePost(post.id)} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                                                     <Trash2 className="h-3.5 w-3.5" /> 
-                                                                    <span>Purge Identity Record</span>
+                                                                    <span>Purge record</span>
                                                                 </DropdownMenuItem>
                                                             ) : (
                                                                 <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
                                                                     <Flag className="h-3.5 w-3.5" /> 
-                                                                    <span>Report Forensic Breach</span>
+                                                                    <span>Report breach</span>
                                                                 </DropdownMenuItem>
                                                             )}
                                                         </DropdownMenuContent>
@@ -566,7 +561,7 @@ export default function UserPublicProfilePage(props: {
                                                         </DropdownMenuContent>
                                                     </DropdownMenu>
                                                     <Button variant="ghost" size="sm" className="h-8 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary hover:text-white transition-all">
-                                                        Inspect Node <ArrowRight className="h-3 w-3" />
+                                                        Inspect <ArrowRight className="h-3 w-3" />
                                                     </Button>
                                                 </div>
                                             </div>

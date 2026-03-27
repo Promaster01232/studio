@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff, ShieldCheck, MailCheck, AlertCircle, CheckCircle2, Sparkles, Smartphone, Scale } from "lucide-react";
+import { Loader2, Eye, EyeOff, ShieldCheck, MailCheck, AlertCircle, CheckCircle2, Sparkles } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { motion, AnimatePresence } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -370,7 +370,7 @@ export default function RegisterPage() {
             </div>
         </div>
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50"></div>
-        <div className="absolute bottom-8 left-8 text-[10px] font-black uppercase tracking-widest opacity-20">Nyaya Sahayak Terminal // NS-REGISTRY</div>
+        <div className="absolute bottom-8 left-8 text-[10px] font-black uppercase tracking-widest opacity-20">Nyaya Sahayak Terminal // REGISTRY</div>
       </div>
     </Card>
   );

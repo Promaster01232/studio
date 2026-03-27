@@ -16,20 +16,15 @@ import {
   Sparkles,
   Activity,
   Heart,
-  MessageCircle,
-  Share2,
-  Bookmark,
-  Loader2,
-  BadgeCheck,
-  MoreVertical,
-  Flag,
-  Trash2,
-  TrendingUp,
   Plus,
   Zap,
   Cpu,
   Bot,
   CheckCircle2,
+  MoreVertical,
+  Flag,
+  Trash2,
+  TrendingUp,
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -60,8 +55,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Logo } from "@/components/logo";
@@ -296,7 +289,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                         onClick={() => setIsExpanded(!isExpanded)}
                                         className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
                                     >
-                                        {isExpanded ? "Show Less" : "Read More"}
+                                        {isExpanded ? "Show less" : "Read more"}
                                     </button>
                                 )}
                             </div>

@@ -1,8 +1,7 @@
-
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
-export function Logo({ className, imageClassName }: { className?: string, imageClassName?: string }) {
+export function Logo({ className, imageClassName, priority = false }: { className?: string, imageClassName?: string, priority?: boolean }) {
   return (
     <div className={cn(
       "relative flex items-center justify-center shrink-0 rounded-full bg-white shadow-[0_10px_40px_rgba(0,0,0,0.15)] border border-primary/10 overflow-hidden aspect-square",
@@ -12,10 +11,10 @@ export function Logo({ className, imageClassName }: { className?: string, imageC
       <Image 
         src="/Logo.png" 
         alt="Nyaya Sahayak Institutional Identity" 
-        width={400} 
-        height={400} 
-        className={cn("h-full w-full object-cover transition-transform group-hover:scale-110 duration-700", imageClassName)} 
-        priority
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className={cn("object-cover transition-transform group-hover:scale-110 duration-700", imageClassName)} 
+        priority={priority}
       />
     </div>
   );

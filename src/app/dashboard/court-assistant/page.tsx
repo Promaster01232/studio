@@ -3,12 +3,11 @@
 import { useActionState, useState, useRef, useEffect } from "react";
 import { generateQuestionsAction, type CourtAssistantState } from "./actions";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mic, BrainCircuit, Loader2, Languages, ArrowLeft, Activity, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
