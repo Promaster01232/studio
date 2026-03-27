@@ -61,6 +61,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Logo } from "@/components/logo";
 import { errorEmitter } from "@/firebase/error-emitter";
@@ -196,7 +197,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     };
 
     const handleDelete = async () => {
-        if (!confirm("Confirm node deletion from community registry?")) return;
+        if (!confirm("Confirm identity node purge from community registry?")) return;
         const postRef = doc(firestore, "posts", post.id);
         deleteDoc(postRef).catch((serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -209,8 +210,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 
     const handleReport = () => {
         toast({
-            title: "Report Transmitted",
-            description: "Institutional audit initiated for this node.",
+            title: "Transmission Reported",
+            description: "Institutional audit initiated for forensic compliance.",
         });
     };
 
@@ -236,17 +237,23 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                         <MoreVertical className="h-3.5 w-3.5 text-muted-foreground" />
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-40 p-1.5 rounded-xl border-primary/5">
-                                    <DropdownMenuItem onSelect={handleGoogleSearch} className="text-[10px] font-bold gap-2 cursor-pointer">
-                                        <Search className="h-3 w-3" /> Search on Google
+                                <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl shadow-2xl glass border-primary/10">
+                                    <DropdownMenuItem onSelect={handleGoogleSearch} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-primary/5">
+                                        <Search className="h-3.5 w-3.5 text-primary opacity-60" /> 
+                                        <span>Search Registry Hub</span>
                                     </DropdownMenuItem>
+                                    
+                                    <DropdownMenuSeparator className="my-1 opacity-5" />
+
                                     {(isAuthor || isAdmin) ? (
-                                        <DropdownMenuItem onSelect={handleDelete} className="text-[10px] font-bold text-destructive gap-2 cursor-pointer">
-                                            <Trash2 className="h-3 w-3" /> Purge Node
+                                        <DropdownMenuItem onSelect={handleDelete} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
+                                            <Trash2 className="h-3.5 w-3.5" /> 
+                                            <span>Purge Identity Node</span>
                                         </DropdownMenuItem>
                                     ) : (
-                                        <DropdownMenuItem onSelect={handleReport} className="text-[10px] font-bold gap-2 cursor-pointer">
-                                            <Flag className="h-3 w-3" /> Report Content
+                                        <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
+                                            <Flag className="h-3.5 w-3.5" /> 
+                                            <span>Report Forensic Breach</span>
                                         </DropdownMenuItem>
                                     )}
                                 </DropdownMenuContent>

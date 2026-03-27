@@ -38,6 +38,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -225,11 +226,11 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     };
 
     const handleDeletePost = () => {
-        if (!confirm("Are you sure you want to purge this transmission?")) return;
+        if (!confirm("Are you sure you want to purge this transmission identity node?")) return;
         const postRef = doc(firestore, "posts", post.id);
         deleteDoc(postRef)
             .then(() => {
-                toast({ title: "Post Purged", description: "Identity node erased." });
+                toast({ title: "Post Purged", description: "Registry data erased permanently." });
             })
             .catch((serverError) => {
                 const permissionError = new FirestorePermissionError({
@@ -242,8 +243,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 
     const handleReport = () => {
         toast({
-            title: "Report Node",
-            description: "Institutional audit initiated for this content.",
+            title: "Forensic Audit Initiated",
+            description: "Transmission node flagged for administrative review.",
         });
     };
 
@@ -273,17 +274,23 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                     <MoreVertical className="h-3.5 w-3.5 text-muted-foreground" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-44 p-1.5 rounded-xl shadow-2xl glass border-primary/5">
-                                <DropdownMenuItem onSelect={handleGoogleSearch} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5">
-                                    <Search className="h-3.5 w-3.5" /> Search on Google
+                            <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl shadow-2xl glass border-primary/10">
+                                <DropdownMenuItem onSelect={handleGoogleSearch} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-primary/5">
+                                    <Search className="h-3.5 w-3.5 text-primary opacity-60" /> 
+                                    <span>Search Registry Hub</span>
                                 </DropdownMenuItem>
+                                
+                                <DropdownMenuSeparator className="my-1 opacity-5" />
+
                                 {(isAuthor || isAdmin) ? (
                                     <DropdownMenuItem onSelect={handleDeletePost} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
-                                        <Trash2 className="h-3.5 w-3.5" /> Purge Node
+                                        <Trash2 className="h-3.5 w-3.5" /> 
+                                        <span>Purge Identity Node</span>
                                     </DropdownMenuItem>
                                 ) : (
-                                    <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5">
-                                        <Flag className="h-3.5 w-3.5" /> Report Content
+                                    <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
+                                        <Flag className="h-3.5 w-3.5" /> 
+                                        <span>Report Forensic Breach</span>
                                     </DropdownMenuItem>
                                 )}
                             </DropdownMenuContent>

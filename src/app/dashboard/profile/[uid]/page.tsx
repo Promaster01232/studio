@@ -30,7 +30,8 @@ import {
   Trash2,
   Twitter,
   MoreVertical,
-  Flag
+  Flag,
+  Search
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -44,6 +45,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 const ADMIN_EMAILS = [
@@ -199,7 +201,7 @@ export default function UserPublicProfilePage(props: {
   const handleReport = () => {
       toast({
           title: "Report Node",
-          description: "Institutional audit initiated for this content.",
+          description: "Institutional audit initiated for forensic compliance.",
       });
   };
 
@@ -214,6 +216,10 @@ export default function UserPublicProfilePage(props: {
         navigator.clipboard.writeText(shareText);
         toast({ title: "Registry Link Copied", description: "Transmission data saved to clipboard." });
     }
+  };
+
+  const handleGoogleSearch = (post: Post) => {
+    window.open(`https://www.google.com/search?q=${encodeURIComponent(post.title)}`, '_blank');
   };
 
   if (loading) {
@@ -247,7 +253,7 @@ export default function UserPublicProfilePage(props: {
   }
 
   const currentUser = auth.currentUser;
-  const isUserAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
+  const isUserAdmin = currentUser?.email && (ADMIN_EMAILS.includes(currentUser.email.toLowerCase()) || profile?.isAdmin);
 
   return (
     <motion.div 
@@ -259,7 +265,7 @@ export default function UserPublicProfilePage(props: {
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10" asChild>
           <Link href="/dashboard/research-analytics">
-            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Click to back only
+            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to Stream
           </Link>
         </Button>
         <div className="flex items-center gap-2">
@@ -308,7 +314,7 @@ export default function UserPublicProfilePage(props: {
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
                       <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background/50 border border-primary/10 shadow-sm">
                           <Activity className="h-3.5 w-3.5 text-primary" />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Dossier Impact: {stats.impact}</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Registry Synchronized</span>
                       </div>
                       <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background/50 border border-primary/10 shadow-sm">
                           <Globe className="h-3.5 w-3.5 text-blue-500" />
@@ -361,7 +367,7 @@ export default function UserPublicProfilePage(props: {
 
               <motion.div variants={itemVariants}>
                   <Card className="glass border-primary/5 rounded-[2rem] overflow-hidden shadow-xl">
-                      <CardHeader className="bg-primary/5 border-b border-primary/5 p-6">
+                      <CardHeader className="bg-primary/5 border-b border-primary/5 p-6 text-left">
                           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                               <Cpu className="h-4 w-4 text-primary" /> Technical Specifications
                           </CardTitle>
@@ -393,7 +399,7 @@ export default function UserPublicProfilePage(props: {
                       <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
                           <Trophy className="h-40 w-40" />
                       </div>
-                      <CardHeader className="p-8 sm:p-10 pb-0 border-none">
+                      <CardHeader className="p-8 sm:p-10 pb-0 border-none text-left">
                           <div className="flex items-center gap-3 text-primary mb-2">
                               <Globe className="h-4 w-4" />
                               <span className="text-[10px] font-black uppercase tracking-[0.3em]">Forensic Dossier</span>
@@ -401,7 +407,7 @@ export default function UserPublicProfilePage(props: {
                           <CardTitle className="text-2xl sm:text-3xl font-black tracking-tighter">Bio & Registry Profile</CardTitle>
                       </CardHeader>
                       <CardContent className="p-8 sm:p-10 space-y-10">
-                          <div className="p-6 rounded-3xl bg-muted/20 border border-primary/5 text-sm font-medium leading-relaxed text-foreground/80 italic shadow-inner">
+                          <div className="p-6 rounded-3xl bg-muted/20 border border-primary/5 text-sm font-medium leading-relaxed text-foreground/80 italic shadow-inner text-left">
                               "Identity synchronizing... This user is an active participant in the nyayasahayak.in legal ecosystem, contributing to statutory discussions and community legal awareness."
                           </div>
 
@@ -510,14 +516,23 @@ export default function UserPublicProfilePage(props: {
                                                                 <MoreVertical className="h-4 w-4" />
                                                             </Button>
                                                         </DropdownMenuTrigger>
-                                                        <DropdownMenuContent align="end" className="w-44 p-1.5 rounded-xl shadow-2xl glass border-primary/5">
+                                                        <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl shadow-2xl glass border-primary/10">
+                                                            <DropdownMenuItem onSelect={() => handleGoogleSearch(post)} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-primary/5">
+                                                                <Search className="h-3.5 w-3.5 text-primary opacity-60" /> 
+                                                                <span>Search Registry Hub</span>
+                                                            </DropdownMenuItem>
+                                                            
+                                                            <DropdownMenuSeparator className="my-1 opacity-5" />
+
                                                             {canDelete ? (
                                                                 <DropdownMenuItem onSelect={() => handleDeletePost(post.id)} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
-                                                                    <Trash2 className="h-3.5 w-3.5" /> Purge Node
+                                                                    <Trash2 className="h-3.5 w-3.5" /> 
+                                                                    <span>Purge Identity Node</span>
                                                                 </DropdownMenuItem>
                                                             ) : (
-                                                                <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5">
-                                                                    <Flag className="h-3.5 w-3.5" /> Report Content
+                                                                <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
+                                                                    <Flag className="h-3.5 w-3.5" /> 
+                                                                    <span>Report Forensic Breach</span>
                                                                 </DropdownMenuItem>
                                                             )}
                                                         </DropdownMenuContent>
