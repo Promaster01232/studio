@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -148,11 +147,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         setProfileLoading(true);
         const userDocRef = doc(firestore, "users", user.uid);
         
-        await updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(() => {});
-
         profileUnsubscribeRef.current = onSnapshot(userDocRef, (userDoc) => {
             if (userDoc.exists()) {
-              setUserProfile(userDoc.data() as any);
+              const data = userDoc.data() as any;
+              setUserProfile(data);
+              
+              // Smart Sync: Only write if verification status changed to prevent bandwidth exhaustion
+              if (data.emailVerified !== user.emailVerified) {
+                  updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(() => {});
+              }
             } else {
               if (pathname !== '/create-profile' && pathname !== '/login' && pathname !== '/register') {
                 router.replace('/create-profile');

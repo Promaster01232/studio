@@ -137,7 +137,7 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
                     {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
                 </div>
                 <p className="text-[10px] text-muted-foreground font-bold opacity-60">
-                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
+                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
                 </p>
             </div>
         </Link>
@@ -327,7 +327,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                             {userHasVotedOnPoll && (
                                 <div className="flex items-center gap-2 px-1 text-[10px] font-bold text-[#128807] animate-in fade-in slide-in-from-left-2">
                                     <CheckCircle2 className="h-3.5 w-3.5" />
-                                    Consensus captured // Registry secure
+                                    consensus captured // registry secure
                                 </div>
                             )}
                         </div>
@@ -351,7 +351,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                         </div>
                         <Button variant="ghost" size="sm" className="h-9 px-5 rounded-xl font-bold text-[11px] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
                             <Link href="/dashboard/research-analytics">
-                                <span>Analyze node</span>
+                                <span>analyze protocol</span>
                                 <ArrowRight className="ml-2.5 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                             </Link>
                         </Button>
@@ -363,10 +363,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Forensic assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "sector: forensic" },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "sector: statutory" },
-    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "sector: civil" },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Legal affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "sector: registry" },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "analyzer", desc: "Forensic assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "sector: forensic" },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "doc intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "sector: statutory" },
+    { href: "/dashboard/document-generator", icon: FileText, title: "drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "sector: civil" },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "bonds", desc: "Legal affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "sector: registry" },
 ];
 
 const SectionHeader = ({ children, icon: Icon, sector }: { children: React.ReactNode, icon?: any, sector?: string }) => (
@@ -473,10 +473,10 @@ export default function DashboardHomePage() {
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
                       <Button size="sm" className="rounded-xl font-bold px-8 h-12 shadow-xl shadow-primary/20 active:scale-95 transition-all text-xs" asChild>
-                          <Link href="/dashboard/narrate">Initialize narration</Link>
+                          <Link href="/dashboard/narrate">initialize narration</Link>
                       </Button>
                       <Button variant="outline" size="sm" className="rounded-xl font-bold px-8 h-12 border-primary/10 hover:bg-primary/5 active:scale-95 transition-all text-xs" asChild>
-                          <Link href="/dashboard/support">Hub support</Link>
+                          <Link href="/dashboard/support">hub support</Link>
                       </Button>
                   </div>
               </div>
@@ -486,7 +486,7 @@ export default function DashboardHomePage() {
         <div className="grid lg:grid-cols-12 gap-10">
           <div className="lg:col-span-8 space-y-10">
               <section>
-                  <SectionHeader icon={TrendingUp} sector="sector: community">Live transmission stream</SectionHeader>
+                  <SectionHeader icon={TrendingUp} sector="sector: community">live transmission stream</SectionHeader>
                   
                   <div className="space-y-6">
                       {postsLoading ? (
@@ -497,7 +497,7 @@ export default function DashboardHomePage() {
                           </div>
                       ) : latestPosts.length === 0 ? (
                           <Card className="py-20 text-center glass rounded-[2.5rem] border-dashed border-2 border-primary/10 opacity-40">
-                              <p className="font-bold text-sm tracking-tight">Registry empty // No active transmissions</p>
+                              <p className="font-bold text-sm tracking-tight">registry empty // no active transmissions</p>
                           </Card>
                       ) : (
                           <div className="space-y-6">
@@ -512,7 +512,7 @@ export default function DashboardHomePage() {
 
           <div className="lg:col-span-4 space-y-10">
               <section>
-                  <SectionHeader icon={Sparkles} sector="status: optimized">System matrix</SectionHeader>
+                  <SectionHeader icon={Sparkles} sector="status: optimized">system matrix</SectionHeader>
                   <div className="grid grid-cols-2 gap-4">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
@@ -537,11 +537,11 @@ export default function DashboardHomePage() {
               </section>
 
               <section>
-                  <SectionHeader icon={Library} sector="status: ready">Statutory registry</SectionHeader>
+                  <SectionHeader icon={Library} sector="status: ready">statutory registry</SectionHeader>
                   <div className="space-y-3.5">
                       {[
-                        { href: "/dashboard/learn", icon: Library, title: "Knowledge hub", label: "learn" },
-                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case tracker", label: "case" },
+                        { href: "/dashboard/learn", icon: Library, title: "knowledge hub", label: "learn" },
+                        { href: "/dashboard/my-cases", icon: Landmark, title: "case tracker", label: "case" },
                       ].map((item) => (
                         <Link key={item.href} href={item.href} className="block group" onMouseEnter={() => playSound('hover')}>
                             <Card className="glass p-4 rounded-2xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between group-hover:scale-[1.01] group-active:scale-[0.99] shadow-sm">
@@ -552,8 +552,8 @@ export default function DashboardHomePage() {
                                     <span className="font-bold text-sm tracking-tight">{item.title}</span>
                                 </div>
                                 <span className="text-[10px] font-bold text-muted-foreground/30 px-3 py-1 rounded-lg bg-muted/30">{item.label}</span>
-                            </Card>
-                        </Link>
+                            </Link>
+                        </Card>
                       ))}
                   </div>
               </section>
