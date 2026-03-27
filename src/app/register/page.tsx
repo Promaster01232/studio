@@ -81,7 +81,7 @@ export default function RegisterPage() {
     try {
       setIsValidating(true);
 
-      // AI Audit: Only validate email authenticity
+      // Forensic Audit Protocol: Only validate email authenticity
       const emailValidation = await verifyEmailAuthenticity({ email });
       if (!emailValidation.isAuthentic) {
         setEmailStatus('invalid');
@@ -101,7 +101,7 @@ export default function RegisterPage() {
       const user = userCredential.user;
 
       await sendEmailVerification(user).catch(err => {
-          console.warn("Auto-verification email failed to send:", err.message);
+          console.warn("Auto-verification email failed:", err.message);
       });
 
       const userProfile = {
@@ -123,11 +123,11 @@ export default function RegisterPage() {
       set(ref(rtdb, `users/${user.uid}`), {
           ...userProfile,
           createdAt: Date.now()
-      }).catch(err => console.warn("RTDB sync issues.", err.message));
+      }).catch(err => console.warn("RTDB sync skipped."));
 
       toast({
-          title: "Registry Active",
-          description: "Welcome! A verification link has been sent to your email.",
+          title: "Registry Enrollment Active",
+          description: "Welcome! A verification link has been dispatched to your inbox.",
       });
       router.push("/dashboard");
 
@@ -141,7 +141,7 @@ export default function RegisterPage() {
 
       toast({
         variant: "destructive",
-        title: "Registration failed",
+        title: "Enrollment failed",
         description: errorMessage,
       });
       setLoading(false);
@@ -188,7 +188,7 @@ export default function RegisterPage() {
           </motion.div>
           <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Citizen Registry</motion.h2>
           <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
-          AI-authenticated email verification.
+          AI-authenticated email enrollment.
           </motion.p>
           <CardContent className="p-0">
               <motion.div variants={itemVariants} className="grid gap-4">
@@ -342,7 +342,7 @@ export default function RegisterPage() {
                   {loading ? (
                       <span className="flex items-center gap-2">
                         <Loader2 className="animate-spin h-5 w-5" />
-                        {isValidating ? "AI SCANNING..." : "CREATING PROFILE..."}
+                        {isValidating ? "AI SCANNING..." : "ENROLLING IDENTITY..."}
                       </span>
                   ) : (
                       <span className="flex items-center gap-2">

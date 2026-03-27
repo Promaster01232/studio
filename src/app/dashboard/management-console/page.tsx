@@ -243,7 +243,6 @@ export default function ManagementConsolePage() {
   const [searchQuery, setSearchSearchQuery] = useState("");
   const [processingUid, setProcessingUid] = useState<string | null>(null);
   const [userToPurge, setUserToPurge] = useState<UserRecord | null>(null);
-  const [isMassPurging, setIsMassPurging] = useState(false);
   
   const unsubscribeRef = useRef<(() => void) | null>(null);
 
@@ -281,7 +280,7 @@ export default function ManagementConsolePage() {
                 setLoading(false);
             },
             (serverError) => {
-                console.error("Management Console list error:", serverError);
+                console.error("Registry list error:", serverError);
                 setLoading(false);
             }
         );
@@ -301,11 +300,10 @@ export default function ManagementConsolePage() {
     updateDoc(userRef, updateData)
         .then(() => {
             update(ref(rtdb, `users/${user.uid}`), updateData).catch(() => {});
-            toast({ title: isInactive ? "User Suspended" : "User Activated" });
+            toast({ title: isInactive ? "Account Suspended" : "Account Re-activated" });
         })
         .catch(async (serverError) => {
-            console.error("Status update error:", serverError);
-            toast({ variant: "destructive", title: "Action Denied" });
+            toast({ variant: "destructive", title: "Action Refused", description: "Registry permissions insufficient." });
         })
         .finally(() => setProcessingUid(null));
   };
@@ -316,13 +314,13 @@ export default function ManagementConsolePage() {
           const verification = await verifyEmailAuthenticity({ email: user.email });
           const updateData = verification.isAuthentic 
             ? { securityStatus: 'verified', flagReason: "", isBlocked: false } 
-            : { securityStatus: 'suspicious', flagReason: verification.reason || "Suspicious identity patterns." };
+            : { securityStatus: 'suspicious', flagReason: verification.reason || "Suspicious identity patterns detected." };
 
           const userRef = doc(firestore, "users", user.uid);
           await updateDoc(userRef, updateData as any);
-          toast({ title: verification.isAuthentic ? "User Authenticated" : "Forensic Audit Failed" });
+          toast({ title: verification.isAuthentic ? "Citizen Authenticated" : "Audit Flagged" });
       } catch (error) {
-          toast({ variant: "destructive", title: "Process Error" });
+          toast({ variant: "destructive", title: "Forensic Audit Error" });
       } finally {
           setProcessingUid(null);
       }
@@ -332,11 +330,12 @@ export default function ManagementConsolePage() {
     if (!userToPurge) return;
     const user = userToPurge;
     
+    // Safety check: Don't allow purging root admins
     if (ADMIN_EMAILS.includes(user.email.toLowerCase()) || user.isAdmin) {
         toast({ 
             variant: "destructive", 
             title: "Action Prohibited", 
-            description: "Administrative accounts are immutable and cannot be purged from the registry." 
+            description: "Institutional root accounts are immutable." 
         });
         setUserToPurge(null);
         return;
@@ -348,11 +347,10 @@ export default function ManagementConsolePage() {
     deleteDoc(userRef)
         .then(() => {
             remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
-            toast({ title: "Registry Record Purged", description: `Record for ${user.firstName} erased permanently.` });
+            toast({ title: "Registry Purged", description: `Dossier for ${user.firstName} erased permanently.` });
         })
         .catch(async (serverError) => {
-            console.error("Purge error:", serverError);
-            toast({ variant: "destructive", title: "Action Denied" });
+            toast({ variant: "destructive", title: "Action Denied", description: "Terminal permissions insufficient." });
         })
         .finally(() => {
             setProcessingUid(null);
@@ -378,7 +376,7 @@ export default function ManagementConsolePage() {
         </div>
         <div className="flex gap-2 sm:gap-3">
             <Button className="bg-primary text-white h-10 sm:h-11 px-4 sm:px-6 rounded-xl font-bold shadow-lg shadow-primary/20 text-[10px] sm:text-xs">
-                <UserPlus className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Manual Entry
+                <UserPlus className="mr-2 h-3 w-3 sm:h-4 w-4" /> Manual Entry
             </Button>
         </div>
       </div>
@@ -409,7 +407,7 @@ export default function ManagementConsolePage() {
                               <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest pl-6 h-12">User Identity</TableHead>
                               <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Role</TableHead>
                               <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Status</TableHead>
-                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Verification</TableHead>
+                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Audit</TableHead>
                               <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
                           </TableRow>
                       </TableHeader>
@@ -453,7 +451,7 @@ export default function ManagementConsolePage() {
                                     <TableCell className="text-center">
                                         <div className="flex flex-col items-center gap-1">
                                             {user.securityStatus === 'verified' ? (
-                                                <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20 text-[8px] font-black uppercase">AI Verified</Badge>
+                                                <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20 text-[8px] font-black uppercase">Verified</Badge>
                                             ) : (
                                                 <Button size="sm" variant="ghost" className="h-6 px-2 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full" onClick={() => handleVerifyUser(user)} disabled={processingUid === user.uid}>
                                                     Verify
@@ -472,7 +470,7 @@ export default function ManagementConsolePage() {
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl">
                                                     <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
-                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><RotateCcw className="mr-3 h-4 w-4" /> Reset Protocol</DropdownMenuItem>
+                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><RotateCcw className="mr-3 h-4 w-4" /> Reset Profile</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem 
                                                         className={cn("rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10", isProtected && "opacity-50 cursor-not-allowed")}

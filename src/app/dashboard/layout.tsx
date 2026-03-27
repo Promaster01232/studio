@@ -152,7 +152,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               const data = userDoc.data() as any;
               setUserProfile(data);
               
-              // Smart Sync: Only write if verification status changed to prevent bandwidth exhaustion
+              // Smart Sync Protocol: Only perform write if forensic mismatch is detected
               if (data.emailVerified !== user.emailVerified) {
                   updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(() => {});
               }
@@ -163,8 +163,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             }
             setProfileLoading(false);
         }, (error) => {
-            console.error("Profile snapshot error:", error);
-            // Harden against blank page: clear loading even on permission error
+            console.warn("Registry sync paused:", error.message);
             setProfileLoading(false);
         });
 

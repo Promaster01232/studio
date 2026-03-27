@@ -27,7 +27,6 @@ import { PublicHeader } from "@/components/public-header";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const TricolorBackground = () => {
   return (
@@ -120,7 +119,7 @@ export default function WelcomePage() {
                 </Badge>
                 
                 <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
-                  Nyaya <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">{text}</span>
+                  Nyaya Sahayak: Your Elite AI <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Legal Assistant</span>
                   <span className="animate-pulse ml-1 text-primary">|</span>
                 </h1>
                 
@@ -166,7 +165,7 @@ export default function WelcomePage() {
                     <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em]">
                         Statutory Mandate
                     </Badge>
-                    <h2 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter">Your Advanced AI <span className="text-primary italic">Legal Assistant</span></h2>
+                    <h2 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter">AI Legal Assistant: Deconstructing the <span className="text-primary italic">Indian Judicial System</span></h2>
                 </div>
                 <div className="grid md:grid-cols-2 gap-12 items-start">
                     <div className="space-y-6">
@@ -174,21 +173,21 @@ export default function WelcomePage() {
                             Nyaya Sahayak represents the pinnacle of AI legal intelligence designed specifically for the unique complexities of the <span className="text-foreground font-bold">Indian judicial system</span>. Our mission is to empower every citizen with elite-grade legal forensic tools that were previously accessible only to high-tier legal firms. By leveraging state-of-the-art neural processing, we provide a mathematical approach to legal navigation.
                         </p>
                         <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                            Our platform integrates several high-performance modules, including the <span className="text-foreground font-bold">Forensic Case Auditor</span>, which analyzes legal narratives to identify statutory violations, and the <span className="text-foreground font-bold">Document Risk Scanner</span>, an OCR-powered engine that dissects contracts and notices to surface hidden liabilities and critical deadlines.
+                            Our platform integrates several high-performance modules, including the <span className="text-foreground font-bold">Forensic Case Auditor</span>, which analyzes legal narratives under the context of the Bharatiya Nyaya Sanhita (BNS) and the Bharatiya Sakshya Adhiniyam (BSA). We utilize advanced OCR-powered engines to dissect contracts, legal notices, and FIR applications to surface hidden liabilities and critical deadlines instantly.
                         </p>
                     </div>
                     <Card className="glass p-8 rounded-[2.5rem] border-primary/10 shadow-xl relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-6 opacity-[0.05]">
                             <Scale className="h-24 w-24 text-primary" />
                         </div>
-                        <h3 className="text-xl font-black tracking-tight mb-4">Navigational Roadmaps</h3>
+                        <h3 className="text-xl font-black tracking-tight mb-4">Procedural Roadmap Intelligence</h3>
                         <p className="text-xs text-muted-foreground leading-relaxed font-medium mb-6">
-                            Navigating the Indian courts and police stations requires a precise understanding of procedural cycles. Nyaya Sahayak generates automated <span className="text-primary font-bold">Procedural Roadmaps</span> that guide you step-by-step through filing FIRs, submitting evidence, and understanding court decorum.
+                            Navigating Indian courts and police complexes requires a precise understanding of the Bharatiya Nagarik Suraksha Sanhita (BNSS). Nyaya Sahayak generates automated <span className="text-primary font-bold">Procedural Roadmaps</span> that guide users step-by-step through filing complaints, understanding writ jurisdictions (Articles 32 and 226), and maintaining courtroom decorum.
                         </p>
                         <div className="flex flex-wrap gap-2">
-                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">Criminal Law Audit</Badge>
-                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">Civil Liability Scan</Badge>
-                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">MSME Compliance</Badge>
+                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">BNS Forensic Audit</Badge>
+                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">BSA Evidence Scan</Badge>
+                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">BNSS Roadmap</Badge>
                         </div>
                     </Card>
                 </div>
@@ -199,30 +198,30 @@ export default function WelcomePage() {
                     <Badge variant="secondary" className="bg-accent/10 text-accent border-accent/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em]">
                         Forensic Capabilities
                     </Badge>
-                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter text-foreground">Institutional <span className="text-primary italic">Sectors</span></h2>
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter text-foreground">Institutional <span className="text-primary italic">Forensic Sectors</span></h2>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-6">
                     {[
                         {
-                            title: "Case Auditor",
-                            desc: "Utilize neural violation mapping to deconstruct complex legal problems with institutional precision and statutory accuracy.",
+                            title: "Forensic Case Auditor",
+                            desc: "Utilize neural violation mapping to deconstruct complex legal problems with institutional precision and statutory accuracy across criminal and civil domains.",
                             icon: BrainCircuit,
                             color: "text-primary",
                             bg: "bg-primary/5",
                             sector: "Sector: NS-V1"
                         },
                         {
-                            title: "Document Risk",
-                            desc: "Initialize a high-fidelity scan of legal instruments to identify hidden statutory liabilities and mandated procedural actions.",
+                            title: "Document Risk Scanner",
+                            desc: "Initialize high-fidelity scans of legal instruments to identify hidden statutory liabilities, non-compliance risks, and mandated procedural actions.",
                             icon: FileSearch,
                             color: "text-accent",
                             bg: "bg-accent/5",
                             sector: "Sector: NS-D2"
                         },
                         {
-                            title: "AI Roadmap",
-                            desc: "Access dynamic, step-by-step navigation cycles designed to guide citizens through the intricacies of the judicial system.",
+                            title: "AI Procedural Roadmap",
+                            desc: "Access dynamic, step-by-step navigation cycles designed to guide citizens through the intricacies of FIR filing and courtroom appearances.",
                             icon: Zap,
                             color: "text-orange-500",
                             bg: "bg-orange-500/5",
