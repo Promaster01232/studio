@@ -57,7 +57,12 @@ import {
   Presentation,
   Terminal,
   Wifi,
-  Waves
+  Waves,
+  SunMoon,
+  TrendingUp,
+  UserPlus,
+  ShieldCheck,
+  Trophy
 } from "lucide-react";
 
 export const topics = [
@@ -185,7 +190,7 @@ export const topics = [
     content: "Detailed content about NDPS... --- **हिन्दी में:** --- NDPS अधिनियम का विवरण।"
   },
   {
-    slug: "sc-st-prevention-atrocities",
+    slug: "sc-st-prevention-of-atrocities",
     title: "SC/ST Prevention of Atrocities Act",
     description: "Special statutory protections, investigative protocols, and special court nodes.",
     icon: Scale,
