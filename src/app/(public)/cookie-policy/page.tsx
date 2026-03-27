@@ -20,23 +20,23 @@ import { motion } from "framer-motion";
 
 const cookieNodes = [
   {
-    title: "Essential Registry Nodes",
-    desc: "Critical for the secure operation of the nyayasahayak.in dashboard. These nodes manage your authentication state and ensure that your registry session remains active during navigation.",
+    title: "Essential Registry",
+    desc: "Critical for the secure operation of the nyayasahayak.in dashboard. These manage your authentication state and ensure that your registry session remains active during navigation.",
     icon: Lock,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
     border: "border-blue-500/20"
   },
   {
-    title: "Forensic Performance Nodes",
-    desc: "Used strictly for internal system auditing on nyayasahayak.in. These allow us to monitor AI response times, detect dashboard latency, and optimize node processing speeds without identifying individuals.",
+    title: "Forensic Performance",
+    desc: "Used strictly for internal system auditing on nyayasahayak.in. These allow us to monitor AI response times, detect dashboard latency, and optimize processing speeds without identifying individuals.",
     icon: Activity,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
     border: "border-emerald-500/20"
   },
   {
-    title: "Preference Memory Nodes",
+    title: "Preference Memory",
     desc: "Enhances your localized experience by remembering your choice of language (e.g., Hindi, English) and your dark mode/light mode theme configuration across browser restarts.",
     icon: Settings,
     color: "text-amber-500",
@@ -44,8 +44,8 @@ const cookieNodes = [
     border: "border-amber-500/20"
   },
   {
-    title: "Security Validation Nodes",
-    desc: "Implemented to prevent unauthorized Cross-Site Request Forgery (CSRF). These nodes verify that actions within the nyayasahayak.in dashboard are initiated strictly by the registered user.",
+    title: "Security Validation",
+    desc: "Implemented to prevent unauthorized Cross-Site Request Forgery (CSRF). These verify that actions within the nyayasahayak.in dashboard are initiated strictly by the registered user.",
     icon: ShieldCheck,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
@@ -80,7 +80,7 @@ export default function CookiePolicyPage() {
       >
         <PageHeader
           title="Cookie Usage Protocol"
-          description="Institutional transparency regarding localized data tracking and session memory nodes on nyayasahayak.in."
+          description="Institutional transparency regarding localized data tracking and session memory at nyayasahayak.in."
         />
       </motion.div>
 
@@ -102,7 +102,7 @@ export default function CookiePolicyPage() {
                 Minimalist Tracking for <span className="text-primary italic">Maximum Integrity.</span>
               </h2>
               <p className="text-sm sm:text-xl text-muted-foreground font-medium leading-relaxed">
-                Nyaya Sahayak utilizes minimalist cookie technology strictly to facilitate secure registry sessions and remember your localized dashboard preferences. We do <span className="text-foreground font-bold">NOT</span> utilize third-party advertising trackers or sell your behavioral data nodes on nyayasahayak.in.
+                Nyaya Sahayak utilizes minimalist cookie technology strictly to facilitate secure registry sessions and remember your localized dashboard preferences. We do <span className="text-foreground font-bold">NOT</span> utilize third-party advertising trackers or sell your behavioral data at nyayasahayak.in.
               </p>
             </div>
           </CardContent>
@@ -110,7 +110,7 @@ export default function CookiePolicyPage() {
         </Card>
       </motion.div>
 
-      {/* Detailed Node Grid */}
+      {/* Detailed Grid */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -144,19 +144,19 @@ export default function CookiePolicyPage() {
               <div className="p-3 rounded-2xl bg-white shadow-sm border border-primary/5 text-primary">
                 <MousePointer2 className="h-6 w-6" />
               </div>
-              <CardTitle className="text-2xl font-black tracking-tight leading-none">User Authority over Nodes</CardTitle>
+              <CardTitle className="text-2xl font-black tracking-tight leading-none">User Authority</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="p-8 sm:p-12 space-y-8 text-left">
             <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-              Users of nyayasahayak.in maintain sovereign authority over their browser's security settings. You may deactivate any non-essential cookie nodes via your browser's "Privacy & Security" console. 
+              Users of nyayasahayak.in maintain sovereign authority over their browser's security settings. You may deactivate any non-essential cookie protocols via your browser's "Privacy & Security" console. 
             </p>
             <div className="bg-destructive/5 border border-destructive/20 rounded-2xl p-6 flex gap-5 items-start shadow-inner">
               <div className="p-2.5 rounded-xl bg-destructive/10">
                 <Lock className="h-6 w-6 text-destructive shrink-0" />
               </div>
               <p className="text-xs sm:text-sm font-bold text-destructive/80 leading-relaxed">
-                WARNING: Deactivating "Essential Registry Nodes" will terminate your secure session on nyayasahayak.in and may result in the deactivation of dashboard tools like document generation and case tracking.
+                WARNING: Deactivating "Essential Registry Protocols" will terminate your secure session on nyayasahayak.in and may result in the deactivation of dashboard tools like document generation and case tracking.
               </p>
             </div>
           </CardContent>

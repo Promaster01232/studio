@@ -110,7 +110,7 @@ function DigitalIdentityCard({ profile }: { profile: UserRecord }) {
                         </div>
                     </div>
                     <div className="bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-md border border-white/10">
-                        <span className="text-[6px] font-black uppercase tracking-widest">Registry Node</span>
+                        <span className="text-[6px] font-black uppercase tracking-widest">Registry Record</span>
                     </div>
                 </div>
 
@@ -180,10 +180,10 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                                         <p className="text-[10px] font-bold text-muted-foreground uppercase">Status: {user.isBlocked ? 'Suspended' : 'Active'}</p>
                                     </div>
                                 </div>
-                                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 text-left">
                                     <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-1">Institutional Context</p>
                                     <p className="text-[10px] font-medium text-muted-foreground leading-relaxed">
-                                        Identity node synchronized with centralized registry. Manual audit status: CLEAR.
+                                        Identity synchronized with centralized registry. Manual audit status: CLEAR.
                                     </p>
                                 </div>
                             </div>
@@ -200,7 +200,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                                     </div>
                                     <div className="p-4 rounded-2xl bg-muted/30 border border-primary/5 space-y-1">
                                         <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                                            <Phone className="h-3 w-3" /> Contact Node
+                                            <Phone className="h-3 w-3" /> Contact
                                         </p>
                                         <p className="font-bold text-xs">{user.mobileNumber || "Not Provided"}</p>
                                     </div>
@@ -381,7 +381,7 @@ export default function ManagementConsolePage() {
         toast({ 
             variant: "destructive", 
             title: "Action Prohibited", 
-            description: "Administrative nodes are immutable and cannot be purged from the registry." 
+            description: "Administrative accounts are immutable and cannot be purged from the registry." 
         });
         setUserToPurge(null);
         return;
@@ -393,7 +393,7 @@ export default function ManagementConsolePage() {
     deleteDoc(userRef)
         .then(() => {
             remove(ref(rtdb, `users/${user.uid}`)).catch(() => {});
-            toast({ title: "Registry Node Purged", description: `Record for ${user.firstName} erased permanently.` });
+            toast({ title: "Registry Record Purged", description: `Record for ${user.firstName} erased permanently.` });
         })
         .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -426,7 +426,7 @@ export default function ManagementConsolePage() {
               } satisfies SecurityRuleContext, serverError);
               errorEmitter.emit('permission-error', permissionError);
           });
-          toast({ title: "Mass Purge Complete", description: `${citizens.length} citizen nodes erased.` });
+          toast({ title: "Mass Purge Complete", description: `${citizens.length} citizen records erased.` });
       } catch (error) {
           toast({ variant: "destructive", title: "Mass Purge Failed" });
       } finally {
@@ -448,7 +448,7 @@ export default function ManagementConsolePage() {
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
           <h1 className="text-2xl sm:text-3xl font-black tracking-tighter font-headline text-foreground">Registry Management</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground font-medium">Institutional oversight of nyayasahayak.in nodes and identity records.</p>
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium">Institutional oversight of nyayasahayak.in records and identity data.</p>
         </div>
         <div className="flex gap-2 sm:gap-3">
             <AlertDialog>
@@ -549,7 +549,7 @@ export default function ManagementConsolePage() {
                                                 <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20 text-[8px] font-black uppercase">AI Verified</Badge>
                                             ) : (
                                                 <Button size="sm" variant="ghost" className="h-6 px-2 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full" onClick={() => handleVerifyUser(user)} disabled={processingUid === user.uid}>
-                                                    Verify Node
+                                                    Verify
                                                 </Button>
                                             )}
                                         </div>
@@ -565,7 +565,7 @@ export default function ManagementConsolePage() {
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl">
                                                     <DropdownMenuItem onClick={() => handleSendAdminMessage(user)} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><Mail className="mr-3 h-4 w-4" /> Message Citizen</DropdownMenuItem>
-                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><RotateCcw className="mr-3 h-4 w-4" /> Reset Node</DropdownMenuItem>
+                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><RotateCcw className="mr-3 h-4 w-4" /> Reset Protocol</DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem 
                                                         className={cn("rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10", isProtected && "opacity-50 cursor-not-allowed")}
@@ -573,7 +573,7 @@ export default function ManagementConsolePage() {
                                                         disabled={processingUid === user.uid || isProtected}
                                                     >
                                                         {isProtected ? <Lock className="mr-3 h-4 w-4" /> : <Trash2 className="mr-3 h-4 w-4" />}
-                                                        Purge Registry Node
+                                                        Purge Registry Record
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>

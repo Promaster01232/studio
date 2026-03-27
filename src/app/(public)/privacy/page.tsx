@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -21,8 +22,8 @@ import { motion } from "framer-motion";
 
 const policySections = [
   {
-    title: "Data Collection Nodes",
-    desc: "At nyayasahayak.in, we capture specific forensic inputs to fuel our AI nodes. This includes your voice narrations (processed as transient audio), legal documents (analyzed via secure OCR), and registry identity data (email and mobile number).",
+    title: "Data Collection Protocols",
+    desc: "At nyayasahayak.in, we capture specific forensic inputs to fuel our AI. This includes your voice narrations (processed as transient audio), legal documents (analyzed via secure OCR), and registry identity data (email and mobile number).",
     icon: Database,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
@@ -38,7 +39,7 @@ const policySections = [
   },
   {
     title: "Encryption Standards",
-    desc: "All traffic on nyayasahayak.in is tunneled through TLS 1.3 protocol. Sensitive data nodes, including your personal 'My Cases' tracker, are encrypted at rest using industry-standard AES-256 algorithms within our institutional vault.",
+    desc: "All traffic on nyayasahayak.in is tunneled through TLS 1.3 protocol. Sensitive data, including your personal 'My Cases' tracker, are encrypted at rest using industry-standard AES-256 algorithms within our institutional vault.",
     icon: Lock,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
@@ -46,7 +47,7 @@ const policySections = [
   },
   {
     title: "Registry Transparency",
-    desc: "Your identity remains galled from public view. Only when you explicitly initiate a 'Connect' request with a verified advocate is your contact dossier shared. We maintain a zero-knowledge policy for unauthorized third parties.",
+    desc: "Your identity remains hidden from public view. Only when you explicitly initiate a 'Connect' request with a verified advocate is your contact dossier shared. We maintain a zero-knowledge policy for unauthorized third parties.",
     icon: EyeOff,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
@@ -54,7 +55,7 @@ const policySections = [
   },
   {
     title: "User Sovereignty",
-    desc: "You maintain absolute authority over your digital footprint. The 'Registry Purge' node in your profile settings allows for the instant, permanent deletion of all associated documents, summaries, and chat logs from our ecosystem.",
+    desc: "You maintain absolute authority over your digital footprint. The 'Registry Purge' protocol in your profile settings allows for the instant, permanent deletion of all associated documents, summaries, and chat logs from our ecosystem.",
     icon: Key,
     color: "text-rose-500",
     bg: "bg-rose-500/10",
@@ -62,7 +63,7 @@ const policySections = [
   },
   {
     title: "Forensic Integrity",
-    desc: "We utilize multi-stage identity audits to ensure all users in our Advocate Registry are legitimate legal professionals. This ensures the integrity of the institutional connection nodes on nyayasahayak.in.",
+    desc: "We utilize multi-stage identity audits to ensure all users in our Advocate Registry are legitimate legal professionals. This ensures the integrity of the institutional connection protocols on nyayasahayak.in.",
     icon: ShieldCheck,
     color: "text-indigo-500",
     bg: "bg-indigo-500/10",
@@ -126,7 +127,7 @@ export default function PrivacyPage() {
                 Your Data is Your <span className="text-primary italic">Sovereign Asset.</span>
               </h2>
               <p className="text-sm sm:text-xl text-muted-foreground font-medium leading-relaxed">
-                Nyaya Sahayak operates on a <span className="text-foreground font-bold">Zero-Sale Commitment.</span> Unlike traditional platforms, we do not monetize user data. Our revenue nodes are driven by institutional efficiency, ensuring your legal narratives remain confidential.
+                Nyaya Sahayak operates on a <span className="text-foreground font-bold">Zero-Sale Commitment.</span> Unlike traditional platforms, we do not monetize user data. Our revenue models are driven by institutional efficiency, ensuring your legal narratives remain confidential.
               </p>
               <div className="flex flex-wrap gap-4 pt-6">
                 <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-green-500/5 border border-green-500/10 shadow-inner">
@@ -139,7 +140,7 @@ export default function PrivacyPage() {
                 </div>
                 <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-purple-500/5 border border-purple-500/10 shadow-inner">
                   <UserCheck className="h-4 w-4 text-purple-600" />
-                  <span className="text-[10px] font-black uppercase text-purple-600 tracking-widest">Isolated Nodes</span>
+                  <span className="text-[10px] font-black uppercase text-purple-600 tracking-widest">Isolated Protocols</span>
                 </div>
               </div>
             </div>
@@ -182,7 +183,7 @@ export default function PrivacyPage() {
                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">Compliance Protocol</span>
                     </div>
                     <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
-                        This Privacy Protocol is engineered to comply with global digital safety standards and regional data protection acts, including the Digital Personal Data Protection Act (DPDP), 2023. By utilizing nyayasahayak.in nodes, you acknowledge and consent to the forensic processing logic described herein.
+                        This Privacy Protocol is engineered to comply with global digital safety standards and regional data protection acts, including the Digital Personal Data Protection Act (DPDP), 2023. By utilizing nyayasahayak.in, you acknowledge and consent to the forensic processing logic described herein.
                     </p>
                 </div>
             </CardContent>

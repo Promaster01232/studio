@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useState, useRef, useEffect, startTransition } from "react";
@@ -122,7 +123,7 @@ export default function NarrateProblemPage() {
                 <CardHeader className="bg-primary/5 border-b border-primary/10 p-8">
                     <div className="flex items-center gap-3 mb-2 text-primary">
                         <Mic className="h-5 w-5" />
-                        <CardTitle className="text-xl font-black tracking-tight leading-none uppercase">Capture Node</CardTitle>
+                        <CardTitle className="text-xl font-black tracking-tight leading-none uppercase">Capture Protocol</CardTitle>
                     </div>
                     <CardDescription className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">Secured Registry Protocol</CardDescription>
                 </CardHeader>
@@ -183,7 +184,7 @@ export default function NarrateProblemPage() {
                         <div className="flex items-center justify-center gap-2">
                             <div className={cn("h-1.5 w-1.5 rounded-full animate-pulse", isRecording ? "bg-red-500" : "bg-primary")}></div>
                             <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">
-                                {isRecording ? "Transmission Active" : isLoading ? "AI Processing Unit..." : "Node Ready"}
+                                {isRecording ? "Transmission Active" : isLoading ? "AI Processing Unit..." : "Ready"}
                             </p>
                         </div>
                     </div>
@@ -211,7 +212,7 @@ export default function NarrateProblemPage() {
                     <div className="space-y-1 text-left">
                         <div className="flex items-center gap-2 text-primary mb-1">
                             <Bot className="h-4 w-4" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Institutional AI Node</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Institutional AI</span>
                         </div>
                         <CardTitle className="text-2xl font-black tracking-tight leading-none">Forensic Audit Output</CardTitle>
                     </div>

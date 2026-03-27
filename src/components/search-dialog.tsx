@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -82,7 +83,7 @@ export function SearchDialog({ children }: { children: ReactNode }) {
                 <>
                     <section className="space-y-3">
                         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 px-1 flex items-center gap-2 text-left">
-                            <Zap className="h-3 w-3" /> Recommended Nodes
+                            <Zap className="h-3 w-3" /> Recommended
                         </h3>
                         <div className="grid sm:grid-cols-2 gap-3">
                             {suggestions.map((item) => (

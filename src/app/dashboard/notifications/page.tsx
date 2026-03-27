@@ -110,7 +110,7 @@ export default function NotificationsPage() {
   };
 
   const clearRegistry = async () => {
-      if (!confirm("Clear Registry: This will permanently erase all notification nodes.")) return;
+      if (!confirm("Clear Registry: This will permanently erase all notification records.")) return;
       const batch = writeBatch(firestore);
       notifications.forEach(n => {
           batch.delete(doc(firestore, "notifications", n.id));
@@ -225,7 +225,7 @@ export default function NotificationsPage() {
                                         {notif.link ? (
                                             <Button variant="ghost" className="h-8 px-3 rounded-lg font-black text-[9px] uppercase tracking-widest gap-2 hover:bg-primary/10 hover:text-primary transition-all" asChild>
                                                 <Link href={notif.link}>
-                                                    Initialize Node <ArrowRight className="h-3 w-3" />
+                                                    Initialize <ArrowRight className="h-3 w-3" />
                                                 </Link>
                                             </Button>
                                         ) : (
@@ -256,13 +256,13 @@ export default function NotificationsPage() {
           </div>
           <div className="space-y-2">
             <p className="font-black text-2xl tracking-tighter uppercase">Registry Clear</p>
-            <p className="text-xs text-muted-foreground font-medium italic">"No institutional alerts are currently active for this node."</p>
+            <p className="text-xs text-muted-foreground font-medium italic">"No institutional alerts are currently active for this session."</p>
           </div>
         </motion.div>
       )}
 
       <div className="pt-16 border-t border-primary/5 text-center opacity-30">
-          <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // SECURE REGISTRY NODE</p>
+          <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // SECURE REGISTRY</p>
       </div>
     </div>
   );

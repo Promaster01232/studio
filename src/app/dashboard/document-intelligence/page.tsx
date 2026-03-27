@@ -35,10 +35,10 @@ export default function DocumentIntelligencePage() {
   };
 
   return (
-    <div className="space-y-10 max-w-7xl mx-auto pb-20 px-2 sm:px-0">
+    <div className="space-y-10 max-w-7xl mx-auto pb-20 px-2 sm:px-0 text-left">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
         <PageHeader
-          title="Document Audit Node"
+          title="Document Audit"
           description="Institutional-grade AI intelligence for legal document risk assessment."
         />
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
@@ -62,7 +62,7 @@ export default function DocumentIntelligencePage() {
                   </div>
                   <CardTitle className="text-2xl font-black tracking-tight leading-none uppercase">Ingestion Terminal</CardTitle>
               </div>
-              <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Secured forensic upload node.</CardDescription>
+              <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Secured forensic upload protocol.</CardDescription>
             </CardHeader>
             <CardContent className="p-8">
               <form action={formAction} className="space-y-8">
@@ -158,7 +158,7 @@ export default function DocumentIntelligencePage() {
               <div className="space-y-1 text-left">
                 <div className="flex items-center gap-2 text-primary mb-1">
                     <Bot className="h-4 w-4" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em]">AI Intelligence Node</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em]">AI Intelligence</span>
                 </div>
                 <CardTitle className="text-2xl font-black tracking-tight leading-none">Analysis Registry</CardTitle>
               </div>
@@ -202,7 +202,7 @@ export default function DocumentIntelligencePage() {
                         <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-3xl p-6">
                             <AlertTriangle className="h-6 w-6 mr-4" />
                             <div className="space-y-1 text-left">
-                                <AlertTitle className="font-black uppercase tracking-widest text-xs">Node Critical Failure</AlertTitle>
+                                <AlertTitle className="font-black uppercase tracking-widest text-xs">Critical Failure</AlertTitle>
                                 <AlertDescription className="text-sm font-medium leading-relaxed opacity-80">{state.error}</AlertDescription>
                             </div>
                         </Alert>

@@ -231,7 +231,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     };
 
     const handleDelete = async () => {
-        if (!confirm("Confirm identity node purge from community registry?")) return;
+        if (!confirm("Confirm identity record purge from community registry?")) return;
         const postRef = doc(firestore, "posts", post.id);
         deleteDoc(postRef).catch((serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -264,7 +264,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                     {(isAuthor || isAdmin) ? (
                                         <DropdownMenuItem onSelect={handleDelete} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                             <Trash2 className="h-3.5 w-3.5" /> 
-                                            <span>Purge Identity Node</span>
+                                            <span>Purge Identity</span>
                                         </DropdownMenuItem>
                                     ) : (
                                         <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
@@ -347,7 +347,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                         </div>
                         <Button variant="ghost" size="sm" className="h-8 px-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
                             <Link href="/dashboard/research-analytics">
-                                <span>Analyze Node</span>
+                                <span>Analyze</span>
                                 <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover/btn:translate-x-1" />
                             </Link>
                         </Button>
@@ -359,10 +359,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Forensic assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "Node: Forensic" },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "Node: Statutory" },
-    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "Node: Civil" },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Legal affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "Node: Registry" },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Forensic assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "Sector: Forensic" },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "Sector: Statutory" },
+    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "Sector: Civil" },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Legal affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "Sector: Registry" },
 ];
 
 const SectionHeader = ({ children, icon: Icon, sector }: { children: React.ReactNode, icon?: any, sector?: string }) => (
@@ -464,7 +464,7 @@ export default function DashboardHomePage() {
                       </h1>
                   </div>
                   <p className="text-[11px] sm:text-xs text-muted-foreground font-medium max-w-lg leading-relaxed">
-                      Access high-fidelity legal intelligence nodes and forensic auditing tools designed for statutory precision.
+                      Access high-fidelity legal intelligence and forensic auditing tools designed for statutory precision.
                   </p>
                   <div className="flex flex-wrap gap-3 pt-1">
                       <Button size="sm" className="rounded-xl font-black uppercase tracking-[0.2em] text-[8px] px-6 h-10 shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
@@ -507,7 +507,7 @@ export default function DashboardHomePage() {
 
           <div className="lg:col-span-4 space-y-8">
               <section>
-                  <SectionHeader icon={Sparkles} sector="Status: Optimized">System Node Matrix</SectionHeader>
+                  <SectionHeader icon={Sparkles} sector="Status: Optimized">System Matrix</SectionHeader>
                   <div className="grid grid-cols-2 gap-3">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group">
@@ -535,8 +535,8 @@ export default function DashboardHomePage() {
                   <SectionHeader icon={Library} sector="Status: Ready">Statutory Registry</SectionHeader>
                   <div className="space-y-2.5">
                       {[
-                        { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", label: "NODE-LERN" },
-                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case Tracker", label: "NODE-CASE" },
+                        { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", label: "LERN" },
+                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case Tracker", label: "CASE" },
                       ].map((item) => (
                         <Link key={item.href} href={item.href} className="block group">
                             <Card className="glass p-3.5 rounded-xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between">

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -118,7 +119,7 @@ export default function WelcomePage() {
 
               <div className="space-y-6 mb-10">
                 <Badge variant="outline" className="border-primary/20 text-primary px-5 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em] bg-primary/5">
-                    Terminal Node // NS-ALPH-4
+                    Terminal // NS-ALPH-4
                 </Badge>
                 
                 <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
@@ -153,7 +154,7 @@ export default function WelcomePage() {
                 ) : (
                   <Button disabled className="w-full h-14 rounded-2xl bg-primary/20 text-white border-primary/10">
                     <Loader2 className="h-4 w-4 animate-spin opacity-40 mr-2" /> 
-                    <span className="text-[8px] uppercase tracking-[0.3em] font-black opacity-40">Syncing Node...</span>
+                    <span className="text-[8px] uppercase tracking-[0.3em] font-black opacity-40">Syncing...</span>
                   </Button>
                 )}
               </div>
@@ -167,7 +168,7 @@ export default function WelcomePage() {
                 <Badge variant="secondary" className="bg-accent/10 text-accent border-accent/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em]">
                     Registry Capabilities
                 </Badge>
-                <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter text-foreground">Institutional <span className="text-primary italic">Nodes</span></h2>
+                <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter text-foreground">Institutional <span className="text-primary italic">Sectors</span></h2>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -178,7 +179,7 @@ export default function WelcomePage() {
                         icon: BrainCircuit,
                         color: "text-primary",
                         bg: "bg-primary/5",
-                        sector: "Node: NS-V1"
+                        sector: "Sector: NS-V1"
                     },
                     {
                         title: "Document Risk",
@@ -186,7 +187,7 @@ export default function WelcomePage() {
                         icon: FileSearch,
                         color: "text-accent",
                         bg: "bg-accent/5",
-                        sector: "Node: NS-D2"
+                        sector: "Sector: NS-D2"
                     },
                     {
                         title: "AI Roadmap",
@@ -194,7 +195,7 @@ export default function WelcomePage() {
                         icon: Zap,
                         color: "text-orange-500",
                         bg: "bg-orange-500/5",
-                        sector: "Node: NS-Z4"
+                        sector: "Sector: NS-Z4"
                     }
                 ].map((item, idx) => (
                     <Card key={idx} className="glass p-6 rounded-[2rem] border-primary/10 text-left group hover:border-primary/30 transition-all h-full shadow-xl">
@@ -229,7 +230,7 @@ export default function WelcomePage() {
                                 <Globe className="h-4 w-4" />
                             </div>
                             <div className="space-y-1">
-                                <h3 className="text-xs font-black tracking-tight uppercase">The Vision Node</h3>
+                                <h3 className="text-xs font-black tracking-tight uppercase">The Vision</h3>
                                 <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">Access to justice as an inherent citizen right, optimized through forensic neural technology.</p>
                             </div>
                         </div>
@@ -299,7 +300,7 @@ export default function WelcomePage() {
                                     </div>
 
                                     <div className="pt-6 border-t border-primary/5 text-center">
-                                        <p className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">End Transmission // Node Active</p>
+                                        <p className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">End Transmission // Active</p>
                                     </div>
                                 </div>
                             </ScrollArea>

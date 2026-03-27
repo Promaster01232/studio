@@ -214,7 +214,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         Access Revoked
                     </CardTitle>
                     <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4">
-                        Your account has been deactivated by the system administrator. Node privileges suspended.
+                        Your account has been deactivated by the system administrator. Statutory privileges suspended.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6 pb-10 px-8 text-center">
@@ -304,7 +304,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <DropdownMenuLabel className="px-2 pb-2">
                     <div className="flex items-center gap-2 text-primary mb-1">
                         <Sparkles className="h-3 w-3" />
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em]">Appearance Node</span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em]">Appearance</span>
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
@@ -379,7 +379,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                                 <div className="flex flex-col items-center gap-3">
                                     <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
                                         <Activity className="h-3 w-3 text-primary animate-pulse" />
-                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Node Synchronization</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Synchronization</span>
                                     </div>
                                     <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
                                         <Loader2 className="h-3 w-3 animate-spin" />

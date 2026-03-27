@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useParams, notFound } from "next/navigation";
@@ -26,7 +27,7 @@ export default function LearnTopicDetailPage() {
         const parts = topic.content.split("--- **हिन्दी में:** ---");
         return {
             en: parts[0]?.trim() || "",
-            hi: parts[1]?.trim() || "Translation for this module is being processed by the AI Forensic node."
+            hi: parts[1]?.trim() || "Translation for this module is being processed by the AI Forensic engine."
         };
     }, [topic]);
 
@@ -46,7 +47,7 @@ export default function LearnTopicDetailPage() {
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2 mr-4 bg-primary/5 px-3 py-1.5 rounded-full border border-primary/10">
                         <Languages className="h-3.5 w-3.5 text-primary" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Dialect Node</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Dialect Ingress</span>
                     </div>
                     <div className="flex items-center bg-muted/30 p-1 rounded-xl border border-primary/5 mr-2">
                         <Button 
@@ -74,7 +75,7 @@ export default function LearnTopicDetailPage() {
 
             <motion.div initial={{ opacity: 0, scale: 0.99 }} animate={{ opacity: 1, scale: 1 }}>
                 <Card className="glass shadow-[0_50px_100px_rgba(0,0,0,0.1)] rounded-[3rem] border-primary/5 overflow-hidden">
-                    <CardHeader className="p-8 sm:p-12 bg-primary/5 border-b border-primary/10 relative overflow-hidden">
+                    <CardHeader className="p-8 sm:p-12 bg-primary/5 border-b border-primary/10 relative overflow-hidden text-left">
                         <div className="absolute top-0 right-0 p-16 opacity-[0.03] pointer-events-none group-hover:scale-110 transition-transform duration-700">
                             <Landmark className="h-64 w-64" />
                         </div>
@@ -87,7 +88,7 @@ export default function LearnTopicDetailPage() {
                                     {topic.title}
                                 </h1>
                                 <p className="text-lg sm:text-xl text-primary font-bold tracking-tight italic opacity-80">
-                                    Institutional Statutory Registry // NS-NODE-{topic.slug.toUpperCase().substring(0, 4)}
+                                    Institutional Statutory Registry // NS-{topic.slug.toUpperCase().substring(0, 4)}
                                 </p>
                             </div>
                         </div>
@@ -103,7 +104,7 @@ export default function LearnTopicDetailPage() {
                                 className="prose dark:prose-invert prose-sm sm:prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-p:font-medium prose-p:leading-relaxed prose-p:text-foreground/80 prose-li:font-medium text-foreground/90 selection:bg-primary/10"
                             >
                                 <div className={cn(
-                                    "whitespace-pre-line leading-loose text-base sm:text-lg font-medium",
+                                    "whitespace-pre-line leading-loose text-base sm:text-lg font-medium text-left",
                                     displayLang === 'hi' ? "font-hindi" : "font-body"
                                 )}>
                                     {displayLang === 'en' ? contentData.en : contentData.hi}
@@ -115,7 +116,7 @@ export default function LearnTopicDetailPage() {
             </motion.div>
 
             <div className="text-center pt-12 opacity-40">
-                <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground mb-2">Knowledge Session Active // Secure Registry Sync Node</p>
+                <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground mb-2">Knowledge Session Active // Secure Registry Sync</p>
                 <p className="text-[10px] font-bold italic">nyayasahayak.in - The Future of Justice is Neural.</p>
             </div>
         </div>

@@ -13,6 +13,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 const initialState: CourtAssistantState = {
   status: "idle",
@@ -90,9 +92,9 @@ export default function CourtAssistantPage() {
 
   return (
     <div className="bg-[#0D1B2A] text-white min-h-full -m-4 md:-m-10 p-4 md:p-10 space-y-10">
-        <motion.header initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-cyan-500/10 pb-8">
-            <div className="space-y-1 text-left">
-                <h1 className="text-3xl font-black tracking-tighter text-cyan-300 font-headline uppercase">Court Operations Node</h1>
+        <motion.header initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-cyan-500/10 pb-8 text-left">
+            <div className="space-y-1">
+                <h1 className="text-3xl font-black tracking-tighter text-cyan-300 font-headline uppercase">Court Operations</h1>
                 <p className="text-[10px] font-bold text-cyan-200/60 uppercase tracking-widest">Real-time statutory assist & transcription interface.</p>
             </div>
             <Button variant="outline" size="sm" className="rounded-xl font-bold h-10 px-6 border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/10 text-[10px] uppercase tracking-widest" asChild>
@@ -104,7 +106,7 @@ export default function CourtAssistantPage() {
 
         <div className="grid lg:grid-cols-2 gap-8">
             <Card className="bg-[#1B263B]/80 border-cyan-500/20 text-white rounded-[2rem] overflow-hidden shadow-2xl">
-                <CardHeader className="bg-cyan-500/5 border-b border-cyan-500/10 p-8">
+                <CardHeader className="bg-cyan-500/5 border-b border-cyan-500/10 p-8 text-left">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 rounded-lg bg-cyan-500/10">
@@ -112,7 +114,7 @@ export default function CourtAssistantPage() {
                             </div>
                             <CardTitle className="text-xl font-black uppercase tracking-tight">Audio Capture</CardTitle>
                         </div>
-                        <Badge variant="outline" className="border-cyan-500/30 text-cyan-400 text-[8px] uppercase tracking-widest font-black">Live Node</Badge>
+                        <Badge variant="outline" className="border-cyan-500/30 text-cyan-400 text-[8px] uppercase tracking-widest font-black">Live</Badge>
                     </div>
                 </CardHeader>
                 <CardContent className="p-8 flex flex-col items-center justify-center space-y-8">
@@ -144,13 +146,13 @@ export default function CourtAssistantPage() {
                             disabled={!isRecording}>
                                 Terminate
                         </Button>
-                        <Button variant="outline" className="flex-1 h-12 border-cyan-500/20 text-cyan-400 hover:bg-cyan-400 hover:text-black font-black uppercase text-[10px] tracking-widest rounded-xl transition-all" disabled={isRecording || transcript.length === 0}>Save Node</Button>
+                        <Button variant="outline" className="flex-1 h-12 border-cyan-500/20 text-cyan-400 hover:bg-cyan-400 hover:text-black font-black uppercase text-[10px] tracking-widest rounded-xl transition-all" disabled={isRecording || transcript.length === 0}>Save Record</Button>
                     </div>
                 </CardContent>
             </Card>
 
             <Card className="bg-[#1B263B]/80 border-cyan-500/20 text-white rounded-[2.5rem] overflow-hidden shadow-2xl">
-                <CardHeader className="bg-cyan-500/5 border-b border-cyan-500/10 p-8">
+                <CardHeader className="bg-cyan-500/5 border-b border-cyan-500/10 p-8 text-left">
                     <div className="flex items-center gap-3">
                         <BrainCircuit className="h-6 w-6 text-cyan-400" />
                         <CardTitle className="text-xl font-black uppercase tracking-tight">Strategy Generator</CardTitle>
@@ -167,7 +169,7 @@ export default function CourtAssistantPage() {
                             <Input id="topic" name="topic" placeholder="e.g., Alibi for October 31st" className="h-12 bg-[#0D1B2A] border-cyan-500/20 text-white font-bold rounded-xl focus:border-cyan-400" />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-widest text-cyan-300/60 ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Node</Label>
+                            <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-widest text-cyan-300/60 ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Protocol</Label>
                             <Select name="language" defaultValue="English" required>
                               <SelectTrigger className="h-12 bg-[#0D1B2A] border-cyan-500/20 text-white font-bold rounded-xl">
                                 <SelectValue />
@@ -179,7 +181,7 @@ export default function CourtAssistantPage() {
                             </Select>
                         </div>
                         <Button type="submit" disabled={isLoading} className="w-full h-14 bg-cyan-500 hover:bg-cyan-600 text-black font-black uppercase tracking-[0.2em] text-xs rounded-xl shadow-xl shadow-cyan-500/20 transition-all active:scale-95 mt-4">
-                            {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Initialize Question Node"}
+                            {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Initialize Question Protocol"}
                         </Button>
                     </form>
 

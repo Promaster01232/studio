@@ -48,7 +48,7 @@ export default function LearnPage() {
                 <span className="text-[10px] font-black uppercase tracking-[0.3em]">Neural Statutory Hub</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter">Knowledge <span className="text-primary italic">Matrix</span></h1>
-            <p className="text-sm text-muted-foreground font-medium">Accessing a high-fidelity registry of 60+ Indian law nodes.</p>
+            <p className="text-sm text-muted-foreground font-medium">Accessing a high-fidelity registry of 60+ Indian law protocols.</p>
         </div>
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
           <Link href="/dashboard">
@@ -140,7 +140,7 @@ export default function LearnPage() {
                                 <div className="pt-8 mt-6 border-t border-primary/5 flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <Bookmark className="h-3.5 w-3.5 text-muted-foreground opacity-20 group-hover:opacity-100 transition-opacity cursor-pointer hover:text-primary" />
-                                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">NODE-{topic.slug.toUpperCase().substring(0, 4)}</span>
+                                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">{topic.slug.toUpperCase().substring(0, 4)}</span>
                                     </div>
                                     <Button asChild variant="ghost" className={cn(
                                         "h-10 px-5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 group-hover:text-white",
@@ -193,7 +193,7 @@ export default function LearnPage() {
                 </div>
                 <div className="text-left">
                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Registry Density</p>
-                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">60+ Statutory Nodes Active.</p>
+                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">60+ Statutory Protocols Active.</p>
                 </div>
             </div>
             <div className="flex items-center gap-4 group">
@@ -206,7 +206,7 @@ export default function LearnPage() {
                 </div>
             </div>
         </div>
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/40 shrink-0">Knowledge Node Matrix // NYAYASAHAYAK.IN</p>
+        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/40 shrink-0">Knowledge Matrix // NYAYASAHAYAK.IN</p>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+
 import {
   BookOpen,
   ShoppingCart,
@@ -74,24 +75,24 @@ Historically, this area has evolved through centuries of common law and indigeno
 
 ### PHASE 2: STATUTORY FRAMEWORK & SECTIONS
 This registry node encompasses a vast array of sections and sub-clauses. Key statutory markers include:
-- **Primary Section Node A**: Establishing the core definition and scope of the protocol.
+- **Primary Section A**: Establishing the core definition and scope of the protocol.
 - **Procedural Sub-clause B**: Mapping the mandatory steps for statutory compliance.
 - **Enforcement Section C**: Detailing the penalties and consequences for forensic breach.
 - **Redressal Mechanism D**: Providing the navigational path for legal recovery.
 
-Each section is meticulously drafted to prevent ambiguity, though judicial interpretation often adds layers of complexity. Our AI node identifies these sections in real-time to provide citizens with a clear roadmap of their legal standing.
+Each section is meticulously drafted to prevent ambiguity, though judicial interpretation often adds layers of complexity. Our AI identifies these sections in real-time to provide citizens with a clear roadmap of their legal standing.
 
 ### PHASE 3: JUDICIAL ENFORCEMENT & PROTOCOLS
 Enforcement occurs through a multi-stage procedural cycle:
-1. **Filing Node**: Initial transmission of the legal instrument to the competent court or authority.
+1. **Filing**: Initial transmission of the legal instrument to the competent court or authority.
 2. **Admission Phase**: The judicial audit determining the maintainability of the petition.
-3. **Evidence Transmission**: The stage where physical and digital forensic nodes are presented.
+3. **Evidence Transmission**: The stage where physical and digital forensic evidence is presented.
 4. **Final Adjudication**: The terminal judgment that establishes a binding precedent.
 
 Understanding these protocols is essential for anyone navigating the courts. Missteps in the procedural cycle can lead to terminal errors in the case summary.
 
 ### PHASE 4: MODERN AMENDMENTS & DIGITAL IMPACT
-In the era of Digital India, this statutory node has undergone significant transformation. The introduction of the Bharatiya Sakshya Adhiniyam (BSA) and the Digital Personal Data Protection (DPDP) Act has integrated neural forensics into the legal process.
+In the era of Digital India, this statutory framework has undergone significant transformation. The introduction of the Bharatiya Sakshya Adhiniyam (BSA) and the Digital Personal Data Protection (DPDP) Act has integrated neural forensics into the legal process.
 - **Digital Ingress**: Admissibility of electronic records under refined sections.
 - **AI Audit**: The role of algorithmic oversight in identifying statutory discrepancies.
 - **Amendments**: A chronological registry of the latest legislative updates that redefine the rights of the citizen.
@@ -102,19 +103,19 @@ In the era of Digital India, this statutory node has undergone significant trans
 ${hindiTitle} भारतीय वैधानिक ढांचे में एक महत्वपूर्ण केंद्र का प्रतिनिधित्व करता है। प्राकृतिक न्याय और कानून के शासन के सिद्धांतों में निहित, यह मॉड्यूल उन दार्शनिक आधारों की पड़ताल करता है जो इसके अनुप्रयोग को नियंत्रित करते हैं। भारतीय न्यायिक प्रणाली के संदर्भ में, यह आधार सुनिश्चित करता है कि प्रत्येक नागरिक संवैधानिक नैतिकता की छत्रछाया में सुरक्षित है।
 
 ### चरण 2: वैधानिक ढांचा और धाराएं
-इस रजिस्ट्री नोड में धाराओं और उप-खंडों की एक विस्तृत श्रृंखला शामिल है। मुख्य वैधानिक चिह्नों में शामिल हैं:
+इस रजिस्ट्री में धाराओं और उप-खंडों की एक विस्तृत श्रृंखला शामिल है। मुख्य वैधानिक चिह्नों में शामिल हैं:
 - **प्राथमिक धारा ए**: प्रोटोकॉल की मुख्य परिभाषा और कार्यक्षेत्र स्थापित करना।
 - **प्रक्रियात्मक उप-खंड बी**: वैधानिक अनुपालन के लिए अनिवार्य चरणों का मानचित्रण करना।
 - **प्रवर्तन धारा सी**: फोरेंसिक उल्लंघन के लिए दंड और परिणामों का विवरण।
 
 ### चरण 3: न्यायिक प्रवर्तन और प्रोटोकॉल
 प्रवर्तन एक बहु-चरणीय प्रक्रियात्मक चक्र के माध्यम से होता है:
-1. **फाइलिंग नोड**: सक्षम न्यायालय या प्राधिकारी को कानूनी दस्तावेज का प्रारंभिक प्रसारण।
+1. **फाइलिंग**: सक्षम न्यायालय या प्राधिकारी को कानूनी दस्तावेज का प्रारंभिक प्रसारण।
 2. **प्रवेश चरण**: याचिका की स्थिरता का निर्धारण करने वाला न्यायिक ऑडिट।
-3. **साक्ष्य प्रसारण**: वह चरण जहां भौतिक और डिजिटल फोरेंसिक नोड्स प्रस्तुत किए जाते हैं।
+3. **साक्ष्य प्रसारण**: वह चरण जहां भौतिक और डिजिटल फोरेंसिक साक्ष्य प्रस्तुत किए जाते हैं।
 
 ### चरण 4: आधुनिक संशोधन और डिजिटल प्रभाव
-डिजिटल इंडिया के युग में, इस वैधानिक नोड में महत्वपूर्ण बदलाव आए हैं। भारतीय साक्ष्य अधिनियम (BSA) और डिजिटल व्यक्तिगत डेटा संरक्षण (DPDP) अधिनियम की शुरुआत ने कानूनी प्रक्रिया में तंत्रिका फोरेंसिक को एकीकृत किया है।
+डिजिटल इंडिया के युग में, इस वैधानिक ढांचे में महत्वपूर्ण बदलाव आए हैं। भारतीय साक्ष्य अधिनियम (BSA) और डिजिटल व्यक्तिगत डेटा संरक्षण (DPDP) अधिनियम की शुरुआत ने कानूनी प्रक्रिया में तंत्रिका फोरेंसिक को एकीकृत किया है।
 `;
 
 export const topics = [
@@ -122,7 +123,7 @@ export const topics = [
   {
     slug: "fundamental-rights",
     title: "Fundamental Rights (Constitutional Forensic Audit)",
-    description: "Deep-study node covering jurisprudence, statutory framework, and judicial enforcement under Part III.",
+    description: "Deep-study registry covering jurisprudence, statutory framework, and judicial enforcement under Part III.",
     icon: BookOpen,
     category: "Constitutional",
     content: deepAuditTemplate("Fundamental Rights", "मौलिक अधिकार")
@@ -235,7 +236,7 @@ export const topics = [
   },
   {
     slug: "ndps-act-audit",
-    title: "NDPS Act: Narcotics Forensic Node",
+    title: "NDPS Act: Narcotics Forensic Protocol",
     description: "Audit of drug-related offences, search and seizure protocols, and punishments.",
     icon: HeartPulse,
     category: "Criminal",
@@ -244,7 +245,7 @@ export const topics = [
   {
     slug: "sc-st-prevention-of-atrocities",
     title: "SC/ST Prevention of Atrocities Act",
-    description: "Special statutory protections, investigative protocols, and special court nodes.",
+    description: "Special statutory protections, investigative protocols, and special court access.",
     icon: Scale,
     category: "Criminal",
     content: deepAuditTemplate("SC/ST Act", "SC/ST अधिनियम")
@@ -261,7 +262,7 @@ export const topics = [
   },
   {
     slug: "indian-contract-act",
-    title: "Indian Contract Act & Agreement Nodes",
+    title: "Indian Contract Act & Agreement Protocols",
     description: "Analysis of offer, acceptance, consideration, and breach of statutory agreements.",
     icon: FileText,
     category: "Civil",
@@ -278,7 +279,7 @@ export const topics = [
   {
     slug: "tort-law-liability",
     title: "Tort Law & Vicarious Liability",
-    description: "Forensic study of civil wrongs, negligence, nuisance, and defamation nodes.",
+    description: "Forensic study of civil wrongs, negligence, nuisance, and defamation protocols.",
     icon: Gavel,
     category: "Civil",
     content: deepAuditTemplate("Tort Law", "अपकृत्य कानून")
@@ -301,7 +302,7 @@ export const topics = [
   },
   {
     slug: "arbitration-conciliation",
-    title: "Arbitration & Conciliation Node",
+    title: "Arbitration & Conciliation Protocol",
     description: "ADR protocols, international commercial arbitration, and award enforcement.",
     icon: HeartHandshake,
     category: "Civil",
@@ -344,7 +345,7 @@ export const topics = [
   {
     slug: "intermediary-liability",
     title: "Intermediary Liability & Social Media",
-    description: "IT Rules 2021 audit: Safe harbor provisions and compliance nodes.",
+    description: "IT Rules 2021 audit: Safe harbor provisions and compliance protocols.",
     icon: Globe,
     category: "Digital",
     content: deepAuditTemplate("Intermediary Liability", "मध्यस्थ देयता")
@@ -368,7 +369,7 @@ export const topics = [
   {
     slug: "fintech-legal-framework",
     title: "Fintech & Payment System Statutes",
-    description: "Audit of PSS Act 2007 and RBI digital payment regulatory nodes.",
+    description: "Audit of PSS Act 2007 and RBI digital payment regulatory protocols.",
     icon: Smartphone,
     category: "Digital",
     content: deepAuditTemplate("Fintech Framework", "फिनटेक कानूनी ढांचा")
@@ -385,7 +386,7 @@ export const topics = [
   // CORPORATE (33-40)
   {
     slug: "companies-act-2013",
-    title: "Companies Act & Governance Node",
+    title: "Companies Act & Governance Protocol",
     description: "Audit of incorporation, management, CSR, and corporate liability protocols.",
     icon: Building2,
     category: "Corporate",
@@ -393,8 +394,8 @@ export const topics = [
   },
   {
     slug: "intellectual-property",
-    title: "IPR: Patents & Trademark Node",
-    description: "Forensic guide to protecting intellectual assets and litigation nodes.",
+    title: "IPR: Patents & Trademark Registry",
+    description: "Forensic guide to protecting intellectual assets and litigation protocols.",
     icon: Palette,
     category: "Corporate",
     content: deepAuditTemplate("IPR Registry", "बौद्धिक संपदा")
@@ -402,7 +403,7 @@ export const topics = [
   {
     slug: "msme-compliance",
     title: "MSME Statutory Compliance Registry",
-    description: "Guide to Udyam registration, priority benefits, and arbitration nodes.",
+    description: "Guide to Udyam registration, priority benefits, and arbitration protocols.",
     icon: Building,
     category: "Corporate",
     content: deepAuditTemplate("MSME Compliance", "MSME अनुपालन")
@@ -417,7 +418,7 @@ export const topics = [
   },
   {
     slug: "insolvency-bankruptcy-code",
-    title: "IBC: Insolvency & Bankruptcy Node",
+    title: "IBC: Insolvency & Bankruptcy Registry",
     description: "Analysis of the resolution process, liquidation, and NCLT statutory cycles.",
     icon: FileText,
     category: "Corporate",
@@ -426,7 +427,7 @@ export const topics = [
   {
     slug: "sebi-market-regulations",
     title: "SEBI & Capital Market Statutes",
-    description: "Audit of listing obligations, insider trading, and investor protection nodes.",
+    description: "Audit of listing obligations, insider trading, and investor protection protocols.",
     icon: TrendingUp,
     category: "Corporate",
     content: deepAuditTemplate("SEBI Regulations", "SEBI बाजार नियम")
@@ -441,7 +442,7 @@ export const topics = [
   },
   {
     slug: "competition-act-audit",
-    title: "Competition Act & Anti-Trust Node",
+    title: "Competition Act & Anti-Trust Protocol",
     description: "Audit of abuse of dominance, cartels, and combination regulatory cycles.",
     icon: UserPlus,
     category: "Corporate",
@@ -459,7 +460,7 @@ export const topics = [
   },
   {
     slug: "rti-transparency",
-    title: "Right to Information (RTI) Node",
+    title: "Right to Information (RTI) Registry",
     description: "Deep study of filing protocols, appeals, and forensic exemption audits.",
     icon: Search,
     category: "Public",
@@ -468,7 +469,7 @@ export const topics = [
   {
     slug: "medical-negligence",
     title: "Medical Negligence & Healthcare Law",
-    description: "Forensic audit of doctor-patient liability, ethics, and claim nodes.",
+    description: "Forensic audit of doctor-patient liability, ethics, and claim protocols.",
     icon: Stethoscope,
     category: "Public",
     content: deepAuditTemplate("Medical Negligence", "चिकित्सा लापरवाही")
@@ -491,7 +492,7 @@ export const topics = [
   },
   {
     slug: "election-laws-rp-act",
-    title: "Representation of People Act Node",
+    title: "Representation of People Act Registry",
     description: "Audit of election protocols, disqualification, and model conduct code.",
     icon: CheckSquare,
     category: "Public",
@@ -500,7 +501,7 @@ export const topics = [
   {
     slug: "municipal-laws-audit",
     title: "Municipal & Civic Statutory Framework",
-    description: "Analysis of local body powers, taxation, and civic administrative nodes.",
+    description: "Analysis of local body powers, taxation, and civic administrative protocols.",
     icon: Building,
     category: "Public",
     content: deepAuditTemplate("Municipal Laws", "नगर पालिका कानून")
@@ -508,7 +509,7 @@ export const topics = [
   {
     slug: "disaster-management-act",
     title: "Disaster Management Protocols",
-    description: "Statutory framework for NDMA, SDMA, and institutional response nodes.",
+    description: "Statutory framework for NDMA, SDMA, and institutional response protocols.",
     icon: Flame,
     category: "Public",
     content: deepAuditTemplate("Disaster Management", "आपदा प्रबंधन अधिनियम")
@@ -542,7 +543,7 @@ export const topics = [
   {
     slug: "space-law-satellites",
     title: "Space Law & Satellite Regulation",
-    description: "Forensic study of outer space treaties and Indian space policy nodes.",
+    description: "Forensic study of outer space treaties and Indian space policy protocols.",
     icon: Globe,
     category: "Specialized",
     content: deepAuditTemplate("Space Law", "अंतरिक्ष कानून")
@@ -557,7 +558,7 @@ export const topics = [
   },
   {
     slug: "energy-renewable-laws",
-    title: "Energy & Renewable Statutory Node",
+    title: "Energy & Renewable Statutory Registry",
     description: "Analysis of the Electricity Act 2003 and green energy regulatory cycles.",
     icon: Zap,
     category: "Specialized",
@@ -574,7 +575,7 @@ export const topics = [
   {
     slug: "intellectual-property-it",
     title: "Patent Forensics in Technology",
-    description: "Specialized study of software patentability and source code statutory nodes.",
+    description: "Specialized study of software patentability and source code statutory protocols.",
     icon: Cpu,
     category: "Specialized",
     content: deepAuditTemplate("Technology Patents", "प्रौद्योगिकी पेटेंट")
@@ -592,7 +593,7 @@ export const topics = [
   {
     slug: "posh-act-2013",
     title: "POSH Act & Workplace Audit",
-    description: "Audit of internal committee protocols and employer liability nodes.",
+    description: "Audit of internal committee protocols and employer liability protocols.",
     icon: Shield,
     category: "Industrial",
     content: deepAuditTemplate("POSH Act", "POSH अधिनियम")
@@ -608,7 +609,7 @@ export const topics = [
   {
     slug: "trade-union-statutes",
     title: "Trade Union & Collective Bargaining",
-    description: "Audit of registration rights, immunities, and industrial dispute nodes.",
+    description: "Audit of registration rights, immunities, and industrial dispute protocols.",
     icon: Users,
     category: "Industrial",
     content: deepAuditTemplate("Trade Union", "ट्रेड यूनियन")
@@ -623,7 +624,7 @@ export const topics = [
   },
   {
     slug: "industrial-disputes-act",
-    title: "Industrial Disputes Resolution Node",
+    title: "Industrial Disputes Resolution Registry",
     description: "Statutory procedures for strikes, lock-outs, and lay-off forensics.",
     icon: Gavel,
     category: "Industrial",
@@ -631,7 +632,7 @@ export const topics = [
   },
   {
     slug: "maternity-benefit-act",
-    title: "Maternity Benefit Statutory Node",
+    title: "Maternity Benefit Statutory Registry",
     description: "Audit of leave entitlements, creche facilities, and statutory protections.",
     icon: Baby,
     category: "Industrial",
@@ -639,7 +640,7 @@ export const topics = [
   },
   {
     slug: "bonus-gratuity-audit",
-    title: "Bonus & Gratuity Calculation Node",
+    title: "Bonus & Gratuity Calculation Registry",
     description: "Statutory framework for payment of bonus and gratuity entitlements.",
     icon: Coins,
     category: "Industrial",
