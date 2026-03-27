@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useActionState, useState, useRef, useEffect } from "react";
@@ -129,9 +128,9 @@ export default function CourtAssistantPage() {
                     
                     <div className="w-full space-y-4">
                         <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-cyan-300/60 text-left">Registry Transcription</h3>
-                        <div className="w-full h-48 bg-[#0D1B2A] rounded-2xl p-6 overflow-y-auto border border-cyan-500/10 shadow-inner">
+                        <div className="w-full h-48 bg-[#0D1B2A] rounded-2xl p-6 overflow-y-auto border border-cyan-500/10 shadow-inner text-left">
                             {isRecording ? <Waveform /> : transcript.length === 0 && <p className="text-cyan-200/30 text-center pt-12 text-xs font-bold uppercase tracking-widest">Awaiting Capture Signal</p>}
-                            <div className="mt-6 space-y-2 text-sm font-mono text-cyan-100/80 text-left">
+                            <div className="mt-6 space-y-2 text-sm font-mono text-cyan-100/80">
                                 {transcript.map((line, i) => (
                                     <p key={i} className="animate-in fade-in slide-in-from-left-2">{'>'} {line}</p>
                                 ))}

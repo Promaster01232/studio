@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -40,56 +39,56 @@ import {
 
 const navigationItems = [
   {
-    title: "Main",
+    title: "main",
     icon: Home,
     href: "/dashboard",
     items: [],
   },
   {
-    title: "AI Legal Tools",
+    title: "ai legal tools",
     icon: BrainCircuit,
     items: [
-      { href: "/dashboard/narrate", icon: Mic, label: "Narrate Problem" },
-      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Document Intelligence" },
-      { href: "/dashboard/document-generator", icon: FileText, label: "Document Generator" },
-      { href: "/dashboard/bond-generator", icon: FileSignature, label: "Bond Generator" },
-      { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "Case Strength Analyzer" },
-      { href: "/dashboard/court-assistant", icon: Gavel, label: "Court Assistant" },
+      { href: "/dashboard/narrate", icon: Mic, label: "narrate problem" },
+      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "document intelligence" },
+      { href: "/dashboard/document-generator", icon: FileText, label: "document generator" },
+      { href: "/dashboard/bond-generator", icon: FileSignature, label: "bond generator" },
+      { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "case strength analyzer" },
+      { href: "/dashboard/court-assistant", icon: Gavel, label: "court assistant" },
     ],
   },
   {
-    title: "Resources & Help",
+    title: "resources & help",
     icon: Library,
     items: [
-      { href: "/dashboard/my-cases", icon: FolderKanban, label: "Case Management" },
-      { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "NGO & Legal Aid" },
-      { href: "/dashboard/learn", icon: Library, label: "Legal Knowledge Hub" },
-      { href: "/dashboard/police-guide", icon: Shield, label: "Police & Court Guides" },
-      { href: "/dashboard/research-analytics", icon: Newspaper, label: "News & Analytics" },
+      { href: "/dashboard/my-cases", icon: FolderKanban, label: "case management" },
+      { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "ngo & legal aid" },
+      { href: "/dashboard/learn", icon: Library, label: "legal knowledge hub" },
+      { href: "/dashboard/police-guide", icon: Shield, label: "police & court guides" },
+      { href: "/dashboard/research-analytics", icon: Newspaper, label: "news & analytics" },
     ],
   },
   {
-    title: "Professional",
+    title: "professional",
     icon: Briefcase,
     items: [
-      { href: "/dashboard/business-msme", icon: Briefcase, label: "Business & MSME" },
-      { href: "/dashboard/finances-billing", icon: Landmark, label: "Finances & Billing" },
+      { href: "/dashboard/business-msme", icon: Briefcase, label: "business & msme" },
+      { href: "/dashboard/finances-billing", icon: Landmark, label: "finances & billing" },
     ],
   },
   {
-    title: "System",
+    title: "system",
     icon: Settings,
     isAdminOnly: true,
     items: [
-      { href: "/dashboard/management-console", icon: Shield, label: "Management Console" },
+      { href: "/dashboard/management-console", icon: Shield, label: "management console" },
     ],
   },
   {
-    title: "General",
+    title: "general",
     icon: CircleUserRound,
     items: [
-      { href: "/dashboard/profile", icon: CircleUserRound, label: "My Profile" },
-      { href: "/dashboard/support", icon: LifeBuoy, label: "Support" },
+      { href: "/dashboard/profile", icon: CircleUserRound, label: "my profile" },
+      { href: "/dashboard/support", icon: LifeBuoy, label: "support" },
     ],
   },
 ];
@@ -124,7 +123,7 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
               >
                 <Link href={item.href!}>
                   <item.icon className="h-5 w-5" />
-                  <span className="font-semibold">{item.title}</span>
+                  <span className="font-black lowercase first-letter:uppercase">{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -146,7 +145,7 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
                   className="h-11 px-4 hover:bg-primary/5"
                 >
                   <item.icon className="h-5 w-5" />
-                  <span className="font-semibold flex-1 lowercase first-letter:uppercase">{item.title}</span>
+                  <span className="font-black flex-1 lowercase first-letter:uppercase">{item.title}</span>
                   <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
