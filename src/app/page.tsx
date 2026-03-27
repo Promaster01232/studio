@@ -113,25 +113,31 @@ export default function WelcomePage() {
                   <span className="animate-pulse ml-1 text-primary">|</span>
                 </h1>
                 
-                <div className="max-w-2xl mx-auto space-y-6">
+                <div className="max-w-2xl mx-auto space-y-8">
                     <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed text-center sm:text-left">
                         Nyaya Sahayak represents the definitive leap forward in AI-powered legal empowerment for the Indian citizenry. In a landscape where the judicial system is often perceived as a dense thicket of complex statutes and intimidating procedural protocols, our platform serves as a high-fidelity navigational beacon. We have engineered this ecosystem to bridge the gap between statutory complexity and the fundamental rights of every individual, providing mathematically precise forensic tools that were previously reserved for elite legal institutions.
                     </p>
                     
-                    <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground border-l-4 border-primary pl-4">Forensic Case Auditor</h2>
-                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                        At the core of the Nyaya Sahayak terminal is the Forensic Case Auditor. This neural engine is specifically trained on the nuances of the Bharatiya Nyaya Sanhita (BNS) and the Bharatiya Sakshya Adhiniyam (BSA). When a citizen narrates their legal problem, our AI performs a deep-layer deconstruction of the narrative, identifying potential statutory violations, mapping relevant sections of the law, and generating a professional case summary. This process transforms a confusing series of events into a structured legal dossier, empowering the user to approach law enforcement or legal counsel with absolute clarity and dignity.
-                    </p>
+                    <div className="space-y-4">
+                        <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground border-l-4 border-primary pl-4">Forensic Case Auditor</h2>
+                        <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+                            At the core of the Nyaya Sahayak terminal is the Forensic Case Auditor. This neural engine is specifically trained on the nuances of the Bharatiya Nyaya Sanhita (BNS) and the Bharatiya Sakshya Adhiniyam (BSA). When a citizen narrates their legal problem, our AI performs a deep-layer deconstruction of the narrative, identifying potential statutory violations, mapping relevant sections of the law, and generating a professional case summary. This process transforms a confusing series of events into a structured legal dossier, empowering the user to approach law enforcement or legal counsel with absolute clarity and dignity.
+                        </p>
+                    </div>
 
-                    <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground border-l-4 border-accent pl-4">Document Risk Scanner</h2>
-                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                        Furthermore, our Document Risk Scanner provides an institutional-grade audit of legal instruments. Whether it is a legal notice, a contract, or an FIR application, the AI node performs a comprehensive forensic scan to identify non-compliance markers, hidden liabilities, and critical procedural deadlines. By automating the risk assessment process, we ensure that no citizen is caught off-guard by the fine print of legal documentation. The system operates on a zero-trust architecture, ensuring that your sensitive data nodes are processed in isolated, transient environments.
-                    </p>
+                    <div className="space-y-4">
+                        <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground border-l-4 border-accent pl-4">Document Risk Scanner</h2>
+                        <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+                            Furthermore, our Document Risk Scanner provides an institutional-grade audit of legal instruments. Whether it is a legal notice, a contract, or an FIR application, the AI node performs a comprehensive forensic scan to identify non-compliance markers, hidden liabilities, and critical procedural deadlines. By automating the risk assessment process, we ensure that no citizen is caught off-guard by the fine print of legal documentation. The system operates on a zero-trust architecture, ensuring that your sensitive data nodes are processed in isolated, transient environments.
+                        </p>
+                    </div>
 
-                    <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground border-l-4 border-orange-400 pl-4">Procedural Roadmap Intelligence</h2>
-                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                        The Procedural Roadmap Intelligence is another critical pillar of our mission. Navigating the Bharatiya Nagarik Suraksha Sanhita (BNSS) requires a step-by-step understanding of judicial cycles. Nyaya Sahayak provides dynamic, personalized roadmaps that guide users through the intricacies of filing complaints, understanding writ jurisdictions under Articles 32 and 226, and maintaining proper courtroom decorum. We are building a more transparent and equitable legal landscape for 1.4 billion people, ensuring that technology serves as a bridge to justice rather than a barrier.
-                    </p>
+                    <div className="space-y-4">
+                        <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground border-l-4 border-orange-400 pl-4">Procedural Roadmap Intelligence</h2>
+                        <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+                            The Procedural Roadmap Intelligence is another critical pillar of our mission. Navigating the Bharatiya Nagarik Suraksha Sanhita (BNSS) requires a step-by-step understanding of judicial cycles. Nyaya Sahayak provides dynamic, personalized roadmaps that guide users through the intricacies of filing complaints, understanding writ jurisdictions under Articles 32 and 226, and maintaining proper courtroom decorum. We are building a more transparent and equitable legal landscape for 1.4 billion people, ensuring that technology serves as a bridge to justice rather than a barrier.
+                        </p>
+                    </div>
                 </div>
               </div>
 

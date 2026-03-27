@@ -96,8 +96,16 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
+        <Script 
+          async 
+          custom-element="amp-auto-ads"
+          src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"
+          strategy="beforeInteractive"
+        />
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>
+        {/* @ts-ignore */}
+        <amp-auto-ads type="adsense" data-ad-client="ca-pub-3991323698767154"></amp-auto-ads>
         <ThemeProvider>
           <LanguageProvider>
             <FirebaseClientProvider>
