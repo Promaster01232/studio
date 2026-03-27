@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,8 @@ import {
   Globe,
   Award,
   Mic,
-  Scale
+  Scale,
+  ExternalLink
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
@@ -36,7 +36,6 @@ const TricolorBackground = () => {
       <div className="tricolor-glow bg-[#FFFFFF]" style={{ top: '30%', left: '40%', width: '800px', opacity: 0.05 }}></div>
       <div className="tricolor-glow bg-[#128807]" style={{ bottom: '-10%', right: '10%' }}></div>
       
-      {/* Ashoka Chakra Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] pointer-events-none">
           <svg className="ashoka-rotate w-[600px] h-[600px] text-[#000080]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.5">
               <circle cx="50" cy="50" r="45" />
@@ -127,10 +126,10 @@ export default function WelcomePage() {
                 
                 <div className="max-w-xl mx-auto space-y-4">
                     <p className="text-base sm:text-lg font-bold text-muted-foreground tracking-tight leading-tight">
-                        AI-Powered Legal Intelligence for the Modern Indian Citizen.
+                        Advanced AI Legal Assistant & Forensic Case Auditor for the Modern Indian Citizen.
                     </p>
                     <p className="text-[11px] sm:text-xs text-muted-foreground font-medium leading-relaxed max-w-lg mx-auto opacity-80">
-                        Bridging the profound gap between complex judicial protocols and citizen rights with precise forensic tools and high-fidelity procedural roadmaps.
+                        Bridging the gap between the complex Indian judicial system and fundamental citizen rights with precision forensic tools, automated document risk scanners, and high-fidelity procedural roadmaps.
                     </p>
                 </div>
               </div>
@@ -143,11 +142,11 @@ export default function WelcomePage() {
                         className="group w-full h-14 text-[10px] font-black shadow-2xl shadow-primary/20 transition-all rounded-2xl bg-primary text-white hover:scale-[1.02] active:scale-[0.98]"
                     >
                         <Link href="/dashboard">
-                            <span className="tracking-[0.2em] uppercase">Enter Dashboard</span>
+                            <span className="tracking-[0.2em] uppercase">Initialize Dashboard</span>
                             <ArrowRight className="ml-3 h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </Link>
                     </Button>
-                    <p className="text-[8px] font-black text-primary/40 uppercase tracking-[0.4em]">Institutional Access Active</p>
+                    <p className="text-[8px] font-black text-primary/40 uppercase tracking-[0.4em]">Secure Institutional Access Active</p>
                   </div>
                 ) : (
                   <Button disabled className="w-full h-14 rounded-2xl bg-primary/20 text-white border-primary/10">
@@ -160,151 +159,123 @@ export default function WelcomePage() {
           </Card>
         </motion.div>
 
-        {/* Capability Matrix */}
-        <div className="w-full max-w-5xl mt-24 space-y-12 px-4 relative z-10">
-            <div className="flex flex-col items-center text-center space-y-3">
-                <Badge variant="secondary" className="bg-accent/10 text-accent border-accent/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em]">
-                    Registry Capabilities
-                </Badge>
-                <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter text-foreground">Institutional <span className="text-primary italic">Sectors</span></h2>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6">
-                {[
-                    {
-                        title: "Case Auditor",
-                        desc: "Neural violation mapping with institutional precision.",
-                        icon: BrainCircuit,
-                        color: "text-primary",
-                        bg: "bg-primary/5",
-                        sector: "Sector: NS-V1"
-                    },
-                    {
-                        title: "Document Risk",
-                        desc: "Scanning legal instruments for hidden statutory liabilities.",
-                        icon: FileSearch,
-                        color: "text-accent",
-                        bg: "bg-accent/5",
-                        sector: "Sector: NS-D2"
-                    },
-                    {
-                        title: "AI Roadmap",
-                        desc: "Step-by-step navigation cycles for the judicial system.",
-                        icon: Zap,
-                        color: "text-orange-500",
-                        bg: "bg-orange-500/5",
-                        sector: "Sector: NS-Z4"
-                    }
-                ].map((item, idx) => (
-                    <Card key={idx} className="glass p-6 rounded-[2rem] border-primary/10 text-left group hover:border-primary/30 transition-all h-full shadow-xl">
-                        <div className="flex justify-between items-start mb-6">
-                            <div className={cn("p-3 rounded-xl transition-transform group-hover:scale-110 shadow-inner", item.bg, item.color)}>
-                                <item.icon className="h-5 w-5" />
-                            </div>
-                            <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest">{item.sector}</span>
+        {/* Informational Content for SEO & Depth */}
+        <div className="w-full max-w-5xl mt-24 space-y-24 px-4 relative z-10 text-left">
+            <section className="space-y-8">
+                <div className="space-y-3 text-center">
+                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em]">
+                        Statutory Mandate
+                    </Badge>
+                    <h2 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter">Your Advanced AI <span className="text-primary italic">Legal Assistant</span></h2>
+                </div>
+                <div className="grid md:grid-cols-2 gap-12 items-start">
+                    <div className="space-y-6">
+                        <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
+                            Nyaya Sahayak represents the pinnacle of AI legal intelligence designed specifically for the unique complexities of the <span className="text-foreground font-bold">Indian judicial system</span>. Our mission is to empower every citizen with elite-grade legal forensic tools that were previously accessible only to high-tier legal firms. By leveraging state-of-the-art neural processing, we provide a mathematical approach to legal navigation.
+                        </p>
+                        <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
+                            Our platform integrates several high-performance modules, including the <span className="text-foreground font-bold">Forensic Case Auditor</span>, which analyzes legal narratives to identify statutory violations, and the <span className="text-foreground font-bold">Document Risk Scanner</span>, an OCR-powered engine that dissects contracts and notices to surface hidden liabilities and critical deadlines.
+                        </p>
+                    </div>
+                    <Card className="glass p-8 rounded-[2.5rem] border-primary/10 shadow-xl relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-6 opacity-[0.05]">
+                            <Scale className="h-24 w-24 text-primary" />
                         </div>
-                        <div className="space-y-2">
-                            <h3 className="text-sm font-black uppercase tracking-tight text-foreground">{item.title}</h3>
-                            <p className="text-[11px] text-muted-foreground font-medium leading-relaxed opacity-80">
-                                {item.desc}
-                            </p>
+                        <h3 className="text-xl font-black tracking-tight mb-4">Navigational Roadmaps</h3>
+                        <p className="text-xs text-muted-foreground leading-relaxed font-medium mb-6">
+                            Navigating the Indian courts and police stations requires a precise understanding of procedural cycles. Nyaya Sahayak generates automated <span className="text-primary font-bold">Procedural Roadmaps</span> that guide you step-by-step through filing FIRs, submitting evidence, and understanding court decorum.
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">Criminal Law Audit</Badge>
+                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">Civil Liability Scan</Badge>
+                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/20">MSME Compliance</Badge>
                         </div>
                     </Card>
-                ))}
-            </div>
-        </div>
+                </div>
+            </section>
 
-        {/* Vision Section */}
-        <div className="w-full max-w-4xl mt-24 space-y-16 px-4 pb-20 relative z-10">
-            <section className="grid lg:grid-cols-2 gap-16 items-center">
-                <div className="space-y-8">
-                    <div className="space-y-3">
-                        <ForensicLabel>Protocol: Statutory-Mandate</ForensicLabel>
-                        <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-tight text-foreground">Democratizing <br /> <span className="text-primary italic">Intelligence</span></h2>
-                    </div>
-                    <div className="space-y-8">
-                        <div className="flex gap-5 items-start group">
-                            <div className="p-3 rounded-2xl bg-primary/5 text-primary shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                                <Globe className="h-4 w-4" />
+            <section className="space-y-12">
+                <div className="flex flex-col items-center text-center space-y-3">
+                    <Badge variant="secondary" className="bg-accent/10 text-accent border-accent/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.3em]">
+                        Forensic Capabilities
+                    </Badge>
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter text-foreground">Institutional <span className="text-primary italic">Sectors</span></h2>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                    {[
+                        {
+                            title: "Case Auditor",
+                            desc: "Utilize neural violation mapping to deconstruct complex legal problems with institutional precision and statutory accuracy.",
+                            icon: BrainCircuit,
+                            color: "text-primary",
+                            bg: "bg-primary/5",
+                            sector: "Sector: NS-V1"
+                        },
+                        {
+                            title: "Document Risk",
+                            desc: "Initialize a high-fidelity scan of legal instruments to identify hidden statutory liabilities and mandated procedural actions.",
+                            icon: FileSearch,
+                            color: "text-accent",
+                            bg: "bg-accent/5",
+                            sector: "Sector: NS-D2"
+                        },
+                        {
+                            title: "AI Roadmap",
+                            desc: "Access dynamic, step-by-step navigation cycles designed to guide citizens through the intricacies of the judicial system.",
+                            icon: Zap,
+                            color: "text-orange-500",
+                            bg: "bg-orange-500/5",
+                            sector: "Sector: NS-Z4"
+                        }
+                    ].map((item, idx) => (
+                        <Card key={idx} className="glass p-8 rounded-[2rem] border-primary/10 text-left group hover:border-primary/30 transition-all h-full shadow-xl">
+                            <div className="flex justify-between items-start mb-6">
+                                <div className={cn("p-3 rounded-xl transition-transform group-hover:scale-110 shadow-inner", item.bg, item.color)}>
+                                    <item.icon className="h-6 w-6" />
+                                </div>
+                                <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest">{item.sector}</span>
                             </div>
-                            <div className="space-y-1">
-                                <h3 className="text-xs font-black tracking-tight uppercase">The Vision</h3>
-                                <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">Access to justice as an inherent citizen right, optimized through forensic neural technology.</p>
+                            <div className="space-y-3">
+                                <h3 className="text-sm font-black uppercase tracking-tight text-foreground">{item.title}</h3>
+                                <p className="text-[11px] text-muted-foreground font-medium leading-relaxed opacity-80">
+                                    {item.desc}
+                                </p>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+            </section>
+
+            <section className="bg-primary/5 rounded-[3rem] p-8 sm:p-16 border border-primary/10 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
+                    <Globe className="h-64 w-64" />
+                </div>
+                <div className="max-w-3xl space-y-8 relative z-10">
+                    <ForensicLabel>Protocol: Digital-Justice-Era</ForensicLabel>
+                    <h2 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-tight">Engineering Dignity Through <span className="text-primary italic">Neural Intelligence</span></h2>
+                    <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+                        In the era of Digital India, legal empowerment must be accessible at the click of a button. Nyaya Sahayak serves as a supplementary navigational node, providing citizens with the tools to understand their legal standing before they even step into a courtroom. By deconstructing judicial barriers, we are building a more transparent and equitable legal landscape for 1.4 billion people.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-6">
+                        <div className="flex-1 space-y-2">
+                            <h4 className="text-xs font-black uppercase text-primary">Official Resources</h4>
+                            <div className="space-y-2">
+                                <a href="https://services.ecourts.gov.in/" target="_blank" className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors">
+                                    <ExternalLink className="h-3 w-3" /> eCourts Services India
+                                </a>
+                                <a href="https://india.gov.in/" target="_blank" className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors">
+                                    <ExternalLink className="h-3 w-3" /> National Portal of India
+                                </a>
                             </div>
                         </div>
-                        <div className="flex gap-5 items-start group">
-                            <div className="p-3 rounded-2xl bg-accent/5 text-accent shrink-0 border border-accent/10 group-hover:bg-accent group-hover:text-white transition-all shadow-sm">
-                                <Award className="h-4 w-4" />
-                            </div>
-                            <div className="space-y-1">
-                                <h3 className="text-xs font-black tracking-tight uppercase">Institutional Trust</h3>
-                                <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">Every output synchronized with current judicial amendments for 100% forensic transparency.</p>
-                            </div>
+                        <div className="flex-1 flex items-end">
+                            <Button variant="outline" className="rounded-xl font-bold h-12 px-8 border-primary/20 hover:bg-primary/5 active:scale-95 transition-all text-xs" asChild>
+                                <Link href="/about">Learn Our Vision</Link>
+                            </Button>
                         </div>
                     </div>
                 </div>
-                
-                <Card className="glass rounded-[2.5rem] p-1 border-primary/10 shadow-2xl overflow-hidden">
-                    <div className="bg-muted/30 h-[480px] rounded-[2.2rem] flex flex-col items-center relative overflow-hidden">
-                        <div className="absolute inset-0 flex flex-col p-8 text-left space-y-5">
-                            <div className="flex items-center justify-between border-b border-primary/10 pb-4 mb-2">
-                                <div className="flex items-center gap-2.5">
-                                    <BadgeCheck className="h-5 w-5 text-primary" />
-                                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Registry Overview</span>
-                                </div>
-                                <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
-                            </div>
-
-                            <ScrollArea className="flex-1 pr-4 custom-scrollbar">
-                                <div className="prose dark:prose-invert prose-xs max-w-none space-y-8 pb-8">
-                                    <p className="text-xs font-black font-headline tracking-tighter leading-tight italic text-foreground border-l-4 border-primary pl-5 py-2 bg-primary/5 rounded-r-2xl">
-                                        "Engineering Dignity through Precise Neural Intelligence. We are deconstructing the judicial barriers of the past."
-                                    </p>
-
-                                    <div className="space-y-3">
-                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                                            <Zap className="h-3 w-3" /> Era of Digital Justice
-                                        </h4>
-                                        <p className="text-[11px] text-muted-foreground font-medium leading-relaxed">
-                                            Nyaya Sahayak represents a revolutionary leap in the democratization of legal intelligence within the Indian judicial ecosystem. Our platform leverages state-of-the-art neural processing to bridge the gap between complex protocols and everyday citizen needs.
-                                        </p>
-                                    </div>
-
-                                    <div className="space-y-3">
-                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                                            <Mic className="h-3 w-3" /> Voice Narration (NS-V1)
-                                        </h4>
-                                        <p className="text-[11px] text-muted-foreground font-medium leading-relaxed">
-                                            Speak directly to the terminal. Our engine performs a deep-layer audit, identifying statutory violations and providing word-for-word transcriptions alongside simplified summaries.
-                                        </p>
-                                    </div>
-
-                                    <div className="space-y-3">
-                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                                            <FileSearch className="h-3 w-3" /> Document Audit (NS-D2)
-                                        </h4>
-                                        <p className="text-[11px] text-muted-foreground font-medium leading-relaxed">
-                                            OCR-powered scanners provide multi-stage forensic audits of contracts and notices, highlighting critical deadlines and mandated procedural actions instantly.
-                                        </p>
-                                    </div>
-
-                                    <div className="space-y-3">
-                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                                            <BrainCircuit className="h-3 w-3" /> Strength Matrix
-                                        </h4>
-                                        <p className="text-[11px] text-muted-foreground font-medium leading-relaxed">
-                                            Probabilistic engines evaluate litigation by analyzing precedents and evidence, providing a comprehensive risk score and recommended strategy.
-                                        </p>
-                                    </div>
-
-                                    <div className="pt-6 border-t border-primary/5 text-center">
-                                        <p className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">End Transmission // Active</p>
-                                    </div>
-                                </div>
-                            </ScrollArea>
-                        </div>
-                    </div>
-                </Card>
             </section>
         </div>
       </div>

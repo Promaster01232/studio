@@ -164,6 +164,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             setProfileLoading(false);
         }, (error) => {
             console.error("Profile snapshot error:", error);
+            // Harden against blank page: clear loading even on permission error
             setProfileLoading(false);
         });
 
