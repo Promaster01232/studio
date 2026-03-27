@@ -124,21 +124,21 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
         <Link 
             href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} 
             className={cn(
-                "flex items-center gap-2.5",
+                "flex items-center gap-3",
                 post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer"
             )}
         >
-            <Avatar className="h-8 w-8 border border-background shadow-md rounded-lg">
+            <Avatar className="h-9 w-9 border border-background shadow-md rounded-lg">
                 {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
-                <AvatarFallback className="font-black bg-primary/10 text-primary text-[10px]">{fallback}</AvatarFallback>
+                <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
             </Avatar>
             <div className="flex-1 text-left">
-                <div className="flex items-center gap-1">
-                    <p className="font-black text-[11px] tracking-tight">{authorName}</p>
-                    {isAdmin && <BadgeCheck className="h-3 w-3 text-blue-500" />}
+                <div className="flex items-center gap-1.5">
+                    <p className="font-black text-xs tracking-tight">{authorName}</p>
+                    {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
                 </div>
-                <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
-                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
+                <p className="text-[10px] text-muted-foreground font-bold opacity-60">
+                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
                 </p>
             </div>
         </Link>
@@ -251,29 +251,29 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
             <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_rgba(255,153,51,0.05)]">
                 <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-[#FF9933] via-white to-[#128807]"></div>
                 
-                <div className="flex-1 flex flex-col p-5 sm:p-6 text-left ml-1">
+                <div className="flex-1 flex flex-col p-6 text-left ml-1">
                     <div className="flex items-center justify-between mb-5">
                         <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
                         <div className="flex items-center gap-2">
-                            <Badge className="bg-primary/10 text-primary border-primary/10 font-black text-[7px] uppercase tracking-widest px-2 py-0.5 rounded-full">
-                                {post.postType || 'TX'}
+                            <Badge className="bg-primary/10 text-primary border-primary/10 font-bold text-[9px] px-2.5 py-0.5 rounded-full">
+                                {post.postType || 'Transmission'}
                             </Badge>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg hover:bg-primary/5">
-                                        <MoreVertical className="h-3.5 w-3.5 text-muted-foreground" />
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/5">
+                                        <MoreVertical className="h-4 w-4 text-muted-foreground" />
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl shadow-2xl glass border-primary/10">
+                                <DropdownMenuContent align="end" className="w-52 p-2 rounded-xl shadow-2xl glass border-primary/10">
                                     {isAuthor ? (
-                                        <DropdownMenuItem onSelect={handleDelete} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
-                                            <Trash2 className="h-3.5 w-3.5" /> 
-                                            <span>Purge Identity Record</span>
+                                        <DropdownMenuItem onSelect={handleDelete} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
+                                            <Trash2 className="h-4 w-4" /> 
+                                            <span>Purge record</span>
                                         </DropdownMenuItem>
                                     ) : (
-                                        <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
-                                            <Flag className="h-3.5 w-3.5" /> 
-                                            <span>Report Forensic Breach</span>
+                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
+                                            <Flag className="h-4 w-4" /> 
+                                            <span>Report breach</span>
                                         </DropdownMenuItem>
                                     )}
                                 </DropdownMenuContent>
@@ -281,13 +281,13 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                         </div>
                     </div>
 
-                    <div className="space-y-2 flex-1 mb-5">
-                        <h3 className="text-base sm:text-lg font-black tracking-tight leading-tight text-foreground">{post.title}</h3>
-                        {post.content && <p className="text-[11px] sm:text-xs text-muted-foreground font-medium leading-relaxed">{post.content}</p>}
+                    <div className="space-y-2 flex-1 mb-6">
+                        <h3 className="text-lg sm:text-xl font-black tracking-tight leading-tight text-foreground/90">{post.title}</h3>
+                        {post.content && <p className="text-sm text-muted-foreground font-medium leading-relaxed">{post.content}</p>}
                     </div>
 
                     {optimisticPoll && (
-                        <div className="space-y-2.5 mb-6">
+                        <div className="space-y-3 mb-6">
                             {optimisticPoll.options.map((option, idx) => {
                                 const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
                                 return (
@@ -297,8 +297,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                         onMouseEnter={() => playSound('hover')}
                                         disabled={userHasVotedOnPoll || isVoting}
                                         className={cn(
-                                            "w-full relative h-11 rounded-xl border border-primary/5 overflow-hidden transition-all text-left px-4 group/option",
-                                            userHasVotedOnPoll ? "bg-muted/10 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/30 active:scale-[0.98]"
+                                            "w-full relative h-12 rounded-xl border border-primary/5 overflow-hidden transition-all text-left px-4 group/option",
+                                            userHasVotedOnPoll ? "bg-muted/10 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/30 active:scale-[0.99]"
                                         )}
                                     >
                                         <AnimatePresence>
@@ -313,47 +313,47 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                         <div className="relative z-10 flex items-center justify-between h-full">
                                             <div className="flex items-center gap-3">
                                                 <div className={cn(
-                                                    "h-2 w-2 rounded-full border border-primary/30 transition-all",
+                                                    "h-2.5 w-2.5 rounded-full border border-primary/30 transition-all",
                                                     userHasVotedOnPoll ? "opacity-0" : "group-hover/option:scale-125"
                                                 )} />
-                                                <span className="font-bold text-[11px] tracking-tight">{option.text}</span>
+                                                <span className="font-bold text-sm tracking-tight">{option.text}</span>
                                             </div>
                                             {userHasVotedOnPoll && (
-                                                <span className="font-black text-[10px] text-primary">{percentage.toFixed(0)}%</span>
+                                                <span className="font-black text-xs text-primary">{percentage.toFixed(0)}%</span>
                                             )}
                                         </div>
                                     </button>
                                 );
                             })}
                             {userHasVotedOnPoll && (
-                                <div className="flex items-center gap-2 px-1 text-[8px] font-black uppercase tracking-[0.2em] text-[#128807] animate-in fade-in slide-in-from-left-2">
-                                    <CheckCircle2 className="h-3 w-3" />
-                                    Consensus Captured // Registry Secure
+                                <div className="flex items-center gap-2 px-1 text-[10px] font-bold text-[#128807] animate-in fade-in slide-in-from-left-2">
+                                    <CheckCircle2 className="h-3.5 w-3.5" />
+                                    Consensus captured // Registry secure
                                 </div>
                             )}
                         </div>
                     )}
 
-                    <div className="flex items-center justify-between pt-4 border-t border-primary/5">
+                    <div className="flex items-center justify-between pt-5 border-t border-primary/5">
                         <div className="flex gap-2">
                             <Button 
                                 variant="ghost" 
                                 size="sm" 
                                 className={cn(
-                                    "h-8 px-3 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] gap-2 transition-all", 
-                                    userHasLiked ? "text-red-500 bg-red-500/5" : "text-primary hover:bg-primary/5"
+                                    "h-9 px-4 rounded-xl text-[11px] font-bold gap-2.5 transition-all", 
+                                    userHasLiked ? "text-red-500 bg-red-500/5 shadow-inner" : "text-primary hover:bg-primary/5"
                                 )}
                                 onClick={handleLike}
                                 disabled={isLiking}
                             >
-                                {isLiking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />}
-                                <span>{optimisticLikes}</span>
+                                {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} />}
+                                <span className="font-black">{optimisticLikes}</span>
                             </Button>
                         </div>
-                        <Button variant="ghost" size="sm" className="h-8 px-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
+                        <Button variant="ghost" size="sm" className="h-9 px-5 rounded-xl font-bold text-[11px] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
                             <Link href="/dashboard/research-analytics">
                                 <span>Analyze Node</span>
-                                <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover/btn:translate-x-1" />
+                                <ArrowRight className="ml-2.5 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                             </Link>
                         </Button>
                     </div>
@@ -364,19 +364,19 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Forensic assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "Sector: Forensic" },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "Sector: Statutory" },
-    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "Sector: Civil" },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Legal affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "Sector: Registry" },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Forensic assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "sector: forensic" },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "sector: statutory" },
+    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "sector: civil" },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Legal affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "sector: registry" },
 ];
 
 const SectionHeader = ({ children, icon: Icon, sector }: { children: React.ReactNode, icon?: any, sector?: string }) => (
-    <div className="flex items-center justify-between mb-5 border-b border-primary/5 pb-3">
-        <div className="flex items-center gap-2.5">
-            {Icon && <Icon className="h-4 w-4 text-primary opacity-40" />}
-            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground">{children}</h2>
+    <div className="flex items-center justify-between mb-6 border-b border-primary/5 pb-4">
+        <div className="flex items-center gap-3">
+            {Icon && <Icon className="h-5 w-5 text-primary/40" />}
+            <h2 className="text-[14px] font-black tracking-tight text-foreground/80">{children}</h2>
         </div>
-        {sector && <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">{sector}</span>}
+        {sector && <span className="text-[11px] font-bold text-muted-foreground/40">{sector}</span>}
     </div>
 )
 
@@ -456,27 +456,27 @@ export default function DashboardHomePage() {
   }, [text, isTyping]);
 
   return (
-    <div className="flex flex-col h-full space-y-10 pb-20 max-w-6xl mx-auto text-left relative">
+    <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
         <MotionWrapper>
-          <Card className="relative p-6 sm:p-10 rounded-[2rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
-              <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
-                  <Logo className="h-48 w-48 border-none p-0 grayscale" />
+          <Card className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
+              <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none">
+                  <Logo className="h-56 w-56 border-none p-0 grayscale" />
               </div>
-              <div className="relative z-10 space-y-6">
-                  <div className="space-y-1">
-                      <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none text-foreground">
+              <div className="relative z-10 space-y-8">
+                  <div className="space-y-2">
+                      <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
                           Welcome back, <br />
                           <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Nyaya {text}</span>
                       </h1>
                   </div>
-                  <p className="text-[11px] sm:text-xs text-muted-foreground font-medium max-w-lg leading-relaxed">
-                      Access high-fidelity legal intelligence and forensic auditing tools designed for statutory precision.
+                  <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed">
+                      Access high-fidelity legal intelligence and forensic auditing tools designed for statutory precision within the Indian judicial ecosystem.
                   </p>
-                  <div className="flex flex-wrap gap-3 pt-1">
-                      <Button size="sm" className="rounded-xl font-black uppercase tracking-[0.2em] text-[8px] px-6 h-10 shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
+                  <div className="flex flex-wrap gap-4 pt-2">
+                      <Button size="sm" className="rounded-xl font-bold px-8 h-12 shadow-xl shadow-primary/20 active:scale-95 transition-all text-xs" asChild>
                           <Link href="/dashboard/narrate">Initialize Narration</Link>
                       </Button>
-                      <Button variant="outline" size="sm" className="rounded-xl font-black uppercase tracking-[0.2em] text-[8px] px-6 h-10 border-primary/10 hover:bg-primary/5 active:scale-95 transition-all" asChild>
+                      <Button variant="outline" size="sm" className="rounded-xl font-bold px-8 h-12 border-primary/10 hover:bg-primary/5 active:scale-95 transition-all text-xs" asChild>
                           <Link href="/dashboard/support">Hub Support</Link>
                       </Button>
                   </div>
@@ -484,24 +484,24 @@ export default function DashboardHomePage() {
           </Card>
         </MotionWrapper>
 
-        <div className="grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8 space-y-8">
+        <div className="grid lg:grid-cols-12 gap-10">
+          <div className="lg:col-span-8 space-y-10">
               <section>
-                  <SectionHeader icon={TrendingUp} sector="Sector: Community">Live Transmission Stream</SectionHeader>
+                  <SectionHeader icon={TrendingUp} sector="sector: community">Live Transmission Stream</SectionHeader>
                   
-                  <div className="space-y-5">
+                  <div className="space-y-6">
                       {postsLoading ? (
-                          <div className="space-y-4">
+                          <div className="space-y-5">
                               {[...Array(3)].map((_, i) => (
-                                  <Card key={i} className="h-24 animate-pulse border-primary/5 rounded-2xl bg-muted/20" />
+                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-2xl bg-muted/20" />
                               ))}
                           </div>
                       ) : latestPosts.length === 0 ? (
-                          <Card className="py-16 text-center glass rounded-[2rem] border-dashed border-2 border-primary/10 opacity-40">
-                              <p className="font-black uppercase tracking-[0.2em] text-[9px]">Registry Empty // No active transmissions</p>
+                          <Card className="py-20 text-center glass rounded-[2.5rem] border-dashed border-2 border-primary/10 opacity-40">
+                              <p className="font-bold text-sm tracking-tight">Registry empty // No active transmissions</p>
                           </Card>
                       ) : (
-                          <div className="space-y-5">
+                          <div className="space-y-6">
                               {latestPosts.map((post) => (
                                   <PostCard key={post.id} post={post} userProfile={userProfile} />
                               ))}
@@ -511,25 +511,25 @@ export default function DashboardHomePage() {
               </section>
           </div>
 
-          <div className="lg:col-span-4 space-y-8">
+          <div className="lg:col-span-4 space-y-10">
               <section>
-                  <SectionHeader icon={Sparkles} sector="Status: Optimized">System Matrix</SectionHeader>
-                  <div className="grid grid-cols-2 gap-3">
+                  <SectionHeader icon={Sparkles} sector="status: optimized">System Matrix</SectionHeader>
+                  <div className="grid grid-cols-2 gap-4">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
-                            <Card className="h-full glass p-3.5 sm:p-4 rounded-[1.25rem] border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden flex flex-col justify-between min-h-[110px] group-hover:scale-[1.02] group-active:scale-[0.98]">
-                                <div className="absolute top-0 right-0 p-2 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                                    <f.icon className="h-6 w-6" />
+                            <Card className="h-full glass p-5 rounded-[1.5rem] border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden flex flex-col justify-between min-h-[130px] group-hover:scale-[1.02] group-active:scale-[0.98] shadow-lg">
+                                <div className="absolute top-0 right-0 p-3 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                                    <f.icon className="h-8 w-8" />
                                 </div>
                                 <div>
-                                    <div className={cn("p-2 rounded-lg w-fit mb-2.5 transition-transform group-hover:scale-110", f.bg, f.color)}>
-                                        <f.icon className="h-3.5 w-3.5" />
+                                    <div className={cn("p-2.5 rounded-xl w-fit mb-3 transition-transform group-hover:scale-110 shadow-sm", f.bg, f.color)}>
+                                        <f.icon className="h-4 w-4" />
                                     </div>
-                                    <h3 className="font-black text-[10px] uppercase tracking-[0.12em] text-foreground leading-none">{f.title}</h3>
-                                    <p className="text-[9px] text-muted-foreground font-medium mt-1 leading-tight opacity-70 line-clamp-1">{f.desc}</p>
+                                    <h3 className="font-black text-sm tracking-tight text-foreground leading-none">{f.title}</h3>
+                                    <p className="text-[11px] text-muted-foreground font-medium mt-1.5 leading-snug opacity-70 line-clamp-2">{f.desc}</p>
                                 </div>
-                                <div className="mt-2.5 pt-2 border-t border-primary/5">
-                                    <span className="text-[7px] font-black uppercase tracking-widest text-primary/40">{f.sector}</span>
+                                <div className="mt-3.5 pt-3 border-t border-primary/5">
+                                    <span className="text-[9px] font-bold text-primary/40 uppercase tracking-wider">{f.sector}</span>
                                 </div>
                             </Card>
                         </Link>
@@ -538,21 +538,21 @@ export default function DashboardHomePage() {
               </section>
 
               <section>
-                  <SectionHeader icon={Library} sector="Status: Ready">Statutory Registry</SectionHeader>
-                  <div className="space-y-2.5">
+                  <SectionHeader icon={Library} sector="status: ready">Statutory Registry</SectionHeader>
+                  <div className="space-y-3.5">
                       {[
-                        { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", label: "LERN" },
-                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case Tracker", label: "CASE" },
+                        { href: "/dashboard/learn", icon: Library, title: "Knowledge Hub", label: "Registry" },
+                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case Tracker", label: "Archive" },
                       ].map((item) => (
                         <Link key={item.href} href={item.href} className="block group" onMouseEnter={() => playSound('hover')}>
-                            <Card className="glass p-3.5 rounded-xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between group-hover:scale-[1.01] group-active:scale-[0.99]">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-1.5 rounded-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
-                                        <item.icon className="h-3.5 w-3.5" />
+                            <Card className="glass p-4 rounded-2xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between group-hover:scale-[1.01] group-active:scale-[0.99] shadow-sm">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-2 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
+                                        <item.icon className="h-4 w-4" />
                                     </div>
-                                    <span className="font-black text-[9px] uppercase tracking-[0.2em]">{item.title}</span>
+                                    <span className="font-bold text-sm tracking-tight">{item.title}</span>
                                 </div>
-                                <span className="text-[7px] font-mono font-bold text-muted-foreground opacity-40">{item.label}</span>
+                                <span className="text-[10px] font-bold text-muted-foreground/30 px-3 py-1 rounded-lg bg-muted/30">{item.label}</span>
                             </Card>
                         </Link>
                       ))}
@@ -561,7 +561,7 @@ export default function DashboardHomePage() {
           </div>
         </div>
 
-        <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-center gap-4">
+        <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-center gap-4">
             <Link href="/dashboard/research-analytics/new">
                 <motion.button
                     onMouseEnter={() => playSound('hover')}
@@ -576,30 +576,30 @@ export default function DashboardHomePage() {
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="relative group h-14 w-14 bg-primary text-white rounded-2xl shadow-2xl flex items-center justify-center transition-all overflow-hidden"
+                    className="relative group h-16 w-16 bg-primary text-white rounded-2xl shadow-[0_20px_50px_rgba(var(--primary),0.3)] flex items-center justify-center transition-all overflow-hidden"
                 >
                     <motion.div 
                         animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.1, 0.2] }}
                         transition={{ repeat: Infinity, duration: 2 }}
                         className="absolute inset-0 bg-primary rounded-2xl"
                     />
-                    <Bot className="h-7 w-7 relative z-10" />
+                    <Bot className="h-8 w-8 relative z-10" />
                     
-                    <div className="absolute top-1.5 right-1.5 bg-accent text-accent-foreground rounded-full p-0.5 shadow-xl z-20 border-2 border-primary group-hover:scale-110 transition-transform">
-                        <Plus className="h-2.5 w-2.5 font-black" />
+                    <div className="absolute top-2 right-2 bg-accent text-accent-foreground rounded-full p-1 shadow-xl z-20 border-2 border-primary group-hover:scale-110 transition-transform">
+                        <Plus className="h-3 w-3 font-black" />
                     </div>
 
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 </motion.button>
             </Link>
             
-            <div className="absolute -top-8 right-0 bg-background border border-primary/20 px-2 py-1 rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                <span className="text-[8px] font-black uppercase tracking-widest text-primary">Neural Assistant Active</span>
+            <div className="absolute -top-10 right-0 bg-background/80 backdrop-blur-md border border-primary/20 px-3 py-1.5 rounded-xl shadow-2xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <span className="text-[10px] font-black tracking-widest text-primary">Neural Assistant Active</span>
             </div>
         </div>
 
-        <div className="pt-10 text-center border-t border-primary/5 opacity-30">
-            <p className="text-[7px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // TERMINAL ACTIVE // PROTOCOL ALPHA-4</p>
+        <div className="pt-12 text-center border-t border-primary/5 opacity-30">
+            <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">nyayasahayak.in // terminal active // protocol alpha-4</p>
         </div>
     </div>
   );
