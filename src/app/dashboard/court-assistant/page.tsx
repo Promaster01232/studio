@@ -1,15 +1,18 @@
+
 "use client";
 
 import { useActionState, useState, useRef, useEffect } from "react";
 import { generateQuestionsAction, type CourtAssistantState } from "./actions";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mic, BrainCircuit, Loader2, Languages } from "lucide-react";
+import { Mic, BrainCircuit, Loader2, Languages, ArrowLeft, Activity, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 const initialState: CourtAssistantState = {
   status: "idle",
@@ -60,28 +63,17 @@ export default function CourtAssistantPage() {
         toast({
           variant: "destructive",
           title: "Microphone Access Denied",
-          description: "Please enable microphone permissions in your browser settings to use this feature.",
+          description: "Please enable microphone permissions in your browser settings.",
         });
       }
     };
     getMicrophonePermission();
   }, [toast]);
 
-  useEffect(() => {
-    if (state.status === "error" && state.error) {
-      toast({
-        variant: "destructive",
-        title: "AI Error",
-        description: state.error,
-      });
-    }
-  }, [state, toast]);
-
   const startRecording = () => {
     if (!hasPermission) return;
     setIsRecording(true);
     setTranscript([]);
-    
     let line = 0;
     transcriptInterval.current = setInterval(() => {
         setTranscript(prev => [...prev, mockTranscription[line]]);
@@ -91,110 +83,124 @@ export default function CourtAssistantPage() {
 
   const stopRecording = () => {
     setIsRecording(false);
-    if (transcriptInterval.current) {
-        clearInterval(transcriptInterval.current);
-    }
+    if (transcriptInterval.current) clearInterval(transcriptInterval.current);
   };
 
   const isLoading = state.status === "loading";
 
   return (
-    <div className="bg-[#0D1B2A] text-white min-h-full -m-4 md:-m-6 lg:-m-8 p-4 md:p-6 lg:p-8">
-        <header className="flex items-center gap-3 py-2">
-            <h1 className="text-2xl font-bold font-headline text-cyan-300">Court Room Tools (Real-time)</h1>
-        </header>
+    <div className="bg-[#0D1B2A] text-white min-h-full -m-4 md:-m-10 p-4 md:p-10 space-y-10">
+        <motion.header initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-cyan-500/10 pb-8">
+            <div className="space-y-1 text-left">
+                <h1 className="text-3xl font-black tracking-tighter text-cyan-300 font-headline uppercase">Court Operations Node</h1>
+                <p className="text-[10px] font-bold text-cyan-200/60 uppercase tracking-widest">Real-time statutory assist & transcription interface.</p>
+            </div>
+            <Button variant="outline" size="sm" className="rounded-xl font-bold h-10 px-6 border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/10 text-[10px] uppercase tracking-widest" asChild>
+                <Link href="/dashboard">
+                    <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to terminal
+                </Link>
+            </Button>
+        </motion.header>
 
-        <div className="grid md:grid-cols-2 gap-8 mt-6">
-            <Card className="bg-[#1B263B]/80 border-cyan-500/20 text-white">
-                <CardContent className="p-6 flex flex-col items-center justify-center space-y-6">
-                    <button onClick={startRecording} disabled={isRecording || !hasPermission} className="disabled:opacity-50">
+        <div className="grid lg:grid-cols-2 gap-8">
+            <Card className="bg-[#1B263B]/80 border-cyan-500/20 text-white rounded-[2rem] overflow-hidden shadow-2xl">
+                <CardHeader className="bg-cyan-500/5 border-b border-cyan-500/10 p-8">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-cyan-500/10">
+                                <Activity className="h-5 w-5 text-cyan-400 animate-pulse" />
+                            </div>
+                            <CardTitle className="text-xl font-black uppercase tracking-tight">Audio Capture</CardTitle>
+                        </div>
+                        <Badge variant="outline" className="border-cyan-500/30 text-cyan-400 text-[8px] uppercase tracking-widest font-black">Live Node</Badge>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-8 flex flex-col items-center justify-center space-y-8">
+                    <button onClick={isRecording ? stopRecording : startRecording} disabled={!hasPermission} className="disabled:opacity-50 transition-all hover:scale-105 active:scale-95 group">
                         <div className="relative">
-                            <Mic className="h-20 w-20 text-cyan-400" />
-                            {isRecording && (
-                            <>
-                                <div className="absolute inset-0 rounded-full bg-cyan-400/20 animate-ping -z-10" style={{ animationDuration: '2s' }}></div>
-                                <div className="absolute inset-0 rounded-full bg-cyan-400/10 animate-ping -z-10" style={{ animationDuration: '2s', animationDelay: '1s' }}></div>
-                            </>
-                            )}
+                            <div className={cn("absolute -inset-6 rounded-full blur-xl transition-all duration-500", isRecording ? "bg-red-500/20 animate-pulse" : "bg-cyan-500/10 group-hover:bg-cyan-500/20")}></div>
+                            <div className={cn("relative h-24 w-24 rounded-full flex items-center justify-center border-2 transition-all duration-500", isRecording ? "bg-red-500 border-red-400 shadow-xl shadow-red-500/20" : "bg-cyan-500/10 border-cyan-500/20")}>
+                                <Mic className={cn("h-10 w-10 transition-colors", isRecording ? "text-white" : "text-cyan-400")} />
+                            </div>
                         </div>
                     </button>
-                    <h2 className="text-xl font-semibold">Live Transcription</h2>
                     
-                    <div className="w-full h-40 bg-[#0D1B2A] rounded-lg p-4 overflow-y-auto border border-cyan-500/20">
-                        {isRecording ? <Waveform /> : <p className="text-cyan-200/50 text-center pt-8">Click the mic to start recording</p>}
-                        
-                        <div className="mt-4 space-y-1 text-sm font-mono">
-                            {transcript.map((line, i) => (
-                                <p key={i}>{line}</p>
-                            ))}
+                    <div className="w-full space-y-4">
+                        <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-cyan-300/60 text-left">Registry Transcription</h3>
+                        <div className="w-full h-48 bg-[#0D1B2A] rounded-2xl p-6 overflow-y-auto border border-cyan-500/10 shadow-inner">
+                            {isRecording ? <Waveform /> : transcript.length === 0 && <p className="text-cyan-200/30 text-center pt-12 text-xs font-bold uppercase tracking-widest">Awaiting Capture Signal</p>}
+                            <div className="mt-6 space-y-2 text-sm font-mono text-cyan-100/80 text-left">
+                                {transcript.map((line, i) => (
+                                    <p key={i} className="animate-in fade-in slide-in-from-left-2">> {line}</p>
+                                ))}
+                            </div>
                         </div>
                     </div>
                     
                     <div className="flex gap-4 w-full">
                         <Button 
-                            className="w-full bg-red-500 hover:bg-red-600 text-white" 
+                            className="flex-1 h-12 bg-red-500/10 border border-red-500/20 hover:bg-red-500 hover:text-white text-red-500 font-black uppercase text-[10px] tracking-widest rounded-xl transition-all" 
                             onClick={stopRecording} 
                             disabled={!isRecording}>
-                                Stop Recording
+                                Terminate
                         </Button>
-                        <Button variant="outline" className="w-full border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black" disabled={isRecording || transcript.length === 0}>Save Transcript</Button>
+                        <Button variant="outline" className="flex-1 h-12 border-cyan-500/20 text-cyan-400 hover:bg-cyan-400 hover:text-black font-black uppercase text-[10px] tracking-widest rounded-xl transition-all" disabled={isRecording || transcript.length === 0}>Save Node</Button>
                     </div>
                 </CardContent>
             </Card>
 
-            <Card className="bg-[#1B263B]/80 border-cyan-500/20 text-white">
-                <CardContent className="p-6">
-                     <div className="flex items-center gap-3 mb-4">
-                        <BrainCircuit className="h-8 w-8 text-cyan-400" />
-                        <h2 className="text-xl font-semibold">Cross-Examination AI</h2>
+            <Card className="bg-[#1B263B]/80 border-cyan-500/20 text-white rounded-[2.5rem] overflow-hidden shadow-2xl">
+                <CardHeader className="bg-cyan-500/5 border-b border-cyan-500/10 p-8">
+                    <div className="flex items-center gap-3">
+                        <BrainCircuit className="h-6 w-6 text-cyan-400" />
+                        <CardTitle className="text-xl font-black uppercase tracking-tight">Strategy Generator</CardTitle>
                     </div>
-                    <form action={formAction} className="space-y-4">
+                </CardHeader>
+                <CardContent className="p-8">
+                    <form action={formAction} className="space-y-6 text-left">
                         <div className="space-y-2">
-                            <Label htmlFor="witnessName" className="text-cyan-200">Witness Name</Label>
-                            <Input id="witnessName" name="witnessName" placeholder="e.g., John Doe" className="bg-[#0D1B2A] border-cyan-500/30 text-white placeholder:text-gray-500" />
+                            <Label htmlFor="witnessName" className="text-[10px] font-black uppercase tracking-widest text-cyan-300/60 ml-1">Witness Identity</Label>
+                            <Input id="witnessName" name="witnessName" placeholder="e.g., John Doe" className="h-12 bg-[#0D1B2A] border-cyan-500/20 text-white font-bold rounded-xl focus:border-cyan-400" />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="topic" className="text-cyan-200">Topic</Label>
-                            <Input id="topic" name="topic" placeholder="e.g., Alibi for October 31st" className="bg-[#0D1B2A] border-cyan-500/30 text-white placeholder:text-gray-500" />
+                            <Label htmlFor="topic" className="text-[10px] font-black uppercase tracking-widest text-cyan-300/60 ml-1">Forensic Topic</Label>
+                            <Input id="topic" name="topic" placeholder="e.g., Alibi for October 31st" className="h-12 bg-[#0D1B2A] border-cyan-500/20 text-white font-bold rounded-xl focus:border-cyan-400" />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="language" className="text-cyan-200 flex items-center gap-2"><Languages className="h-4 w-4" /> AI Response Language</Label>
+                            <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-widest text-cyan-300/60 ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Node</Label>
                             <Select name="language" defaultValue="English" required>
-                              <SelectTrigger className="bg-[#0D1B2A] border-cyan-500/30 text-white">
+                              <SelectTrigger className="h-12 bg-[#0D1B2A] border-cyan-500/20 text-white font-bold rounded-xl">
                                 <SelectValue />
                               </SelectTrigger>
-                              <SelectContent className="bg-[#1B263B] border-cyan-500/30 text-white">
-                                <SelectItem value="English">English</SelectItem>
-                                <SelectItem value="Hindi">Hindi</SelectItem>
+                              <SelectContent className="bg-[#1B263B] border-cyan-500/20 text-white rounded-xl">
+                                <SelectItem value="English" className="font-bold">English Protocol</SelectItem>
+                                <SelectItem value="Hindi" className="font-bold">Hindi Protocol</SelectItem>
                               </SelectContent>
                             </Select>
                         </div>
-                        <Button type="submit" disabled={isLoading} className="w-full bg-cyan-500 hover:bg-cyan-600 text-black font-bold mt-2">
-                            {isLoading ? <Loader2 className="animate-spin" /> : "Generate Questions"}
+                        <Button type="submit" disabled={isLoading} className="w-full h-14 bg-cyan-500 hover:bg-cyan-600 text-black font-black uppercase tracking-[0.2em] text-xs rounded-xl shadow-xl shadow-cyan-500/20 transition-all active:scale-95 mt-4">
+                            {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Initialize Question Node"}
                         </Button>
                     </form>
 
-                     {state.status === "error" && (
-                        <Alert variant="destructive" className="mt-4">
-                            <AlertTitle>Error</AlertTitle>
-                            <AlertDescription>{state.error}</AlertDescription>
-                        </Alert>
-                    )}
-
-                    {(state.status === 'success' && state.data) || state.status === 'loading' ? (
-                        <div className="mt-6 space-y-2">
-                            <h3 className="font-semibold text-cyan-300">Generated Questions:</h3>
-                            <div className="space-y-3 text-sm p-3 rounded-md bg-[#0D1B2A] border border-cyan-500/20 min-h-24">
-                               {isLoading && <p className="text-cyan-200/50">Generating...</p>}
-                               {state.data?.questions.map((q, i) => (
-                                   <div key={i} className="flex gap-2">
-                                       <span className="text-cyan-400">{i + 1}.</span>
-                                       <p>{q}</p>
-                                   </div>
-                               ))}
-                            </div>
-                        </div>
-                    ) : null}
+                    <AnimatePresence>
+                        {(state.status === 'success' && state.data) || state.status === 'loading' ? (
+                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-10 space-y-4 text-left">
+                                <h3 className="text-[10px] font-black uppercase tracking-widest text-cyan-300 flex items-center gap-2">
+                                    <ShieldCheck className="h-4 w-4" /> Generated Question Registry
+                                </h3>
+                                <div className="space-y-4 text-sm p-6 rounded-2xl bg-[#0D1B2A] border border-cyan-500/10 min-h-24 shadow-inner">
+                                   {isLoading && <p className="text-cyan-200/30 font-bold uppercase tracking-widest text-center py-8">Neural Engine Processing...</p>}
+                                   {state.data?.questions.map((q, i) => (
+                                       <div key={i} className="flex gap-4 group">
+                                           <span className="font-mono text-cyan-500 font-bold">{i + 1}.</span>
+                                           <p className="font-medium text-cyan-100/90 leading-relaxed group-hover:text-white transition-colors">{q}</p>
+                                       </div>
+                                   ))}
+                                </div>
+                            </motion.div>
+                        ) : null}
+                    </AnimatePresence>
                 </CardContent>
             </Card>
         </div>

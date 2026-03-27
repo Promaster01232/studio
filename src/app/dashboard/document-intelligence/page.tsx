@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useRef, useState } from "react";
@@ -8,10 +9,11 @@ import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb, Languages, FileText, ShieldCheck, Sparkles, CheckCircle2 } from "lucide-react";
+import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb, Languages, FileText, ShieldCheck, Sparkles, CheckCircle2, ArrowLeft } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
 import { AudioAssistant } from "@/components/audio-assistant";
+import Link from "next/link";
 
 const initialState: DocumentIntelligenceState = {
   status: "idle",
@@ -33,12 +35,17 @@ export default function DocumentIntelligencePage() {
   };
 
   return (
-    <div className="space-y-10 max-w-7xl mx-auto pb-20">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+    <div className="space-y-10 max-w-7xl mx-auto pb-20 px-2 sm:px-0">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
         <PageHeader
           title="Document Audit Node"
-          description="Institutional-grade AI intelligence for legal document risk assessment and clause extraction."
+          description="Institutional-grade AI intelligence for legal document risk assessment."
         />
+        <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
+          <Link href="/dashboard">
+            <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Terminal
+          </Link>
+        </Button>
       </motion.div>
 
       <div className="grid lg:grid-cols-12 gap-8 items-start">
@@ -53,9 +60,9 @@ export default function DocumentIntelligencePage() {
                   <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
                     <FileUp className="h-5 w-5" />
                   </div>
-                  <CardTitle className="text-2xl font-black tracking-tight leading-none">Ingestion Terminal</CardTitle>
+                  <CardTitle className="text-2xl font-black tracking-tight leading-none uppercase">Ingestion Terminal</CardTitle>
               </div>
-              <CardDescription className="text-xs font-medium opacity-70">Secured forensic upload node.</CardDescription>
+              <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Secured forensic upload node.</CardDescription>
             </CardHeader>
             <CardContent className="p-8">
               <form action={formAction} className="space-y-8">
@@ -131,8 +138,8 @@ export default function DocumentIntelligencePage() {
                   <div className="p-3 rounded-2xl bg-white/50 dark:bg-black/50 shadow-sm border border-primary/5 shrink-0 h-fit">
                     <Sparkles className="h-5 w-5 text-primary" />
                   </div>
-                  <div className="space-y-1">
-                      <p className="text-xs font-black text-primary uppercase tracking-widest">Accuracy Protocol</p>
+                  <div className="space-y-1 text-left">
+                      <p className="text-[10px] font-black text-primary uppercase tracking-widest">Accuracy Protocol</p>
                       <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
                           Our neural engine is optimized for 99.8% forensic accuracy in clause extraction and risk identification.
                       </p>
@@ -148,7 +155,7 @@ export default function DocumentIntelligencePage() {
         >
           <Card className="glass shadow-2xl min-h-[600px] flex flex-col rounded-[2.5rem] overflow-hidden border-primary/5">
             <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8 sm:p-10">
-              <div className="space-y-1">
+              <div className="space-y-1 text-left">
                 <div className="flex items-center gap-2 text-primary mb-1">
                     <Bot className="h-4 w-4" />
                     <span className="text-[10px] font-black uppercase tracking-[0.3em]">AI Intelligence Node</span>
@@ -194,7 +201,7 @@ export default function DocumentIntelligencePage() {
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
                         <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-3xl p-6">
                             <AlertTriangle className="h-6 w-6 mr-4" />
-                            <div className="space-y-1">
+                            <div className="space-y-1 text-left">
                                 <AlertTitle className="font-black uppercase tracking-widest text-xs">Node Critical Failure</AlertTitle>
                                 <AlertDescription className="text-sm font-medium leading-relaxed opacity-80">{state.error}</AlertDescription>
                             </div>
@@ -203,7 +210,7 @@ export default function DocumentIntelligencePage() {
                 )}
 
                 {state.status === "success" && state.data && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 pb-10">
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 pb-10 text-left">
                         <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10 shadow-inner group transition-all hover:bg-primary/10">
                             <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4 flex items-center gap-3">
                                 <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></div>
@@ -249,7 +256,7 @@ export default function DocumentIntelligencePage() {
                             <FileUp className="h-16 w-16 text-muted-foreground" />
                         </div>
                         <div className="space-y-2">
-                            <p className="font-black text-xl tracking-tighter">Awaiting Ingestion</p>
+                            <p className="font-black text-xl tracking-tighter uppercase">Awaiting Ingestion</p>
                             <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto leading-relaxed">
                                 Upload an institutional legal document to initialize the neural forensic scanning protocol.
                             </p>

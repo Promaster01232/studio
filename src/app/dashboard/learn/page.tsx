@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Search, Bookmark, ShieldCheck } from "lucide-react";
+import { ArrowRight, Search, Bookmark, ShieldCheck, ArrowLeft } from "lucide-react";
 import { topics } from "./data";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -30,11 +30,16 @@ export default function LearnPage() {
 
   return (
     <div className="space-y-10 max-w-7xl mx-auto pb-20 px-2 sm:px-0 text-left">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
         <PageHeader
           title="Institutional Knowledge Hub"
-          description="Access a massive, high-fidelity registry of Indian laws, constitutional rights, and statutory forensic guides."
+          description="Access a massive, high-fidelity registry of Indian laws and statutory guides."
         />
+        <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
+          <Link href="/dashboard">
+            <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Dashboard
+          </Link>
+        </Button>
       </motion.div>
 
       <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between border-b border-primary/5 pb-8">
