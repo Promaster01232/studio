@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
@@ -16,6 +17,11 @@ export const metadata: Metadata = {
   keywords: ["AI Legal Assistant India", "Forensic Case Auditor", "Legal Document Risk Assessment", "Indian Law AI", "Legal Notice Generator India", "Nyaya Sahayak", "Online FIR Guide India", "Legal Jargon Simplifier", "Indian Court Assistant"],
   authors: [{ name: "IdeaSpark Institutional Tech" }],
   viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+  referrer: "origin-when-cross-origin",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
   alternates: {
     canonical: "https://nyayasahayak.in",
   },
@@ -77,9 +83,9 @@ export default function RootLayout({
       "addressCountry": "IN"
     },
     "sameAs": [
-      "https://facebook.com/nyayasahayak",
+      "https://facebook.com/profile.php?id=61578664907514",
       "https://twitter.com/nyayasahayak",
-      "https://linkedin.com/company/nyayasahayak"
+      "https://instagram.com/nyaya_sahayak/"
     ]
   };
 

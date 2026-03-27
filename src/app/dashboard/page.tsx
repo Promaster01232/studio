@@ -265,7 +265,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl shadow-2xl glass border-primary/10">
-                                    {(isAuthor || isAdmin) ? (
+                                    {isAuthor ? (
                                         <DropdownMenuItem onSelect={handleDelete} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                             <Trash2 className="h-3.5 w-3.5" /> 
                                             <span>Purge Identity Record</span>
