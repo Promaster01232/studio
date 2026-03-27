@@ -250,7 +250,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                 {(isAuthor || isAdmin) ? (
                                     <DropdownMenuItem onSelect={handleDeletePost} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                         <Trash2 className="h-3.5 w-3.5" /> 
-                                        <span>Purge Identity Node</span>
+                                        <span>Purge Identity Record</span>
                                     </DropdownMenuItem>
                                 ) : (
                                     <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
@@ -347,7 +347,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                     
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-muted-foreground hover:bg-primary/10">
                                 <Share2 className="h-3.5 w-3.5 text-muted-foreground" />
                             </Button>
                         </DropdownMenuTrigger>

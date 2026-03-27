@@ -516,7 +516,7 @@ export default function UserPublicProfilePage(props: {
                                                             {canDelete ? (
                                                                 <DropdownMenuItem onSelect={() => handleDeletePost(post.id)} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                                                     <Trash2 className="h-3.5 w-3.5" /> 
-                                                                    <span>Purge Identity Node</span>
+                                                                    <span>Purge Identity Record</span>
                                                                 </DropdownMenuItem>
                                                             ) : (
                                                                 <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
