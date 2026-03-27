@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -541,8 +540,8 @@ export default function DashboardHomePage() {
                   <SectionHeader icon={Library} sector="status: ready">Statutory registry</SectionHeader>
                   <div className="space-y-3.5">
                       {[
-                        { href: "/dashboard/learn", icon: Library, title: "Knowledge hub", label: "Lern" },
-                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case tracker", label: "Case" },
+                        { href: "/dashboard/learn", icon: Library, title: "Knowledge hub", label: "learn" },
+                        { href: "/dashboard/my-cases", icon: Landmark, title: "Case tracker", label: "case" },
                       ].map((item) => (
                         <Link key={item.href} href={item.href} className="block group" onMouseEnter={() => playSound('hover')}>
                             <Card className="glass p-4 rounded-2xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between group-hover:scale-[1.01] group-active:scale-[0.99] shadow-sm">
