@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -37,6 +38,7 @@ import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -83,8 +85,8 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
 
             <div className="flex items-center gap-3">
                 {isLimited && (
-                    <Button asChild size="sm" variant="outline" className="hidden lg:flex h-10 px-5 rounded-xl border-primary/20 text-primary hover:bg-primary/5 font-black text-[9px] uppercase tracking-widest gap-2 active:scale-95 transition-all group overflow-hidden">
-                        <Link href="/dashboard/billing" className="relative">
+                    <Button asChild size="sm" variant="outline" className="hidden lg:flex h-10 px-5 rounded-xl border-primary/20 text-primary hover:bg-primary/5 font-black text-[9px] uppercase tracking-widest gap-2 active:scale-95 transition-all group overflow-hidden relative">
+                        <Link href="/dashboard/billing">
                             <span className="relative z-10 flex items-center gap-2">
                                 <Zap className="h-3.5 w-3.5 animate-pulse" />
                                 Upgrade Clearance
@@ -296,7 +298,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           {isLimited && !profileLoading && (
             <div className="px-4 py-6 group-data-[collapsible=icon]:hidden">
                 <Card className="bg-primary/5 border-primary/10 rounded-[1.5rem] overflow-hidden group/upgrade hover:border-primary/30 transition-all shadow-lg">
-                    <div className="p-5 space-y-4">
+                    <div className="p-5 space-y-4 text-left">
                         <div className="flex items-center gap-3">
                             <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-inner">
                                 <Zap className="h-4 w-4 animate-pulse" />

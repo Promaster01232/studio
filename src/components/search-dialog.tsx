@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Card } from "./ui/card";
 
 const suggestions = [
     { name: "Narrate Problem", type: "AI Tool", icon: Zap, href: "/dashboard/narrate", color: "text-amber-500", bg: "bg-amber-500/10" },
@@ -26,7 +27,7 @@ const suggestions = [
 
 const institutionalKnowledge = [
     { 
-        keywords: ["ceo", "piyush", "founder", "pishush singh"], 
+        keywords: ["ceo", "piyush", "founder", "piyush singh"], 
         title: "Piyush Singh", 
         role: "CEO & Co-founder", 
         bio: "Steers the strategic trajectory of Nyaya Sahayak, focusing on institutional growth and the democratization of elite legal tools.",
@@ -96,7 +97,7 @@ export function SearchDialog({ children }: { children: ReactNode }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl p-0 overflow-hidden border-none shadow-[0_0_100px_rgba(0,0,0,0.2)] rounded-[2rem] bg-card">
+      <DialogContent className="sm:max-w-2xl p-0 overflow-hidden border-none shadow-[0_0_100px_rgba(0,0,0,0.2)] rounded-[2rem] bg-card text-left">
         <DialogHeader className="sr-only">
           <DialogTitle>Institutional Search Hub</DialogTitle>
           <DialogDescription>Search for legal tools, resources, or tracked cases within the nyayasahayak.in ecosystem.</DialogDescription>

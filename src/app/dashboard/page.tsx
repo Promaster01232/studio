@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,7 @@ import {
   addDoc, 
   serverTimestamp,
   getDoc,
+  where
 } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -472,7 +474,7 @@ export default function DashboardHomePage() {
     <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
         <MotionWrapper>
           <Card className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
-              <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none">
+              <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none text-left">
                   <div className="bg-white rounded-full p-10 grayscale">
                     <Logo className="h-56 w-56 border-none p-0 shadow-none" />
                   </div>
@@ -493,12 +495,12 @@ export default function DashboardHomePage() {
                             </Badge>
                           )}
                       </div>
-                      <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
+                      <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground text-left">
                           Greetings, <br />
                           <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Nyaya {text}</span>
                       </h1>
                   </div>
-                  <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed">
+                  <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed text-left">
                       {isYearly ? "You have absolute institutional authority over all forensic nodes. Your yearly protocol provides maximum-fidelity legal intelligence." : 
                        isMonthly ? "Unlimited forensic clearance is active. Accessing full neural capacity for high-frequency legal auditing." :
                        "Access precision AI nodes for statutory auditing within the Indian judicial ecosystem. Standard operation protocols active."}
@@ -553,7 +555,7 @@ export default function DashboardHomePage() {
           <div className="lg:col-span-4 space-y-10">
               <section>
                   <SectionHeader icon={CreditCard} sector={isLimited ? "Status: Restricted" : "Status: Absolute"}>Statutory Audit</SectionHeader>
-                  <Card className="glass p-6 rounded-[2rem] border-primary/10 shadow-lg relative overflow-hidden">
+                  <Card className="glass p-6 rounded-[2rem] border-primary/10 shadow-lg relative overflow-hidden text-left">
                       <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
                           <Zap className="h-16 w-16 text-primary" />
                       </div>
@@ -574,8 +576,8 @@ export default function DashboardHomePage() {
                           {isLimited ? (
                             <Button asChild className="w-full h-12 font-black uppercase tracking-widest text-[9px] rounded-xl shadow-lg shadow-primary/20 transition-all">
                                 <Link href="/dashboard/billing">
-                                  <span className="hidden sm:inline">Upgrade My Clearance</span>
-                                  <span className="sm:hidden">Upgrade Tier</span>
+                                  <span className="hidden sm:inline">Upgrade Now</span>
+                                  <span className="sm:hidden">Upgrade Now</span>
                                 </Link>
                             </Button>
                           ) : (
@@ -622,7 +624,7 @@ export default function DashboardHomePage() {
                       ].map((item) => (
                         <Link key={item.href} href={item.href} className="block group" onMouseEnter={() => playSound('hover')}>
                             <Card className="glass p-4 rounded-2xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between group-hover:scale-[1.01] group-active:scale-[0.99] shadow-sm">
-                                <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-4 text-left">
                                     <div className="p-2 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
                                         <item.icon className="h-4 w-4" />
                                     </div>
