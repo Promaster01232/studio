@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -35,7 +36,8 @@ import {
   Send,
   CreditCard,
   Layers,
-  BarChart3
+  BarChart3,
+  RefreshCw
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -321,10 +323,10 @@ export default function ManagementConsolePage() {
         const notifSnap = await getDocs(notifQuery);
         notifSnap.docs.forEach(d => batch.delete(d.ref));
 
-        // Execute Firestore atomic batch
+        // Execute Firestore atomic batch - Real-time delete in Firestore
         await batch.commit();
 
-        // 4. Delete from RTDB (Real-time sync)
+        // 4. Delete from RTDB (Real-time sync) - Real-time delete in RTDB
         await remove(ref(rtdb, `users/${userToPurge.uid}`)).catch(() => {});
         await remove(ref(rtdb, `advocates/${userToPurge.uid}`)).catch(() => {});
 
@@ -363,6 +365,10 @@ export default function ManagementConsolePage() {
     <div className="max-w-7xl mx-auto space-y-8 pb-20 px-2 sm:px-6 text-left">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1">
+          <div className="flex items-center gap-2 text-primary mb-1">
+            <RefreshCw className="h-4 w-4 animate-spin-slow" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Live Firebase Registry</span>
+          </div>
           <h1 className="text-3xl font-black tracking-tighter font-headline text-foreground uppercase">Management Terminal</h1>
           <p className="text-sm text-muted-foreground font-medium">Institutional oversight of nyayasahayak.in records and identity nodes.</p>
         </div>
@@ -457,7 +463,7 @@ export default function ManagementConsolePage() {
                                         <div className="flex flex-col items-center gap-1">
                                             <span className="font-mono font-black text-xs">{usage} ops</span>
                                             <div className="w-12 h-1.5 bg-muted rounded-full overflow-hidden">
-                                                <div className="h-full bg-primary" style={{ width: `${Math.min(100, (usage / 20) * 100)}%` }} />
+                                                <div className="h-full bg-primary" style={{ width: `${Math.min(100, (usage / (user.subscriptionType === 'pro_20' ? 20 : 5)) * 100)}%` }} />
                                             </div>
                                         </div>
                                     </TableCell>
@@ -531,7 +537,7 @@ export default function ManagementConsolePage() {
                   <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4"><ShieldAlert className="h-10 w-10 text-destructive animate-pulse" /></div>
                   <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Permanent Purge</AlertDialogTitle>
                   <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
-                      Terminal deactivation of node <strong>{userToPurge?.firstName}</strong>. This forensic erasure is 100% permanent and will remove all profile data, community transmissions, and registry logs.
+                      Terminal deactivation of node <strong>{userToPurge?.firstName}</strong>. This forensic erasure is 100% permanent and will remove all profile data, community transmissions, and registry logs from both Firestore and Real-time Database.
                   </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
