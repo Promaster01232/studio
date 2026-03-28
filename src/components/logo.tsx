@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 
 export function Logo({ className, imageClassName, priority = false }: { className?: string, imageClassName?: string, priority?: boolean }) {
   return (
