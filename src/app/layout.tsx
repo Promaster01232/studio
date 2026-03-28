@@ -104,7 +104,6 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>
-        {/* @ts-ignore */}
         <amp-auto-ads type="adsense" data-ad-client="ca-pub-3991323698767154"></amp-auto-ads>
         <ThemeProvider>
           <LanguageProvider>

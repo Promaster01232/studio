@@ -145,7 +145,7 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
                   className="h-11 px-4 hover:bg-primary/5"
                 >
                   <item.icon className="h-5 w-5" />
-                  <span className="font-black flex-1 lowercase first-letter:uppercase">{item.title}</span>
+                  <span className="font-black flex-1 lowercase first-letter:uppercase text-left">{item.title}</span>
                   <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>

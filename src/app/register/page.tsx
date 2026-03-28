@@ -22,6 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
+import { sendVerificationEmailAction } from "./email-action";
 
 export default function RegisterPage() {
   const auth = useAuth();
@@ -81,7 +82,7 @@ export default function RegisterPage() {
     try {
       setIsValidating(true);
 
-      // Forensic Audit Protocol: AI Check exclusively for Email Authenticity
+      // AI check only email authenticity as requested
       const emailValidation = await verifyEmailAuthenticity({ email });
       if (!emailValidation.isAuthentic) {
         setEmailStatus('invalid');
@@ -100,9 +101,9 @@ export default function RegisterPage() {
       );
       const user = userCredential.user;
 
-      await sendEmailVerification(user).catch(err => {
-          console.warn("Auto-verification email failed:", err.message);
-      });
+      // Initialize Gmail API custom verification structure
+      const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+      await sendVerificationEmailAction(email, verificationCode);
 
       const userProfile = {
         uid: user.uid,
@@ -127,7 +128,7 @@ export default function RegisterPage() {
 
       toast({
           title: "Registry Enrollment Active",
-          description: "Welcome! A verification link has been dispatched to your inbox.",
+          description: "Welcome! Identity link and custom verification node dispatched.",
       });
       router.push("/dashboard");
 
@@ -257,7 +258,7 @@ export default function RegisterPage() {
               </div>
 
               {validationError && (
-                  <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] font-black text-red-600 bg-red-500/10 p-2 rounded-lg border border-red-500/20">
+                  <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] font-black text-red-600 bg-red-500/10 p-2 rounded-lg border border-red-500/20 text-left">
                       AI FORENSIC ALERT: {validationError}
                   </motion.p>
               )}

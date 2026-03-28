@@ -113,7 +113,7 @@ export default function WelcomePage() {
                   <span className="animate-pulse ml-1 text-primary">|</span>
                 </h1>
                 
-                <div className="max-w-2xl mx-auto space-y-8">
+                <div className="max-w-2xl mx-auto space-y-8 mt-10">
                     <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed text-center sm:text-left">
                         Nyaya Sahayak represents the definitive leap forward in AI-powered legal empowerment for the Indian citizenry. In a landscape where the judicial system is often perceived as a dense thicket of complex statutes and intimidating procedural protocols, our platform serves as a high-fidelity navigational beacon. We have engineered this ecosystem to bridge the gap between statutory complexity and the fundamental rights of every individual, providing mathematically precise forensic tools that were previously reserved for elite legal institutions.
                     </p>
@@ -128,7 +128,7 @@ export default function WelcomePage() {
                     <div className="space-y-4">
                         <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground border-l-4 border-accent pl-4">Document Risk Scanner</h2>
                         <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                            Furthermore, our Document Risk Scanner provides an institutional-grade audit of legal instruments. Whether it is a legal notice, a contract, or an FIR application, the AI node performs a comprehensive forensic scan to identify non-compliance markers, hidden liabilities, and critical procedural deadlines. By automating the risk assessment process, we ensure that no citizen is caught off-guard by the fine print of legal documentation. The system operates on a zero-trust architecture, ensuring that your sensitive data nodes are processed in isolated, transient environments.
+                            Furthermore, our Document Risk Scanner provides an institutional-grade audit of legal instruments. Whether it is a legal notice, a contract, or an FIR application, the AI node performs a comprehensive forensic scan to identify non-compliance markers, hidden liabilities, and critical procedural deadlines. By automating the risk assessment process, we ensure that no citizen is caught off-guard by the fine print of legal documentation. The system operates on a zero-trust architecture, ensuring that your sensitive data nodes are processed in isolated, transient environments within our secure judicial cloud.
                         </p>
                     </div>
 
@@ -156,10 +156,10 @@ export default function WelcomePage() {
                     <p className="text-[8px] font-black text-primary/40 uppercase tracking-[0.4em]">Secure Institutional Access Active</p>
                   </div>
                 ) : (
-                  <Button disabled className="w-full h-14 rounded-2xl bg-primary/20 text-white border-primary/10">
-                    <Loader2 className="h-4 w-4 animate-spin opacity-40 mr-2" /> 
+                  <div className="flex flex-col items-center gap-3">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary opacity-40" />
                     <span className="text-[8px] uppercase tracking-[0.3em] font-black opacity-40">Syncing Registry...</span>
-                  </Button>
+                  </div>
                 )}
               </div>
             </CardContent>
@@ -227,7 +227,7 @@ export default function WelcomePage() {
                     </Badge>
                     <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter text-foreground">Official <span className="text-primary italic">Judicial Resources</span></h2>
                 </div>
-                <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto pb-20">
                     <a href="https://services.ecourts.gov.in/" target="_blank" rel="noopener noreferrer" className="group">
                         <Card className="glass p-6 rounded-2xl border-primary/5 hover:border-primary/30 transition-all flex items-center justify-between shadow-lg">
                             <div className="flex items-center gap-4">

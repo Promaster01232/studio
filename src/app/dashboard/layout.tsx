@@ -152,7 +152,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               const data = userDoc.data() as any;
               setUserProfile(data);
               
-              // Smart Sync Protocol: Only perform write if forensic mismatch is detected
               if (data.emailVerified !== user.emailVerified) {
                   updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(() => {});
               }
