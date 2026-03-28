@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -89,7 +88,7 @@ export default function WelcomePage() {
             >
               <div className="relative group cursor-pointer">
                 <div className="absolute -inset-8 sm:-inset-16 rounded-full bg-gradient-to-tr from-[#FF9933]/30 via-[#000080]/15 to-[#128807]/30 blur-3xl animate-pulse group-hover:scale-125 transition-transform duration-1000"></div>
-                <Logo className="h-24 w-24 sm:h-48 sm:w-48 relative z-10 shadow-[0_40px_80px_rgba(0,0,0,0.25)] bg-white border-none p-2 sm:p-4" priority />
+                <Logo className="h-32 w-32 sm:h-48 sm:w-48 relative z-10 shadow-[0_40px_80px_rgba(0,0,0,0.25)] bg-white border-none p-2 sm:p-4" priority />
               </div>
             </motion.div>
 
@@ -97,7 +96,7 @@ export default function WelcomePage() {
               <Badge variant="outline" className="h-8 sm:h-12 px-6 sm:px-10 rounded-full border-primary/20 text-primary bg-primary/5 font-black uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[8px] sm:text-[11px] animate-in fade-in slide-in-from-bottom-2 duration-1000">
                 Institutional Terminal // Alpha v4.2
               </Badge>
-              <h1 className="text-4xl sm:text-7xl lg:text-[9rem] font-black font-headline tracking-tighter leading-[0.9] sm:leading-[0.85] text-foreground max-w-7xl mx-auto">
+              <h1 className="text-5xl sm:text-8xl lg:text-[9rem] font-black font-headline tracking-tighter leading-[0.9] sm:leading-[0.85] text-foreground max-w-7xl mx-auto">
                 Elite AI for <br/>
                 <span className="bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">
                   Indian Citizens.
@@ -116,7 +115,7 @@ export default function WelcomePage() {
                 <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
                   <Button 
                     asChild 
-                    className="h-14 sm:h-16 w-full sm:w-auto min-w-[240px] px-8 sm:px-12 text-sm sm:text-base font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 rounded-xl sm:rounded-2xl transition-all group overflow-hidden relative"
+                    className="h-14 sm:h-16 w-full sm:w-auto min-w-[200px] px-8 sm:px-12 text-sm sm:text-base font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 rounded-xl sm:rounded-2xl transition-all group overflow-hidden relative"
                   >
                     <Link href="/dashboard">
                       <span className="relative z-10 flex items-center gap-3">
@@ -134,7 +133,7 @@ export default function WelcomePage() {
                   </div>
                 </div>
               ) : (
-                <div className="h-14 sm:h-16 w-full sm:w-[240px] flex items-center justify-center gap-3 px-8 bg-muted/20 rounded-xl sm:rounded-2xl border border-primary/10">
+                <div className="h-14 sm:h-16 w-full sm:w-[200px] flex items-center justify-center gap-3 px-8 bg-muted/20 rounded-xl sm:rounded-2xl border border-primary/10">
                   <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin text-primary opacity-40" />
                   <span className="text-[9px] sm:text-[11px] font-black uppercase tracking-[0.3em] opacity-40">Syncing...</span>
                 </div>

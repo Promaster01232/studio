@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -55,9 +54,9 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
             "sticky top-0 z-[40] flex h-16 items-center gap-4 border-b px-4 sm:px-8 transition-all",
             "bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60"
         )}>
-            <div className="flex items-center gap-3 md:hidden">
+            <div className="flex items-center gap-2 md:hidden">
                 <SidebarTrigger className="h-10 w-10 rounded-xl hover:bg-primary/5 active:scale-95 transition-all" />
-                <Logo className="h-8 w-8 p-0" />
+                <Logo className="h-10 w-10 p-0 shadow-none border-none" />
             </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
@@ -83,7 +82,7 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
                 )}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
                 {isLimited && (
                     <Button asChild size="sm" variant="outline" className="hidden lg:flex h-10 px-5 rounded-xl border-primary/20 text-primary hover:bg-primary/5 font-black text-[9px] uppercase tracking-widest gap-2 active:scale-95 transition-all group overflow-hidden relative">
                         <Link href="/dashboard/billing">
@@ -104,26 +103,26 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
                 {!userProfile?.isBlocked && (
                     <>
                         <SosDialog>
-                            <Button variant="destructive" size="sm" className="font-black gap-2 animate-pulse px-5 h-11 text-[9px] rounded-xl shadow-xl shadow-destructive/20 active:scale-95 transition-all">
-                                <ShieldAlert className="h-4 w-4" />
-                                <span className="hidden sm:inline tracking-[0.2em] uppercase">Emergency SOS</span>
+                            <Button variant="destructive" size="sm" className="font-black gap-2 animate-pulse px-3 sm:px-5 h-10 sm:h-11 text-[8px] sm:text-[9px] rounded-xl shadow-xl shadow-destructive/20 active:scale-95 transition-all">
+                                <ShieldAlert className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                <span className="hidden xs:inline tracking-[0.2em] uppercase">Emergency SOS</span>
                             </Button>
                         </SosDialog>
                         
-                        <div className="flex items-center gap-2 border-l pl-4 ml-1">
+                        <div className="flex items-center gap-1 sm:gap-2 border-l pl-2 sm:pl-4 ml-1">
                             <Button 
                                 variant="ghost" 
                                 size="icon" 
-                                className="h-11 w-11 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all active:scale-95 relative group"
+                                className="h-10 w-10 sm:h-11 sm:w-11 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all active:scale-95 relative group"
                                 asChild
                             >
                                 <Link href="/dashboard/notifications">
-                                    <Bell className="h-5 w-5 group-hover:rotate-12 transition-transform" />
+                                    <Bell className="h-4.5 w-4.5 sm:h-5 sm:w-5 group-hover:rotate-12 transition-transform" />
                                     {unreadCount > 0 && (
                                         <motion.span 
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
-                                            className="absolute top-2.5 right-2.5 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-background shadow-sm"
+                                            className="absolute top-2.5 right-2.5 h-2 w-2 sm:h-2.5 sm:w-2.5 bg-red-500 rounded-full border-2 border-background shadow-sm"
                                         />
                                     )}
                                 </Link>
