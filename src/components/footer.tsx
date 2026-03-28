@@ -1,6 +1,6 @@
 
 import { Logo } from "@/components/logo";
-import { ShieldCheck, FileText, Cookie, AlertCircle, Info, Mail, Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
+import { ShieldCheck, FileText, Cookie, AlertCircle, Info, Mail, Facebook, Twitter, Instagram, Youtube, Linkedin, CreditCard } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {
@@ -62,14 +62,14 @@ export function Footer() {
 
             <div className="space-y-6">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary border-b border-primary/10 pb-2 w-fit mx-auto sm:mx-0">
-                Security Protocols
+                Security & Payments
               </h3>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: "Privacy", href: "/privacy", icon: ShieldCheck },
                   { label: "Terms", href: "/terms", icon: FileText },
-                  { label: "Cookies", href: "/cookie-policy", icon: Cookie },
-                  { label: "Disclaim", href: "/disclaimer", icon: AlertCircle }
+                  { label: "Refunds", href: "/refund-policy", icon: CreditCard },
+                  { label: "Cookies", href: "/cookie-policy", icon: Cookie }
                 ].map((item) => (
                   <Link key={item.label} href={item.href} className="group flex items-center gap-3 px-4 py-3 rounded-2xl glass hover:bg-primary/5 hover:border-primary/20 transition-all text-[11px] font-black uppercase tracking-widest text-foreground/70 active:scale-95">
                     <div className="p-1.5 rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform shrink-0 shadow-sm">

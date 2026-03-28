@@ -11,6 +11,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Sparkles, Activity, Zap, CreditCard } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
@@ -38,7 +39,6 @@ import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card } from "@/components/ui/card";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -48,7 +48,7 @@ const ADMIN_EMAILS = [
 ];
 
 function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: number }) {
-    const isLimited = !userProfile?.subscriptionType?.includes('unlimited');
+    const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited');
     
     return (
         <header className={cn(
@@ -204,7 +204,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         setProfileLoading(false);
         setUserProfile(null);
         setUnreadCount(0);
-        if (!['/login', '/register', '/', '/about', '/terms', '/privacy', '/cookie-policy', '/disclaimer', '/contact'].includes(pathname)) {
+        if (!['/login', '/register', '/', '/about', '/terms', '/privacy', '/cookie-policy', '/disclaimer', '/contact', '/refund-policy'].includes(pathname)) {
             router.replace('/login');
         }
       }
@@ -227,7 +227,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
   const isSuspended = userProfile?.isBlocked === true;
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
-  const isLimited = !userProfile?.subscriptionType?.includes('unlimited');
+  const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited');
 
   if (showContent && isSuspended) {
       return (
