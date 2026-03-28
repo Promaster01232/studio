@@ -98,10 +98,10 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>
+        <amp-auto-ads type="adsense" data-ad-client="ca-pub-3991323698767154"></amp-auto-ads>
         <ThemeProvider>
           <LanguageProvider>
             <FirebaseClientProvider>
-              <amp-auto-ads type="adsense" data-ad-client="ca-pub-3991323698767154"></amp-auto-ads>
               {children}
               <CookieBanner />
             </FirebaseClientProvider>
