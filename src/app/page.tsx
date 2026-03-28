@@ -116,40 +116,40 @@ export default function WelcomePage() {
                 <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
                   <Button 
                     asChild 
-                    className="h-20 sm:h-28 w-full sm:w-[400px] px-10 sm:px-20 text-base sm:text-lg font-black uppercase tracking-[0.25em] shadow-[0_25px_60px_rgba(var(--primary),0.35)] rounded-[1.5rem] sm:rounded-[2.5rem] transition-all group overflow-hidden relative"
+                    className="h-14 sm:h-16 w-full sm:w-auto min-w-[240px] px-8 sm:px-12 text-sm sm:text-base font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 rounded-xl sm:rounded-2xl transition-all group overflow-hidden relative"
                   >
                     <Link href="/dashboard">
-                      <span className="relative z-10 flex items-center gap-4">
+                      <span className="relative z-10 flex items-center gap-3">
                         <span className="hidden sm:inline">Initialize Dashboard</span>
                         <span className="sm:hidden">Start Hub</span>
-                        <ArrowRight className="h-5 w-5 sm:h-8 sm:w-8 transition-transform group-hover:translate-x-3" />
+                        <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-2" />
                       </span>
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                     </Link>
                   </Button>
-                  <div className="flex items-center gap-2 text-primary/60 font-black text-[8px] sm:text-[10px] uppercase tracking-widest animate-pulse">
-                    <ShieldCheck className="h-3 w-3 sm:h-4 w-4" />
+                  <div className="flex items-center gap-2 text-primary/60 font-black text-[8px] sm:text-[9px] uppercase tracking-widest animate-pulse">
+                    <ShieldCheck className="h-3 w-3 sm:h-3.5 w-3.5" />
                     <span className="hidden sm:inline">Secure Institutional Access Active</span>
                     <span className="sm:hidden">Secured Node</span>
                   </div>
                 </div>
               ) : (
-                <div className="h-20 sm:h-28 w-full sm:w-[400px] flex items-center justify-center gap-4 px-10 bg-muted/20 rounded-[1.5rem] sm:rounded-[2.5rem] border border-primary/10">
-                  <Loader2 className="h-6 w-6 sm:h-10 sm:w-10 animate-spin text-primary opacity-40" />
-                  <span className="text-[10px] sm:text-[14px] font-black uppercase tracking-[0.3em] opacity-40">Syncing Registry...</span>
+                <div className="h-14 sm:h-16 w-full sm:w-[240px] flex items-center justify-center gap-3 px-8 bg-muted/20 rounded-xl sm:rounded-2xl border border-primary/10">
+                  <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin text-primary opacity-40" />
+                  <span className="text-[9px] sm:text-[11px] font-black uppercase tracking-[0.3em] opacity-40">Syncing...</span>
                 </div>
               )}
               
               <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
-                <Button variant="ghost" className="h-20 sm:h-28 w-full sm:w-auto px-8 sm:px-16 text-sm sm:text-lg font-black uppercase tracking-widest rounded-[1.5rem] sm:rounded-[2.5rem] border border-primary/10 hover:bg-primary/5 transition-all group" asChild>
-                  <Link href="/about" className="flex items-center gap-4">
+                <Button variant="ghost" className="h-14 sm:h-16 w-full sm:w-auto px-8 sm:px-12 text-sm sm:text-base font-black uppercase tracking-widest rounded-xl sm:rounded-2xl border border-primary/10 hover:bg-primary/5 transition-all group" asChild>
+                  <Link href="/about" className="flex items-center gap-3">
                     <span className="hidden sm:inline">Explore Mandate</span>
                     <span className="sm:hidden">Explore</span>
-                    <ChevronRight className="h-5 w-5 opacity-40 group-hover:opacity-100 transition-all" />
+                    <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 opacity-40 group-hover:opacity-100 transition-all" />
                   </Link>
                 </Button>
-                <div className="flex items-center gap-2 text-muted-foreground/40 font-black text-[8px] sm:text-[10px] uppercase tracking-widest">
-                  <Globe className="h-3 w-3 sm:h-4 w-4" />
+                <div className="flex items-center gap-2 text-muted-foreground/40 font-black text-[8px] sm:text-[9px] uppercase tracking-widest">
+                  <Globe className="h-3 w-3 sm:h-3.5 w-3.5" />
                   <span className="hidden sm:inline">Open Network Registry</span>
                   <span className="sm:hidden">Open Registry</span>
                 </div>
