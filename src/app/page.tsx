@@ -109,32 +109,51 @@ export default function WelcomePage() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 pt-4 sm:pt-10 px-4">
-            {!loading ? (
-              <Button 
-                asChild 
-                className="h-20 sm:h-28 w-full sm:w-auto px-10 sm:px-20 text-sm sm:text-lg font-black uppercase tracking-[0.25em] shadow-[0_25px_60px_rgba(var(--primary),0.35)] rounded-[1.5rem] sm:rounded-[2.5rem] active:scale-95 transition-all group overflow-hidden relative"
-              >
-                <Link href="/dashboard">
-                  <span className="relative z-10 flex items-center gap-4">
-                    Initialize Dashboard
-                    <ArrowRight className="h-5 w-5 sm:h-8 sm:w-8 transition-transform group-hover:translate-x-3" />
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                </Link>
-              </Button>
-            ) : (
-              <div className="h-20 sm:h-28 w-full sm:w-auto flex items-center gap-4 px-10 sm:px-20 bg-muted/20 rounded-[1.5rem] sm:rounded-[2.5rem] border border-primary/10">
-                <Loader2 className="h-6 w-6 sm:h-10 sm:w-10 animate-spin text-primary opacity-40" />
-                <span className="text-[10px] sm:text-[14px] font-black uppercase tracking-[0.3em] opacity-40">Synchronizing Registry...</span>
+          <div className="flex flex-col items-center justify-center gap-6 sm:gap-10 pt-4 sm:pt-10 px-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 w-full sm:w-auto">
+              {!loading ? (
+                <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
+                  <Button 
+                    asChild 
+                    className="h-20 sm:h-28 w-full sm:w-[400px] px-10 sm:px-20 text-base sm:text-lg font-black uppercase tracking-[0.25em] shadow-[0_25px_60px_rgba(var(--primary),0.35)] rounded-[1.5rem] sm:rounded-[2.5rem] transition-all group overflow-hidden relative"
+                  >
+                    <Link href="/dashboard">
+                      <span className="relative z-10 flex items-center gap-4">
+                        <span className="hidden sm:inline">Initialize Dashboard</span>
+                        <span className="sm:hidden">Start Hub</span>
+                        <ArrowRight className="h-5 w-5 sm:h-8 sm:w-8 transition-transform group-hover:translate-x-3" />
+                      </span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                    </Link>
+                  </Button>
+                  <div className="flex items-center gap-2 text-primary/60 font-black text-[8px] sm:text-[10px] uppercase tracking-widest animate-pulse">
+                    <ShieldCheck className="h-3 w-3 sm:h-4 w-4" />
+                    <span className="hidden sm:inline">Secure Institutional Access Active</span>
+                    <span className="sm:hidden">Secured Node</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="h-20 sm:h-28 w-full sm:w-[400px] flex items-center justify-center gap-4 px-10 bg-muted/20 rounded-[1.5rem] sm:rounded-[2.5rem] border border-primary/10">
+                  <Loader2 className="h-6 w-6 sm:h-10 sm:w-10 animate-spin text-primary opacity-40" />
+                  <span className="text-[10px] sm:text-[14px] font-black uppercase tracking-[0.3em] opacity-40">Syncing Registry...</span>
+                </div>
+              )}
+              
+              <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
+                <Button variant="ghost" className="h-20 sm:h-28 w-full sm:w-auto px-8 sm:px-16 text-sm sm:text-lg font-black uppercase tracking-widest rounded-[1.5rem] sm:rounded-[2.5rem] border border-primary/10 hover:bg-primary/5 transition-all group" asChild>
+                  <Link href="/about" className="flex items-center gap-4">
+                    <span className="hidden sm:inline">Explore Mandate</span>
+                    <span className="sm:hidden">Explore</span>
+                    <ChevronRight className="h-5 w-5 opacity-40 group-hover:opacity-100 transition-all" />
+                  </Link>
+                </Button>
+                <div className="flex items-center gap-2 text-muted-foreground/40 font-black text-[8px] sm:text-[10px] uppercase tracking-widest">
+                  <Globe className="h-3 w-3 sm:h-4 w-4" />
+                  <span className="hidden sm:inline">Open Network Registry</span>
+                  <span className="sm:hidden">Open Registry</span>
+                </div>
               </div>
-            )}
-            <Button variant="ghost" className="h-20 sm:h-28 w-full sm:w-auto px-8 sm:px-16 text-sm sm:text-lg font-black uppercase tracking-widest rounded-[1.5rem] sm:rounded-[2.5rem] border border-primary/10 hover:bg-primary/5 active:scale-95 transition-all group" asChild>
-              <Link href="/about" className="flex items-center gap-4">
-                Explore Mandate 
-                <ChevronRight className="h-5 w-5 opacity-40 group-hover:opacity-100 transition-all" />
-              </Link>
-            </Button>
+            </div>
           </div>
 
           <motion.div 
@@ -144,14 +163,17 @@ export default function WelcomePage() {
             className="pt-12 sm:pt-24 flex flex-wrap justify-center gap-8 sm:gap-20 opacity-40 grayscale group-hover:grayscale-0 transition-all duration-1000 px-4"
           >
             {[
-              { icon: Activity, label: "Real-time BNS Audit" },
-              { icon: ShieldCheck, label: "Secured Registry" },
-              { icon: Globe, label: "Digital India Sync" },
-              { icon: Zap, label: "Neural Ingress" }
+              { icon: Activity, label: "BNS Audit", full: "Real-time BNS Audit" },
+              { icon: ShieldCheck, label: "Secured", full: "Secured Registry" },
+              { icon: Globe, label: "Digital Sync", full: "Digital India Sync" },
+              { icon: Zap, label: "Neural Ingress", full: "Neural Ingress" }
             ].map((stat, i) => (
               <div key={i} className="flex items-center gap-3 sm:gap-5 group/stat">
                 <stat.icon className="h-5 w-5 sm:h-7 sm:w-7 text-primary group-hover/stat:animate-bounce" />
-                <span className="text-[9px] sm:text-[13px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em]">{stat.label}</span>
+                <span className="text-[9px] sm:text-[13px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em]">
+                  <span className="hidden sm:inline">{stat.full}</span>
+                  <span className="sm:hidden">{stat.label}</span>
+                </span>
               </div>
             ))}
           </motion.div>
