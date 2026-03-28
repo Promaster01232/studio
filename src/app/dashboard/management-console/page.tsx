@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useAuth, useDatabase } from "@/firebase";
-import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, query, where, getDocs, serverTimestamp, addDoc } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, query, where, getDocs, serverTimestamp, addDoc, writeBatch } from "firebase/firestore";
 import { ref, remove, update } from "firebase/database";
 import { sendPasswordResetEmail, onAuthStateChanged } from "firebase/auth";
 import { 
@@ -57,6 +57,7 @@ import {
   AlertDialogCancel, 
   AlertDialogContent, 
   AlertDialogDescription, 
+  AlertDialogFooter, 
   AlertDialogHeader, 
   AlertDialogTitle, 
 } from "@/components/ui/alert-dialog";
@@ -302,15 +303,46 @@ export default function ManagementConsolePage() {
     if (!userToPurge) return;
     setProcessingUid(userToPurge.uid);
     
-    deleteDoc(doc(firestore, "users", userToPurge.uid))
-        .then(() => {
-            remove(ref(rtdb, `users/${userToPurge.uid}`)).catch(() => {});
-            toast({ title: "Registry Purged" });
-        })
-        .finally(() => {
-            setProcessingUid(null);
-            setUserToPurge(null);
+    try {
+        const batch = writeBatch(firestore);
+        
+        // 1. Delete user profile doc from Firestore
+        batch.delete(doc(firestore, "users", userToPurge.uid));
+        
+        // 2. Find and delete all posts by this user
+        const postsRef = collection(firestore, "posts");
+        const postsQuery = query(postsRef, where("authorUid", "==", userToPurge.uid));
+        const postsSnap = await getDocs(postsQuery);
+        postsSnap.docs.forEach(d => batch.delete(d.ref));
+        
+        // 3. Find and delete all notifications for this user
+        const notifRef = collection(firestore, "notifications");
+        const notifQuery = query(notifRef, where("userId", "==", userToPurge.uid));
+        const notifSnap = await getDocs(notifQuery);
+        notifSnap.docs.forEach(d => batch.delete(d.ref));
+
+        // Execute Firestore atomic batch
+        await batch.commit();
+
+        // 4. Delete from RTDB (Real-time sync)
+        await remove(ref(rtdb, `users/${userToPurge.uid}`)).catch(() => {});
+        await remove(ref(rtdb, `advocates/${userToPurge.uid}`)).catch(() => {});
+
+        toast({ 
+            title: "Forensic Purge Complete", 
+            description: `Registry node and all associated transmissions for ${userToPurge.firstName} have been erased.` 
         });
+    } catch (error: any) {
+        console.error("Purge failure:", error);
+        toast({ 
+            variant: "destructive", 
+            title: "Purge Refused", 
+            description: "Institutional permissions insufficient or node network failure." 
+        });
+    } finally {
+        setProcessingUid(null);
+        setUserToPurge(null);
+    }
   };
 
   const filteredUsers = users.filter(u => 
@@ -497,13 +529,13 @@ export default function ManagementConsolePage() {
           <AlertDialogContent className="rounded-[2.5rem] p-8 border-none shadow-2xl glass text-left">
               <AlertDialogHeader className="text-left">
                   <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4"><ShieldAlert className="h-10 w-10 text-destructive animate-pulse" /></div>
-                  <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Purge Protocol</AlertDialogTitle>
+                  <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Permanent Purge</AlertDialogTitle>
                   <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
-                      Terminal deactivation of node <strong>{userToPurge?.firstName}</strong>. This forensic erasure is permanent.
+                      Terminal deactivation of node <strong>{userToPurge?.firstName}</strong>. This forensic erasure is 100% permanent and will remove all profile data, community transmissions, and registry logs.
                   </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
-                  <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort</AlertDialogCancel>
+                  <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort Protocol</AlertDialogCancel>
                   <AlertDialogAction onClick={handleExecutePurge} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px]">Execute Purge</AlertDialogAction>
               </div>
           </AlertDialogContent>
