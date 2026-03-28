@@ -207,7 +207,7 @@ export default function BillingPage() {
                         </div>
                         <div className="flex gap-2">
                             <Input 
-                                placeholder="Enter code (e.g., NYAYA62)" 
+                                placeholder="Enter code (e.g., ABCD123)" 
                                 value={couponCode}
                                 onChange={(e) => setCouponCode(e.target.value)}
                                 className="h-11 font-bold bg-background border-primary/10 uppercase"
