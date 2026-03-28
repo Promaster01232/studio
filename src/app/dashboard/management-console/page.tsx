@@ -134,7 +134,7 @@ function EmailDispatchDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2rem] border-none shadow-3xl bg-card">
+            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2rem] border-none shadow-3xl bg-card text-left">
                 <div className="p-8">
                     <DialogHeader className="mb-8 border-none text-left">
                         <div className="flex items-center gap-3 text-primary mb-2">
@@ -258,7 +258,7 @@ function UserDetailsModal({ user, trigger }: { user: UserRecord, trigger?: React
                     </button>
                 )}
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border-none shadow-2xl bg-card">
+            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border-none shadow-2xl bg-card text-left">
                 <div className="p-6 sm:p-8">
                     <DialogHeader className="mb-6 border-none text-left">
                         <div className="flex items-center gap-2 text-primary mb-2">
@@ -540,8 +540,8 @@ export default function ManagementConsolePage() {
           ))}
       </div>
 
-      <Card className="border border-primary/5 shadow-xl rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden bg-card">
-          <CardHeader className="bg-muted/5 border-b border-primary/5 px-4 sm:px-6 py-6">
+      <Card className="border border-primary/5 shadow-xl rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden bg-card text-left">
+          <CardHeader className="bg-muted/5 border-b border-primary/5 px-4 sm:px-6 py-6 text-left">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="text-left w-full">
                       <CardTitle className="font-headline font-black text-lg sm:text-xl tracking-tight">Identity Registry Report</CardTitle>
@@ -667,8 +667,8 @@ export default function ManagementConsolePage() {
       />
 
       <AlertDialog open={!!userToPurge} onOpenChange={(open) => !open && setUserToPurge(null)}>
-          <AlertDialogContent className="rounded-[2.5rem] p-8 border-none shadow-2xl glass">
-              <AlertDialogHeader>
+          <AlertDialogContent className="rounded-[2.5rem] p-8 border-none shadow-2xl glass text-left">
+              <AlertDialogHeader className="text-left">
                   <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4">
                       <ShieldAlert className="h-10 w-10 text-destructive animate-pulse" />
                   </div>
