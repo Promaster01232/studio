@@ -52,6 +52,7 @@ export default function MyCasesPage() {
     setLoadingSave(true);
     const formData = new FormData(event.currentTarget);
     
+    // REDUCED DELAY FOR HIGH PERFORMANCE FEEL
     setTimeout(() => {
         const newCase: Case = {
           id: `case-${Date.now()}`,
@@ -66,7 +67,7 @@ export default function MyCasesPage() {
         setLoadingSave(false);
         setIsDialogOpen(false);
         toast({ title: "Case Saved", description: "Successfully added to your personal tracker." });
-    }, 1500);
+    }, 400);
   };
   
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -80,10 +81,11 @@ export default function MyCasesPage() {
         }
       });
       
+      // REDUCED DELAY FOR HIGH PERFORMANCE FEEL
       setTimeout(() => {
           router.push(`/dashboard/my-cases/results?${query.toString()}`);
           setLoadingSearch(false);
-      }, 1500);
+      }, 500);
   };
 
   const handleDelete = (id: string) => {
@@ -92,7 +94,7 @@ export default function MyCasesPage() {
           setCases(prev => prev.filter(c => c.id !== id));
           setProcessingId(null);
           toast({ title: "Case Removed", description: "The record has been purged from your tracker." });
-      }, 1000);
+      }, 300);
   };
 
   return (

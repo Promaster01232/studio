@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -157,7 +158,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setIsNavigating(true);
-    const timer = setTimeout(() => setIsNavigating(false), 600);
+    const timer = setTimeout(() => setIsNavigating(false), 200); // HIGH VELOCITY REDUCTION FROM 600ms
     return () => clearTimeout(timer);
   }, [pathname]);
 
@@ -441,7 +442,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             initial={{ opacity: 0, scale: 0.99, y: 10 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 1.01, y: -10 }}
-                            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }} // FASTER TRANSITION
                             className="flex-1 flex flex-col"
                         >
                             <div className="flex-1">

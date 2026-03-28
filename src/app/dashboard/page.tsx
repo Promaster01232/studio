@@ -105,9 +105,9 @@ const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, del
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ delay }}
+      initial={{ opacity: 0, y: 15 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+      transition={{ delay, duration: 0.2 }}
     >
       {children}
     </motion.div>
@@ -453,15 +453,15 @@ export default function DashboardHomePage() {
     let timeoutId: NodeJS.Timeout;
     if (isTyping) {
       if (text.length < fullText.length) {
-        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 150);
+        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 80); // FASTER TYPING
       } else {
-        timeoutId = setTimeout(() => setIsTyping(false), 3000);
+        timeoutId = setTimeout(() => setIsTyping(false), 2000);
       }
     } else {
       timeoutId = setTimeout(() => {
         setText('');
         setIsTyping(true);
-      }, 1000);
+      }, 800);
     }
     return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
