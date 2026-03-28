@@ -26,6 +26,7 @@ import {
   Trash2,
   TrendingUp,
   BadgeCheck,
+  CreditCard,
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -460,6 +461,8 @@ export default function DashboardHomePage() {
     return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
 
+  const isLimited = !userProfile?.subscriptionType?.includes('unlimited');
+
   return (
     <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
         <MotionWrapper>
@@ -470,7 +473,14 @@ export default function DashboardHomePage() {
                   </div>
               </div>
               <div className="relative z-10 space-y-8">
-                  <div className="space-y-2">
+                  <div className="space-y-4">
+                      {isLimited && (
+                        <Link href="/dashboard/billing">
+                            <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] mb-4 hover:bg-primary/20 transition-all cursor-pointer">
+                                Tier: {(userProfile?.subscriptionType || 'Free').replace('_', ' ')} // Upgrade Now
+                            </Badge>
+                        </Link>
+                      )}
                       <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
                           Welcome back, <br />
                           <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Nyaya {text}</span>
@@ -483,9 +493,11 @@ export default function DashboardHomePage() {
                       <Button size="sm" className="rounded-xl font-bold px-8 h-12 shadow-xl shadow-primary/20 active:scale-95 transition-all text-xs" asChild>
                           <Link href="/dashboard/narrate">initialize narration</Link>
                       </Button>
-                      <Button variant="outline" size="sm" className="rounded-xl font-bold px-8 h-12 border-primary/10 hover:bg-primary/5 active:scale-95 transition-all text-xs" asChild>
-                          <Link href="/dashboard/support">hub support</Link>
-                      </Button>
+                      {isLimited && (
+                        <Button variant="outline" size="sm" className="rounded-xl font-bold px-8 h-12 border-primary/10 bg-primary/5 text-primary hover:bg-primary/10 active:scale-95 transition-all text-xs" asChild>
+                            <Link href="/dashboard/billing">Upgrade Protocol</Link>
+                        </Button>
+                      )}
                   </div>
               </div>
           </Card>
@@ -519,6 +531,33 @@ export default function DashboardHomePage() {
           </div>
 
           <div className="lg:col-span-4 space-y-10">
+              {isLimited && (
+                <section>
+                    <SectionHeader icon={CreditCard} sector="Status: Restricted">Usage Audit</SectionHeader>
+                    <Card className="glass p-6 rounded-[2rem] border-primary/10 shadow-lg relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
+                            <Zap className="h-16 w-16 text-primary" />
+                        </div>
+                        <div className="space-y-6 relative z-10">
+                            <div className="flex justify-between items-center">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Operations Executed</p>
+                                <span className="font-mono font-black text-primary">{userProfile?.aiUsageCount || 0} / {userProfile?.subscriptionType === 'pro_20' ? '20' : '5'}</span>
+                            </div>
+                            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                                <motion.div 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${Math.min(100, ((userProfile?.aiUsageCount || 0) / (userProfile?.subscriptionType === 'pro_20' ? 20 : 5)) * 100)}%` }}
+                                    className="h-full bg-primary"
+                                />
+                            </div>
+                            <Button asChild className="w-full h-11 font-black uppercase tracking-widest text-[9px] rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                                <Link href="/dashboard/billing">Get More Credits</Link>
+                            </Button>
+                        </div>
+                    </Card>
+                </section>
+              )}
+
               <section>
                   <SectionHeader icon={Sparkles} sector="Status: Optimized">system matrix</SectionHeader>
                   <div className="grid grid-cols-2 gap-4">

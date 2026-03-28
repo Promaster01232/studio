@@ -10,7 +10,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Sparkles, Activity } from "lucide-react";
+import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Sparkles, Activity, Zap, CreditCard } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -46,6 +46,8 @@ const ADMIN_EMAILS = [
 ];
 
 function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: number }) {
+    const isLimited = !userProfile?.subscriptionType?.includes('unlimited');
+    
     return (
         <header className={cn(
             "sticky top-0 z-[40] flex h-16 items-center gap-4 border-b px-4 sm:px-8 transition-all",
@@ -80,6 +82,15 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
             </div>
 
             <div className="flex items-center gap-3">
+                {isLimited && (
+                    <Button asChild size="sm" variant="outline" className="hidden lg:flex h-10 px-5 rounded-xl border-primary/20 text-primary hover:bg-primary/5 font-black text-[9px] uppercase tracking-widest gap-2 active:scale-95 transition-all">
+                        <Link href="/dashboard/billing">
+                            <Zap className="h-3.5 w-3.5 animate-pulse" />
+                            Upgrade Clearance
+                        </Link>
+                    </Button>
+                )}
+
                 <div className="hidden lg:flex items-center gap-2 mr-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-left">
                     <Activity className="h-3 w-3 text-green-500 animate-pulse" />
                     <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/60">System: Active</span>
@@ -141,7 +152,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Show navigation loader on every sector ingress for professional visual feedback
     setIsNavigating(true);
     const timer = setTimeout(() => setIsNavigating(false), 600);
     return () => clearTimeout(timer);
@@ -165,8 +175,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             if (userDoc.exists()) {
               const data = userDoc.data() as any;
               setUserProfile(data);
-              
-              // Smart Sync: Only write if mismatch detected to save bandwidth
               if (data.emailVerified !== user.emailVerified) {
                   updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(() => {});
               }
@@ -217,6 +225,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
   const isSuspended = userProfile?.isBlocked === true;
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
+  const isLimited = !userProfile?.subscriptionType?.includes('unlimited');
 
   if (showContent && isSuspended) {
       return (
@@ -276,6 +285,26 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </SidebarHeader>
         <SidebarContent className="pt-2">
           <SidebarNav isAdmin={isAdmin} />
+          
+          {/* Global Upgrade CTA in Sidebar */}
+          {isLimited && !profileLoading && (
+            <div className="px-4 py-6 group-data-[collapsible=icon]:hidden">
+                <Card className="bg-primary/5 border-primary/10 rounded-[1.5rem] overflow-hidden group/upgrade hover:border-primary/30 transition-all">
+                    <div className="p-5 space-y-4">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-inner">
+                                <Zap className="h-4 w-4 animate-pulse" />
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Expansion Protocol</span>
+                        </div>
+                        <p className="text-[10px] font-medium text-muted-foreground leading-relaxed">Unlock unlimited forensic scans and institutional tools.</p>
+                        <Button asChild size="sm" className="w-full h-10 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                            <Link href="/dashboard/billing">Upgrade Clearance</Link>
+                        </Button>
+                    </div>
+                </Card>
+            </div>
+          )}
         </SidebarContent>
         <SidebarFooter className="p-4">
            {profileLoading ? (
@@ -321,6 +350,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         <User className="h-4 w-4 opacity-40" /> My Registry Profile
                     </Link>
                 </DropdownMenuItem>
+
+                {isLimited && (
+                    <DropdownMenuItem asChild className="rounded-xl h-11 font-bold text-xs gap-3 mb-1 cursor-pointer bg-primary/5 text-primary hover:bg-primary/10 text-left">
+                        <Link href="/dashboard/billing">
+                            <CreditCard className="h-4 w-4" /> Initialize Expansion
+                        </Link>
+                    </DropdownMenuItem>
+                )}
 
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 

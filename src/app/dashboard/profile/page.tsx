@@ -31,11 +31,12 @@ import {
   QrCode,
   ArrowRight,
   Activity,
-  Globe
+  Globe,
+  CreditCard
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
-import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { ref, set, update, remove } from 'firebase/database';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -69,6 +70,8 @@ type UserProfile = {
   photoURL?: string;
   securityStatus?: string;
   emailVerified?: boolean;
+  subscriptionType?: string;
+  aiUsageCount?: number;
 }
 
 const ADMIN_EMAILS = [
@@ -165,18 +168,11 @@ export default function ProfilePage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const hasChanges = userProfile ? (
-    firstName !== userProfile.firstName ||
-    lastName !== userProfile.lastName ||
-    mobileNumber !== (userProfile.mobileNumber || '') ||
-    photoURL !== (userProfile.photoURL || '')
-  ) : false;
-
   useEffect(() => {
     setIsMounted(true);
     if (auth.currentUser) {
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-      getDoc(userDocRef).then(userDoc => {
+      const unsub = onSnapshot(userDocRef, (userDoc) => {
         if (userDoc.exists()) {
           const data = userDoc.data() as UserProfile;
           setUserProfile(data);
@@ -190,10 +186,18 @@ export default function ProfilePage() {
         }
         setLoading(false);
       });
+      return () => unsub();
     } else {
       router.push('/login');
     }
   }, [auth, firestore, router]);
+
+  const hasChanges = userProfile ? (
+    firstName !== userProfile.firstName ||
+    lastName !== userProfile.lastName ||
+    mobileNumber !== (userProfile.mobileNumber || '') ||
+    photoURL !== (userProfile.photoURL || '')
+  ) : false;
 
   const handleSendVerification = async () => {
       if (!auth.currentUser) return;
@@ -216,7 +220,6 @@ export default function ProfilePage() {
         if (verification.isAuthentic) {
             const userRef = doc(firestore, "users", userProfile.uid);
             await setDoc(userRef, { securityStatus: 'verified', flagReason: "", isBlocked: false }, { merge: true });
-            setUserProfile(prev => prev ? { ...prev, securityStatus: 'verified' } : null);
             toast({ title: "Audit Passed", description: `Forensic identity confirmed.` });
         } else {
             toast({ variant: "destructive", title: "Security Flag Active", description: verification.reason || "Pattern mismatch detected." });
@@ -234,7 +237,6 @@ export default function ProfilePage() {
       setDoc(userRef, { photoURL: newPhotoURL }, { merge: true })
         .then(() => {
             toast({ title: "Registry Updated", description: "Identity photo synchronized." });
-            setUserProfile(prev => prev ? { ...prev, photoURL: newPhotoURL } : null);
         });
       update(ref(rtdb, `users/${auth.currentUser.uid}`), { photoURL: newPhotoURL }).catch(() => {});
   };
@@ -297,7 +299,6 @@ export default function ProfilePage() {
     setDoc(userDocRef, updatedProfile, { merge: true })
       .then(() => {
         set(ref(rtdb, `users/${auth.currentUser?.uid}`), updatedProfile).catch(() => {});
-        setUserProfile(updatedProfile);
         toast({ title: 'Registry Synchronized', description: 'Personal dossier updated successfully.' });
       })
       .finally(() => setSaving(false));
@@ -334,6 +335,8 @@ export default function ProfilePage() {
   };
 
   if (loading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
+
+  const isLimited = !userProfile?.subscriptionType?.includes('unlimited');
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0 text-left">
@@ -501,6 +504,67 @@ export default function ProfilePage() {
                                 {saving ? <Loader2 className="mr-3 h-5 w-5 animate-spin" /> : <Edit className="mr-3 h-4 w-4" />}
                                 Synchronize Registry
                             </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Statutory Subscription Overview Node */}
+                <Card className="glass shadow-2xl rounded-[2.5rem] border-primary/5 overflow-hidden">
+                    <CardHeader className="p-8 sm:p-10 bg-muted/5 border-b border-primary/5 flex flex-row items-center justify-between">
+                        <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-primary">
+                                <CreditCard className="h-4 w-4" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Statutory Clearance</span>
+                            </div>
+                            <CardTitle className="text-2xl font-black tracking-tight leading-none uppercase">Subscription Hub</CardTitle>
+                        </div>
+                        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
+                            {userProfile?.subscriptionType?.replace('_', ' ') || 'Free Tier'}
+                        </Badge>
+                    </CardHeader>
+                    <CardContent className="p-8 sm:p-10">
+                        <div className="grid md:grid-cols-2 gap-10">
+                            <div className="space-y-6">
+                                <div className="space-y-2">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">AI Forensic Usage</p>
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden shadow-inner">
+                                            <motion.div 
+                                                initial={{ width: 0 }}
+                                                animate={{ width: `${Math.min(100, ((userProfile?.aiUsageCount || 0) / (userProfile?.subscriptionType === 'pro_20' ? 20 : 5)) * 100)}%` }}
+                                                className="h-full bg-primary"
+                                            />
+                                        </div>
+                                        <span className="font-mono font-black text-sm tracking-tighter">
+                                            {userProfile?.aiUsageCount || 0} / {isLimited ? (userProfile?.subscriptionType === 'pro_20' ? '20' : '5') : '∞'}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-1">
+                                    <p className="text-[9px] font-black uppercase text-primary">Current Clearance</p>
+                                    <p className="text-sm font-medium text-muted-foreground leading-relaxed">
+                                        {isLimited ? "Your node is currently operating on a restricted credit protocol." : "You possess absolute institutional clearance for all neural nodes."}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex flex-col justify-center gap-4">
+                                {isLimited ? (
+                                    <>
+                                        <Button asChild className="h-14 font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-primary/20 rounded-2xl active:scale-95 transition-all">
+                                            <Link href="/dashboard/billing">
+                                                <Zap className="mr-3 h-4 w-4 animate-pulse" />
+                                                Initialize Upgrade
+                                            </Link>
+                                        </Button>
+                                        <p className="text-[9px] font-bold text-center text-muted-foreground uppercase tracking-widest opacity-40">Next Reset: Dynamic Synchronization</p>
+                                    </>
+                                ) : (
+                                    <div className="p-6 rounded-2xl border-2 border-dashed border-primary/20 flex flex-col items-center text-center gap-3">
+                                        <ShieldCheck className="h-10 w-10 text-primary opacity-20" />
+                                        <p className="text-xs font-black uppercase tracking-widest text-primary">Maximum Clearance Active</p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </CardContent>
                 </Card>
