@@ -123,6 +123,7 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const { theme, setTheme } = useTheme();
   const auth = useAuth();
   const firestore = useFirestore();
@@ -138,6 +139,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    // Every time pathname changes, show navigation loader for a smooth institutional transition
+    setIsNavigating(true);
+    const timer = setTimeout(() => setIsNavigating(false), 600);
+    return () => clearTimeout(timer);
+  }, [pathname]);
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
@@ -353,7 +361,31 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         
         <div className="flex flex-col h-screen overflow-hidden">
           <Header userProfile={userProfile} unreadCount={unreadCount} />
-          <main className="flex-1 overflow-y-auto custom-scrollbar">
+          <main className="flex-1 overflow-y-auto custom-scrollbar relative">
+            <AnimatePresence>
+                {isNavigating && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 z-[100] bg-background/60 backdrop-blur-md flex items-center justify-center"
+                    >
+                        <div className="flex flex-col items-center gap-6">
+                            <div className="relative">
+                                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 4, ease: "linear" }} className="p-12 rounded-full border-2 border-dashed border-primary/20" />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <Logo className="h-12 w-12" />
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
+                                <Activity className="h-3 w-3 text-primary animate-pulse" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Neural Synchronization...</span>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <div className="p-4 sm:p-10 min-h-[calc(100vh-64px)] flex flex-col">
                 <AnimatePresence mode="wait">
                     {showContent ? (
