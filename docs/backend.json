@@ -11,21 +11,17 @@
                     "description": "The user's unique ID from Firebase Authentication."
                 },
                 "firstName": {
-                    "type": "string",
-                    "description": "The user's first name."
+                    "type": "string"
                 },
                 "lastName": {
-                    "type": "string",
-                    "description": "The user's last name."
+                    "type": "string"
                 },
                 "email": {
                     "type": "string",
-                    "format": "email",
-                    "description": "The user's email address."
+                    "format": "email"
                 },
                 "mobileNumber": {
-                    "type": "string",
-                    "description": "The user's mobile phone number."
+                    "type": "string"
                 },
                 "userType": {
                     "type": "string",
@@ -33,42 +29,29 @@
                         "citizen",
                         "businessman",
                         "student"
-                    ],
-                    "description": "The type of user."
+                    ]
                 },
                 "photoURL": {
                     "type": "string",
-                    "format": "uri",
-                    "description": "The URL of the user's profile picture."
+                    "format": "uri"
                 },
                 "isAdmin": {
-                    "type": "boolean",
-                    "description": "Whether the user has administrative privileges."
+                    "type": "boolean"
                 },
                 "isBlocked": {
-                    "type": "boolean",
-                    "description": "Whether the user's access has been suspended."
+                    "type": "boolean"
                 },
-                "securityStatus": {
+                "aiUsageCount": {
+                    "type": "number",
+                    "description": "Number of AI forensic operations executed."
+                },
+                "subscriptionType": {
                     "type": "string",
-                    "enum": [
-                        "verified",
-                        "suspicious",
-                        "flagged"
-                    ],
-                    "description": "The AI-determined security status of the account."
-                },
-                "flaggedAt": {
-                    "type": "object",
-                    "description": "Timestamp when the account was flagged by AI."
-                },
-                "flagReason": {
-                    "type": "string",
-                    "description": "Reason provided by AI for flagging the account."
+                    "enum": ["free", "pro_20", "unlimited_monthly", "unlimited_yearly"],
+                    "description": "The active statutory plan for the node."
                 },
                 "createdAt": {
-                    "type": "object",
-                    "description": "Timestamp when the user was created."
+                    "type": "object"
                 }
             },
             "required": [
@@ -78,21 +61,6 @@
                 "email",
                 "userType"
             ]
-        },
-        "Notification": {
-            "title": "Notification",
-            "description": "Represents a user notification node.",
-            "type": "object",
-            "properties": {
-                "userId": { "type": "string" },
-                "type": { "type": "string", "enum": ["like", "admin_message", "system"] },
-                "title": { "type": "string" },
-                "description": { "type": "string" },
-                "link": { "type": "string" },
-                "isRead": { "type": "boolean" },
-                "createdAt": { "type": "object" }
-            },
-            "required": ["userId", "type", "title", "description", "isRead", "createdAt"]
         }
     },
     "auth": {
@@ -105,14 +73,7 @@
         "/users/{userId}": {
             "schema": {
                 "$ref": "#/entities/UserProfile"
-            },
-            "description": "Stores public information for each user."
-        },
-        "/notifications/{notificationId}": {
-            "schema": {
-                "$ref": "#/entities/Notification"
-            },
-            "description": "System and user-triggered notification nodes."
+            }
         }
     }
 }

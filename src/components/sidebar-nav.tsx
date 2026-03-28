@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -27,6 +28,7 @@ import {
   LifeBuoy,
   ChevronRight,
   Settings,
+  CreditCard,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -73,6 +75,13 @@ const navigationItems = [
     items: [
       { href: "/dashboard/business-msme", icon: Briefcase, label: "business & msme" },
       { href: "/dashboard/finances-billing", icon: Landmark, label: "finances & billing" },
+    ],
+  },
+  {
+    title: "billing & usage",
+    icon: CreditCard,
+    items: [
+      { href: "/dashboard/billing", icon: CreditCard, label: "upgrade & credits" },
     ],
   },
   {
