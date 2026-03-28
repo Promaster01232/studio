@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/theme-provider";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, onSnapshot, updateDoc, collection, query, where } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
 import { SosDialog } from "@/components/sos-dialog";
@@ -56,7 +55,7 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
         )}>
             <div className="flex items-center gap-3 md:hidden">
                 <SidebarTrigger className="h-10 w-10 rounded-xl hover:bg-primary/5 active:scale-95 transition-all" />
-                <Logo className="h-8 w-8" />
+                <Logo className="h-8 w-8 p-0" />
             </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
@@ -276,14 +275,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               className="relative"
             >
                 <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-primary/20 via-blue-500/20 to-accent/20 blur-md animate-pulse group-data-[collapsible=icon]:hidden"></div>
-                <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
+                <div className="relative p-1 rounded-full bg-gradient-to-tr from-[#FF9933] via-[#000080] to-[#128807]">
                   <div className="bg-white rounded-full p-1.5 shadow-lg relative z-10">
                     <Logo className="h-7 w-7 border-none shadow-none p-0" />
                   </div>
                 </div>
             </motion.div>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden text-left">
-              <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-blue-600 to-accent bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] truncate">
+              <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] truncate">
                   Nyaya Sahayak
               </span>
               <span className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 leading-none mt-0.5">Forensic Terminal</span>
@@ -421,7 +420,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             <div className="relative">
                                 <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 4, ease: "linear" }} className="p-12 rounded-full border-2 border-dashed border-primary/20" />
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <Logo className="h-12 w-12" />
+                                    <Logo className="h-12 w-12 p-0 shadow-none border-none" />
                                 </div>
                             </div>
                             <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 shadow-lg">

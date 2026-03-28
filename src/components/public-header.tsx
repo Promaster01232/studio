@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useState, useEffect } from "react";
-import { LogIn, ArrowLeft } from "lucide-react";
+import { LogIn, ArrowLeft, Activity } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function PublicHeader() {
@@ -27,18 +27,26 @@ export function PublicHeader() {
             className="relative"
           >
             <div className="absolute -inset-2 bg-primary/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-            <Logo className="h-10 w-10 shadow-none border-none bg-transparent relative z-10" />
+            <Logo className="h-10 w-10 shadow-none border-none bg-transparent relative z-10 p-0" />
           </motion.div>
-          <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-blue-600 to-accent bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] hidden sm:block">
-            Nyaya Sahayak
-          </span>
+          <div className="flex flex-col">
+            <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] leading-none">
+              Nyaya Sahayak
+            </span>
+            <span className="text-[7px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 mt-0.5 leading-none">Institutional Terminal</span>
+          </div>
         </Link>
         
         <div className="flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-2 mr-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
+            <Activity className="h-3 w-3 text-green-500 animate-pulse" />
+            <span className="text-[8px] font-black uppercase tracking-widest text-primary/60">System Ready</span>
+          </div>
+          
           {user ? (
             <Button asChild size="sm" className="font-bold rounded-xl shadow-lg shadow-primary/20 h-10 px-6 group transition-all active:scale-95">
               <Link href="/dashboard">
-                <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to Dashboard
+                <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Dashboard
               </Link>
             </Button>
           ) : (
