@@ -88,7 +88,7 @@ export default function WelcomePage() {
             >
               <div className="relative group cursor-pointer">
                 <div className="absolute -inset-8 sm:-inset-16 rounded-full bg-gradient-to-tr from-[#FF9933]/30 via-[#000080]/15 to-[#128807]/30 blur-3xl animate-pulse group-hover:scale-125 transition-transform duration-1000"></div>
-                <Logo className="h-28 w-24 sm:h-48 sm:w-48 relative z-10 shadow-[0_40px_80px_rgba(0,0,0,0.25)] bg-white border-none p-2 sm:p-4" priority />
+                <Logo className="h-24 w-24 sm:h-48 sm:w-48 relative z-10 shadow-[0_40px_80px_rgba(0,0,0,0.25)] bg-white border-none p-2 sm:p-4" priority />
               </div>
             </motion.div>
 
