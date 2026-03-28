@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck, ShieldAlert, FileSignature, Globe, Layers } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -21,7 +20,7 @@ const plans = [
         amount: 0,
         desc: 'Standard identity enrollment.',
         credits: '5 Forensic Credits',
-        features: ['Voice Narration (5x)', 'Document Audit (5x)', 'Case Analytics', 'Basic Directory Access'],
+        features: ['Voice Narration (5x)', 'Document Audit (5x)', 'Basic Case Analytics', 'Public Directory Access'],
         color: 'text-muted-foreground',
         bg: 'bg-muted/10',
         border: 'border-muted/20'
@@ -33,11 +32,12 @@ const plans = [
         amount: 99,
         desc: 'Essential statutory expansion.',
         credits: '20 Forensic Credits',
-        features: ['Voice Narration (20x)', 'Document Audit (20x)', 'Extended Case Tracker', 'Priority AI Nodes'],
+        features: ['Voice Narration (20x)', 'Document Audit (20x)', 'Extended Case Tracker', 'Priority AI Ingress'],
         color: 'text-blue-500',
         bg: 'bg-blue-500/5',
         border: 'border-blue-500/20',
-        badge: 'Popular Choice'
+        badge: 'Popular Choice',
+        icon: Zap
     },
     {
         id: 'unlimited_monthly',
@@ -46,11 +46,12 @@ const plans = [
         amount: 599,
         desc: 'Continuous institutional access.',
         credits: 'Absolute Clearance',
-        features: ['Unlimited AI Forensic Scans', 'Unlimited Document Audits', 'Full Case Strategy Hub', 'Verified Connect Ingress'],
+        features: ['Unlimited AI Forensic Scans', 'Unlimited Document Audits', 'Full Case Strategy Hub', 'Verified Connect Ingress', 'Priority Neural Support'],
         color: 'text-primary',
         bg: 'bg-primary/5',
         border: 'border-primary/20',
-        badge: 'Best Value'
+        badge: 'Professional Tier',
+        icon: Crown
     },
     {
         id: 'unlimited_yearly',
@@ -59,11 +60,12 @@ const plans = [
         amount: 4999,
         desc: 'Permanent statutory authority.',
         credits: 'Absolute Clearance',
-        features: ['Everything in Unlimited', 'Advanced Contract Node', 'Custom PDF Export Protocol', 'Root System Access'],
+        features: ['Everything in Unlimited', 'Advanced Contract Node', 'Custom PDF Export Protocol', 'Root System Access', 'Institutional Branding'],
         color: 'text-amber-600',
         bg: 'bg-amber-500/5',
         border: 'border-amber-500/20',
-        badge: 'Elite Node'
+        badge: 'Elite Node',
+        icon: ShieldCheck
     }
 ];
 
@@ -150,7 +152,7 @@ export default function BillingPage() {
             
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
                 <PageHeader
-                    title="Billing & Statutory Usage"
+                    title="Billing & Statutory Clearance"
                     description="Monitor your institutional forensic credits and manage clearance levels."
                 />
                 <div className="flex items-center gap-4 bg-primary/5 px-6 py-3 rounded-2xl border border-primary/10 shadow-inner">
@@ -170,6 +172,7 @@ export default function BillingPage() {
                 {plans.map((plan, idx) => {
                     const isActive = currentPlan === plan.id;
                     const isProcessing = processingId === plan.id;
+                    const PlanIcon = plan.icon || Activity;
                     
                     return (
                         <motion.div
@@ -179,12 +182,12 @@ export default function BillingPage() {
                             transition={{ delay: idx * 0.1 }}
                         >
                             <Card className={cn(
-                                "h-full flex flex-col glass relative overflow-hidden transition-all duration-500 rounded-[2.5rem] border-primary/5",
+                                "h-full flex flex-col glass relative overflow-hidden transition-all duration-500 rounded-[2.5rem] border-primary/5 group",
                                 isActive && "ring-2 ring-primary border-primary/20 shadow-2xl shadow-primary/10"
                             )}>
                                 {plan.badge && (
                                     <div className="absolute top-6 right-6">
-                                        <BadgeCheck className={cn("h-6 w-6 opacity-40", plan.color)} />
+                                        <BadgeCheck className={cn("h-6 w-6 opacity-40 transition-transform group-hover:scale-110", plan.color)} />
                                     </div>
                                 )}
                                 
@@ -196,8 +199,13 @@ export default function BillingPage() {
                                                 <span className="text-[9px] font-black uppercase tracking-widest">Active Clearance</span>
                                             </div>
                                         )}
-                                        <h3 className="text-xl font-black tracking-tight leading-none">{plan.name}</h3>
-                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest pt-1">{plan.desc}</p>
+                                        <div className="flex items-center gap-3">
+                                            <div className={cn("p-2 rounded-lg bg-background shadow-sm border border-primary/5", plan.color)}>
+                                                <PlanIcon className="h-4 w-4" />
+                                            </div>
+                                            <h3 className="text-xl font-black tracking-tight leading-none">{plan.name}</h3>
+                                        </div>
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest pt-2">{plan.desc}</p>
                                     </div>
                                     <div className="pt-6">
                                         <span className="text-4xl font-black tracking-tighter">{plan.price}</span>
@@ -206,15 +214,15 @@ export default function BillingPage() {
                                 </CardHeader>
 
                                 <CardContent className="p-8 pt-4 flex-grow space-y-6">
-                                    <div className={cn("p-4 rounded-2xl flex items-center gap-3", plan.bg)}>
+                                    <div className={cn("p-4 rounded-2xl flex items-center gap-3 shadow-inner", plan.bg)}>
                                         <Zap className={cn("h-4 w-4", plan.color)} />
                                         <span className={cn("text-[11px] font-black uppercase tracking-widest", plan.color)}>{plan.credits}</span>
                                     </div>
                                     <div className="space-y-3">
                                         {plan.features.map((f, i) => (
-                                            <div key={i} className="flex items-start gap-3">
-                                                <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0 mt-0.5" />
-                                                <span className="text-[11px] font-medium text-muted-foreground leading-snug">{f}</span>
+                                            <div key={i} className="flex items-start gap-3 group/feat">
+                                                <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0 mt-0.5 group-hover/feat:scale-110 transition-transform" />
+                                                <span className="text-[11px] font-medium text-muted-foreground leading-snug group-hover/feat:text-foreground transition-colors">{f}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -241,19 +249,36 @@ export default function BillingPage() {
             <Card className="glass border-primary/5 rounded-[2.5rem] overflow-hidden shadow-xl mt-12">
                 <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
                     <div className="flex items-center gap-3 text-primary mb-2">
-                        <History className="h-5 w-5" />
-                        <CardTitle className="text-xl font-black uppercase tracking-tight">Transaction Registry</CardTitle>
+                        <Layers className="h-5 w-5" />
+                        <CardTitle className="text-xl font-black uppercase tracking-tight">Institutional Feature Matrix</CardTitle>
                     </div>
-                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Chronological log of institutional payments and credit renewals.</CardDescription>
+                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comparative deconstruction of tier-based forensic capabilities.</CardDescription>
                 </CardHeader>
-                <CardContent className="p-0">
-                    <div className="p-12 text-center opacity-40 space-y-4">
-                        <div className="bg-primary/5 p-6 rounded-full w-fit mx-auto">
-                            <Activity className="h-10 w-10 text-muted-foreground" />
+                <CardContent className="p-8">
+                    <div className="grid md:grid-cols-3 gap-8">
+                        <div className="space-y-4">
+                            <h4 className="text-xs font-black uppercase text-primary tracking-widest border-b pb-2">Forensic Sectors</h4>
+                            <ul className="space-y-2 text-[11px] font-medium text-muted-foreground">
+                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Neural Violation Mapping</li>
+                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Statutory Clause Extraction</li>
+                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Jurisdictional Roadmap</li>
+                            </ul>
                         </div>
-                        <div className="space-y-1">
-                            <p className="font-black text-sm tracking-tight uppercase">Registry synchronized</p>
-                            <p className="text-[10px] font-medium italic">"No prior transaction nodes detected for this session."</p>
+                        <div className="space-y-4">
+                            <h4 className="text-xs font-black uppercase text-blue-500 tracking-widest border-b pb-2">Institutional Tools</h4>
+                            <ul className="space-y-2 text-[11px] font-medium text-muted-foreground">
+                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Custom Petition Generator</li>
+                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Bond Structural Drafter</li>
+                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Case Management Terminal</li>
+                            </ul>
+                        </div>
+                        <div className="space-y-4">
+                            <h4 className="text-xs font-black uppercase text-amber-600 tracking-widest border-b pb-2">Enterprise Nodes</h4>
+                            <ul className="space-y-2 text-[11px] font-medium text-muted-foreground">
+                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Corporate Compliance Audit</li>
+                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Multi-lingual Dialect Sync</li>
+                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Priority API Queue</li>
+                            </ul>
                         </div>
                     </div>
                 </CardContent>
@@ -272,15 +297,15 @@ export default function BillingPage() {
                     </div>
                     <div className="flex items-center gap-3">
                         <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600">
-                            <Sparkles className="h-5 w-5" />
+                            <Globe className="h-5 w-5" />
                         </div>
                         <div className="text-left">
-                            <p className="text-[10px] font-black uppercase text-blue-600 tracking-widest leading-none">Instant Provisioning</p>
-                            <p className="text-[9px] font-bold text-muted-foreground mt-1">Direct Neural Sync</p>
+                            <p className="text-[10px] font-black uppercase text-blue-600 tracking-widest leading-none">Global Standard</p>
+                            <p className="text-[9px] font-bold text-muted-foreground mt-1">Digital India Ingress</p>
                         </div>
                     </div>
                 </div>
-                <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/40">NYAYASAHAYAK.IN // PAYMENT GATEWAY v1.0</p>
+                <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/40">NYAYASAHAYAK.IN // BILLING NODE v4.2</p>
             </div>
         </div>
     );

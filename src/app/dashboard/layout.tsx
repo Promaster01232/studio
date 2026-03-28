@@ -249,7 +249,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6 pb-10 px-8 text-center">
-                    <div className="p-4 bg-muted/50 rounded-2xl flex items-start gap-3 border border-border">
+                    <div className="p-4 bg-muted/5 rounded-2xl flex items-start gap-3 border border-border">
                         <p className="text-[11px] font-medium text-left leading-relaxed text-muted-foreground italic">
                             Protocol: Contact <span className="font-bold text-primary">nyayasahayakhelp@gmail.com</span> for audit.
                         </p>

@@ -27,6 +27,9 @@ import {
   TrendingUp,
   BadgeCheck,
   CreditCard,
+  Crown,
+  ShieldCheck,
+  Globe
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -462,6 +465,8 @@ export default function DashboardHomePage() {
   }, [text, isTyping]);
 
   const isLimited = !userProfile?.subscriptionType?.includes('unlimited');
+  const isMonthly = userProfile?.subscriptionType === 'unlimited_monthly';
+  const isYearly = userProfile?.subscriptionType === 'unlimited_yearly';
 
   return (
     <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
@@ -474,20 +479,29 @@ export default function DashboardHomePage() {
               </div>
               <div className="relative z-10 space-y-8">
                   <div className="space-y-4">
-                      {isLimited && (
-                        <Link href="/dashboard/billing">
-                            <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] mb-4 hover:bg-primary/20 transition-all cursor-pointer">
-                                Tier: {(userProfile?.subscriptionType || 'Free').replace('_', ' ')} // Upgrade Now
+                      <div className="flex flex-wrap items-center gap-3 mb-4">
+                          {isLimited ? (
+                            <Link href="/dashboard/billing">
+                                <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] hover:bg-primary/20 transition-all cursor-pointer">
+                                    Tier: {(userProfile?.subscriptionType || 'Free').replace('_', ' ')} // Upgrade Now
+                                </Badge>
+                            </Link>
+                          ) : (
+                            <Badge className="bg-green-500/10 text-green-600 border-green-500/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                                {isYearly ? <ShieldCheck className="h-3 w-3" /> : <Crown className="h-3 w-3" />}
+                                Clearance: {isYearly ? 'Institutional Annual' : 'Unlimited Monthly'} Node
                             </Badge>
-                        </Link>
-                      )}
+                          )}
+                      </div>
                       <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
-                          Welcome back, <br />
+                          Greetings, <br />
                           <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Nyaya {text}</span>
                       </h1>
                   </div>
                   <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed">
-                      Access high-fidelity legal intelligence and forensic auditing tools designed for statutory precision within the Indian judicial ecosystem.
+                      {isYearly ? "You have absolute institutional authority over all forensic nodes. Your yearly protocol provides maximum-fidelity legal intelligence." : 
+                       isMonthly ? "Unlimited forensic clearance is active. Accessing full neural capacity for high-frequency legal auditing." :
+                       "Access precision AI nodes for statutory auditing within the Indian judicial ecosystem. Standard operation protocols active."}
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
                       <Button size="sm" className="rounded-xl font-bold px-8 h-12 shadow-xl shadow-primary/20 active:scale-95 transition-all text-xs" asChild>
@@ -531,32 +545,39 @@ export default function DashboardHomePage() {
           </div>
 
           <div className="lg:col-span-4 space-y-10">
-              {isLimited && (
-                <section>
-                    <SectionHeader icon={CreditCard} sector="Status: Restricted">Usage Audit</SectionHeader>
-                    <Card className="glass p-6 rounded-[2rem] border-primary/10 shadow-lg relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
-                            <Zap className="h-16 w-16 text-primary" />
-                        </div>
-                        <div className="space-y-6 relative z-10">
-                            <div className="flex justify-between items-center">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Operations Executed</p>
-                                <span className="font-mono font-black text-primary">{userProfile?.aiUsageCount || 0} / {userProfile?.subscriptionType === 'pro_20' ? '20' : '5'}</span>
-                            </div>
-                            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                                <motion.div 
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${Math.min(100, ((userProfile?.aiUsageCount || 0) / (userProfile?.subscriptionType === 'pro_20' ? 20 : 5)) * 100)}%` }}
-                                    className="h-full bg-primary"
-                                />
-                            </div>
+              <section>
+                  <SectionHeader icon={CreditCard} sector={isLimited ? "Status: Restricted" : "Status: Absolute"}>Statutory Audit</SectionHeader>
+                  <Card className="glass p-6 rounded-[2rem] border-primary/10 shadow-lg relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
+                          <Zap className="h-16 w-16 text-primary" />
+                      </div>
+                      <div className="space-y-6 relative z-10">
+                          <div className="flex justify-between items-center">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Operations Executed</p>
+                              <span className="font-mono font-black text-primary">
+                                  {userProfile?.aiUsageCount || 0} / {isLimited ? (userProfile?.subscriptionType === 'pro_20' ? '20' : '5') : '∞'}
+                              </span>
+                          </div>
+                          <div className="w-full h-2 bg-muted rounded-full overflow-hidden shadow-inner">
+                              <motion.div 
+                                  initial={{ width: 0 }}
+                                  animate={{ width: isLimited ? `${Math.min(100, ((userProfile?.aiUsageCount || 0) / (userProfile?.subscriptionType === 'pro_20' ? 20 : 5)) * 100)}%` : "100%" }}
+                                  className={cn("h-full", isLimited ? "bg-primary" : "bg-green-500")}
+                              />
+                          </div>
+                          {isLimited ? (
                             <Button asChild className="w-full h-11 font-black uppercase tracking-widest text-[9px] rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
-                                <Link href="/dashboard/billing">Get More Credits</Link>
+                                <Link href="/dashboard/billing">Expansion Protocol</Link>
                             </Button>
-                        </div>
-                    </Card>
-                </section>
-              )}
+                          ) : (
+                            <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/5 border border-green-500/10">
+                                <ShieldCheck className="h-4 w-4 text-green-600" />
+                                <span className="text-[10px] font-black uppercase text-green-600 tracking-wider">Maximum Clearance Active</span>
+                            </div>
+                          )}
+                      </div>
+                  </Card>
+              </section>
 
               <section>
                   <SectionHeader icon={Sparkles} sector="Status: Optimized">system matrix</SectionHeader>
