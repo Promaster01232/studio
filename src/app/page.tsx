@@ -27,9 +27,9 @@ import { Footer } from "@/components/footer";
 const TricolorBackground = () => {
   return (
     <div className="tricolor-pulse">
-      <div className="tricolor-glow bg-[#FF9933]" style={{ top: '-10%', left: '10%' }}></div>
-      <div className="tricolor-glow bg-[#FFFFFF]" style={{ top: '30%', left: '40%', width: '800px', opacity: 0.05 }}></div>
-      <div className="tricolor-glow bg-[#128807]" style={{ bottom: '-10%', right: '10%' }}></div>
+      <div className="tricolor-glow bg-[#FF9933] top-[-10%] left-[10%]"></div>
+      <div className="tricolor-glow bg-[#FFFFFF] top-[30%] left-[40%] w-[800px] opacity-[0.05]"></div>
+      <div className="tricolor-glow bg-[#128807] bottom-[-10%] right-[10%]"></div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] pointer-events-none">
           <svg className="ashoka-rotate w-[600px] h-[600px] text-[#000080]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.5">
               <circle cx="50" cy="50" r="45" />
