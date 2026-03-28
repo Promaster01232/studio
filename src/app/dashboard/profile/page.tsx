@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -9,7 +8,31 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Trash2, KeyRound, ShieldCheck, Moon, Edit, Loader2, User, Camera, X, ImageUp, ShieldAlert, MailCheck, AlertTriangle, BadgeCheck, UserCheck, Fingerprint, Zap, Cpu, QrCode } from 'lucide-react';
+import { 
+  LogOut, 
+  Trash2, 
+  KeyRound, 
+  ShieldCheck, 
+  Moon, 
+  Edit, 
+  Loader2, 
+  User, 
+  Camera, 
+  X, 
+  ImageUp, 
+  ShieldAlert, 
+  MailCheck, 
+  AlertTriangle, 
+  BadgeCheck, 
+  UserCheck, 
+  Fingerprint, 
+  Zap, 
+  Cpu, 
+  QrCode,
+  ArrowRight,
+  Activity,
+  Globe
+} from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
@@ -35,8 +58,6 @@ import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Logo } from "@/components/logo";
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 type UserProfile = {
   uid: string;
@@ -194,16 +215,7 @@ export default function ProfilePage() {
         const verification = await verifyEmailAuthenticity({ email: userProfile.email });
         if (verification.isAuthentic) {
             const userRef = doc(firestore, "users", userProfile.uid);
-            const updateData = { securityStatus: 'verified', flagReason: "", isBlocked: false };
-            setDoc(userRef, updateData, { merge: true })
-                .catch(async (serverError) => {
-                    const permissionError = new FirestorePermissionError({
-                        path: userRef.path,
-                        operation: 'update',
-                        requestResourceData: updateData,
-                    } satisfies SecurityRuleContext, serverError);
-                    errorEmitter.emit('permission-error', permissionError);
-                });
+            await setDoc(userRef, { securityStatus: 'verified', flagReason: "", isBlocked: false }, { merge: true });
             setUserProfile(prev => prev ? { ...prev, securityStatus: 'verified' } : null);
             toast({ title: "Audit Passed", description: `Forensic identity confirmed.` });
         } else {
@@ -219,22 +231,12 @@ export default function ProfilePage() {
   const updateUserPhoto = (newPhotoURL: string) => {
       if (!auth.currentUser || !userProfile) return;
       const userRef = doc(firestore, "users", auth.currentUser.uid);
-      const updateData = { photoURL: newPhotoURL };
-      
-      setDoc(userRef, updateData, { merge: true })
+      setDoc(userRef, { photoURL: newPhotoURL }, { merge: true })
         .then(() => {
             toast({ title: "Registry Updated", description: "Identity photo synchronized." });
             setUserProfile(prev => prev ? { ...prev, photoURL: newPhotoURL } : null);
-        })
-        .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: userRef.path,
-                operation: 'update',
-                requestResourceData: updateData,
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
         });
-      update(ref(rtdb, `users/${auth.currentUser.uid}`), updateData).catch(() => {});
+      update(ref(rtdb, `users/${auth.currentUser.uid}`), { photoURL: newPhotoURL }).catch(() => {});
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -298,14 +300,6 @@ export default function ProfilePage() {
         setUserProfile(updatedProfile);
         toast({ title: 'Registry Synchronized', description: 'Personal dossier updated successfully.' });
       })
-      .catch(async (serverError) => {
-          const permissionError = new FirestorePermissionError({
-              path: userDocRef.path,
-              operation: 'update',
-              requestResourceData: updatedProfile,
-          } satisfies SecurityRuleContext, serverError);
-          errorEmitter.emit('permission-error', permissionError);
-      })
       .finally(() => setSaving(false));
   };
 
@@ -331,12 +325,8 @@ export default function ProfilePage() {
             toast({ title: "Registry Purged", description: "All identity records have been permanently erased." });
             router.replace('/');
         })
-        .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: userDocRef.path,
-                operation: 'delete',
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
+        .catch((err) => {
+            toast({ variant: "destructive", title: "Purge Refused", description: "Unauthorized session access." });
         })
         .finally(() => {
             if (auth.currentUser) setSaving(false);
@@ -368,12 +358,12 @@ export default function ProfilePage() {
                                 </div>
                             )}
                             <div className="absolute -bottom-2 -right-2 flex gap-2 z-20">
-                                <Button size="icon" variant="secondary" className="rounded-xl h-9 w-9 sm:h-10 sm:w-10 shadow-2xl border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={startCamera}>
+                                <button className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-white dark:bg-zinc-800 shadow-2xl flex items-center justify-center border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={startCamera}>
                                     <Camera className="h-4 w-4" />
-                                </Button>
-                                <Button size="icon" variant="secondary" className="rounded-xl h-9 w-9 sm:h-10 sm:w-10 shadow-2xl border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}>
+                                </button>
+                                <button className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-white dark:bg-zinc-800 shadow-2xl flex items-center justify-center border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}>
                                     <ImageUp className="h-4 w-4" />
-                                </Button>
+                                </button>
                             </div>
                         </div>
                         <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
