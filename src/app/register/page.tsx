@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -8,8 +7,8 @@ import { useAuth, useFirestore, useDatabase } from "@/firebase";
 import { 
   createUserWithEmailAndPassword, 
   onAuthStateChanged, 
-  signInWithEmailAndPassword,
-  updateProfile
+  updateProfile,
+  sendEmailVerification
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
 import { ref, set } from "firebase/database";
@@ -21,14 +20,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle2, Sparkles, Scale } from "lucide-react";
+import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle2, Sparkles, Scale, Info } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { motion, AnimatePresence } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
-import { sendVerificationEmailAction } from "./email-action";
 
 export default function RegisterPage() {
   const auth = useAuth();
@@ -56,7 +54,6 @@ export default function RegisterPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // If user is logged in, double check if they have a profile, if so go to dashboard
         const checkProfile = async () => {
             const docRef = doc(firestore, "users", user.uid);
             const docSnap = await getDoc(docRef);
@@ -77,7 +74,7 @@ export default function RegisterPage() {
       toast({
         variant: "destructive",
         title: "Information missing",
-        description: "Please fill in all required fields to initialize the registry node.",
+        description: "Please fill all required fields to initialize the registry node.",
       });
       return;
     }
@@ -93,20 +90,16 @@ export default function RegisterPage() {
 
     setLoading(true);
     setValidationError("");
-    setEmailStatus('idle');
+    setIsValidating(true);
 
     try {
-      setIsValidating(true);
-
-      // AI Email Audit with Resilient Fallback
-      let isAuthentic = true;
+      // 1. AI Email Audit with Resilient Fallback
       let securityStatus = 'verified';
-      
       try {
         const emailValidation = await verifyEmailAuthenticity({ email: trimmedEmail });
         if (!emailValidation.isAuthentic) {
           setEmailStatus('invalid');
-          setValidationError(emailValidation.reason || "AI detected suspicious email pattern.");
+          setValidationError(emailValidation.reason || "Suspicious email pattern detected.");
           setIsValidating(false);
           setLoading(false);
           return;
@@ -120,33 +113,14 @@ export default function RegisterPage() {
       
       setIsValidating(false);
 
-      let user;
-      try {
-          const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
-          user = userCredential.user;
-      } catch (authError: any) {
-          // Recovery Logic: If user already exists in Auth but registration failed previously
-          if (authError.code === 'auth/email-already-in-use') {
-              try {
-                  const signInResult = await signInWithEmailAndPassword(auth, trimmedEmail, password);
-                  user = signInResult.user;
-                  console.log("Existing identity found - synchronizing registry nodes.");
-              } catch (signInError) {
-                  throw authError; // Re-throw original error if password is wrong
-              }
-          } else {
-              throw authError;
-          }
-      }
+      // 2. Auth Node Creation
+      const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
+      const user = userCredential.user;
 
       if (!user) throw new Error("Identity node generation failed.");
 
-      // Update Display Name
+      // 3. Metadata & Profile Synchronization
       await updateProfile(user, { displayName: `${firstName} ${lastName}` });
-
-      // Dispatch Verification Node (Mock implementation)
-      const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-      await sendVerificationEmailAction(trimmedEmail, verificationCode).catch(e => console.warn("Email dispatch error:", e));
 
       const userProfile = {
         uid: user.uid,
@@ -159,10 +133,12 @@ export default function RegisterPage() {
         securityStatus: securityStatus,
         emailVerified: user.emailVerified,
         isBlocked: false,
+        aiUsageCount: 0,
+        subscriptionType: 'free',
         createdAt: serverTimestamp(),
       };
 
-      // Atomic Registry Update
+      // Atomic Registry Update (Firestore + RTDB)
       const userDocRef = doc(firestore, "users", user.uid);
       await setDoc(userDocRef, userProfile);
       
@@ -170,11 +146,11 @@ export default function RegisterPage() {
       await set(rtdbRef, {
           ...userProfile,
           createdAt: Date.now()
-      }).catch(err => console.warn("RTDB synchronization delayed."));
+      }).catch(err => console.warn("RTDB synchronization delayed:", err.message));
 
       toast({
           title: "Registry Enrollment Complete",
-          description: "Your digital identity has been synchronized with the terminal.",
+          description: "Welcome to Nyaya Sahayak. Accessing your terminal...",
       });
       
       router.push("/dashboard");
@@ -182,15 +158,13 @@ export default function RegisterPage() {
     } catch (error: any) {
       console.error("Enrollment Failure Dossier:", error);
       
-      let errorMessage = "An unknown protocol error occurred. Please try again.";
+      let errorMessage = "A protocol error occurred. Please try again.";
       if (error.code === 'auth/email-already-in-use') {
-          errorMessage = "This email is already in the registry. Try signing in.";
+          errorMessage = "This email is already registered. Please sign in.";
       } else if (error.code === 'auth/weak-password') {
-          errorMessage = "Password does not meet statutory complexity requirements.";
+          errorMessage = "Password does not meet complexity requirements.";
       } else if (error.code === 'auth/network-request-failed') {
-          errorMessage = "Network latency detected. Check your downlink.";
-      } else if (error.code === 'auth/too-many-requests') {
-          errorMessage = "Terminal busy. Please wait 60 seconds before retrying.";
+          errorMessage = "Network latency detected. Please check your downlink.";
       }
 
       toast({
@@ -203,77 +177,51 @@ export default function RegisterPage() {
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-      },
-    },
-  };
-
   return (
     <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl border-primary/5 rounded-2xl bg-card">
       <motion.div 
           className="p-8 sm:p-12 flex flex-col justify-center"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
       >
-          <motion.div variants={itemVariants} className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-6">
               <Logo className="h-12 w-12" />
-              <h1 className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
+              <h1 className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
                   Nyaya Sahayak
               </h1>
-          </motion.div>
-          <motion.h2 variants={itemVariants} className="text-3xl font-black tracking-tighter">Citizen Registry</motion.h2>
-          <motion.p variants={itemVariants} className="text-muted-foreground mt-2 mb-8 font-medium">
-          AI-authenticated email enrollment.
-          </motion.p>
-          <CardContent className="p-0">
-              <motion.div variants={itemVariants} className="grid gap-4">
+          </div>
+          <h2 className="text-3xl font-black tracking-tighter">Citizen Registry</h2>
+          <p className="text-muted-foreground mt-2 mb-8 font-medium">
+            AI-authenticated institutional enrollment.
+          </p>
+          
+          <div className="grid gap-4">
               <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2 text-left">
-                  <Label htmlFor="first-name" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">First name</Label>
-                  <Input id="first-name" placeholder="Rajesh" required value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} className="h-11 font-bold bg-background" />
+                    <Label htmlFor="first-name" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">First name</Label>
+                    <Input id="first-name" placeholder="Rajesh" value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} className="h-11 font-bold bg-background" />
                   </div>
                   <div className="grid gap-2 text-left">
-                  <Label htmlFor="last-name" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Last name</Label>
-                  <Input id="last-name" placeholder="Kumar" required value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} className="h-11 font-bold bg-background" />
+                    <Label htmlFor="last-name" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Last name</Label>
+                    <Input id="last-name" placeholder="Kumar" value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} className="h-11 font-bold bg-background" />
                   </div>
               </div>
               
               <div className="grid gap-2 text-left">
                   <Label htmlFor="email" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
-                    <span>Email ID</span>
-                    <AnimatePresence>
-                        {isValidating && (
-                            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[9px] text-primary flex items-center gap-1 font-black">
-                                <Loader2 className="h-2.5 w-2.5 animate-spin" /> AI SCANNING
-                            </motion.span>
-                        )}
-                    </AnimatePresence>
+                    <span>Email Address</span>
+                    {isValidating && (
+                        <span className="text-[9px] text-primary flex items-center gap-1 font-black">
+                            <Loader2 className="h-2.5 w-2.5 animate-spin" /> AI SCANNING
+                        </span>
+                    )}
                   </Label>
                   <div className="relative">
                     <Input
                         id="email"
                         type="email"
                         placeholder="m@example.com"
-                        required
                         value={email}
                         onChange={(e) => {
                             setEmail(e.target.value);
@@ -283,15 +231,13 @@ export default function RegisterPage() {
                         className={cn(
                             "h-11 font-bold bg-background pr-10 transition-colors",
                             emailStatus === 'valid' && "border-green-500/50 bg-green-500/5",
-                            emailStatus === 'invalid' && "border-red-500/50 bg-red-500/5",
-                            emailStatus === 'pending' && "border-amber-500/50 bg-amber-500/5"
+                            emailStatus === 'invalid' && "border-red-500/50 bg-red-500/5"
                         )}
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
                         {emailStatus === 'valid' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
                         {emailStatus === 'invalid' && <AlertCircle className="h-4 w-4 text-red-600" />}
                         {emailStatus === 'pending' && <Loader2 className="h-4 w-4 text-amber-600 animate-spin" />}
-                        {emailStatus === 'idle' && !isValidating && email && <Sparkles className="h-4 w-4 text-primary opacity-20" />}
                     </div>
                   </div>
               </div>
@@ -304,19 +250,12 @@ export default function RegisterPage() {
                       id="mobile-number"
                       type="tel"
                       placeholder="+91 98765 43210"
-                      required
                       value={mobileNumber}
                       onChange={(e) => setMobileNumber(e.target.value)}
                       disabled={loading}
                       className="h-11 font-bold bg-background"
                   />
               </div>
-
-              {validationError && (
-                  <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] font-black text-red-600 bg-red-500/10 p-2 rounded-lg border border-red-500/20 text-left">
-                      AI FORENSIC ALERT: {validationError}
-                  </motion.p>
-              )}
 
               <div className="grid gap-2 text-left">
                   <Label htmlFor="userType" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Platform Role</Label>
@@ -334,50 +273,26 @@ export default function RegisterPage() {
 
               <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2 text-left">
-                      <Label htmlFor="password" title="password" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Password</Label>
+                      <Label htmlFor="password" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Password</Label>
                       <div className="relative">
-                          <Input 
-                              id="password" 
-                              type={showPassword ? "text" : "password"} 
-                              required 
-                              value={password} 
-                              onChange={(e) => setPassword(e.target.value)} 
-                              disabled={loading} 
-                              className="h-11 font-bold pr-10 bg-background" 
-                          />
-                          <button
-                              type="button"
-                              onClick={() => setShowPassword(!showPassword)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                          >
+                          <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} className="h-11 font-bold pr-10 bg-background" />
+                          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                           </button>
                       </div>
                   </div>
                   <div className="grid gap-2 text-left">
-                      <Label htmlFor="confirm-password" title="confirm-password" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Confirm</Label>
+                      <Label htmlFor="confirm-password" className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Confirm</Label>
                       <div className="relative">
-                          <Input 
-                              id="confirm-password" 
-                              type={showConfirmPassword ? "text" : "password"} 
-                              required 
-                              value={confirmPassword} 
-                              onChange={(e) => setConfirmPassword(e.target.value)} 
-                              disabled={loading} 
-                              className="h-11 font-bold pr-10 bg-background" 
-                          />
-                          <button
-                              type="button"
-                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                          >
+                          <Input id="confirm-password" type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} className="h-11 font-bold pr-10 bg-background" />
+                          <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                               {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                           </button>
                       </div>
                   </div>
               </div>
 
-              <div className="flex items-start space-x-3 text-left p-3 rounded-xl bg-primary/5 border border-primary/10 transition-all hover:bg-primary/10 mt-2">
+              <div className="flex items-start space-x-3 text-left p-3 rounded-xl bg-primary/5 border border-primary/10 mt-2">
                   <Checkbox 
                       id="register-terms" 
                       checked={acceptedTerms} 
@@ -385,36 +300,34 @@ export default function RegisterPage() {
                       className="mt-1 border-primary/30 data-[state=checked]:bg-primary"
                   />
                   <div className="grid gap-1 leading-none">
-                      <Label
-                          htmlFor="register-terms"
-                          className="text-[10px] font-bold text-muted-foreground leading-snug cursor-pointer"
-                      >
-                          I acknowledge the <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Protocol</Link>.
+                      <Label htmlFor="register-terms" className="text-[10px] font-bold text-muted-foreground leading-snug cursor-pointer">
+                          I acknowledge the <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Protocol</Link> of nyayasahayak.in.
                       </Label>
                   </div>
               </div>
 
-              <Button type="submit" className="w-full h-12 font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all mt-4" onClick={handleRegister} disabled={loading || !acceptedTerms}>
+              <Button className="w-full h-12 font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all mt-4" onClick={handleRegister} disabled={loading || !acceptedTerms}>
                   {loading ? (
                       <span className="flex items-center gap-2">
                         <Loader2 className="animate-spin h-5 w-5" />
-                        {isValidating ? "AI SCANNING..." : "ENROLLING IDENTITY..."}
+                        {isValidating ? "AI SCANNING..." : "ENROLLING..."}
                       </span>
                   ) : (
                       <span className="flex items-center gap-2">
-                        <ShieldCheck className="h-5 w-5" /> COMPLETE REGISTRATION
+                        <ShieldCheck className="h-5 w-5" /> COMPLETE ENROLLMENT
                       </span>
                   )}
               </Button>
-              </motion.div>
-              <motion.div variants={itemVariants} className="mt-6 text-center text-sm font-medium">
+          </div>
+          
+          <div className="mt-6 text-center text-sm font-medium">
               Already in registry?{" "}
               <Link href="/login" className="font-bold text-primary hover:underline">
                   Sign in here
               </Link>
-              </motion.div>
-          </CardContent>
+          </div>
       </motion.div>
+      
       <div className="hidden md:flex flex-col items-center justify-center relative bg-muted/30 border-l border-primary/5 overflow-hidden">
         <div className="p-12 text-center space-y-6 relative z-10">
             <div className="bg-primary/5 p-8 rounded-full inline-block animate-pulse">
@@ -425,7 +338,6 @@ export default function RegisterPage() {
                 <p className="text-sm text-muted-foreground font-medium max-w-[280px]">Secure your digital presence within the Nyaya Sahayak ecosystem.</p>
             </div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50"></div>
         <div className="absolute bottom-8 left-8 text-[10px] font-black uppercase tracking-widest opacity-20">Nyaya Sahayak Terminal // REGISTRY</div>
       </div>
     </Card>

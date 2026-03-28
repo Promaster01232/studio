@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -15,9 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Scale } from "lucide-react";
-import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
+import { Loader2, Scale, ShieldCheck } from "lucide-react";
 import { validateUserDetails } from "@/ai/flows/validate-user-details";
 
 const profileSchema = z.object({
@@ -75,8 +72,8 @@ export default function CreateProfilePage() {
     if (!auth.currentUser) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Authentication session expired. Please log in again.",
+        title: "Session Expired",
+        description: "Please log in again to complete your profile.",
       });
       router.push("/login");
       return;
@@ -85,61 +82,58 @@ export default function CreateProfilePage() {
     setLoading(true);
 
     try {
-      const validation = await validateUserDetails({
-        mobileNumber: data.mobileNumber,
-        userType: data.userType,
-      });
-
-      if (!validation.isValid) {
-        toast({
-          variant: "destructive",
-          title: "Validation failed",
-          description: validation.reason || "The provided mobile number appear to be invalid.",
+      // AI Mobile Audit with Resilient Fallback
+      let isValid = true;
+      try {
+        const validation = await validateUserDetails({
+          mobileNumber: data.mobileNumber,
+          userType: data.userType,
         });
-        setLoading(false);
-        return;
+        isValid = validation.isValid;
+        if (!isValid) {
+          toast({
+            variant: "destructive",
+            title: "Validation failed",
+            description: validation.reason || "The provided mobile number appears to be invalid.",
+          });
+          setLoading(false);
+          return;
+        }
+      } catch (aiError) {
+        console.warn("AI Validation Bypass: Validation node busy.");
       }
 
       const userProfile = {
         uid: auth.currentUser.uid,
         photoURL: auth.currentUser.photoURL || '',
         ...data,
-        isBlocked: false, // EXPLICITLY INITIALIZE AS ACTIVE
+        isBlocked: false,
+        aiUsageCount: 0,
+        subscriptionType: 'free',
         createdAt: serverTimestamp(),
       };
       
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+      await setDoc(userDocRef, userProfile);
+      
+      await set(ref(rtdb, `users/${auth.currentUser.uid}`), {
+          ...userProfile,
+          createdAt: Date.now()
+      }).catch(err => console.warn("RTDB sync issues:", err.message));
 
-      setDoc(userDocRef, userProfile)
-        .then(() => {
-            set(ref(rtdb, `users/${auth.currentUser!.uid}`), {
-                ...userProfile,
-                createdAt: Date.now()
-            }).catch(err => {
-                console.warn("RTDB registry issue:", err.message);
-            });
-
-            toast({
-                title: "Profile active",
-                description: "Welcome to Nyaya Sahayak.",
-            });
-            router.push("/dashboard");
-        })
-        .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: userDocRef.path,
-                operation: 'create',
-                requestResourceData: userProfile,
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
-        })
-        .finally(() => {
-            setLoading(false);
-        });
+      toast({
+          title: "Profile Synchronized",
+          description: "Welcome to your Nyaya Sahayak terminal.",
+      });
+      router.push("/dashboard");
 
     } catch (error: any) {
-        console.error("Validation error:", error);
-        toast({ variant: "destructive", title: "Error", description: "Could not validate registration details." });
+        console.error("Profile creation failure:", error);
+        toast({ 
+            variant: "destructive", 
+            title: "Registry Error", 
+            description: "Could not synchronize profile data. Please try again." 
+        });
         setLoading(false);
     }
   };
@@ -147,7 +141,7 @@ export default function CreateProfilePage() {
   if (authLoading) {
       return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <Loader2 className="h-8 w-8 animate-spin text-primary opacity-20" />
         </div>
       );
   }
@@ -160,7 +154,7 @@ export default function CreateProfilePage() {
           <CardTitle className="font-headline font-black tracking-tighter">Onboarding</CardTitle>
         </div>
         <CardDescription className="font-medium">
-          Let's customize your experience based on your role.
+          Finalize your identity nodes to activate platform permissions.
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-8">
@@ -199,9 +193,9 @@ export default function CreateProfilePage() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Email address</FormLabel>
+                  <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Registry Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="rajesh.k@example.com" {...field} disabled className="h-11 font-bold opacity-50" />
+                    <Input placeholder="rajesh.k@example.com" {...field} disabled className="h-11 font-bold opacity-50 bg-muted/20" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -213,7 +207,7 @@ export default function CreateProfilePage() {
               name="mobileNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Mobile number</FormLabel>
+                  <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Mobile Number</FormLabel>
                   <FormControl>
                     <Input placeholder="+91 12345 67890" {...field} className="h-11 font-bold" />
                   </FormControl>
@@ -227,11 +221,11 @@ export default function CreateProfilePage() {
               name="userType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Select Platform Role</FormLabel>
+                  <FormLabel className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Statutory Role</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-11 font-bold">
-                        <SelectValue placeholder="Select your role" />
+                        <SelectValue placeholder="Select role" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -246,7 +240,15 @@ export default function CreateProfilePage() {
             />
 
             <Button type="submit" disabled={loading} className="w-full h-12 font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all">
-              {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Activate My Account"}
+              {loading ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin" /> SYNCHRONIZING...
+                  </span>
+              ) : (
+                  <span className="flex items-center gap-2">
+                    <ShieldCheck className="h-5 w-5" /> ACTIVATE REGISTRY
+                  </span>
+              )}
             </Button>
           </form>
         </Form>

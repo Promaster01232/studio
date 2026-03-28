@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,13 +11,13 @@
     --card-foreground: 224 71% 4%;
     --popover: 210 20% 98%;
     --popover-foreground: 224 71% 4%;
-    --primary: 28 100% 35%; /* Darkened Saffron for WCAG Contrast (ratio > 4.5:1) */
+    --primary: 28 100% 35%; /* Saffron */
     --primary-foreground: 210 40% 98%;
     --secondary: 115 60% 92%;
     --secondary-foreground: 115 100% 10%;
     --muted: 210 40% 92%;
-    --muted-foreground: 215.4 16.3% 25%; /* Darker for better accessibility */
-    --accent: 115 80% 15%; /* Deep Indian Green */
+    --muted-foreground: 215.4 16.3% 25%;
+    --accent: 115 80% 15%; /* Green */
     --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 40%;
     --destructive-foreground: 210 40% 98%;
@@ -38,14 +37,14 @@
   }
  
   .dark {
-    /* Deep Forensic Charcoal with High-Contrast Glow Accents */
+    /* Deep Forensic Charcoal */
     --background: 222 47% 4%;
     --foreground: 210 40% 98%;
     --card: 222 47% 6%;
     --card-foreground: 210 40% 98%;
     --popover: 222 47% 4%;
     --popover-foreground: 210 40% 98%;
-    --primary: 28 100% 65%; /* Saffron Glow */
+    --primary: 28 100% 65%;
     --primary-foreground: 222.2 47.4% 8%;
     --secondary: 115 40% 10%;
     --secondary-foreground: 115 100% 85%;
@@ -83,35 +82,11 @@
   .glass { @apply bg-card/40 backdrop-blur-2xl border border-primary/5; }
   .forensic-text { @apply font-black uppercase tracking-widest text-[9px]; }
 
-  .tricolor-pulse {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .tricolor-glow {
-    position: absolute;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.15;
-    animation: tricolor-move 20s infinite alternate ease-in-out;
-  }
-
-  @keyframes tricolor-move {
-    0% { transform: translate(-10%, -10%); }
-    100% { transform: translate(20%, 20%); }
-  }
-
-  .ashoka-rotate {
-    animation: ashoka-spin 60s linear infinite;
-  }
-
   @keyframes ashoka-spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+  .ashoka-rotate {
+    animation: ashoka-spin 60s linear infinite;
   }
 }
