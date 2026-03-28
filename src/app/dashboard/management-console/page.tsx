@@ -7,9 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
-import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, query, where, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, query, where, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, remove, update } from "firebase/database";
-import { sendPasswordResetEmail } from "firebase/auth";
+import { sendPasswordResetEmail, onAuthStateChanged } from "firebase/auth";
 import { 
   ShieldCheck, 
   Loader2, 
@@ -23,24 +23,24 @@ import {
   UserPlus,
   Trash2,
   Phone,
-  RotateCcw,
   Activity,
   Cpu,
   Lock,
   QrCode,
   KeyRound,
-  FileText,
   UserCheck,
   Zap,
   TrendingUp,
-  MailCheck
+  MailCheck,
+  Send,
+  X,
+  FileText
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { onAuthStateChanged } from "firebase/auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,7 +58,6 @@ import {
   AlertDialogDescription, 
   AlertDialogHeader, 
   AlertDialogTitle, 
-  AlertDialogTrigger 
 } from "@/components/ui/alert-dialog";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
@@ -66,6 +65,8 @@ import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/logo";
 import { sendVerificationEmailAction } from "@/app/register/email-action";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 interface UserRecord {
   uid: string;
@@ -90,6 +91,105 @@ const ADMIN_EMAILS = [
   'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com'
 ];
+
+function EmailDispatchDialog({ 
+    user, 
+    type, 
+    open, 
+    onOpenChange, 
+    onDispatch 
+}: { 
+    user: UserRecord | null, 
+    type: 'reset' | 'verify' | null, 
+    open: boolean, 
+    onOpenChange: (open: boolean) => void,
+    onDispatch: (subject: string, body: string) => Promise<void>
+}) {
+    const [subject, setSubject] = useState("");
+    const [body, setBody] = useState("");
+    const [isDispatching, setIsDispatching] = useState(false);
+
+    useEffect(() => {
+        if (user && type) {
+            if (type === 'reset') {
+                setSubject(`[Nyaya Sahayak] Password Restoration Protocol: ${user.firstName}`);
+                setBody(`Greetings ${user.firstName},\n\nWe have initialized a Password Restoration Protocol for your institutional registry node on nyayasahayak.in.\n\nAn official security link is attached below. Use this link to reset your credentials within the next 60 minutes.\n\nPROTOCOL LINK: [Official Security Link Included Automatically]\n\nIf you did not initiate this request, please contact technical support immediately.\n\nStatutory regards,\nNyaya Sahayak Registry Terminal`);
+            } else {
+                const code = Math.floor(100000 + Math.random() * 900000).toString();
+                setSubject(`[Nyaya Sahayak] Identity Verification Node: ${user.firstName}`);
+                setBody(`Greetings ${user.firstName},\n\nTo ensure 100% forensic integrity of the Citizen Registry, we require you to verify your identity node.\n\nYour 6-digit forensic verification code is: ${code}\n\nEnter this code in your dashboard to activate full platform permissions.\n\nStatutory regards,\nNyaya Sahayak Registry Terminal`);
+            }
+        }
+    }, [user, type, open]);
+
+    const handleSend = async () => {
+        setIsDispatching(true);
+        try {
+            await onDispatch(subject, body);
+            onOpenChange(false);
+        } finally {
+            setIsDispatching(false);
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2rem] border-none shadow-3xl bg-card">
+                <div className="p-8">
+                    <DialogHeader className="mb-8 border-none text-left">
+                        <div className="flex items-center gap-3 text-primary mb-2">
+                            <Mail className="h-5 w-5" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Communication Node</span>
+                        </div>
+                        <DialogTitle className="text-2xl font-black tracking-tighter">
+                            {type === 'reset' ? 'Password Restoration Dispatch' : 'Identity Verification Dispatch'}
+                        </DialogTitle>
+                        <DialogDescription className="font-medium text-xs">
+                            Customize the institutional transmission for citizen: <span className="text-foreground font-bold">{user?.email}</span>
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-6">
+                        <div className="space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Registry Subject</Label>
+                            <Input 
+                                value={subject} 
+                                onChange={e => setSubject(e.target.value)} 
+                                className="h-12 font-bold bg-muted/20 border-primary/5 focus:border-primary"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory Body</Label>
+                            <Textarea 
+                                value={body} 
+                                onChange={e => setBody(e.target.value)} 
+                                rows={10}
+                                className="resize-none font-medium text-sm leading-relaxed p-6 rounded-2xl bg-muted/20 border-primary/5 focus:border-primary shadow-inner"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="p-6 border-t bg-muted/5 flex justify-between items-center gap-4">
+                    <div className="flex items-center gap-2 text-primary opacity-40">
+                        <ShieldCheck className="h-4 w-4" />
+                        <span className="text-[9px] font-black uppercase tracking-widest">Secured Node</span>
+                    </div>
+                    <div className="flex gap-3">
+                        <Button variant="ghost" onClick={() => onOpenChange(false)} className="rounded-xl font-bold h-11 px-6">Cancel</Button>
+                        <Button 
+                            onClick={handleSend} 
+                            disabled={isDispatching}
+                            className="bg-primary text-white font-black uppercase tracking-[0.2em] text-[10px] h-11 px-8 rounded-xl shadow-xl shadow-primary/20 active:scale-95 transition-all"
+                        >
+                            {isDispatching ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
+                            Execute Transmission
+                        </Button>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+}
 
 function DigitalIdentityCard({ profile }: { profile: UserRecord }) {
     const systemId = `NS-REG-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
@@ -249,6 +349,10 @@ export default function ManagementConsolePage() {
   const [processingUid, setProcessingUid] = useState<string | null>(null);
   const [userToPurge, setUserToPurge] = useState<UserRecord | null>(null);
   
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [modalTargetUser, setModalTargetUser] = useState<UserRecord | null>(null);
+  const [modalType, setModalType] = useState<'reset' | 'verify' | null>(null);
+
   const unsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -297,6 +401,33 @@ export default function ManagementConsolePage() {
     };
   }, [firestore, auth, router, toast]);
 
+  const handleOpenEmailEditor = (user: UserRecord, type: 'reset' | 'verify') => {
+      setModalTargetUser(user);
+      setModalType(type);
+      setEmailModalOpen(true);
+  };
+
+  const handleDispatchEmail = async (subject: string, body: string) => {
+      if (!modalTargetUser || !modalType) return;
+      
+      setProcessingUid(modalTargetUser.uid);
+      try {
+          if (modalType === 'reset') {
+              await sendPasswordResetEmail(auth, modalTargetUser.email);
+              toast({ title: "Restoration Dispatch Complete", description: `Official Firebase link sent to ${modalTargetUser.email}.` });
+          } else {
+              const codeMatch = body.match(/\d{6}/);
+              const code = codeMatch ? codeMatch[0] : "123456";
+              await sendVerificationEmailAction(modalTargetUser.email, code);
+              toast({ title: "Verification Node Active", description: `Forensic code ${code} dispatched to ${modalTargetUser.email}.` });
+          }
+      } catch (error: any) {
+          toast({ variant: "destructive", title: "Transmission Failed", description: error.message });
+      } finally {
+          setProcessingUid(null);
+      }
+  };
+
   const handleToggleStatus = (user: UserRecord, isInactive: boolean) => {
     setProcessingUid(user.uid);
     const updateData = { isBlocked: isInactive };
@@ -311,31 +442,6 @@ export default function ManagementConsolePage() {
             toast({ variant: "destructive", title: "Action Refused", description: "Registry permissions insufficient." });
         })
         .finally(() => setProcessingUid(null));
-  };
-
-  const handleSendReset = async (user: UserRecord) => {
-      setProcessingUid(user.uid);
-      try {
-          await sendPasswordResetEmail(auth, user.email);
-          toast({ title: "Reset link sent", description: `Transmission dispatched to ${user.email}.` });
-      } catch (error: any) {
-          toast({ variant: "destructive", title: "Dispatch Failed", description: error.message });
-      } finally {
-          setProcessingUid(null);
-      }
-  };
-
-  const handleSendVerify = async (user: UserRecord) => {
-      setProcessingUid(user.uid);
-      try {
-          const code = Math.floor(100000 + Math.random() * 900000).toString();
-          await sendVerificationEmailAction(user.email, code);
-          toast({ title: "Verification link dispatched", description: `Gmail node activated for ${user.email}.` });
-      } catch (error: any) {
-          toast({ variant: "destructive", title: "Registry Error", description: error.message });
-      } finally {
-          setProcessingUid(null);
-      }
   };
 
   const handleVerifyUser = async (user: UserRecord) => {
@@ -523,10 +629,10 @@ export default function ManagementConsolePage() {
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-60 p-2 rounded-xl shadow-2xl glass border-primary/10">
                                                     <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 px-3">Registry Controls</DropdownMenuLabel>
-                                                    <DropdownMenuItem onSelect={() => handleSendReset(user)} className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3 text-left">
+                                                    <DropdownMenuItem onSelect={() => handleOpenEmailEditor(user, 'reset')} className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3 text-left">
                                                         <KeyRound className="h-4 w-4 opacity-40" /> Dispatch Reset Link
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem onSelect={() => handleSendVerify(user)} className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3 text-left">
+                                                    <DropdownMenuItem onSelect={() => handleOpenEmailEditor(user, 'verify')} className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3 text-left">
                                                         <MailCheck className="h-4 w-4 opacity-40" /> Dispatch Verification
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator className="opacity-5" />
@@ -551,6 +657,14 @@ export default function ManagementConsolePage() {
               </ScrollArea>
           </CardContent>
       </Card>
+
+      <EmailDispatchDialog 
+        user={modalTargetUser}
+        type={modalType}
+        open={emailModalOpen}
+        onOpenChange={setEmailModalOpen}
+        onDispatch={handleDispatchEmail}
+      />
 
       <AlertDialog open={!!userToPurge} onOpenChange={(open) => !open && setUserToPurge(null)}>
           <AlertDialogContent className="rounded-[2.5rem] p-8 border-none shadow-2xl glass">
