@@ -24,7 +24,13 @@ import {
   Fingerprint,
   Gavel,
   ShieldAlert,
-  Dna
+  Dna,
+  Mic,
+  FileText,
+  FileSignature,
+  Library,
+  FolderKanban,
+  Search
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
@@ -58,6 +64,89 @@ const TricolorBackground = () => {
   );
 };
 
+const featureNodes = [
+  {
+    icon: Mic,
+    title: "Forensic Case Auditor",
+    sector: "Sector: Forensic",
+    desc: "Neural engine specifically trained on the nuances of the Bharatiya Nyaya Sanhita (BNS). It performs deep-layer deconstruction of legal narratives to map relevant sections and generate professional dossiers.",
+    href: "/dashboard/narrate",
+    color: "text-orange-500",
+    bg: "bg-orange-500/5",
+    border: "border-orange-500/10"
+  },
+  {
+    icon: Search,
+    title: "Statutory Risk Scanner",
+    sector: "Sector: Statutory",
+    desc: "Institutional-grade audit system for legal instruments. Scans notices, contracts, and FIR applications to identify non-compliance markers and hidden liabilities under a zero-trust architecture.",
+    href: "/dashboard/document-intelligence",
+    color: "text-blue-600",
+    bg: "bg-blue-600/5",
+    border: "border-blue-600/10"
+  },
+  {
+    icon: FileText,
+    title: "Statutory Drafting Terminal",
+    sector: "Sector: Civil",
+    desc: "AI-driven drafting node for complex legal petitions and notices. Ensures all instruments adhere to the latest judicial amendments and procedural formatting requirements.",
+    href: "/dashboard/document-generator",
+    color: "text-emerald-600",
+    bg: "bg-emerald-600/5",
+    border: "border-emerald-600/10"
+  },
+  {
+    icon: FileSignature,
+    title: "Bond Structural Ingress",
+    sector: "Sector: Registry",
+    desc: "Specialized tool for generating legally sound affidavits, bail bonds, and indemnity instruments with precise placeholder mapping for citizen data.",
+    href: "/dashboard/bond-generator",
+    color: "text-purple-600",
+    bg: "bg-purple-600/5",
+    border: "border-purple-600/10"
+  },
+  {
+    icon: BrainCircuit,
+    title: "Litigation Success Matrix",
+    sector: "Sector: Predictive",
+    desc: "Advanced neural assessment of litigation success probability. Analyzes case strength based on forensic data points and provides recommended statutory actions.",
+    href: "/dashboard/strength-analyzer",
+    color: "text-amber-600",
+    bg: "bg-amber-600/5",
+    border: "border-amber-600/10"
+  },
+  {
+    icon: Gavel,
+    title: "Procedural Roadmap Hub",
+    sector: "Sector: Procedural",
+    desc: "Dynamic navigational roadmaps for the Bharatiya Nagarik Suraksha Sanhita (BNSS). Provides step-by-step guidance through complex judicial cycles and writ jurisdictions.",
+    href: "/dashboard/police-guide",
+    color: "text-red-600",
+    bg: "bg-red-600/5",
+    border: "border-red-600/10"
+  },
+  {
+    icon: ShieldCheck,
+    title: "Verified Advocate Registry",
+    sector: "Sector: Connection",
+    desc: "Secure connection point to independent legal professionals. Every profile undergoes multi-stage forensic identity audits to ensure absolute citizen trust.",
+    href: "/dashboard/lawyer-connect",
+    color: "text-sky-600",
+    bg: "bg-sky-600/5",
+    border: "border-sky-600/10"
+  },
+  {
+    icon: Globe,
+    title: "eCourts Sync Node",
+    sector: "Sector: Integration",
+    desc: "Real-time synchronization with the official Indian eCourts database. Monitor case status, hearing dates, and judicial orders from a unified institutional terminal.",
+    href: "/dashboard/my-cases",
+    color: "text-indigo-600",
+    bg: "bg-indigo-600/5",
+    border: "border-indigo-600/10"
+  }
+];
+
 export default function WelcomePage() {
   const auth = useAuth();
   const [user, setUser] = useState<User | null>(null);
@@ -77,8 +166,8 @@ export default function WelcomePage() {
       <TricolorBackground />
       
       <main className="flex-1 flex flex-col items-center relative z-10">
-        {/* Hero Sector - High Design & Compact */}
-        <section className="w-full max-w-[1200px] pt-12 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-16 px-6 text-center space-y-6">
+        {/* Hero Sector - Architectural & Compact */}
+        <section className="w-full max-w-[1200px] pt-12 pb-8 sm:pt-16 sm:pb-10 lg:pt-20 lg:pb-12 px-6 text-center space-y-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -147,134 +236,137 @@ export default function WelcomePage() {
           </motion.div>
         </section>
 
-        {/* Feature Documentation Sector - High Labeling */}
-        <section className="w-full max-w-[1200px] py-16 px-6">
-          <div className="grid lg:grid-cols-12 gap-12 items-start">
-            <div className="lg:col-span-5 space-y-8">
-              <div className="space-y-4 text-left">
-                <div className="flex items-center gap-2 text-primary">
-                  <Dna className="h-5 w-5" />
-                  <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.4em]">Forensic Mandate</span>
-                </div>
-                <h2 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[1] uppercase">
-                  Statutory <br />
-                  <span className="text-primary italic font-black">Intelligence.</span>
-                </h2>
-                <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed opacity-80">
-                  Nyaya Sahayak represents the definitive leap forward in AI-powered legal empowerment for the Indian citizenry. We have engineered this ecosystem to bridge the gap between statutory complexity and fundamental rights.
-                </p>
+        {/* Feature Registry Sector - Card by Card Professional Design */}
+        <section className="w-full max-w-[1200px] py-12 px-6">
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12 border-b border-primary/5 pb-8">
+            <div className="space-y-2 text-left">
+              <div className="flex items-center gap-2 text-primary">
+                <Sparkles className="h-5 w-5" />
+                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.4em]">Forensic Registry</span>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <Card className="glass border-primary/5 p-5 rounded-2xl shadow-sm">
-                  <p className="text-2xl font-black tracking-tight text-primary">1.4B+</p>
-                  <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Citizen Reach</p>
-                </Card>
-                <Card className="glass border-primary/5 p-5 rounded-2xl shadow-sm">
-                  <p className="text-2xl font-black tracking-tight text-blue-600">99.8%</p>
-                  <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Audit Precision</p>
-                </Card>
-              </div>
+              <h2 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[1] uppercase">
+                Neural <span className="text-primary italic font-black">Capabilities.</span>
+              </h2>
             </div>
+            <p className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest hidden md:block">
+              Institutional Protocol // NS-REG-001
+            </p>
+          </div>
 
-            <div className="lg:col-span-7 space-y-6">
-              {[
-                {
-                  icon: BrainCircuit,
-                  title: "Forensic Case Auditor Node",
-                  desc: "Neural engine specifically trained on the nuances of the Bharatiya Nyaya Sanhita (BNS) and the Bharatiya Sakshya Adhiniyam (BSA). It performs deep-layer deconstruction of legal narratives, mapping relevant sections and generating professional statutory dossiers for immediate law enforcement engagement.",
-                  href: "/dashboard/narrate",
-                  color: "text-primary",
-                  bg: "bg-primary/5",
-                  sector: "Sector: Forensic"
-                },
-                {
-                  icon: FileSearch,
-                  title: "Document Risk Scanner Protocol",
-                  desc: "Institutional-grade audit system for legal instruments. Performs a comprehensive forensic scan of notices, contracts, and FIR applications to identify non-compliance markers, hidden liabilities, and critical procedural deadlines under a zero-trust architecture.",
-                  href: "/dashboard/document-intelligence",
-                  color: "text-blue-600",
-                  bg: "bg-blue-600/5",
-                  sector: "Sector: Statutory"
-                },
-                {
-                  icon: Gavel,
-                  title: "Procedural Roadmap Intelligence",
-                  desc: "Dynamic navigational roadmaps for the Bharatiya Nagarik Suraksha Sanhita (BNSS). Provides step-by-step guidance through judicial cycles, including writ jurisdiction under Articles 32 and 226, ensuring technology serves as a bridge to justice.",
-                  href: "/dashboard/police-guide",
-                  color: "text-[#128807]",
-                  bg: "bg-[#128807]/5",
-                  sector: "Sector: Procedural"
-                }
-              ].map((feature, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <Card className="glass border-primary/10 hover:border-primary/30 rounded-[2.5rem] overflow-hidden shadow-xl transition-all duration-500 group active:scale-[0.99] text-left">
-                    <CardContent className="p-8 sm:p-10">
-                      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
-                        <div className={cn("p-5 rounded-2xl transition-all group-hover:scale-110 duration-500 shadow-lg shrink-0 h-fit w-fit", feature.bg)}>
-                          <feature.icon className={cn("h-6 w-6 sm:h-8 sm:w-8", feature.color)} />
-                        </div>
-                        <div className="flex-1 space-y-4">
-                          <div className="flex items-center justify-between">
-                            <h3 className="text-xl sm:text-2xl font-black tracking-tighter uppercase leading-none">{feature.title}</h3>
-                            <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest hidden sm:block">{feature.sector}</span>
-                          </div>
-                          <p className="text-sm text-muted-foreground font-medium leading-relaxed opacity-90">
-                            {feature.desc}
-                          </p>
-                          <div className="pt-4 flex items-center justify-between border-t border-primary/5">
-                            <Button variant="ghost" className="p-0 h-auto font-black text-[10px] uppercase tracking-[0.2em] text-primary hover:bg-transparent group/btn" asChild>
-                              <Link href={feature.href} className="flex items-center gap-2">
-                                Initialize Protocol
-                                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-2" />
-                              </Link>
-                            </Button>
-                            <div className="flex items-center gap-2">
-                                <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
-                                <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Active Node</span>
-                            </div>
-                          </div>
-                        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {featureNodes.map((node, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+              >
+                <Card className={cn(
+                  "h-full flex flex-col glass transition-all duration-500 rounded-[2rem] overflow-hidden border-primary/10 hover:border-primary/30 group active:scale-[0.98] shadow-lg hover:shadow-2xl hover:shadow-primary/5",
+                  "text-left"
+                )}>
+                  {/* Spectral Side Border */}
+                  <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  
+                  <CardContent className="p-8 flex flex-col flex-grow relative z-10">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className={cn("p-3.5 rounded-2xl transition-all duration-500 group-hover:scale-110 shadow-xl", node.bg, node.color)}>
+                        <node.icon className="h-6 w-6" />
                       </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
+                      <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/5 opacity-40">
+                        {node.sector}
+                      </Badge>
+                    </div>
+                    
+                    <div className="space-y-3 flex-grow">
+                      <h3 className="text-lg font-black tracking-tight leading-tight group-hover:text-primary transition-colors">{node.title}</h3>
+                      <p className="text-xs text-muted-foreground font-medium leading-relaxed opacity-80 line-clamp-4">
+                        {node.desc}
+                      </p>
+                    </div>
+                    
+                    <div className="pt-6 mt-6 border-t border-primary/5 flex items-center justify-between">
+                      <Button asChild variant="ghost" className="p-0 h-auto font-black text-[9px] uppercase tracking-[0.2em] text-primary hover:bg-transparent group/btn">
+                        <Link href={node.href} className="flex items-center gap-2">
+                          Access Node
+                          <ArrowRight className="h-3 w-3 transition-transform group-hover/btn:translate-x-1.5" />
+                        </Link>
+                      </Button>
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-1 w-1 rounded-full bg-primary/20" />
+                        <span className="text-[7px] font-bold text-muted-foreground/30 uppercase">Protocol v1.0</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </section>
 
-        {/* Global Registry Sector - Unified Style */}
-        <section className="w-full max-w-[1000px] py-16 px-6 text-center space-y-12">
+        {/* Trust Sector - Compact Metrics */}
+        <section className="w-full max-w-[1200px] py-12 px-6">
+          <Card className="glass border-primary/5 p-8 sm:p-12 rounded-[3rem] overflow-hidden shadow-2xl relative">
+            <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
+              <Dna className="h-64 w-64 text-primary" />
+            </div>
+            <div className="grid lg:grid-cols-2 gap-12 items-center relative z-10">
+              <div className="space-y-6 text-left">
+                <div className="flex items-center gap-3 text-primary">
+                  <div className="p-2 rounded-xl bg-primary/10">
+                    <TrendingUp className="h-5 w-5" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em]">Performance Metrics</span>
+                </div>
+                <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-none uppercase">Statutory <br/><span className="text-primary italic">Authority.</span></h2>
+                <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-md">
+                  Nyaya Sahayak is engineered to process complex legal data with mathematical precision, ensuring every citizen has access to institutional-grade intelligence.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-6">
+                {[
+                  { label: "Neural Precision", val: "99.8%", sub: "Forensic Audit" },
+                  { label: "Citizen Reach", val: "1.4B+", sub: "National Node" },
+                  { label: "Statutory Registry", val: "60+", sub: "Protocols Active" },
+                  { label: "Audit Speed", val: "< 2s", sub: "Neural Ingress" }
+                ].map((stat, i) => (
+                  <div key={i} className="p-6 rounded-[2rem] bg-background/50 border border-primary/5 shadow-sm group hover:border-primary/20 transition-all">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60 mb-1">{stat.label}</p>
+                    <p className="text-3xl font-black tracking-tighter text-foreground group-hover:text-primary transition-colors">{stat.val}</p>
+                    <p className="text-[8px] font-bold text-primary/40 uppercase tracking-tighter mt-1">{stat.sub}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+        </section>
+
+        {/* Global Registry Sector */}
+        <section className="w-full max-w-[1000px] py-12 px-6 text-center space-y-10">
           <div className="space-y-3">
             <div className="flex items-center justify-center gap-3 text-primary mb-2">
                 <Globe className="h-5 w-5" />
                 <span className="text-[10px] font-black uppercase tracking-[0.4em]">External Ingress</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter text-foreground leading-none uppercase">Official Registry</h2>
+            <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter text-foreground leading-none uppercase">Institutional Gateways</h2>
           </div>
           
-          <div className="grid sm:grid-cols-2 gap-6 lg:gap-10">
+          <div className="grid sm:grid-cols-2 gap-6">
             {[
-              { icon: Globe, label: "eCourts Services", sub: "Live Judicial Registry", href: "https://services.ecourts.gov.in/", color: "text-primary", bg: "bg-primary/5" },
+              { icon: Globe, label: "eCourts Services", sub: "Official Judicial Registry", href: "https://services.ecourts.gov.in/", color: "text-primary", bg: "bg-primary/5" },
               { icon: Scale, label: "National Portal", sub: "Statutory Access Node", href: "https://www.india.gov.in/", color: "text-blue-600", bg: "bg-blue-600/5" }
             ].map((link, i) => (
               <a key={i} href={link.href} target="_blank" rel="noopener noreferrer" className="group">
-                <Card className="glass p-8 sm:p-12 rounded-[2.5rem] border-primary/10 hover:border-primary/40 transition-all duration-500 flex flex-col items-center justify-center gap-6 shadow-2xl relative overflow-hidden active:scale-[0.98]">
-                  <div className="p-5 rounded-2xl transition-all duration-500 shadow-xl group-hover:scale-110 group-hover:-rotate-2 bg-muted/30">
-                    <link.icon className={cn("h-8 w-8 sm:h-10 sm:w-10", link.color)} />
+                <Card className="glass p-8 rounded-[2.5rem] border-primary/10 hover:border-primary/40 transition-all duration-500 flex flex-col items-center justify-center gap-4 shadow-xl relative overflow-hidden active:scale-[0.98]">
+                  <div className="p-4 rounded-2xl transition-all duration-500 shadow-xl group-hover:scale-110 group-hover:-rotate-2 bg-muted/30">
+                    <link.icon className={cn("h-8 w-8", link.color)} />
                   </div>
-                  <div className="space-y-2 relative z-10">
-                    <span className="font-black text-2xl sm:text-3xl tracking-tighter leading-none uppercase block">{link.label}</span>
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.3em] block opacity-50">{link.sub}</span>
+                  <div className="space-y-1 relative z-10">
+                    <span className="font-black text-xl tracking-tighter leading-none uppercase block">{link.label}</span>
+                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.3em] block opacity-50">{link.sub}</span>
                   </div>
-                  <ExternalLink className="h-4 w-4 opacity-20 group-hover:opacity-100 group-hover:text-primary transition-all duration-500 absolute top-8 right-8" />
+                  <ExternalLink className="h-3.5 w-3.5 opacity-20 group-hover:opacity-100 group-hover:text-primary transition-all duration-500 absolute top-6 right-6" />
                 </Card>
               </a>
             ))}
