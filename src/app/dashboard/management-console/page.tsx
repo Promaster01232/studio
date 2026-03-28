@@ -669,9 +669,7 @@ export default function ManagementConsolePage() {
       <AlertDialog open={!!userToPurge} onOpenChange={(open) => !open && setUserToPurge(null)}>
           <AlertDialogContent className="rounded-[2.5rem] p-8 border-none shadow-2xl glass text-left">
               <AlertDialogHeader className="text-left">
-                  <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4">
-                      <ShieldAlert className="h-10 w-10 text-destructive animate-pulse" />
-                  </div>
+                  <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4"><ShieldAlert className="h-10 w-10 text-destructive animate-pulse" /></div>
                   <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Purge Protocol</AlertDialogTitle>
                   <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
                       This protocol will permanently erase <strong>{userToPurge?.firstName} {userToPurge?.lastName}</strong> from the registry. This action is terminal and irreversible.

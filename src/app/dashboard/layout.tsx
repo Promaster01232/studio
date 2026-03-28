@@ -141,7 +141,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Every time pathname changes, show navigation loader for a smooth institutional transition
+    // Show navigation loader on every sector ingress for professional visual feedback
     setIsNavigating(true);
     const timer = setTimeout(() => setIsNavigating(false), 600);
     return () => clearTimeout(timer);
@@ -166,7 +166,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               const data = userDoc.data() as any;
               setUserProfile(data);
               
-              // Throttled sync to avoid resource exhaustion
+              // Smart Sync: Only write if mismatch detected to save bandwidth
               if (data.emailVerified !== user.emailVerified) {
                   updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(() => {});
               }
@@ -177,7 +177,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             }
             setProfileLoading(false);
         }, (error) => {
-            console.warn("Registry sync paused:", error.message);
+            console.warn("Registry synchronization paused:", error.message);
             setProfileLoading(false);
         });
 
@@ -186,7 +186,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         notifUnsubscribeRef.current = onSnapshot(q, (snap) => {
             setUnreadCount(snap.size);
         }, (error) => {
-            console.warn("Notification listener error:", error);
+            console.warn("Notification node error:", error);
             setUnreadCount(0);
         });
 
@@ -309,8 +309,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-[1.5rem] shadow-3xl border-primary/5 glass animate-in slide-in-from-left-2 duration-300">
-                <DropdownMenuLabel className="px-2 pb-2">
-                    <div className="flex items-center gap-2 text-primary mb-1 text-left">
+                <DropdownMenuLabel className="px-2 pb-2 text-left">
+                    <div className="flex items-center gap-2 text-primary mb-1">
                         <Sparkles className="h-3 w-3" />
                         <span className="text-[9px] font-black uppercase tracking-[0.2em]">Registry Dossier</span>
                     </div>
