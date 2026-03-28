@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -509,7 +510,7 @@ export default function DashboardHomePage() {
                       </Button>
                       {isLimited && (
                         <Button variant="outline" size="sm" className="rounded-xl font-bold px-8 h-12 border-primary/10 bg-primary/5 text-primary hover:bg-primary/10 active:scale-95 transition-all text-xs" asChild>
-                            <Link href="/dashboard/billing">Upgrade Protocol</Link>
+                            <Link href="/dashboard/billing">Upgrade Now</Link>
                         </Button>
                       )}
                   </div>
@@ -567,7 +568,7 @@ export default function DashboardHomePage() {
                           </div>
                           {isLimited ? (
                             <Button asChild className="w-full h-11 font-black uppercase tracking-widest text-[9px] rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
-                                <Link href="/dashboard/billing">Expansion Protocol</Link>
+                                <Link href="/dashboard/billing">Upgrade Now</Link>
                             </Button>
                           ) : (
                             <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/5 border border-green-500/10">
