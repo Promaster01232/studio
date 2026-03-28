@@ -219,7 +219,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <CardTitle className="text-3xl font-black tracking-tighter text-destructive leading-none">
                         Statutory Suspension
                     </CardTitle>
-                    <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4">
+                    <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4 text-center">
                         Your account has been deactivated by the system administrator. Registry privileges suspended.
                     </CardDescription>
                 </CardHeader>
@@ -295,7 +295,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-[1.5rem] shadow-3xl border-primary/5 glass animate-in slide-in-from-left-2 duration-300">
                 <DropdownMenuLabel className="px-2 pb-2">
-                    <div className="flex items-center gap-2 text-primary mb-1">
+                    <div className="flex items-center gap-2 text-primary mb-1 text-left">
                         <Sparkles className="h-3 w-3" />
                         <span className="text-[9px] font-black uppercase tracking-[0.2em]">Registry Dossier</span>
                     </div>
@@ -310,7 +310,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 
                 <DropdownMenuLabel className="px-2 pb-2">
-                    <div className="flex items-center gap-2 text-primary mb-1">
+                    <div className="flex items-center gap-2 text-primary mb-1 text-left">
                         <Sparkles className="h-3 w-3" />
                         <span className="text-[9px] font-black uppercase tracking-[0.2em]">Appearance</span>
                     </div>
@@ -387,7 +387,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                                     />
                                 </div>
                                 <div className="flex flex-col items-center gap-3">
-                                    <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
+                                    <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 shadow-sm">
                                         <Activity className="h-3 w-3 text-primary animate-pulse" />
                                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Synchronization</span>
                                     </div>

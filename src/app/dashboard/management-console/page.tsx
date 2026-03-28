@@ -7,8 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useDatabase, useAuth } from "@/firebase";
-import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, writeBatch, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, query, where, getDocs } from "firebase/firestore";
 import { ref, remove, update } from "firebase/database";
+import { sendPasswordResetEmail } from "firebase/auth";
 import { 
   ShieldCheck, 
   Loader2, 
@@ -22,13 +23,17 @@ import {
   UserPlus,
   Trash2,
   Phone,
-  UserCheck,
   RotateCcw,
   Activity,
   Cpu,
-  Eraser,
   Lock,
-  QrCode
+  QrCode,
+  KeyRound,
+  FileText,
+  UserCheck,
+  Zap,
+  TrendingUp,
+  MailCheck
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,8 +41,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { onAuthStateChanged } from "firebase/auth";
-import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,8 +64,9 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/logo";
+import { sendVerificationEmailAction } from "@/app/register/email-action";
 
 interface UserRecord {
   uid: string;
@@ -310,6 +314,31 @@ export default function ManagementConsolePage() {
         .finally(() => setProcessingUid(null));
   };
 
+  const handleSendReset = async (user: UserRecord) => {
+      setProcessingUid(user.uid);
+      try {
+          await sendPasswordResetEmail(auth, user.email);
+          toast({ title: "Reset link sent", description: `Transmission dispatched to ${user.email}.` });
+      } catch (error: any) {
+          toast({ variant: "destructive", title: "Dispatch Failed", description: error.message });
+      } finally {
+          setProcessingUid(null);
+      }
+  };
+
+  const handleSendVerify = async (user: UserRecord) => {
+      setProcessingUid(user.uid);
+      try {
+          const code = Math.floor(100000 + Math.random() * 900000).toString();
+          await sendVerificationEmailAction(user.email, code);
+          toast({ title: "Verification link dispatched", description: `Gmail node activated for ${user.email}.` });
+      } catch (error: any) {
+          toast({ variant: "destructive", title: "Registry Error", description: error.message });
+      } finally {
+          setProcessingUid(null);
+      }
+  };
+
   const handleVerifyUser = async (user: UserRecord) => {
       setProcessingUid(user.uid);
       try {
@@ -332,13 +361,8 @@ export default function ManagementConsolePage() {
     if (!userToPurge) return;
     const user = userToPurge;
     
-    // Core protection only for root administrators
     if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
-        toast({ 
-            variant: "destructive", 
-            title: "Action Prohibited", 
-            description: "Institutional root accounts are immutable." 
-        });
+        toast({ variant: "destructive", title: "Action Prohibited", description: "Institutional root accounts are immutable." });
         setUserToPurge(null);
         return;
     }
@@ -365,6 +389,13 @@ export default function ManagementConsolePage() {
     u.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const stats = {
+      total: users.length,
+      verified: users.filter(u => u.securityStatus === 'verified').length,
+      flagged: users.filter(u => u.securityStatus === 'flagged' || u.securityStatus === 'suspicious').length,
+      pending: users.filter(u => !u.securityStatus).length
+  };
+
   if (loading) {
     return <div className="flex h-[70vh] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
@@ -373,7 +404,7 @@ export default function ManagementConsolePage() {
     <div className="max-w-7xl mx-auto space-y-8 px-2 sm:px-6 pb-12 text-left">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tighter font-headline text-foreground lowercase first-letter:uppercase">Registry management</h1>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tighter font-headline text-foreground">Registry Management Terminal</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-medium">Institutional oversight of nyayasahayak.in records and identity data.</p>
         </div>
         <div className="flex gap-2 sm:gap-3">
@@ -383,11 +414,32 @@ export default function ManagementConsolePage() {
         </div>
       </div>
 
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+              { label: "Total Nodes", value: stats.total, icon: Activity, color: "text-blue-500", bg: "bg-blue-500/10" },
+              { label: "Verified", value: stats.verified, icon: UserCheck, color: "text-green-600", bg: "bg-green-600/10" },
+              { label: "Audit Flags", value: stats.flagged, icon: AlertTriangle, color: "text-red-500", bg: "bg-red-500/10" },
+              { label: "New Ingress", value: stats.pending, icon: TrendingUp, color: "text-amber-600", bg: "bg-amber-600/10" }
+          ].map((stat, i) => (
+              <Card key={i} className="border-primary/5 shadow-md rounded-2xl overflow-hidden glass group transition-all hover:scale-[1.02]">
+                  <CardContent className="p-5 flex items-center gap-4">
+                      <div className={cn("p-3 rounded-xl transition-transform group-hover:scale-110 shadow-sm", stat.bg, stat.color)}>
+                          <stat.icon className="h-5 w-5" />
+                      </div>
+                      <div className="text-left">
+                          <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60 leading-none mb-1">{stat.label}</p>
+                          <p className="text-2xl font-black tracking-tighter">{stat.value}</p>
+                      </div>
+                  </CardContent>
+              </Card>
+          ))}
+      </div>
+
       <Card className="border border-primary/5 shadow-xl rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden bg-card">
           <CardHeader className="bg-muted/5 border-b border-primary/5 px-4 sm:px-6 py-6">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="text-left w-full">
-                      <CardTitle className="font-headline font-black text-lg sm:text-xl tracking-tight">Identity registry</CardTitle>
+                      <CardTitle className="font-headline font-black text-lg sm:text-xl tracking-tight">Identity Registry Report</CardTitle>
                       <CardDescription className="text-[10px] sm:text-xs font-medium mt-1">Forensic security and account status oversight.</CardDescription>
                   </div>
                   <div className="relative group w-full md:w-80">
@@ -403,14 +455,14 @@ export default function ManagementConsolePage() {
           </CardHeader>
           <CardContent className="p-0">
               <ScrollArea className="w-full text-left">
-                  <Table className="min-w-[900px]">
+                  <Table className="min-w-[1000px]">
                       <TableHeader className="bg-muted/20">
                           <TableRow>
-                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest pl-6 h-12">User identity</TableHead>
+                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest pl-6 h-12">User Identity</TableHead>
                               <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Role</TableHead>
                               <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Status</TableHead>
-                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Audit</TableHead>
-                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
+                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-center h-12">Security Audit</TableHead>
+                              <TableHead className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-right pr-6 h-12">Command Protocol</TableHead>
                           </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -420,12 +472,12 @@ export default function ManagementConsolePage() {
                               return (
                                 <TableRow key={user.uid} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", !isActive && "bg-red-500/5")}>
                                     <TableCell className="pl-6 py-4">
-                                        <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-3 text-left">
                                             <Avatar className="h-10 w-10 border border-primary/10">
                                                 <AvatarImage src={user.photoURL} className="object-cover" />
                                                 <AvatarFallback className="font-bold text-primary bg-primary/5">{user.firstName.charAt(0)}</AvatarFallback>
                                             </Avatar>
-                                            <div className="flex flex-col text-left">
+                                            <div className="flex flex-col">
                                                 <div className="flex items-center gap-2">
                                                     <span className="font-bold text-xs sm:text-sm tracking-tight">{user.firstName} {user.lastName}</span>
                                                     {isProtected && <BadgeCheck className="h-3 w-3 text-primary" />}
@@ -456,7 +508,7 @@ export default function ManagementConsolePage() {
                                                 <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20 text-[8px] font-black uppercase">Verified</Badge>
                                             ) : (
                                                 <Button size="sm" variant="ghost" className="h-6 px-2 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full" onClick={() => handleVerifyUser(user)} disabled={processingUid === user.uid}>
-                                                    Verify
+                                                    Initialize Audit
                                                 </Button>
                                             )}
                                         </div>
@@ -466,21 +518,26 @@ export default function ManagementConsolePage() {
                                             <UserDetailsModal user={user} />
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-muted">
-                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-muted" disabled={processingUid === user.uid}>
+                                                        {processingUid === user.uid ? <Loader2 className="h-4 w-4 animate-spin" /> : <MoreHorizontal className="h-4 w-4" />}
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl">
-                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><Mail className="mr-3 h-4 w-4" /> message citizen</DropdownMenuItem>
-                                                    <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><RotateCcw className="mr-3 h-4 w-4" /> reset profile</DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
+                                                <DropdownMenuContent align="end" className="w-60 p-2 rounded-xl shadow-2xl glass border-primary/10">
+                                                    <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 px-3">Registry Controls</DropdownMenuLabel>
+                                                    <DropdownMenuItem onSelect={() => handleSendReset(user)} className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3">
+                                                        <KeyRound className="mr-3 h-4 w-4 opacity-40" /> Dispatch Reset Link
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem onSelect={() => handleSendVerify(user)} className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3">
+                                                        <MailCheck className="mr-3 h-4 w-4 opacity-40" /> Dispatch Verification
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuSeparator className="opacity-5" />
                                                     <DropdownMenuItem 
-                                                        className={cn("rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10", isProtected && "opacity-50 cursor-not-allowed")}
+                                                        className={cn("rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3", isProtected && "opacity-50 cursor-not-allowed")}
                                                         onClick={() => !isProtected && setUserToPurge(user)}
                                                         disabled={processingUid === user.uid || isProtected}
                                                     >
                                                         {isProtected ? <Lock className="mr-3 h-4 w-4" /> : <Trash2 className="mr-3 h-4 w-4" />}
-                                                        purge record
+                                                        Purge Registry Record
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -507,7 +564,7 @@ export default function ManagementConsolePage() {
                       This protocol will permanently erase <strong>{userToPurge?.firstName} {userToPurge?.lastName}</strong> from the registry. This action is terminal and irreversible.
                   </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6 text-left">
+              <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6">
                   <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort protocol</AlertDialogCancel>
                   <AlertDialogAction onClick={handleExecutePurge} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px] shadow-lg shadow-destructive/20">Execute purge</AlertDialogAction>
               </AlertDialogFooter>

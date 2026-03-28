@@ -31,7 +31,6 @@ const TricolorBackground = () => {
       <div className="tricolor-glow bg-[#FF9933]" style={{ top: '-10%', left: '10%' }}></div>
       <div className="tricolor-glow bg-[#FFFFFF]" style={{ top: '30%', left: '40%', width: '800px', opacity: 0.05 }}></div>
       <div className="tricolor-glow bg-[#128807]" style={{ bottom: '-10%', right: '10%' }}></div>
-      
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] pointer-events-none">
           <svg className="ashoka-rotate w-[600px] h-[600px] text-[#000080]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.5">
               <circle cx="50" cy="50" r="45" />
@@ -110,7 +109,6 @@ export default function WelcomePage() {
                 
                 <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground text-center">
                   Nyaya Sahayak: Elite AI <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Legal Assistant</span>
-                  <span className="animate-pulse ml-1 text-primary">|</span>
                 </h1>
                 
                 <div className="max-w-2xl mx-auto space-y-8 mt-10">
