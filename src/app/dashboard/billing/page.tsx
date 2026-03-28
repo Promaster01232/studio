@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck, ShieldAlert, FileSignature, Globe, Layers } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck, ShieldAlert, FileSignature, Globe, Layers, TicketPercent, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -76,6 +77,11 @@ export default function BillingPage() {
     const [profile, setProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [processingId, setProcessingId] = useState<string | null>(null);
+    
+    // Coupon States
+    const [couponCode, setCouponCode] = useState("");
+    const [appliedDiscount, setAppliedDiscount] = useState<{ code: string, percent: number, planId: string } | null>(null);
+    const [couponError, setCouponError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!auth.currentUser) return;
@@ -86,6 +92,25 @@ export default function BillingPage() {
         return () => unsub();
     }, [auth, firestore]);
 
+    const validateCoupon = () => {
+        setCouponError(null);
+        const code = couponCode.trim().toUpperCase();
+        
+        if (code === 'NYAYA62') {
+            setAppliedDiscount({ code, percent: 95, planId: 'unlimited_monthly' });
+            toast({ title: "95% Discount Applied", description: "Valid for Unlimited Monthly clearance." });
+        } else if (code === 'HARDY0') {
+            setAppliedDiscount({ code, percent: 99.5, planId: 'unlimited_yearly' });
+            toast({ title: "99.5% Discount Applied", description: "Valid for Institutional Annual node." });
+        } else if (code === 'PIE') {
+            setAppliedDiscount({ code, percent: 35, planId: 'unlimited_yearly' });
+            toast({ title: "35% Discount Applied", description: "Valid for Institutional Annual node." });
+        } else {
+            setCouponError("Invalid or expired registry code.");
+            setAppliedDiscount(null);
+        }
+    };
+
     const handleUpgrade = async (planId: string) => {
         if (planId === profile?.subscriptionType) return;
         
@@ -94,21 +119,25 @@ export default function BillingPage() {
 
         setProcessingId(planId);
 
+        let finalAmount = plan.amount;
+        if (appliedDiscount && appliedDiscount.planId === planId) {
+            finalAmount = plan.amount * (1 - appliedDiscount.percent / 100);
+        }
+
         // Razorpay Live Integration Protocol
         const options = {
             key: "rzp_live_SWZcLhmqajCvPv",
-            amount: plan.amount * 100, // Amount in paise
+            amount: Math.round(finalAmount * 100), // Amount in paise
             currency: "INR",
             name: "Nyaya Sahayak",
-            description: `Clearance Upgrade: ${plan.name}`,
+            description: `Clearance Upgrade: ${plan.name} ${appliedDiscount ? `(${appliedDiscount.code})` : ''}`,
             image: "/Logo.png",
             handler: async function (response: any) {
                 try {
                     const userRef = doc(firestore, "users", auth.currentUser!.uid);
                     await updateDoc(userRef, { 
                         subscriptionType: planId,
-                        // Reset usage if unlimited, or keep tracking
-                        aiUsageCount: planId.includes('unlimited') ? 0 : (profile?.aiUsageCount || 0)
+                        aiUsageCount: 0 // Reset usage on premium upgrade
                     });
                     toast({ title: "Clearance Level Upgraded", description: "Your institutional node has been recalibrated." });
                 } catch (err) {
@@ -168,12 +197,55 @@ export default function BillingPage() {
                 </div>
             </div>
 
+            {/* Global Coupon Node */}
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+                <Card className="max-w-md mx-auto border-dashed border-2 border-primary/20 bg-primary/5 rounded-[1.5rem] overflow-hidden">
+                    <CardContent className="p-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <TicketPercent className="h-5 w-5 text-primary" />
+                            <h3 className="text-sm font-black uppercase tracking-widest">Protocol Promo Code</h3>
+                        </div>
+                        <div className="flex gap-2">
+                            <Input 
+                                placeholder="Enter code (e.g., NYAYA62)" 
+                                value={couponCode}
+                                onChange={(e) => setCouponCode(e.target.value)}
+                                className="h-11 font-bold bg-background border-primary/10 uppercase"
+                            />
+                            <Button onClick={validateCoupon} className="h-11 px-6 font-black uppercase text-[10px] tracking-widest rounded-xl">
+                                Apply
+                            </Button>
+                        </div>
+                        <AnimatePresence>
+                            {couponError && (
+                                <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="text-[10px] font-bold text-red-500 mt-2 flex items-center gap-1.5">
+                                    <XCircle className="h-3 w-3" /> {couponError}
+                                </motion.p>
+                            )}
+                            {appliedDiscount && (
+                                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-3 p-3 rounded-xl bg-green-500/10 border border-green-500/20">
+                                    <p className="text-[10px] font-black text-green-600 uppercase tracking-widest flex items-center gap-2">
+                                        <CheckCircle2 className="h-3.5 w-3.5" /> Code Active: {appliedDiscount.code}
+                                    </p>
+                                    <p className="text-[9px] font-bold text-green-600/70 mt-0.5">
+                                        {appliedDiscount.percent}% discount will be applied at checkout for {appliedDiscount.planId.replace('_', ' ')}.
+                                    </p>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </CardContent>
+                </Card>
+            </motion.div>
+
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
                 {plans.map((plan, idx) => {
                     const isActive = currentPlan === plan.id;
                     const isProcessing = processingId === plan.id;
                     const PlanIcon = plan.icon || Activity;
                     
+                    const isDiscounted = appliedDiscount && appliedDiscount.planId === plan.id;
+                    const discountedAmount = isDiscounted ? plan.amount * (1 - appliedDiscount!.percent / 100) : plan.amount;
+
                     return (
                         <motion.div
                             key={plan.id}
@@ -208,8 +280,17 @@ export default function BillingPage() {
                                         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest pt-2">{plan.desc}</p>
                                     </div>
                                     <div className="pt-6">
-                                        <span className="text-4xl font-black tracking-tighter">{plan.price}</span>
-                                        <span className="text-xs font-bold text-muted-foreground ml-2 opacity-60">{plan.id.includes('unlimited') ? '/ cycle' : 'once'}</span>
+                                        <div className="flex items-baseline gap-2">
+                                            <span className={cn("text-4xl font-black tracking-tighter", isDiscounted && "text-green-600")}>
+                                                ₹{discountedAmount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+                                            </span>
+                                            {isDiscounted && (
+                                                <span className="text-sm font-bold text-muted-foreground line-through opacity-40">
+                                                    {plan.price}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span className="text-xs font-bold text-muted-foreground ml-1 opacity-60">{plan.id.includes('unlimited') ? '/ cycle' : 'once'}</span>
                                     </div>
                                 </CardHeader>
 
