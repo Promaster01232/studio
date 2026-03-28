@@ -7,16 +7,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import Script from "next/script";
 
 const plans = [
     {
         id: 'free',
         name: 'Citizen Basic',
         price: '₹0',
+        amount: 0,
         desc: 'Standard identity enrollment.',
         credits: '5 Forensic Credits',
         features: ['Voice Narration (5x)', 'Document Audit (5x)', 'Case Analytics', 'Basic Directory Access'],
@@ -28,6 +30,7 @@ const plans = [
         id: 'pro_20',
         name: 'Professional 20',
         price: '₹99',
+        amount: 99,
         desc: 'Essential statutory expansion.',
         credits: '20 Forensic Credits',
         features: ['Voice Narration (20x)', 'Document Audit (20x)', 'Extended Case Tracker', 'Priority AI Nodes'],
@@ -40,6 +43,7 @@ const plans = [
         id: 'unlimited_monthly',
         name: 'Unlimited Monthly',
         price: '₹599',
+        amount: 599,
         desc: 'Continuous institutional access.',
         credits: 'Absolute Clearance',
         features: ['Unlimited AI Forensic Scans', 'Unlimited Document Audits', 'Full Case Strategy Hub', 'Verified Connect Ingress'],
@@ -52,6 +56,7 @@ const plans = [
         id: 'unlimited_yearly',
         name: 'Institutional Annual',
         price: '₹4,999',
+        amount: 4999,
         desc: 'Permanent statutory authority.',
         credits: 'Absolute Clearance',
         features: ['Everything in Unlimited', 'Advanced Contract Node', 'Custom PDF Export Protocol', 'Root System Access'],
@@ -82,23 +87,56 @@ export default function BillingPage() {
     const handleUpgrade = async (planId: string) => {
         if (planId === profile?.subscriptionType) return;
         
+        const plan = plans.find(p => p.id === planId);
+        if (!plan || plan.amount === 0) return;
+
         setProcessingId(planId);
-        // Simulation of payment gateway integration
-        setTimeout(async () => {
-            try {
-                const userRef = doc(firestore, "users", auth.currentUser!.uid);
-                await updateDoc(userRef, { 
-                    subscriptionType: planId,
-                    // Reset usage if unlimited, or keep tracking
-                    aiUsageCount: planId.includes('unlimited') ? 0 : (profile?.aiUsageCount || 0)
-                });
-                toast({ title: "Clearance Level Upgraded", description: "Your institutional node has been recalibrated." });
-            } catch (err) {
-                toast({ variant: "destructive", title: "Transaction Failed" });
-            } finally {
-                setProcessingId(null);
+
+        // Razorpay Live Integration Protocol
+        const options = {
+            key: "rzp_live_SWZcLhmqajCvPv",
+            amount: plan.amount * 100, // Amount in paise
+            currency: "INR",
+            name: "Nyaya Sahayak",
+            description: `Clearance Upgrade: ${plan.name}`,
+            image: "/Logo.png",
+            handler: async function (response: any) {
+                try {
+                    const userRef = doc(firestore, "users", auth.currentUser!.uid);
+                    await updateDoc(userRef, { 
+                        subscriptionType: planId,
+                        // Reset usage if unlimited, or keep tracking
+                        aiUsageCount: planId.includes('unlimited') ? 0 : (profile?.aiUsageCount || 0)
+                    });
+                    toast({ title: "Clearance Level Upgraded", description: "Your institutional node has been recalibrated." });
+                } catch (err) {
+                    toast({ variant: "destructive", title: "Registry Error", description: "Payment successful but node synchronization failed. Contact support." });
+                } finally {
+                    setProcessingId(null);
+                }
+            },
+            prefill: {
+                name: `${profile?.firstName} ${profile?.lastName}`,
+                email: profile?.email,
+                contact: profile?.mobileNumber
+            },
+            theme: {
+                color: "#994B00" // Institutional Saffron
+            },
+            modal: {
+                ondismiss: function() {
+                    setProcessingId(null);
+                }
             }
-        }, 2000);
+        };
+
+        try {
+            const rzp = new (window as any).Razorpay(options);
+            rzp.open();
+        } catch (error) {
+            toast({ variant: "destructive", title: "Payment Interface Error", description: "Could not initialize Razorpay node." });
+            setProcessingId(null);
+        }
     };
 
     if (loading) return <div className="flex h-[70vh] items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
@@ -108,6 +146,8 @@ export default function BillingPage() {
 
     return (
         <div className="max-w-7xl mx-auto space-y-10 pb-20 px-2 sm:px-0 text-left">
+            <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+            
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
                 <PageHeader
                     title="Billing & Statutory Usage"
