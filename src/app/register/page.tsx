@@ -1,11 +1,17 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth, useFirestore, useDatabase } from "@/firebase";
-import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { 
+  createUserWithEmailAndPassword, 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword,
+  updateProfile
+} from "firebase/auth";
+import { doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
 import { ref, set } from "firebase/database";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff, ShieldCheck, MailCheck, AlertCircle, CheckCircle2, Sparkles, Scale } from "lucide-react";
+import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle2, Sparkles, Scale } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { motion, AnimatePresence } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -44,24 +50,34 @@ export default function RegisterPage() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   
   const [isValidating, setIsValidating] = useState(false);
-  const [emailStatus, setEmailStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'valid' | 'invalid' | 'pending'>('idle');
   const [validationError, setValidationError] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.replace('/dashboard');
+        // If user is logged in, double check if they have a profile, if so go to dashboard
+        const checkProfile = async () => {
+            const docRef = doc(firestore, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                router.replace('/dashboard');
+            }
+        };
+        checkProfile();
       }
     });
     return () => unsubscribe();
-  }, [auth, router]);
+  }, [auth, firestore, router]);
 
   const handleRegister = async () => {
-    if (!firstName || !lastName || !email || !mobileNumber || !password || !confirmPassword) {
+    const trimmedEmail = email.trim().toLowerCase();
+    
+    if (!firstName || !lastName || !trimmedEmail || !mobileNumber || !password || !confirmPassword) {
       toast({
         variant: "destructive",
         title: "Information missing",
-        description: "Please fill in all required fields.",
+        description: "Please fill in all required fields to initialize the registry node.",
       });
       return;
     }
@@ -70,7 +86,7 @@ export default function RegisterPage() {
       toast({
         variant: "destructive",
         title: "Passwords mismatch",
-        description: "Please ensure your passwords are identical.",
+        description: "Credentials must be identical for statutory security.",
       });
       return;
     }
@@ -82,67 +98,104 @@ export default function RegisterPage() {
     try {
       setIsValidating(true);
 
-      // AI check only email authenticity as requested
-      const emailValidation = await verifyEmailAuthenticity({ email });
-      if (!emailValidation.isAuthentic) {
-        setEmailStatus('invalid');
-        setValidationError(emailValidation.reason || "AI detected suspicious email pattern.");
-        setIsValidating(false);
-        setLoading(false);
-        return;
+      // AI Email Audit with Resilient Fallback
+      let isAuthentic = true;
+      let securityStatus = 'verified';
+      
+      try {
+        const emailValidation = await verifyEmailAuthenticity({ email: trimmedEmail });
+        if (!emailValidation.isAuthentic) {
+          setEmailStatus('invalid');
+          setValidationError(emailValidation.reason || "AI detected suspicious email pattern.");
+          setIsValidating(false);
+          setLoading(false);
+          return;
+        }
+        setEmailStatus('valid');
+      } catch (aiError) {
+        console.warn("AI Validation Node Latency - Proceeding with manual audit status.");
+        setEmailStatus('pending');
+        securityStatus = 'pending_audit';
       }
-      setEmailStatus('valid');
+      
       setIsValidating(false);
 
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
+      let user;
+      try {
+          const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
+          user = userCredential.user;
+      } catch (authError: any) {
+          // Recovery Logic: If user already exists in Auth but registration failed previously
+          if (authError.code === 'auth/email-already-in-use') {
+              try {
+                  const signInResult = await signInWithEmailAndPassword(auth, trimmedEmail, password);
+                  user = signInResult.user;
+                  console.log("Existing identity found - synchronizing registry nodes.");
+              } catch (signInError) {
+                  throw authError; // Re-throw original error if password is wrong
+              }
+          } else {
+              throw authError;
+          }
+      }
 
-      // Initialize Gmail API custom verification structure
+      if (!user) throw new Error("Identity node generation failed.");
+
+      // Update Display Name
+      await updateProfile(user, { displayName: `${firstName} ${lastName}` });
+
+      // Dispatch Verification Node (Mock implementation)
       const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-      await sendVerificationEmailAction(email, verificationCode);
+      await sendVerificationEmailAction(trimmedEmail, verificationCode).catch(e => console.warn("Email dispatch error:", e));
 
       const userProfile = {
         uid: user.uid,
-        firstName,
-        lastName,
-        email,
-        mobileNumber,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: trimmedEmail,
+        mobileNumber: mobileNumber.trim(),
         userType,
         photoURL: user.photoURL || '',
-        securityStatus: 'verified',
+        securityStatus: securityStatus,
         emailVerified: user.emailVerified,
         isBlocked: false,
         createdAt: serverTimestamp(),
       };
 
-      await setDoc(doc(firestore, "users", user.uid), userProfile);
+      // Atomic Registry Update
+      const userDocRef = doc(firestore, "users", user.uid);
+      await setDoc(userDocRef, userProfile);
       
-      set(ref(rtdb, `users/${user.uid}`), {
+      const rtdbRef = ref(rtdb, `users/${user.uid}`);
+      await set(rtdbRef, {
           ...userProfile,
           createdAt: Date.now()
-      }).catch(err => console.warn("RTDB sync skipped."));
+      }).catch(err => console.warn("RTDB synchronization delayed."));
 
       toast({
-          title: "Registry Enrollment Active",
-          description: "Welcome! Identity link and custom verification node dispatched.",
+          title: "Registry Enrollment Complete",
+          description: "Your digital identity has been synchronized with the terminal.",
       });
+      
       router.push("/dashboard");
 
     } catch (error: any) {
-      let errorMessage = "An unknown error occurred. Please try again.";
+      console.error("Enrollment Failure Dossier:", error);
+      
+      let errorMessage = "An unknown protocol error occurred. Please try again.";
       if (error.code === 'auth/email-already-in-use') {
-          errorMessage = "This email is already registered.";
+          errorMessage = "This email is already in the registry. Try signing in.";
       } else if (error.code === 'auth/weak-password') {
-          errorMessage = "Password is too weak.";
+          errorMessage = "Password does not meet statutory complexity requirements.";
+      } else if (error.code === 'auth/network-request-failed') {
+          errorMessage = "Network latency detected. Check your downlink.";
+      } else if (error.code === 'auth/too-many-requests') {
+          errorMessage = "Terminal busy. Please wait 60 seconds before retrying.";
       }
 
       toast({
         variant: "destructive",
-        title: "Enrollment failed",
+        title: "Enrollment Failure",
         description: errorMessage,
       });
       setLoading(false);
@@ -230,12 +283,14 @@ export default function RegisterPage() {
                         className={cn(
                             "h-11 font-bold bg-background pr-10 transition-colors",
                             emailStatus === 'valid' && "border-green-500/50 bg-green-500/5",
-                            emailStatus === 'invalid' && "border-red-500/50 bg-red-500/5"
+                            emailStatus === 'invalid' && "border-red-500/50 bg-red-500/5",
+                            emailStatus === 'pending' && "border-amber-500/50 bg-amber-500/5"
                         )}
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
                         {emailStatus === 'valid' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
                         {emailStatus === 'invalid' && <AlertCircle className="h-4 w-4 text-red-600" />}
+                        {emailStatus === 'pending' && <Loader2 className="h-4 w-4 text-amber-600 animate-spin" />}
                         {emailStatus === 'idle' && !isValidating && email && <Sparkles className="h-4 w-4 text-primary opacity-20" />}
                     </div>
                   </div>
