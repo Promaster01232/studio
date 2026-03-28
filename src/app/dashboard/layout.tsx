@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -85,10 +84,13 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
 
             <div className="flex items-center gap-3">
                 {isLimited && (
-                    <Button asChild size="sm" variant="outline" className="hidden lg:flex h-10 px-5 rounded-xl border-primary/20 text-primary hover:bg-primary/5 font-black text-[9px] uppercase tracking-widest gap-2 active:scale-95 transition-all">
-                        <Link href="/dashboard/billing">
-                            <Zap className="h-3.5 w-3.5 animate-pulse" />
-                            Upgrade Clearance
+                    <Button asChild size="sm" variant="outline" className="hidden lg:flex h-10 px-5 rounded-xl border-primary/20 text-primary hover:bg-primary/5 font-black text-[9px] uppercase tracking-widest gap-2 active:scale-95 transition-all group overflow-hidden">
+                        <Link href="/dashboard/billing" className="relative">
+                            <span className="relative z-10 flex items-center gap-2">
+                                <Zap className="h-3.5 w-3.5 animate-pulse" />
+                                Upgrade Clearance
+                            </span>
+                            <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                         </Link>
                     </Button>
                 )}
@@ -269,16 +271,19 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <Sidebar collapsible="icon" className="border-r border-border glass bg-white/50 dark:bg-zinc-950/50">
         <SidebarHeader className="p-6 overflow-hidden">
           <Link href="/dashboard" className="flex items-center gap-4 transition-all hover:scale-105 active:scale-95 group-data-[collapsible=icon]:justify-center group">
-            <div className="relative">
-                <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-primary/20 via-accent/20 to-blue-400/20 blur-md animate-pulse group-data-[collapsible=icon]:hidden"></div>
+            <motion.div 
+              whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
+              className="relative"
+            >
+                <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-primary/20 via-blue-500/20 to-accent/20 blur-md animate-pulse group-data-[collapsible=icon]:hidden"></div>
                 <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
                   <div className="bg-white rounded-full p-1.5 shadow-lg relative z-10">
                     <Logo className="h-7 w-7 border-none shadow-none p-0" />
                   </div>
                 </div>
-            </div>
+            </motion.div>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden text-left">
-              <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] truncate">
+              <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-blue-600 to-accent bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] truncate">
                   Nyaya Sahayak
               </span>
               <span className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 leading-none mt-0.5">Forensic Terminal</span>
@@ -291,7 +296,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           {/* Global Upgrade CTA in Sidebar */}
           {isLimited && !profileLoading && (
             <div className="px-4 py-6 group-data-[collapsible=icon]:hidden">
-                <Card className="bg-primary/5 border-primary/10 rounded-[1.5rem] overflow-hidden group/upgrade hover:border-primary/30 transition-all">
+                <Card className="bg-primary/5 border-primary/10 rounded-[1.5rem] overflow-hidden group/upgrade hover:border-primary/30 transition-all shadow-lg">
                     <div className="p-5 space-y-4">
                         <div className="flex items-center gap-3">
                             <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-inner">
@@ -300,8 +305,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Expansion Protocol</span>
                         </div>
                         <p className="text-[10px] font-medium text-muted-foreground leading-relaxed">Unlock unlimited forensic scans and institutional tools.</p>
-                        <Button asChild size="sm" className="w-full h-10 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
-                            <Link href="/dashboard/billing">Upgrade Clearance</Link>
+                        <Button asChild size="sm" className="w-full h-10 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all overflow-hidden relative group/btn">
+                            <Link href="/dashboard/billing">
+                              <span className="relative z-10">Upgrade Clearance</span>
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                            </Link>
                         </Button>
                     </div>
                 </Card>
@@ -416,7 +424,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                                     <Logo className="h-12 w-12" />
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
+                            <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 shadow-lg">
                                 <Activity className="h-3 w-3 text-primary animate-pulse" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Neural Synchronization...</span>
                             </div>
