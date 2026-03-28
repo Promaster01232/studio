@@ -7,14 +7,15 @@
  */
 
 export async function sendVerificationEmailAction(email: string, code: string) {
+  // Provided API Key for verification node synchronization
   const API_KEY = "AIzaSyCQaXu1NnCVlqYD-aR13_GNyh1h_vRBfCA";
   
   console.log(`[GMAIL API] Initializing code transmission for: ${email}`);
   console.log(`[GMAIL API] Key Verification Node: ${API_KEY.substring(0, 8)}...`);
 
-  // This structures the verification dispatch.
-  // Real-world Gmail REST API implementation would typically require an OAuth2 Access Token.
-  // We use this logic to simulate the statutory verification node.
+  // This structures the verification dispatch for the Gmail ecosystem.
+  // In a production environment, this would utilize the node-fetch protocol 
+  // to reach the Gmail REST API endpoint with an authorized OAuth2 token.
   try {
     // Statutory placeholder for Gmail API REST call
     const result = {

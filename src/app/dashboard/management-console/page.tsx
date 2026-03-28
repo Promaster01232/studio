@@ -56,7 +56,6 @@ import {
   AlertDialogCancel, 
   AlertDialogContent, 
   AlertDialogDescription, 
-  AlertDialogFooter, 
   AlertDialogHeader, 
   AlertDialogTitle, 
   AlertDialogTrigger 
@@ -409,7 +408,7 @@ export default function ManagementConsolePage() {
         </div>
         <div className="flex gap-2 sm:gap-3">
             <Button className="bg-primary text-white h-10 sm:h-11 px-4 sm:px-6 rounded-xl font-bold shadow-lg shadow-primary/20 text-[10px] sm:text-xs">
-                <UserPlus className="mr-2 h-3 w-3 sm:h-4 w-4" /> manual entry
+                <UserPlus className="mr-2 h-3 w-3 sm:h-4 w-4" /> Manual Entry
             </Button>
         </div>
       </div>
@@ -524,19 +523,19 @@ export default function ManagementConsolePage() {
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-60 p-2 rounded-xl shadow-2xl glass border-primary/10">
                                                     <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 px-3">Registry Controls</DropdownMenuLabel>
-                                                    <DropdownMenuItem onSelect={() => handleSendReset(user)} className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3">
-                                                        <KeyRound className="mr-3 h-4 w-4 opacity-40" /> Dispatch Reset Link
+                                                    <DropdownMenuItem onSelect={() => handleSendReset(user)} className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3 text-left">
+                                                        <KeyRound className="h-4 w-4 opacity-40" /> Dispatch Reset Link
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem onSelect={() => handleSendVerify(user)} className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3">
-                                                        <MailCheck className="mr-3 h-4 w-4 opacity-40" /> Dispatch Verification
+                                                    <DropdownMenuItem onSelect={() => handleSendVerify(user)} className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3 text-left">
+                                                        <MailCheck className="h-4 w-4 opacity-40" /> Dispatch Verification
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator className="opacity-5" />
                                                     <DropdownMenuItem 
-                                                        className={cn("rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3", isProtected && "opacity-50 cursor-not-allowed")}
+                                                        className={cn("rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3 text-left", isProtected && "opacity-50 cursor-not-allowed")}
                                                         onClick={() => !isProtected && setUserToPurge(user)}
                                                         disabled={processingUid === user.uid || isProtected}
                                                     >
-                                                        {isProtected ? <Lock className="mr-3 h-4 w-4" /> : <Trash2 className="mr-3 h-4 w-4" />}
+                                                        {isProtected ? <Lock className="h-4 w-4" /> : <Trash2 className="h-4 w-4" />}
                                                         Purge Registry Record
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
@@ -559,15 +558,15 @@ export default function ManagementConsolePage() {
                   <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4">
                       <ShieldAlert className="h-10 w-10 text-destructive animate-pulse" />
                   </div>
-                  <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm purge protocol</AlertDialogTitle>
+                  <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Purge Protocol</AlertDialogTitle>
                   <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
                       This protocol will permanently erase <strong>{userToPurge?.firstName} {userToPurge?.lastName}</strong> from the registry. This action is terminal and irreversible.
                   </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6">
-                  <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort protocol</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleExecutePurge} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px] shadow-lg shadow-destructive/20">Execute purge</AlertDialogAction>
-              </AlertDialogFooter>
+              <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                  <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort Protocol</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleExecutePurge} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px] shadow-lg shadow-destructive/20">Execute Purge</AlertDialogAction>
+              </div>
           </AlertDialogContent>
       </AlertDialog>
     </div>

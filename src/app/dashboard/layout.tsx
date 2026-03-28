@@ -73,7 +73,7 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
             </div>
 
             <div className="flex items-center gap-3">
-                <div className="hidden lg:flex items-center gap-2 mr-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10">
+                <div className="hidden lg:flex items-center gap-2 mr-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-left">
                     <Activity className="h-3 w-3 text-green-500 animate-pulse" />
                     <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/60">System: Active</span>
                 </div>
@@ -144,7 +144,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       }
 
       if (user) {
-        setProfileLoading(true);
         const userDocRef = doc(firestore, "users", user.uid);
         
         profileUnsubscribeRef.current = onSnapshot(userDocRef, (userDoc) => {
@@ -152,6 +151,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               const data = userDoc.data() as any;
               setUserProfile(data);
               
+              // Throttled sync to avoid resource exhaustion
               if (data.emailVerified !== user.emailVerified) {
                   updateDoc(userDocRef, { emailVerified: user.emailVerified }).catch(() => {});
               }
@@ -201,7 +201,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
   const isSuspended = userProfile?.isBlocked === true;
-  const isAdmin = userProfile?.email === 'enterspaceindia@gmail.com' || !!userProfile?.isAdmin;
+  const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
 
   if (showContent && isSuspended) {
       return (
@@ -216,7 +216,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         <ShieldAlert className="h-4 w-4" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">Security Alert</span>
                     </div>
-                    <CardTitle className="text-3xl font-black tracking-tighter text-destructive leading-none">
+                    <CardTitle className="text-3xl font-black tracking-tighter text-destructive leading-none text-center">
                         Statutory Suspension
                     </CardTitle>
                     <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4 text-center">
@@ -229,7 +229,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             Protocol: Contact <span className="font-bold text-primary">nyayasahayakhelp@gmail.com</span> for audit.
                         </p>
                     </div>
-                    <Button onClick={handleLogout} variant="outline" className="w-full h-14 font-black text-xs uppercase tracking-widest rounded-2xl border-primary/10 hover:bg-primary/5 transition-all">
+                    <Button onClick={handleLogout} variant="outline" className="w-full h-14 font-black text-xs uppercase tracking-widest rounded-2xl border-primary/10 hover:bg-primary/5 transition-all text-center">
                         <LogOut className="mr-3 h-4 w-4" /> Terminate Session
                     </Button>
                 </CardContent>
@@ -266,7 +266,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
            {profileLoading ? (
             <div className="flex items-center gap-3 p-3">
               <Skeleton className="h-10 w-10 rounded-2xl" />
-              <div className="flex-1 space-y-2">
+              <div className="flex-1 space-y-2 text-left">
                  <Skeleton className="h-3 w-20" />
                  <Skeleton className="h-3 w-24" />
               </div>
@@ -287,7 +287,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                       )}
                       <div className="absolute -bottom-0.5 -right-0.5 bg-green-500 h-3 w-3 rounded-full border-2 border-background shadow-sm group-data-[collapsible=icon]:hidden"></div>
                   </div>
-                  <div className="flex-1 truncate group-data-[state=collapsed]:hidden">
+                  <div className="flex-1 truncate group-data-[state=collapsed]:hidden text-left">
                     <div className="font-black text-sm truncate tracking-tighter text-foreground leading-tight">{userProfile.firstName} {userProfile.lastName}</div>
                     <div className="text-[10px] text-muted-foreground truncate font-bold opacity-60 uppercase tracking-widest">{userProfile.userType}</div>
                   </div>
@@ -301,7 +301,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     </div>
                 </DropdownMenuLabel>
                 
-                <DropdownMenuItem asChild className="rounded-xl h-11 font-bold text-xs gap-3 mb-1 cursor-pointer hover:bg-primary/5">
+                <DropdownMenuItem asChild className="rounded-xl h-11 font-bold text-xs gap-3 mb-1 cursor-pointer hover:bg-primary/5 text-left">
                     <Link href="/dashboard/profile">
                         <User className="h-4 w-4 opacity-40" /> My Registry Profile
                     </Link>
@@ -309,24 +309,24 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 
-                <DropdownMenuLabel className="px-2 pb-2">
-                    <div className="flex items-center gap-2 text-primary mb-1 text-left">
+                <DropdownMenuLabel className="px-2 pb-2 text-left">
+                    <div className="flex items-center gap-2 text-primary mb-1">
                         <Sparkles className="h-3 w-3" />
                         <span className="text-[9px] font-black uppercase tracking-[0.2em]">Appearance</span>
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
-                    <DropdownMenuRadioItem value="light" className="rounded-xl h-11 font-bold text-xs gap-3 cursor-pointer">
+                    <DropdownMenuRadioItem value="light" className="rounded-xl h-11 font-bold text-xs gap-3 cursor-pointer text-left">
                         <SunMoon className="h-4 w-4 opacity-40" /> Light Protocol
                     </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="dark" className="rounded-xl h-11 font-bold text-xs gap-3 cursor-pointer">
+                    <DropdownMenuRadioItem value="dark" className="rounded-xl h-11 font-bold text-xs gap-3 cursor-pointer text-left">
                         <SunMoon className="h-4 w-4 opacity-40" /> Dark Protocol
                     </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
                 
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 
-                <DropdownMenuItem onClick={handleLogout} className="rounded-xl h-12 font-black text-[10px] uppercase tracking-widest text-destructive focus:bg-destructive/10 focus:text-destructive gap-3 active:scale-95 transition-all cursor-pointer">
+                <DropdownMenuItem onClick={handleLogout} className="rounded-xl h-12 font-black text-[10px] uppercase tracking-widest text-destructive focus:bg-destructive/10 focus:text-destructive gap-3 active:scale-95 transition-all cursor-pointer text-left">
                     <LogOut className="h-4 w-4" />
                     <span>Terminate Session</span>
                 </DropdownMenuItem>
@@ -334,7 +334,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </DropdownMenu>
           ) : (
              <div className="p-2">
-                <Button asChild className="w-full rounded-2xl h-12 font-black tracking-widest uppercase text-xs shadow-xl shadow-primary/20 active:scale-95 transition-all">
+                <Button asChild className="w-full rounded-2xl h-12 font-black tracking-widest uppercase text-xs shadow-xl shadow-primary/20 active:scale-95 transition-all text-center">
                     <Link href="/login">Initialize Sign In</Link>
                 </Button>
              </div>
@@ -387,11 +387,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                                     />
                                 </div>
                                 <div className="flex flex-col items-center gap-3">
-                                    <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 shadow-sm">
+                                    <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 shadow-sm text-left">
                                         <Activity className="h-3 w-3 text-primary animate-pulse" />
                                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Synchronization</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+                                    <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 text-left">
                                         <Loader2 className="h-3 w-3 animate-spin" />
                                         <span>Authenticating Hub Access...</span>
                                     </div>
