@@ -96,7 +96,7 @@ export default function WelcomePage() {
               <Badge variant="outline" className="h-8 sm:h-12 px-6 sm:px-10 rounded-full border-primary/20 text-primary bg-primary/5 font-black uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[8px] sm:text-[11px] animate-in fade-in slide-in-from-bottom-2 duration-1000">
                 Institutional Terminal // Alpha v4.2
               </Badge>
-              <h1 className="text-4xl sm:text-8xl lg:text-[10rem] font-black font-headline tracking-tighter leading-[0.8] sm:leading-[0.82] text-foreground max-w-7xl mx-auto uppercase">
+              <h1 className="text-4xl sm:text-7xl lg:text-[9rem] font-black font-headline tracking-tighter leading-[0.9] sm:leading-[0.85] text-foreground max-w-7xl mx-auto">
                 Elite AI for <br/>
                 <span className="bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">
                   Indian Citizens.
