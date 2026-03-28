@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -105,7 +106,7 @@ export default function WelcomePage() {
             </div>
 
             <p className="text-lg sm:text-2xl lg:text-4xl text-muted-foreground font-medium max-w-4xl mx-auto leading-tight sm:leading-relaxed opacity-80 px-4">
-              Precision neural forensics for statutory deconstruction and navigating the complex Indian judicial landscape.
+              Precision neural forensics for statutory deconstruction and navigating the complex Indian judicial landscape with India's premier AI legal co-pilot.
             </p>
           </div>
 
@@ -194,7 +195,7 @@ export default function WelcomePage() {
                 </h2>
               </div>
               <p className="text-lg sm:text-2xl text-muted-foreground font-medium leading-relaxed">
-                Nyaya Sahayak represents the definitive leap forward in AI-powered legal empowerment for the Indian citizenry. In a landscape where the judicial system is often perceived as a dense thicket of complex statutes, our platform serves as a high-fidelity navigational beacon.
+                Nyaya Sahayak represents the definitive leap forward in AI-powered legal empowerment for the Indian citizenry. In a landscape where the judicial system is often perceived as a dense thicket of complex statutes, our platform serves as a high-fidelity navigational beacon. We are Bharat's most advanced AI Nyaya Mitra.
               </p>
               <div className="p-8 sm:p-12 rounded-[2rem] sm:rounded-[3rem] bg-primary/5 border border-primary/10 shadow-inner group transition-all hover:bg-primary/10">
                 <div className="flex items-center gap-6 sm:gap-8">
@@ -214,7 +215,7 @@ export default function WelcomePage() {
                 {
                   icon: BrainCircuit,
                   title: "Forensic Auditor Node",
-                  desc: "At the core of the Nyaya Sahayak terminal is the Forensic Case Auditor. This neural engine is specifically trained on the nuances of the Bharatiya Nyaya Sanhita (BNS) and the Bharatiya Sakshya Adhiniyam (BSA). When a citizen narrates their legal problem, our AI performs a deep-layer deconstruction identifying potential statutory violations.",
+                  desc: "At the core of the Nyaya Sahayak terminal is the Forensic Case Auditor. This neural engine is specifically trained on the nuances of the Bharatiya Nyaya Sanhita (BNS) and the Bharatiya Sakshya Adhiniyam (BSA). When a citizen narrates their legal problem, our AI performs a deep-layer deconstruction identifying potential statutory violations and mapping relevant sections of the Indian Penal Code and BNS.",
                   href: "/dashboard/narrate",
                   color: "text-primary",
                   bg: "bg-primary/5"
@@ -222,7 +223,7 @@ export default function WelcomePage() {
                 {
                   icon: FileSearch,
                   title: "Risk Scanner Protocol",
-                  desc: "Our Document Risk Scanner provides an institutional-grade audit of legal instruments. Whether it is a legal notice, a contract, or an FIR application, the AI node performs a comprehensive forensic scan to identify non-compliance markers, hidden liabilities, and critical procedural deadlines.",
+                  desc: "Our Document Risk Scanner provides an institutional-grade audit of legal instruments. Whether it is a legal notice, a contract, or an FIR application, the AI node performs a comprehensive forensic scan to identify non-compliance markers, hidden liabilities, and critical procedural deadlines under current Indian Law.",
                   href: "/dashboard/document-intelligence",
                   color: "text-blue-600",
                   bg: "bg-blue-600/5"
@@ -230,7 +231,7 @@ export default function WelcomePage() {
                 {
                   icon: Zap,
                   title: "Roadmap Intelligence",
-                  desc: "Navigating the Bharatiya Nagarik Suraksha Sanhita (BNSS) requires a step-by-step understanding of judicial cycles. Nyaya Sahayak provides dynamic, personalized roadmaps that guide users through the intricacies of filing complaints and courtroom decorum.",
+                  desc: "Navigating the Bharatiya Nagarik Suraksha Sanhita (BNSS) requires a step-by-step understanding of judicial cycles. Nyaya Sahayak provides dynamic, personalized roadmaps that guide users through the intricacies of filing complaints, bail procedures, and maintaining proper courtroom decorum in Indian High Courts and District Courts.",
                   href: "/dashboard/police-guide",
                   color: "text-amber-500",
                   bg: "bg-amber-500/5"

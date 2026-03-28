@@ -22,26 +22,45 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Nyaya Sahayak | AI Legal Assistant & Forensic Case Auditor",
-  description: "Elite AI Legal Assistant for Indian citizens. Access Forensic Case Auditor and Document Risk Scanner on nyayasahayak.in.",
-  keywords: ["AI Legal Assistant India", "Forensic Case Auditor", "Legal Document Risk Assessment", "Indian Law AI", "Nyaya Sahayak"],
+  title: "Nyaya Sahayak | AI Legal Assistant & Forensic Case Auditor India",
+  description: "India's premier AI Legal Assistant. Access forensic case audits, BNS statutory scanning, and document risk analysis on nyayasahayak.in.",
+  keywords: ["AI Legal Assistant India", "BNS Forensic Audit", "Legal Document Risk Scanner India", "Nyaya Sahayak", "Indian Judicial AI", "Online Legal Advice India"],
   authors: [{ name: "IdeaSpark Institutional Tech" }],
   referrer: "origin-when-cross-origin",
+  metadataBase: new URL('https://nyayasahayak.in'),
   alternates: {
     canonical: "https://nyayasahayak.in",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   openGraph: {
     title: "Nyaya Sahayak | Your AI-Powered Legal Co-Pilot",
-    description: "Analyze case strength and audit documents with precision AI on India's premier legal-tech terminal.",
+    description: "Analyze case strength and audit documents with mathematically precise AI on India's premier legal-tech terminal.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
     images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Institutional Identity" }],
     locale: "en_IN",
     type: "website",
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Nyaya Sahayak | AI Legal Assistant',
+    description: 'Elite forensic AI for the Indian judicial landscape.',
+    images: ['/Logo.png'],
+  },
+  icons: {
+    icon: '/Logo.png',
+    shortcut: '/Logo.png',
+    apple: '/Logo.png',
   },
 };
 
@@ -57,7 +76,13 @@ export default function RootLayout({
     "alternateName": "AI Nyaya Mitra",
     "url": "https://nyayasahayak.in",
     "logo": "https://nyayasahayak.in/Logo.png",
-    "description": "Premium AI-driven legal assistance and forensic document auditing platform for the Indian judicial system.",
+    "image": "https://nyayasahayak.in/Logo.png",
+    "description": "Premium AI-driven legal assistance and forensic document auditing platform specifically engineered for the Indian judicial system and Bharat's citizens.",
+    "brand": {
+      "@type": "Brand",
+      "name": "Nyaya Sahayak",
+      "logo": "https://nyayasahayak.in/Logo.png"
+    },
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Digital Registry Terminal",
@@ -65,7 +90,17 @@ export default function RootLayout({
       "addressRegion": "Delhi",
       "postalCode": "110001",
       "addressCountry": "IN"
-    }
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "28.6139",
+      "longitude": "77.2090"
+    },
+    "sameAs": [
+      "https://www.facebook.com/profile.php?id=61578664907514",
+      "https://x.com/nyayasahayak/",
+      "https://www.instagram.com/nyaya_sahayak/"
+    ]
   };
 
   return (
@@ -82,7 +117,6 @@ export default function RootLayout({
           src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"
           strategy="lazyOnload"
         />
-        {/* Facebook Pixel */}
         <Script id="facebook-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
