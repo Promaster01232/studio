@@ -19,8 +19,6 @@ import {
   Heart,
   Plus,
   Zap,
-  Cpu,
-  Bot,
   CheckCircle2,
   MoreVertical,
   Flag,
@@ -30,7 +28,9 @@ import {
   CreditCard,
   Crown,
   ShieldCheck,
-  Globe
+  Globe,
+  Bot,
+  Loader2
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -51,8 +51,7 @@ import {
   deleteDoc, 
   addDoc, 
   serverTimestamp,
-  getDoc,
-  where
+  getDoc
 } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -251,7 +250,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 
     return (
         <motion.div layout className="w-full">
-            <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_rgba(255,153,51,0.05)]">
+            <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative shadow-sm hover:shadow-xl shadow-primary/5">
                 <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-[#FF9933] via-white to-[#128807]"></div>
                 
                 <div className="flex-1 flex flex-col p-6 text-left ml-1">
@@ -473,7 +472,7 @@ export default function DashboardHomePage() {
   return (
     <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
         <MotionWrapper>
-          <Card className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
+          <Card className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl shadow-primary/5">
               <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none text-left">
                   <div className="bg-white rounded-full p-10 grayscale">
                     <Logo className="h-56 w-56 border-none p-0 bg-transparent shadow-none" />
@@ -555,7 +554,7 @@ export default function DashboardHomePage() {
           <div className="lg:col-span-4 space-y-10">
               <section>
                   <SectionHeader icon={CreditCard} sector={isLimited ? "Status: Restricted" : "Status: Absolute"}>Statutory Audit</SectionHeader>
-                  <Card className="glass p-6 rounded-[2rem] border-primary/10 shadow-lg relative overflow-hidden text-left">
+                  <Card className="glass p-6 rounded-[2rem] border-primary/10 shadow-lg shadow-primary/5 relative overflow-hidden text-left">
                       <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
                           <Zap className="h-16 w-16 text-primary" />
                       </div>
@@ -595,7 +594,7 @@ export default function DashboardHomePage() {
                   <div className="grid grid-cols-2 gap-4">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
-                            <Card className="h-full glass p-5 rounded-[1.5rem] border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden flex flex-col justify-between min-h-[130px] group-hover:scale-[1.02] group-active:scale-[0.98] shadow-lg">
+                            <Card className="h-full glass p-5 rounded-[1.5rem] border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden flex flex-col justify-between min-h-[130px] group-hover:scale-[1.02] group-active:scale-[0.98] shadow-sm hover:shadow-xl shadow-primary/5">
                                 <div className="absolute top-0 right-0 p-3 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
                                     <f.icon className="h-8 w-8" />
                                 </div>
@@ -654,7 +653,7 @@ export default function DashboardHomePage() {
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="relative group h-16 w-16 bg-primary text-white rounded-2xl shadow-[0_20px_50px_hsl(var(--primary)/0.3)] flex items-center justify-center transition-all overflow-hidden"
+                    className="relative group h-16 w-16 bg-primary text-white rounded-2xl shadow-xl shadow-primary/30 flex items-center justify-center transition-all overflow-hidden"
                 >
                     <motion.div 
                         animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.1, 0.2] }}

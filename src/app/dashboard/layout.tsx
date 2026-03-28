@@ -157,9 +157,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Velocity Optimization: Near-instant transition
+    // High-Velocity Navigation: Minimal synchronization sequence
     setIsNavigating(true);
-    const timer = setTimeout(() => setIsNavigating(false), 50); 
+    const timer = setTimeout(() => setIsNavigating(false), 100); 
     return () => clearTimeout(timer);
   }, [pathname]);
 
@@ -295,7 +295,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <SidebarContent className="pt-2">
           <SidebarNav isAdmin={isAdmin} />
           
-          {/* Global Upgrade CTA in Sidebar */}
           {isLimited && !profileLoading && (
             <div className="px-4 py-6 group-data-[collapsible=icon]:hidden">
                 <Card className="bg-primary/5 border-primary/10 rounded-[1.5rem] overflow-hidden group/upgrade hover:border-primary/30 transition-all shadow-lg">
@@ -443,7 +442,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             initial={{ opacity: 0, scale: 0.99, y: 10 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 1.01, y: -10 }}
-                            transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }} 
+                            transition={{ duration: 0.1, ease: [0.22, 1, 0.36, 1] }} 
                             className="flex-1 flex flex-col"
                         >
                             <div className="flex-1">

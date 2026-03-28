@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -8,20 +9,15 @@ import {
   ArrowRight, 
   Loader2, 
   ShieldCheck, 
-  BrainCircuit,
-  Zap,
-  Globe,
-  Scale,
-  ExternalLink,
-  Activity,
   Sparkles,
-  TrendingUp,
+  Activity,
   Mic,
   FileText,
   FileSignature,
-  Gavel,
-  Dna,
-  Search
+  Search,
+  Globe,
+  Scale,
+  ExternalLink
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
@@ -60,7 +56,7 @@ const featureNodes = [
     icon: Mic,
     title: "Forensic Case Auditor",
     sector: "Sector: Forensic",
-    desc: "Neural engine specifically trained on the nuances of the Bharatiya Nyaya Sanhita (BNS). It performs deep-layer deconstruction of legal narratives to map relevant sections.",
+    desc: "Neural engine trained on the Bharatiya Nyaya Sanhita (BNS). It performs deep-layer deconstruction of legal narratives to map relevant statutory sections.",
     href: "/dashboard/narrate",
     color: "text-orange-500",
     bg: "bg-orange-500/5"
@@ -69,7 +65,7 @@ const featureNodes = [
     icon: Search,
     title: "Statutory Risk Scanner",
     sector: "Sector: Statutory",
-    desc: "Institutional-grade audit system for legal instruments. Scans notices, contracts, and FIR applications to identify non-compliance markers.",
+    desc: "Institutional-grade audit system for legal instruments. Scans notices, contracts, and FIR applications to identify non-compliance and liability markers.",
     href: "/dashboard/document-intelligence",
     color: "text-blue-600",
     bg: "bg-blue-600/5"
@@ -78,7 +74,7 @@ const featureNodes = [
     icon: FileText,
     title: "Statutory Drafting Terminal",
     sector: "Sector: Civil",
-    desc: "AI-driven drafting node for complex legal petitions and notices. Ensures all instruments adhere to the latest judicial amendments.",
+    desc: "AI-driven drafting node for complex legal petitions and notices. Ensures all instruments adhere to the latest judicial amendments and procedural protocols.",
     href: "/dashboard/document-generator",
     color: "text-emerald-600",
     bg: "bg-emerald-600/5"
@@ -87,7 +83,7 @@ const featureNodes = [
     icon: FileSignature,
     title: "Bond Structural Ingress",
     sector: "Sector: Registry",
-    desc: "Specialized tool for generating legally sound affidavits, bail bonds, and indemnity instruments with precise placeholder mapping.",
+    desc: "Specialized tool for generating legally sound affidavits, bail bonds, and indemnity instruments with precise forensic placeholder mapping.",
     href: "/dashboard/bond-generator",
     color: "text-purple-600",
     bg: "bg-purple-600/5"
@@ -113,12 +109,11 @@ export default function WelcomePage() {
       <TricolorBackground />
       
       <main className="flex-1 flex flex-col items-center relative z-10">
-        {/* Hero Sector */}
         <section className="w-full max-w-7xl pt-12 pb-8 sm:pt-16 sm:pb-10 px-6 text-center space-y-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             className="space-y-6"
           >
             <div className="flex justify-center">
@@ -160,7 +155,7 @@ export default function WelcomePage() {
                         <span className="sm:hidden">Start Hub</span>
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-2" />
                       </span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                     </Link>
                   </Button>
                   <p className="flex items-center gap-1.5 text-primary/50 font-black text-[8px] uppercase tracking-[0.25em]">
@@ -178,7 +173,6 @@ export default function WelcomePage() {
           </motion.div>
         </section>
 
-        {/* Feature Registry Sector */}
         <section className="w-full max-w-7xl py-12 px-6">
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12 border-b border-primary/5 pb-8">
             <div className="space-y-2 text-left">
@@ -234,7 +228,6 @@ export default function WelcomePage() {
           </div>
         </section>
 
-        {/* Global Registry Links */}
         <section className="w-full max-w-[1000px] py-12 px-6 text-center space-y-10">
           <div className="grid sm:grid-cols-2 gap-6">
             {[
