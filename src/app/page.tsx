@@ -75,12 +75,12 @@ export default function WelcomePage() {
       
       <main className="flex-1 flex flex-col items-center relative z-10">
         {/* Hero Sector - Compact High-Design */}
-        <section className="w-full max-w-[1200px] pt-12 pb-16 sm:pt-20 sm:pb-24 lg:pt-28 lg:pb-32 px-6 text-center space-y-8 sm:space-y-12">
+        <section className="w-full max-w-[1200px] pt-10 pb-12 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24 px-6 text-center space-y-6 sm:space-y-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="space-y-8 sm:space-y-10"
+            className="space-y-6 sm:space-y-8"
           >
             <div className="flex justify-center">
               <motion.div 
@@ -88,65 +88,65 @@ export default function WelcomePage() {
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 className="relative cursor-pointer group"
               >
-                <div className="absolute -inset-8 rounded-full bg-gradient-to-tr from-primary/10 via-transparent to-accent/10 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                <Logo className="h-24 w-24 sm:h-36 sm:w-36 shadow-[0_30px_80px_rgba(0,0,0,0.12)] relative z-10" priority />
+                <div className="absolute -inset-6 rounded-full bg-gradient-to-tr from-primary/10 via-transparent to-accent/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <Logo className="h-20 w-20 sm:h-28 sm:w-28 shadow-[0_20px_60px_rgba(0,0,0,0.1)] relative z-10" priority />
               </motion.div>
             </div>
 
-            <div className="space-y-6 max-w-5xl mx-auto">
+            <div className="space-y-4 max-w-4xl mx-auto">
               <div className="flex justify-center">
-                <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-primary/10 bg-primary/5 shadow-sm backdrop-blur-sm">
-                  <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                  <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.4em] text-primary">
+                <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-primary/10 bg-primary/5 shadow-sm backdrop-blur-sm">
+                  <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
+                  <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.4em] text-primary">
                     Institutional Node NS-ALPHA v4.2
                   </span>
                 </div>
               </div>
               
-              <h1 className="text-4xl sm:text-7xl lg:text-[7.5rem] font-black font-headline tracking-[-0.06em] leading-[0.85] text-foreground text-center">
+              <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black font-headline tracking-tighter leading-[0.9] text-foreground text-center">
                 Elite AI for <br/>
                 <span className="bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">
                   Indian Citizens.
                 </span>
               </h1>
 
-              <p className="text-base sm:text-xl lg:text-2xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed opacity-80 px-4">
+              <p className="text-sm sm:text-lg lg:text-xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed opacity-80 px-4">
                 Precision neural forensics for statutory deconstruction and navigating Bharat's judicial landscape with absolute institutional clarity.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
               {!loading ? (
-                <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
+                <div className="flex flex-col items-center gap-2.5 w-full sm:w-auto">
                   <Button 
                     asChild 
-                    className="h-14 sm:h-16 w-full sm:w-auto min-w-[240px] px-10 text-xs sm:text-sm font-black uppercase tracking-[0.2em] shadow-[0_20px_50px_rgba(var(--primary),0.25)] rounded-xl transition-all group overflow-hidden relative"
+                    className="h-12 sm:h-14 w-full sm:w-auto min-w-[220px] px-8 text-[11px] sm:text-xs font-black uppercase tracking-[0.2em] shadow-[0_15px_40px_rgba(var(--primary),0.2)] rounded-xl transition-all group overflow-hidden relative"
                   >
                     <Link href="/dashboard">
                       <span className="relative z-10 flex items-center gap-3">
                         <span className="hidden sm:inline">Initialize Dashboard</span>
                         <span className="sm:hidden">Start Hub</span>
-                        <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-2" />
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-2" />
                       </span>
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                     </Link>
                   </Button>
-                  <p className="flex items-center gap-1.5 text-primary/50 font-black text-[8px] uppercase tracking-[0.2em]">
-                    <ShieldCheck className="h-3 w-3" />
-                    Institutional Access Active
+                  <p className="flex items-center gap-1.5 text-primary/50 font-black text-[7px] uppercase tracking-[0.2em]">
+                    <ShieldCheck className="h-2.5 w-2.5" />
+                    Secure Institutional Access Active
                   </p>
                 </div>
               ) : (
-                <div className="h-14 sm:h-16 w-[240px] flex items-center justify-center gap-3 px-10 bg-muted/10 rounded-xl border border-primary/5">
-                  <Loader2 className="h-4 w-4 animate-spin text-primary opacity-30" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">Synchronizing...</span>
+                <div className="h-12 sm:h-14 w-[220px] flex items-center justify-center gap-3 px-8 bg-muted/10 rounded-xl border border-primary/5">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin text-primary opacity-30" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] opacity-30">Syncing...</span>
                 </div>
               )}
               
-              <Button variant="ghost" className="h-14 sm:h-16 w-full sm:w-auto px-10 text-xs sm:text-sm font-black uppercase tracking-widest rounded-xl border border-primary/10 hover:bg-primary/5 transition-all group" asChild>
+              <Button variant="ghost" className="h-12 sm:h-14 w-full sm:w-auto px-8 text-[11px] sm:text-xs font-black uppercase tracking-widest rounded-xl border border-primary/10 hover:bg-primary/5 transition-all group" asChild>
                 <Link href="/about" className="flex items-center gap-3">
                   Our Mandate
-                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 opacity-30 group-hover:opacity-100 transition-all" />
+                  <ChevronRight className="h-4 w-4 opacity-30 group-hover:opacity-100 transition-all" />
                 </Link>
               </Button>
             </div>
@@ -156,7 +156,7 @@ export default function WelcomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-12 max-w-4xl mx-auto pt-10 border-t border-primary/5"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-8 max-w-3xl mx-auto pt-8 border-t border-primary/5"
           >
             {[
               { icon: Activity, label: "Forensic Audit", color: "text-primary" },
@@ -164,11 +164,11 @@ export default function WelcomePage() {
               { icon: Globe, label: "Digital Sync", color: "text-[#128807]" },
               { icon: Zap, label: "Neural Ingress", color: "text-amber-500" }
             ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center gap-3 group/stat text-center">
-                <div className={cn("p-3 rounded-xl bg-muted/20 transition-all group-hover/stat:bg-white dark:group-hover/stat:bg-zinc-900 group-hover/stat:shadow-lg", stat.color.replace('text-', 'bg-').replace('600', '10'))}>
-                  <stat.icon className={cn("h-5 w-5 sm:h-6 sm:w-6", stat.color)} />
+              <div key={i} className="flex flex-col items-center gap-2 group/stat text-center">
+                <div className={cn("p-2.5 rounded-lg bg-muted/20 transition-all group-hover/stat:bg-white dark:group-hover/stat:bg-zinc-900 group-hover/stat:shadow-md", stat.color.replace('text-', 'bg-').replace('600', '10'))}>
+                  <stat.icon className={cn("h-4 w-4 sm:h-5 sm:w-5", stat.color)} />
                 </div>
-                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/60 group-hover/stat:text-foreground transition-colors leading-tight">
+                <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 group-hover/stat:text-foreground transition-colors leading-tight">
                   {stat.label}
                 </span>
               </div>
@@ -177,37 +177,37 @@ export default function WelcomePage() {
         </section>
 
         {/* Mandate Sector - Professional Precision */}
-        <section className="w-full max-w-[1200px] py-16 sm:py-24 lg:py-32 px-6 space-y-16">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-            <div className="lg:col-span-5 space-y-8 lg:sticky lg:top-24">
-              <div className="space-y-6 text-left">
-                <div className="flex items-center gap-3 text-primary">
-                  <Sparkles className="h-6 w-6" />
-                  <span className="text-[11px] sm:text-[13px] font-black uppercase tracking-[0.4em]">Elite Registry</span>
+        <section className="w-full max-w-[1200px] py-12 sm:py-16 lg:py-20 px-6 space-y-12">
+          <div className="grid lg:grid-cols-12 gap-10 items-start">
+            <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
+              <div className="space-y-4 text-left">
+                <div className="flex items-center gap-2 text-primary">
+                  <Sparkles className="h-5 w-5" />
+                  <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.4em]">Elite Registry</span>
                 </div>
-                <h2 className="text-3xl sm:text-6xl font-black font-headline tracking-tighter leading-[0.95] uppercase">
+                <h2 className="text-2xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.95] uppercase">
                   Institutional <br />
                   <span className="text-primary italic font-black">Architecture.</span>
                 </h2>
-                <p className="text-base sm:text-xl text-muted-foreground font-medium leading-relaxed">
+                <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed opacity-80">
                   Nyaya Sahayak is Bharat's premier AI legal terminal, specifically engineered to provide mathematically precise forensic auditing for 1.4 billion citizens.
                 </p>
               </div>
               
-              <Card className="glass border-primary/5 rounded-[2rem] overflow-hidden shadow-xl p-8 sm:p-10 transition-all hover:border-primary/20">
-                <div className="flex items-center gap-6">
-                  <div className="p-5 rounded-2xl bg-primary text-white shadow-xl shadow-primary/20">
-                    <Command className="h-8 w-8" />
+              <Card className="glass border-primary/5 rounded-[1.5rem] overflow-hidden shadow-md p-6 sm:p-8 transition-all hover:border-primary/20">
+                <div className="flex items-center gap-5">
+                  <div className="p-4 rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
+                    <Command className="h-6 w-6" />
                   </div>
                   <div className="space-y-0.5">
-                    <p className="text-[12px] font-black uppercase tracking-[0.2em] text-primary leading-none mb-1">System Node NS-ALPHA</p>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase opacity-50 tracking-widest">Verified Forensic Protocol</p>
+                    <p className="text-[11px] font-black uppercase tracking-[0.2em] text-primary leading-none mb-1">System Node NS-ALPHA</p>
+                    <p className="text-[9px] font-bold text-muted-foreground uppercase opacity-50 tracking-widest">Verified Forensic Protocol</p>
                   </div>
                 </div>
               </Card>
             </div>
 
-            <div className="lg:col-span-7 space-y-6 sm:space-y-8">
+            <div className="lg:col-span-7 space-y-4 sm:space-y-6">
               {[
                 {
                   icon: BrainCircuit,
@@ -241,20 +241,20 @@ export default function WelcomePage() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.05 }}
                 >
-                  <Card className="glass border-primary/5 hover:border-primary/20 rounded-[2.5rem] overflow-hidden shadow-lg transition-all duration-500 group active:scale-[0.99]">
-                    <CardContent className="p-8 sm:p-10 flex items-center gap-6 sm:gap-10">
-                      <div className={cn("p-5 sm:p-7 rounded-[1.5rem] sm:rounded-[2rem] transition-all group-hover:scale-105 duration-500 shadow-md shrink-0", feature.bg)}>
-                        <feature.icon className={cn("h-6 w-6 sm:h-8 sm:w-8", feature.color)} />
+                  <Card className="glass border-primary/5 hover:border-primary/20 rounded-[2rem] overflow-hidden shadow-md transition-all duration-500 group active:scale-[0.99]">
+                    <CardContent className="p-6 sm:p-8 flex items-center gap-5 sm:gap-8">
+                      <div className={cn("p-4 sm:p-6 rounded-[1.2rem] transition-all group-hover:scale-105 duration-500 shadow-sm shrink-0", feature.bg)}>
+                        <feature.icon className={cn("h-5 w-5 sm:h-6 sm:w-6", feature.color)} />
                       </div>
-                      <div className="flex-1 text-left space-y-3">
-                        <h3 className="text-xl sm:text-2xl font-black tracking-tight uppercase leading-none">{feature.title}</h3>
-                        <p className="text-sm sm:text-base text-muted-foreground font-medium leading-snug opacity-80">
+                      <div className="flex-1 text-left space-y-2">
+                        <h3 className="text-lg sm:text-xl font-black tracking-tight uppercase leading-none">{feature.title}</h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-snug opacity-80">
                           {feature.desc}
                         </p>
-                        <Button variant="ghost" className="p-0 h-auto font-black text-[10px] uppercase tracking-[0.2em] text-primary hover:bg-transparent group/btn" asChild>
+                        <Button variant="ghost" className="p-0 h-auto font-black text-[9px] uppercase tracking-[0.2em] text-primary hover:bg-transparent group/btn" asChild>
                           <Link href={feature.href} className="flex items-center gap-2">
                             Initialize Node 
-                            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-2" />
+                            <ArrowRight className="h-3 w-3 transition-transform group-hover/btn:translate-x-2" />
                           </Link>
                         </Button>
                       </div>
@@ -267,27 +267,27 @@ export default function WelcomePage() {
         </section>
 
         {/* Resources Sector - Unified Transparency */}
-        <section className="w-full max-w-[1000px] pb-20 sm:pb-32 px-6 text-center space-y-12 sm:space-y-20">
-          <div className="space-y-4">
-            <div className="h-px w-12 bg-primary/20 mx-auto" />
-            <h2 className="text-3xl sm:text-6xl font-black font-headline tracking-tighter text-foreground leading-none uppercase">Official Registry</h2>
+        <section className="w-full max-w-[1000px] pb-16 sm:pb-24 px-6 text-center space-y-10 sm:space-y-16">
+          <div className="space-y-3">
+            <div className="h-px w-10 bg-primary/20 mx-auto" />
+            <h2 className="text-2xl sm:text-5xl font-black font-headline tracking-tighter text-foreground leading-none uppercase">Official Registry</h2>
           </div>
           
-          <div className="grid sm:grid-cols-2 gap-6 lg:gap-10">
+          <div className="grid sm:grid-cols-2 gap-5 lg:gap-8">
             {[
               { icon: Globe, label: "eCourts Services", sub: "Live Judicial Registry", href: "https://services.ecourts.gov.in/", color: "text-primary", bg: "bg-primary/5" },
               { icon: Scale, label: "National Portal", sub: "Statutory Access Node", href: "https://www.india.gov.in/", color: "text-blue-600", bg: "bg-blue-600/5" }
             ].map((link, i) => (
               <a key={i} href={link.href} target="_blank" rel="noopener noreferrer" className="group">
-                <Card className="glass p-8 sm:p-12 rounded-[2.5rem] border-primary/5 hover:border-primary/30 transition-all duration-500 flex flex-col items-center justify-center gap-6 shadow-xl relative overflow-hidden active:scale-[0.98]">
-                  <div className="p-5 rounded-2xl transition-all duration-500 shadow-md group-hover:scale-110 group-hover:-rotate-2 bg-muted/20">
-                    <link.icon className={cn("h-8 w-8 sm:h-10 sm:w-10", link.color)} />
+                <Card className="glass p-6 sm:p-10 rounded-[2rem] border-primary/5 hover:border-primary/30 transition-all duration-500 flex flex-col items-center justify-center gap-5 shadow-lg relative overflow-hidden active:scale-[0.98]">
+                  <div className="p-4 rounded-xl transition-all duration-500 shadow-sm group-hover:scale-110 group-hover:-rotate-2 bg-muted/20">
+                    <link.icon className={cn("h-6 w-6 sm:h-8 sm:w-8", link.color)} />
                   </div>
                   <div className="space-y-1 relative z-10">
-                    <span className="font-black text-xl sm:text-3xl tracking-tighter leading-none uppercase block">{link.label}</span>
-                    <span className="text-[9px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-[0.2em] block opacity-50">{link.sub}</span>
+                    <span className="font-black text-lg sm:text-2xl tracking-tighter leading-none uppercase block">{link.label}</span>
+                    <span className="text-[8px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] block opacity-50">{link.sub}</span>
                   </div>
-                  <ExternalLink className="h-4 w-4 opacity-20 group-hover:opacity-100 group-hover:text-primary transition-all duration-500 absolute top-8 right-8" />
+                  <ExternalLink className="h-3.5 w-3.5 opacity-20 group-hover:opacity-100 group-hover:text-primary transition-all duration-500 absolute top-6 right-6" />
                 </Card>
               </a>
             ))}
