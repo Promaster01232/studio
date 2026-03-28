@@ -67,7 +67,6 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { motion, AnimatePresence } from "framer-motion";
-import { Logo } from "@/components/logo";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -138,7 +137,7 @@ function EmailDispatchDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2.5rem] border-none shadow-3xl bg-card text-left">
+            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl bg-card text-left">
                 <div className="p-8">
                     <DialogHeader className="mb-8 border-none text-left">
                         <div className="flex items-center gap-3 text-primary mb-2">
