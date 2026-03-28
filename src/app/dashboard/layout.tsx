@@ -57,7 +57,7 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
         )}>
             <div className="flex items-center gap-2 md:hidden">
                 <SidebarTrigger className="h-10 w-10 rounded-xl hover:bg-primary/5 active:scale-95 transition-all" />
-                <Logo className="h-10 w-10 p-0 shadow-none border-none" />
+                <Logo className="h-10 w-10 p-0 shadow-none border-none bg-transparent" />
             </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
@@ -157,8 +157,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // Velocity Optimization: Near-instant transition
     setIsNavigating(true);
-    const timer = setTimeout(() => setIsNavigating(false), 200); // HIGH VELOCITY REDUCTION FROM 600ms
+    const timer = setTimeout(() => setIsNavigating(false), 50); 
     return () => clearTimeout(timer);
   }, [pathname]);
 
@@ -348,7 +349,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-[1.5rem] shadow-3xl border-primary/5 glass animate-in slide-in-from-left-2 duration-300">
+              <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-[1.5rem] shadow-2xl shadow-black/10 glass border-primary/5 animate-in slide-in-from-left-2 duration-300">
                 <DropdownMenuLabel className="px-2 pb-2 text-left">
                     <div className="flex items-center gap-2 text-primary mb-1">
                         <Sparkles className="h-3 w-3" />
@@ -422,7 +423,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             <div className="relative">
                                 <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 4, ease: "linear" }} className="p-12 rounded-full border-2 border-dashed border-primary/20" />
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <Logo className="h-12 w-12 p-0 shadow-none border-none" />
+                                    <Logo className="h-12 w-12 p-0 shadow-none border-none bg-transparent" />
                                 </div>
                             </div>
                             <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 shadow-lg">
@@ -442,7 +443,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             initial={{ opacity: 0, scale: 0.99, y: 10 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 1.01, y: -10 }}
-                            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }} // FASTER TRANSITION
+                            transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }} 
                             className="flex-1 flex flex-col"
                         >
                             <div className="flex-1">
@@ -461,7 +462,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                                     />
                                     <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
                                         <div className="bg-white rounded-full p-2 shadow-2xl">
-                                            <Logo className="h-12 w-12 border-none shadow-none p-0" />
+                                            <Logo className="h-12 w-12 border-none shadow-none bg-transparent p-0" />
                                         </div>
                                     </div>
                                     <motion.div

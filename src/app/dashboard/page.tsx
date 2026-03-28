@@ -267,7 +267,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                         <MoreVertical className="h-4 w-4 text-muted-foreground" />
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-52 p-2 rounded-xl shadow-2xl glass border-primary/10">
+                                <DropdownMenuContent align="end" className="w-52 p-2 rounded-xl shadow-2xl shadow-black/10 glass border-primary/10">
                                     {isAuthor ? (
                                         <DropdownMenuItem onSelect={handleDelete} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                             <Trash2 className="h-4 w-4" /> 
@@ -453,7 +453,7 @@ export default function DashboardHomePage() {
     let timeoutId: NodeJS.Timeout;
     if (isTyping) {
       if (text.length < fullText.length) {
-        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 80); // FASTER TYPING
+        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 50); 
       } else {
         timeoutId = setTimeout(() => setIsTyping(false), 2000);
       }
@@ -476,7 +476,7 @@ export default function DashboardHomePage() {
           <Card className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
               <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none text-left">
                   <div className="bg-white rounded-full p-10 grayscale">
-                    <Logo className="h-56 w-56 border-none p-0 shadow-none" />
+                    <Logo className="h-56 w-56 border-none p-0 bg-transparent shadow-none" />
                   </div>
               </div>
               <div className="relative z-10 space-y-8">
@@ -534,7 +534,7 @@ export default function DashboardHomePage() {
                       {postsLoading ? (
                           <div className="space-y-5">
                               {[...Array(3)].map((_, i) => (
-                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-2xl bg-muted/20" />
+                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-2xl bg-muted/20 shadow-sm" />
                               ))}
                           </div>
                       ) : latestPosts.length === 0 ? (
@@ -574,7 +574,7 @@ export default function DashboardHomePage() {
                               />
                           </div>
                           {isLimited ? (
-                            <Button asChild className="w-full h-12 font-black uppercase tracking-widest text-[9px] rounded-xl shadow-lg shadow-primary/20 transition-all">
+                            <Button asChild className="w-full h-12 font-black uppercase tracking-widest text-[9px] rounded-xl shadow-xl shadow-primary/20 transition-all">
                                 <Link href="/dashboard/billing">
                                   <span className="hidden sm:inline">Upgrade Now</span>
                                   <span className="sm:hidden">Upgrade Now</span>
@@ -654,7 +654,7 @@ export default function DashboardHomePage() {
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="relative group h-16 w-16 bg-primary text-white rounded-2xl shadow-[0_20px_50px_rgba(var(--primary),0.3)] flex items-center justify-center transition-all overflow-hidden"
+                    className="relative group h-16 w-16 bg-primary text-white rounded-2xl shadow-[0_20px_50px_hsl(var(--primary)/0.3)] flex items-center justify-center transition-all overflow-hidden"
                 >
                     <motion.div 
                         animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.1, 0.2] }}

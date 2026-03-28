@@ -251,7 +251,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                     <MoreVertical className="h-4 w-4 text-muted-foreground" />
                                 </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-3xl glass border-primary/10">
+                            <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl shadow-black/10 glass border-primary/10">
                                 {isAuthor ? (
                                     <DropdownMenuItem onSelect={handleDeletePost} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
                                         <Trash2 className="h-4 w-4" /> 
@@ -372,7 +372,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                 <Share2 className="h-4 w-4" />
                             </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-52 p-2 rounded-2xl shadow-3xl glass border-primary/10">
+                        <DropdownMenuContent align="end" className="w-52 p-2 rounded-2xl shadow-2xl shadow-black/10 glass border-primary/10">
                             <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
                                 <div className="p-1.5 rounded-lg bg-green-500/10 text-green-600"><MessageCircle className="h-4 w-4" /></div>
                                 WhatsApp

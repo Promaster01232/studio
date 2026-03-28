@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -107,7 +108,6 @@ export default function NewPostPage() {
         
         setIsPosting(true);
 
-        // Construction of newPostData node to avoid 'undefined' field errors in Firestore
         const newPostData: any = {
             authorUid: auth.currentUser.uid,
             authorName: isAnonymous ? 'Anonymous' : `${userProfile.firstName} ${userProfile.lastName}`,
@@ -123,7 +123,6 @@ export default function NewPostPage() {
             createdAt: serverTimestamp(),
         };
 
-        // Only include optional nodes if they possess valid forensic data
         if (!isAnonymous && userProfile.photoURL) {
             newPostData.authorAvatar = userProfile.photoURL;
         }
@@ -310,7 +309,7 @@ export default function NewPostPage() {
                         </Tabs>
 
                         <div className="pt-10 border-t border-primary/10">
-                            <Button type="submit" disabled={isPosting} className="w-full h-16 font-black uppercase tracking-[0.2em] text-xs shadow-[0_20px_50px_rgba(var(--primary),0.2)] rounded-[1.5rem] active:scale-[0.98] transition-all group overflow-hidden relative">
+                            <Button type="submit" disabled={isPosting} className="w-full h-16 font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-primary/20 rounded-[1.5rem] active:scale-[0.98] transition-all group overflow-hidden relative">
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                                 {isPosting ? (
                                     <>
