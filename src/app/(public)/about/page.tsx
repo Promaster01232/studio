@@ -221,7 +221,7 @@ export default function AboutPage() {
             </motion.div>
           ))}
         </div>
-      </leadership.div>
+      </motion.div>
 
       {/* Trust Quote */}
       <motion.div variants={itemVariants} className="text-center pt-20 border-t border-primary/5">

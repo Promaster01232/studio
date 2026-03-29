@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -101,7 +102,6 @@ export default function ManagementConsolePage() {
             return;
         }
 
-        // Direct Firestore Mirroring with Reactive Listener
         const usersCol = collection(firestore, "users");
         const unsubscribeSnapshot = onSnapshot(usersCol, (snapshot) => {
             setIsLive(!snapshot.metadata.fromCache);
@@ -124,7 +124,6 @@ export default function ManagementConsolePage() {
   }, [firestore, auth, router, toast]);
 
   const handleToggleStatus = async (user: UserRecord, isBlocked: boolean) => {
-    // PROTECTION: Cannot block root admins
     if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         toast({ variant: "destructive", title: "Protection Active", description: "Root authority nodes cannot be suspended." });
         return;
@@ -161,7 +160,6 @@ export default function ManagementConsolePage() {
   const handleExecutePurge = async () => {
     if (!userToPurge) return;
     
-    // PROTECTION: Cannot purge root admins
     if (ADMIN_EMAILS.includes(userToPurge.email.toLowerCase())) {
         toast({ variant: "destructive", title: "Protection Active", description: "Root authority nodes are immutable." });
         setUserToPurge(null);
@@ -171,19 +169,14 @@ export default function ManagementConsolePage() {
     setProcessingUid(userToPurge.uid);
     
     try {
-        // Atomic Multi-Sector Purge via Firestore Write Batch
         const batch = writeBatch(firestore);
-        
-        // 1. Purge Identity Node
         batch.delete(doc(firestore, "users", userToPurge.uid));
         
-        // 2. Purge all Transmission Registry entries (Posts)
         const postsRef = collection(firestore, "posts");
         const postsQuery = query(postsRef, where("authorUid", "==", userToPurge.uid));
         const postsSnap = await getDocs(postsQuery);
         postsSnap.docs.forEach(d => batch.delete(d.ref));
         
-        // 3. Purge all Alert Nodes (Notifications)
         const notifRef = collection(firestore, "notifications");
         const notifQuery = query(notifRef, where("userId", "==", userToPurge.uid));
         const notifSnap = await getDocs(notifQuery);
@@ -191,7 +184,6 @@ export default function ManagementConsolePage() {
 
         await batch.commit();
 
-        // 4. Purge RTDB Sync Points
         await remove(ref(rtdb, `users/${userToPurge.uid}`)).catch(() => {});
         await remove(ref(rtdb, `advocates/${userToPurge.uid}`)).catch(() => {});
 

@@ -207,9 +207,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       }
     });
 
-    // Safety timeout to prevent hanging loaders on slow networks
     const safetyTimeout = setTimeout(() => {
-        if (profileLoading) setProfileLoading(false);
+        setProfileLoading(false);
     }, 8000);
 
     return () => {
@@ -218,7 +217,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
         if (notifUnsubscribeRef.current) notifUnsubscribeRef.current();
     };
-  }, [auth, firestore, router, pathname, profileLoading]);
+  }, [auth, firestore, router, pathname]);
 
   const handleLogout = async () => {
     if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
