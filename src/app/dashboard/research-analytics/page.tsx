@@ -4,7 +4,7 @@
 import { useToast } from "@/hooks/use-toast";
 import React, { useState, useEffect, useRef } from "react";
 import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
@@ -29,7 +29,11 @@ import {
   Sparkles,
   Zap,
   Newspaper,
-  ShieldCheck
+  ShieldCheck,
+  Bot,
+  Command,
+  Layers,
+  ArrowUpRight
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -48,6 +52,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -95,21 +100,23 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
         <Link 
             href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} 
             className={cn(
-                "flex items-start gap-3 group/author transition-all active:scale-[0.98]",
+                "flex items-center gap-3 group/author transition-all active:scale-[0.98]",
                 post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer"
             )}
         >
-            <Avatar className="h-10 w-10 border border-background shadow-lg rounded-xl group-hover/author:scale-105 transition-transform">
-                {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
-                <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
-            </Avatar>
+            <div className="relative">
+                <Avatar className="h-10 w-10 border border-primary/10 shadow-lg rounded-xl group-hover/author:scale-105 transition-transform duration-500">
+                    {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
+                    <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
+                </Avatar>
+                {isAdmin && <div className="absolute -top-1 -right-1 bg-blue-500 rounded-full p-0.5 border-2 border-background shadow-sm"><BadgeCheck className="h-2 w-2 text-white" /></div>}
+            </div>
             <div className="flex-1 text-left">
                 <div className="flex items-center gap-1.5">
-                    <p className="font-black text-xs tracking-tight group-hover/author:text-primary transition-colors underline decoration-primary/0 group-hover/author:decoration-primary/30 underline-offset-4">{authorName}</p>
-                    {isAdmin && <BadgeCheck className="h-3 w-3 text-blue-500" />}
+                    <p className="font-black text-xs tracking-tight group-hover/author:text-primary transition-colors">{authorName}</p>
                 </div>
-                <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest opacity-60">
-                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : '...'}
+                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-40">
+                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
                 </p>
             </div>
         </Link>
@@ -182,6 +189,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
             const permissionError = new FirestorePermissionError({
                 path: postRef.path,
                 operation: 'update',
+                requestResourceData: { likes: post.likes },
             } satisfies SecurityRuleContext, serverError);
             errorEmitter.emit('permission-error', permissionError);
         }).finally(() => {
@@ -236,32 +244,38 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     };
 
     return (
-        <Card className="overflow-hidden glass border-primary/10 transition-all shadow-2xl rounded-[2.5rem] relative group/post text-left">
-            <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-[#FF9933] via-[#000080] to-[#128807]"></div>
+        <Card className="overflow-hidden bg-card/40 backdrop-blur-md border-primary/10 transition-all shadow-2xl rounded-[2.5rem] relative group/post text-left">
+            {/* Tricolor Forensic Indicator */}
+            <div className="absolute top-0 left-0 bottom-0 w-1.5 flex flex-col">
+                <div className="flex-1 bg-[#FF9933]"></div>
+                <div className="flex-1 bg-white"></div>
+                <div className="flex-1 bg-[#128807]"></div>
+            </div>
             
-            <CardHeader className="p-8 sm:p-10 pb-0 ml-1">
-                <div className="flex items-start justify-between mb-6">
+            <CardHeader className="p-8 sm:p-10 pb-0 ml-1.5">
+                <div className="flex items-start justify-between mb-8">
                     <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
                     <div className="flex items-center gap-3">
-                        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/10 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest h-6">
-                            {post.postType || 'Transmission'}
-                        </Badge>
+                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-primary/5 border border-primary/10 shadow-inner">
+                            <Activity className="h-3 w-3 text-primary animate-pulse" />
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{post.postType || 'Dossier'}</span>
+                        </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <button className="h-9 w-9 rounded-xl hover:bg-primary/5 flex items-center justify-center transition-all">
-                                    <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                                <button className="h-10 w-10 rounded-2xl hover:bg-primary/5 flex items-center justify-center transition-all bg-muted/20 border border-transparent hover:border-primary/10">
+                                    <MoreVertical className="h-4.5 w-4.5 text-muted-foreground" />
                                 </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl shadow-black/10 glass border-primary/10">
                                 {isAuthor ? (
                                     <DropdownMenuItem onSelect={handleDeletePost} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
                                         <Trash2 className="h-4 w-4" /> 
-                                        <span>Purge record</span>
+                                        <span>Purge Transmission</span>
                                     </DropdownMenuItem>
                                 ) : (
                                     <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3 hover:bg-red-500/5 hover:text-red-500">
                                         <Flag className="h-4 w-4" /> 
-                                        <span>Report breach</span>
+                                        <span>Statutory Report</span>
                                     </DropdownMenuItem>
                                 )}
                             </DropdownMenuContent>
@@ -269,134 +283,164 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                     </div>
                 </div>
 
-                <div className="space-y-4">
-                    <h3 className="text-xl sm:text-3xl font-black tracking-tighter text-foreground leading-tight">{post.title}</h3>
+                <div className="space-y-5">
+                    <div className="space-y-2">
+                        <h3 className="text-2xl sm:text-4xl font-black tracking-tighter text-foreground leading-tight">{post.title}</h3>
+                        <div className="h-1 w-12 bg-primary rounded-full"></div>
+                    </div>
+                    
                     {post.content && (
-                        <div className="space-y-3">
-                            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed whitespace-pre-line">
+                        <div className="space-y-4">
+                            <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed whitespace-pre-line">
                                 {displayedContent}
                             </p>
                             {shouldShowReadMore && (
                                 <button 
                                     onClick={() => setIsExpanded(!isExpanded)}
-                                    className="text-[11px] font-black uppercase tracking-widest text-primary hover:underline underline-offset-4 decoration-primary/30"
+                                    className="text-[11px] font-black uppercase tracking-[0.3em] text-primary hover:text-primary/80 flex items-center gap-2 transition-colors"
                                 >
-                                    {isExpanded ? "Minimize node" : "Expand full dossier"}
+                                    {isExpanded ? "Close Dossier" : "Analyze Full Dossier"} <ArrowRight className={cn("h-3 w-3 transition-transform", isExpanded ? "-rotate-90" : "rotate-0")} />
                                 </button>
                             )}
                         </div>
                     )}
 
                     {post.tags && post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 pt-2">
+                        <div className="flex flex-wrap gap-2 pt-4">
                             {post.tags.map(tag => (
-                                <Badge key={tag} variant="outline" className="bg-muted/30 border-primary/5 text-[9px] font-bold px-3 py-0.5 h-6 rounded-lg tracking-tight">#{tag}</Badge>
+                                <Badge key={tag} variant="outline" className="bg-primary/5 border-primary/10 text-[10px] font-black uppercase px-4 py-1 rounded-xl tracking-widest text-primary/60">
+                                    <Sparkles className="h-2.5 w-2.5 mr-2 opacity-40" />
+                                    {tag}
+                                </Badge>
                             ))}
                         </div>
                     )}
                 </div>
             </CardHeader>
 
-            <div className="px-8 sm:p-10 pb-0 pt-6 ml-1">
+            <div className="px-8 sm:p-10 pb-0 pt-8 ml-1.5">
                  {post.link && (
-                    <a href={post.link} target="_blank" rel="noopener noreferrer" className="block p-5 rounded-2xl border border-primary/10 bg-primary/5 hover:bg-primary/10 transition-all group/link">
-                        <div className="flex items-center gap-4">
-                            <div className="p-2 rounded-lg bg-white dark:bg-black shadow-sm group-hover/link:scale-110 transition-transform">
-                                <Search className="h-4 w-4 text-primary" />
+                    <a href={post.link} target="_blank" rel="noopener noreferrer" className="block p-6 rounded-[2rem] border border-primary/10 bg-primary/5 hover:bg-primary/10 transition-all group/link relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover/link:opacity-[0.08] transition-opacity">
+                            <Globe className="h-16 w-16" />
+                        </div>
+                        <div className="flex items-center gap-5 relative z-10">
+                            <div className="p-3 rounded-2xl bg-white dark:bg-black shadow-xl group-hover/link:scale-110 transition-all duration-500">
+                                <Search className="h-5 w-5 text-primary" />
                             </div>
-                            <p className="text-[10px] font-black truncate text-foreground group-hover/link:text-primary tracking-tight flex-1">{post.link}</p>
-                            <ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover/link:opacity-100 -translate-x-2 group-hover/link:translate-x-0 transition-all" />
+                            <div className="flex-1 min-w-0">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-1">External Citation Node</p>
+                                <p className="text-xs font-bold truncate text-foreground tracking-tight">{post.link}</p>
+                            </div>
+                            <ArrowUpRight className="h-5 w-5 text-primary opacity-40 group-hover/link:opacity-100 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-all" />
                         </div>
                     </a>
                 )}
                 
                 {optimisticPoll && (
-                    <div className="pt-6 space-y-3">
-                       {optimisticPoll.options.map((option, index) => {
-                           const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
-                           const userVotedForThis = post.poll?.voters?.includes(currentUser?.uid ?? '');
+                    <div className="pt-8 space-y-4">
+                       <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60 px-2 flex items-center gap-3 mb-2">
+                           <Zap className="h-3 w-3" /> Consensus Protocol
+                       </h4>
+                       <div className="grid gap-3">
+                            {optimisticPoll.options.map((option, index) => {
+                                const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
+                                const userVotedForThis = post.poll?.voters?.includes(currentUser?.uid ?? '');
 
-                           return (
-                            <button 
-                                key={index} 
-                                onClick={() => handleVote(index)}
-                                disabled={userHasVotedOnPoll || isVoting}
-                                className={cn(
-                                    "w-full relative h-14 rounded-2xl border border-primary/5 overflow-hidden transition-all text-left px-6 group/option shadow-sm",
-                                    userHasVotedOnPoll ? "bg-muted/10 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/30 active:scale-[0.99]"
-                                )}
-                            >
-                                <AnimatePresence>
-                                    {userHasVotedOnPoll && (
-                                        <motion.div 
-                                            initial={{ width: 0 }}
-                                            animate={{ width: `${percentage}%` }}
-                                            className="absolute inset-y-0 left-0 bg-primary/10 border-r border-primary/20"
-                                        />
-                                    )}
-                                </AnimatePresence>
-                                <div className="relative z-10 flex items-center justify-between h-full">
-                                    <div className="flex items-center gap-4">
-                                        <div className={cn(
-                                            "h-3 w-3 rounded-full border border-primary/30 transition-all",
-                                            userHasVotedOnPoll && !userVotedForThis ? "opacity-0" : "group-hover/option:scale-125",
-                                            userVotedForThis && "bg-primary border-primary shadow-[0_0_15px_rgba(255,153,51,0.5)]"
-                                        )} />
-                                        <span className="font-bold text-sm sm:text-base tracking-tight">{option.text}</span>
-                                    </div>
-                                    {userHasVotedOnPoll && (
-                                        <span className="font-black text-xs sm:text-sm text-primary">{percentage.toFixed(0)}%</span>
-                                    )}
-                                </div>
-                            </button>
-                       )})}
+                                return (
+                                    <button 
+                                        key={index} 
+                                        onClick={() => handleVote(index)}
+                                        disabled={userHasVotedOnPoll || isVoting}
+                                        className={cn(
+                                            "w-full relative h-16 rounded-[1.5rem] border border-primary/5 overflow-hidden transition-all text-left px-6 group/option shadow-sm",
+                                            userHasVotedOnPoll ? "bg-muted/10 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/20 active:scale-[0.99]"
+                                        )}
+                                    >
+                                        <AnimatePresence>
+                                            {userHasVotedOnPoll && (
+                                                <motion.div 
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: `${percentage}%` }}
+                                                    className="absolute inset-y-0 left-0 bg-primary/10 border-r border-primary/20"
+                                                />
+                                            )}
+                                        </AnimatePresence>
+                                        <div className="relative z-10 flex items-center justify-between h-full">
+                                            <div className="flex items-center gap-4">
+                                                <div className={cn(
+                                                    "h-3.5 w-3.5 rounded-full border-2 border-primary/20 transition-all",
+                                                    userHasVotedOnPoll && !userVotedForThis ? "opacity-0" : "group-hover/option:scale-125 group-hover/option:border-primary",
+                                                    userVotedForThis && "bg-primary border-primary shadow-[0_0_20px_rgba(255,153,51,0.4)]"
+                                                )} />
+                                                <span className="font-bold text-sm sm:text-base tracking-tight">{option.text}</span>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                {userHasVotedOnPoll && (
+                                                    <span className="font-black text-sm sm:text-lg text-primary tracking-tighter">{percentage.toFixed(0)}%</span>
+                                                )}
+                                                <ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover/option:opacity-100 -translate-x-2 group-hover/option:translate-x-0 transition-all" />
+                                            </div>
+                                        </div>
+                                    </button>
+                                )
+                            })}
+                       </div>
                        {userHasVotedOnPoll && (
-                            <div className="flex items-center gap-2 px-2 text-[10px] font-black uppercase tracking-[0.3em] text-[#128807] animate-in fade-in slide-in-from-left-4">
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500/5 border border-green-500/10 text-[10px] font-black uppercase tracking-[0.2em] text-[#128807] w-fit animate-in fade-in slide-in-from-left-4">
                                 <CheckCircle2 className="h-4 w-4" />
-                                consensus captured // registry secure
+                                identity-locked consensus captured
                             </div>
                         )}
                     </div>
                 )}
             </div>
 
-            <CardFooter className="p-6 sm:p-10 mt-6 flex justify-between items-center bg-muted/5 border-t border-primary/10 ml-1">
-                <div className="flex gap-3">
-                    <Button variant="ghost" size="sm" className={cn("flex items-center gap-2.5 h-10 px-5 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] transition-all", userHasLiked ? "text-red-500 bg-red-500/5 shadow-inner" : "text-primary hover:bg-primary/5")} onClick={handleLike} disabled={isLiking}>
-                        {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4 transition-all", userHasLiked && "fill-current scale-110")} />}
-                        <span>{optimisticLikes}</span>
+            <CardFooter className="p-8 sm:p-10 mt-10 flex flex-col sm:flex-row justify-between items-center gap-6 bg-muted/5 border-t border-primary/10 ml-1.5">
+                <div className="flex gap-4 w-full sm:w-auto">
+                    <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className={cn(
+                            "flex-1 sm:flex-none flex items-center justify-center gap-3 h-12 px-8 rounded-[1.2rem] font-black text-[11px] uppercase tracking-[0.3em] transition-all", 
+                            userHasLiked ? "text-red-500 bg-red-500/5 shadow-inner" : "text-primary hover:bg-primary/5"
+                        )} 
+                        onClick={handleLike} 
+                        disabled={isLiking}
+                    >
+                        {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4.5 w-4.5 transition-all", userHasLiked && "fill-current scale-110")} />}
+                        <span>{optimisticLikes} Audits</span>
                     </Button>
                     
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="h-10 w-10 rounded-xl bg-background border border-primary/10 flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all">
-                                <Share2 className="h-4 w-4" />
+                            <button className="h-12 w-12 rounded-[1.2rem] bg-background border border-primary/10 flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all shadow-sm">
+                                <Share2 className="h-5 w-5" />
                             </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-52 p-2 rounded-2xl shadow-2xl shadow-black/10 glass border-primary/10">
-                            <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
-                                <div className="p-1.5 rounded-lg bg-green-500/10 text-green-600"><MessageCircle className="h-4 w-4" /></div>
-                                WhatsApp
+                        <DropdownMenuContent align="end" className="w-64 p-3 rounded-[1.5rem] shadow-2xl shadow-black/10 glass border-primary/10">
+                            <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-xl font-bold text-xs h-12 px-4 cursor-pointer gap-4">
+                                <div className="p-2 rounded-lg bg-green-500/10 text-green-600 shadow-sm"><MessageCircle className="h-4.5 w-4.5" /></div>
+                                WhatsApp Dispatch
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
-                                <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-500"><Twitter className="h-4 w-4" /></div>
-                                Twitter (X)
+                            <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-xl font-bold text-xs h-12 px-4 cursor-pointer gap-4">
+                                <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500 shadow-sm"><Twitter className="h-4.5 w-4.5" /></div>
+                                Twitter (X) Node
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3">
-                                <div className="p-1.5 rounded-lg bg-primary/10 text-primary"><Bookmark className="h-4 w-4" /></div>
-                                Copy Node Link
+                            <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-xl font-bold text-xs h-12 px-4 cursor-pointer gap-4">
+                                <div className="p-2 rounded-lg bg-primary/10 text-primary shadow-sm"><Bookmark className="h-4.5 w-4.5" /></div>
+                                Copy Registry Link
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" className="h-10 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-md group/btn" asChild>
-                        <Link href="/dashboard/research-analytics">
-                            <span>Analyze Protocol</span>
-                            <ArrowRight className="ml-2.5 h-4 w-4 transition-transform group-hover/btn:translate-x-2" />
-                        </Link>
-                    </Button>
-                </div>
+                
+                <Button asChild className="w-full sm:w-auto h-12 px-10 rounded-[1.2rem] font-black text-[11px] uppercase tracking-[0.3em] shadow-xl shadow-primary/20 group/btn transition-all active:scale-95">
+                    <Link href="/dashboard/research-analytics">
+                        Analyze Protocol
+                        <ArrowRight className="ml-3 h-4 w-4 transition-transform group-hover/btn:translate-x-2" />
+                    </Link>
+                </Button>
             </CardFooter>
         </Card>
     );
@@ -405,6 +449,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 export default function ResearchAnalyticsPage() {
     const firestore = useFirestore();
     const auth = useAuth();
+    const { toast } = useToast();
     const [feed, setFeed] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -469,76 +514,111 @@ export default function ResearchAnalyticsPage() {
     
     if (loading) {
         return (
-            <div className="space-y-12 max-w-5xl mx-auto pb-20 px-2 sm:px-0 text-left">
-                <div className="flex items-center gap-4">
-                    <Skeleton className="h-16 w-16 rounded-3xl" />
-                    <div className="space-y-2">
-                        <Skeleton className="h-8 w-64 rounded-xl" />
-                        <Skeleton className="h-4 w-96 rounded-lg" />
+            <div className="space-y-16 max-w-5xl mx-auto pb-20 px-4 sm:px-0 text-left">
+                <div className="flex items-center gap-6">
+                    <Skeleton className="h-20 w-20 rounded-[2rem]" />
+                    <div className="space-y-3">
+                        <Skeleton className="h-10 w-64 rounded-xl" />
+                        <Skeleton className="h-5 w-96 rounded-lg" />
                     </div>
                 </div>
-                <div className="space-y-10">
-                    {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-96 w-full rounded-[3rem]" />)}
+                <div className="space-y-12">
+                    {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-[500px] w-full rounded-[3rem]" />)}
                 </div>
             </div>
         )
     }
 
     return (
-        <div className="space-y-12 max-w-5xl mx-auto pb-20 px-2 sm:px-0 text-left">
-            <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 border-b border-primary/5 pb-10">
-                <div className="space-y-2">
-                    <div className="flex items-center gap-3 text-primary mb-2">
-                        <TrendingUp className="h-6 w-6 animate-bounce" />
-                        <span className="text-[11px] font-black uppercase tracking-[0.4em]">Community Authority Hub</span>
-                    </div>
-                    <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter uppercase leading-none">
-                        Live <span className="text-primary italic">Transmissions</span>
-                    </h1>
-                    <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-2xl leading-relaxed">
-                        Publicly audited statutory ideas, community polling, and real-time legal forensics from the Nyaya Sahayak registry.
-                    </p>
+        <div className="space-y-16 max-w-5xl mx-auto pb-24 px-2 sm:px-0 text-left">
+            {/* Redesigned Mandatory Institutional Header */}
+            <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative p-10 sm:p-16 rounded-[3rem] overflow-hidden bg-card/40 backdrop-blur-xl border border-primary/10 shadow-[0_50px_100px_rgba(0,0,0,0.1)]"
+            >
+                <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
+                    <Logo className="h-64 w-64 grayscale" priority />
                 </div>
-                <Button size="lg" className="h-14 px-8 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-2xl shadow-primary/20 transition-all active:scale-95 group overflow-hidden relative" asChild>
-                    <Link href={isAuthenticated ? "/dashboard/research-analytics/new" : "/login"}>
-                        <span className="relative z-10 flex items-center gap-3">
-                            <PlusCircle className="h-5 w-5 group-hover:rotate-90 transition-transform" />
-                            Initialize Post
-                        </span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                    </Link>
-                </Button>
-            </div>
+                
+                <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-end justify-between gap-12">
+                    <div className="space-y-6">
+                        <div className="flex flex-wrap items-center gap-4">
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 shadow-sm">
+                                <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Community Authority Hub</span>
+                            </div>
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/5 border border-blue-500/10 shadow-sm">
+                                <Activity className="h-4 w-4 text-blue-500" />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-blue-500/70">Registry: Active</span>
+                            </div>
+                        </div>
+                        
+                        <div className="space-y-3">
+                            <h1 className="text-4xl sm:text-7xl font-black font-headline tracking-tighter uppercase leading-[0.9] text-foreground">
+                                Live <br/>
+                                <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Transmissions.</span>
+                            </h1>
+                            <p className="text-base sm:text-xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
+                                Publicly audited statutory ideas, community polling, and real-time legal forensics from the Nyaya Sahayak registry terminal.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="w-full lg:w-auto">
+                        <Button size="lg" className="h-16 w-full lg:w-auto px-10 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-2xl shadow-primary/30 transition-all active:scale-95 group overflow-hidden relative" asChild>
+                            <Link href={isAuthenticated ? "/dashboard/research-analytics/new" : "/login"}>
+                                <span className="relative z-10 flex items-center gap-4">
+                                    <PlusCircle className="h-6 w-6 group-hover:rotate-90 transition-transform duration-500" />
+                                    Initialize Transmission
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                            </Link>
+                        </Button>
+                    </div>
+                </div>
+                
+                {/* Visual Status Bar */}
+                <div className="absolute bottom-0 left-0 right-0 h-1.5 flex">
+                    <div className="flex-1 bg-[#FF9933] opacity-40"></div>
+                    <div className="flex-1 bg-white opacity-40"></div>
+                    <div className="flex-1 bg-[#128807] opacity-40"></div>
+                </div>
+            </motion.div>
             
-            <div className="grid gap-10">
+            {/* Feed Section */}
+            <div className="grid gap-12">
                 <AnimatePresence mode="popLayout">
                     {!isAuthenticated ? (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-32 text-center opacity-40 flex flex-col items-center gap-8">
-                            <div className="p-10 rounded-[3rem] bg-muted/20 border-2 border-dashed border-primary/10">
-                                <Zap className="h-20 w-20 text-primary opacity-20" />
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-32 text-center opacity-40 flex flex-col items-center gap-10">
+                            <div className="p-12 rounded-[3rem] bg-muted/20 border-2 border-dashed border-primary/10 relative">
+                                <Zap className="h-24 w-24 text-primary opacity-20" />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <ShieldCheck className="h-10 w-10 text-primary/40 animate-pulse" />
+                                </div>
                             </div>
                             <div className="space-y-3">
-                                <p className="font-black text-2xl tracking-tighter uppercase">Clearance Required</p>
-                                <p className="text-sm font-medium italic">"Initialize dashboard ingress to access live transmissions."</p>
+                                <p className="font-black text-3xl tracking-tighter uppercase">Clearance Required</p>
+                                <p className="text-sm font-medium italic max-w-sm mx-auto leading-relaxed">"Initialize dashboard ingress to access live community transmissions and statutory nodes."</p>
                             </div>
                         </motion.div>
                     ) : feed.length === 0 ? (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-32 text-center opacity-40 flex flex-col items-center gap-8">
-                            <div className="p-10 rounded-[3rem] bg-muted/20 border-2 border-dashed border-primary/10">
-                                <Newspaper className="h-20 w-20 text-muted-foreground opacity-20" />
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-32 text-center opacity-40 flex flex-col items-center gap-10">
+                            <div className="p-12 rounded-[3rem] bg-muted/20 border-2 border-dashed border-primary/10">
+                                <Newspaper className="h-24 w-24 text-muted-foreground opacity-20" />
                             </div>
                             <div className="space-y-3">
-                                <p className="font-black text-2xl tracking-tighter uppercase">Registry Empty</p>
-                                <p className="text-sm font-medium italic">"No active transmissions found in the community node."</p>
+                                <p className="font-black text-3xl tracking-tighter uppercase">Registry Clear</p>
+                                <p className="text-sm font-medium italic max-w-sm mx-auto">"No active transmissions currently found in the community consensus node."</p>
                             </div>
                         </motion.div>
                     ) : (
                         feed.map((item, index) => (
                             <motion.div 
                                 key={item.id}
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={{ opacity: 0, y: 40 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.05, duration: 0.6 }}
+                                transition={{ delay: index * 0.05, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                             >
                                 <PostCard post={item} userProfile={userProfile} />
                             </motion.div>
@@ -547,28 +627,36 @@ export default function ResearchAnalyticsPage() {
                 </AnimatePresence>
             </div>
 
-            <div className="pt-20 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-10">
-                <div className="flex flex-wrap justify-center gap-10">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 rounded-2xl bg-primary/5 text-primary">
-                            <ShieldCheck className="h-6 w-6" />
+            {/* Footer Compliance Section */}
+            <div className="pt-24 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-12">
+                <div className="flex flex-wrap justify-center gap-16">
+                    <div className="flex items-center gap-5 group">
+                        <div className="p-4 rounded-[1.5rem] bg-primary/5 text-primary group-hover:scale-110 transition-transform duration-500 shadow-sm border border-primary/5">
+                            <ShieldCheck className="h-7 w-7" />
                         </div>
-                        <div className="text-left">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-primary">Verified Feed</p>
-                            <p className="text-[9px] font-bold text-muted-foreground opacity-60">Audited for forensic accuracy.</p>
+                        <div className="text-left space-y-1">
+                            <p className="text-[11px] font-black uppercase tracking-widest text-primary">Verified Hub</p>
+                            <p className="text-[10px] font-bold text-muted-foreground opacity-60">Forensic Identity Audit Active.</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 rounded-2xl bg-blue-500/5 text-blue-500">
-                            <Globe className="h-6 w-6" />
+                    <div className="flex items-center gap-5 group">
+                        <div className="p-4 rounded-[1.5rem] bg-blue-500/5 text-blue-500 group-hover:scale-110 transition-transform duration-500 shadow-sm border border-blue-500/10">
+                            <Layers className="h-7 w-7" />
                         </div>
-                        <div className="text-left">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-blue-500">Open Access</p>
-                            <p className="text-[9px] font-bold text-muted-foreground opacity-60">Citizen-driven statutory reform.</p>
+                        <div className="text-left space-y-1">
+                            <p className="text-[11px] font-black uppercase tracking-widest text-blue-500">Registry Density</p>
+                            <p className="text-[10px] font-bold text-muted-foreground opacity-60">High-fidelity consensus nodes.</p>
                         </div>
                     </div>
                 </div>
-                <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground/30">NYAYASAHAYAK.IN // TRANSMISSION REGISTRY</p>
+                <div className="text-center sm:text-right space-y-2">
+                    <p className="text-[10px] font-black uppercase tracking-[0.6em] text-muted-foreground/30">NYAYASAHAYAK.IN // NS-STREAM-V4</p>
+                    <div className="flex items-center justify-center sm:justify-end gap-3 opacity-20">
+                        <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
+                        <div className="h-1.5 w-1.5 rounded-full bg-white border border-muted"></div>
+                        <div className="h-1.5 w-1.5 rounded-full bg-[#128807]"></div>
+                    </div>
+                </div>
             </div>
         </div>
     );
