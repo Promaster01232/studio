@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -231,7 +232,7 @@ export default function ManagementConsolePage() {
                 "flex items-center gap-2 px-4 py-2 rounded-xl border shadow-inner transition-all",
                 isLive ? "bg-green-500/5 border-green-500/10 text-green-600" : "bg-amber-500/5 border-amber-500/10 text-amber-600"
             )}>
-                {isLive ? <Cloud className="h-3 w-3" /> : <HardDrive className="h-3 w-3 animate-pulse" />}
+                <Cloud className="h-3 w-3" />
                 <span className="text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
                     <div className={cn("h-1 w-1 rounded-full animate-pulse", isLive ? "bg-green-500" : "bg-amber-500")} />
                     {isLive ? "Sync: Direct" : "Sync: Cache"}

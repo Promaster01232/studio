@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useToast } from "@/hooks/use-toast";
@@ -53,7 +54,8 @@ const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
   'piyushkumarsingh23323@gmail.com',
   'piyushkumrsingh23323@gmail.com',
-  'piyushkumrsingh23399@gmail.com'
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
 ];
 
 interface Post {
@@ -142,6 +144,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
     const isAuthor = post.authorUid === currentUser?.uid;
+    const isGlobalAdmin = userProfile?.email && ADMIN_EMAILS.includes(userProfile.email.toLowerCase());
+    
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
     
@@ -233,7 +237,9 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     };
 
     const handleDeletePost = () => {
-        if (!confirm("Confirm Transmission Purge: This action will permanently erase the node from the community registry.")) return;
+        const confirmMsg = isGlobalAdmin && !isAuthor ? "Confirm ADMIN PURGE: You are using institutional root privileges to erase this transmission." : "Confirm Transmission Purge: This action will permanently erase the node from the community registry.";
+        if (!confirm(confirmMsg)) return;
+        
         const postRef = doc(firestore, "posts", post.id);
         deleteDoc(postRef)
             .then(() => {
@@ -273,10 +279,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                 </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl glass border-primary/10">
-                                {isAuthor ? (
+                                {(isAuthor || isGlobalAdmin) ? (
                                     <DropdownMenuItem onSelect={handleDeletePost} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
                                         <Trash2 className="h-4 w-4" /> 
-                                        <span>Purge record</span>
+                                        <span>{isGlobalAdmin && !isAuthor ? 'Admin Purge' : 'Purge record'}</span>
                                     </DropdownMenuItem>
                                 ) : (
                                     <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3 hover:bg-red-500/5 hover:text-red-500">
