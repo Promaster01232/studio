@@ -234,7 +234,7 @@ export default function ManagementConsolePage() {
             )}>
                 <Cloud className="h-3 w-3" />
                 <span className="text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
-                    <div className={cn("h-1 w-1 rounded-full animate-pulse", isLive ? "bg-green-500" : "bg-amber-500")} />
+                    <div className={cn("h-1.5 w-1.5 rounded-full animate-pulse", isLive ? "bg-green-500" : "bg-amber-500")} />
                     {isLive ? "Sync: Direct" : "Sync: Cache"}
                 </span>
             </div>
