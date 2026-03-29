@@ -127,12 +127,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        <Script 
-          async 
-          custom-element="amp-auto-ads"
-          src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"
-          strategy="lazyOnload"
-        />
         <Script id="facebook-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
@@ -149,7 +143,6 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>
-        <amp-auto-ads type="adsense" data-ad-client="ca-pub-3991323698767154"></amp-auto-ads>
         <ThemeProvider>
           <LanguageProvider>
             <FirebaseClientProvider>
