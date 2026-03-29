@@ -25,7 +25,7 @@ import {
   RefreshCw,
   Lock,
   Database,
-  CloudCheck,
+  Cloud,
   HardDrive
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -102,17 +102,10 @@ export default function ManagementConsolePage() {
             return;
         }
 
-        // HIGH-FIDELITY FIREBASE MIRROR: Strictly reactive logic
         const usersCol = collection(firestore, "users");
-        
-        // Use standard snapshot listener. No local state fallback to ensure data matches Firebase exactly.
         const unsubscribeSnapshot = onSnapshot(usersCol, (snapshot) => {
-            // metadata.fromCache tells us if we are looking at local data or server data
             setIsLive(!snapshot.metadata.fromCache);
-            
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
-            
-            // Re-order and set users. This replaces the old list completely.
             setUsers(list.sort((a, b) => {
                 const dateA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Number(a.createdAt || 0);
                 const dateB = b.createdAt?.toMillis ? b.createdAt.toMillis() : Number(b.createdAt || 0);
@@ -165,26 +158,19 @@ export default function ManagementConsolePage() {
     
     try {
         const batch = writeBatch(firestore);
-        
-        // 1. Purge Profile Node (Identity)
         batch.delete(doc(firestore, "users", userToPurge.uid));
         
-        // 2. Purge Transmission Registry (All Posts)
         const postsRef = collection(firestore, "posts");
         const postsQuery = query(postsRef, where("authorUid", "==", userToPurge.uid));
         const postsSnap = await getDocs(postsQuery);
         postsSnap.docs.forEach(d => batch.delete(d.ref));
         
-        // 3. Purge Alert Node (Notifications)
         const notifRef = collection(firestore, "notifications");
         const notifQuery = query(notifRef, where("userId", "==", userToPurge.uid));
         const notifSnap = await getDocs(notifQuery);
         notifSnap.docs.forEach(d => batch.delete(d.ref));
 
-        // Commit all deletions atomically across Firestore
         await batch.commit();
-
-        // 4. Synchronize Real-time Database erasure
         await remove(ref(rtdb, `users/${userToPurge.uid}`)).catch(() => {});
         await remove(ref(rtdb, `advocates/${userToPurge.uid}`)).catch(() => {});
 
@@ -232,7 +218,7 @@ export default function ManagementConsolePage() {
                 "flex items-center gap-2 px-4 py-2 rounded-xl border shadow-inner transition-all",
                 isLive ? "bg-green-500/5 border-green-500/10 text-green-600" : "bg-amber-500/5 border-amber-500/10 text-amber-600"
             )}>
-                {isLive ? <CloudCheck className="h-3 w-3" /> : <HardDrive className="h-3 w-3 animate-pulse" />}
+                {isLive ? <Cloud className="h-3 w-3" /> : <HardDrive className="h-3 w-3 animate-pulse" />}
                 <span className="text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
                     <div className={cn("h-1 w-1 rounded-full animate-pulse", isLive ? "bg-green-500" : "bg-amber-500")} />
                     {isLive ? "Sync: Direct" : "Sync: Cache"}
