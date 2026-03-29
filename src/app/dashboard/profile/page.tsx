@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -33,7 +34,8 @@ import {
   Activity,
   Globe,
   CreditCard,
-  Lock
+  Lock,
+  Crown
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -83,11 +85,14 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-function DigitalIdentityCard({ profile }: { profile: UserProfile }) {
-    const systemId = `NS-REG-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
+function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdmin: boolean }) {
+    const systemId = isAdmin ? `NS-ROOT-AUTH-99` : `NS-REG-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
     return (
         <div className="relative w-full aspect-[1.586/1] rounded-[1.5rem] overflow-hidden shadow-2xl group transition-all hover:scale-[1.02] active:scale-[0.98] text-left">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-blue-600"></div>
+            <div className={cn(
+                "absolute inset-0 bg-gradient-to-br",
+                isAdmin ? "from-amber-600 via-primary to-amber-800" : "from-primary via-primary/90 to-blue-600"
+            )}></div>
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
             
             <div className="absolute top-0 right-0 p-4 opacity-10">
@@ -102,11 +107,11 @@ function DigitalIdentityCard({ profile }: { profile: UserProfile }) {
                         </div>
                         <div className="flex flex-col">
                             <span className="font-black text-[10px] tracking-tighter leading-none">NYAYA SAHAYAK</span>
-                            <span className="text-[6px] font-bold uppercase tracking-[0.2em] opacity-60">Forensic Terminal</span>
+                            <span className="text-[6px] font-bold uppercase tracking-[0.2em] opacity-60">{isAdmin ? "Root Authority Node" : "Forensic Terminal"}</span>
                         </div>
                     </div>
                     <div className="bg-white/20 backdrop-blur-md px-2 py-1 rounded-md border border-white/10">
-                        <span className="text-[8px] font-black uppercase tracking-widest">Active Registry</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest">{isAdmin ? "System Root" : "Active Registry"}</span>
                     </div>
                 </div>
 
@@ -120,7 +125,7 @@ function DigitalIdentityCard({ profile }: { profile: UserProfile }) {
                     </div>
                     <div className="flex-1 space-y-0.5 min-w-0">
                         <h3 className="font-black text-sm sm:text-base tracking-tight truncate uppercase leading-none">{profile.firstName} {profile.lastName}</h3>
-                        <p className="text-[8px] font-bold uppercase tracking-widest opacity-70 leading-none">{profile.userType}</p>
+                        <p className="text-[8px] font-bold uppercase tracking-widest opacity-70 leading-none">{isAdmin ? "Institutional Admin" : profile.userType}</p>
                         <p className="text-[10px] font-mono font-bold tracking-wider pt-1">{systemId}</p>
                     </div>
                     <div className="bg-white p-1.5 rounded-lg shadow-xl shrink-0">
@@ -134,8 +139,8 @@ function DigitalIdentityCard({ profile }: { profile: UserProfile }) {
                         <p className="text-[8px] font-bold truncate max-w-[120px] sm:max-w-[180px]">{profile.email}</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-[6px] font-bold uppercase opacity-40">Security Status</p>
-                        <p className="text-[8px] font-black uppercase tracking-tighter text-green-300">Verified Identity</p>
+                        <p className="text-[6px] font-bold uppercase opacity-40">Clearance Level</p>
+                        <p className="text-[8px] font-black uppercase tracking-tighter text-green-300">{isAdmin ? "Absolute Statutory Hub" : "Verified Identity"}</p>
                     </div>
                 </div>
             </div>
@@ -339,8 +344,9 @@ export default function ProfilePage() {
 
   if (loading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
-  const isLimited = !userProfile?.subscriptionType?.includes('unlimited');
-  const isProtected = ADMIN_EMAILS.includes(email.toLowerCase());
+  const isAdmin = email && ADMIN_EMAILS.includes(email.toLowerCase());
+  const isLimited = !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
+  const isProtected = isAdmin;
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0 text-left">
@@ -378,7 +384,7 @@ export default function ProfilePage() {
                         <div className="space-y-2 max-w-full px-2">
                             <h2 className="text-xl sm:text-2xl font-black tracking-tighter leading-tight truncate">{firstName} {lastName}</h2>
                             <div className="flex flex-col items-center gap-3">
-                                {userProfile?.emailVerified ? (
+                                {userProfile?.emailVerified || isAdmin ? (
                                     <Badge className="bg-green-500/10 text-green-600 border-green-500/20 py-1 px-4 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
                                         <BadgeCheck className="h-3 w-3 mr-2" /> Identity Verified
                                     </Badge>
@@ -398,7 +404,7 @@ export default function ProfilePage() {
                                         Run Forensic Scan
                                     </Button>
                                 )}
-                                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] opacity-40">System Protocol: {userProfile?.userType}</span>
+                                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] opacity-40">System Protocol: {isAdmin ? "Root Administrator" : userProfile?.userType}</span>
                             </div>
                         </div>
                     </div>
@@ -424,7 +430,7 @@ export default function ProfilePage() {
                 {userProfile && (
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-3">
                         <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-4">Digital Identity Terminal</h3>
-                        <DigitalIdentityCard profile={userProfile} />
+                        <DigitalIdentityCard profile={userProfile} isAdmin={isAdmin || false} />
                     </motion.div>
                 )}
                 
@@ -528,8 +534,11 @@ export default function ProfilePage() {
                             </div>
                             <CardTitle className="text-2xl font-black tracking-tight leading-none uppercase">Subscription Hub</CardTitle>
                         </div>
-                        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
-                            {userProfile?.subscriptionType?.replace('_', ' ') || 'Free Tier'}
+                        <Badge variant="secondary" className={cn(
+                            "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm",
+                            isAdmin ? "bg-amber-500/10 text-amber-600 border-amber-500/20" : "bg-primary/10 text-primary border-primary/20"
+                        )}>
+                            {isAdmin ? 'INSTITUTIONAL ANNUAL' : (userProfile?.subscriptionType?.replace('_', ' ') || 'Free Tier')}
                         </Badge>
                     </CardHeader>
                     <CardContent className="p-8 sm:p-10">
@@ -541,8 +550,8 @@ export default function ProfilePage() {
                                         <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden shadow-inner">
                                             <motion.div 
                                                 initial={{ width: 0 }}
-                                                animate={{ width: `${Math.min(100, ((userProfile?.aiUsageCount || 0) / (userProfile?.subscriptionType === 'pro_20' ? 20 : 5)) * 100)}%` }}
-                                                className="h-full bg-primary"
+                                                animate={{ width: isLimited ? `${Math.min(100, ((userProfile?.aiUsageCount || 0) / (userProfile?.subscriptionType === 'pro_20' ? 20 : 5)) * 100)}%` : "100%" }}
+                                                className={cn("h-full", isAdmin ? "bg-amber-500" : "bg-primary")}
                                             />
                                         </div>
                                         <span className="font-mono font-black text-sm tracking-tighter">
@@ -551,9 +560,9 @@ export default function ProfilePage() {
                                     </div>
                                 </div>
                                 <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-1">
-                                    <p className="text-[9px] font-black uppercase text-primary">Current Clearance</p>
+                                    <p className="text-[9px] font-black uppercase text-primary">{isAdmin ? "Root Access" : "Current Clearance"}</p>
                                     <p className="text-sm font-medium text-muted-foreground leading-relaxed">
-                                        {isLimited ? "Your node is currently operating on a restricted credit protocol." : "You possess absolute institutional clearance for all neural nodes."}
+                                        {isAdmin ? "You possess absolute institutional authority over all neural nodes." : isLimited ? "Your node is currently operating on a restricted credit protocol." : "You possess absolute institutional clearance for all neural nodes."}
                                     </p>
                                 </div>
                             </div>
@@ -570,8 +579,8 @@ export default function ProfilePage() {
                                     </>
                                 ) : (
                                     <div className="p-6 rounded-2xl border-2 border-dashed border-primary/20 flex flex-col items-center text-center gap-3">
-                                        <ShieldCheck className="h-10 w-10 text-primary opacity-20" />
-                                        <p className="text-xs font-black uppercase tracking-widest text-primary">Maximum Clearance Active</p>
+                                        {isAdmin ? <Crown className="h-10 w-10 text-amber-600 opacity-40" /> : <ShieldCheck className="h-10 w-10 text-primary opacity-20" />}
+                                        <p className="text-xs font-black uppercase tracking-widest text-primary">{isAdmin ? "Maximum Authority Node" : "Maximum Clearance Active"}</p>
                                     </div>
                                 )}
                             </div>
@@ -580,7 +589,7 @@ export default function ProfilePage() {
                 </Card>
 
                 <AnimatePresence>
-                    {!userProfile?.emailVerified && (
+                    {!userProfile?.emailVerified && !isAdmin && (
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
                             <Card className="border-amber-500/20 bg-amber-500/5 rounded-[2.5rem] shadow-xl overflow-hidden relative">
                                 <div className="absolute top-0 right-0 p-8 opacity-[0.05]">

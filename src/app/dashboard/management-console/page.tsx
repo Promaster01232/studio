@@ -205,7 +205,7 @@ export default function ManagementConsolePage() {
   const stats = {
       total: users.length,
       verified: users.filter(u => u.securityStatus === 'verified').length,
-      unlimited: users.filter(u => u.subscriptionType?.includes('unlimited')).length,
+      unlimited: users.filter(u => u.subscriptionType?.includes('unlimited') || ADMIN_EMAILS.includes(u.email.toLowerCase())).length,
       flagged: users.filter(u => u.isBlocked).length
   };
 
@@ -325,7 +325,7 @@ export default function ManagementConsolePage() {
                                         </TableCell>
                                         <TableCell className="text-center">
                                             <Badge variant="secondary" className="font-black text-[8px] uppercase bg-primary/5 text-primary border-primary/10">
-                                                {(user.subscriptionType || 'FREE').replace('_', ' ')}
+                                                {isProtected ? 'INSTITUTIONAL ANNUAL' : (user.subscriptionType || 'FREE').replace('_', ' ')}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-center">
@@ -343,13 +343,13 @@ export default function ManagementConsolePage() {
                                             />
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            {user.securityStatus === 'verified' ? (
+                                            {user.securityStatus === 'verified' || isProtected ? (
                                                 <div className="flex items-center justify-center gap-1.5 text-blue-600">
                                                     <ShieldCheck className="h-3 w-3" />
                                                     <span className="text-[8px] font-black uppercase">Cleared</span>
                                                 </div>
                                             ) : (
-                                                <Button size="sm" variant="ghost" className="h-7 px-3 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full hover:bg-primary/5" onClick={() => handleVerifyUser(user)} disabled={processingUid === user.uid || isProtected}>
+                                                <Button size="sm" variant="ghost" className="h-7 px-3 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full hover:bg-primary/5" onClick={() => handleVerifyUser(user)} disabled={processingUid === user.uid}>
                                                     Run Audit
                                                 </Button>
                                             )}

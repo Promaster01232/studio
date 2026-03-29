@@ -144,7 +144,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
     const isAuthor = post.authorUid === currentUser?.uid;
-    const isGlobalAdmin = userProfile?.email && ADMIN_EMAILS.includes(userProfile.email.toLowerCase());
+    const isGlobalAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
     
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;

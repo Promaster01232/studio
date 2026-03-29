@@ -10,6 +10,14 @@ import { ShieldAlert, Zap, ArrowRight, Loader2, CreditCard } from "lucide-react"
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
+const ADMIN_EMAILS = [
+  'enterspaceindia@gmail.com', 
+  'piyushkumarsingh23323@gmail.com',
+  'piyushkumrsingh23323@gmail.com',
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
+];
+
 interface AIUsageGuardProps {
   children: ReactNode;
   featureName: string;
@@ -40,12 +48,17 @@ export function AIUsageGuard({ children, featureName }: AIUsageGuardProps) {
     );
   }
 
+  const isAdmin = profile?.email && ADMIN_EMAILS.includes(profile.email.toLowerCase());
   const usage = profile?.aiUsageCount || 0;
   const plan = profile?.subscriptionType || 'free';
   
+  // Root Admins always have unlimited access
   let limit = 5;
-  if (plan === 'pro_20') limit = 20;
-  if (plan === 'unlimited_monthly' || plan === 'unlimited_yearly') limit = 999999;
+  if (isAdmin || plan === 'unlimited_monthly' || plan === 'unlimited_yearly') {
+    limit = 9999999;
+  } else if (plan === 'pro_20') {
+    limit = 20;
+  }
 
   const isLimitReached = usage >= limit;
 

@@ -72,7 +72,8 @@ const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
   'piyushkumarsingh23323@gmail.com',
   'piyushkumrsingh23323@gmail.com',
-  'piyushkumrsingh23399@gmail.com'
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
 ];
 
 interface Post {
@@ -159,6 +160,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
 
     const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
     const isAuthor = post.authorUid === currentUser?.uid;
+    const isGlobalAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
+    
     const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
     const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
     
@@ -237,7 +240,9 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     };
 
     const handleDelete = async () => {
-        if (!confirm("Confirm record purge from community registry?")) return;
+        const msg = isGlobalAdmin && !isAuthor ? "ADMIN PURGE: Confirm record erasure?" : "Confirm record purge from community registry?";
+        if (!confirm(msg)) return;
+        
         const postRef = doc(firestore, "posts", post.id);
         deleteDoc(postRef).catch((serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -267,10 +272,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-52 p-2 rounded-xl shadow-2xl shadow-black/10 glass border-primary/10">
-                                    {isAuthor ? (
+                                    {(isAuthor || isGlobalAdmin) ? (
                                         <DropdownMenuItem onSelect={handleDelete} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                             <Trash2 className="h-4 w-4" /> 
-                                            <span>Purge record</span>
+                                            <span>{isGlobalAdmin && !isAuthor ? 'Admin Purge' : 'Purge record'}</span>
                                         </DropdownMenuItem>
                                     ) : (
                                         <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
@@ -465,9 +470,11 @@ export default function DashboardHomePage() {
     return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
 
-  const isLimited = !userProfile?.subscriptionType?.includes('unlimited');
+  const isAdmin = userProfile?.email && ADMIN_EMAILS.includes(userProfile.email.toLowerCase());
+  // Admins are treated as Elite Nodes
+  const isLimited = !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
   const isMonthly = userProfile?.subscriptionType === 'unlimited_monthly';
-  const isYearly = userProfile?.subscriptionType === 'unlimited_yearly';
+  const isYearly = userProfile?.subscriptionType === 'unlimited_yearly' || isAdmin;
 
   return (
     <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
@@ -500,7 +507,7 @@ export default function DashboardHomePage() {
                       </h1>
                   </div>
                   <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed text-left">
-                      {isYearly ? "You have absolute institutional authority over all forensic nodes. Your yearly protocol provides maximum-fidelity legal intelligence." : 
+                      {isYearly ? "You have absolute institutional authority over all forensic nodes. Your elite protocol provides maximum-fidelity legal intelligence." : 
                        isMonthly ? "Unlimited forensic clearance is active. Accessing full neural capacity for high-frequency legal auditing." :
                        "Access precision AI nodes for statutory auditing within the Indian judicial ecosystem. Standard operation protocols active."}
                   </p>

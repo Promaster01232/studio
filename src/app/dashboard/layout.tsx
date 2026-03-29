@@ -48,8 +48,9 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: number }) {
-    const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited');
+function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unreadCount: number, isAdmin: boolean }) {
+    // Admins are never limited
+    const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
     
     return (
         <header className={cn(
@@ -99,7 +100,7 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
 
                 <div className="hidden lg:flex items-center gap-2 mr-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-left">
                     <Activity className="h-3 w-3 text-green-500 animate-pulse" />
-                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/60">System: Active</span>
+                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/60">{isAdmin ? "Root Protocol: Active" : "System: Active"}</span>
                 </div>
 
                 {!userProfile?.isBlocked && (
@@ -183,9 +184,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               }
             }
             setProfileLoading(false);
-        }, (error) => {
-            console.warn("Registry synchronization paused:", error.message);
-            setProfileLoading(false);
         });
 
         const notifRef = collection(firestore, "notifications");
@@ -207,13 +205,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       }
     });
 
-    const safetyTimeout = setTimeout(() => {
-        setProfileLoading(false);
-    }, 8000);
-
     return () => {
         unsubscribeAuth();
-        clearTimeout(safetyTimeout);
         if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
         if (notifUnsubscribeRef.current) notifUnsubscribeRef.current();
     };
@@ -229,7 +222,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
   const isSuspended = userProfile?.isBlocked === true;
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
-  const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited');
+  // Admins always have unlimited clearance
+  const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
 
   if (showContent && isSuspended) {
       return (
@@ -406,7 +400,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none -z-10"></div>
         
         <div className="flex flex-col h-screen overflow-hidden">
-          <Header userProfile={userProfile} unreadCount={unreadCount} />
+          <Header userProfile={userProfile} unreadCount={unreadCount} isAdmin={isAdmin} />
           <main className="flex-1 overflow-y-auto custom-scrollbar relative">
             <div className="p-4 sm:p-10 min-h-[calc(100vh-64px)] flex flex-col">
                 <AnimatePresence mode="wait">
