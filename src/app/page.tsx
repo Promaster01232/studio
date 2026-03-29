@@ -131,6 +131,7 @@ export default function WelcomePage() {
               </div>
               
               <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-headline tracking-tighter leading-[0.95] text-foreground">
+                <span className="sr-only">Nyaya Sahayak | India's Premier AI Legal Assistant & Forensic Case Auditor</span>
                 Elite AI Assistant for <br/>
                 <span className="bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">
                   Indian Citizens.
@@ -138,7 +139,7 @@ export default function WelcomePage() {
               </h1>
 
               <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed opacity-80 px-4">
-                Precision neural forensics for statutory deconstruction and navigating the complex Indian judicial landscape with absolute institutional clarity. Trusted by thousands for legal empowerment.
+                Precision neural forensics for statutory deconstruction and navigating the complex Indian judicial landscape with absolute institutional clarity. Trusted by 1.4 billion for legal empowerment.
               </p>
             </div>
 

@@ -357,9 +357,9 @@ export default function ManagementConsolePage() {
                                         <TableCell className="text-right pr-6">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-muted" disabled={processingUid === user.uid}>
-                                                        {processingUid === user.uid ? <Loader2 className="h-4 w-4 animate-spin" /> : <MoreHorizontal className="h-4 w-4" />}
-                                                    </Button>
+                                                    <button className="h-9 w-9 rounded-xl hover:bg-muted flex items-center justify-center transition-all" disabled={processingUid === user.uid}>
+                                                        {processingUid === user.uid ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <MoreHorizontal className="h-4 w-4 text-muted-foreground" />}
+                                                    </button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-52 p-2 rounded-2xl shadow-2xl glass border-primary/10">
                                                     <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-widest opacity-40 px-3">System Protocol</DropdownMenuLabel>
