@@ -475,7 +475,7 @@ export default function DashboardHomePage() {
           <Card className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl shadow-primary/5">
               <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none text-left">
                   <div className="bg-white rounded-full p-10 grayscale">
-                    <Logo className="h-56 w-56 border-none p-0 bg-transparent shadow-none" />
+                    <Logo className="h-56 w-56 border-none p-0 bg-transparent shadow-none" priority />
                   </div>
               </div>
               <div className="relative z-10 space-y-8">

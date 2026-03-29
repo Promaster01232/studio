@@ -58,7 +58,7 @@ function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: n
         )}>
             <div className="flex items-center gap-2 md:hidden">
                 <SidebarTrigger className="h-10 w-10 rounded-xl hover:bg-primary/5 active:scale-95 transition-all" />
-                <Logo className="h-10 w-10 p-0 shadow-none border-none bg-transparent" />
+                <Logo className="h-10 w-10 p-0 shadow-none border-none bg-transparent" priority />
             </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
@@ -273,7 +273,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-primary/20 via-blue-500/20 to-accent/20 blur-md animate-pulse group-data-[collapsible=icon]:hidden"></div>
                 <div className="relative p-1 rounded-full bg-gradient-to-tr from-[#FF9933] via-[#000080] to-[#128807]">
                   <div className="bg-white rounded-full p-1.5 shadow-lg relative z-10">
-                    <Logo className="h-7 w-7 border-none shadow-none p-0" />
+                    <Logo className="h-7 w-7 border-none shadow-none p-0" priority />
                   </div>
                 </div>
             </motion.div>
@@ -430,7 +430,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                                     />
                                     <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
                                         <div className="bg-white rounded-full p-2 shadow-2xl">
-                                            <Logo className="h-12 w-12 border-none shadow-none bg-transparent p-0" />
+                                            <Logo className="h-12 w-12 border-none shadow-none bg-transparent p-0" priority />
                                         </div>
                                     </div>
                                     <motion.div

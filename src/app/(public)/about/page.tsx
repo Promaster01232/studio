@@ -104,7 +104,7 @@ export default function AboutPage() {
     >
       <motion.div variants={itemVariants} className="text-center space-y-4">
         <div className="flex justify-center mb-6">
-            <Logo className="h-24 w-24 sm:h-32 sm:w-32 shadow-2xl" />
+            <Logo className="h-24 w-24 sm:h-32 sm:w-32 shadow-2xl" priority />
         </div>
         <div className="space-y-2">
             <div className="flex items-center justify-center gap-3 text-primary mb-2">
@@ -221,7 +221,7 @@ export default function AboutPage() {
             </motion.div>
           ))}
         </div>
-      </motion.div>
+      </leadership.div>
 
       {/* Trust Quote */}
       <motion.div variants={itemVariants} className="text-center pt-20 border-t border-primary/5">

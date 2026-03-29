@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Logo } from "@/components/logo";
@@ -27,7 +28,7 @@ export function PublicHeader() {
             className="relative"
           >
             <div className="absolute -inset-2 bg-primary/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-            <Logo className="h-10 w-10 shadow-none border-none bg-transparent relative z-10 p-0" />
+            <Logo className="h-10 w-10 shadow-none border-none bg-transparent relative z-10 p-0" priority />
           </motion.div>
           <div className="flex flex-col">
             <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] leading-none">
