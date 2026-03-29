@@ -537,7 +537,7 @@ export default function ResearchAnalyticsPage() {
                             </div>
                             <Badge variant="outline" className="text-[9px] font-black uppercase border-blue-500/20 text-blue-500/70 tracking-widest bg-blue-500/5 px-3">Registry: Active</Badge>
                         </div>
-                        <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter uppercase leading-[0.9] text-foreground">
+                        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-headline tracking-tighter uppercase leading-[0.9] text-foreground">
                             Live <span className="text-primary italic font-black">Transmissions.</span>
                         </h1>
                         <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed opacity-80">

@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -217,7 +216,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
         if (notifUnsubscribeRef.current) notifUnsubscribeRef.current();
     };
-  }, [auth, firestore, router]);
+  }, [auth, firestore, pathname, router]);
 
   const handleLogout = async () => {
     if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
