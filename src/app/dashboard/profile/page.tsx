@@ -35,7 +35,11 @@ import {
   Globe,
   CreditCard,
   Lock,
-  Crown
+  Crown,
+  FileText,
+  Award,
+  Sparkles,
+  Download
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -85,62 +89,153 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
+function EliteCertificateNode({ profile }: { profile: UserProfile }) {
+    const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+    const expiry = new Date();
+    expiry.setFullYear(expiry.getFullYear() + 1);
+    const expiryDate = expiry.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    return (
+        <Card className="border-[12px] border-primary/5 bg-white dark:bg-zinc-950 p-8 sm:p-16 rounded-[3rem] shadow-3xl relative overflow-hidden text-center">
+            {/* Background Texture Nodes */}
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-full h-full border-[1px] border-primary rounded-full scale-150" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-full h-full border-[1px] border-primary rounded-full scale-150" />
+            </div>
+            
+            <div className="relative z-10 space-y-12">
+                <header className="space-y-6">
+                    <div className="flex justify-center">
+                        <div className="relative">
+                            <div className="absolute -inset-4 bg-primary/10 rounded-full animate-pulse blur-xl" />
+                            <Logo className="h-20 w-20 relative z-10 p-0 shadow-none border-none bg-transparent" priority />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-primary">Institutional Statutory Authority</h2>
+                        <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter text-foreground uppercase leading-none">Certificate of <br/> <span className="text-primary italic">Elite Clearance</span></h1>
+                    </div>
+                </header>
+
+                <div className="space-y-8 max-w-2xl mx-auto">
+                    <p className="text-sm sm:text-base font-medium text-muted-foreground leading-relaxed">
+                        This document formally certifies that the node identified as <span className="text-foreground font-black uppercase tracking-tight">{profile.firstName} {profile.lastName}</span> has been granted the status of <span className="text-primary font-black uppercase tracking-tight">Institutional Annual Clearance</span> within the Nyaya Sahayak neural legal ecosystem.
+                    </p>
+                    <p className="text-xs sm:text-sm font-medium text-muted-foreground/80 leading-relaxed italic">
+                        Subject to the Terms of Protocol and Forensic Security Standards of Bharat. Access to absolute neural auditing and high-fidelity drafting terminals is authorized effective immediately.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-12 pt-8 items-end">
+                    <div className="text-left space-y-4">
+                        <div className="space-y-1">
+                            <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Issue Date</p>
+                            <p className="text-xs font-bold text-foreground">{today}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Registry ID</p>
+                            <p className="text-[10px] font-mono font-bold text-primary">NS-CERT-{profile.uid.substring(0, 8).toUpperCase()}</p>
+                        </div>
+                    </div>
+                    <div className="text-right flex flex-col items-end gap-2">
+                        {/* Digital Signature Design */}
+                        <div className="relative group">
+                            <div className="absolute -inset-2 bg-primary/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="relative space-y-1">
+                                <p className="font-headline font-black text-xl sm:text-2xl text-primary italic tracking-tighter leading-none pr-2">IdeaSpark</p>
+                                <div className="h-px w-24 sm:w-32 bg-primary/30 mx-auto ml-auto" />
+                                <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground pt-1">Authorized Root Authority</p>
+                            </div>
+                        </div>
+                        <div className="pt-4">
+                            <p className="text-[8px] font-bold text-muted-foreground opacity-40 uppercase">Valid Until: {expiryDate}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Premium Corner Node */}
+            <div className="absolute bottom-[-20px] left-[-20px] w-24 h-24 bg-primary/5 rounded-full blur-xl" />
+            <div className="absolute top-10 right-10 opacity-10">
+                <ShieldCheck className="h-32 w-32 text-primary" />
+            </div>
+        </Card>
+    );
+}
+
 function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdmin: boolean }) {
     const systemId = isAdmin ? `NS-ROOT-AUTH-99` : `NS-REG-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
     return (
         <div className="relative w-full aspect-[1.586/1] rounded-[1.5rem] overflow-hidden shadow-2xl group transition-all hover:scale-[1.02] active:scale-[0.98] text-left">
+            {/* Professional Carbon Fibre Background */}
             <div className={cn(
-                "absolute inset-0 bg-gradient-to-br",
-                isAdmin ? "from-amber-600 via-primary to-amber-800" : "from-primary via-primary/90 to-blue-600"
+                "absolute inset-0 bg-gradient-to-br transition-all duration-700",
+                isAdmin ? "from-amber-600 via-amber-500 to-amber-800" : "from-[#1a1a1a] via-[#333333] to-[#000000]"
             )}></div>
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
             
-            <div className="absolute top-0 right-0 p-4 opacity-10">
-                <Logo className="h-32 w-32 shadow-none" />
+            {/* Animated Glow Node */}
+            <div className="absolute inset-0 opacity-30 pointer-events-none">
+                <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-primary/20 blur-[80px] animate-pulse" />
+                <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-primary/10 blur-[80px] animate-pulse" />
+            </div>
+
+            <div className="absolute top-0 right-0 p-4 opacity-5">
+                <Logo className="h-40 w-40 shadow-none" priority={false} />
             </div>
             
             <div className="relative h-full flex flex-col p-6 text-white">
                 <div className="flex justify-between items-start mb-auto">
-                    <div className="flex items-center gap-2">
-                        <div className="bg-white rounded-full p-1 shadow-xl">
-                            <Logo className="h-8 w-8 shadow-none" />
+                    <div className="flex items-center gap-3">
+                        <div className="bg-white rounded-full p-1 shadow-xl group-hover:scale-110 transition-transform">
+                            <Logo className="h-8 w-8 shadow-none p-0 border-none bg-transparent" priority={false} />
                         </div>
                         <div className="flex flex-col">
-                            <span className="font-black text-[10px] tracking-tighter leading-none">NYAYA SAHAYAK</span>
-                            <span className="text-[6px] font-bold uppercase tracking-[0.2em] opacity-60">{isAdmin ? "Root Authority Node" : "Forensic Terminal"}</span>
+                            <span className="font-black text-xs tracking-tighter leading-none">NYAYA SAHAYAK</span>
+                            <span className="text-[7px] font-bold uppercase tracking-[0.3em] text-primary/80">{isAdmin ? "Root Authority Node" : "Forensic Terminal"}</span>
                         </div>
                     </div>
-                    <div className="bg-white/20 backdrop-blur-md px-2 py-1 rounded-md border border-white/10">
-                        <span className="text-[8px] font-black uppercase tracking-widest">{isAdmin ? "System Root" : "Active Registry"}</span>
+                    <div className="bg-white/10 backdrop-blur-xl px-3 py-1.5 rounded-xl border border-white/10 shadow-lg">
+                        <span className="text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
+                            <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                            {isAdmin ? "System Root" : "Registry Verified"}
+                        </span>
                     </div>
                 </div>
 
-                <div className="flex gap-4 items-end mb-4">
-                    <div className="relative shrink-0">
-                        <Avatar className="h-16 w-16 border-2 border-white/20 rounded-xl shadow-lg">
+                <div className="flex gap-5 items-end mb-4">
+                    <div className="relative shrink-0 group/av">
+                        <div className="absolute -inset-2 bg-primary/20 rounded-2xl blur-md opacity-0 group-hover/av:opacity-100 transition-opacity" />
+                        <Avatar className="h-20 w-20 border-2 border-white/20 rounded-2xl shadow-2xl relative z-10 transition-transform group-hover:scale-105">
                             <AvatarImage src={profile.photoURL} className="object-cover" />
-                            <AvatarFallback className="bg-white/10 text-white font-black">{profile.firstName?.charAt(0)}</AvatarFallback>
+                            <AvatarFallback className="bg-white/10 text-white font-black text-xl">{profile.firstName?.charAt(0)}</AvatarFallback>
                         </Avatar>
-                        <div className="absolute -bottom-1 -right-1 bg-green-500 h-3 w-3 rounded-full border-2 border-primary shadow-sm"></div>
+                        <div className="absolute -bottom-1 -right-1 bg-green-500 h-4 w-4 rounded-full border-2 border-[#1a1a1a] shadow-xl z-20"></div>
                     </div>
-                    <div className="flex-1 space-y-0.5 min-w-0">
-                        <h3 className="font-black text-sm sm:text-base tracking-tight truncate uppercase leading-none">{profile.firstName} {profile.lastName}</h3>
-                        <p className="text-[8px] font-bold uppercase tracking-widest opacity-70 leading-none">{isAdmin ? "Institutional Admin" : profile.userType}</p>
-                        <p className="text-[10px] font-mono font-bold tracking-wider pt-1">{systemId}</p>
+                    <div className="flex-1 space-y-1 min-w-0">
+                        <h3 className="font-black text-lg sm:text-xl tracking-tight truncate uppercase leading-none">{profile.firstName} {profile.lastName}</h3>
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-primary leading-none">{isAdmin ? "Institutional Admin" : profile.userType}</p>
+                        <div className="flex items-center gap-2 pt-1">
+                            <p className="text-[11px] font-mono font-bold tracking-wider opacity-60">{systemId}</p>
+                            <BadgeCheck className="h-3 w-3 text-blue-400" />
+                        </div>
                     </div>
-                    <div className="bg-white p-1.5 rounded-lg shadow-xl shrink-0">
-                        <QrCode className="h-8 w-8 sm:h-10 sm:w-10 text-black" />
+                    <div className="bg-white/95 p-2 rounded-xl shadow-2xl shrink-0 group-hover:scale-110 transition-transform">
+                        <QrCode className="h-10 w-10 text-black" />
                     </div>
                 </div>
                 
-                <div className="pt-3 border-t border-white/10 flex justify-between items-center">
+                <div className="pt-4 border-t border-white/10 flex justify-between items-center bg-white/5 -mx-6 px-6 mt-2">
                     <div className="space-y-0.5">
-                        <p className="text-[6px] font-bold uppercase opacity-40">Registry Email</p>
-                        <p className="text-[8px] font-bold truncate max-w-[120px] sm:max-w-[180px]">{profile.email}</p>
+                        <p className="text-[7px] font-bold uppercase opacity-40 tracking-widest">Digital Registry Email</p>
+                        <p className="text-[9px] font-bold truncate max-w-[140px] sm:max-w-[200px] text-white/80">{profile.email}</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-[6px] font-bold uppercase opacity-40">Clearance Level</p>
-                        <p className="text-[8px] font-black uppercase tracking-tighter text-green-300">{isAdmin ? "Absolute Statutory Hub" : "Verified Identity"}</p>
+                        <p className="text-[7px] font-bold uppercase opacity-40 tracking-widest">Clearance Node</p>
+                        <p className={cn(
+                            "text-[9px] font-black uppercase tracking-tighter",
+                            isAdmin ? "text-amber-400" : "text-green-400"
+                        )}>{isAdmin ? "Absolute Statutory Hub" : "Identity Ingress Level 4"}</p>
                     </div>
                 </div>
             </div>
@@ -346,7 +441,7 @@ export default function ProfilePage() {
 
   const isAdmin = email && ADMIN_EMAILS.includes(email.toLowerCase());
   const isLimited = !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
-  const isProtected = isAdmin;
+  const isElite = (userProfile?.subscriptionType?.includes('unlimited') || isAdmin);
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0 text-left">
@@ -429,7 +524,10 @@ export default function ProfilePage() {
 
                 {userProfile && (
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-4">Digital Identity Terminal</h3>
+                        <div className="flex items-center justify-between px-4">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Digital Credential</h3>
+                            <Link href="#" className="text-[9px] font-black text-primary uppercase hover:underline">Share Registry</Link>
+                        </div>
                         <DigitalIdentityCard profile={userProfile} isAdmin={isAdmin || false} />
                     </motion.div>
                 )}
@@ -523,6 +621,28 @@ export default function ProfilePage() {
                         </div>
                     </CardContent>
                 </Card>
+
+                {/* Elite Certificate Node for Upgraded Users */}
+                <AnimatePresence>
+                    {isElite && userProfile && (
+                        <motion.div 
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="space-y-6"
+                        >
+                            <div className="flex items-center justify-between px-4">
+                                <div className="flex items-center gap-3">
+                                    <Award className="h-5 w-5 text-amber-500" />
+                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-foreground">Institutional Authorization Certificate</h3>
+                                </div>
+                                <Button variant="ghost" size="sm" className="h-8 px-4 rounded-xl font-black text-[9px] uppercase tracking-widest gap-2">
+                                    <Download className="h-3 w-3" /> Export Statutory Record
+                                </Button>
+                            </div>
+                            <EliteCertificateNode profile={userProfile} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 {/* Statutory Subscription Overview Node */}
                 <Card className="glass shadow-2xl rounded-[2.5rem] border-primary/5 overflow-hidden">

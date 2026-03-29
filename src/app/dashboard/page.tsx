@@ -479,7 +479,24 @@ export default function DashboardHomePage() {
   return (
     <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
         <MotionWrapper>
-          <Card className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl shadow-primary/5">
+          <Card className={cn(
+              "relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 backdrop-blur-xl shadow-2xl transition-all duration-700",
+              (isYearly || isMonthly) ? "bg-gradient-to-br from-primary/10 via-amber-500/5 to-primary/5 shadow-primary/10 border-primary/20" : "bg-card/40 shadow-primary/5"
+          )}>
+              {/* Premium Animated Background Layer */}
+              <AnimatePresence>
+                  {(isYearly || isMonthly) && (
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="absolute inset-0 pointer-events-none"
+                      >
+                          <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[100px] animate-pulse" />
+                          <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-amber-500/5 blur-[100px] animate-pulse" />
+                      </motion.div>
+                  )}
+              </AnimatePresence>
+
               <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none text-left">
                   <div className="bg-white rounded-full p-10 grayscale">
                     <Logo className="h-56 w-56 border-none p-0 bg-transparent shadow-none" priority />
@@ -495,15 +512,27 @@ export default function DashboardHomePage() {
                                 </Badge>
                             </Link>
                           ) : (
-                            <Badge className="bg-green-500/10 text-green-600 border-green-500/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                                {isYearly ? <ShieldCheck className="h-3 w-3" /> : <Crown className="h-3 w-3" />}
-                                Clearance: {isYearly ? 'Institutional Annual' : 'Unlimited Monthly'} Node
-                            </Badge>
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                className="flex gap-2"
+                            >
+                                <Badge className="bg-green-500/10 text-green-600 border-green-500/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                                    {isYearly ? <ShieldCheck className="h-3 w-3" /> : <Crown className="h-3 w-3" />}
+                                    Clearance: {isYearly ? 'Institutional Annual' : 'Unlimited Monthly'} Node
+                                </Badge>
+                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2 animate-pulse">
+                                    <Sparkles className="h-3 w-3" /> Elite Mode Active
+                                </Badge>
+                            </motion.div>
                           )}
                       </div>
                       <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground text-left">
                           Greetings, <br />
-                          <span className="bg-gradient-to-r from-primary via-orange-400 to-accent bg-clip-text text-transparent italic">Nyaya {text}</span>
+                          <span className={cn(
+                              "bg-gradient-to-r bg-clip-text text-transparent italic",
+                              (isYearly || isMonthly) ? "from-primary via-amber-500 to-orange-600 animate-animated-gradient bg-[200%_auto]" : "from-primary via-orange-400 to-accent"
+                          )}>Nyaya {text}</span>
                       </h1>
                   </div>
                   <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed text-left">
@@ -512,7 +541,10 @@ export default function DashboardHomePage() {
                        "Access precision AI nodes for statutory auditing within the Indian judicial ecosystem. Standard operation protocols active."}
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
-                      <Button size="sm" className="rounded-xl font-bold px-8 h-14 shadow-xl shadow-primary/20 transition-all text-xs" asChild>
+                      <Button size="sm" className={cn(
+                          "rounded-xl font-bold px-8 h-14 shadow-xl transition-all text-xs",
+                          (isYearly || isMonthly) ? "bg-primary shadow-primary/30 hover:scale-105" : "shadow-primary/20"
+                      )} asChild>
                           <Link href="/dashboard/narrate">
                             <span className="hidden sm:inline">initialize narration</span>
                             <span className="sm:hidden">narrate now</span>
@@ -561,7 +593,10 @@ export default function DashboardHomePage() {
           <div className="lg:col-span-4 space-y-10">
               <section>
                   <SectionHeader icon={CreditCard} sector={isLimited ? "Status: Restricted" : "Status: Absolute"}>Statutory Audit</SectionHeader>
-                  <Card className="glass p-6 rounded-[2rem] border-primary/10 shadow-lg shadow-primary/5 relative overflow-hidden text-left">
+                  <Card className={cn(
+                      "glass p-6 rounded-[2rem] border-primary/10 shadow-lg shadow-primary/5 relative overflow-hidden text-left transition-all",
+                      (isYearly || isMonthly) && "ring-1 ring-primary/20 bg-primary/5"
+                  )}>
                       <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
                           <Zap className="h-16 w-16 text-primary" />
                       </div>
@@ -576,7 +611,7 @@ export default function DashboardHomePage() {
                               <motion.div 
                                   initial={{ width: 0 }}
                                   animate={{ width: isLimited ? `${Math.min(100, ((userProfile?.aiUsageCount || 0) / (userProfile?.subscriptionType === 'pro_20' ? 20 : 5)) * 100)}%` : "100%" }}
-                                  className={cn("h-full", isLimited ? "bg-primary" : "bg-green-500")}
+                                  className={cn("h-full", isLimited ? "bg-primary" : "bg-gradient-to-r from-green-500 to-emerald-600")}
                               />
                           </div>
                           {isLimited ? (
@@ -587,10 +622,14 @@ export default function DashboardHomePage() {
                                 </Link>
                             </Button>
                           ) : (
-                            <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/5 border border-green-500/10">
+                            <motion.div 
+                                initial={{ opacity: 0, y: 5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="flex items-center gap-3 p-3 rounded-xl bg-green-500/5 border border-green-500/10 shadow-inner"
+                            >
                                 <ShieldCheck className="h-4 w-4 text-green-600" />
                                 <span className="text-[10px] font-black uppercase text-green-600 tracking-wider">Maximum Clearance Active</span>
-                            </div>
+                            </motion.div>
                           )}
                       </div>
                   </Card>
