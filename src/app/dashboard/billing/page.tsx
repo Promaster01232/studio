@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
+import { useRouter } from "next/navigation";
 
 const plans = [
     {
@@ -74,6 +75,7 @@ const plans = [
 export default function BillingPage() {
     const auth = useAuth();
     const firestore = useFirestore();
+    const router = useRouter();
     const { toast } = useToast();
     const [profile, setProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -148,7 +150,14 @@ export default function BillingPage() {
                         aiUsageCount: 0 // Reset usage on premium upgrade
                     });
                     toast({ title: "Clearance Level Upgraded", description: "Your institutional node has been recalibrated." });
+                    
+                    // Force navigation to dashboard to refresh state
+                    router.refresh();
+                    setTimeout(() => {
+                        router.push('/dashboard');
+                    }, 500);
                 } catch (err) {
+                    console.error("Payment Sync Error:", err);
                     toast({ variant: "destructive", title: "Registry Error", description: "Payment successful but node synchronization failed. Contact support." });
                 } finally {
                     setProcessingId(null);
