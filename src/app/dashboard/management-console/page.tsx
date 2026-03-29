@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -56,7 +55,7 @@ interface UserRecord {
   photoURL?: string;
   isAdmin?: boolean;
   isBlocked?: boolean;
-  securityStatus?: 'verified' | 'suspicious' | 'flagged';
+  securityStatus?: 'verified' | 'suspicious' | 'flagged' | 'pending_audit';
   createdAt?: any;
   mobileNumber?: string;
   aiUsageCount?: number;

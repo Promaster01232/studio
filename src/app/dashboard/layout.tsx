@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -44,7 +43,8 @@ const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
   'piyushkumarsingh23323@gmail.com',
   'piyushkumrsingh23323@gmail.com',
-  'piyushkumrsingh23399@gmail.com'
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
 ];
 
 function Header({ userProfile, unreadCount }: { userProfile: any, unreadCount: number }) {
@@ -157,9 +157,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // High-Velocity Navigation: Minimal synchronization sequence
+    // Ultra-Fast Navigation Engine: Immediate content materialization
     setIsNavigating(true);
-    const timer = setTimeout(() => setIsNavigating(false), 100); 
+    const timer = setTimeout(() => setIsNavigating(false), 50); 
     return () => clearTimeout(timer);
   }, [pathname]);
 
@@ -306,7 +306,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Expansion Protocol</span>
                         </div>
                         <p className="text-[10px] font-medium text-muted-foreground leading-relaxed">Unlock unlimited forensic scans and institutional tools.</p>
-                        <Button asChild size="sm" className="w-full h-10 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all overflow-hidden relative group/btn">
+                        <Button asChild size="sm" className="w-full h-10 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/30 active:scale-95 transition-all overflow-hidden relative group/btn">
                             <Link href="/dashboard/billing">
                               <span className="relative z-10">Upgrade Clearance</span>
                               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
