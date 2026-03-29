@@ -81,7 +81,7 @@ export default function BillingPage() {
     
     // Coupon States
     const [couponCode, setCouponCode] = useState("");
-    const [appliedDiscount, setAppliedDiscount] = useState<{ code: string, percent: number, planId: string } | null>(null);
+    const [appliedDiscount, setAppliedDiscount] = useState<{ code: string, percent?: number, fixedAmount?: number, planId: string } | null>(null);
     const [couponError, setCouponError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -106,6 +106,9 @@ export default function BillingPage() {
         } else if (code === 'PIE') {
             setAppliedDiscount({ code, percent: 35, planId: 'unlimited_yearly' });
             toast({ title: "35% Discount Applied", description: "Valid for Institutional Annual node." });
+        } else if (code === 'PIYUSH11') {
+            setAppliedDiscount({ code, fixedAmount: 1, planId: 'unlimited_yearly' });
+            toast({ title: "Special Registry Code Applied", description: "Institutional Annual clearance recalibrated to ₹1." });
         } else {
             setCouponError("Invalid or expired registry code.");
             setAppliedDiscount(null);
@@ -122,7 +125,11 @@ export default function BillingPage() {
 
         let finalAmount = plan.amount;
         if (appliedDiscount && appliedDiscount.planId === planId) {
-            finalAmount = plan.amount * (1 - appliedDiscount.percent / 100);
+            if (appliedDiscount.fixedAmount !== undefined) {
+                finalAmount = appliedDiscount.fixedAmount;
+            } else if (appliedDiscount.percent !== undefined) {
+                finalAmount = plan.amount * (1 - appliedDiscount.percent / 100);
+            }
         }
 
         // Razorpay Live Integration Protocol
@@ -229,7 +236,7 @@ export default function BillingPage() {
                                         <CheckCircle2 className="h-3.5 w-3.5" /> Code Active: {appliedDiscount.code}
                                     </p>
                                     <p className="text-[9px] font-bold text-green-600/70 mt-0.5">
-                                        {appliedDiscount.percent}% discount will be applied at checkout for {appliedDiscount.planId.replace('_', ' ')}.
+                                        {appliedDiscount.fixedAmount !== undefined ? `Price adjusted to ₹${appliedDiscount.fixedAmount}` : `${appliedDiscount.percent}% discount`} will be applied at checkout for {appliedDiscount.planId.replace('_', ' ')}.
                                     </p>
                                 </motion.div>
                             )}
@@ -245,7 +252,11 @@ export default function BillingPage() {
                     const PlanIcon = plan.icon || Activity;
                     
                     const isDiscounted = appliedDiscount && appliedDiscount.planId === plan.id;
-                    const discountedAmount = isDiscounted ? plan.amount * (1 - appliedDiscount!.percent / 100) : plan.amount;
+                    let discountedAmount = plan.amount;
+                    if (isDiscounted) {
+                        if (appliedDiscount!.fixedAmount !== undefined) discountedAmount = appliedDiscount!.fixedAmount;
+                        else if (appliedDiscount!.percent !== undefined) discountedAmount = plan.amount * (1 - appliedDiscount!.percent / 100);
+                    }
 
                     return (
                         <motion.div
