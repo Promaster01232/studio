@@ -24,7 +24,7 @@ export default function Loading() {
           
           <div className="relative">
             <div className="p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400 shadow-2xl">
-              <Logo className="h-16 w-16 shadow-none" />
+              <Logo className="h-16 w-16 shadow-none" priority />
             </div>
             
             {/* Pulsing Tricolor Glow */}

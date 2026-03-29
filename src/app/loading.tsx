@@ -16,7 +16,7 @@ export default function Loading() {
             className="absolute -inset-6 bg-primary/10 rounded-full blur-xl"
           />
           <div className="relative p-1 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400">
-            <Logo className="h-14 w-14 border-none bg-white rounded-full p-2 shadow-2xl" />
+            <Logo className="h-14 w-14 border-none bg-white rounded-full p-2 shadow-2xl" priority />
           </div>
         </div>
         <div className="flex items-center gap-3 text-primary font-black text-[10px] uppercase tracking-[0.4em]">

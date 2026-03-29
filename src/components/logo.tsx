@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
-export function Logo({ className, imageClassName, priority = false }: { className?: string, imageClassName?: string, priority?: boolean }) {
+export function Logo({ className, imageClassName, priority = true }: { className?: string, imageClassName?: string, priority?: boolean }) {
   return (
     <div className={cn(
       "relative flex items-center justify-center shrink-0 rounded-full bg-white shadow-[0_20px_80px_rgba(0,0,0,0.2)] border-none overflow-hidden aspect-square",
