@@ -24,7 +24,9 @@ import {
   Zap,
   RefreshCw,
   Lock,
-  Database
+  Database,
+  CloudCheck,
+  HardDrive
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -78,6 +80,7 @@ export default function ManagementConsolePage() {
   
   const [users, setUsers] = useState<UserRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLive, setIsLive] = useState(false);
   const [searchQuery, setSearchSearchQuery] = useState("");
   const [processingUid, setProcessingUid] = useState<string | null>(null);
   const [userToPurge, setUserToPurge] = useState<UserRecord | null>(null);
@@ -101,10 +104,15 @@ export default function ManagementConsolePage() {
 
         // HIGH-FIDELITY FIREBASE MIRROR: Strictly reactive logic
         const usersCol = collection(firestore, "users");
+        
+        // Use standard snapshot listener. No local state fallback to ensure data matches Firebase exactly.
         const unsubscribeSnapshot = onSnapshot(usersCol, (snapshot) => {
+            // metadata.fromCache tells us if we are looking at local data or server data
+            setIsLive(!snapshot.metadata.fromCache);
+            
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
             
-            // Sort by creation date (newest first)
+            // Re-order and set users. This replaces the old list completely.
             setUsers(list.sort((a, b) => {
                 const dateA = a.createdAt?.toMillis ? a.createdAt.toMillis() : Number(a.createdAt || 0);
                 const dateB = b.createdAt?.toMillis ? b.createdAt.toMillis() : Number(b.createdAt || 0);
@@ -122,13 +130,13 @@ export default function ManagementConsolePage() {
     return () => unsubAuth();
   }, [firestore, auth, router, toast]);
 
-  const handleToggleStatus = async (user: UserRecord, isInactive: boolean) => {
+  const handleToggleStatus = async (user: UserRecord, isBlocked: boolean) => {
     setProcessingUid(user.uid);
     const userRef = doc(firestore, "users", user.uid);
     try {
-        await updateDoc(userRef, { isBlocked: isInactive });
-        await update(ref(rtdb, `users/${user.uid}`), { isBlocked: isInactive });
-        toast({ title: isInactive ? "Node Suspended" : "Node Activated" });
+        await updateDoc(userRef, { isBlocked });
+        await update(ref(rtdb, `users/${user.uid}`), { isBlocked });
+        toast({ title: isBlocked ? "Node Suspended" : "Node Activated" });
     } catch (err) {
         toast({ variant: "destructive", title: "Update Refused" });
     } finally {
@@ -214,17 +222,20 @@ export default function ManagementConsolePage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary mb-1">
             <RefreshCw className="h-4 w-4 animate-spin-slow" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Live Firebase Mirror</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Live Firebase Hub</span>
           </div>
           <h1 className="text-3xl font-black tracking-tighter font-headline text-foreground uppercase">Management Console</h1>
-          <p className="text-sm text-muted-foreground font-medium">100% reactive oversight of the citizen registry and statutory data.</p>
+          <p className="text-sm text-muted-foreground font-medium">Real-time statutory oversight of the citizen registry. Data matches Firebase exactly.</p>
         </div>
         <div className="flex flex-wrap gap-3">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500/5 border border-green-500/10 shadow-inner">
-                <Database className="h-3 w-3 text-green-600" />
-                <span className="text-[9px] font-black uppercase text-green-600 tracking-widest flex items-center gap-2">
-                    <div className="h-1 w-1 rounded-full bg-green-500 animate-pulse" />
-                    Sync: Active
+            <div className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-xl border shadow-inner transition-all",
+                isLive ? "bg-green-500/5 border-green-500/10 text-green-600" : "bg-amber-500/5 border-amber-500/10 text-amber-600"
+            )}>
+                {isLive ? <CloudCheck className="h-3 w-3" /> : <HardDrive className="h-3 w-3 animate-pulse" />}
+                <span className="text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
+                    <div className={cn("h-1 w-1 rounded-full animate-pulse", isLive ? "bg-green-500" : "bg-amber-500")} />
+                    {isLive ? "Sync: Direct" : "Sync: Cache"}
                 </span>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/5 border border-primary/10">
@@ -257,7 +268,7 @@ export default function ManagementConsolePage() {
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="text-left w-full">
                       <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Citizen Registry Dossier</CardTitle>
-                      <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Real-time mirror. Any change in Firebase Console materializes here instantly.</CardDescription>
+                      <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Verified Firestore Mirror. If documents are deleted in Firebase Console, they disappear here instantly.</CardDescription>
                   </div>
                   <div className="relative group w-full md:w-80">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -372,7 +383,7 @@ export default function ManagementConsolePage() {
                             }) : (
                                 <TableRow>
                                     <TableCell colSpan={6} className="h-32 text-center text-muted-foreground font-bold uppercase tracking-widest opacity-40">
-                                        No matching Firebase records.
+                                        No matching Firestore documents.
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -401,7 +412,7 @@ export default function ManagementConsolePage() {
       </AlertDialog>
 
       <div className="pt-12 text-center opacity-30">
-          <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // FIREBASE REAL-TIME MIRROR // ALPHA-4</p>
+          <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // FIREBASE CORE SYNC // ALPHA-4</p>
       </div>
     </div>
   );
