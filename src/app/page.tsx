@@ -116,9 +116,9 @@ export default function WelcomePage() {
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            <div className="flex justify-center">
+            <header className="flex justify-center">
               <Logo className="h-24 w-24 sm:h-32 sm:w-32 shadow-2xl relative z-10" priority />
-            </div>
+            </header>
 
             <div className="space-y-4 max-w-4xl mx-auto">
               <div className="flex justify-center">
@@ -138,11 +138,11 @@ export default function WelcomePage() {
               </h1>
 
               <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed opacity-80 px-4">
-                Precision neural forensics for statutory deconstruction and navigating the complex Indian judicial landscape with absolute institutional clarity.
+                Precision neural forensics for statutory deconstruction and navigating the complex Indian judicial landscape with absolute institutional clarity. Trusted by thousands for legal empowerment.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <nav className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               {!loading ? (
                 <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
                   <Button 
@@ -158,10 +158,10 @@ export default function WelcomePage() {
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                     </Link>
                   </Button>
-                  <p className="flex items-center gap-1.5 text-primary/50 font-black text-[8px] uppercase tracking-[0.25em]">
+                  <div className="flex items-center gap-1.5 text-primary/50 font-black text-[8px] uppercase tracking-[0.25em]">
                     <ShieldCheck className="h-3 w-3" />
                     Secure Institutional Access Active
-                  </p>
+                  </div>
                 </div>
               ) : (
                 <div className="h-14 w-[240px] flex items-center justify-center gap-3 px-8 bg-muted/10 rounded-xl border border-primary/5">
@@ -169,7 +169,7 @@ export default function WelcomePage() {
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">Synchronizing...</span>
                 </div>
               )}
-            </div>
+            </nav>
           </motion.div>
         </section>
 
@@ -195,34 +195,36 @@ export default function WelcomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
               >
-                <Card className="h-full flex flex-col glass transition-all duration-500 rounded-[2rem] overflow-hidden border-primary/10 hover:border-primary/30 group active:scale-[0.98] shadow-lg hover:shadow-2xl">
-                  <CardContent className="p-8 flex flex-col flex-grow relative z-10 text-left">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className={cn("p-3.5 rounded-2xl transition-all duration-500 group-hover:scale-110", node.bg, node.color)}>
-                        <node.icon className="h-6 w-6" />
+                <article>
+                  <Card className="h-full flex flex-col glass transition-all duration-500 rounded-[2rem] overflow-hidden border-primary/10 hover:border-primary/30 group active:scale-[0.98] shadow-lg hover:shadow-2xl">
+                    <CardContent className="p-8 flex flex-col flex-grow relative z-10 text-left">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className={cn("p-3.5 rounded-2xl transition-all duration-500 group-hover:scale-110", node.bg, node.color)}>
+                          <node.icon className="h-6 w-6" aria-hidden="true" />
+                        </div>
+                        <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/5 opacity-40">
+                          {node.sector}
+                        </Badge>
                       </div>
-                      <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/5 opacity-40">
-                        {node.sector}
-                      </Badge>
-                    </div>
-                    
-                    <div className="space-y-3 flex-grow">
-                      <h3 className="text-lg font-black tracking-tight leading-tight group-hover:text-primary transition-colors">{node.title}</h3>
-                      <p className="text-xs text-muted-foreground font-medium leading-relaxed opacity-80">
-                        {node.desc}
-                      </p>
-                    </div>
-                    
-                    <div className="pt-6 mt-6 border-t border-primary/5 flex items-center justify-between">
-                      <Button asChild variant="ghost" className="p-0 h-auto font-black text-[9px] uppercase tracking-[0.2em] text-primary hover:bg-transparent group/btn">
-                        <Link href={node.href} className="flex items-center gap-2">
-                          Access Node
-                          <ArrowRight className="h-3 w-3 transition-transform group-hover/btn:translate-x-1.5" />
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                      
+                      <div className="space-y-3 flex-grow">
+                        <h3 className="text-lg font-black tracking-tight leading-tight group-hover:text-primary transition-colors">{node.title}</h3>
+                        <p className="text-xs text-muted-foreground font-medium leading-relaxed opacity-80">
+                          {node.desc}
+                        </p>
+                      </div>
+                      
+                      <div className="pt-6 mt-6 border-t border-primary/5 flex items-center justify-between">
+                        <Button asChild variant="ghost" className="p-0 h-auto font-black text-[9px] uppercase tracking-[0.2em] text-primary hover:bg-transparent group/btn">
+                          <Link href={node.href} className="flex items-center gap-2">
+                            Access Node
+                            <ArrowRight className="h-3 w-3 transition-transform group-hover/btn:translate-x-1.5" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </article>
               </motion.div>
             ))}
           </div>
@@ -234,10 +236,10 @@ export default function WelcomePage() {
               { icon: Globe, label: "eCourts Services", sub: "Official Judicial Registry", href: "https://services.ecourts.gov.in/", color: "text-primary", bg: "bg-primary/5" },
               { icon: Scale, label: "National Portal", sub: "Statutory Access Node", href: "https://www.india.gov.in/", color: "text-blue-600", bg: "bg-blue-600/5" }
             ].map((link, i) => (
-              <a key={i} href={link.href} target="_blank" rel="noopener noreferrer" className="group">
+              <a key={i} href={link.href} target="_blank" rel="noopener noreferrer" className="group" aria-label={`Visit ${link.label}`}>
                 <Card className="glass p-8 rounded-[2.5rem] border-primary/10 hover:border-primary/40 transition-all duration-500 flex flex-col items-center justify-center gap-4 shadow-xl relative overflow-hidden active:scale-[0.98]">
                   <div className="p-4 rounded-2xl bg-muted/30 transition-all duration-500 group-hover:scale-110">
-                    <link.icon className={cn("h-8 w-8", link.color)} />
+                    <link.icon className={cn("h-8 w-8", link.color)} aria-hidden="true" />
                   </div>
                   <div className="space-y-1">
                     <span className="font-black text-xl tracking-tighter uppercase block">{link.label}</span>

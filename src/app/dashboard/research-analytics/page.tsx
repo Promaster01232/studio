@@ -600,7 +600,7 @@ export default function ResearchAnalyticsPage() {
                             <ShieldCheck className="h-6 w-6" />
                         </div>
                         <div className="text-left">
-                            <p className="text-[11px] font-black uppercase tracking-widest text-primary">Verified Hub</p>
+                            <p className="text-[11px] font-black uppercase tracking-widest text-primary">Verified Feed</p>
                             <p className="text-[10px] font-bold text-muted-foreground opacity-60">Forensic Identity Audit Active.</p>
                         </div>
                     </div>

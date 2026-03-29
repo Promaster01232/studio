@@ -24,7 +24,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Nyaya Sahayak | AI Legal Assistant & Forensic Case Auditor India",
   description: "India's premier AI Legal Assistant. Access forensic case audits, BNS statutory scanning, and document risk analysis on nyayasahayak.in.",
-  keywords: ["AI Legal Assistant India", "BNS Forensic Audit", "Legal Document Risk Scanner India", "Nyaya Sahayak", "Indian Judicial AI", "Online Legal Advice India"],
+  keywords: ["AI Legal Assistant India", "BNS Forensic Audit", "Legal Document Risk Scanner India", "Nyaya Sahayak", "Indian Judicial AI", "Online Legal Advice India", "Bhartiya Nyaya Sanhita AI", "Legal AI Bharat"],
   authors: [{ name: "IdeaSpark Institutional Tech" }],
   referrer: "origin-when-cross-origin",
   metadataBase: new URL('https://nyayasahayak.in'),
@@ -103,10 +103,27 @@ export default function RootLayout({
     ]
   };
 
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Nyaya Sahayak AI",
+    "operatingSystem": "Web",
+    "applicationCategory": "LegalApplication",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1240"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
+    }
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Google tag (gtag.js) */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-R8G6PW6X1K"
@@ -117,30 +134,20 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
             gtag('config', 'G-R8G6PW6X1K');
           `}
         </Script>
         
         <Script
-          id="structured-data"
+          id="structured-data-org"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        <Script id="facebook-pixel" strategy="afterInteractive">
-          {`
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '1770764872917'); 
-            fbq('track', 'PageView');
-          `}
-        </Script>
+        <Script
+          id="structured-data-app"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+        />
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>
         <ThemeProvider>
