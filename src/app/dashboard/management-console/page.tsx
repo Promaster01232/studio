@@ -102,6 +102,7 @@ export default function ManagementConsolePage() {
             return;
         }
 
+        // Direct Firestore Mirroring with Reactive Listener
         const usersCol = collection(firestore, "users");
         const unsubscribeSnapshot = onSnapshot(usersCol, (snapshot) => {
             setIsLive(!snapshot.metadata.fromCache);
@@ -157,26 +158,34 @@ export default function ManagementConsolePage() {
     setProcessingUid(userToPurge.uid);
     
     try {
+        // Atomic Multi-Sector Purge via Firestore Write Batch
         const batch = writeBatch(firestore);
+        
+        // 1. Purge Identity Node
         batch.delete(doc(firestore, "users", userToPurge.uid));
         
+        // 2. Purge all Transmission Registry entries (Posts)
         const postsRef = collection(firestore, "posts");
         const postsQuery = query(postsRef, where("authorUid", "==", userToPurge.uid));
         const postsSnap = await getDocs(postsQuery);
         postsSnap.docs.forEach(d => batch.delete(d.ref));
         
+        // 3. Purge all Alert Nodes (Notifications)
         const notifRef = collection(firestore, "notifications");
         const notifQuery = query(notifRef, where("userId", "==", userToPurge.uid));
         const notifSnap = await getDocs(notifQuery);
         notifSnap.docs.forEach(d => batch.delete(d.ref));
 
         await batch.commit();
+
+        // 4. Purge RTDB Sync Points
         await remove(ref(rtdb, `users/${userToPurge.uid}`)).catch(() => {});
         await remove(ref(rtdb, `advocates/${userToPurge.uid}`)).catch(() => {});
 
-        toast({ title: "Forensic Purge Complete", description: "Identity and all transmissions erased." });
+        toast({ title: "Forensic Purge Complete", description: "Identity, transmissions, and alerts erased permanently." });
     } catch (error) {
-        toast({ variant: "destructive", title: "Purge Refused", description: "Admin authority check failed." });
+        console.error("Purge Error:", error);
+        toast({ variant: "destructive", title: "Purge Refused", description: "System authority check failed." });
     } finally {
         setProcessingUid(null);
         setUserToPurge(null);
@@ -211,7 +220,7 @@ export default function ManagementConsolePage() {
             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Live Firebase Hub</span>
           </div>
           <h1 className="text-3xl font-black tracking-tighter font-headline text-foreground uppercase">Management Console</h1>
-          <p className="text-sm text-muted-foreground font-medium">Real-time statutory oversight of the citizen registry. Data matches Firebase exactly.</p>
+          <p className="text-sm text-muted-foreground font-medium">Real-time statutory oversight of the citizen registry. Data mirrors Firebase exactly.</p>
         </div>
         <div className="flex flex-wrap gap-3">
             <div className={cn(
@@ -254,7 +263,7 @@ export default function ManagementConsolePage() {
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="text-left w-full">
                       <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Citizen Registry Dossier</CardTitle>
-                      <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Verified Firestore Mirror. If documents are deleted in Firebase Console, they disappear here instantly.</CardDescription>
+                      <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Verified Firestore Mirror. Record status is synchronized instantly across all places.</CardDescription>
                   </div>
                   <div className="relative group w-full md:w-80">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -387,7 +396,7 @@ export default function ManagementConsolePage() {
                   <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4"><ShieldAlert className="h-10 w-10 text-destructive animate-pulse" /></div>
                   <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Statutory Purge</AlertDialogTitle>
                   <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
-                      Terminal deactivation of node <strong>{userToPurge?.firstName}</strong>. This atomic forensic erasure will remove all profile data, every transmission authored, and every alert from the Firebase host.
+                      Terminal deactivation of node <strong>{userToPurge?.firstName}</strong>. This atomic forensic erasure will remove all profile data, every transmission authored, and every alert from the Firebase host. This action is irreversible.
                   </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
@@ -398,7 +407,7 @@ export default function ManagementConsolePage() {
       </AlertDialog>
 
       <div className="pt-12 text-center opacity-30">
-          <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // FIREBASE CORE SYNC // ALPHA-4</p>
+          <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // FIREBASE REAL-TIME MIRROR // ALPHA-4</p>
       </div>
     </div>
   );

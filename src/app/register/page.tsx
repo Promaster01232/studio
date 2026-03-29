@@ -61,14 +61,17 @@ export default function RegisterPage() {
 
   const handleRegister = async () => {
     const trimmedEmail = email.trim().toLowerCase();
+    const cleanFirstName = firstName.trim();
+    const cleanLastName = lastName.trim();
+    const cleanMobile = mobileNumber.trim();
     
-    if (!firstName || !lastName || !trimmedEmail || !mobileNumber || !password || !confirmPassword) {
-      toast({ variant: "destructive", title: "Information missing" });
+    if (!cleanFirstName || !cleanLastName || !trimmedEmail || !cleanMobile || !password || !confirmPassword) {
+      toast({ variant: "destructive", title: "Information missing", description: "All fields are required for enrollment." });
       return;
     }
 
     if (password !== confirmPassword) {
-      toast({ variant: "destructive", title: "Passwords mismatch" });
+      toast({ variant: "destructive", title: "Passwords mismatch", description: "Verification failed." });
       return;
     }
 
@@ -76,7 +79,7 @@ export default function RegisterPage() {
     setIsValidating(true);
 
     try {
-      // 1. AI Email Audit with Resilient Fallback
+      // AI Email Audit with Resilient Fallback
       let securityStatus = 'verified';
       try {
         const emailValidation = await verifyEmailAuthenticity({ email: trimmedEmail });
@@ -89,26 +92,27 @@ export default function RegisterPage() {
         }
         setEmailStatus('valid');
       } catch (aiError) {
+        console.warn("AI Validation node busy, proceeding with pending audit.");
         setEmailStatus('pending');
         securityStatus = 'pending_audit';
       }
       
       setIsValidating(false);
 
-      // 2. Auth Node Creation (Real Firebase Auth)
+      // Auth Node Creation
       const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
       const user = userCredential.user;
 
       if (!user) throw new Error("Identity node generation failed.");
 
-      await updateProfile(user, { displayName: `${firstName} ${lastName}` });
+      await updateProfile(user, { displayName: `${cleanFirstName} ${cleanLastName}` });
 
       const userProfile = {
         uid: user.uid,
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
+        firstName: cleanFirstName,
+        lastName: cleanLastName,
         email: trimmedEmail,
-        mobileNumber: mobileNumber.trim(),
+        mobileNumber: cleanMobile,
         userType,
         photoURL: user.photoURL || '',
         securityStatus: securityStatus,
@@ -119,20 +123,23 @@ export default function RegisterPage() {
         createdAt: serverTimestamp(),
       };
 
-      // 3. Firestore Sync (Real Persistent Record)
+      // Persistent Sync
       await setDoc(doc(firestore, "users", user.uid), userProfile);
-      
-      // 4. RTDB Sync (Real-time Discovery)
       await set(ref(rtdb, `users/${user.uid}`), {
           ...userProfile,
           createdAt: Date.now()
       });
 
-      toast({ title: "Registry Enrollment Complete", description: "Welcome to Nyaya Sahayak." });
+      toast({ title: "Registry Enrollment Complete", description: "Welcome to Nyaya Sahayak terminal." });
       router.push("/dashboard");
 
     } catch (error: any) {
-      toast({ variant: "destructive", title: "Enrollment Failure", description: error.message });
+      console.error("Enrollment failed:", error);
+      let errorMsg = "Enrollment refused by system.";
+      if (error.code === 'auth/email-already-in-use') errorMsg = "This email is already in the registry.";
+      if (error.code === 'auth/weak-password') errorMsg = "Password protocol insufficient.";
+      
+      toast({ variant: "destructive", title: "Enrollment Failure", description: errorMsg });
       setLoading(false);
       setIsValidating(false);
     }
@@ -169,7 +176,7 @@ export default function RegisterPage() {
               <div className="grid gap-2 text-left">
                   <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest flex items-center justify-between">
                     <span>Email Address</span>
-                    {isValidating && <span className="text-[9px] text-primary font-black animate-pulse">AI SCANNING...</span>}
+                    {isValidating && <span className="text-[9px] text-primary font-black animate-pulse uppercase">AI SCANNING...</span>}
                   </Label>
                   <div className="relative">
                     <Input
@@ -221,8 +228,8 @@ export default function RegisterPage() {
               </div>
 
               <div className="flex items-start space-x-3 text-left p-3 rounded-xl bg-primary/5 border border-primary/10 mt-2">
-                  <Checkbox id="terms" checked={acceptedTerms} onCheckedChange={(c) => setAcceptedTerms(c as boolean)} />
-                  <Label htmlFor="terms" className="text-[10px] font-bold text-muted-foreground leading-snug cursor-pointer">I acknowledge the statutory protocols and privacy policy.</Label>
+                  <Checkbox id="terms" checked={acceptedTerms} onCheckedChange={(c) => setAcceptedTerms(c as boolean)} className="data-[state=checked]:bg-primary mt-1" />
+                  <Label htmlFor="terms" className="text-[10px] font-bold text-muted-foreground leading-snug cursor-pointer">I acknowledge the statutory protocols and privacy policy of nyayasahayak.in.</Label>
               </div>
 
               <Button className="w-full h-12 font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all mt-4" onClick={handleRegister} disabled={loading || !acceptedTerms}>
