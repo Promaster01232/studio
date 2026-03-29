@@ -28,7 +28,8 @@ import {
   Globe,
   Sparkles,
   Zap,
-  Newspaper
+  Newspaper,
+  ShieldCheck
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -229,7 +230,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                 const permissionError = new FirestorePermissionError({
                     path: postRef.path,
                     operation: 'delete',
-                } satisfies SecurityRuleContext, serverError);
+                    } satisfies SecurityRuleContext, serverError);
                 errorEmitter.emit('permission-error', permissionError);
             });
     };

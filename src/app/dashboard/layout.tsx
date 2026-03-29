@@ -217,7 +217,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
         if (notifUnsubscribeRef.current) notifUnsubscribeRef.current();
     };
-  }, [auth, firestore, router, pathname]);
+  }, [auth, firestore, router]);
 
   const handleLogout = async () => {
     if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
