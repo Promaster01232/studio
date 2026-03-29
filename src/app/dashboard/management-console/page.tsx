@@ -65,7 +65,8 @@ const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
   'piyushkumarsingh23323@gmail.com',
   'piyushkumrsingh23323@gmail.com',
-  'piyushkumrsingh23399@gmail.com'
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
 ];
 
 export default function ManagementConsolePage() {
@@ -93,12 +94,12 @@ export default function ManagementConsolePage() {
         const isAuthorized = ADMIN_EMAILS.includes(user.email?.toLowerCase() || '') || !!adminData?.isAdmin;
 
         if (!isAuthorized) {
-            toast({ variant: "destructive", title: "Access Denied" });
+            toast({ variant: "destructive", title: "Access Denied", description: "Admin credentials required." });
             router.replace('/dashboard');
             return;
         }
 
-        // LIVE FIREBASE MIRROR: Real-time listener for the entire collection
+        // HIGH-FIDELITY FIREBASE MIRROR: Strictly reactive logic
         const usersCol = collection(firestore, "users");
         const unsubscribeSnapshot = onSnapshot(usersCol, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
@@ -112,7 +113,6 @@ export default function ManagementConsolePage() {
             setLoading(false);
         }, (error) => {
             console.error("Firebase Sync Failure:", error);
-            toast({ variant: "destructive", title: "Sync Interrupted", description: "Lost connection to the Firebase registry." });
             setLoading(false);
         });
 
@@ -122,15 +122,18 @@ export default function ManagementConsolePage() {
     return () => unsubAuth();
   }, [firestore, auth, router, toast]);
 
-  const handleToggleStatus = (user: UserRecord, isInactive: boolean) => {
+  const handleToggleStatus = async (user: UserRecord, isInactive: boolean) => {
     setProcessingUid(user.uid);
     const userRef = doc(firestore, "users", user.uid);
-    updateDoc(userRef, { isBlocked: isInactive })
-        .then(() => {
-            update(ref(rtdb, `users/${user.uid}`), { isBlocked: isInactive }).catch(() => {});
-            toast({ title: isInactive ? "Node Suspended" : "Node Activated" });
-        })
-        .finally(() => setProcessingUid(null));
+    try {
+        await updateDoc(userRef, { isBlocked: isInactive });
+        await update(ref(rtdb, `users/${user.uid}`), { isBlocked: isInactive });
+        toast({ title: isInactive ? "Node Suspended" : "Node Activated" });
+    } catch (err) {
+        toast({ variant: "destructive", title: "Update Refused" });
+    } finally {
+        setProcessingUid(null);
+    }
   };
 
   const handleVerifyUser = async (user: UserRecord) => {
@@ -140,7 +143,7 @@ export default function ManagementConsolePage() {
           await updateDoc(doc(firestore, "users", user.uid), { 
               securityStatus: verification.isAuthentic ? 'verified' : 'suspicious'
           });
-          toast({ title: "Forensic Audit Complete" });
+          toast({ title: "Forensic Audit Complete", description: verification.isAuthentic ? "Node cleared." : "Node flagged." });
       } catch (error) {
           toast({ variant: "destructive", title: "Audit Error" });
       } finally {
@@ -155,31 +158,31 @@ export default function ManagementConsolePage() {
     try {
         const batch = writeBatch(firestore);
         
-        // 1. Purge Profile Node
+        // 1. Purge Profile Node (Identity)
         batch.delete(doc(firestore, "users", userToPurge.uid));
         
-        // 2. Purge Transmission Registry (Posts)
+        // 2. Purge Transmission Registry (All Posts)
         const postsRef = collection(firestore, "posts");
         const postsQuery = query(postsRef, where("authorUid", "==", userToPurge.uid));
         const postsSnap = await getDocs(postsQuery);
         postsSnap.docs.forEach(d => batch.delete(d.ref));
         
-        // 3. Purge Notification Node
+        // 3. Purge Alert Node (Notifications)
         const notifRef = collection(firestore, "notifications");
         const notifQuery = query(notifRef, where("userId", "==", userToPurge.uid));
         const notifSnap = await getDocs(notifQuery);
         notifSnap.docs.forEach(d => batch.delete(d.ref));
 
-        // Commit all deletions atomically
+        // Commit all deletions atomically across Firestore
         await batch.commit();
 
         // 4. Synchronize Real-time Database erasure
         await remove(ref(rtdb, `users/${userToPurge.uid}`)).catch(() => {});
         await remove(ref(rtdb, `advocates/${userToPurge.uid}`)).catch(() => {});
 
-        toast({ title: "Forensic Purge Complete", description: "Record erased from all institutional nodes." });
+        toast({ title: "Forensic Purge Complete", description: "Identity and all transmissions erased." });
     } catch (error) {
-        toast({ variant: "destructive", title: "Purge Refused", description: "Insufficient administrative permissions." });
+        toast({ variant: "destructive", title: "Purge Refused", description: "Admin authority check failed." });
     } finally {
         setProcessingUid(null);
         setUserToPurge(null);
@@ -201,7 +204,7 @@ export default function ManagementConsolePage() {
   if (loading) return (
     <div className="flex flex-col h-[70vh] items-center justify-center gap-4">
         <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40 animate-pulse">Initializing Firebase Link...</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40 animate-pulse">Establishing Live Sync...</p>
     </div>
   );
 
@@ -211,32 +214,32 @@ export default function ManagementConsolePage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary mb-1">
             <RefreshCw className="h-4 w-4 animate-spin-slow" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Institutional Hub Sync</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Live Firebase Mirror</span>
           </div>
           <h1 className="text-3xl font-black tracking-tighter font-headline text-foreground uppercase">Management Console</h1>
-          <p className="text-sm text-muted-foreground font-medium">Live reactive mirror of the Firebase citizen registry.</p>
+          <p className="text-sm text-muted-foreground font-medium">100% reactive oversight of the citizen registry and statutory data.</p>
         </div>
         <div className="flex flex-wrap gap-3">
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500/5 border border-green-500/10 shadow-inner">
                 <Database className="h-3 w-3 text-green-600" />
                 <span className="text-[9px] font-black uppercase text-green-600 tracking-widest flex items-center gap-2">
                     <div className="h-1 w-1 rounded-full bg-green-500 animate-pulse" />
-                    Firebase Live Hub
+                    Sync: Active
                 </span>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/5 border border-primary/10">
                 <Activity className="h-3 w-3 text-primary animate-pulse" />
-                <span className="text-[9px] font-black uppercase text-primary tracking-widest">{stats.total} Total Nodes</span>
+                <span className="text-[9px] font-black uppercase text-primary tracking-widest">{stats.total} Nodes Active</span>
             </div>
         </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-              { label: "Total Nodes", value: stats.total, icon: Database, color: "text-blue-500" },
+              { label: "Total Registry", value: stats.total, icon: Database, color: "text-blue-500" },
               { label: "AI Verified", value: stats.verified, icon: ShieldCheck, color: "text-emerald-500" },
-              { label: "Elite Clearance", value: stats.unlimited, icon: Zap, color: "text-amber-500" },
-              { label: "Risk Flags", value: stats.flagged, icon: ShieldAlert, color: "text-red-500" }
+              { label: "Elite Access", value: stats.unlimited, icon: Zap, color: "text-amber-500" },
+              { label: "Blocked Nodes", value: stats.flagged, icon: ShieldAlert, color: "text-red-500" }
           ].map((stat, i) => (
               <Card key={i} className="glass border-primary/5 p-4 rounded-2xl shadow-sm text-left">
                   <div className="flex items-center justify-between mb-2">
@@ -253,13 +256,13 @@ export default function ManagementConsolePage() {
           <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="text-left w-full">
-                      <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Statutory Registry Dossier</CardTitle>
-                      <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Real-time oversight. Matches Firebase Console exactly.</CardDescription>
+                      <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Citizen Registry Dossier</CardTitle>
+                      <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Real-time mirror. Any change in Firebase Console materializes here instantly.</CardDescription>
                   </div>
                   <div className="relative group w-full md:w-80">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                       <Input 
-                          placeholder="Filter registry records..." 
+                          placeholder="Search identity records..." 
                           className="pl-9 h-11 w-full bg-background border-primary/10 rounded-xl text-xs font-bold focus:border-primary shadow-sm" 
                           value={searchQuery}
                           onChange={(e) => setSearchSearchQuery(e.target.value)}
@@ -274,7 +277,7 @@ export default function ManagementConsolePage() {
                           <TableRow>
                               <TableHead className="font-black text-[10px] uppercase tracking-widest pl-6 h-12">User Identity</TableHead>
                               <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Tier</TableHead>
-                              <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">AI Usage</TableHead>
+                              <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Usage</TableHead>
                               <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Status</TableHead>
                               <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Forensic Audit</TableHead>
                               <TableHead className="font-black text-[10px] uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
@@ -317,7 +320,7 @@ export default function ManagementConsolePage() {
                                         <TableCell className="text-center">
                                             <div className="flex flex-col items-center">
                                                 <span className="font-mono font-black text-xs text-primary">{user.aiUsageCount || 0}</span>
-                                                <span className="text-[8px] font-bold text-muted-foreground uppercase opacity-40">Operations</span>
+                                                <span className="text-[8px] font-bold text-muted-foreground uppercase opacity-40">Ops</span>
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">
@@ -348,7 +351,7 @@ export default function ManagementConsolePage() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-52 p-2 rounded-2xl shadow-2xl glass border-primary/10">
-                                                    <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-widest opacity-40 px-3">Registry Protocols</DropdownMenuLabel>
+                                                    <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-widest opacity-40 px-3">System Protocol</DropdownMenuLabel>
                                                     <DropdownMenuItem onClick={() => sendPasswordResetEmail(auth, user.email).then(() => toast({ title: "Reset Dispatched" }))} className="rounded-xl font-bold text-xs h-10 px-3 cursor-pointer gap-3">
                                                         <KeyRound className="h-4 w-4 opacity-40" /> Reset Credentials
                                                     </DropdownMenuItem>
@@ -369,7 +372,7 @@ export default function ManagementConsolePage() {
                             }) : (
                                 <TableRow>
                                     <TableCell colSpan={6} className="h-32 text-center text-muted-foreground font-bold uppercase tracking-widest opacity-40">
-                                        No matching registry records found.
+                                        No matching Firebase records.
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -385,9 +388,9 @@ export default function ManagementConsolePage() {
           <AlertDialogContent className="rounded-[2.5rem] p-8 border-none shadow-2xl glass text-left">
               <AlertDialogHeader className="text-left">
                   <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4"><ShieldAlert className="h-10 w-10 text-destructive animate-pulse" /></div>
-                  <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Permanent Purge</AlertDialogTitle>
+                  <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Statutory Purge</AlertDialogTitle>
                   <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
-                      Terminal deactivation of node <strong>{userToPurge?.firstName}</strong>. This forensic erasure will remove all profile data, transmissions, and registry logs from Firebase Firestore and Real-time Database.
+                      Terminal deactivation of node <strong>{userToPurge?.firstName}</strong>. This atomic forensic erasure will remove all profile data, every transmission authored, and every alert from the Firebase host.
                   </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
@@ -398,7 +401,7 @@ export default function ManagementConsolePage() {
       </AlertDialog>
 
       <div className="pt-12 text-center opacity-30">
-          <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // FIREBASE REAL-TIME MIRROR // NS-ADMIN-NODE</p>
+          <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // FIREBASE REAL-TIME MIRROR // ALPHA-4</p>
       </div>
     </div>
   );
