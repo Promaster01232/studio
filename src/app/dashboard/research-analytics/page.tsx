@@ -90,6 +90,14 @@ interface UserProfile {
     isAdmin?: boolean;
 }
 
+const typeConfig: Record<string, { color: string, bg: string, border: string, icon: any, gradient: string }> = {
+    'Idea': { color: 'text-amber-600', bg: 'bg-amber-500/10', border: 'border-amber-500/20', icon: Sparkles, gradient: 'from-amber-500/10' },
+    'Question': { color: 'text-blue-600', bg: 'bg-blue-500/10', border: 'border-blue-500/20', icon: Bot, gradient: 'from-blue-500/10' },
+    'Suggestion': { color: 'text-emerald-600', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', icon: Zap, gradient: 'from-emerald-500/10' },
+    'Poll': { color: 'text-purple-600', bg: 'bg-purple-500/10', border: 'border-purple-500/20', icon: Layers, gradient: 'from-purple-500/10' },
+    'News': { color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20', icon: Newspaper, gradient: 'from-primary/10' },
+};
+
 function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
     const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
     const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
@@ -144,6 +152,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     const contentLimit = 300;
     const shouldShowReadMore = post.content && post.content.length > contentLimit;
     const displayedContent = isExpanded ? post.content : (post.content?.slice(0, contentLimit) + (shouldShowReadMore ? "..." : ""));
+
+    const config = typeConfig[post.postType || 'Idea'] || typeConfig['Idea'];
 
     const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
         const shareText = `Statutory Transmission: "${post.title}"\n\nAnalyze this node on Nyaya Sahayak: ${window.location.origin}/dashboard/research-analytics`;
@@ -243,35 +253,37 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     };
 
     return (
-        <Card className="overflow-hidden bg-card/40 backdrop-blur-md border-primary/10 transition-all shadow-xl hover:shadow-2xl hover:border-primary/20 rounded-[2rem] relative group/post text-left">
-            {/* Subtle Vertical Identity Bar */}
+        <Card className="overflow-hidden bg-card border-primary/10 transition-all shadow-xl hover:shadow-2xl hover:border-primary/20 rounded-[2.5rem] relative group/post text-left">
+            <div className={cn("absolute inset-0 bg-gradient-to-br via-transparent to-transparent opacity-5 group-hover:opacity-10 transition-opacity duration-700", config.gradient)}></div>
+            
             <div className="absolute top-0 left-0 bottom-0 w-1 flex flex-col">
                 <div className="flex-1 bg-primary/20"></div>
                 <div className="flex-1 bg-background"></div>
                 <div className="flex-1 bg-green-500/20"></div>
             </div>
             
-            <CardHeader className="p-6 sm:p-8 pb-0 ml-1">
-                <div className="flex items-start justify-between mb-6">
+            <CardHeader className="p-6 sm:p-10 pb-0 ml-1">
+                <div className="flex items-start justify-between mb-8">
                     <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
-                    <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-primary/5 border-primary/10 text-[9px] font-black uppercase px-3 py-0.5 rounded-full tracking-wider text-primary">
+                    <div className="flex items-center gap-3">
+                        <Badge variant="outline" className={cn("border font-black text-[9px] uppercase px-4 py-1 rounded-full tracking-[0.1em] shadow-sm", config.bg, config.color, config.border)}>
+                            <config.icon className="h-3 w-3 mr-2" />
                             {post.postType || 'Transmission'}
                         </Badge>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <button className="h-9 w-9 rounded-xl hover:bg-primary/5 flex items-center justify-center transition-all">
-                                    <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                                <button className="h-10 w-10 rounded-2xl bg-muted/20 hover:bg-primary/5 flex items-center justify-center transition-all shadow-sm">
+                                    <MoreVertical className="h-5 w-5 text-muted-foreground" />
                                 </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-52 p-2 rounded-2xl shadow-2xl glass border-primary/10">
+                            <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl glass border-primary/10">
                                 {isAuthor ? (
-                                    <DropdownMenuItem onSelect={handleDeletePost} className="rounded-xl font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
+                                    <DropdownMenuItem onSelect={handleDeletePost} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
                                         <Trash2 className="h-4 w-4" /> 
                                         <span>Purge record</span>
                                     </DropdownMenuItem>
                                 ) : (
-                                    <DropdownMenuItem className="rounded-xl font-bold text-xs h-10 px-3 cursor-pointer gap-3 hover:bg-red-500/5 hover:text-red-500">
+                                    <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3 hover:bg-red-500/5 hover:text-red-500">
                                         <Flag className="h-4 w-4" /> 
                                         <span>Flag node</span>
                                     </DropdownMenuItem>
@@ -281,29 +293,30 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                     </div>
                 </div>
 
-                <div className="space-y-4">
-                    <h3 className="text-xl sm:text-2xl font-black tracking-tight text-foreground/90 leading-tight">{post.title}</h3>
+                <div className="space-y-5">
+                    <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground/90 leading-[1.1]">{post.title}</h3>
                     
                     {post.content && (
-                        <div className="space-y-3">
-                            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed whitespace-pre-line">
+                        <div className="space-y-4">
+                            <p className="text-base sm:text-lg text-muted-foreground font-medium leading-relaxed whitespace-pre-line">
                                 {displayedContent}
                             </p>
                             {shouldShowReadMore && (
                                 <button 
                                     onClick={() => setIsExpanded(!isExpanded)}
-                                    className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:underline"
+                                    className="text-[11px] font-black uppercase tracking-[0.2em] text-primary hover:underline flex items-center gap-2"
                                 >
-                                    {isExpanded ? "Close audit" : "Expand full audit"}
+                                    <Activity className="h-3.5 w-3.5" />
+                                    {isExpanded ? "Close forensic audit" : "Expand full audit node"}
                                 </button>
                             )}
                         </div>
                     )}
 
                     {post.tags && post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 pt-2">
+                        <div className="flex flex-wrap gap-2.5 pt-2">
                             {post.tags.map(tag => (
-                                <Badge key={tag} variant="outline" className="bg-muted/30 border-primary/5 text-[8px] font-black uppercase px-2.5 py-0.5 rounded-lg tracking-widest text-muted-foreground">
+                                <Badge key={tag} variant="secondary" className="bg-primary/5 border border-primary/10 text-[9px] font-black uppercase px-3 py-1 rounded-xl tracking-widest text-primary/70">
                                     #{tag}
                                 </Badge>
                             ))}
@@ -312,25 +325,25 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                 </div>
             </CardHeader>
 
-            <div className="px-6 sm:px-8 pb-0 pt-6 ml-1">
+            <div className="px-6 sm:px-10 pb-0 pt-8 ml-1">
                  {post.link && (
-                    <a href={post.link} target="_blank" rel="noopener noreferrer" className="block p-4 rounded-2xl border border-primary/5 bg-primary/5 hover:bg-primary/10 transition-all group/link">
-                        <div className="flex items-center gap-4">
-                            <div className="p-2 rounded-xl bg-background shadow-sm group-hover/link:scale-110 transition-transform">
-                                <Globe className="h-4 w-4 text-primary" />
+                    <a href={post.link} target="_blank" rel="noopener noreferrer" className="block p-5 rounded-3xl border border-primary/10 bg-muted/30 hover:bg-primary/5 transition-all group/link shadow-inner">
+                        <div className="flex items-center gap-5">
+                            <div className="p-3 rounded-2xl bg-white dark:bg-black/40 shadow-md group-hover/link:scale-110 transition-transform">
+                                <Globe className="h-5 w-5 text-primary" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60">Citation Ingress</p>
-                                <p className="text-xs font-bold truncate text-foreground/80">{post.link}</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-0.5">Statutory Citation Ingress</p>
+                                <p className="text-sm font-bold truncate text-foreground/80">{post.link}</p>
                             </div>
-                            <ArrowUpRight className="h-4 w-4 text-primary opacity-20 group-hover/link:opacity-100 transition-opacity" />
+                            <ArrowUpRight className="h-5 w-5 text-primary opacity-20 group-hover/link:opacity-100 transition-opacity" />
                         </div>
                     </a>
                 )}
                 
                 {optimisticPoll && (
-                    <div className="pt-6 space-y-3">
-                       <div className="grid gap-2">
+                    <div className="pt-8 space-y-4">
+                       <div className="grid gap-3">
                             {optimisticPoll.options.map((option, index) => {
                                 const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
                                 return (
@@ -339,8 +352,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                         onClick={() => handleVote(index)}
                                         disabled={userHasVotedOnPoll || isVoting}
                                         className={cn(
-                                            "w-full relative h-12 rounded-xl border border-primary/5 overflow-hidden transition-all text-left px-4 group/option shadow-sm",
-                                            userHasVotedOnPoll ? "bg-muted/10 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/20 active:scale-[0.99]"
+                                            "w-full relative h-14 rounded-2xl border border-primary/5 overflow-hidden transition-all text-left px-5 group/option shadow-sm",
+                                            userHasVotedOnPoll ? "bg-muted/20 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/20 active:scale-[0.99]"
                                         )}
                                     >
                                         <AnimatePresence>
@@ -353,15 +366,15 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                             )}
                                         </AnimatePresence>
                                         <div className="relative z-10 flex items-center justify-between h-full">
-                                            <div className="flex items-center gap-3">
+                                            <div className="flex items-center gap-4">
                                                 <div className={cn(
-                                                    "h-2 w-2 rounded-full border border-primary/30",
-                                                    userHasVotedOnPoll ? "opacity-0" : "group-hover/option:scale-125"
+                                                    "h-2.5 w-2.5 rounded-full border-2 border-primary/30",
+                                                    userHasVotedOnPoll ? "bg-primary border-transparent" : "group-hover/option:scale-125"
                                                 )} />
-                                                <span className="font-bold text-xs sm:text-sm tracking-tight">{option.text}</span>
+                                                <span className="font-bold text-sm sm:text-base tracking-tight">{option.text}</span>
                                             </div>
                                             {userHasVotedOnPoll && (
-                                                <span className="font-black text-xs text-primary">{percentage.toFixed(0)}%</span>
+                                                <span className="font-black text-sm text-primary font-mono">{percentage.toFixed(0)}%</span>
                                             )}
                                         </div>
                                     </button>
@@ -369,54 +382,54 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                             })}
                        </div>
                        {userHasVotedOnPoll && (
-                            <div className="flex items-center gap-2 px-2 text-[9px] font-black uppercase tracking-[0.2em] text-[#128807] animate-in fade-in slide-in-from-left-2">
-                                <CheckCircle2 className="h-3 w-3" />
-                                identity-verified consensus captured
+                            <div className="flex items-center gap-3 px-3 py-3 rounded-2xl bg-green-500/5 border border-green-500/10 text-[10px] font-black uppercase tracking-[0.2em] text-[#128807] animate-in fade-in slide-in-from-left-2">
+                                <ShieldCheck className="h-4 w-4" />
+                                identity-verified consensus captured // registry secure
                             </div>
                         )}
                     </div>
                 )}
             </div>
 
-            <CardFooter className="p-6 sm:p-8 mt-6 flex justify-between items-center bg-muted/5 border-t border-primary/5 ml-1">
-                <div className="flex gap-2">
+            <CardFooter className="p-6 sm:p-10 mt-8 flex justify-between items-center bg-muted/5 border-t border-primary/5 ml-1">
+                <div className="flex gap-3">
                     <Button 
                         variant="ghost" 
                         size="sm" 
                         className={cn(
-                            "h-9 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest gap-2.5 transition-all", 
-                            userHasLiked ? "text-red-500 bg-red-500/5 shadow-inner" : "text-primary hover:bg-primary/5"
+                            "h-11 px-6 rounded-2xl text-[11px] font-black uppercase tracking-widest gap-3 transition-all shadow-sm", 
+                            userHasLiked ? "text-red-500 bg-red-500/5 border border-red-500/10" : "bg-white dark:bg-black/20 text-primary border border-primary/5 hover:bg-primary/5"
                         )} 
                         onClick={handleLike} 
                         disabled={isLiking}
                     >
-                        {isLiking ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />}
+                        {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} />}
                         <span>{optimisticLikes} Audits</span>
                     </Button>
                     
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="h-9 w-9 rounded-xl bg-background border border-primary/10 flex items-center justify-center text-muted-foreground hover:text-primary transition-all">
-                                <Share2 className="h-3.5 w-3.5" />
+                            <button className="h-11 w-11 rounded-2xl bg-white dark:bg-black/20 border border-primary/5 flex items-center justify-center text-muted-foreground hover:text-primary transition-all shadow-sm">
+                                <Share2 className="h-4 w-4" />
                             </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl glass border-primary/10">
-                            <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-xl font-bold text-xs h-10 px-3 cursor-pointer gap-3">
-                                <MessageCircle className="h-4 w-4 text-green-600" /> WhatsApp
+                        <DropdownMenuContent align="end" className="w-60 p-2 rounded-2xl shadow-2xl glass border-primary/10">
+                            <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-4">
+                                <div className="p-2 rounded-lg bg-green-500/10 text-green-600"><MessageCircle className="h-4 w-4" /></div> WhatsApp
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-xl font-bold text-xs h-10 px-3 cursor-pointer gap-3">
-                                <Twitter className="h-4 w-4 text-blue-500" /> Twitter (X)
+                            <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-4">
+                                <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500"><Twitter className="h-4 w-4" /></div> Twitter (X)
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-xl font-bold text-xs h-10 px-3 cursor-pointer gap-3">
-                                <Bookmark className="h-4 w-4 text-primary" /> Copy ID
+                            <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-4">
+                                <div className="p-2 rounded-lg bg-primary/10 text-primary"><Bookmark className="h-4 w-4" /></div> Copy Transmission ID
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
                 
-                <Button asChild variant="ghost" className="h-9 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all group/btn">
+                <Button asChild variant="ghost" className="h-11 px-6 rounded-2xl font-black text-[11px] uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all group/btn border border-primary/5 bg-white dark:bg-black/20 shadow-sm">
                     <Link href="/dashboard/research-analytics">
-                        Analyze <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover/btn:translate-x-1" />
+                        Analyze Protocol <ArrowRight className="ml-3 h-4 w-4 transition-transform group-hover/btn:translate-x-1.5" />
                     </Link>
                 </Button>
             </CardFooter>
@@ -494,11 +507,11 @@ export default function ResearchAnalyticsPage() {
         return (
             <div className="space-y-12 max-w-4xl mx-auto pb-20 px-4 sm:px-0 text-left">
                 <div className="space-y-4">
-                    <Skeleton className="h-12 w-64 rounded-xl" />
-                    <Skeleton className="h-6 w-full max-w-lg rounded-lg" />
+                    <Skeleton className="h-16 w-80 rounded-2xl" />
+                    <Skeleton className="h-6 w-full max-w-xl rounded-lg" />
                 </div>
-                <div className="space-y-8">
-                    {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-64 w-full rounded-[2rem]" />)}
+                <div className="space-y-10">
+                    {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-96 w-full rounded-[2.5rem]" />)}
                 </div>
             </div>
         )
@@ -506,72 +519,70 @@ export default function ResearchAnalyticsPage() {
 
     return (
         <div className="space-y-12 max-w-4xl mx-auto pb-20 px-2 sm:px-0 text-left">
-            {/* Compact Professional Header */}
             <motion.div 
-                initial={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden bg-card/40 backdrop-blur-xl border border-primary/10 shadow-2xl"
+                className="relative p-10 sm:p-16 rounded-[3rem] overflow-hidden bg-card/40 backdrop-blur-xl border border-primary/10 shadow-3xl"
             >
-                <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-                    <Logo className="h-48 w-48 grayscale" priority />
+                <div className="absolute top-0 right-0 p-10 opacity-[0.04] pointer-events-none">
+                    <Logo className="h-64 w-64 grayscale" priority />
                 </div>
                 
-                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                                <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
-                                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">Community Authority</span>
+                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-10">
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 shadow-sm">
+                                <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Community Authority</span>
                             </div>
-                            <Badge variant="outline" className="text-[8px] font-black uppercase border-blue-500/20 text-blue-500/70 tracking-widest bg-blue-500/5">Registry: Active</Badge>
+                            <Badge variant="outline" className="text-[9px] font-black uppercase border-blue-500/20 text-blue-500/70 tracking-widest bg-blue-500/5 px-3">Registry: Active</Badge>
                         </div>
-                        <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter uppercase leading-tight text-foreground">
-                            Live <span className="text-primary italic">Transmissions.</span>
+                        <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter uppercase leading-[0.9] text-foreground">
+                            Live <span className="text-primary italic font-black">Transmissions.</span>
                         </h1>
-                        <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed opacity-80">
+                        <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed opacity-80">
                             Publicly audited statutory ideas, community polling, and real-time legal forensics from the Nyaya Sahayak registry terminal.
                         </p>
                     </div>
 
-                    <Button size="lg" className="h-14 px-8 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-primary/30 group active:scale-95 transition-all" asChild>
+                    <Button size="lg" className="h-16 px-10 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-2xl shadow-primary/30 group active:scale-95 transition-all shrink-0" asChild>
                         <Link href={isAuthenticated ? "/dashboard/research-analytics/new" : "/login"}>
-                            <PlusCircle className="mr-3 h-5 w-5" />
+                            <PlusCircle className="mr-3 h-5 w-5 group-hover:rotate-90 transition-transform duration-500" />
                             Initialize Post
                         </Link>
                     </Button>
                 </div>
             </motion.div>
             
-            {/* Feed Section */}
-            <div className="grid gap-8">
+            <div className="grid gap-10">
                 <AnimatePresence mode="popLayout">
                     {!isAuthenticated ? (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-24 text-center opacity-40 flex flex-col items-center gap-8">
-                            <div className="p-8 rounded-[2rem] bg-muted/20 border-2 border-dashed border-primary/10">
-                                <Zap className="h-16 w-16 text-primary" />
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-32 text-center opacity-40 flex flex-col items-center gap-10">
+                            <div className="p-12 rounded-[3rem] bg-muted/20 border-2 border-dashed border-primary/10 shadow-inner">
+                                <Zap className="h-20 w-20 text-primary" />
                             </div>
-                            <div className="space-y-2">
-                                <p className="font-black text-2xl tracking-tighter uppercase">Clearance Required</p>
-                                <p className="text-xs font-medium italic max-w-xs mx-auto">"Initialize dashboard ingress to access live community transmissions."</p>
+                            <div className="space-y-3">
+                                <p className="font-black text-3xl tracking-tighter uppercase">Clearance Required</p>
+                                <p className="text-sm font-medium italic max-w-xs mx-auto">"Initialize dashboard ingress to access live community transmissions."</p>
                             </div>
                         </motion.div>
                     ) : feed.length === 0 ? (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-24 text-center opacity-40 flex flex-col items-center gap-8">
-                            <div className="p-8 rounded-[2rem] bg-muted/20 border-2 border-dashed border-primary/10">
-                                <Newspaper className="h-16 w-16 text-muted-foreground" />
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-32 text-center opacity-40 flex flex-col items-center gap-10">
+                            <div className="p-12 rounded-[3rem] bg-muted/20 border-2 border-dashed border-primary/10 shadow-inner">
+                                <Newspaper className="h-20 w-20 text-muted-foreground" />
                             </div>
-                            <div className="space-y-2">
-                                <p className="font-black text-2xl tracking-tighter uppercase">Registry Clear</p>
-                                <p className="text-xs font-medium italic max-w-xs mx-auto">"No active transmissions currently found in the community node."</p>
+                            <div className="space-y-3">
+                                <p className="font-black text-3xl tracking-tighter uppercase">Registry Clear</p>
+                                <p className="text-sm font-medium italic max-w-xs mx-auto">"No active transmissions currently found in the community node."</p>
                             </div>
                         </motion.div>
                     ) : (
                         feed.map((item, index) => (
                             <motion.div 
                                 key={item.id}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.05, duration: 0.5 }}
+                                transition={{ delay: index * 0.05, duration: 0.6 }}
                             >
                                 <PostCard post={item} userProfile={userProfile} />
                             </motion.div>
@@ -580,24 +591,28 @@ export default function ResearchAnalyticsPage() {
                 </AnimatePresence>
             </div>
 
-            <div className="pt-16 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
-                <div className="flex gap-12">
-                    <div className="flex items-center gap-4">
-                        <ShieldCheck className="h-5 w-5 text-primary" />
+            <div className="pt-20 border-t border-primary/10 flex flex-col sm:flex-row items-center justify-between gap-10">
+                <div className="flex flex-wrap justify-center gap-12">
+                    <div className="flex items-center gap-5 group">
+                        <div className="p-4 rounded-[1.5rem] bg-primary/5 text-primary group-hover:scale-110 transition-transform shadow-sm">
+                            <ShieldCheck className="h-6 w-6" />
+                        </div>
                         <div className="text-left">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-primary">Verified Hub</p>
-                            <p className="text-[8px] font-bold text-muted-foreground">Forensic Identity Audit Active.</p>
+                            <p className="text-[11px] font-black uppercase tracking-widest text-primary">Verified Hub</p>
+                            <p className="text-[10px] font-bold text-muted-foreground opacity-60">Forensic Identity Audit Active.</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <Layers className="h-5 w-5 text-blue-500" />
+                    <div className="flex items-center gap-5 group">
+                        <div className="p-4 rounded-[1.5rem] bg-blue-500/5 text-blue-500 group-hover:scale-110 transition-transform shadow-sm">
+                            <Layers className="h-6 w-6" />
+                        </div>
                         <div className="text-left">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-blue-500">Registry Density</p>
-                            <p className="text-[8px] font-bold text-muted-foreground">High-fidelity consensus nodes.</p>
+                            <p className="text-[11px] font-black uppercase tracking-widest text-blue-500">Registry Density</p>
+                            <p className="text-[10px] font-bold text-muted-foreground opacity-60">High-fidelity consensus nodes.</p>
                         </div>
                     </div>
                 </div>
-                <p className="text-[8px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // NS-STREAM-V4</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.6em] text-muted-foreground/30 shrink-0">NYAYASAHAYAK.IN // NS-STREAM-V4</p>
             </div>
         </div>
     );
