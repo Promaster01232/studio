@@ -32,7 +32,8 @@ import {
   ArrowRight,
   Activity,
   Globe,
-  CreditCard
+  CreditCard,
+  Lock
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -78,7 +79,8 @@ const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
   'piyushkumarsingh23323@gmail.com',
   'piyushkumrsingh23323@gmail.com',
-  'piyushkumrsingh23399@gmail.com'
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
 ];
 
 function DigitalIdentityCard({ profile }: { profile: UserProfile }) {
@@ -311,8 +313,9 @@ export default function ProfilePage() {
 
   const handleDeleteAccount = async () => {
     if (!auth.currentUser) return;
+    // PROTECTION: Root admins cannot delete their own account via UI
     if (ADMIN_EMAILS.includes(email.toLowerCase())) {
-        toast({ variant: "destructive", title: "Immutable Protocol", description: "Root administration accounts cannot be purged." });
+        toast({ variant: "destructive", title: "Immutable Protocol", description: "Root administration nodes cannot be purged from the registry." });
         return;
     }
     setSaving(true);
@@ -327,7 +330,7 @@ export default function ProfilePage() {
             router.replace('/');
         })
         .catch((err) => {
-            toast({ variant: "destructive", title: "Purge Refused", description: "Unauthorized session access." });
+            toast({ variant: "destructive", title: "Purge Refused", description: "Unauthorized session access or root protection active." });
         })
         .finally(() => {
             if (auth.currentUser) setSaving(false);
@@ -337,6 +340,7 @@ export default function ProfilePage() {
   if (loading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
   const isLimited = !userProfile?.subscriptionType?.includes('unlimited');
+  const isProtected = ADMIN_EMAILS.includes(email.toLowerCase());
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0 text-left">
@@ -438,21 +442,27 @@ export default function ProfilePage() {
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button variant="destructive" className="w-full h-12 justify-start font-black text-xs uppercase tracking-widest rounded-2xl active:scale-95 transition-all shadow-lg shadow-destructive/20">
-                                    <Trash2 className="mr-3 h-4 w-4" />
+                                    {isProtected ? <Lock className="mr-3 h-4 w-4" /> : <Trash2 className="mr-3 h-4 w-4" />}
                                     Purge Registry Record
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent className="glass border-destructive/20 rounded-[2rem] p-8 max-w-md">
                                 <AlertDialogHeader>
-                                    <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4"><ShieldAlert className="h-10 w-10 text-destructive" /></div>
-                                    <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Permanent Purge</AlertDialogTitle>
+                                    <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4">
+                                        {isProtected ? <ShieldCheck className="h-10 w-10 text-primary animate-pulse" /> : <ShieldAlert className="h-10 w-10 text-destructive" />}
+                                    </div>
+                                    <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">
+                                        {isProtected ? "Node Protected" : "Confirm Permanent Purge"}
+                                    </AlertDialogTitle>
                                     <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
-                                        This protocol is irreversible. All forensic records, case narrations, and identity data will be permanently erased.
+                                        {isProtected ? "Institutional root accounts are protected by immutable security protocols and cannot be purged via this terminal." : "This protocol is irreversible. All forensic records, case narrations, and identity data will be permanently erased from the registry."}
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-6">
                                     <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort Protocol</AlertDialogCancel>
-                                    <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-xs">Execute Purge</AlertDialogAction>
+                                    {!isProtected && (
+                                        <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-xs">Execute Purge</AlertDialogAction>
+                                    )}
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>

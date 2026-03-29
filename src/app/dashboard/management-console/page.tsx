@@ -124,6 +124,12 @@ export default function ManagementConsolePage() {
   }, [firestore, auth, router, toast]);
 
   const handleToggleStatus = async (user: UserRecord, isBlocked: boolean) => {
+    // PROTECTION: Cannot block root admins
+    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+        toast({ variant: "destructive", title: "Protection Active", description: "Root authority nodes cannot be suspended." });
+        return;
+    }
+
     setProcessingUid(user.uid);
     const userRef = doc(firestore, "users", user.uid);
     try {
@@ -154,6 +160,14 @@ export default function ManagementConsolePage() {
 
   const handleExecutePurge = async () => {
     if (!userToPurge) return;
+    
+    // PROTECTION: Cannot purge root admins
+    if (ADMIN_EMAILS.includes(userToPurge.email.toLowerCase())) {
+        toast({ variant: "destructive", title: "Protection Active", description: "Root authority nodes are immutable." });
+        setUserToPurge(null);
+        return;
+    }
+
     setProcessingUid(userToPurge.uid);
     
     try {
@@ -211,7 +225,7 @@ export default function ManagementConsolePage() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-20 px-2 sm:px-6 text-left">
+    <div className="max-w-7xl auto space-y-8 pb-20 px-2 sm:px-6 text-left">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary mb-1">
@@ -219,7 +233,7 @@ export default function ManagementConsolePage() {
             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Live Firebase Hub</span>
           </div>
           <h1 className="text-3xl font-black tracking-tighter font-headline text-foreground uppercase">Management Console</h1>
-          <p className="text-sm text-muted-foreground font-medium">Real-time statutory oversight of the citizen registry. Data mirrors Firebase exactly.</p>
+          <p className="text-sm text-muted-foreground font-medium">Real-time statutory oversight of the citizen registry with protection protocols.</p>
         </div>
         <div className="flex flex-wrap gap-3">
             <div className={cn(
@@ -262,7 +276,7 @@ export default function ManagementConsolePage() {
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="text-left w-full">
                       <CardTitle className="font-headline font-black text-xl tracking-tight text-primary">Citizen Registry Dossier</CardTitle>
-                      <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Verified Firestore Mirror. Record status is synchronized instantly across all places.</CardDescription>
+                      <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Verified Firestore Mirror. Root nodes protected by statutory immutable protocol.</CardDescription>
                   </div>
                   <div className="relative group w-full md:w-80">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -343,7 +357,7 @@ export default function ManagementConsolePage() {
                                                     <span className="text-[8px] font-black uppercase">Cleared</span>
                                                 </div>
                                             ) : (
-                                                <Button size="sm" variant="ghost" className="h-7 px-3 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full hover:bg-primary/5" onClick={() => handleVerifyUser(user)} disabled={processingUid === user.uid}>
+                                                <Button size="sm" variant="ghost" className="h-7 px-3 text-[8px] font-black uppercase text-primary border border-primary/10 rounded-full hover:bg-primary/5" onClick={() => handleVerifyUser(user)} disabled={processingUid === user.uid || isProtected}>
                                                     Run Audit
                                                 </Button>
                                             )}
@@ -357,7 +371,7 @@ export default function ManagementConsolePage() {
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end" className="w-52 p-2 rounded-2xl shadow-2xl glass border-primary/10">
                                                     <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-widest opacity-40 px-3">System Protocol</DropdownMenuLabel>
-                                                    <DropdownMenuItem onClick={() => sendPasswordResetEmail(auth, user.email).then(() => toast({ title: "Reset Dispatched" }))} className="rounded-xl font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                                    <DropdownMenuItem onClick={() => sendPasswordResetEmail(auth, user.email).then(() => toast({ title: "Reset Dispatched" }))} className="rounded-xl font-bold text-xs h-10 px-3 cursor-pointer gap-3" disabled={isProtected}>
                                                         <KeyRound className="h-4 w-4 opacity-40" /> Reset Credentials
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator className="opacity-5" />
