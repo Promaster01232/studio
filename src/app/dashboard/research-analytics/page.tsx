@@ -8,31 +8,27 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Heart, 
-  MessageCircle, 
   Share2, 
   Bookmark, 
   PlusCircle, 
   Loader2, 
   ArrowRight, 
-  User, 
   MoreVertical, 
   Trash2, 
   Flag,
   Activity,
   BadgeCheck,
-  Search,
   Twitter,
   CheckCircle2,
-  TrendingUp,
   Globe,
   Sparkles,
   Zap,
   Newspaper,
   ShieldCheck,
   Bot,
-  Command,
   Layers,
-  ArrowUpRight
+  ArrowUpRight,
+  MessageCircle
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";

@@ -1,12 +1,9 @@
 "use client";
 
-import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
   BrainCircuit, 
-  Gavel, 
   FileText, 
   ShieldCheck, 
   Scale, 
