@@ -95,7 +95,7 @@ export default function RegisterPage() {
       
       setIsValidating(false);
 
-      // 2. Auth Node Creation (Firebase Direct)
+      // 2. Auth Node Creation (Real Firebase Auth)
       const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
       const user = userCredential.user;
 
@@ -119,10 +119,10 @@ export default function RegisterPage() {
         createdAt: serverTimestamp(),
       };
 
-      // 3. Firestore Sync (Real Firebase Data)
+      // 3. Firestore Sync (Real Persistent Record)
       await setDoc(doc(firestore, "users", user.uid), userProfile);
       
-      // 4. RTDB Sync
+      // 4. RTDB Sync (Real-time Discovery)
       await set(ref(rtdb, `users/${user.uid}`), {
           ...userProfile,
           createdAt: Date.now()
@@ -152,7 +152,7 @@ export default function RegisterPage() {
               </h1>
           </div>
           <h2 className="text-3xl font-black tracking-tighter">Citizen Registry</h2>
-          <p className="text-muted-foreground mt-2 mb-8 font-medium">Direct Firebase identity enrollment.</p>
+          <p className="text-muted-foreground mt-2 mb-8 font-medium">Direct institutional enrollment protocol.</p>
           
           <div className="grid gap-4">
               <div className="grid grid-cols-2 gap-4">
