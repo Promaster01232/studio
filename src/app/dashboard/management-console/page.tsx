@@ -50,6 +50,7 @@ import { Switch } from "@/components/ui/switch";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { formatDistanceToNow } from "date-fns";
 
 interface UserRecord {
   uid: string;

@@ -49,7 +49,7 @@ const ADMIN_EMAILS = [
 ];
 
 // Routes that don't require authentication within the dashboard prefix
-const PUBLIC_DASHBOARD_ROUTES = ['/dashboard/research-analytics'];
+const PUBLIC_DASHBOARD_ROUTES = ['/dashboard', '/dashboard/research-analytics'];
 
 function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unreadCount: number, isAdmin: boolean }) {
     const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
@@ -204,7 +204,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         
         // Allowed paths for unauthenticated users
         const isPublicRoute = ['/login', '/register', '/', '/about', '/terms', '/privacy', '/cookie-policy', '/disclaimer', '/contact', '/refund-policy'].includes(pathname) || 
-                             PUBLIC_DASHBOARD_ROUTES.some(route => pathname.startsWith(route));
+                             PUBLIC_DASHBOARD_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
 
         if (!isPublicRoute) {
             router.replace('/login');
@@ -226,7 +226,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     router.replace('/login');
   };
 
-  const showContent = isMounted && (!profileLoading || pathname === '/create-profile' || PUBLIC_DASHBOARD_ROUTES.includes(pathname));
+  const isPublicPath = PUBLIC_DASHBOARD_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
+  const showContent = isMounted && (!profileLoading || pathname === '/create-profile' || isPublicPath);
   const isSuspended = userProfile?.isBlocked === true;
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
   const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
@@ -400,6 +401,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </Button>
              </div>
           )}
+        </SidebarContent>
+        <SidebarFooter className="p-4">
         </SidebarFooter>
       </Sidebar>
       <SidebarInset className="bg-background relative overflow-hidden">
