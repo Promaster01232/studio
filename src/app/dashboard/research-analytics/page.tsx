@@ -29,7 +29,8 @@ import {
   Bot,
   Layers,
   ArrowUpRight,
-  MessageCircle
+  MessageCircle,
+  RefreshCw
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -295,7 +296,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                     </div>
                 </div>
 
-                <div className="space-y-5">
+                <div className="space-y-5 text-left">
                     <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground/90 leading-[1.1]">{post.title}</h3>
                     
                     {post.content && (
@@ -327,14 +328,14 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                 </div>
             </CardHeader>
 
-            <div className="px-6 sm:px-10 pb-0 pt-8 ml-1">
+            <div className="px-6 sm:px-10 pb-0 pt-8 ml-1 text-left">
                  {post.link && (
                     <a href={post.link} target="_blank" rel="noopener noreferrer" className="block p-5 rounded-3xl border border-primary/10 bg-muted/30 hover:bg-primary/5 transition-all group/link shadow-inner">
                         <div className="flex items-center gap-5">
                             <div className="p-3 rounded-2xl bg-white dark:bg-black/40 shadow-md group-hover/link:scale-110 transition-transform">
                                 <Globe className="h-5 w-5 text-primary" />
                             </div>
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0 text-left">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-0.5">Statutory Citation Ingress</p>
                                 <p className="text-sm font-bold truncate text-foreground/80">{post.link}</p>
                             </div>
@@ -384,7 +385,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                             })}
                        </div>
                        {userHasVotedOnPoll && (
-                            <div className="flex items-center gap-3 px-3 py-3 rounded-2xl bg-green-500/5 border border-green-500/10 text-[10px] font-black uppercase tracking-[0.2em] text-[#128807] animate-in fade-in slide-in-from-left-2">
+                            <div className="flex items-center gap-3 px-3 py-3 rounded-2xl bg-green-500/5 border border-green-500/10 text-[10px] font-black uppercase tracking-[0.2em] text-[#128807] animate-in fade-in slide-in-from-left-2 text-left">
                                 <ShieldCheck className="h-4 w-4" />
                                 identity-verified consensus captured // registry secure
                             </div>
@@ -531,7 +532,7 @@ export default function ResearchAnalyticsPage() {
                 </div>
                 
                 <div className="relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-10">
-                    <div className="space-y-6">
+                    <div className="space-y-6 text-left">
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 shadow-sm">
                                 <Sparkles className="h-4 w-4 text-primary animate-pulse" />
@@ -542,7 +543,7 @@ export default function ResearchAnalyticsPage() {
                         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-headline tracking-tighter uppercase leading-[0.9] text-foreground">
                             Live <span className="text-primary italic font-black">Transmissions.</span>
                         </h1>
-                        <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed opacity-80">
+                        <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed opacity-80 text-left">
                             Publicly audited statutory ideas, community polling, and real-time legal forensics from the Nyaya Sahayak registry terminal.
                         </p>
                     </div>

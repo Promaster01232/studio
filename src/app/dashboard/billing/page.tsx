@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck, ShieldAlert, FileSignature, Globe, Layers, TicketPercent, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -137,7 +137,7 @@ export default function BillingPage() {
         // Razorpay Live Integration Protocol
         const options = {
             key: "rzp_live_SWZcLhmqajCvPv",
-            amount: Math.round(finalAmount * 100), // Amount in paise
+            amount: Math.round(finalAmount * 100), 
             currency: "INR",
             name: "Nyaya Sahayak",
             description: `Clearance Upgrade: ${plan.name} ${appliedDiscount ? `(${appliedDiscount.code})` : ''}`,
@@ -145,17 +145,42 @@ export default function BillingPage() {
             handler: async function (response: any) {
                 try {
                     const userRef = doc(firestore, "users", auth.currentUser!.uid);
+                    
+                    // Calculate Expiry Node
+                    const now = new Date();
+                    let expiryDate = new Date();
+                    if (planId.includes('monthly')) expiryDate.setDate(now.getDate() + 30);
+                    else if (planId.includes('yearly')) expiryDate.setFullYear(now.getFullYear() + 1);
+                    else expiryDate.setDate(now.getDate() + 365); // Default to a year for one-off pro
+
+                    // Statutory Updates
                     await updateDoc(userRef, { 
                         subscriptionType: planId,
-                        aiUsageCount: 0 // Reset usage on premium upgrade
+                        aiUsageCount: 0,
+                        clearanceExpiry: expiryDate.toISOString(),
+                        lastPaymentId: response.razorpay_payment_id
                     });
+
+                    // Admin Audit Write
+                    await addDoc(collection(firestore, "transactions"), {
+                        userId: auth.currentUser!.uid,
+                        userEmail: profile?.email,
+                        userName: `${profile?.firstName} ${profile?.lastName}`,
+                        planId: planId,
+                        amount: finalAmount,
+                        paymentId: response.razorpay_payment_id,
+                        orderId: response.razorpay_order_id,
+                        createdAt: serverTimestamp(),
+                        expiryDate: expiryDate.toISOString(),
+                        status: 'CAPTURED'
+                    });
+
                     toast({ title: "Clearance Level Upgraded", description: "Your institutional node has been recalibrated." });
                     
-                    // Force navigation to dashboard to refresh state
                     router.refresh();
                     setTimeout(() => {
-                        router.push('/dashboard');
-                    }, 500);
+                        router.push('/dashboard/profile');
+                    }, 800);
                 } catch (err) {
                     console.error("Payment Sync Error:", err);
                     toast({ variant: "destructive", title: "Registry Error", description: "Payment successful but node synchronization failed. Contact support." });
@@ -169,7 +194,7 @@ export default function BillingPage() {
                 contact: profile?.mobileNumber
             },
             theme: {
-                color: "#994B00" // Institutional Saffron
+                color: "#994B00"
             },
             modal: {
                 ondismiss: function() {
@@ -209,12 +234,11 @@ export default function BillingPage() {
                     <div className="h-8 w-px bg-primary/10"></div>
                     <div className="text-left">
                         <p className="text-[9px] font-black uppercase tracking-widest text-primary opacity-60">Plan Tier</p>
-                        <p className="text-xl font-black tracking-tighter text-primary uppercase">{currentPlan.replace('_', ' ')}</p>
+                        <p className="text-xl font-black tracking-tighter text-primary uppercase">{(currentPlan || 'free').replace('_', ' ')}</p>
                     </div>
                 </div>
             </div>
 
-            {/* Global Coupon Node */}
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
                 <Card className="max-w-md mx-auto border-dashed border-2 border-primary/20 bg-primary/5 rounded-[1.5rem] overflow-hidden">
                     <CardContent className="p-6">
@@ -224,7 +248,7 @@ export default function BillingPage() {
                         </div>
                         <div className="flex gap-2">
                             <Input 
-                                placeholder="Enter code (e.g., ABCD123)" 
+                                placeholder="Enter code (e.g., PIYUSH11)" 
                                 value={couponCode}
                                 onChange={(e) => setCouponCode(e.target.value)}
                                 className="h-11 font-bold bg-background border-primary/10 uppercase"

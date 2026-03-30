@@ -39,7 +39,8 @@ import {
   FileText,
   Award,
   Sparkles,
-  Download
+  Download,
+  CalendarClock
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -79,6 +80,8 @@ type UserProfile = {
   emailVerified?: boolean;
   subscriptionType?: string;
   aiUsageCount?: number;
+  clearanceExpiry?: string;
+  lastPaymentId?: string;
 }
 
 const ADMIN_EMAILS = [
@@ -91,13 +94,12 @@ const ADMIN_EMAILS = [
 
 function EliteCertificateNode({ profile }: { profile: UserProfile }) {
     const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-    const expiry = new Date();
-    expiry.setFullYear(expiry.getFullYear() + 1);
+    const expiry = profile.clearanceExpiry ? new Date(profile.clearanceExpiry) : new Date();
+    if (!profile.clearanceExpiry) expiry.setFullYear(expiry.getFullYear() + 1);
     const expiryDate = expiry.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
 
     return (
         <Card className="border-[12px] border-primary/5 bg-white dark:bg-zinc-950 p-8 sm:p-16 rounded-[3rem] shadow-3xl relative overflow-hidden text-center">
-            {/* Background Texture Nodes */}
             <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-full h-full border-[1px] border-primary rounded-full scale-150" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-full h-full border-[1px] border-primary rounded-full scale-150" />
@@ -138,7 +140,6 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                         </div>
                     </div>
                     <div className="text-right flex flex-col items-end gap-2">
-                        {/* Digital Signature Design */}
                         <div className="relative group">
                             <div className="absolute -inset-2 bg-primary/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                             <div className="relative space-y-1">
@@ -154,7 +155,6 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                 </div>
             </div>
 
-            {/* Premium Corner Node */}
             <div className="absolute bottom-[-20px] left-[-20px] w-24 h-24 bg-primary/5 rounded-full blur-xl" />
             <div className="absolute top-10 right-10 opacity-10">
                 <ShieldCheck className="h-32 w-32 text-primary" />
@@ -167,14 +167,12 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
     const systemId = isAdmin ? `NS-ROOT-AUTH-99` : `NS-REG-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
     return (
         <div className="relative w-full aspect-[1.586/1] rounded-[1.5rem] overflow-hidden shadow-2xl group transition-all hover:scale-[1.02] active:scale-[0.98] text-left">
-            {/* Professional Carbon Fibre Background */}
             <div className={cn(
                 "absolute inset-0 bg-gradient-to-br transition-all duration-700",
                 isAdmin ? "from-amber-600 via-amber-500 to-amber-800" : "from-[#1a1a1a] via-[#333333] to-[#000000]"
             )}></div>
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
             
-            {/* Animated Glow Node */}
             <div className="absolute inset-0 opacity-30 pointer-events-none">
                 <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-primary/20 blur-[80px] animate-pulse" />
                 <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-primary/10 blur-[80px] animate-pulse" />
@@ -212,7 +210,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         </Avatar>
                         <div className="absolute -bottom-1 -right-1 bg-green-500 h-4 w-4 rounded-full border-2 border-[#1a1a1a] shadow-xl z-20"></div>
                     </div>
-                    <div className="flex-1 space-y-1 min-w-0">
+                    <div className="flex-1 min-w-0">
                         <h3 className="font-black text-lg sm:text-xl tracking-tight truncate uppercase leading-none">{profile.firstName} {profile.lastName}</h3>
                         <p className="text-[9px] font-bold uppercase tracking-widest text-primary leading-none">{isAdmin ? "Institutional Admin" : profile.userType}</p>
                         <div className="flex items-center gap-2 pt-1">
@@ -413,7 +411,6 @@ export default function ProfilePage() {
 
   const handleDeleteAccount = async () => {
     if (!auth.currentUser) return;
-    // PROTECTION: Root admins cannot delete their own account via UI
     if (ADMIN_EMAILS.includes(email.toLowerCase())) {
         toast({ variant: "destructive", title: "Immutable Protocol", description: "Root administration nodes cannot be purged from the registry." });
         return;
@@ -442,6 +439,7 @@ export default function ProfilePage() {
   const isAdmin = email && ADMIN_EMAILS.includes(email.toLowerCase());
   const isLimited = !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
   const isElite = (userProfile?.subscriptionType?.includes('unlimited') || isAdmin);
+  const isProtected = isAdmin;
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0 text-left">
@@ -622,7 +620,6 @@ export default function ProfilePage() {
                     </CardContent>
                 </Card>
 
-                {/* Elite Certificate Node for Upgraded Users */}
                 <AnimatePresence>
                     {isElite && userProfile && (
                         <motion.div 
@@ -644,7 +641,6 @@ export default function ProfilePage() {
                     )}
                 </AnimatePresence>
 
-                {/* Statutory Subscription Overview Node */}
                 <Card className="glass shadow-2xl rounded-[2.5rem] border-primary/5 overflow-hidden">
                     <CardHeader className="p-8 sm:p-10 bg-muted/5 border-b border-primary/5 flex flex-row items-center justify-between">
                         <div className="space-y-1">
@@ -663,7 +659,7 @@ export default function ProfilePage() {
                     </CardHeader>
                     <CardContent className="p-8 sm:p-10">
                         <div className="grid md:grid-cols-2 gap-10">
-                            <div className="space-y-6">
+                            <div className="space-y-6 text-left">
                                 <div className="space-y-2">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">AI Forensic Usage</p>
                                     <div className="flex items-center gap-4">
@@ -679,6 +675,19 @@ export default function ProfilePage() {
                                         </span>
                                     </div>
                                 </div>
+                                
+                                {userProfile?.clearanceExpiry && !isAdmin && (
+                                    <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 flex items-center gap-4">
+                                        <CalendarClock className="h-5 w-5 text-amber-600" />
+                                        <div>
+                                            <p className="text-[9px] font-black uppercase text-amber-600">Statutory Validity</p>
+                                            <p className="text-sm font-bold text-foreground">
+                                                Active until {new Date(userProfile.clearanceExpiry).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-1">
                                     <p className="text-[9px] font-black uppercase text-primary">{isAdmin ? "Root Access" : "Current Clearance"}</p>
                                     <p className="text-sm font-medium text-muted-foreground leading-relaxed">
@@ -701,6 +710,9 @@ export default function ProfilePage() {
                                     <div className="p-6 rounded-2xl border-2 border-dashed border-primary/20 flex flex-col items-center text-center gap-3">
                                         {isAdmin ? <Crown className="h-10 w-10 text-amber-600 opacity-40" /> : <ShieldCheck className="h-10 w-10 text-primary opacity-20" />}
                                         <p className="text-xs font-black uppercase tracking-widest text-primary">{isAdmin ? "Maximum Authority Node" : "Maximum Clearance Active"}</p>
+                                        {userProfile?.lastPaymentId && (
+                                            <p className="text-[8px] font-mono text-muted-foreground mt-2 opacity-40 uppercase">TxID: {userProfile.lastPaymentId}</p>
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -715,7 +727,7 @@ export default function ProfilePage() {
                                 <div className="absolute top-0 right-0 p-8 opacity-[0.05]">
                                     <MailCheck className="h-32 w-32 text-amber-600" />
                                 </div>
-                                <CardHeader className="p-8 sm:p-10 pb-4">
+                                <CardHeader className="p-8 sm:p-10 pb-4 text-left">
                                     <div className="flex items-center gap-2 text-amber-600 mb-2">
                                         <AlertTriangle className="h-4 w-4 animate-pulse" />
                                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">Security Mandate</span>
