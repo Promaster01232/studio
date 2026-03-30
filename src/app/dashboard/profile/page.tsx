@@ -101,7 +101,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
 
     return (
         <Card className="border-[12px] border-primary/5 bg-white dark:bg-zinc-950 p-8 sm:p-16 rounded-[3rem] shadow-3xl relative overflow-hidden text-center">
-            <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none text-left">
                 <div className="absolute top-[-10%] left-[-10%] w-full h-full border-[1px] border-primary rounded-full scale-150" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-full h-full border-[1px] border-primary rounded-full scale-150" />
             </div>
@@ -185,7 +185,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
             </div>
 
             <div className="absolute bottom-[-20px] left-[-20px] w-32 h-32 bg-primary/5 rounded-full blur-2xl" />
-            <div className="absolute top-10 right-10 opacity-5">
+            <div className="absolute top-10 right-10 opacity-5 text-left">
                 <ShieldCheck className="h-48 w-48 text-primary" />
             </div>
         </Card>
@@ -195,7 +195,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
 function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdmin: boolean }) {
     const systemId = isAdmin ? `NS-ROOT-AUTH-99` : `NS-REG-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
     return (
-        <div className="relative w-full aspect-[1.586/1] rounded-[1.5rem] overflow-hidden shadow-2xl group transition-all hover:scale-[1.02] active:scale-[0.98] text-left">
+        <div className="relative w-full aspect-[1.586/1] rounded-[1.5rem] overflow-hidden shadow-2xl group transition-all hover:scale-[1.02] active:scale-0.98 text-left">
             <div className={cn(
                 "absolute inset-0 bg-gradient-to-br transition-all duration-700",
                 isAdmin ? "from-amber-600 via-amber-500 to-amber-800" : "from-[#1a1a1a] via-[#333333] to-[#000000]"
@@ -207,7 +207,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                 <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-primary/10 blur-[80px] animate-pulse" />
             </div>
 
-            <div className="absolute top-0 right-0 p-4 opacity-5">
+            <div className="absolute top-0 right-0 p-4 opacity-5 text-left">
                 <Logo className="h-40 w-40 shadow-none" priority={false} />
             </div>
             
@@ -253,7 +253,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                 </div>
                 
                 <div className="pt-4 border-t border-white/10 flex justify-between items-center bg-white/5 -mx-6 px-6 mt-2">
-                    <div className="space-y-0.5">
+                    <div className="space-y-0.5 text-left">
                         <p className="text-[7px] font-bold uppercase opacity-40 tracking-widest">Digital Registry Email</p>
                         <p className="text-[9px] font-bold truncate max-w-[140px] sm:max-w-[200px] text-white/80">{profile.email}</p>
                     </div>
@@ -530,7 +530,7 @@ export default function ProfilePage() {
                             </div>
                         </div>
                     </div>
-                    <CardContent className="p-6 sm:p-8 space-y-4">
+                    <CardContent className="p-6 sm:p-8 space-y-4 text-left">
                         <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-primary/5">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 rounded-lg bg-background shadow-sm border border-primary/5">
@@ -560,12 +560,12 @@ export default function ProfilePage() {
                 )}
                 
                 <Card className="border-destructive/10 bg-destructive/5 shadow-xl rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
-                    <CardHeader className="p-6 sm:p-8 pb-4">
+                    <CardHeader className="p-6 sm:p-8 pb-4 text-left">
                         <CardTitle className="text-destructive font-black text-lg tracking-tight flex items-center gap-2">
                             <ShieldAlert className="h-5 w-5" /> Account Disposal
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="p-6 sm:p-8 pt-0 space-y-3">
+                    <CardContent className="p-6 sm:p-8 pt-0 space-y-3 text-left">
                         <Button variant="outline" className="w-full h-12 justify-start hover:bg-destructive/10 text-foreground border-destructive/5 rounded-2xl font-bold transition-all" onClick={handleLogout}>
                             <LogOut className="mr-3 h-4 w-4 opacity-40" /> 
                             <span className="text-xs">Terminate Session</span>
@@ -577,7 +577,7 @@ export default function ProfilePage() {
                                     Purge Registry Record
                                 </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent className="glass border-destructive/20 rounded-[2rem] p-8 max-w-md">
+                            <AlertDialogContent className="glass border-destructive/20 rounded-[2rem] p-8 max-w-md text-left">
                                 <AlertDialogHeader>
                                     <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4">
                                         {isProtected ? <ShieldCheck className="h-10 w-10 text-primary animate-pulse" /> : <ShieldAlert className="h-10 w-10 text-destructive" />}
@@ -604,7 +604,7 @@ export default function ProfilePage() {
             <div className="lg:col-span-8 space-y-8">
                 <Card className="glass shadow-2xl rounded-[2.5rem] border-primary/5 overflow-hidden">
                     <CardHeader className="p-8 sm:p-10 bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between">
-                        <div className="space-y-1">
+                        <div className="space-y-1 text-left">
                             <div className="flex items-center gap-2 text-primary">
                                 <Zap className="h-3 w-3" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em]">Registry Information</span>
@@ -613,7 +613,7 @@ export default function ProfilePage() {
                         </div>
                         <UserCheck className="h-8 w-8 text-primary opacity-20" />
                     </CardHeader>
-                    <CardContent className="p-8 sm:p-10 space-y-8">
+                    <CardContent className="p-8 sm:p-10 space-y-8 text-left">
                         <div className="grid sm:grid-cols-2 gap-8">
                             <div className="space-y-3">
                                 <Label htmlFor="firstName" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Given Name</Label>
@@ -672,7 +672,7 @@ export default function ProfilePage() {
 
                 <Card className="glass shadow-2xl rounded-[2.5rem] border-primary/5 overflow-hidden">
                     <CardHeader className="p-8 sm:p-10 bg-muted/5 border-b border-primary/5 flex flex-row items-center justify-between">
-                        <div className="space-y-1">
+                        <div className="space-y-1 text-left">
                             <div className="flex items-center gap-2 text-primary">
                                 <CreditCard className="h-4 w-4" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em]">Statutory Clearance</span>
@@ -708,7 +708,7 @@ export default function ProfilePage() {
                                 {userProfile?.clearanceExpiry && !isAdmin && (
                                     <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 flex items-center gap-4">
                                         <CalendarClock className="h-5 w-5 text-amber-600" />
-                                        <div>
+                                        <div className="text-left">
                                             <p className="text-[9px] font-black uppercase text-amber-600">Statutory Validity</p>
                                             <p className="text-sm font-bold text-foreground">
                                                 Active until {new Date(userProfile.clearanceExpiry).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
@@ -753,7 +753,7 @@ export default function ProfilePage() {
                     {!userProfile?.emailVerified && !isAdmin && (
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
                             <Card className="border-amber-500/20 bg-amber-500/5 rounded-[2.5rem] shadow-xl overflow-hidden relative">
-                                <div className="absolute top-0 right-0 p-8 opacity-[0.05]">
+                                <div className="absolute top-0 right-0 p-8 opacity-[0.05] text-left">
                                     <MailCheck className="h-32 w-32 text-amber-600" />
                                 </div>
                                 <CardHeader className="p-8 sm:p-10 pb-4 text-left">
@@ -766,7 +766,7 @@ export default function ProfilePage() {
                                         Your institutional email is currently unverified. Complete the link protocol to unlock full forensic permissions.
                                     </CardDescription>
                                 </CardHeader>
-                                <CardContent className="p-8 sm:p-10 pt-0 flex flex-col sm:flex-row items-center gap-6">
+                                <CardContent className="p-8 sm:p-10 pt-0 flex flex-col sm:flex-row items-center gap-6 text-left">
                                     <Button 
                                         onClick={handleSendVerification}
                                         disabled={isResending}
@@ -784,7 +784,7 @@ export default function ProfilePage() {
         </div>
 
       <Dialog open={isCameraOpen} onOpenChange={(open) => !open && stopCamera()}>
-          <DialogContent className="p-0 overflow-hidden sm:rounded-[2.5rem] border-none shadow-[0_50px_100px_rgba(0,0,0,0.5)] h-[100dvh] sm:h-auto bg-black max-w-2xl">
+          <DialogContent className="p-0 overflow-hidden sm:rounded-[2.5rem] border-none shadow-[0_50px_100px_rgba(0,0,0,0.5)] h-[100dvh] sm:h-auto bg-black max-w-2xl text-left">
               <div className="relative h-full aspect-video sm:aspect-square group bg-zinc-900">
                   <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
                   <canvas ref={canvasRef} className="hidden" />

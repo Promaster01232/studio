@@ -34,7 +34,8 @@ import {
   Share2,
   Twitter,
   Bookmark,
-  MessageCircle
+  MessageCircle,
+  Layers
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -183,7 +184,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     const config = typeConfig[post.postType || 'Idea'] || typeConfig['Idea'];
 
     const handleLike = () => {
-        if (!currentUser) return;
+        if (!currentUser) {
+            toast({ title: "Authentication Required", description: "Initialize dashboard ingress to participate in audits." });
+            return;
+        }
         if (isLiking) return;
         setIsLiking(true);
 
@@ -224,7 +228,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     };
 
     const handleVote = (optionIndex: number) => {
-        if (!currentUser || !optimisticPoll || isVoting || userHasVotedOnPoll) return;
+        if (!currentUser || !optimisticPoll || isVoting || userHasVotedOnPoll) {
+            if (!currentUser) toast({ title: "Consensus Required", description: "Initialize dashboard ingress to participate in community polls." });
+            return;
+        }
         setIsVoting(true);
         playSound('success');
 
