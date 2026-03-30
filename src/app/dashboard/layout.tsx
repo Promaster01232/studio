@@ -11,8 +11,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Sparkles, Activity, Zap, CreditCard } from "lucide-react";
+import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Activity, Zap, CreditCard, Sparkles } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -201,10 +201,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         setUserProfile(null);
         setUnreadCount(0);
         
-        const isPublicRoute = ['/login', '/register', '/', '/about', '/terms', '/privacy', '/cookie-policy', '/disclaimer', '/contact', '/refund-policy'].includes(pathname) || 
-                             PUBLIC_DASHBOARD_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
+        const isPublicPath = PUBLIC_DASHBOARD_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
 
-        if (!isPublicRoute) {
+        if (!isPublicPath) {
             router.replace('/login');
         }
       }

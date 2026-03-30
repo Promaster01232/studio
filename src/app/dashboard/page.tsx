@@ -30,7 +30,11 @@ import {
   ShieldCheck,
   Globe,
   Bot,
-  Loader2
+  Loader2,
+  Share2,
+  Twitter,
+  Bookmark,
+  MessageCircle
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -97,6 +101,13 @@ interface Post {
     tags?: string[];
     isAnonymous?: boolean;
 }
+
+const typeConfig: Record<string, { color: string, bg: string, border: string, icon: any, gradient: string, glow: string }> = {
+    'Idea': { color: 'text-amber-600', bg: 'bg-amber-500/10', border: 'border-amber-500/20', icon: Sparkles, gradient: 'from-amber-500/5', glow: 'shadow-amber-500/10' },
+    'Question': { color: 'text-blue-600', bg: 'bg-blue-500/10', border: 'border-blue-500/20', icon: Bot, gradient: 'from-blue-500/5', glow: 'shadow-blue-500/10' },
+    'Suggestion': { color: 'text-emerald-600', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', icon: Zap, gradient: 'from-emerald-500/5', glow: 'shadow-emerald-500/10' },
+    'Poll': { color: 'text-purple-600', bg: 'bg-purple-500/10', border: 'border-purple-500/20', icon: Layers, gradient: 'from-purple-500/5', glow: 'shadow-purple-500/10' },
+};
 
 const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
   const ref = useRef(null);
@@ -168,6 +179,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     const contentLimit = 200;
     const shouldShowReadMore = post.content && post.content.length > contentLimit;
     const displayedContent = isExpanded ? post.content : (post.content?.slice(0, contentLimit) + (shouldShowReadMore ? "..." : ""));
+
+    const config = typeConfig[post.postType || 'Idea'] || typeConfig['Idea'];
 
     const handleLike = () => {
         if (!currentUser) return;
@@ -253,16 +266,32 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
         });
     };
 
+    const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
+        const shareText = `Statutory Transmission: "${post.title}"\n\nAnalyze this node on Nyaya Sahayak: ${window.location.origin}/dashboard/research-analytics`;
+        
+        if (platform === 'whatsapp') {
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+        } else if (platform === 'twitter') {
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+        } else if (platform === 'copy') {
+            navigator.clipboard.writeText(shareText);
+            toast({ title: "Registry Link Copied", description: "Transmission data saved to clipboard." });
+        }
+    };
+
     return (
         <motion.div layout className="w-full">
-            <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative shadow-sm hover:shadow-xl shadow-primary/5">
-                <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-[#FF9933] via-white to-[#128807]"></div>
+            <Card className={cn(
+                "overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative shadow-sm hover:shadow-xl",
+                config.glow
+            )}>
+                <div className={cn("absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b", config.gradient)}></div>
                 
                 <div className="flex-1 flex flex-col p-6 text-left ml-1">
                     <div className="flex items-center justify-between mb-5">
                         <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
                         <div className="flex items-center gap-2">
-                            <Badge className="bg-primary/10 text-primary border-primary/10 font-bold text-[9px] px-2.5 py-0.5 rounded-full">
+                            <Badge className={cn("bg-primary/10 text-primary border-primary/10 font-bold text-[9px] px-2.5 py-0.5 rounded-full", config.bg, config.color)}>
                                 {post.postType || 'Transmission'}
                             </Badge>
                             <DropdownMenu>
@@ -370,6 +399,26 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                 {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} />}
                                 <span className="font-black">{optimisticLikes}</span>
                             </Button>
+                            
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm" className="h-9 px-4 rounded-xl text-[11px] font-bold gap-2.5 transition-all bg-white dark:bg-black/20 border border-primary/5 hover:bg-primary/5">
+                                        <Share2 className="h-4 w-4" />
+                                        <span className="hidden xs:inline">Share</span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl glass border-primary/10">
+                                    <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                        <MessageCircle className="h-4 w-4 text-green-600" /> WhatsApp
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                        <Twitter className="h-4 w-4 text-blue-500" /> Twitter (X)
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
+                                        <Bookmark className="h-4 w-4 text-primary" /> Copy Link
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                         <Button variant="ghost" size="sm" className="h-9 px-5 rounded-xl font-bold text-[11px] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
                             <Link href="/dashboard/research-analytics">
@@ -422,17 +471,14 @@ export default function DashboardHomePage() {
             postsUnsubscribeRef.current = null;
         }
 
-        if (!user) {
-            setPostsLoading(false);
+        if (user) {
+            const userDocRef = doc(firestore, "users", user.uid);
+            getDoc(userDocRef).then(docSnap => {
+                if (docSnap.exists()) setUserProfile(docSnap.data());
+            });
+        } else {
             setUserProfile(null);
-            setLatestPosts([]);
-            return;
         }
-
-        const userDocRef = doc(firestore, "users", user.uid);
-        getDoc(userDocRef).then(docSnap => {
-            if (docSnap.exists()) setUserProfile(docSnap.data());
-        });
 
         const postsRef = collection(firestore, "posts");
         const q = query(postsRef, orderBy("createdAt", "desc"), limit(5));
@@ -471,7 +517,6 @@ export default function DashboardHomePage() {
   }, [text, isTyping]);
 
   const isAdmin = userProfile?.email && ADMIN_EMAILS.includes(userProfile.email.toLowerCase());
-  // Admins are treated as Elite Nodes
   const isLimited = !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
   const isMonthly = userProfile?.subscriptionType === 'unlimited_monthly';
   const isYearly = userProfile?.subscriptionType === 'unlimited_yearly' || isAdmin;
