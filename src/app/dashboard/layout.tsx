@@ -48,7 +48,6 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-// Routes that don't require authentication within the dashboard prefix
 const PUBLIC_DASHBOARD_ROUTES = ['/dashboard', '/dashboard/research-analytics'];
 
 function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unreadCount: number, isAdmin: boolean }) {
@@ -202,7 +201,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         setUserProfile(null);
         setUnreadCount(0);
         
-        // Allowed paths for unauthenticated users
         const isPublicRoute = ['/login', '/register', '/', '/about', '/terms', '/privacy', '/cookie-policy', '/disclaimer', '/contact', '/refund-policy'].includes(pathname) || 
                              PUBLIC_DASHBOARD_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
 
@@ -401,8 +399,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </Button>
              </div>
           )}
-        </SidebarContent>
-        <SidebarFooter className="p-4">
         </SidebarFooter>
       </Sidebar>
       <SidebarInset className="bg-background relative overflow-hidden">
