@@ -146,41 +146,47 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                     
                     <div className="flex flex-col items-center sm:items-end gap-6 relative">
                         {/* Official Seal / Mohar */}
-                        <div className="absolute -left-4 sm:left-auto sm:-right-4 -top-8 pointer-events-none">
+                        <div className="absolute -left-4 sm:left-auto sm:-right-4 -top-12 pointer-events-none">
                             <motion.div 
                                 animate={{ rotate: 360 }}
-                                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                                className="relative h-24 w-24 sm:h-32 sm:w-32 rounded-full border-4 border-dashed border-primary/20 flex items-center justify-center"
+                                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                                className="relative h-28 w-28 sm:h-36 sm:w-36 rounded-full border-4 border-dashed border-primary/20 flex items-center justify-center"
                             >
-                                <div className="absolute inset-2 rounded-full border-2 border-primary/10" />
-                                <div className="text-center space-y-0.5">
-                                    <p className="text-[6px] font-black text-primary uppercase tracking-tighter">IDEASPARK</p>
-                                    <ShieldCheck className="h-4 w-4 text-primary/40 mx-auto" />
-                                    <p className="text-[5px] font-bold text-primary/30 uppercase tracking-[0.2em]">OFFICIAL SEAL</p>
+                                <div className="absolute inset-3 rounded-full border-2 border-primary/10 shadow-inner" />
+                                <div className="text-center space-y-0.5 relative z-10">
+                                    <div className="bg-white/80 dark:bg-zinc-950/80 p-1 rounded-md backdrop-blur-sm">
+                                        <p className="text-[7px] font-black text-primary uppercase tracking-tighter">IDEASPARK</p>
+                                        <ShieldCheck className="h-5 w-5 text-primary/60 mx-auto" />
+                                        <p className="text-[6px] font-bold text-primary/40 uppercase tracking-[0.3em]">OFFICIAL SEAL</p>
+                                    </div>
                                 </div>
                             </motion.div>
                         </div>
 
                         {/* Signature Node */}
-                        <div className="relative pt-8 text-center sm:text-right min-w-[200px]">
-                            <div className="mb-[-10px] relative z-10">
-                                <p className="font-['Cursive',_serif] text-3xl sm:text-4xl text-primary/80 italic tracking-tighter select-none">
+                        <div className="relative pt-10 text-center sm:text-right min-w-[220px]">
+                            <div className="mb-[-15px] relative z-10">
+                                <motion.p 
+                                    initial={{ opacity: 0, pathLength: 0 }}
+                                    animate={{ opacity: 1, pathLength: 1 }}
+                                    className="font-['Brush_Script_MT',_cursive] text-4xl sm:text-5xl text-primary/90 italic tracking-tighter select-none drop-shadow-sm"
+                                >
                                     Hardy Pie
-                                </p>
+                                </motion.p>
                             </div>
-                            <div className="h-px w-full bg-foreground/20" />
-                            <div className="pt-2">
-                                <p className="text-[9px] font-black uppercase tracking-widest text-foreground leading-none">Hardy Pie</p>
-                                <p className="text-[7px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">Founder & Chief Architect</p>
+                            <div className="h-[1.5px] w-full bg-foreground/30 rounded-full" />
+                            <div className="pt-3">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-foreground leading-none">Hardy Pie</p>
+                                <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1.5">Founder & Chief Architect</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="absolute bottom-[-20px] left-[-20px] w-24 h-24 bg-primary/5 rounded-full blur-xl" />
-            <div className="absolute top-10 right-10 opacity-10">
-                <ShieldCheck className="h-32 w-32 text-primary" />
+            <div className="absolute bottom-[-20px] left-[-20px] w-32 h-32 bg-primary/5 rounded-full blur-2xl" />
+            <div className="absolute top-10 right-10 opacity-5">
+                <ShieldCheck className="h-48 w-48 text-primary" />
             </div>
         </Card>
     );
@@ -694,7 +700,7 @@ export default function ProfilePage() {
                                             />
                                         </div>
                                         <span className="font-mono font-black text-sm tracking-tighter">
-                                            {userProfile?.aiUsageCount || 0} / {isLimited ? (userProfile?.subscriptionType === 'pro_20' ? '20' : '5') : '∞'}
+                                            {userProfile?.aiUsageCount || 0} / {isLimited ? (userProfile?.subscriptionType === 'pro_20' ? 20 : 5) : '∞'}
                                         </span>
                                     </div>
                                 </div>

@@ -48,8 +48,10 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
+// Routes that don't require authentication within the dashboard prefix
+const PUBLIC_DASHBOARD_ROUTES = ['/dashboard/research-analytics'];
+
 function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unreadCount: number, isAdmin: boolean }) {
-    // Admins are never limited
     const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
     
     return (
@@ -103,7 +105,7 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                     <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/60">{isAdmin ? "Root Protocol: Active" : "System: Active"}</span>
                 </div>
 
-                {!userProfile?.isBlocked && (
+                {!userProfile?.isBlocked && userProfile && (
                     <>
                         <SosDialog>
                             <Button variant="destructive" size="sm" className="font-black gap-2 animate-pulse px-3 sm:px-5 h-10 sm:h-11 text-[8px] sm:text-[9px] rounded-xl shadow-xl shadow-destructive/20 active:scale-95 transition-all">
@@ -199,7 +201,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         setProfileLoading(false);
         setUserProfile(null);
         setUnreadCount(0);
-        if (!['/login', '/register', '/', '/about', '/terms', '/privacy', '/cookie-policy', '/disclaimer', '/contact', '/refund-policy'].includes(pathname)) {
+        
+        // Allowed paths for unauthenticated users
+        const isPublicRoute = ['/login', '/register', '/', '/about', '/terms', '/privacy', '/cookie-policy', '/disclaimer', '/contact', '/refund-policy'].includes(pathname) || 
+                             PUBLIC_DASHBOARD_ROUTES.some(route => pathname.startsWith(route));
+
+        if (!isPublicRoute) {
             router.replace('/login');
         }
       }
@@ -219,10 +226,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     router.replace('/login');
   };
 
-  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
+  const showContent = isMounted && (!profileLoading || pathname === '/create-profile' || PUBLIC_DASHBOARD_ROUTES.includes(pathname));
   const isSuspended = userProfile?.isBlocked === true;
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
-  // Admins always have unlimited clearance
   const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
 
   if (showContent && isSuspended) {

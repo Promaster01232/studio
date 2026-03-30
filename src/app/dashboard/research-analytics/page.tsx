@@ -170,7 +170,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     };
 
     const handleLike = () => {
-        if (!currentUser) return;
+        if (!currentUser) {
+            toast({ title: "Authentication Required", description: "Initialize dashboard ingress to participate in audits." });
+            return;
+        }
         if (isLiking) return;
         setIsLiking(true);
 
@@ -191,7 +194,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                     description: `${userProfile?.firstName || 'A citizen'} liked your post: "${post.title}"`,
                     isRead: false,
                     createdAt: serverTimestamp()
-                });
+                }).catch(() => {});
             }
         }).catch((serverError) => {
             setOptimisticLikes(post.likes);
@@ -208,7 +211,11 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
     };
 
     const handleVote = (optionIndex: number) => {
-        if (!currentUser || !optimisticPoll || isVoting || userHasVotedOnPoll) return;
+        if (!currentUser) {
+            toast({ title: "Consensus Required", description: "Initialize dashboard ingress to participate in community polls." });
+            return;
+        }
+        if (!optimisticPoll || isVoting || userHasVotedOnPoll) return;
         setIsVoting(true);
 
         const postRef = doc(firestore, "posts", post.id);
@@ -260,9 +267,9 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
             <div className={cn("absolute inset-0 bg-gradient-to-br via-transparent to-transparent opacity-5 group-hover:opacity-10 transition-opacity duration-700", config.gradient)}></div>
             
             <div className="absolute top-0 left-0 bottom-0 w-1 flex flex-col">
-                <div className="flex-1 bg-primary/20"></div>
-                <div className="flex-1 bg-background"></div>
-                <div className="flex-1 bg-green-500/20"></div>
+                <div className="flex-1 bg-[#FF9933]/20"></div>
+                <div className="flex-1 bg-white"></div>
+                <div className="flex-1 bg-[#128807]/20"></div>
             </div>
             
             <CardHeader className="p-6 sm:p-10 pb-0 ml-1">
@@ -407,13 +414,14 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                         disabled={isLiking}
                     >
                         {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} />}
-                        <span>{optimisticLikes} Audits</span>
+                        <span className="font-black">{optimisticLikes} Audits</span>
                     </Button>
                     
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="h-11 w-11 rounded-2xl bg-white dark:bg-black/20 border border-primary/5 flex items-center justify-center text-muted-foreground hover:text-primary transition-all shadow-sm">
+                            <button className="h-11 px-5 rounded-2xl bg-white dark:bg-black/20 border border-primary/5 flex items-center justify-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all shadow-sm">
                                 <Share2 className="h-4 w-4" />
+                                <span>Share Node</span>
                             </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-60 p-2 rounded-2xl shadow-2xl glass border-primary/10">
@@ -443,7 +451,6 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 export default function ResearchAnalyticsPage() {
     const firestore = useFirestore();
     const auth = useAuth();
-    const { toast } = useToast();
     const [feed, setFeed] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -462,21 +469,20 @@ export default function ResearchAnalyticsPage() {
                 postsUnsubscribeRef.current = null;
             }
 
-            if (!user) {
-                setLoading(false);
-                setFeed([]);
+            // Fetch profile if user exists
+            if (user) {
+                const userDocRef = doc(firestore, "users", user.uid);
+                getDoc(userDocRef).then(userDoc => {
+                    if (userDoc.exists()) {
+                        setUserProfile(userDoc.data() as UserProfile);
+                    }
+                });
+            } else {
                 setUserProfile(null);
-                return;
             }
 
+            // Always fetch the feed (Public Access node)
             setLoading(true);
-            const userDocRef = doc(firestore, "users", user.uid);
-            getDoc(userDocRef).then(userDoc => {
-                if (userDoc.exists()) {
-                    setUserProfile(userDoc.data() as UserProfile);
-                }
-            });
-
             const postsCollection = collection(firestore, "posts");
             const q = query(postsCollection, orderBy("createdAt", "desc"));
 
@@ -487,13 +493,7 @@ export default function ResearchAnalyticsPage() {
                     setLoading(false);
                 },
                 (serverError) => {
-                    if (auth.currentUser) {
-                        const permissionError = new FirestorePermissionError({
-                            path: postsCollection.path,
-                            operation: 'list',
-                        } satisfies SecurityRuleContext, serverError);
-                        errorEmitter.emit('permission-error', permissionError);
-                    }
+                    console.error("Registry feed ingress error:", serverError);
                     setLoading(false);
                     setFeed([]);
                 }
@@ -536,7 +536,7 @@ export default function ResearchAnalyticsPage() {
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 shadow-sm">
                                 <Sparkles className="h-4 w-4 text-primary animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Community Authority</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Community Ingress Hub</span>
                             </div>
                             <Badge variant="outline" className="text-[9px] font-black uppercase border-blue-500/20 text-blue-500/70 tracking-widest bg-blue-500/5 px-3">Registry: Active</Badge>
                         </div>
@@ -559,17 +559,7 @@ export default function ResearchAnalyticsPage() {
             
             <div className="grid gap-10">
                 <AnimatePresence mode="popLayout">
-                    {!isAuthenticated ? (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-32 text-center opacity-40 flex flex-col items-center gap-10">
-                            <div className="p-12 rounded-[3rem] bg-muted/20 border-2 border-dashed border-primary/10 shadow-inner">
-                                <Zap className="h-20 w-20 text-primary" />
-                            </div>
-                            <div className="space-y-3">
-                                <p className="font-black text-3xl tracking-tighter uppercase">Clearance Required</p>
-                                <p className="text-sm font-medium italic max-w-xs mx-auto">"Initialize dashboard ingress to access live community transmissions."</p>
-                            </div>
-                        </motion.div>
-                    ) : feed.length === 0 ? (
+                    {feed.length === 0 ? (
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-32 text-center opacity-40 flex flex-col items-center gap-10">
                             <div className="p-12 rounded-[3rem] bg-muted/20 border-2 border-dashed border-primary/10 shadow-inner">
                                 <Newspaper className="h-20 w-20 text-muted-foreground" />
@@ -601,7 +591,7 @@ export default function ResearchAnalyticsPage() {
                             <ShieldCheck className="h-6 w-6" />
                         </div>
                         <div className="text-left">
-                            <p className="text-[11px] font-black uppercase tracking-widest text-primary">Verified Feed</p>
+                            <p className="text-[11px] font-black uppercase tracking-widest text-primary">Verified Hub</p>
                             <p className="text-[10px] font-bold text-muted-foreground opacity-60">Forensic Identity Audit Active.</p>
                         </div>
                     </div>
