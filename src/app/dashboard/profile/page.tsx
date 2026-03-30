@@ -40,7 +40,8 @@ import {
   Award,
   Sparkles,
   Download,
-  CalendarClock
+  CalendarClock,
+  History
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -119,7 +120,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                     </div>
                 </header>
 
-                <div className="space-y-8 max-w-2xl mx-auto">
+                <div className="space-y-8 max-w-2xl mx-auto text-center">
                     <p className="text-sm sm:text-base font-medium text-muted-foreground leading-relaxed">
                         This document formally certifies that the node identified as <span className="text-foreground font-black uppercase tracking-tight">{profile.firstName} {profile.lastName}</span> has been granted the status of <span className="text-primary font-black uppercase tracking-tight">Institutional Annual Clearance</span> within the Nyaya Sahayak neural legal ecosystem.
                     </p>
@@ -128,8 +129,8 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-12 pt-8 items-end">
-                    <div className="text-left space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 pt-8 items-end">
+                    <div className="text-left space-y-6">
                         <div className="space-y-1">
                             <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Issue Date</p>
                             <p className="text-xs font-bold text-foreground">{today}</p>
@@ -138,18 +139,40 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                             <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Registry ID</p>
                             <p className="text-[10px] font-mono font-bold text-primary">NS-CERT-{profile.uid.substring(0, 8).toUpperCase()}</p>
                         </div>
-                    </div>
-                    <div className="text-right flex flex-col items-end gap-2">
-                        <div className="relative group">
-                            <div className="absolute -inset-2 bg-primary/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <div className="relative space-y-1">
-                                <p className="font-headline font-black text-xl sm:text-2xl text-primary italic tracking-tighter leading-none pr-2">IdeaSpark</p>
-                                <div className="h-px w-24 sm:w-32 bg-primary/30 mx-auto ml-auto" />
-                                <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground pt-1">Authorized Root Authority</p>
-                            </div>
-                        </div>
-                        <div className="pt-4">
+                        <div className="pt-2">
                             <p className="text-[8px] font-bold text-muted-foreground opacity-40 uppercase">Valid Until: {expiryDate}</p>
+                        </div>
+                    </div>
+                    
+                    <div className="flex flex-col items-center sm:items-end gap-6 relative">
+                        {/* Official Seal / Mohar */}
+                        <div className="absolute -left-4 sm:left-auto sm:-right-4 -top-8 pointer-events-none">
+                            <motion.div 
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                className="relative h-24 w-24 sm:h-32 sm:w-32 rounded-full border-4 border-dashed border-primary/20 flex items-center justify-center"
+                            >
+                                <div className="absolute inset-2 rounded-full border-2 border-primary/10" />
+                                <div className="text-center space-y-0.5">
+                                    <p className="text-[6px] font-black text-primary uppercase tracking-tighter">IDEASPARK</p>
+                                    <ShieldCheck className="h-4 w-4 text-primary/40 mx-auto" />
+                                    <p className="text-[5px] font-bold text-primary/30 uppercase tracking-[0.2em]">OFFICIAL SEAL</p>
+                                </div>
+                            </motion.div>
+                        </div>
+
+                        {/* Signature Node */}
+                        <div className="relative pt-8 text-center sm:text-right min-w-[200px]">
+                            <div className="mb-[-10px] relative z-10">
+                                <p className="font-['Cursive',_serif] text-3xl sm:text-4xl text-primary/80 italic tracking-tighter select-none">
+                                    Hardy Pie
+                                </p>
+                            </div>
+                            <div className="h-px w-full bg-foreground/20" />
+                            <div className="pt-2">
+                                <p className="text-[9px] font-black uppercase tracking-widest text-foreground leading-none">Hardy Pie</p>
+                                <p className="text-[7px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">Founder & Chief Architect</p>
+                            </div>
                         </div>
                     </div>
                 </div>
