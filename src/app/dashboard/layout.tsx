@@ -232,12 +232,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   };
 
   const isPublicPath = PUBLIC_DASHBOARD_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
+  // We use a stable check for showing content to avoid hydration flicker.
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile' || isPublicPath);
   const isSuspended = userProfile?.isBlocked === true;
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
   const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
 
-  if (showContent && isSuspended) {
+  if (isMounted && isSuspended) {
       return (
         <div className="flex h-screen items-center justify-center bg-background p-4 relative overflow-hidden text-left">
             <div className="absolute inset-0 bg-destructive/5 -z-10 animate-pulse"></div>
@@ -418,7 +419,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <AnimatePresence mode="wait">
                     {showContent ? (
                         <motion.div 
-                            key={pathname}
+                            key="dashboard-content"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
@@ -431,7 +432,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             <Footer />
                         </motion.div>
                     ) : (
-                        <div className="flex flex-1 items-center justify-center">
+                        <motion.div 
+                            key="dashboard-loader"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="flex flex-1 items-center justify-center"
+                        >
                             <div className="flex flex-col items-center gap-8">
                                 <div className="relative">
                                     <motion.div
@@ -464,7 +471,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     )}
                 </AnimatePresence>
             </div>

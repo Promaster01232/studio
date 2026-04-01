@@ -1,4 +1,3 @@
-
 'use client';
 import { ReactNode, useEffect, useState } from 'react';
 import { FirebaseProvider } from './provider';
@@ -13,8 +12,6 @@ import {
 } from 'firebase/firestore';
 import { getDatabase, type Database } from 'firebase/database';
 import { firebaseConfig } from './config';
-import { Logo } from '@/components/logo';
-import { motion } from 'framer-motion';
 
 interface FirebaseInstances {
   app: FirebaseApp;
@@ -41,27 +38,8 @@ const rtdb = getDatabase(app);
 const instances = { app, auth, firestore, rtdb };
 
 export function FirebaseClientProvider({ children }: { children: ReactNode }) {
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    setIsReady(true);
-  }, []);
-
-  if (!isReady) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-background">
-        <div className="relative">
-          <motion.div 
-            animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.5, 0.2] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="absolute -inset-10 bg-primary/10 rounded-full blur-xl"
-          />
-          <Logo className="h-12 w-12 border-none p-0 bg-transparent shadow-none" priority />
-        </div>
-      </div>
-    );
-  }
-
+  // We render the provider immediately to match server hydration.
+  // The instances are already initialized outside the component.
   return (
     <FirebaseProvider value={instances}>
       {children}

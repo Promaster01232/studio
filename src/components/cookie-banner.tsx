@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,8 +8,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function CookieBanner() {
   const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Check if consent has already been given
     const consent = localStorage.getItem('cookie-consent');
     if (!consent) {
@@ -20,10 +21,8 @@ export function CookieBanner() {
     }
   }, []);
 
-  const handleAccept = () => {
-    localStorage.setItem('cookie-consent', 'true');
-    setIsVisible(false);
-  };
+  // Avoid hydration mismatch with client-side only visibility
+  if (!mounted) return null;
 
   return (
     <AnimatePresence>
@@ -60,4 +59,9 @@ export function CookieBanner() {
       )}
     </AnimatePresence>
   );
+
+  function handleAccept() {
+    localStorage.setItem('cookie-consent', 'true');
+    setIsVisible(false);
+  }
 }
