@@ -205,7 +205,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                     <div className="flex justify-center">
                         <div className="relative group">
                             <div className="absolute -inset-4 bg-primary/10 rounded-full animate-pulse blur-xl" />
-                            <Logo className="h-24 w-24 relative z-10 p-0 shadow-none border-none bg-transparent" priority />
+                            <Logo className="h-24 w-24 relative z-10 p-0 shadow-none border-none bg-transparent" priority={true} />
                         </div>
                     </div>
                     <div className="space-y-2">

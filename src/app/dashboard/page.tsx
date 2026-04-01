@@ -34,7 +34,8 @@ import {
   Twitter,
   Bookmark,
   MessageCircle,
-  Layers
+  Layers,
+  Clock
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -276,7 +277,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
             });
     };
 
-    const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
+    const handleShare = async (platform: 'whatsapp' | 'twitter' | 'copy') => {
         const shareText = `Statutory Transmission: "${post.title}"\n\nAnalyze this node on Nyaya Sahayak: ${window.location.origin}/dashboard/research-analytics`;
         
         if (platform === 'whatsapp') {
@@ -284,8 +285,16 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
         } else if (platform === 'twitter') {
             window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
         } else if (platform === 'copy') {
-            navigator.clipboard.writeText(shareText);
-            toast({ title: "Registry Link Copied", description: "Transmission data saved to clipboard." });
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(shareText);
+                    toast({ title: "Registry Link Copied", description: "Transmission data saved to clipboard." });
+                } else {
+                    throw new Error('Clipboard API unavailable');
+                }
+            } catch (err) {
+                toast({ variant: "destructive", title: "Copy Failed", description: "Browser permissions restricted clipboard access." });
+            }
         }
     };
 
@@ -445,6 +454,8 @@ export default function DashboardHomePage() {
             postsUnsubscribeRef.current = null;
         }
 
+        const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+
         if (user) {
             const userDocRef = doc(firestore, "users", user.uid);
             getDoc(userDocRef).then(docSnap => {
@@ -466,7 +477,10 @@ export default function DashboardHomePage() {
                 const createdAtMillis = data.createdAt?.toMillis() || now;
                 
                 if (now - createdAtMillis > TRANSience_WINDOW) {
-                    deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
+                    // Strictly Admin-only purge to prevent permission errors
+                    if (isAdmin) {
+                        deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
+                    }
                 } else {
                     list.push({ id: d.id, ...data });
                 }
@@ -518,7 +532,7 @@ export default function DashboardHomePage() {
           )}>
               <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none text-left">
                   <div className="bg-white rounded-full p-10 grayscale">
-                    <Logo className="h-56 w-56 border-none p-0 bg-transparent shadow-none" priority />
+                    <Logo className="h-56 w-56 border-none p-0 bg-transparent shadow-none" priority={true} />
                   </div>
               </div>
               <div className="relative z-10 space-y-8">

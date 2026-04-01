@@ -23,7 +23,7 @@ export default function Loading() {
         <div className="relative">
           <div className="p-1.5 rounded-full bg-gradient-to-tr from-primary via-accent to-blue-400 shadow-2xl">
             <div className="bg-white rounded-full p-3 shadow-inner">
-              <Logo className="h-20 w-20 shadow-none border-none p-0" priority />
+              <Logo className="h-20 w-20 shadow-none border-none p-0" priority={true} />
             </div>
           </div>
           

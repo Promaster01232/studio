@@ -31,6 +31,8 @@ const TricolorBackground = () => {
     setMounted(true);
   }, []);
 
+  if (!mounted) return <div className="fixed inset-0 bg-background z-0" />;
+
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
       <div className="absolute top-[-5%] left-[-5%] w-[50%] h-[50%] bg-[#FF9933] blur-[120px] opacity-[0.06] animate-pulse"></div>
@@ -39,7 +41,7 @@ const TricolorBackground = () => {
           <svg className="ashoka-rotate w-[600px] h-[600px] lg:w-[1000px] lg:h-[1000px] text-[#000080]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.05">
               <circle cx="50" cy="50" r="45" />
               <circle cx="50" cy="50" r="5" fill="currentColor" />
-              {mounted && Array.from({ length: 24 }).map((_, i) => {
+              {Array.from({ length: 24 }).map((_, i) => {
                   const angle = (i * 15 * Math.PI) / 180;
                   const x2 = 50 + 45 * Math.cos(angle);
                   const y2 = 50 + 45 * Math.sin(angle);

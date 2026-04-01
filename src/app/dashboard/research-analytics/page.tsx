@@ -156,7 +156,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
 
     const config = typeConfig[post.postType || 'Idea'] || typeConfig['Idea'];
 
-    const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
+    const handleShare = async (platform: 'whatsapp' | 'twitter' | 'copy') => {
         const shareText = `Statutory Transmission: "${post.title}"\n\nAnalyze this node on Nyaya Sahayak: ${window.location.origin}/dashboard/research-analytics`;
         
         if (platform === 'whatsapp') {
@@ -164,8 +164,16 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
         } else if (platform === 'twitter') {
             window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
         } else if (platform === 'copy') {
-            navigator.clipboard.writeText(shareText);
-            toast({ title: "Registry Link Copied", description: "Transmission data saved to clipboard." });
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(shareText);
+                    toast({ title: "Registry Link Copied", description: "Transmission data saved to clipboard." });
+                } else {
+                    throw new Error('Clipboard API unavailable');
+                }
+            } catch (err) {
+                toast({ variant: "destructive", title: "Copy Failed", description: "Browser permissions restricted clipboard access." });
+            }
         }
     };
 
@@ -425,6 +433,8 @@ export default function ResearchAnalyticsPage() {
                 postsUnsubscribeRef.current = null;
             }
 
+            const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+
             if (user) {
                 const userDocRef = doc(firestore, "users", user.uid);
                 getDoc(userDocRef).then(userDoc => {
@@ -451,8 +461,10 @@ export default function ResearchAnalyticsPage() {
                         
                         // Autonomous 56-Hour Purge Protocol
                         if (now - createdAtMillis > TRANSience_WINDOW) {
-                            // Direct Firestore Purge on Read
-                            deleteDoc(doc(firestore, "posts", postDoc.id)).catch(() => {});
+                            // Strictly Admin-only purge to prevent permission errors
+                            if (isAdmin) {
+                                deleteDoc(doc(firestore, "posts", postDoc.id)).catch(() => {});
+                            }
                         } else {
                             postsData.push({ id: postDoc.id, ...data });
                         }
@@ -497,7 +509,7 @@ export default function ResearchAnalyticsPage() {
                 className="relative p-8 sm:p-16 rounded-[3rem] overflow-hidden bg-card/40 backdrop-blur-xl border border-primary/10 shadow-3xl"
             >
                 <div className="absolute top-0 right-0 p-10 opacity-[0.04] pointer-events-none">
-                    <Logo className="h-64 w-64 grayscale" priority />
+                    <Logo className="h-64 w-64 grayscale" priority={true} />
                 </div>
                 
                 <div className="relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-8 sm:gap-10">
