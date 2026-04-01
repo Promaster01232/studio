@@ -108,9 +108,7 @@ export default function UserPublicProfilePage(props: {
   params: Promise<{ uid: string }>,
   searchParams: Promise<any>
 }) {
-  const unwrappedParams = use(props.params);
-  const _searchParams = use(props.searchParams);
-  const uid = unwrappedParams.uid;
+  const { uid } = use(props.params);
   const firestore = useFirestore();
   const auth = useAuth();
   const { toast } = useToast();

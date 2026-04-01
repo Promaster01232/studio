@@ -1,9 +1,7 @@
-
 "use client";
 
 import { use } from "react";
 import { notFound } from "next/navigation";
-import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -14,10 +12,7 @@ export default function GuideDetailPage(props: {
   params: Promise<{ slug: string }>,
   searchParams: Promise<any>
 }) {
-    const unwrappedParams = use(props.params);
-    // Unwrap searchParams to prevent enumeration errors in Next.js 15
-    const _searchParams = use(props.searchParams);
-    const slug = unwrappedParams.slug;
+    const { slug } = use(props.params);
 
     const guide = guides.find((g) => g.slug === slug);
 

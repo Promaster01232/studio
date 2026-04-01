@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -219,7 +218,7 @@ export default async function SearchResultsPage(props: {
   searchParams: Promise<CaseSearchParams> 
 }) {
     // In Next.js 15, params and searchParams must be awaited in Server Components
-    const params = await props.params;
+    const _params = await props.params;
     const searchParams = await props.searchParams;
     
     return (

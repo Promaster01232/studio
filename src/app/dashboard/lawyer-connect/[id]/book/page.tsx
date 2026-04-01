@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, use } from "react";
@@ -27,10 +26,7 @@ export default function BookConsultationPage(props: {
   params: Promise<{ id: string }>,
   searchParams: Promise<any>
 }) {
-  const unwrappedParams = use(props.params);
-  // Also unwrap searchParams even if unused to avoid Next.js 15 enumeration errors
-  const _searchParams = use(props.searchParams);
-  const id = unwrappedParams.id;
+  const { id } = use(props.params);
   const rtdb = useDatabase();
   const { toast } = useToast();
   

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { use, useState, useMemo } from "react";
@@ -20,9 +19,7 @@ export default function LearnTopicDetailPage(props: {
   params: Promise<{ slug: string }>,
   searchParams: Promise<any>
 }) {
-    const unwrappedParams = use(props.params);
-    const _searchParams = use(props.searchParams);
-    const slug = unwrappedParams.slug;
+    const { slug } = use(props.params);
     
     const [displayLang, setDisplayLang] = useState<'en' | 'hi'>('en');
 
