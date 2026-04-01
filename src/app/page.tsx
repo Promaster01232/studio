@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -108,7 +107,7 @@ const featureNodes = [
     icon: Gavel,
     title: "Court Assistant Hub",
     sector: "Sector: Procedural",
-    desc: "Real-time courtroom strategy node. GeneratesProbe-questions for cross-examination and provides procedural guidance for ongoing judicial hearings.",
+    desc: "Real-time courtroom strategy node. Generates probing questions for cross-examination and provides procedural guidance for ongoing judicial hearings.",
     href: "/dashboard/court-assistant",
     color: "text-cyan-600",
     bg: "bg-cyan-600/5"
