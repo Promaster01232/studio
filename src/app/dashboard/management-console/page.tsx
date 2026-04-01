@@ -33,7 +33,10 @@ import {
   Smartphone,
   Eye,
   FileText,
-  Calendar
+  Calendar,
+  XCircle,
+  RotateCcw,
+  AlertCircle
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -84,7 +87,11 @@ interface TransactionRecord {
     orderId: string;
     createdAt: any;
     expiryDate?: string;
-    status: string;
+    status: 'CAPTURED' | 'FAILED' | 'REFUNDED' | 'CANCELLED_BY_USER' | string;
+    failureReason?: string;
+    refundId?: string;
+    refundAmount?: number;
+    refundedAt?: any;
 }
 
 const ADMIN_EMAILS = [
@@ -108,14 +115,24 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">Forensic Ledger Audit</span>
                     </div>
                     <DialogTitle className="text-2xl font-black tracking-tighter">Transaction Protocol</DialogTitle>
-                    <DialogDescription className="text-xs font-medium">Detailed telemetry for capture ID: {tx.paymentId}</DialogDescription>
+                    <DialogDescription className="text-xs font-medium">Detailed telemetry for session ID: {tx.id}</DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-6">
-                    <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-4">
+                    <div className={cn(
+                        "p-6 rounded-2xl border space-y-4",
+                        tx.status === 'CAPTURED' ? "bg-green-500/5 border-green-500/10" : 
+                        tx.status === 'FAILED' ? "bg-red-500/5 border-red-500/10" :
+                        tx.status === 'REFUNDED' ? "bg-amber-500/5 border-amber-500/10" : "bg-primary/5 border-primary/10"
+                    )}>
                         <div className="flex justify-between items-center">
                             <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Status</span>
-                            <Badge className="bg-green-500/10 text-green-600 border-green-500/20 font-black text-[9px] uppercase tracking-widest">{tx.status}</Badge>
+                            <Badge className={cn(
+                                "font-black text-[9px] uppercase tracking-widest",
+                                tx.status === 'CAPTURED' ? "bg-green-500/10 text-green-600 border-green-500/20" : 
+                                tx.status === 'FAILED' ? "bg-red-500/10 text-red-600 border-red-500/20" :
+                                tx.status === 'REFUNDED' ? "bg-amber-500/10 text-amber-600 border-amber-500/20" : "bg-muted text-muted-foreground"
+                            )}>{tx.status}</Badge>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Value</span>
@@ -123,9 +140,38 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Clearance Node</span>
-                            <Badge variant="outline" className="font-bold text-[10px] uppercase tracking-widest border-primary/20">{tx.planId.replace('_', ' ')}</Badge>
+                            <Badge variant="outline" className="font-bold text-[10px] uppercase tracking-widest border-primary/20">{tx.planId?.replace('_', ' ') || 'N/A'}</Badge>
                         </div>
                     </div>
+
+                    {tx.status === 'FAILED' && tx.failureReason && (
+                        <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/10 flex items-start gap-3">
+                            <XCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black text-red-600 uppercase tracking-widest">Failure Ingress</p>
+                                <p className="text-xs font-bold text-red-900/80 dark:text-red-100/80 leading-relaxed">{tx.failureReason}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {tx.status === 'REFUNDED' && (
+                        <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 space-y-3">
+                            <div className="flex items-center gap-2 text-amber-600">
+                                <RotateCcw className="h-4 w-4" />
+                                <span className="text-[10px] font-black uppercase tracking-widest">Refund Metadata</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-[8px] font-bold text-muted-foreground uppercase">Refund ID</p>
+                                    <p className="text-[10px] font-mono font-bold truncate">{tx.refundId || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-[8px] font-bold text-muted-foreground uppercase">Amount</p>
+                                    <p className="text-[10px] font-bold text-amber-600">₹{tx.refundAmount?.toLocaleString('en-IN')}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="space-y-4">
                         <div className="grid gap-4">
@@ -150,7 +196,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                                 <div className="text-left">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">System Registry</p>
                                     <p className="text-[10px] font-mono font-bold">Order: {tx.orderId || 'N/A'}</p>
-                                    <p className="text-[10px] font-mono font-bold opacity-60">Payment: {tx.paymentId}</p>
+                                    <p className="text-[10px] font-mono font-bold opacity-60">Payment: {tx.paymentId || 'N/A'}</p>
                                 </div>
                             </div>
                         </div>
@@ -306,7 +352,7 @@ export default function ManagementConsolePage() {
       verified: users.filter(u => u.securityStatus === 'verified').length,
       unlimited: users.filter(u => u.subscriptionType?.includes('unlimited') || ADMIN_EMAILS.includes(u.email.toLowerCase())).length,
       flagged: users.filter(u => u.isBlocked).length,
-      totalRevenue: transactions.reduce((acc, curr) => acc + (curr.amount || 0), 0)
+      totalRevenue: transactions.filter(t => t.status === 'CAPTURED').reduce((acc, curr) => acc + (curr.amount || 0), 0)
   };
 
   if (loading) return (
@@ -531,39 +577,51 @@ export default function ManagementConsolePage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {transactions.length > 0 ? transactions.map((tx) => (
-                                    <TableRow key={tx.id} className="hover:bg-muted/5 border-b border-primary/5 transition-colors">
-                                        <TableCell className="pl-6 py-4">
-                                            <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground">
-                                                <History className="h-3 w-3" />
-                                                {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-col">
-                                                <span className="font-bold text-xs">{tx.userName}</span>
-                                                <span className="text-[10px] opacity-60">{tx.userEmail}</span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge variant="outline" className="font-black text-[8px] uppercase tracking-widest border-primary/20 text-primary bg-primary/5">
-                                                {tx.planId?.replace('_', ' ')}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-center font-mono font-black text-xs">
-                                            ₹{(tx.amount || 0).toLocaleString('en-IN')}
-                                        </TableCell>
-                                        <TableCell className="text-center">
-                                            <div className="flex items-center justify-center gap-1.5 text-green-600 font-black text-[8px] uppercase tracking-widest bg-green-500/10 px-2 py-1 rounded-full w-fit mx-auto border border-green-500/20">
-                                                <ShieldCheck className="h-2.5 w-2.5" />
-                                                {tx.status}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-right pr-6">
-                                            <TransactionDetailDialog tx={tx} />
-                                        </TableCell>
-                                    </TableRow>
-                                )) : (
+                                {transactions.length > 0 ? transactions.map((tx) => {
+                                    const isSuccess = tx.status === 'CAPTURED';
+                                    const isFailed = tx.status === 'FAILED' || tx.status === 'CANCELLED_BY_USER';
+                                    const isRefunded = tx.status === 'REFUNDED';
+                                    
+                                    return (
+                                        <TableRow key={tx.id} className={cn("hover:bg-muted/5 border-b border-primary/5 transition-colors", !isSuccess && "bg-muted/5")}>
+                                            <TableCell className="pl-6 py-4">
+                                                <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground">
+                                                    <History className="h-3 w-3" />
+                                                    {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex flex-col">
+                                                    <span className="font-bold text-xs">{tx.userName}</span>
+                                                    <span className="text-[10px] opacity-60">{tx.userEmail}</span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge variant="outline" className="font-black text-[8px] uppercase tracking-widest border-primary/20 text-primary bg-primary/5">
+                                                    {tx.planId?.replace('_', ' ') || 'UNKNOWN'}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="text-center font-mono font-black text-xs">
+                                                ₹{(tx.amount || 0).toLocaleString('en-IN')}
+                                            </TableCell>
+                                            <TableCell className="text-center">
+                                                <div className={cn(
+                                                    "flex items-center justify-center gap-1.5 font-black text-[8px] uppercase tracking-widest px-2 py-1 rounded-full w-fit mx-auto border",
+                                                    isSuccess ? "text-green-600 bg-green-500/10 border-green-500/20" : 
+                                                    isFailed ? "text-red-600 bg-red-500/10 border-red-500/20" :
+                                                    isRefunded ? "text-amber-600 bg-amber-500/10 border-amber-500/20" : "text-muted-foreground bg-muted/20 border-border"
+                                                )}>
+                                                    {isSuccess ? <ShieldCheck className="h-2.5 w-2.5" /> : 
+                                                     isFailed ? <AlertCircle className="h-2.5 w-2.5" /> : <RotateCcw className="h-2.5 w-2.5" />}
+                                                    {tx.status}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="text-right pr-6">
+                                                <TransactionDetailDialog tx={tx} />
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                }) : (
                                     <TableRow>
                                         <TableCell colSpan={6} className="h-32 text-center text-muted-foreground font-bold uppercase tracking-widest opacity-40">
                                             Registry Ledger Clear.

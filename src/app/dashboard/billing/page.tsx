@@ -168,7 +168,7 @@ export default function BillingPage() {
                         planId: planId,
                         amount: finalAmount,
                         paymentId: paymentId,
-                        orderId: response.razorpay_order_id,
+                        orderId: response.razorpay_order_id || 'N/A',
                         createdAt: serverTimestamp(),
                         expiryDate: expiryDate.toISOString(),
                         status: 'CAPTURED'
@@ -191,11 +191,46 @@ export default function BillingPage() {
                 contact: profile?.mobileNumber
             },
             theme: { color: "#994B00" },
-            modal: { ondismiss: () => setProcessingId(null) }
+            modal: { 
+                ondismiss: async () => { 
+                    setProcessingId(null);
+                    // Log cancelled attempt for admin visibility
+                    try {
+                        await addDoc(collection(firestore, "transactions"), {
+                            userId: auth.currentUser!.uid,
+                            userEmail: profile?.email,
+                            userName: `${profile?.firstName} ${profile?.lastName}`,
+                            planId: planId,
+                            amount: finalAmount,
+                            status: 'CANCELLED_BY_USER',
+                            createdAt: serverTimestamp(),
+                        });
+                    } catch (e) {}
+                } 
+            }
         };
 
         try {
             const rzp = new (window as any).Razorpay(options);
+            
+            // Listen for failures
+            rzp.on('payment.failed', async function (response: any) {
+                try {
+                    await addDoc(collection(firestore, "transactions"), {
+                        userId: auth.currentUser!.uid,
+                        userEmail: profile?.email,
+                        userName: `${profile?.firstName} ${profile?.lastName}`,
+                        planId: planId,
+                        amount: finalAmount,
+                        status: 'FAILED',
+                        failureReason: response.error.description,
+                        orderId: response.error.metadata.order_id || 'N/A',
+                        paymentId: response.error.metadata.payment_id || 'N/A',
+                        createdAt: serverTimestamp(),
+                    });
+                } catch (e) {}
+            });
+
             rzp.open();
         } catch (error) {
             toast({ variant: "destructive", title: "Payment Interface Error", description: "Could not initialize Razorpay node." });
@@ -218,7 +253,7 @@ export default function BillingPage() {
                             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Critical Synchronization Event</span>
                         </div>
                         <CardTitle className="text-3xl font-black font-headline tracking-tighter">Capture Successful, Node Pending</CardTitle>
-                        <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4">
+                        <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4 text-center">
                             Your payment for <span className="text-foreground font-bold">{syncError.plan}</span> was captured, but an internal node error occurred during registry synchronization.
                         </CardDescription>
                     </CardHeader>
