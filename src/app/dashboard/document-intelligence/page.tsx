@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb, Languages, FileText, ShieldCheck, Sparkles, CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
+import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb, Languages, FileText, ShieldCheck, CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
 import { AudioAssistant } from "@/components/audio-assistant";

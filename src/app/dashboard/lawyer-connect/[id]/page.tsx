@@ -4,7 +4,7 @@ import { useEffect, useState, use } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, MessageSquare, Star, MapPin, BadgeCheck, Briefcase, Globe, User, Scale, Phone, Mail, Loader2, ChevronRight } from "lucide-react";
+import { ArrowLeft, MessageSquare, Star, MapPin, BadgeCheck, Briefcase, Globe, User, Scale, Phone, Mail, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { type Lawyer } from '@/lib/advocates-data';

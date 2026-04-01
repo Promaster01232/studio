@@ -100,24 +100,17 @@ export default function BillingPage() {
         
         const unsubTrans = onSnapshot(q, (snap) => {
             const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            // Client-side sorting protocol to handled mixed timestamp formats and avoid index errors
             list.sort((a: any, b: any) => {
-                const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-                const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-                return timeB - timeA;
+                const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
+                const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
+                return Number(timeB) - Number(timeA);
             });
             setUserTransactions(list.slice(0, 10));
         });
 
         return () => { unsub(); unsubTrans(); };
     }, [auth, firestore]);
-
-    const validateCoupon = () => {
-        setCouponError(null);
-        const code = couponCode.trim().toUpperCase();
-        if (code === 'NYAYA62') setAppliedDiscount({ code, percent: 95, planId: 'unlimited_monthly' });
-        else if (code === 'PIYUSH11') setAppliedDiscount({ code, fixedAmount: 1, planId: 'unlimited_yearly' });
-        else { setCouponError("Invalid code."); setAppliedDiscount(null); }
-    };
 
     const handleUpgrade = async (planId: string) => {
         if (planId === profile?.subscriptionType) return;
@@ -146,6 +139,7 @@ export default function BillingPage() {
                     if (planId.includes('monthly')) expiryDate.setDate(now.getDate() + 30);
                     else expiryDate.setFullYear(now.getFullYear() + 1);
 
+                    // Zero-Persistence Hardening: Only record successful captures
                     await addDoc(collection(firestore, "transactions"), {
                         userId: auth.currentUser!.uid,
                         userEmail: profile?.email,
@@ -175,7 +169,12 @@ export default function BillingPage() {
             },
             prefill: { name: `${profile?.firstName} ${profile?.lastName}`, email: profile?.email },
             theme: { color: "#994B00" },
-            modal: { ondismiss: () => setProcessingId(null) }
+            modal: { 
+                ondismiss: () => {
+                    setProcessingId(null);
+                    // Zero-persistence protocol for non-finalized events
+                } 
+            }
         };
 
         try {
@@ -245,9 +244,12 @@ export default function BillingPage() {
             </div>
 
             <section className="pt-16 space-y-8 text-left">
-                <div className="flex items-center gap-3">
-                    <History className="h-5 w-5 text-primary" />
-                    <h2 className="text-xl font-black font-headline tracking-tighter uppercase">Verified Capture Ledger</h2>
+                <div className="flex items-center justify-between border-b border-primary/5 pb-4">
+                    <div className="flex items-center gap-3">
+                        <History className="h-5 w-5 text-primary" />
+                        <h2 className="text-xl font-black font-headline tracking-tighter uppercase">Verified Capture Ledger</h2>
+                    </div>
+                    <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest bg-primary/5 text-primary/60 border-primary/10">Privacy Node Active</Badge>
                 </div>
                 <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
                     <div className="overflow-x-auto">
@@ -265,7 +267,7 @@ export default function BillingPage() {
                                     <tr key={tx.id} className="hover:bg-primary/5 transition-colors">
                                         <td className="px-6 py-4">
                                             <p className="text-[10px] font-bold text-muted-foreground">
-                                                {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
+                                                {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate ? tx.createdAt.toDate() : new Date(tx.createdAt), { addSuffix: true }) : 'Syncing...'}
                                             </p>
                                         </td>
                                         <td className="px-6 py-4">
@@ -283,7 +285,7 @@ export default function BillingPage() {
                                 )) : (
                                     <tr>
                                         <td colSpan={4} className="px-6 py-16 text-center text-muted-foreground font-medium text-xs opacity-40 italic">
-                                            Registry clear. No captures found.
+                                            Registry clear. No finalized captures found.
                                         </td>
                                     </tr>
                                 )}

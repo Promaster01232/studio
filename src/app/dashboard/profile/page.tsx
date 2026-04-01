@@ -21,36 +21,24 @@ import {
   X, 
   ImageUp, 
   ShieldAlert, 
-  MailCheck, 
-  AlertTriangle, 
   BadgeCheck, 
-  UserCheck, 
-  Fingerprint, 
   Zap, 
   Cpu, 
   QrCode,
   Activity,
   Globe,
   CreditCard,
-  Lock,
-  Crown,
-  FileText,
   Award,
-  Sparkles,
   Download,
-  CalendarClock,
-  History,
-  MessageSquare,
-  Shield
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
 import { doc, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
-import { ref, set, update, remove } from 'firebase/database';
+import { ref, update, remove } from 'firebase/database';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
-import { signOut, deleteUser, sendEmailVerification } from 'firebase/auth';
+import { signOut, deleteUser } from 'firebase/auth';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { 
   AlertDialog, 
@@ -63,7 +51,7 @@ import {
   AlertDialogTitle, 
   AlertDialogTrigger 
 } from '@/components/ui/alert-dialog';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -107,14 +95,12 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                 format: 'a4'
             });
 
-            // Border
-            doc.setDrawColor(153, 75, 0); // Primary Saffron-ish
+            doc.setDrawColor(153, 75, 0); 
             doc.setLineWidth(2);
             doc.rect(5, 5, 287, 200);
             doc.setLineWidth(0.5);
             doc.rect(8, 8, 281, 194);
 
-            // Title
             doc.setFont("helvetica", "bold");
             doc.setFontSize(10);
             doc.setTextColor(153, 75, 0);
@@ -124,7 +110,6 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
             doc.setTextColor(0, 0, 0);
             doc.text("CERTIFICATE OF CLEARANCE", 148.5, 55, { align: 'center' });
 
-            // Name
             doc.setFontSize(16);
             doc.text("This document formally certifies that", 148.5, 80, { align: 'center' });
             
@@ -132,21 +117,18 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
             doc.setTextColor(153, 75, 0);
             doc.text(`${profile.firstName} ${profile.lastName}`.toUpperCase(), 148.5, 100, { align: 'center' });
 
-            // Description
             doc.setFontSize(14);
             doc.setTextColor(100, 100, 100);
             const desc = `has been granted an Upgraded Statutory Node within the Nyaya Sahayak neural legal ecosystem. Subject to the Terms of Protocol and Forensic Security Standards of Bharat. Access to advanced neural auditing terminals is authorized.`;
             const splitDesc = doc.splitTextToSize(desc, 220);
             doc.text(splitDesc, 148.5, 120, { align: 'center' });
 
-            // Metadata
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
             doc.text(`Registry Node ID: NS-REG-${profile.uid.substring(0, 12).toUpperCase()}`, 40, 160);
             doc.text(`Verification Date: ${today}`, 40, 170);
             doc.text(`Valid Until: ${expiryDate}`, 40, 180);
 
-            // Signature
             doc.setFont("courier", "bolditalic");
             doc.setFontSize(20);
             doc.text("Hardy Pie", 220, 170);
@@ -208,7 +190,6 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                     </div>
                     
                     <div className="flex flex-col items-center sm:items-end gap-6 relative">
-                        {/* Official Seal */}
                         <div className="absolute -left-4 sm:left-auto sm:-right-4 -top-12 pointer-events-none">
                             <motion.div 
                                 animate={{ rotate: 360 }}
@@ -226,7 +207,6 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                             </motion.div>
                         </div>
 
-                        {/* Signature */}
                         <div className="relative pt-10 text-center sm:text-right min-w-[220px]">
                             <div className="mb-[-15px] relative z-10">
                                 <p className="font-['Brush_Script_MT',_cursive] text-4xl sm:text-5xl text-primary/90 italic tracking-tighter select-none drop-shadow-sm">
@@ -244,14 +224,9 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                 
                 <div className="pt-10 flex justify-center">
                     <Button onClick={downloadCertificate} className="rounded-xl h-12 px-10 font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 active:scale-95 transition-all">
-                        <Download className="mr-2 h-4 w-4" /> Download Statutory Record
+                        <Download className="mr-2 h-4 w-4" /> Export Statutory Record
                     </Button>
                 </div>
-            </div>
-
-            <div className="absolute bottom-[-20px] left-[-20px] w-32 h-32 bg-primary/5 rounded-full blur-2xl" />
-            <div className="absolute top-10 right-10 opacity-5 text-left">
-                <ShieldCheck className="h-48 w-48 text-primary" />
             </div>
         </Card>
     );
@@ -289,7 +264,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                 </div>
 
                 <div className="flex gap-5 items-end mb-4">
-                    <div className="relative shrink-0 group/av">
+                    <div className="relative shrink-0">
                         <Avatar className="h-20 w-20 border-2 border-white/20 rounded-2xl shadow-2xl relative z-10 transition-transform group-hover:scale-105">
                             <AvatarImage src={profile.photoURL} className="object-cover" />
                             <AvatarFallback className="bg-white/10 text-white font-black text-xl">{profile.firstName?.charAt(0)}</AvatarFallback>
@@ -340,7 +315,6 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
-  const [isResending, setIsResending] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   const [firstName, setFirstName] = useState('');
@@ -379,19 +353,6 @@ export default function ProfilePage() {
     mobileNumber !== (userProfile.mobileNumber || '') ||
     photoURL !== (userProfile.photoURL || '')
   ) : false;
-
-  const handleSendVerification = async () => {
-      if (!auth.currentUser) return;
-      setIsResending(true);
-      try {
-          await sendEmailVerification(auth.currentUser);
-          toast({ title: "Verification Dispatched", description: "Check your registry email." });
-      } catch (error: any) {
-          toast({ variant: "destructive", title: "Transmission Failed", description: error.message });
-      } finally {
-          setIsResending(false);
-      }
-  };
 
   const handleVerifySelf = async () => {
     if (!userProfile || isVerifying) return;
@@ -644,14 +605,14 @@ export default function ProfilePage() {
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">AI Forensic Usage</p>
                                     <div className="flex items-center gap-4">
                                         <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden shadow-inner">
-                                            <div className="h-full bg-primary" style={{ width: isAdmin ? '100%' : `${Math.min(100, ((userProfile?.aiUsageCount || 0) / 5) * 100)}%` }} />
+                                            <div className="h-full bg-primary" style={{ width: '100%' }} />
                                         </div>
-                                        <span className="font-mono font-black text-sm">{userProfile?.aiUsageCount || 0} / {isAdmin ? '∞' : '5'}</span>
+                                        <span className="font-mono font-black text-sm">∞</span>
                                     </div>
                                 </div>
                                 <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
                                     <p className="text-sm font-medium text-muted-foreground leading-relaxed">
-                                        {isAdmin ? "Root access active. Unrestricted neural bandwidth." : "Standard node. Clearance required for expanded forensic access."}
+                                        Registry Freedom Active. Unrestricted neural bandwidth authorized for all nodes.
                                     </p>
                                 </div>
                             </div>

@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { 
@@ -13,24 +15,13 @@ import {
   Mic,
   FileText,
   FileSignature,
-  Search,
-  Globe,
-  Scale,
-  ExternalLink,
-  BrainCircuit,
-  Gavel,
-  Library,
-  FolderKanban,
-  Zap,
-  Layers
+  Search
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { PublicHeader } from "@/components/public-header";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { Footer } from "@/components/footer";
 
 const TricolorBackground = () => {
@@ -112,7 +103,7 @@ export default function WelcomePage() {
                 <div className="h-14 w-[240px] flex items-center justify-center gap-3 px-8 bg-muted/10 rounded-xl"><Loader2 className="h-4 w-4 animate-spin text-primary opacity-30" /></div>
               )}
             </nav>
-          </motion.div>
+          </motion.div> section
         </section>
 
         <section className="w-full max-w-7xl py-12 px-6">

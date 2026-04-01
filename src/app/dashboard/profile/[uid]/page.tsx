@@ -2,9 +2,9 @@
 
 import { useEffect, useState, use, useRef } from "react";
 import { useFirestore, useAuth } from "@/firebase";
-import { doc, onSnapshot, collection, query, where, getDocs, orderBy, Timestamp, deleteDoc } from "firebase/firestore";
+import { doc, onSnapshot, collection, query, where, getDocs, Timestamp, deleteDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   ArrowLeft, 
@@ -30,7 +30,6 @@ import {
   Twitter,
   MoreVertical,
   Flag,
-  Search
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -44,7 +43,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 const ADMIN_EMAILS = [
