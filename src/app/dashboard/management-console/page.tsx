@@ -7,56 +7,38 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useAuth, useDatabase } from "@/firebase";
-import { collection, doc, getDoc, onSnapshot, updateDoc, query, where, getDocs, writeBatch, deleteDoc } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc, deleteDoc, query, where } from "firebase/firestore";
 import { ref, remove, update } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import { 
   ShieldCheck, 
   Loader2, 
   Search, 
-  ShieldAlert, 
-  BadgeCheck, 
+  Trash2, 
   MoreHorizontal,
-  Trash2,
-  Activity,
-  KeyRound,
-  Zap,
-  Lock,
-  Database,
-  Cloud,
-  CreditCard,
-  History,
-  TrendingUp,
   Receipt,
-  Smartphone,
   Eye,
-  FileText,
   Calendar,
-  XCircle,
-  RotateCcw,
-  PlusCircle,
+  History,
+  CheckCircle2,
   User,
-  CheckCircle2
+  PlusCircle
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatDistanceToNow, format } from "date-fns";
+import { format } from "date-fns";
 
 interface UserRecord {
   uid: string;
@@ -67,10 +49,7 @@ interface UserRecord {
   photoURL?: string;
   isAdmin?: boolean;
   isBlocked?: boolean;
-  securityStatus?: 'verified' | 'suspicious' | 'flagged' | 'pending_audit';
   createdAt?: any;
-  mobileNumber?: string;
-  aiUsageCount?: number;
   subscriptionType?: string;
 }
 
@@ -128,6 +107,13 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                     <div className="space-y-4">
                         <div className="grid gap-4">
                             <div className="flex items-start gap-3">
+                                <div className="p-2 rounded-lg bg-muted shadow-inner"><User className="h-3.5 w-3.5 text-muted-foreground" /></div>
+                                <div className="text-left">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Citizen Identity</p>
+                                    <p className="text-xs font-bold">{tx.userName}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
                                 <div className="p-2 rounded-lg bg-muted shadow-inner"><Calendar className="h-3.5 w-3.5 text-muted-foreground" /></div>
                                 <div className="text-left">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Timestamp</p>
@@ -160,7 +146,6 @@ export default function ManagementConsolePage() {
   const [transactions, setTransactions] = useState<TransactionRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchSearchQuery] = useState("");
-  const [processingUid, setProcessingUid] = useState<string | null>(null);
   const [userToPurge, setUserToPurge] = useState<UserRecord | null>(null);
 
   useEffect(() => {
@@ -180,7 +165,10 @@ export default function ManagementConsolePage() {
             setLoading(false);
         });
 
-        onSnapshot(collection(firestore, "transactions"), (snapshot) => {
+        // Strictly query for CAPTURED (Success) transactions only
+        const transRef = collection(firestore, "transactions");
+        const qTrans = query(transRef, where("status", "==", "CAPTURED"));
+        onSnapshot(qTrans, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as TransactionRecord));
             setTransactions(list.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0)));
         });
@@ -190,12 +178,11 @@ export default function ManagementConsolePage() {
 
   const handleToggleStatus = async (user: UserRecord, isBlocked: boolean) => {
     if (ADMIN_EMAILS.includes(user.email.toLowerCase())) return;
-    setProcessingUid(user.uid);
     try {
         await updateDoc(doc(firestore, "users", user.uid), { isBlocked });
         await update(ref(rtdb, `users/${user.uid}`), { isBlocked });
         toast({ title: isBlocked ? "Node Suspended" : "Node Activated" });
-    } finally { setProcessingUid(null); }
+    } catch (e) {}
   };
 
   const filteredUsers = users.filter(u => 
@@ -291,7 +278,7 @@ export default function ManagementConsolePage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {transactions.map((tx) => (
+                                {transactions.length > 0 ? transactions.map((tx) => (
                                     <TableRow key={tx.id} className="hover:bg-muted/5 border-b border-primary/5">
                                         <TableCell className="pl-6 py-4 text-[10px] font-bold text-muted-foreground">{tx.createdAt ? format(tx.createdAt.toDate(), 'PP p') : 'Syncing...'}</TableCell>
                                         <TableCell className="text-center">
@@ -303,9 +290,13 @@ export default function ManagementConsolePage() {
                                         <TableCell className="text-center font-mono font-black text-xs">₹{(tx.amount || 0).toLocaleString('en-IN')}</TableCell>
                                         <TableCell className="text-right pr-6"><TransactionDetailDialog tx={tx} /></TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                )) : (
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="h-32 text-center text-muted-foreground font-medium text-xs opacity-40">Registry clear. No successful captures found.</TableCell>
+                                    </TableRow>
+                                )}
+                            </tbody>
+                        </table>
                         <ScrollBar orientation="horizontal" />
                     </ScrollArea>
                 </CardContent>

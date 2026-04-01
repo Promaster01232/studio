@@ -21,9 +21,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Nyaya Sahayak | AI Legal Assistant & Forensic Case Auditor India",
-  description: "India's premier AI Legal Assistant. Access forensic case audits, BNS statutory scanning, and document risk analysis on nyayasahayak.in. Trusted AI Nyaya Mitra for 1.4 billion citizens.",
-  keywords: ["AI Legal Assistant India", "BNS Forensic Audit", "Legal Document Risk Scanner India", "Nyaya Sahayak", "Indian Judicial AI", "Online Legal Advice India", "Bhartiya Nyaya Sanhita AI", "Legal AI Bharat", "Nyaya Mitra AI"],
+  title: "Nyaya Sahayak | India's Premier AI Legal Assistant & Forensic Auditor",
+  description: "Access elite AI legal assistance on nyayasahayak.in. Forensic case audits, BNS statutory scanning, and automated document drafting for Bharat's citizens. Trusted AI Nyaya Mitra for 1.4 billion people.",
+  keywords: ["AI Legal Assistant India", "Nyaya Sahayak", "Legal AI Bharat", "BNS Forensic Audit", "Statutory Risk Scanner", "Indian Judicial AI", "Online Legal Advice India", "Nyaya Mitra AI", "Legal Tech India"],
   authors: [{ name: "IdeaSpark Institutional Tech" }],
   referrer: "origin-when-cross-origin",
   metadataBase: new URL('https://nyayasahayak.in'),
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Nyaya Sahayak | Your AI-Powered Legal Co-Pilot",
-    description: "Analyze case strength and audit documents with mathematically precise AI on India's premier legal-tech terminal.",
+    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
     images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Institutional Identity" }],
@@ -52,8 +52,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nyaya Sahayak | AI Legal Assistant',
-    description: 'Elite forensic AI for the Indian judicial landscape.',
+    title: 'Nyaya Sahayak | AI Legal Assistant for Bharat',
+    description: 'Elite forensic AI for navigation of the Indian legal ecosystem.',
     images: ['/Logo.png'],
   },
   icons: {
@@ -76,7 +76,7 @@ export default function RootLayout({
     "url": "https://nyayasahayak.in",
     "logo": "https://nyayasahayak.in/Logo.png",
     "image": "https://nyayasahayak.in/Logo.png",
-    "description": "Premium AI-driven legal assistance and forensic document auditing platform specifically engineered for the Indian judicial system and Bharat's citizens.",
+    "description": "Premium AI-driven legal assistance and forensic document auditing platform engineered for the Indian judicial system.",
     "brand": {
       "@type": "Brand",
       "name": "Nyaya Sahayak",
@@ -94,29 +94,6 @@ export default function RootLayout({
       "@type": "GeoCoordinates",
       "latitude": "28.6139",
       "longitude": "77.2090"
-    },
-    "sameAs": [
-      "https://www.facebook.com/profile.php?id=61578664907514",
-      "https://x.com/nyayasahayak/",
-      "https://www.instagram.com/nyaya_sahayak/"
-    ]
-  };
-
-  const softwareSchema = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Nyaya Sahayak AI",
-    "operatingSystem": "Web",
-    "applicationCategory": "LegalApplication",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "1240"
-    },
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "INR"
     }
   };
 
@@ -124,28 +101,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-R8G6PW6X1K"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-R8G6PW6X1K');
-          `}
-        </Script>
-        
-        <Script
           id="structured-data-org"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
-        <Script
-          id="structured-data-app"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
         />
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>

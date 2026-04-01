@@ -4,13 +4,11 @@ import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, XCircle, TicketPercent, AlertTriangle, Mail, Lock } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, AlertTriangle, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
@@ -83,10 +81,6 @@ export default function BillingPage() {
     const [processingId, setProcessingId] = useState<string | null>(null);
     const [syncError, setSyncError] = useState<{ paymentId: string, plan: string } | null>(null);
     const [userTransactions, setUserTransactions] = useState<any[]>([]);
-    
-    const [couponCode, setCouponCode] = useState("");
-    const [appliedDiscount, setAppliedDiscount] = useState<{ code: string, percent?: number, fixedAmount?: number, planId: string } | null>(null);
-    const [couponError, setCouponError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!auth.currentUser) return;
@@ -95,18 +89,22 @@ export default function BillingPage() {
             setLoading(false);
         });
 
+        // Strictly query for CAPTURED (Success) transactions only
         const transRef = collection(firestore, "transactions");
-        const q = query(transRef, where("userId", "==", auth.currentUser.uid));
+        const q = query(
+            transRef, 
+            where("userId", "==", auth.currentUser.uid),
+            where("status", "==", "CAPTURED")
+        );
         
         const unsubTrans = onSnapshot(q, (snap) => {
             const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            // Client-side sorting protocol to handled mixed timestamp formats and avoid index errors
             list.sort((a: any, b: any) => {
                 const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
                 const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
                 return Number(timeB) - Number(timeA);
             });
-            setUserTransactions(list.slice(0, 10));
+            setUserTransactions(list);
         });
 
         return () => { unsub(); unsubTrans(); };
@@ -118,14 +116,10 @@ export default function BillingPage() {
         if (!plan || plan.amount === 0) return;
 
         setProcessingId(planId);
-        let finalAmount = plan.amount;
-        if (appliedDiscount && appliedDiscount.planId === planId) {
-            finalAmount = appliedDiscount.fixedAmount ?? (plan.amount * (1 - appliedDiscount.percent! / 100));
-        }
 
         const options = {
             key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_SY4T9oT2oLGhiS",
-            amount: Math.round(finalAmount * 100), 
+            amount: Math.round(plan.amount * 100), 
             currency: "INR",
             name: "Nyaya Sahayak",
             description: `Upgrade: ${plan.name}`,
@@ -139,13 +133,13 @@ export default function BillingPage() {
                     if (planId.includes('monthly')) expiryDate.setDate(now.getDate() + 30);
                     else expiryDate.setFullYear(now.getFullYear() + 1);
 
-                    // Zero-Persistence Hardening: Only record successful captures
+                    // Strictly record ONLY captured transactions
                     await addDoc(collection(firestore, "transactions"), {
                         userId: auth.currentUser!.uid,
                         userEmail: profile?.email,
                         userName: `${profile?.firstName} ${profile?.lastName}`,
                         planId: planId,
-                        amount: finalAmount,
+                        amount: plan.amount,
                         paymentId: paymentId,
                         createdAt: serverTimestamp(),
                         expiryDate: expiryDate.toISOString(),
@@ -170,10 +164,7 @@ export default function BillingPage() {
             prefill: { name: `${profile?.firstName} ${profile?.lastName}`, email: profile?.email },
             theme: { color: "#994B00" },
             modal: { 
-                ondismiss: () => {
-                    setProcessingId(null);
-                    // Zero-persistence protocol for non-finalized events
-                } 
+                ondismiss: () => setProcessingId(null) 
             }
         };
 
@@ -249,7 +240,7 @@ export default function BillingPage() {
                         <History className="h-5 w-5 text-primary" />
                         <h2 className="text-xl font-black font-headline tracking-tighter uppercase">Verified Capture Ledger</h2>
                     </div>
-                    <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest bg-primary/5 text-primary/60 border-primary/10">Privacy Node Active</Badge>
+                    <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest bg-primary/5 text-primary/60 border-primary/10">Success-Only Protocol</Badge>
                 </div>
                 <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
                     <div className="overflow-x-auto">
@@ -257,7 +248,7 @@ export default function BillingPage() {
                             <thead className="bg-muted/30 border-b border-primary/5">
                                 <tr>
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Timestamp</th>
-                                    <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Registry Node</th>
+                                    <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Clearance Node</th>
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Value</th>
                                     <th className="px-6 py-4 text-right text-[9px] font-black uppercase tracking-widest text-muted-foreground pr-10">TXID</th>
                                 </tr>
@@ -285,7 +276,7 @@ export default function BillingPage() {
                                 )) : (
                                     <tr>
                                         <td colSpan={4} className="px-6 py-16 text-center text-muted-foreground font-medium text-xs opacity-40 italic">
-                                            Registry clear. No finalized captures found.
+                                            Registry clear. Only successful captures are recorded.
                                         </td>
                                     </tr>
                                 )}
