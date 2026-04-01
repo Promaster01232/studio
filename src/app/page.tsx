@@ -25,6 +25,12 @@ import { motion } from "framer-motion";
 import { Footer } from "@/components/footer";
 
 const TricolorBackground = () => {
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
       <div className="absolute top-[-5%] left-[-5%] w-[50%] h-[50%] bg-[#FF9933] blur-[120px] opacity-[0.06] animate-pulse"></div>
@@ -33,8 +39,14 @@ const TricolorBackground = () => {
           <svg className="ashoka-rotate w-[600px] h-[600px] lg:w-[1000px] lg:h-[1000px] text-[#000080]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.05">
               <circle cx="50" cy="50" r="45" />
               <circle cx="50" cy="50" r="5" fill="currentColor" />
-              {Array.from({ length: 24 }).map((_, i) => (
-                  <line key={i} x1="50" y1="50" x2={50 + 45 * Math.cos((i * 15 * Math.PI) / 180)} y2={50 + 45 * Math.sin((i * 15 * Math.PI) / 180)} />
+              {mounted && Array.from({ length: 24 }).map((_, i) => (
+                  <line 
+                    key={i} 
+                    x1="50" 
+                    y1="50" 
+                    x2={50 + 45 * Math.cos((i * 15 * Math.PI) / 180)} 
+                    y2={50 + 45 * Math.sin((i * 15 * Math.PI) / 180)} 
+                  />
               ))}
           </svg>
       </div>
@@ -71,7 +83,7 @@ export default function WelcomePage() {
         <section className="w-full max-w-7xl pt-12 pb-8 sm:pt-16 sm:pb-10 px-6 text-center space-y-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="space-y-6">
             <header className="flex justify-center">
-              <Logo className="h-24 w-24 sm:h-32 sm:w-32 shadow-2xl relative z-10" priority />
+              <Logo className="h-24 w-24 sm:h-32 sm:w-32 shadow-2xl relative z-10" priority={true} />
             </header>
 
             <div className="space-y-4 max-w-4xl mx-auto">
@@ -103,7 +115,7 @@ export default function WelcomePage() {
                 <div className="h-14 w-[240px] flex items-center justify-center gap-3 px-8 bg-muted/10 rounded-xl"><Loader2 className="h-4 w-4 animate-spin text-primary opacity-30" /></div>
               )}
             </nav>
-          </motion.div> section
+          </motion.div>
         </section>
 
         <section className="w-full max-w-7xl py-12 px-6">
