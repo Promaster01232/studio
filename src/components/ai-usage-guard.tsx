@@ -1,4 +1,3 @@
-
 "use client";
 
 import { ReactNode, useState, useEffect } from "react";
@@ -12,8 +11,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumarsingh23323@gmail.com',
-  'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'
 ];

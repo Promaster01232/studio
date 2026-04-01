@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -9,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, BadgeCheck, XCircle, TicketPercent, AlertTriangle, Mail } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, BadgeCheck, XCircle, TicketPercent, AlertTriangle, Mail, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -97,7 +96,7 @@ export default function BillingPage() {
             setLoading(false);
         });
 
-        // Fetch User Transactions (Success Only)
+        // Fetch User Transactions (Success Only - Verified captures)
         const transRef = collection(firestore, "transactions");
         const q = query(transRef, where("userId", "==", auth.currentUser.uid), where("status", "==", "CAPTURED"));
         
@@ -176,7 +175,7 @@ export default function BillingPage() {
                     else if (planId.includes('yearly')) expiryDate.setFullYear(now.getFullYear() + 1);
                     else expiryDate.setDate(now.getDate() + 365);
 
-                    // Atomic write for success only
+                    // Atomic write for success only - Zero-Persistence for failures
                     await addDoc(collection(firestore, "transactions"), {
                         userId: auth.currentUser!.uid,
                         userEmail: profile?.email,
@@ -215,7 +214,7 @@ export default function BillingPage() {
             theme: { color: "#994B00" },
             modal: { 
                 ondismiss: () => { 
-                    // No data stored on cancellation
+                    // NO DATA STORED ON CANCELLATION - Zero-Persistence Protocol
                     setProcessingId(null);
                 } 
             }
@@ -225,7 +224,7 @@ export default function BillingPage() {
             const rzp = new (window as any).Razorpay(options);
             rzp.open();
         } catch (error) {
-            toast({ variant: "destructive", title: "Payment Interface Error", description: "Could not initialize Razorpay node." });
+            // Internal UI reset only - no persistence
             setProcessingId(null);
         }
     };
@@ -236,15 +235,15 @@ export default function BillingPage() {
         const mailtoLink = `mailto:nyayasahayakhelp@gmail.com?subject=Payment%20Sync%20Error%20-%20${syncError.paymentId}&body=Hello%20Nyaya%20Sahayak%20Support%2C%0D%0A%0D%0AMy%20payment%20was%20successful%20but%20my%20subscription%20did%20not%20activate.%0D%0A%0D%0ATransaction%20ID%3A%20${syncError.paymentId}%0D%0APlan%3A%20${syncError.plan}`;
 
         return (
-            <div className="max-w-2xl mx-auto py-20 px-4">
-                <Card className="border-amber-500/20 bg-amber-500/5 shadow-2xl rounded-[2.5rem] overflow-hidden text-left">
+            <div className="max-w-2xl mx-auto py-20 px-4 text-left">
+                <Card className="border-amber-500/20 bg-amber-500/5 shadow-2xl rounded-[2.5rem] overflow-hidden">
                     <div className="bg-amber-500/10 p-10 flex justify-center border-b border-amber-500/10">
                         <AlertTriangle className="h-20 w-20 text-amber-600 animate-pulse" />
                     </div>
                     <CardHeader className="p-8 sm:p-10 text-center">
-                        <CardTitle className="text-3xl font-black font-headline tracking-tighter">Capture Successful, Node Pending</CardTitle>
-                        <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4 text-center">
-                            Your payment was captured, but an internal node error occurred.
+                        <CardTitle className="text-3xl font-black font-headline tracking-tighter uppercase">Capture Successful, Node Pending</CardTitle>
+                        <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4">
+                            Your payment was captured, but an internal node error occurred during synchronization.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="px-8 pb-10 space-y-6">
@@ -252,7 +251,7 @@ export default function BillingPage() {
                             <p className="text-[9px] font-black uppercase text-muted-foreground opacity-60 mb-2">Transaction ID (TXID)</p>
                             <p className="font-mono font-black text-amber-600 select-all">{syncError.paymentId}</p>
                         </div>
-                        <Button className="w-full h-14 font-black uppercase tracking-widest text-[10px] rounded-xl shadow-xl shadow-primary/20" asChild>
+                        <Button className="w-full h-14 font-black uppercase tracking-widest text-[10px] rounded-xl shadow-xl shadow-primary/20 transition-all active:scale-95" asChild>
                             <a href={mailtoLink}>
                                 <Mail className="mr-2 h-4 w-4" /> Resolve via Institutional Mail
                             </a>
@@ -290,7 +289,7 @@ export default function BillingPage() {
 
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
                 <Card className="max-w-md mx-auto border-dashed border-2 border-primary/20 bg-primary/5 rounded-[1.5rem] overflow-hidden">
-                    <CardContent className="p-6">
+                    <CardContent className="p-6 text-left">
                         <div className="flex items-center gap-3 mb-4">
                             <TicketPercent className="h-5 w-5 text-primary" />
                             <h3 className="text-sm font-black uppercase tracking-widest">Protocol Promo Code</h3>
@@ -362,7 +361,7 @@ export default function BillingPage() {
                                     </div>
                                 </CardHeader>
 
-                                <CardContent className="p-8 pt-4 flex-grow space-y-6">
+                                <CardContent className="p-8 pt-4 flex-grow space-y-6 text-left">
                                     <div className={cn("p-4 rounded-2xl flex items-center gap-3 shadow-inner", plan.bg)}>
                                         <Zap className={cn("h-4 w-4", plan.color)} />
                                         <span className={cn("text-[11px] font-black uppercase tracking-widest", plan.color)}>{plan.credits}</span>
@@ -382,8 +381,8 @@ export default function BillingPage() {
                                         onClick={() => handleUpgrade(plan.id)}
                                         disabled={isActive || isProcessing || processingId !== null}
                                         className={cn(
-                                            "w-full h-12 font-black uppercase tracking-widest text-[10px] rounded-xl",
-                                            isActive ? "bg-muted text-muted-foreground cursor-default" : "shadow-lg shadow-primary/20"
+                                            "w-full h-12 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all",
+                                            isActive ? "bg-muted text-muted-foreground cursor-default" : "shadow-lg shadow-primary/20 active:scale-95"
                                         )}
                                     >
                                         {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "Current Tier" : "Initialize Upgrade"}
@@ -395,12 +394,18 @@ export default function BillingPage() {
                 })}
             </div>
 
-            <section className="pt-16 space-y-8">
-                <div className="flex items-center gap-3">
-                    <History className="h-5 w-5 text-primary" />
-                    <h2 className="text-xl font-black font-headline tracking-tighter uppercase">Statutory Upgrade History</h2>
+            <section className="pt-16 space-y-8 text-left">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <History className="h-5 w-5 text-primary" />
+                        <h2 className="text-xl font-black font-headline tracking-tighter uppercase">Verified Capture Ledger</h2>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
+                        <Lock className="h-3 w-3 text-primary/60" />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">Privacy Protocol: Cancelled attempts are not recorded</span>
+                    </div>
                 </div>
-                <Card className="glass shadow-2xl rounded-[2rem] overflow-hidden border-primary/5">
+                <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-muted/30 border-b border-primary/5">
@@ -408,7 +413,7 @@ export default function BillingPage() {
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Timestamp</th>
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Registry Node</th>
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Value</th>
-                                    <th className="px-6 py-4 text-right text-[9px] font-black uppercase tracking-widest text-muted-foreground">TXID</th>
+                                    <th className="px-6 py-4 text-right text-[9px] font-black uppercase tracking-widest text-muted-foreground pr-10">TXID</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-primary/5">
@@ -427,14 +432,14 @@ export default function BillingPage() {
                                         <td className="px-6 py-4">
                                             <p className="font-mono font-black text-xs">₹{tx.amount.toLocaleString('en-IN')}</p>
                                         </td>
-                                        <td className="px-6 py-4 text-right">
+                                        <td className="px-6 py-4 text-right pr-10">
                                             <p className="font-mono text-[9px] opacity-40 select-all">{tx.paymentId}</p>
                                         </td>
                                     </tr>
                                 )) : (
                                     <tr>
-                                        <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground font-medium text-xs opacity-40 italic">
-                                            No finalized transactions found in the registry.
+                                        <td colSpan={4} className="px-6 py-16 text-center text-muted-foreground font-medium text-xs opacity-40 italic">
+                                            No verified capture events found in the registry.
                                         </td>
                                     </tr>
                                 )}

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -106,9 +105,9 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary transition-all">
+                <button className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center">
                     <Eye className="h-4 w-4" />
-                </Button>
+                </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md rounded-[2.5rem] border-none shadow-2xl glass p-8 text-left">
                 <DialogHeader className="border-none mb-6">
@@ -122,7 +121,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
 
                 <div className="space-y-6">
                     <div className={cn(
-                        "p-6 rounded-2xl border space-y-4",
+                        "p-6 rounded-2xl border space-y-4 shadow-inner",
                         tx.status === 'CAPTURED' ? "bg-green-500/5 border-green-500/10" : 
                         tx.status === 'FAILED' ? "bg-red-500/5 border-red-500/10" :
                         tx.status === 'REFUNDED' ? "bg-amber-500/5 border-amber-500/10" : "bg-primary/5 border-primary/10"
@@ -147,7 +146,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                     </div>
 
                     {tx.status === 'FAILED' && tx.failureReason && (
-                        <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/10 flex items-start gap-3">
+                        <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/10 flex items-start gap-3 shadow-inner">
                             <XCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
                             <div className="space-y-1">
                                 <p className="text-[10px] font-black text-red-600 uppercase tracking-widest">Failure Ingress</p>
@@ -157,7 +156,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                     )}
 
                     {tx.status === 'REFUNDED' && (
-                        <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 space-y-3">
+                        <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 space-y-3 shadow-inner">
                             <div className="flex items-center gap-2 text-amber-600">
                                 <RotateCcw className="h-4 w-4" />
                                 <span className="text-[10px] font-black uppercase tracking-widest">Refund Metadata</span>
@@ -255,9 +254,15 @@ export default function ManagementConsolePage() {
 
         const transCol = collection(firestore, "transactions");
         const qTrans = query(transCol, orderBy("createdAt", "desc"), limit(100));
-        const unsubscribeTrans = onSnapshot(qTrans, (snapshot) => {
+        const unsubscribeTrans = onSnapshot(transCol, (snapshot) => {
+            // Client-side sorting to bypass composite index requirement
             const list = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as TransactionRecord));
-            setTransactions(list);
+            list.sort((a, b) => {
+                const dateA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+                const dateB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+                return dateB - dateA;
+            });
+            setTransactions(list.slice(0, 100));
         });
 
         return () => {
@@ -373,7 +378,7 @@ export default function ManagementConsolePage() {
             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Live Firebase Hub</span>
           </div>
           <h1 className="text-3xl font-black tracking-tighter font-headline text-foreground uppercase">Management Console</h1>
-          <p className="text-sm text-muted-foreground font-medium">Real-time statutory oversight of the citizen registry and transaction ledger.</p>
+          <p className="text-sm text-muted-foreground font-medium">Real-time statutory oversight of the citizen registry and verified transaction ledger.</p>
         </div>
         <div className="flex flex-wrap gap-3">
             <div className={cn(
@@ -415,7 +420,7 @@ export default function ManagementConsolePage() {
       <Tabs defaultValue="users" className="w-full">
           <TabsList className="h-12 bg-muted/20 p-1 rounded-xl mb-6">
               <TabsTrigger value="users" className="font-bold text-xs uppercase tracking-widest px-8">Citizen Registry</TabsTrigger>
-              <TabsTrigger value="transactions" className="font-bold text-xs uppercase tracking-widest px-8">Transaction Ledger</TabsTrigger>
+              <TabsTrigger value="transactions" className="font-bold text-xs uppercase tracking-widest px-8">Verified Ledger</TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -524,7 +529,7 @@ export default function ManagementConsolePage() {
                                                                 {processingUid === user.uid ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <MoreHorizontal className="h-4 w-4 text-muted-foreground" />}
                                                             </button>
                                                         </DropdownMenuTrigger>
-                                                        <DropdownMenuContent align="end" className="w-52 p-2 rounded-2xl shadow-2xl glass border-primary/10">
+                                                        <DropdownMenuContent align="end" className="w-52 p-2 rounded-xl shadow-2xl glass border-primary/10">
                                                             <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-widest opacity-40 px-3">System Protocol</DropdownMenuLabel>
                                                             <DropdownMenuItem onClick={() => sendPasswordResetEmail(auth, user.email).then(() => toast({ title: "Reset Dispatched" }))} className="rounded-xl font-bold text-xs h-10 px-3 cursor-pointer gap-3" disabled={isProtected}>
                                                                 <KeyRound className="h-4 w-4 opacity-40" /> Reset Credentials
@@ -563,13 +568,13 @@ export default function ManagementConsolePage() {
             <Card className="border-primary/5 shadow-2xl rounded-[2.5rem] overflow-hidden bg-card text-left">
                 <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                        <CardTitle className="font-headline font-black text-xl tracking-tight text-green-600">Statutory Transaction Ledger</CardTitle>
-                        <Button size="sm" className="h-9 px-5 rounded-xl font-black text-[9px] uppercase tracking-widest shadow-lg shadow-primary/20">
-                            <PlusCircle className="h-3 w-3 mr-2" />
-                            New Node
-                        </Button>
+                        <CardTitle className="font-headline font-black text-xl tracking-tight text-green-600">Statutory Verified Ledger</CardTitle>
+                        <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
+                            <Lock className="h-3 w-3 text-primary/60" />
+                            <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">Zero-Persistence: Cancelled attempts are not stored</span>
+                        </div>
                     </div>
-                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Live feed of all statutory upgrades and revenue capture events.</CardDescription>
+                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Success-only feed of verified institutional captures.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                     <ScrollArea className="w-full">
@@ -587,7 +592,6 @@ export default function ManagementConsolePage() {
                             <TableBody>
                                 {transactions.length > 0 ? transactions.map((tx) => {
                                     const isSuccess = tx.status === 'CAPTURED';
-                                    const isFailed = tx.status === 'FAILED' || tx.status === 'CANCELLED_BY_USER';
                                     const isRefunded = tx.status === 'REFUNDED';
                                     
                                     return (
@@ -616,11 +620,10 @@ export default function ManagementConsolePage() {
                                                 <div className={cn(
                                                     "flex items-center justify-center gap-1.5 font-black text-[8px] uppercase tracking-widest px-2 py-1 rounded-full w-fit mx-auto border",
                                                     isSuccess ? "text-green-600 bg-green-500/10 border-green-500/20" : 
-                                                    isFailed ? "text-red-600 bg-red-500/10 border-red-500/20" :
                                                     isRefunded ? "text-amber-600 bg-amber-500/10 border-amber-500/20" : "text-muted-foreground bg-muted/20 border-border"
                                                 )}>
                                                     {isSuccess ? <ShieldCheck className="h-2.5 w-2.5" /> : 
-                                                     isFailed ? <AlertCircle className="h-2.5 w-2.5" /> : <RotateCcw className="h-2.5 w-2.5" />}
+                                                     <RotateCcw className="h-2.5 w-2.5" />}
                                                     {tx.status}
                                                 </div>
                                             </TableCell>
@@ -632,7 +635,7 @@ export default function ManagementConsolePage() {
                                 }) : (
                                     <TableRow>
                                         <TableCell colSpan={6} className="h-32 text-center text-muted-foreground font-bold uppercase tracking-widest opacity-40">
-                                            Registry Ledger Clear.
+                                            Registry Ledger Clear. No verified captures found.
                                         </TableCell>
                                     </TableRow>
                                 )}

@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import { useToast } from "@/hooks/use-toast";
 import React, { useState, useEffect, useRef } from "react";
@@ -29,7 +28,8 @@ import {
   Bot,
   Layers,
   ArrowUpRight,
-  MessageCircle
+  MessageCircle,
+  Clock
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -56,7 +56,7 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-// 56 hours in milliseconds
+// 56 hours in milliseconds for Transience Protocol
 const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
 
 interface Post {
@@ -251,7 +251,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
         const postRef = doc(firestore, "posts", post.id);
         deleteDoc(postRef)
             .then(() => {
-                toast({ title: "Post Purged", description: "Registry data erased permanently." });
+                toast({ title: "Post Purged", description: "Registry data erased permanently from Firestore." });
             })
             .catch((serverError) => {
                 const permissionError = new FirestorePermissionError({
@@ -397,18 +397,12 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                 
                 <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
                     <Clock className="h-3 w-3" />
-                    <span>Transience Active</span>
+                    <span>Transience Protocol: Purge in 56H</span>
                 </div>
             </CardFooter>
         </Card>
     );
 }
-
-const Clock = ({ className }: { className?: string }) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-    </svg>
-);
 
 export default function ResearchAnalyticsPage() {
     const firestore = useFirestore();
@@ -455,9 +449,9 @@ export default function ResearchAnalyticsPage() {
                         const data = postDoc.data() as Post;
                         const createdAtMillis = data.createdAt?.toMillis() || now;
                         
-                        // Check for 56-hour expiration
+                        // Autonomous 56-Hour Purge Protocol
                         if (now - createdAtMillis > TRANSience_WINDOW) {
-                            // Autonomous Client-Side Purge from Firestore
+                            // Direct Firestore Purge on Read
                             deleteDoc(doc(firestore, "posts", postDoc.id)).catch(() => {});
                         } else {
                             postsData.push({ id: postDoc.id, ...data });
@@ -519,7 +513,7 @@ export default function ResearchAnalyticsPage() {
                             Live <span className="text-primary italic font-black">Transmissions.</span>
                         </h1>
                         <p className="text-xs sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed opacity-80 text-left">
-                            Publicly audited statutory ideas and consensus nodes. Every transmission is automatically purged after 56 hours.
+                            Publicly audited statutory ideas and consensus nodes. Every transmission is automatically purged from the registry after 56 hours.
                         </p>
                     </div>
 
@@ -541,7 +535,7 @@ export default function ResearchAnalyticsPage() {
                             </div>
                             <div className="space-y-3">
                                 <p className="font-black text-2xl sm:text-3xl tracking-tighter uppercase">Registry Clear</p>
-                                <p className="text-xs sm:text-sm font-medium italic max-w-xs mx-auto">"No active transmissions currently found in the community node."</p>
+                                <p className="text-xs sm:text-sm font-medium italic max-w-xs mx-auto">"No active transmissions currently found in the community node. Data is purged periodically."</p>
                             </div>
                         </motion.div>
                     ) : (
