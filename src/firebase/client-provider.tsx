@@ -1,3 +1,4 @@
+
 'use client';
 import { ReactNode, useEffect, useState } from 'react';
 import { FirebaseProvider } from './provider';
@@ -12,7 +13,8 @@ import {
 } from 'firebase/firestore';
 import { getDatabase, type Database } from 'firebase/database';
 import { firebaseConfig } from './config';
-import { Loader2 } from 'lucide-react';
+import { Logo } from '@/components/logo';
+import { motion } from 'framer-motion';
 
 interface FirebaseInstances {
   app: FirebaseApp;
@@ -21,11 +23,9 @@ interface FirebaseInstances {
   rtdb: Database;
 }
 
-// Create singleton instances at the module level
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 
-// Use the modern localCache settings to replace deprecated enableIndexedDbPersistence
 let firestore: Firestore;
 try {
   firestore = initializeFirestore(app, {
@@ -34,7 +34,6 @@ try {
     }),
   });
 } catch (error) {
-  // If already initialized (e.g. during hot reloading), just get the existing instance
   firestore = getFirestore(app);
 }
 
@@ -45,15 +44,20 @@ export function FirebaseClientProvider({ children }: { children: ReactNode }) {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // We use a simple ready state to handle hydration properly in Next.js
     setIsReady(true);
   }, []);
 
-  // Show a loader until hydration is complete.
   if (!isReady) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="relative">
+          <motion.div 
+            animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.5, 0.2] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="absolute -inset-10 bg-primary/10 rounded-full blur-xl"
+          />
+          <Logo className="h-12 w-12 border-none p-0 bg-transparent shadow-none" priority />
+        </div>
       </div>
     );
   }
