@@ -136,7 +136,7 @@ export default function BillingPage() {
         }
 
         const options = {
-            key: "rzp_live_SY4T9oT2oLGhiS",
+            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_SY4T9oT2oLGhiS",
             amount: Math.round(finalAmount * 100), 
             currency: "INR",
             name: "Nyaya Sahayak",
@@ -180,7 +180,6 @@ export default function BillingPage() {
                     setTimeout(() => router.push('/dashboard/profile'), 1000);
                 } catch (err) {
                     console.error("Critical Sync Error:", err);
-                    // Subscription failed but payment captured - show specialized help UI
                     setSyncError({ paymentId, plan: plan.name });
                     setProcessingId(null);
                 }
@@ -194,7 +193,6 @@ export default function BillingPage() {
             modal: { 
                 ondismiss: async () => { 
                     setProcessingId(null);
-                    // Log cancelled attempt for admin visibility
                     try {
                         await addDoc(collection(firestore, "transactions"), {
                             userId: auth.currentUser!.uid,
@@ -213,7 +211,6 @@ export default function BillingPage() {
         try {
             const rzp = new (window as any).Razorpay(options);
             
-            // Listen for failures
             rzp.on('payment.failed', async function (response: any) {
                 try {
                     await addDoc(collection(firestore, "transactions"), {
