@@ -137,7 +137,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Value</span>
-                            <span className="text-lg font-black tracking-tight">₹{tx.amount.toLocaleString('en-IN')}</span>
+                            <span className="text-lg font-black tracking-tight">₹{(tx.amount || 0).toLocaleString('en-IN')}</span>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Clearance Node</span>

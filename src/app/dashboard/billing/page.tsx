@@ -421,11 +421,11 @@ export default function BillingPage() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <Badge variant="outline" className="font-black text-[8px] uppercase border-primary/20 text-primary bg-primary/5">
-                                                {tx.planId?.replace('_', ' ')}
+                                                {tx.planId?.replace('_', ' ') || 'Statutory Upgrade'}
                                             </Badge>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <p className="font-mono font-black text-xs">₹{tx.amount.toLocaleString('en-IN')}</p>
+                                            <p className="font-mono font-black text-xs">₹{(tx.amount || 0).toLocaleString('en-IN')}</p>
                                         </td>
                                         <td className="px-6 py-4 text-right pr-10">
                                             <p className="font-mono text-[9px] opacity-40 select-all">{tx.paymentId}</p>

@@ -22,8 +22,7 @@ import {
   Library,
   FolderKanban,
   Zap,
-  Layers,
-  Activity as PulseIcon
+  Layers
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
@@ -136,6 +135,9 @@ export default function WelcomePage() {
   const auth = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [text, setText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
+  const fullText = 'Sahayak';
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -144,6 +146,23 @@ export default function WelcomePage() {
     });
     return () => unsubscribe();
   }, [auth]);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (isTyping) {
+      if (text.length < fullText.length) {
+        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 50); 
+      } else {
+        timeoutId = setTimeout(() => setIsTyping(false), 2000);
+      }
+    } else {
+      timeoutId = setTimeout(() => {
+        setText('');
+        setIsTyping(true);
+      }, 800);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [text, isTyping]);
 
   return (
     <div className="flex flex-col min-h-screen bg-background selection:bg-primary/10 overflow-x-hidden text-left font-body relative">
