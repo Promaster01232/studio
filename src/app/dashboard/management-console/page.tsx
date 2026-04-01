@@ -25,7 +25,8 @@ import {
   User,
   PlusCircle,
   Activity,
-  Zap
+  Zap,
+  Clock
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -114,7 +115,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                                 <div className="p-2 rounded-lg bg-muted shadow-inner"><User className="h-3.5 w-3.5 text-muted-foreground" /></div>
                                 <div className="text-left">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Citizen Identity</p>
-                                    <p className="text-xs font-bold">Registry Identity Masked</p>
+                                    <p className="text-xs font-bold">Identity Masked for Privacy</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-3">
@@ -263,7 +264,9 @@ export default function ManagementConsolePage() {
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild><button className="h-9 w-9 rounded-xl hover:bg-muted flex items-center justify-center transition-all active:scale-90"><MoreHorizontal className="h-4 w-4" /></button></DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end" className="w-52 p-2 rounded-xl glass border-primary/10 shadow-2xl">
-                                                        <DropdownMenuItem onClick={() => setUserToPurge(user)} className="rounded-lg h-10 font-bold text-xs cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3" disabled={isProtected}><Trash2 className="h-4 w-4" /> Purge Node Registry</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => setUserToPurge(user)} className="rounded-lg h-10 font-bold text-xs cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
+                                                            <Trash2 className="h-4 w-4" /> <span>Purge Node Registry</span>
+                                                        </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </TableCell>
