@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -466,7 +465,6 @@ export default function DashboardHomePage() {
                 const data = d.data() as Post;
                 const createdAtMillis = data.createdAt?.toMillis() || now;
                 
-                // 56-hour Transience Window Check
                 if (now - createdAtMillis > TRANSience_WINDOW) {
                     deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
                 } else {
@@ -506,7 +504,8 @@ export default function DashboardHomePage() {
   }, [text, isTyping]);
 
   const isAdmin = userProfile?.email && ADMIN_EMAILS.includes(userProfile.email.toLowerCase());
-  const isLimited = !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
+  const isElite = isAdmin || userProfile?.subscriptionType?.includes('unlimited');
+  const isLimited = userProfile && !isElite;
   const isMonthly = userProfile?.subscriptionType === 'unlimited_monthly';
   const isYearly = userProfile?.subscriptionType === 'unlimited_yearly' || isAdmin;
 

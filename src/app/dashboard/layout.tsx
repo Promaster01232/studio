@@ -49,7 +49,9 @@ const ADMIN_EMAILS = [
 const PUBLIC_DASHBOARD_ROUTES = ['/dashboard', '/dashboard/research-analytics'];
 
 function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unreadCount: number, isAdmin: boolean }) {
-    const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
+    // Hide upgrade button for all unlimited tiers and admins
+    const isElite = isAdmin || userProfile?.subscriptionType?.includes('unlimited');
+    const isLimited = userProfile && !isElite;
     
     return (
         <header className={cn(
@@ -232,11 +234,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   };
 
   const isPublicPath = PUBLIC_DASHBOARD_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
-  // We use a stable check for showing content to avoid hydration flicker.
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile' || isPublicPath);
   const isSuspended = userProfile?.isBlocked === true;
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
-  const isLimited = userProfile && !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
+  const isElite = isAdmin || userProfile?.subscriptionType?.includes('unlimited');
+  const isLimited = userProfile && !isElite;
 
   if (isMounted && isSuspended) {
       return (

@@ -84,7 +84,6 @@ export default function BillingPage() {
     const [syncError, setSyncError] = useState<{ paymentId: string, plan: string } | null>(null);
     const [userTransactions, setUserTransactions] = useState<any[]>([]);
     
-    // Coupon States
     const [couponCode, setCouponCode] = useState("");
     const [appliedDiscount, setAppliedDiscount] = useState<{ code: string, percent?: number, fixedAmount?: number, planId: string } | null>(null);
     const [couponError, setCouponError] = useState<string | null>(null);
@@ -96,7 +95,6 @@ export default function BillingPage() {
             setLoading(false);
         });
 
-        // Fetch User Transactions (Success Only - Verified captures)
         const transRef = collection(firestore, "transactions");
         const q = query(transRef, where("userId", "==", auth.currentUser.uid), where("status", "==", "CAPTURED"));
         
@@ -175,7 +173,6 @@ export default function BillingPage() {
                     else if (planId.includes('yearly')) expiryDate.setFullYear(now.getFullYear() + 1);
                     else expiryDate.setDate(now.getDate() + 365);
 
-                    // Atomic write for success only - Zero-Persistence for failures
                     await addDoc(collection(firestore, "transactions"), {
                         userId: auth.currentUser!.uid,
                         userEmail: profile?.email,
@@ -214,7 +211,6 @@ export default function BillingPage() {
             theme: { color: "#994B00" },
             modal: { 
                 ondismiss: () => { 
-                    // NO DATA STORED ON CANCELLATION - Zero-Persistence Protocol
                     setProcessingId(null);
                 } 
             }
@@ -224,7 +220,6 @@ export default function BillingPage() {
             const rzp = new (window as any).Razorpay(options);
             rzp.open();
         } catch (error) {
-            // Internal UI reset only - no persistence
             setProcessingId(null);
         }
     };
@@ -402,7 +397,7 @@ export default function BillingPage() {
                     </div>
                     <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
                         <Lock className="h-3 w-3 text-primary/60" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">Privacy Protocol: Cancelled attempts are not recorded</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">Privacy Protocol: Success-only sync active</span>
                     </div>
                 </div>
                 <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">

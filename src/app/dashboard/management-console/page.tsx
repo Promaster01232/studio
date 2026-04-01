@@ -253,9 +253,7 @@ export default function ManagementConsolePage() {
         });
 
         const transCol = collection(firestore, "transactions");
-        const qTrans = query(transCol, orderBy("createdAt", "desc"), limit(100));
         const unsubscribeTrans = onSnapshot(transCol, (snapshot) => {
-            // Client-side sorting to bypass composite index requirement
             const list = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as TransactionRecord));
             list.sort((a, b) => {
                 const dateA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
@@ -571,7 +569,7 @@ export default function ManagementConsolePage() {
                         <CardTitle className="font-headline font-black text-xl tracking-tight text-green-600">Statutory Verified Ledger</CardTitle>
                         <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
                             <Lock className="h-3 w-3 text-primary/60" />
-                            <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">Zero-Persistence: Cancelled attempts are not stored</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">Zero-Persistence Sync Active</span>
                         </div>
                     </div>
                     <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Success-only feed of verified institutional captures.</CardDescription>
