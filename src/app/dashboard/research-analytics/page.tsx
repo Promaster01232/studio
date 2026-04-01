@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useToast } from "@/hooks/use-toast";
@@ -54,6 +55,9 @@ const ADMIN_EMAILS = [
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'
 ];
+
+// 56 hours in milliseconds
+const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
 
 interface Post {
     id: string;
@@ -265,18 +269,11 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
         )}>
             <div className={cn("absolute inset-0 bg-gradient-to-br via-transparent to-transparent opacity-5 group-hover:opacity-10 transition-opacity duration-700", config.gradient)}></div>
             
-            <div className="absolute top-0 left-0 bottom-0 w-1 flex flex-col">
-                <div className={cn("flex-1 opacity-40", config.bg)}></div>
-                <div className="flex-1 bg-white dark:bg-zinc-900"></div>
-                <div className={cn("flex-1 opacity-40", config.bg)}></div>
-            </div>
-            
             <CardHeader className="p-5 sm:p-10 pb-0 ml-1">
                 <div className="flex items-start justify-between mb-6 sm:mb-8">
                     <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
                     <div className="flex items-center gap-2 sm:gap-3">
-                        <Badge variant="outline" className={cn("border font-black text-[8px] sm:text-[9px] uppercase px-3 sm:px-4 py-1 rounded-full tracking-[0.1em] shadow-sm whitespace-nowrap", config.bg, config.color, config.border)}>
-                            <config.icon className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-1.5 sm:mr-2" />
+                        <Badge variant="outline" className={cn("border font-black text-[8px] sm:text-[9px] uppercase px-3 sm:px-4 py-1 rounded-full tracking-[0.1em] whitespace-nowrap", config.bg, config.color, config.border)}>
                             {post.postType || 'Transmission'}
                         </Badge>
                         <DropdownMenu>
@@ -289,7 +286,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                 {(isAuthor || isGlobalAdmin) ? (
                                     <DropdownMenuItem onSelect={handleDeletePost} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3">
                                         <Trash2 className="h-4 w-4" /> 
-                                        <span>{isGlobalAdmin && !isAuthor ? 'Admin Purge' : 'Purge record'}</span>
+                                        <span>Purge record</span>
                                     </DropdownMenuItem>
                                 ) : (
                                     <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3 hover:bg-red-500/5 hover:text-red-500">
@@ -321,35 +318,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                             )}
                         </div>
                     )}
-
-                    {post.tags && post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 pt-1 sm:pt-2">
-                            {post.tags.map(tag => (
-                                <Badge key={tag} variant="secondary" className="bg-primary/5 border border-primary/10 text-[8px] sm:text-[9px] font-black uppercase px-2.5 sm:px-3 py-1 rounded-xl tracking-widest text-primary/70">
-                                    #{tag}
-                                </Badge>
-                            ))}
-                        </div>
-                    )}
                 </div>
             </CardHeader>
 
             <div className="px-5 sm:px-10 pb-0 pt-6 sm:pt-8 ml-1 text-left">
-                 {post.link && (
-                    <a href={post.link} target="_blank" rel="noopener noreferrer" className="block p-4 sm:p-5 rounded-3xl border border-primary/10 bg-muted/30 hover:bg-primary/5 transition-all group/link shadow-inner">
-                        <div className="flex items-center gap-4 sm:gap-5">
-                            <div className="p-2.5 sm:p-3 rounded-2xl bg-white dark:bg-black/40 shadow-md group-hover/link:scale-110 transition-transform">
-                                <Globe className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                            </div>
-                            <div className="flex-1 min-w-0 text-left">
-                                <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-0.5">Statutory Citation Ingress</p>
-                                <p className="text-xs sm:text-sm font-bold truncate text-foreground/80">{post.link}</p>
-                            </div>
-                            <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5 text-primary opacity-20 group-hover/link:opacity-100 transition-opacity" />
-                        </div>
-                    </a>
-                )}
-                
                 {optimisticPoll && (
                     <div className="pt-6 sm:pt-8 space-y-4">
                        <div className="grid gap-2.5 sm:gap-3">
@@ -375,27 +347,13 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                                             )}
                                         </AnimatePresence>
                                         <div className="relative z-10 flex items-center justify-between h-full">
-                                            <div className="flex items-center gap-3 sm:gap-4">
-                                                <div className={cn(
-                                                    "h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full border-2 border-primary/30",
-                                                    userHasVotedOnPoll ? "bg-primary border-transparent" : "group-hover/option:scale-125"
-                                                )} />
-                                                <span className="font-bold text-xs sm:text-sm sm:text-base tracking-tight">{option.text}</span>
-                                            </div>
-                                            {userHasVotedOnPoll && (
-                                                <span className="font-black text-xs sm:text-sm text-primary font-mono">{percentage.toFixed(0)}%</span>
-                                            )}
+                                            <span className="font-bold text-xs sm:text-sm sm:text-base tracking-tight">{option.text}</span>
+                                            {userHasVotedOnPoll && <span className="font-black text-xs sm:text-sm text-primary font-mono">{percentage.toFixed(0)}%</span>}
                                         </div>
                                     </button>
                                 )
                             })}
                        </div>
-                       {userHasVotedOnPoll && (
-                            <div className="flex items-center gap-2.5 sm:gap-3 px-3 py-3 rounded-2xl bg-green-500/5 border border-green-500/10 text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#128807] animate-in fade-in slide-in-from-left-2 text-left">
-                                <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                identity-verified consensus captured // registry secure
-                            </div>
-                        )}
                     </div>
                 )}
             </div>
@@ -406,21 +364,21 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                         variant="ghost" 
                         size="sm" 
                         className={cn(
-                            "h-10 sm:h-11 px-4 sm:px-6 rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest gap-2 sm:gap-3 transition-all shadow-sm", 
+                            "h-10 sm:h-11 px-4 sm:px-6 rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest gap-2 sm:gap-3 transition-all", 
                             userHasLiked ? "text-red-500 bg-red-500/5 border border-red-500/10" : "bg-white dark:bg-black/20 text-primary border border-primary/5 hover:bg-primary/5"
                         )} 
                         onClick={handleLike} 
                         disabled={isLiking}
                     >
                         {isLiking ? <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" /> : <Heart className={cn("h-3.5 w-3.5 sm:h-4 sm:w-4", userHasLiked && "fill-current")} />}
-                        <span className="font-black">{optimisticLikes} <span className="hidden xs:inline">Audits</span></span>
+                        <span className="font-black">{optimisticLikes}</span>
                     </Button>
                     
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="h-10 sm:h-11 px-4 sm:px-5 rounded-2xl bg-white dark:bg-black/20 border border-primary/5 flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all shadow-sm">
+                            <button className="h-10 sm:h-11 px-4 sm:px-5 rounded-2xl bg-white dark:bg-black/20 border border-primary/5 flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
                                 <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                <span className="hidden xs:inline">Share Node</span>
+                                <span className="hidden xs:inline">Share</span>
                             </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-60 p-2 rounded-2xl shadow-2xl glass border-primary/10">
@@ -437,17 +395,20 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: UserProfile 
                     </DropdownMenu>
                 </div>
                 
-                <Button asChild variant="ghost" className="h-10 sm:h-11 px-4 sm:px-6 rounded-2xl font-black text-[10px] sm:text-[11px] uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all group/btn border border-primary/5 bg-white dark:bg-black/20 shadow-sm">
-                    <Link href="/dashboard/research-analytics">
-                        <span className="hidden xs:inline">Analyze Protocol</span>
-                        <span className="xs:hidden">Analyze</span>
-                        <ArrowRight className="ml-2 sm:ml-3 h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover/btn:translate-x-1.5" />
-                    </Link>
-                </Button>
+                <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+                    <Clock className="h-3 w-3" />
+                    <span>Transience Active</span>
+                </div>
             </CardFooter>
         </Card>
     );
 }
+
+const Clock = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+    </svg>
+);
 
 export default function ResearchAnalyticsPage() {
     const firestore = useFirestore();
@@ -487,7 +448,22 @@ export default function ResearchAnalyticsPage() {
 
             postsUnsubscribeRef.current = onSnapshot(q,
                 (querySnapshot) => {
-                    const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Post));
+                    const now = Date.now();
+                    const postsData: Post[] = [];
+                    
+                    querySnapshot.docs.forEach(postDoc => {
+                        const data = postDoc.data() as Post;
+                        const createdAtMillis = data.createdAt?.toMillis() || now;
+                        
+                        // Check for 56-hour expiration
+                        if (now - createdAtMillis > TRANSience_WINDOW) {
+                            // Autonomous Client-Side Purge from Firestore
+                            deleteDoc(doc(firestore, "posts", postDoc.id)).catch(() => {});
+                        } else {
+                            postsData.push({ id: postDoc.id, ...data });
+                        }
+                    });
+                    
                     setFeed(postsData);
                     setLoading(false);
                 },
@@ -535,15 +511,15 @@ export default function ResearchAnalyticsPage() {
                         <div className="flex items-center gap-3 sm:gap-4">
                             <div className="flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 shadow-sm">
                                 <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary animate-pulse" />
-                                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.4em] text-primary">Community Ingress Hub</span>
+                                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.4em] text-primary">Transience Active</span>
                             </div>
-                            <Badge variant="outline" className="text-[8px] sm:text-[9px] font-black uppercase border-blue-500/20 text-blue-500/70 tracking-widest bg-blue-500/5 px-2.5 sm:px-3">Registry: Active</Badge>
+                            <Badge variant="outline" className="text-[8px] sm:text-[9px] font-black uppercase border-blue-500/20 text-blue-500/70 tracking-widest bg-blue-500/5 px-2.5 sm:px-3">Statutory Window: 56H</Badge>
                         </div>
                         <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black font-headline tracking-tighter uppercase leading-[0.9] text-foreground">
                             Live <span className="text-primary italic font-black">Transmissions.</span>
                         </h1>
                         <p className="text-xs sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed opacity-80 text-left">
-                            Publicly audited statutory ideas, community polling, and real-time legal forensics from the Nyaya Sahayak registry terminal.
+                            Publicly audited statutory ideas and consensus nodes. Every transmission is automatically purged after 56 hours.
                         </p>
                     </div>
 
@@ -581,30 +557,6 @@ export default function ResearchAnalyticsPage() {
                         ))
                     )}
                 </AnimatePresence>
-            </div>
-
-            <div className="pt-16 sm:pt-20 border-t border-primary/10 flex flex-col sm:flex-row items-center justify-between gap-8 sm:gap-10">
-                <div className="flex flex-wrap justify-center gap-8 sm:gap-12">
-                    <div className="flex items-center gap-4 sm:gap-5 group">
-                        <div className="p-3.5 sm:p-4 rounded-[1.2rem] sm:rounded-[1.5rem] bg-primary/5 text-primary group-hover:scale-110 transition-transform shadow-sm">
-                            <ShieldCheck className="h-5 w-5 sm:h-6 sm:w-6" />
-                        </div>
-                        <div className="text-left">
-                            <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-primary">Verified Hub</p>
-                            <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground opacity-60">Forensic Identity Audit Active.</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-4 sm:gap-5 group">
-                        <div className="p-3.5 sm:p-4 rounded-[1.2rem] sm:rounded-[1.5rem] bg-blue-500/5 text-blue-500 group-hover:scale-110 transition-transform shadow-sm">
-                            <Layers className="h-5 w-5 sm:h-6 sm:w-6" />
-                        </div>
-                        <div className="text-left">
-                            <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-blue-500">Registry Density</p>
-                            <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground opacity-60">High-fidelity consensus nodes.</p>
-                        </div>
-                    </div>
-                </div>
-                <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground/30 shrink-0">NYAYASAHAYAK.IN // NS-STREAM-V4</p>
             </div>
         </div>
     );

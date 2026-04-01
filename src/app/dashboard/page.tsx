@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -77,6 +78,8 @@ const ADMIN_EMAILS = [
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'
 ];
+
+const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
 
 interface Post {
     id: string;
@@ -312,7 +315,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                     {(isAuthor || isGlobalAdmin) ? (
                                         <DropdownMenuItem onSelect={handleDelete} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                             <Trash2 className="h-4 w-4" /> 
-                                            <span>{isGlobalAdmin && !isAuthor ? 'Admin Purge' : 'Purge record'}</span>
+                                            <span>Purge record</span>
                                         </DropdownMenuItem>
                                     ) : (
                                         <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
@@ -369,26 +372,12 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                             )}
                                         </AnimatePresence>
                                         <div className="relative z-10 flex items-center justify-between h-full">
-                                            <div className="flex items-center gap-3">
-                                                <div className={cn(
-                                                    "h-2.5 w-2.5 rounded-full border border-primary/30 transition-all",
-                                                    userHasVotedOnPoll ? "opacity-0" : "group-hover/option:scale-125"
-                                                )} />
-                                                <span className="font-bold text-sm tracking-tight">{option.text}</span>
-                                            </div>
-                                            {userHasVotedOnPoll && (
-                                                <span className="font-black text-xs text-primary">{percentage.toFixed(0)}%</span>
-                                            )}
+                                            <span className="font-bold text-sm tracking-tight">{option.text}</span>
+                                            {userHasVotedOnPoll && <span className="font-black text-xs text-primary">{percentage.toFixed(0)}%</span>}
                                         </div>
                                     </button>
                                 );
                             })}
-                            {userHasVotedOnPoll && (
-                                <div className="flex items-center gap-2 px-1 text-[10px] font-bold text-[#128807] animate-in fade-in slide-in-from-left-2">
-                                    <CheckCircle2 className="h-3.5 w-3.5" />
-                                    consensus captured // registry secure
-                                </div>
-                            )}
                         </div>
                     )}
 
@@ -407,33 +396,11 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
                                 {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} />}
                                 <span className="font-black">{optimisticLikes}</span>
                             </Button>
-                            
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="sm" className="h-9 px-4 rounded-xl text-[11px] font-bold gap-2.5 transition-all bg-white dark:bg-black/20 border border-primary/5 hover:bg-primary/5">
-                                        <Share2 className="h-4 w-4" />
-                                        <span className="hidden xs:inline">Share</span>
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl glass border-primary/10">
-                                    <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
-                                        <MessageCircle className="h-4 w-4 text-green-600" /> WhatsApp
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
-                                        <Twitter className="h-4 w-4 text-blue-500" /> Twitter (X)
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3">
-                                        <Bookmark className="h-4 w-4 text-primary" /> Copy Link
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
                         </div>
-                        <Button variant="ghost" size="sm" className="h-9 px-5 rounded-xl font-bold text-[11px] text-primary border border-primary/10 hover:bg-primary hover:text-white transition-all shadow-sm group/btn" asChild>
-                            <Link href="/dashboard/research-analytics">
-                                <span>analyze protocol</span>
-                                <ArrowRight className="ml-2.5 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                            </Link>
-                        </Button>
+                        <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+                            <Activity className="h-3 w-3" />
+                            <span>Registry Transient</span>
+                        </div>
                     </div>
                 </div>
             </Card>
@@ -492,7 +459,21 @@ export default function DashboardHomePage() {
         const q = query(postsRef, orderBy("createdAt", "desc"), limit(5));
         
         postsUnsubscribeRef.current = onSnapshot(q, (snap) => {
-            const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
+            const now = Date.now();
+            const list: Post[] = [];
+            
+            snap.docs.forEach(d => {
+                const data = d.data() as Post;
+                const createdAtMillis = data.createdAt?.toMillis() || now;
+                
+                // 56-hour Transience Window Check
+                if (now - createdAtMillis > TRANSience_WINDOW) {
+                    deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
+                } else {
+                    list.push({ id: d.id, ...data });
+                }
+            });
+            
             setLatestPosts(list);
             setPostsLoading(false);
         }, (serverError) => {
@@ -536,20 +517,6 @@ export default function DashboardHomePage() {
               "relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 backdrop-blur-xl shadow-2xl transition-all duration-700",
               (isYearly || isMonthly) ? "bg-gradient-to-br from-primary/10 via-amber-500/5 to-primary/5 shadow-primary/10 border-primary/20" : "bg-card/40 shadow-primary/5"
           )}>
-              {/* Premium Animated Background Layer */}
-              <AnimatePresence>
-                  {(isYearly || isMonthly) && (
-                      <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="absolute inset-0 pointer-events-none"
-                      >
-                          <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[100px] animate-pulse" />
-                          <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-amber-500/5 blur-[100px] animate-pulse" />
-                      </motion.div>
-                  )}
-              </AnimatePresence>
-
               <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none text-left">
                   <div className="bg-white rounded-full p-10 grayscale">
                     <Logo className="h-56 w-56 border-none p-0 bg-transparent shadow-none" priority />
@@ -574,9 +541,6 @@ export default function DashboardHomePage() {
                                     {isYearly ? <ShieldCheck className="h-3 w-3" /> : <Crown className="h-3 w-3" />}
                                     Clearance: {isYearly ? 'Institutional Annual' : 'Unlimited Monthly'} Node
                                 </Badge>
-                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2 animate-pulse">
-                                    <Sparkles className="h-3 w-3" /> Elite Mode Active
-                                </Badge>
                             </motion.div>
                           )}
                       </div>
@@ -589,28 +553,18 @@ export default function DashboardHomePage() {
                       </h1>
                   </div>
                   <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed text-left">
-                      {isYearly ? "You have absolute institutional authority over all forensic nodes. Your elite protocol provides maximum-fidelity legal intelligence." : 
-                       isMonthly ? "Unlimited forensic clearance is active. Accessing full neural capacity for high-frequency legal auditing." :
-                       "Access precision AI nodes for statutory auditing within the Indian judicial ecosystem. Standard operation protocols active."}
+                      Access precision AI nodes for statutory auditing within the Indian judicial ecosystem. 
+                      <span className="block mt-2 font-black text-[10px] uppercase text-primary/60 tracking-widest flex items-center gap-2">
+                        <Activity className="h-3 w-3" /> Transience protocol active: Posts purge after 56H.
+                      </span>
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
                       <Button size="sm" className={cn(
                           "rounded-xl font-bold px-8 h-14 shadow-xl transition-all text-xs",
                           (isYearly || isMonthly) ? "bg-primary shadow-primary/30 hover:scale-105" : "shadow-primary/20"
                       )} asChild>
-                          <Link href="/dashboard/narrate">
-                            <span className="hidden sm:inline">initialize narration</span>
-                            <span className="sm:hidden">narrate now</span>
-                          </Link>
+                          <Link href="/dashboard/narrate">initialize narration</Link>
                       </Button>
-                      {isLimited && (
-                        <Button variant="outline" size="sm" className="rounded-xl font-bold px-8 h-14 border-primary/10 bg-primary/5 text-primary hover:bg-primary/10 transition-all text-xs" asChild>
-                            <Link href="/dashboard/billing">
-                              <span className="hidden sm:inline">Upgrade Clearance</span>
-                              <span className="sm:hidden">Upgrade Tier</span>
-                            </Link>
-                        </Button>
-                      )}
                   </div>
               </div>
           </Card>
@@ -619,18 +573,17 @@ export default function DashboardHomePage() {
         <div className="grid lg:grid-cols-12 gap-10">
           <div className="lg:col-span-8 space-y-10">
               <section>
-                  <SectionHeader icon={TrendingUp} sector="Sector: Community">live transmission stream</SectionHeader>
-                  
+                  <SectionHeader icon={TrendingUp} sector="Sector: Community">live transient stream</SectionHeader>
                   <div className="space-y-6">
                       {postsLoading ? (
                           <div className="space-y-5">
-                              {[...Array(3)].map((_, i) => (
+                              {[...Array(2)].map((_, i) => (
                                   <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-2xl bg-muted/20 shadow-sm" />
                               ))}
                           </div>
                       ) : latestPosts.length === 0 ? (
                           <Card className="py-20 text-center glass rounded-[2.5rem] border-dashed border-2 border-primary/10 opacity-40">
-                              <p className="font-bold text-sm tracking-tight">registry empty // no active transmissions</p>
+                              <p className="font-bold text-sm tracking-tight">registry clear // awaiting transmissions</p>
                           </Card>
                       ) : (
                           <div className="space-y-6">
@@ -645,50 +598,6 @@ export default function DashboardHomePage() {
 
           <div className="lg:col-span-4 space-y-10">
               <section>
-                  <SectionHeader icon={CreditCard} sector={isLimited ? "Status: Restricted" : "Status: Absolute"}>Statutory Audit</SectionHeader>
-                  <Card className={cn(
-                      "glass p-6 rounded-[2rem] border-primary/10 shadow-lg shadow-primary/5 relative overflow-hidden text-left transition-all",
-                      (isYearly || isMonthly) && "ring-1 ring-primary/20 bg-primary/5"
-                  )}>
-                      <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
-                          <Zap className="h-16 w-16 text-primary" />
-                      </div>
-                      <div className="space-y-6 relative z-10">
-                          <div className="flex justify-between items-center">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Operations Executed</p>
-                              <span className="font-mono font-black text-primary">
-                                  {userProfile?.aiUsageCount || 0} / {isLimited ? (userProfile?.subscriptionType === 'pro_20' ? '20' : '5') : '∞'}
-                              </span>
-                          </div>
-                          <div className="w-full h-2 bg-muted rounded-full overflow-hidden shadow-inner">
-                              <motion.div 
-                                  initial={{ width: 0 }}
-                                  animate={{ width: isLimited ? `${Math.min(100, ((userProfile?.aiUsageCount || 0) / (userProfile?.subscriptionType === 'pro_20' ? 20 : 5)) * 100)}%` : "100%" }}
-                                  className={cn("h-full", isLimited ? "bg-primary" : "bg-gradient-to-r from-green-500 to-emerald-600")}
-                              />
-                          </div>
-                          {isLimited ? (
-                            <Button asChild className="w-full h-12 font-black uppercase tracking-widest text-[9px] rounded-xl shadow-xl shadow-primary/20 transition-all">
-                                <Link href="/dashboard/billing">
-                                  <span className="hidden sm:inline">Upgrade Now</span>
-                                  <span className="sm:hidden">Upgrade Now</span>
-                                </Link>
-                            </Button>
-                          ) : (
-                            <motion.div 
-                                initial={{ opacity: 0, y: 5 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="flex items-center gap-3 p-3 rounded-xl bg-green-500/5 border border-green-500/10 shadow-inner"
-                            >
-                                <ShieldCheck className="h-4 w-4 text-green-600" />
-                                <span className="text-[10px] font-black uppercase text-green-600 tracking-wider">Maximum Clearance Active</span>
-                            </motion.div>
-                          )}
-                      </div>
-                  </Card>
-              </section>
-
-              <section>
                   <SectionHeader icon={Sparkles} sector="Status: Optimized">system matrix</SectionHeader>
                   <div className="grid grid-cols-2 gap-4">
                       {aiFeatures.map((f) => (
@@ -702,7 +611,6 @@ export default function DashboardHomePage() {
                                         <f.icon className="h-4 w-4" />
                                     </div>
                                     <h3 className="font-black text-[12px] tracking-tight text-foreground leading-none lowercase first-letter:uppercase">{f.title}</h3>
-                                    <p className="text-[11px] text-muted-foreground font-medium mt-1.5 leading-snug opacity-70 line-clamp-2">{f.desc}</p>
                                 </div>
                                 <div className="mt-3.5 pt-3 border-t border-primary/5">
                                     <span className="text-[9px] font-bold text-primary/40 tracking-wider">{f.sector}</span>
@@ -712,70 +620,7 @@ export default function DashboardHomePage() {
                       ))}
                   </div>
               </section>
-
-              <section>
-                  <SectionHeader icon={Library} sector="Status: Ready">statutory registry</SectionHeader>
-                  <div className="space-y-3.5">
-                      {[
-                        { href: "/dashboard/learn", icon: Library, title: "knowledge hub", label: "learn" },
-                        { href: "/dashboard/my-cases", icon: Landmark, title: "case tracker", label: "case" },
-                      ].map((item) => (
-                        <Link key={item.href} href={item.href} className="block group" onMouseEnter={() => playSound('hover')}>
-                            <Card className="glass p-4 rounded-2xl border-primary/5 group-hover:bg-primary/5 group-hover:border-primary/20 transition-all flex items-center justify-between group-hover:scale-[1.01] group-active:scale-[0.99] shadow-sm">
-                                <div className="flex items-center gap-4 text-left">
-                                    <div className="p-2 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
-                                        <item.icon className="h-4 w-4" />
-                                    </div>
-                                    <span className="font-bold text-sm tracking-tight lowercase first-letter:uppercase">{item.title}</span>
-                                </div>
-                                <span className="text-[10px] font-bold text-muted-foreground/30 px-3 py-1 rounded-lg bg-muted/30">{item.label}</span>
-                            </Card>
-                        </Link>
-                      ))}
-                  </div>
-              </section>
           </div>
-        </div>
-
-        <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-center gap-4">
-            <Link href="/dashboard/research-analytics/new">
-                <motion.button
-                    onMouseEnter={() => playSound('hover')}
-                    onClick={() => playSound('click')}
-                    animate={{
-                        y: [0, -8, 0],
-                    }}
-                    transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="relative group h-16 w-16 bg-primary text-white rounded-2xl shadow-xl shadow-primary/30 flex items-center justify-center transition-all overflow-hidden"
-                >
-                    <motion.div 
-                        animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.1, 0.2] }}
-                        transition={{ repeat: Infinity, duration: 2 }}
-                        className="absolute inset-0 bg-primary rounded-2xl"
-                    />
-                    <Bot className="h-8 w-8 relative z-10" />
-                    
-                    <div className="absolute top-2 right-2 bg-accent text-accent-foreground rounded-full p-1 shadow-xl z-20 border-2 border-primary group-hover:scale-110 transition-transform">
-                        <Plus className="h-3 w-3 font-black" />
-                    </div>
-
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                </motion.button>
-            </Link>
-            
-            <div className="absolute -top-10 right-0 bg-background/80 backdrop-blur-md border border-primary/20 px-3 py-1.5 rounded-xl shadow-2xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                <span className="text-[10px] font-black tracking-widest text-primary">Neural assistant active</span>
-            </div>
-        </div>
-
-        <div className="pt-12 text-center border-t border-primary/5 opacity-30">
-            <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">nyayasahayak.in // terminal active // protocol alpha-4</p>
         </div>
     </div>
   );

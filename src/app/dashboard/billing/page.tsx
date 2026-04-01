@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where, orderBy, limit } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck, ShieldAlert, FileSignature, Globe, Layers, TicketPercent, XCircle, Mail, AlertTriangle, ExternalLink, RotateCcw } from "lucide-react";
+import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where } from "firebase/firestore";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, BadgeCheck, XCircle, TicketPercent, AlertTriangle, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -97,14 +97,13 @@ export default function BillingPage() {
             setLoading(false);
         });
 
-        // Fetch User Transactions
+        // Fetch User Transactions (Success Only)
         const transRef = collection(firestore, "transactions");
-        const q = query(transRef, where("userId", "==", auth.currentUser.uid));
+        const q = query(transRef, where("userId", "==", auth.currentUser.uid), where("status", "==", "CAPTURED"));
         
         const unsubTrans = onSnapshot(q, (snap) => {
             const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             
-            // Forensic Client-Side Sort
             list.sort((a: any, b: any) => {
                 const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
                 const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
@@ -112,8 +111,6 @@ export default function BillingPage() {
             });
 
             setUserTransactions(list.slice(0, 10));
-        }, (error) => {
-            console.error("Ledger Sync Failure:", error);
         });
 
         return () => {
@@ -166,7 +163,7 @@ export default function BillingPage() {
             amount: Math.round(finalAmount * 100), 
             currency: "INR",
             name: "Nyaya Sahayak",
-            description: `Clearance Upgrade: ${plan.name} ${appliedDiscount ? `(${appliedDiscount.code})` : ''}`,
+            description: `Clearance Upgrade: ${plan.name}`,
             image: "/Logo.png",
             handler: async function (response: any) {
                 const paymentId = response.razorpay_payment_id;
@@ -179,6 +176,7 @@ export default function BillingPage() {
                     else if (planId.includes('yearly')) expiryDate.setFullYear(now.getFullYear() + 1);
                     else expiryDate.setDate(now.getDate() + 365);
 
+                    // Atomic write for success only
                     await addDoc(collection(firestore, "transactions"), {
                         userId: auth.currentUser!.uid,
                         userEmail: profile?.email,
@@ -216,43 +214,15 @@ export default function BillingPage() {
             },
             theme: { color: "#994B00" },
             modal: { 
-                ondismiss: async () => { 
+                ondismiss: () => { 
+                    // No data stored on cancellation
                     setProcessingId(null);
-                    try {
-                        await addDoc(collection(firestore, "transactions"), {
-                            userId: auth.currentUser!.uid,
-                            userEmail: profile?.email,
-                            userName: `${profile?.firstName} ${profile?.lastName}`,
-                            planId: planId,
-                            amount: finalAmount,
-                            status: 'CANCELLED_BY_USER',
-                            createdAt: serverTimestamp(),
-                        });
-                    } catch (e) {}
                 } 
             }
         };
 
         try {
             const rzp = new (window as any).Razorpay(options);
-            
-            rzp.on('payment.failed', async function (response: any) {
-                try {
-                    await addDoc(collection(firestore, "transactions"), {
-                        userId: auth.currentUser!.uid,
-                        userEmail: profile?.email,
-                        userName: `${profile?.firstName} ${profile?.lastName}`,
-                        planId: planId,
-                        amount: finalAmount,
-                        status: 'FAILED',
-                        failureReason: response.error.description,
-                        orderId: response.error.metadata.order_id || 'N/A',
-                        paymentId: response.error.metadata.payment_id || 'N/A',
-                        createdAt: serverTimestamp(),
-                    });
-                } catch (e) {}
-            });
-
             rzp.open();
         } catch (error) {
             toast({ variant: "destructive", title: "Payment Interface Error", description: "Could not initialize Razorpay node." });
@@ -263,7 +233,7 @@ export default function BillingPage() {
     if (loading) return <div className="flex h-[70vh] items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
     if (syncError) {
-        const mailtoLink = `mailto:nyayasahayakhelp@gmail.com?subject=Payment%20Sync%20Error%20-%20${syncError.paymentId}&body=Hello%20Nyaya%20Sahayak%20Support%2C%0D%0A%0D%0AMy%20payment%20was%20successful%20but%20my%20subscription%20did%20not%20activate.%0D%0A%0D%0ATransaction%20ID%3A%20${syncError.paymentId}%0D%0APlan%3A%20${syncError.plan}%0D%0A%0D%0APlease%20manually%20verify%20and%20activate%20my%20clearance.%0D%0A%0D%0ABest%20regards%2C%0D%0A${profile?.firstName}%20${profile?.lastName}`;
+        const mailtoLink = `mailto:nyayasahayakhelp@gmail.com?subject=Payment%20Sync%20Error%20-%20${syncError.paymentId}&body=Hello%20Nyaya%20Sahayak%20Support%2C%0D%0A%0D%0AMy%20payment%20was%20successful%20but%20my%20subscription%20did%20not%20activate.%0D%0A%0D%0ATransaction%20ID%3A%20${syncError.paymentId}%0D%0APlan%3A%20${syncError.plan}`;
 
         return (
             <div className="max-w-2xl mx-auto py-20 px-4">
@@ -272,43 +242,21 @@ export default function BillingPage() {
                         <AlertTriangle className="h-20 w-20 text-amber-600 animate-pulse" />
                     </div>
                     <CardHeader className="p-8 sm:p-10 text-center">
-                        <div className="flex items-center justify-center gap-2 text-amber-600 mb-2">
-                            <ShieldAlert className="h-4 w-4" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Critical Synchronization Event</span>
-                        </div>
                         <CardTitle className="text-3xl font-black font-headline tracking-tighter">Capture Successful, Node Pending</CardTitle>
                         <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4 text-center">
-                            Your payment for <span className="text-foreground font-bold">{syncError.plan}</span> was captured, but an internal node error occurred during registry synchronization.
+                            Your payment was captured, but an internal node error occurred.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="px-8 pb-10 space-y-6">
                         <div className="p-6 rounded-2xl bg-white dark:bg-black/40 border border-amber-500/10 shadow-inner">
-                            <p className="text-[9px] font-black uppercase text-muted-foreground opacity-60 mb-2">Transaction Reference (TXID)</p>
+                            <p className="text-[9px] font-black uppercase text-muted-foreground opacity-60 mb-2">Transaction ID (TXID)</p>
                             <p className="font-mono font-black text-amber-600 select-all">{syncError.paymentId}</p>
                         </div>
-                        <div className="space-y-4">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-foreground">Next Protocol Steps:</h4>
-                            <ul className="space-y-3 text-xs text-muted-foreground font-medium">
-                                <li className="flex gap-3">
-                                    <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0 mt-1.5" />
-                                    Use the button below to initialize an official support mail with your TXID.
-                                </li>
-                                <li className="flex gap-3">
-                                    <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0 mt-1.5" />
-                                    Our support node will manually authorize your clearance within 24 business hours.
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-3">
-                            <Button className="flex-1 h-14 font-black uppercase tracking-widest text-[10px] rounded-xl shadow-xl shadow-primary/20" asChild>
-                                <a href={mailtoLink}>
-                                    <Mail className="mr-2 h-4 w-4" /> Resolve via Institutional Mail
-                                </a>
-                            </Button>
-                            <Button variant="outline" className="h-14 font-bold rounded-xl px-8" onClick={() => window.location.reload()}>
-                                Restart Terminal
-                            </Button>
-                        </div>
+                        <Button className="w-full h-14 font-black uppercase tracking-widest text-[10px] rounded-xl shadow-xl shadow-primary/20" asChild>
+                            <a href={mailtoLink}>
+                                <Mail className="mr-2 h-4 w-4" /> Resolve via Institutional Mail
+                            </a>
+                        </Button>
                     </CardContent>
                 </Card>
             </div>
@@ -369,9 +317,6 @@ export default function BillingPage() {
                                     <p className="text-[10px] font-black text-green-600 uppercase tracking-widest flex items-center gap-2">
                                         <CheckCircle2 className="h-3.5 w-3.5" /> Code Active: {appliedDiscount.code}
                                     </p>
-                                    <p className="text-[9px] font-bold text-green-600/70 mt-0.5">
-                                        {appliedDiscount.fixedAmount !== undefined ? `Price adjusted to ₹${appliedDiscount.fixedAmount}` : `${appliedDiscount.percent}% discount`} will be applied at checkout for {appliedDiscount.planId.replace('_', ' ')}.
-                                    </p>
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -383,7 +328,7 @@ export default function BillingPage() {
                 {plans.map((plan, idx) => {
                     const isActive = currentPlan === plan.id;
                     const isProcessing = processingId === plan.id;
-                    const PlanIcon = plan.icon || Activity;
+                    const PlanIcon = plan.icon || Zap;
                     
                     const isDiscounted = appliedDiscount && appliedDiscount.planId === plan.id;
                     let discountedAmount = plan.amount;
@@ -403,40 +348,17 @@ export default function BillingPage() {
                                 "h-full flex flex-col glass relative overflow-hidden transition-all duration-500 rounded-[2.5rem] border-primary/5 group",
                                 isActive && "ring-2 ring-primary border-primary/20 shadow-2xl shadow-primary/10"
                             )}>
-                                {plan.badge && (
-                                    <div className="absolute top-6 right-6">
-                                        <BadgeCheck className={cn("h-6 w-6 opacity-40 transition-transform group-hover:scale-110", plan.color)} />
-                                    </div>
-                                )}
-                                
                                 <CardHeader className="p-8 pb-4 text-left">
-                                    <div className="space-y-1">
-                                        {isActive && (
-                                            <div className="flex items-center gap-2 text-primary mb-2">
-                                                <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                                                <span className="text-[9px] font-black uppercase tracking-widest">Active Clearance</span>
-                                            </div>
-                                        )}
-                                        <div className="flex items-center gap-3">
-                                            <div className={cn("p-2 rounded-lg bg-background shadow-sm border border-primary/5", plan.color)}>
-                                                <PlanIcon className="h-4 w-4" />
-                                            </div>
-                                            <h3 className="text-xl font-black tracking-tight leading-none">{plan.name}</h3>
+                                    <div className="flex items-center gap-3">
+                                        <div className={cn("p-2 rounded-lg bg-background shadow-sm border border-primary/5", plan.color)}>
+                                            <PlanIcon className="h-4 w-4" />
                                         </div>
-                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest pt-2">{plan.desc}</p>
+                                        <h3 className="text-xl font-black tracking-tight">{plan.name}</h3>
                                     </div>
                                     <div className="pt-6">
-                                        <div className="flex items-baseline gap-2">
-                                            <span className={cn("text-4xl font-black tracking-tighter", isDiscounted && "text-green-600")}>
-                                                ₹{discountedAmount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
-                                            </span>
-                                            {isDiscounted && (
-                                                <span className="text-sm font-bold text-muted-foreground line-through opacity-40">
-                                                    {plan.price}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <span className="text-xs font-bold text-muted-foreground ml-1 opacity-60">{plan.id.includes('unlimited') ? '/ cycle' : 'once'}</span>
+                                        <span className={cn("text-4xl font-black tracking-tighter", isDiscounted && "text-green-600")}>
+                                            ₹{discountedAmount.toLocaleString('en-IN')}
+                                        </span>
                                     </div>
                                 </CardHeader>
 
@@ -447,9 +369,9 @@ export default function BillingPage() {
                                     </div>
                                     <div className="space-y-3">
                                         {plan.features.map((f, i) => (
-                                            <div key={i} className="flex items-start gap-3 group/feat">
-                                                <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0 mt-0.5 group-hover/feat:scale-110 transition-transform" />
-                                                <span className="text-[11px] font-medium text-muted-foreground leading-snug group-hover/feat:text-foreground transition-colors">{f}</span>
+                                            <div key={i} className="flex items-start gap-3">
+                                                <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0 mt-0.5" />
+                                                <span className="text-[11px] font-medium text-muted-foreground leading-snug">{f}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -460,8 +382,8 @@ export default function BillingPage() {
                                         onClick={() => handleUpgrade(plan.id)}
                                         disabled={isActive || isProcessing || processingId !== null}
                                         className={cn(
-                                            "w-full h-12 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all",
-                                            isActive ? "bg-muted text-muted-foreground cursor-default" : "shadow-lg shadow-primary/20 active:scale-95"
+                                            "w-full h-12 font-black uppercase tracking-widest text-[10px] rounded-xl",
+                                            isActive ? "bg-muted text-muted-foreground cursor-default" : "shadow-lg shadow-primary/20"
                                         )}
                                     >
                                         {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "Current Tier" : "Initialize Upgrade"}
@@ -476,7 +398,7 @@ export default function BillingPage() {
             <section className="pt-16 space-y-8">
                 <div className="flex items-center gap-3">
                     <History className="h-5 w-5 text-primary" />
-                    <h2 className="text-xl font-black font-headline tracking-tighter uppercase">Personal Transaction Ledger</h2>
+                    <h2 className="text-xl font-black font-headline tracking-tighter uppercase">Statutory Upgrade History</h2>
                 </div>
                 <Card className="glass shadow-2xl rounded-[2rem] overflow-hidden border-primary/5">
                     <div className="overflow-x-auto">
@@ -486,7 +408,6 @@ export default function BillingPage() {
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Timestamp</th>
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Registry Node</th>
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Value</th>
-                                    <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Status</th>
                                     <th className="px-6 py-4 text-right text-[9px] font-black uppercase tracking-widest text-muted-foreground">TXID</th>
                                 </tr>
                             </thead>
@@ -495,35 +416,25 @@ export default function BillingPage() {
                                     <tr key={tx.id} className="hover:bg-primary/5 transition-colors">
                                         <td className="px-6 py-4">
                                             <p className="text-[10px] font-bold text-muted-foreground">
-                                                {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate ? tx.createdAt.toDate() : new Date(tx.createdAt), { addSuffix: true }) : 'Processing...'}
+                                                {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
                                             </p>
                                         </td>
                                         <td className="px-6 py-4">
                                             <Badge variant="outline" className="font-black text-[8px] uppercase border-primary/20 text-primary bg-primary/5">
-                                                {tx.planId?.replace('_', ' ') || 'Statutory Upgrade'}
+                                                {tx.planId?.replace('_', ' ')}
                                             </Badge>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <p className="font-mono font-black text-xs">₹{(tx.amount || 0).toLocaleString('en-IN')}</p>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className={cn(
-                                                "flex items-center gap-1.5 font-black text-[8px] uppercase tracking-widest px-2 py-1 rounded-full w-fit border",
-                                                tx.status === 'CAPTURED' ? "text-green-600 bg-green-500/10 border-green-500/20" : 
-                                                tx.status === 'FAILED' || tx.status === 'CANCELLED_BY_USER' ? "text-red-600 bg-red-500/10 border-red-500/20" : "text-muted-foreground bg-muted/20 border-border"
-                                            )}>
-                                                {tx.status === 'CAPTURED' ? <ShieldCheck className="h-2.5 w-2.5" /> : <AlertTriangle className="h-2.5 w-2.5" />}
-                                                {tx.status}
-                                            </div>
+                                            <p className="font-mono font-black text-xs">₹{tx.amount.toLocaleString('en-IN')}</p>
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <p className="font-mono text-[9px] opacity-40 select-all">{tx.paymentId || 'N/A'}</p>
+                                            <p className="font-mono text-[9px] opacity-40 select-all">{tx.paymentId}</p>
                                         </td>
                                     </tr>
                                 )) : (
                                     <tr>
-                                        <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground font-medium text-xs opacity-40 italic">
-                                            No institutional transactions recorded for this node.
+                                        <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground font-medium text-xs opacity-40 italic">
+                                            No finalized transactions found in the registry.
                                         </td>
                                     </tr>
                                 )}
@@ -532,30 +443,6 @@ export default function BillingPage() {
                     </div>
                 </Card>
             </section>
-
-            <div className="pt-16 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left">
-                <div className="flex gap-10">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-xl bg-green-500/10 text-green-600">
-                            <ShieldCheck className="h-5 w-5" />
-                        </div>
-                        <div className="text-left">
-                            <p className="text-[10px] font-black uppercase text-green-600 tracking-widest leading-none">Secured Protocol</p>
-                            <p className="text-[9px] font-bold text-muted-foreground mt-1">PCI DSS Compliant</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600">
-                            <Globe className="h-5 w-5" />
-                        </div>
-                        <div className="text-left">
-                            <p className="text-[10px] font-black uppercase text-blue-600 tracking-widest leading-none">UPI & QR Ready</p>
-                            <p className="text-[9px] font-bold text-muted-foreground mt-1">Digital India Ingress</p>
-                        </div>
-                    </div>
-                </div>
-                <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/40">NYAYASAHAYAK.IN // BILLING NODE v4.2</p>
-            </div>
         </div>
     );
 }
