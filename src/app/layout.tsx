@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Nyaya Sahayak | Your AI-Powered Legal Co-Pilot",
+    title: "Nyaya Sahayak | India's Premier AI Legal Assistant",
     description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
@@ -89,11 +89,19 @@ export default function RootLayout({
       "addressRegion": "Delhi",
       "postalCode": "110001",
       "addressCountry": "IN"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": "28.6139",
-      "longitude": "77.2090"
+    }
+  };
+
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Nyaya Sahayak",
+    "operatingSystem": "Web",
+    "applicationCategory": "LegalApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
     }
   };
 
@@ -104,6 +112,11 @@ export default function RootLayout({
           id="structured-data-org"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <Script
+          id="structured-data-app"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
         />
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>
