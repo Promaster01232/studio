@@ -270,7 +270,7 @@ export default function BillingPage() {
                                         </td>
                                         <td className="px-6 py-4 text-center">
                                             <div className="flex items-center justify-center gap-1.5 text-green-600 font-black text-[8px] uppercase tracking-widest">
-                                                <CheckCircle2 className="h-3 w-3" /> SUCCESS
+                                                <CheckCircle2 className="h-3.5 w-3.5" /> SUCCESS
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
