@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -35,7 +36,8 @@ import {
   Calendar,
   XCircle,
   RotateCcw,
-  AlertCircle
+  AlertCircle,
+  PlusCircle
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -559,7 +561,13 @@ export default function ManagementConsolePage() {
           <TabsContent value="transactions">
             <Card className="border-primary/5 shadow-2xl rounded-[2.5rem] overflow-hidden bg-card text-left">
                 <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6">
-                    <CardTitle className="font-headline font-black text-xl tracking-tight text-green-600">Statutory Transaction Ledger</CardTitle>
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                        <CardTitle className="font-headline font-black text-xl tracking-tight text-green-600">Statutory Transaction Ledger</CardTitle>
+                        <Button size="sm" className="h-9 px-5 rounded-xl font-black text-[9px] uppercase tracking-widest shadow-lg shadow-primary/20">
+                            <PlusCircle className="h-3 w-3 mr-2" />
+                            New Node
+                        </Button>
+                    </div>
                     <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Live feed of all statutory upgrades and revenue capture events.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">

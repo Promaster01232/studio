@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where, orderBy, limit } from "firebase/firestore";
 import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck, ShieldAlert, FileSignature, Globe, Layers, TicketPercent, XCircle, Mail, AlertTriangle, ExternalLink, RotateCcw } from "lucide-react";
@@ -97,8 +98,6 @@ export default function BillingPage() {
         });
 
         // Fetch User Transactions
-        // We remove orderBy and limit from the query to bypass composite index requirement
-        // Sorting and limiting is now performed client-side
         const transRef = collection(firestore, "transactions");
         const q = query(transRef, where("userId", "==", auth.currentUser.uid));
         
@@ -180,8 +179,6 @@ export default function BillingPage() {
                     else if (planId.includes('yearly')) expiryDate.setFullYear(now.getFullYear() + 1);
                     else expiryDate.setDate(now.getDate() + 365);
 
-                    // Atomic write: Payment data + Subscription
-                    // Step 1: Save transaction detail first as primary record
                     await addDoc(collection(firestore, "transactions"), {
                         userId: auth.currentUser!.uid,
                         userEmail: profile?.email,
@@ -195,7 +192,6 @@ export default function BillingPage() {
                         status: 'CAPTURED'
                     });
 
-                    // Step 2: Update user profile
                     await updateDoc(userRef, { 
                         subscriptionType: planId,
                         aiUsageCount: 0,
