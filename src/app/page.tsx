@@ -17,7 +17,14 @@ import {
   Search,
   Globe,
   Scale,
-  ExternalLink
+  ExternalLink,
+  BrainCircuit,
+  Gavel,
+  Library,
+  FolderKanban,
+  Zap,
+  Layers,
+  Activity as PulseIcon
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
@@ -56,7 +63,7 @@ const featureNodes = [
     icon: Mic,
     title: "Forensic Case Auditor",
     sector: "Sector: Forensic",
-    desc: "Neural engine trained on the Bharatiya Nyaya Sanhita (BNS). It performs deep-layer deconstruction of legal narratives to map relevant statutory sections.",
+    desc: "Voice-to-statute neural engine. Converts complex legal narratives into structured forensic reports, identifying relevant sections of the Bharatiya Nyaya Sanhita (BNS) instantly.",
     href: "/dashboard/narrate",
     color: "text-orange-500",
     bg: "bg-orange-500/5"
@@ -65,7 +72,7 @@ const featureNodes = [
     icon: Search,
     title: "Statutory Risk Scanner",
     sector: "Sector: Statutory",
-    desc: "Institutional-grade audit system for legal instruments. Scans notices, contracts, and FIR applications to identify non-compliance and liability markers.",
+    desc: "Institutional document audit system. Scans FIRs, legal notices, and contracts to identify hidden risks, compliance gaps, and jurisdictional discrepancies with AI precision.",
     href: "/dashboard/document-intelligence",
     color: "text-blue-600",
     bg: "bg-blue-600/5"
@@ -74,7 +81,7 @@ const featureNodes = [
     icon: FileText,
     title: "Statutory Drafting Terminal",
     sector: "Sector: Civil",
-    desc: "AI-driven drafting node for complex legal petitions and notices. Ensures all instruments adhere to the latest judicial amendments and procedural protocols.",
+    desc: "Elite AI drafting node. Generate legally sound petitions, notices, and applications tailored to Indian judicial standards and current legislative amendments.",
     href: "/dashboard/document-generator",
     color: "text-emerald-600",
     bg: "bg-emerald-600/5"
@@ -83,10 +90,46 @@ const featureNodes = [
     icon: FileSignature,
     title: "Bond Structural Ingress",
     sector: "Sector: Registry",
-    desc: "Specialized tool for generating legally sound affidavits, bail bonds, and indemnity instruments with precise forensic placeholder mapping.",
+    desc: "Specialized generation of affidavits, bail bonds, and indemnity instruments. Precision placeholder mapping ensures every document is ready for official court submission.",
     href: "/dashboard/bond-generator",
     color: "text-purple-600",
     bg: "bg-purple-600/5"
+  },
+  {
+    icon: BrainCircuit,
+    title: "Case Strength Matrix",
+    sector: "Sector: Analytics",
+    desc: "Neural probability analyzer. Assess the statistical likelihood of litigation success based on provided evidence nodes and historical judicial precedents in Bharat.",
+    href: "/dashboard/strength-analyzer",
+    color: "text-red-500",
+    bg: "bg-red-500/5"
+  },
+  {
+    icon: Gavel,
+    title: "Court Assistant Hub",
+    sector: "Sector: Procedural",
+    desc: "Real-time courtroom strategy node. GeneratesProbe-questions for cross-examination and provides procedural guidance for ongoing judicial hearings.",
+    href: "/dashboard/court-assistant",
+    color: "text-cyan-600",
+    bg: "bg-cyan-600/5"
+  },
+  {
+    icon: Library,
+    title: "Legal Knowledge Matrix",
+    sector: "Sector: Education",
+    desc: "A high-fidelity registry of 60+ Indian law protocols. Access simplified statutory explanations and procedural roadmaps for every major area of the law.",
+    href: "/dashboard/learn",
+    color: "text-indigo-600",
+    bg: "bg-indigo-600/5"
+  },
+  {
+    icon: FolderKanban,
+    title: "Statutory Case Tracker",
+    sector: "Sector: Management",
+    desc: "Integrated case management terminal. Monitor hearing dates, track status updates, and search the official eCourts registry for real-time judicial data.",
+    href: "/dashboard/my-cases",
+    color: "text-amber-600",
+    bg: "bg-amber-600/5"
   }
 ];
 
@@ -184,6 +227,9 @@ export default function WelcomePage() {
               <h2 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[1] uppercase">
                 Neural <span className="text-primary italic font-black">Capabilities.</span>
               </h2>
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-widest opacity-60">
+                Click any module to initialize forensic ingress.
+              </p>
             </div>
           </div>
 
@@ -196,36 +242,37 @@ export default function WelcomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
               >
-                <article>
-                  <Card className="h-full flex flex-col glass transition-all duration-500 rounded-[2rem] overflow-hidden border-primary/10 hover:border-primary/30 group active:scale-[0.98] shadow-lg hover:shadow-2xl">
-                    <CardContent className="p-8 flex flex-col flex-grow relative z-10 text-left">
-                      <div className="flex items-center justify-between mb-6">
-                        <div className={cn("p-3.5 rounded-2xl transition-all duration-500 group-hover:scale-110", node.bg, node.color)}>
-                          <node.icon className="h-6 w-6" aria-hidden="true" />
+                <Link href={node.href} className="block group">
+                  <article className="h-full">
+                    <Card className="h-full flex flex-col glass transition-all duration-500 rounded-[2rem] overflow-hidden border-primary/10 group-hover:border-primary/40 active:scale-[0.98] shadow-lg group-hover:shadow-2xl group-hover:-translate-y-1">
+                      <CardContent className="p-8 flex flex-col flex-grow relative z-10 text-left">
+                        <div className="flex items-center justify-between mb-6">
+                          <div className={cn("p-3.5 rounded-2xl transition-all duration-500 group-hover:scale-110 shadow-lg", node.bg, node.color)}>
+                            <node.icon className="h-6 w-6" aria-hidden="true" />
+                          </div>
+                          <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/5 opacity-40">
+                            {node.sector}
+                          </Badge>
                         </div>
-                        <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-primary/5 opacity-40">
-                          {node.sector}
-                        </Badge>
-                      </div>
-                      
-                      <div className="space-y-3 flex-grow">
-                        <h3 className="text-lg font-black tracking-tight leading-tight group-hover:text-primary transition-colors">{node.title}</h3>
-                        <p className="text-xs text-muted-foreground font-medium leading-relaxed opacity-80">
-                          {node.desc}
-                        </p>
-                      </div>
-                      
-                      <div className="pt-6 mt-6 border-t border-primary/5 flex items-center justify-between">
-                        <Button asChild variant="ghost" className="p-0 h-auto font-black text-[9px] uppercase tracking-[0.2em] text-primary hover:bg-transparent group/btn">
-                          <Link href={node.href} className="flex items-center gap-2">
-                            Access Node
-                            <ArrowRight className="h-3 w-3 transition-transform group-hover/btn:translate-x-1.5" />
-                          </Link>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </article>
+                        
+                        <div className="space-y-3 flex-grow">
+                          <h3 className="text-lg font-black tracking-tight leading-tight group-hover:text-primary transition-colors">{node.title}</h3>
+                          <p className="text-xs text-muted-foreground font-medium leading-relaxed opacity-80 line-clamp-4">
+                            {node.desc}
+                          </p>
+                        </div>
+                        
+                        <div className="pt-6 mt-6 border-t border-primary/5 flex items-center justify-between">
+                          <span className="font-black text-[9px] uppercase tracking-[0.2em] text-primary/60 group-hover:text-primary transition-colors flex items-center gap-2">
+                            Initialize Node
+                            <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1.5" />
+                          </span>
+                          <div className="h-1.5 w-1.5 rounded-full bg-primary/20 group-hover:bg-primary group-hover:animate-pulse transition-all"></div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </article>
+                </Link>
               </motion.div>
             ))}
           </div>
