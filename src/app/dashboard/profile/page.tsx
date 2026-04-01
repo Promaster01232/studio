@@ -30,6 +30,8 @@ import {
   CreditCard,
   Award,
   Download,
+  Lightbulb,
+  Mail,
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -87,7 +89,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
     const expiryDate = expiry.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
     const { toast } = useToast();
 
-    const downloadCertificate = () => {
+    const downloadCertificate = async () => {
         try {
             const doc = new jsPDF({
                 orientation: 'landscape',
@@ -95,58 +97,105 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                 format: 'a4'
             });
 
-            doc.setDrawColor(153, 75, 0); 
-            doc.setLineWidth(2);
-            doc.rect(5, 5, 287, 200);
-            doc.setLineWidth(0.5);
-            doc.rect(8, 8, 281, 194);
+            // 1. Background & Borders (Colorful Tricolor Aesthetic)
+            doc.setFillColor(255, 255, 255);
+            doc.rect(0, 0, 297, 210, 'F');
+            
+            // Saffron Top Border
+            doc.setFillColor(255, 153, 51);
+            doc.rect(5, 5, 287, 5, 'F');
+            
+            // Green Bottom Border
+            doc.setFillColor(18, 136, 7);
+            doc.rect(5, 200, 287, 5, 'F');
 
+            // Side Navy Borders
+            doc.setFillColor(0, 0, 128);
+            doc.rect(5, 5, 5, 200, 'F');
+            doc.rect(287, 5, 5, 200, 'F');
+
+            // Decorative Inner Border
+            doc.setDrawColor(0, 0, 128);
+            doc.setLineWidth(0.5);
+            doc.rect(12, 12, 273, 186);
+
+            // 2. Main Logo Node
+            const logoImg = new Image();
+            logoImg.src = '/Logo.png';
+            await new Promise((resolve) => { logoImg.onload = resolve; });
+            doc.addImage(logoImg, 'PNG', 133.5, 20, 30, 30);
+
+            // 3. Header Text
             doc.setFont("helvetica", "bold");
             doc.setFontSize(10);
             doc.setTextColor(153, 75, 0);
-            doc.text("INSTITUTIONAL STATUTORY AUTHORITY", 148.5, 30, { align: 'center' });
+            doc.text("INSTITUTIONAL STATUTORY AUTHORITY", 148.5, 58, { align: 'center' });
 
-            doc.setFontSize(36);
+            doc.setFontSize(32);
             doc.setTextColor(0, 0, 0);
-            doc.text("CERTIFICATE OF CLEARANCE", 148.5, 55, { align: 'center' });
+            doc.text("CERTIFICATE OF CLEARANCE", 148.5, 75, { align: 'center' });
 
+            // 4. Recipient Node
             doc.setFontSize(16);
-            doc.text("This document formally certifies that", 148.5, 80, { align: 'center' });
+            doc.text("This document formally certifies that", 148.5, 95, { align: 'center' });
             
-            doc.setFontSize(28);
+            doc.setFontSize(36);
             doc.setTextColor(153, 75, 0);
-            doc.text(`${profile.firstName} ${profile.lastName}`.toUpperCase(), 148.5, 100, { align: 'center' });
+            doc.text(`${profile.firstName} ${profile.lastName}`.toUpperCase(), 148.5, 115, { align: 'center' });
 
+            // 5. Body Text
             doc.setFontSize(14);
             doc.setTextColor(100, 100, 100);
             const desc = `has been granted an Upgraded Statutory Node within the Nyaya Sahayak neural legal ecosystem. Subject to the Terms of Protocol and Forensic Security Standards of Bharat. Access to advanced neural auditing terminals is authorized.`;
             const splitDesc = doc.splitTextToSize(desc, 220);
-            doc.text(splitDesc, 148.5, 120, { align: 'center' });
+            doc.text(splitDesc, 148.5, 135, { align: 'center' });
 
+            // 6. Metadata Registry
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
-            doc.text(`Registry Node ID: NS-REG-${profile.uid.substring(0, 12).toUpperCase()}`, 40, 160);
-            doc.text(`Verification Date: ${today}`, 40, 170);
-            doc.text(`Valid Until: ${expiryDate}`, 40, 180);
+            doc.text(`Registry Node ID: NS-REG-${profile.uid.substring(0, 12).toUpperCase()}`, 25, 170);
+            doc.text(`Verification Date: ${today}`, 25, 178);
+            doc.text(`Valid Until: ${expiryDate}`, 25, 186);
+            doc.text(`Web: https://nyayasahayak.in`, 25, 194);
 
-            doc.setFont("courier", "bolditalic");
-            doc.setFontSize(20);
-            doc.text("Hardy Pie", 220, 170);
+            // 7. Signature & Ownership
+            doc.setFont("helvetica", "bolditalic");
+            doc.setFontSize(22);
+            doc.setTextColor(153, 75, 0);
+            doc.text("Hardy Pie", 230, 175, { align: 'center' });
+            doc.line(200, 178, 260, 178);
+            
             doc.setFont("helvetica", "bold");
-            doc.setFontSize(10);
-            doc.text("Chief Architect", 220, 175);
-            doc.line(200, 172, 260, 172);
+            doc.setFontSize(9);
+            doc.setTextColor(0, 0, 0);
+            doc.text("HARDY PIE", 230, 183, { align: 'center' });
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text("Owner & Chief Architect", 230, 188, { align: 'center' });
+
+            // 8. IdeaSpark Footer
+            doc.setFillColor(240, 240, 240);
+            doc.rect(110, 175, 77, 15, 'F');
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9);
+            doc.setTextColor(0, 0, 0);
+            doc.text("DEVELOPED BY IDEASPARK", 148.5, 182, { align: 'center' });
+            doc.setFontSize(7);
+            doc.setTextColor(153, 75, 0);
+            doc.text("nyayasahayakhelp@gmail.com", 148.5, 187, { align: 'center' });
 
             doc.save(`Nyaya-Sahayak-Clearance-${profile.firstName}.pdf`);
-            toast({ title: "Certificate Downloaded", description: "Your statutory record is ready." });
+            toast({ title: "Certificate Downloaded", description: "Your statutory record is ready for institutional presentation." });
         } catch (e) {
+            console.error(e);
             toast({ variant: "destructive", title: "Export Failed", description: "PDF generation encountered a node error." });
         }
     };
 
     return (
         <Card className="border-[12px] border-primary/5 bg-white dark:bg-zinc-950 p-8 sm:p-16 rounded-[3rem] shadow-3xl relative overflow-hidden text-center">
-            <div className="absolute inset-0 opacity-[0.02] pointer-events-none text-left">
+            {/* Design Watermarks */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none text-left">
                 <div className="absolute top-[-10%] left-[-10%] w-full h-full border-[1px] border-primary rounded-full scale-150" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-full h-full border-[1px] border-primary rounded-full scale-150" />
             </div>
@@ -154,14 +203,15 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
             <div className="relative z-10 space-y-12">
                 <header className="space-y-6">
                     <div className="flex justify-center">
-                        <div className="relative">
+                        <div className="relative group">
                             <div className="absolute -inset-4 bg-primary/10 rounded-full animate-pulse blur-xl" />
-                            <Logo className="h-20 w-20 relative z-10 p-0 shadow-none border-none bg-transparent" priority />
+                            <Logo className="h-24 w-24 relative z-10 p-0 shadow-none border-none bg-transparent" priority />
                         </div>
                     </div>
                     <div className="space-y-2">
                         <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-primary">Institutional Statutory Authority</h2>
                         <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter text-foreground uppercase leading-none">Certificate of <br/> <span className="text-primary italic">Clearance Upgrade</span></h1>
+                        <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest pt-2">Web Registry: https://nyayasahayak.in</p>
                     </div>
                 </header>
 
@@ -184,12 +234,19 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                             <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Registry Node ID</p>
                             <p className="text-[10px] font-mono font-bold text-primary">NS-REG-{profile.uid.substring(0, 8).toUpperCase()}</p>
                         </div>
-                        <div className="pt-2">
-                            <p className="text-[8px] font-bold text-muted-foreground opacity-40 uppercase">Clearance active until: {expiryDate}</p>
+                        <div className="pt-2 flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-primary/5 border border-primary/10">
+                                <Lightbulb className="h-4 w-4 text-primary" />
+                            </div>
+                            <div className="text-left">
+                                <p className="text-[8px] font-black uppercase tracking-widest text-primary">Developed by IdeaSpark</p>
+                                <p className="text-[7px] font-bold text-muted-foreground opacity-40 uppercase">Institutional Technology</p>
+                            </div>
                         </div>
                     </div>
                     
                     <div className="flex flex-col items-center sm:items-end gap-6 relative">
+                        {/* Rotating Official Seal */}
                         <div className="absolute -left-4 sm:left-auto sm:-right-4 -top-12 pointer-events-none">
                             <motion.div 
                                 animate={{ rotate: 360 }}
@@ -207,6 +264,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                             </motion.div>
                         </div>
 
+                        {/* Signature Terminal */}
                         <div className="relative pt-10 text-center sm:text-right min-w-[220px]">
                             <div className="mb-[-15px] relative z-10">
                                 <p className="font-['Brush_Script_MT',_cursive] text-4xl sm:text-5xl text-primary/90 italic tracking-tighter select-none drop-shadow-sm">
@@ -216,16 +274,25 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                             <div className="h-[1.5px] w-full bg-foreground/30 rounded-full" />
                             <div className="pt-3">
                                 <p className="text-10 font-black uppercase tracking-widest text-foreground leading-none">Hardy Pie</p>
-                                <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1.5">Founder & Chief Architect</p>
+                                <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1.5">Owner & Chief Architect</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div className="pt-10 flex justify-center">
-                    <Button onClick={downloadCertificate} className="rounded-xl h-12 px-10 font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 active:scale-95 transition-all">
-                        <Download className="mr-2 h-4 w-4" /> Export Statutory Record
+                <div className="pt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
+                    <Button onClick={downloadCertificate} className="rounded-xl h-14 px-10 font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                        <Download className="mr-3 h-5 w-5" /> Export Statutory Record (PDF)
                     </Button>
+                    <div className="text-left space-y-1 opacity-60">
+                        <p className="text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
+                            <Mail className="h-3 w-3 text-primary" /> nyayasahayakhelp@gmail.com
+                        </p>
+                        <p className="text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
+                            <Globe className="h-3 w-3 text-primary" /> nyayasahayak.in
+                        </p>
+                    </div>
                 </div>
             </div>
         </Card>
