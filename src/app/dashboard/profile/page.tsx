@@ -81,9 +81,6 @@ const ADMIN_EMAILS = [
 
 function EliteCertificateNode({ profile }: { profile: UserProfile }) {
     const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-    const expiry = profile.clearanceExpiry ? new Date(profile.clearanceExpiry) : new Date();
-    if (!profile.clearanceExpiry) expiry.setFullYear(expiry.getFullYear() + 1);
-    const expiryDate = expiry.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
     const { toast } = useToast();
 
     const downloadCertificate = async () => {
@@ -278,8 +275,6 @@ export default function ProfilePage() {
   const [mobileNumber, setMobileNumber] = useState('');
   const [photoURL, setPhotoURL] = useState('');
   
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -478,7 +477,6 @@ export default function DashboardHomePage() {
                 const createdAtMillis = data.createdAt?.toMillis() || now;
                 
                 if (now - createdAtMillis > TRANSience_WINDOW) {
-                    // Strictly Admin-only purge to prevent permission errors
                     if (isAdmin) {
                         deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
                     }
@@ -566,7 +564,7 @@ export default function DashboardHomePage() {
                           )}>Nyaya {text}</span>
                       </h1>
                   </div>
-                  <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed text-left">
+                  <p className="text-sm sm:text-base text-muted-foreground font-medium max-xl leading-relaxed text-left">
                       Access precision AI nodes for statutory auditing within the Indian judicial ecosystem. 
                       <span className="block mt-2 font-black text-[10px] uppercase text-primary/60 tracking-widest flex items-center gap-2">
                         <Activity className="h-3 w-3" /> Transience protocol active: Posts purge after 56H.
@@ -602,7 +600,7 @@ export default function DashboardHomePage() {
                       ) : (
                           <div className="space-y-6">
                               {latestPosts.map((post) => (
-                                  <PostCard key={post.id} post={post} userProfile={userProfile} />
+                                  <PostCard key={post.id} post={post} userProfile={userProfile} isAdmin={isAdmin} />
                               ))}
                           </div>
                       )}

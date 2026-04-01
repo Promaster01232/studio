@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -40,6 +39,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface UserRecord {
   uid: string;
@@ -111,7 +111,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                                 <div className="p-2 rounded-lg bg-muted shadow-inner"><User className="h-3.5 w-3.5 text-muted-foreground" /></div>
                                 <div className="text-left">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Citizen Identity</p>
-                                    <p className="text-xs font-bold">{tx.userName}</p>
+                                    <p className="text-xs font-bold">Node Identity Masked</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-3">
@@ -293,11 +293,11 @@ export default function ManagementConsolePage() {
                                     </TableRow>
                                 )) : (
                                     <TableRow>
-                                        <TableCell colSpan={4} className="px-6 py-16 text-center text-muted-foreground font-medium text-xs opacity-40">Registry clear. No successful captures found.</TableCell>
+                                        <TableCell colSpan={4} className="h-32 text-center text-muted-foreground font-medium text-xs opacity-40">Registry clear. No successful captures found.</TableCell>
                                     </TableRow>
                                 )}
-                            </tbody>
-                        </table>
+                            </TableBody>
+                        </Table>
                         <ScrollBar orientation="horizontal" />
                     </ScrollArea>
                 </CardContent>

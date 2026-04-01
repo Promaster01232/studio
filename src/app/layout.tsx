@@ -1,4 +1,3 @@
-
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
@@ -43,8 +42,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Nyaya Sahayak | India's Most Trusted AI Legal Hub",
-    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape. Designed by IdeaSpark.",
+    title: "Nyaya Sahayak | Your AI-Powered Legal Co-Pilot",
+    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
     images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Institutional Identity" }],
@@ -54,7 +53,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Nyaya Sahayak | AI Legal Assistant for Bharat',
-    description: 'Elite forensic AI for navigation of the Indian legal ecosystem. Created by IdeaSpark.',
+    description: 'Elite forensic AI for navigation of the Indian legal ecosystem.',
     images: ['/Logo.png'],
   },
   icons: {
@@ -100,14 +99,14 @@ export default function RootLayout({
 
   const softwareSchema = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Nyaya Sahayak",
+    "operatingSystem": "Web",
     "applicationCategory": "LegalApplication",
-    "operatingSystem": "All",
-    "url": "https://nyayasahayak.in",
-    "author": {
-        "@type": "Organization",
-        "name": "IdeaSpark"
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
     }
   };
 

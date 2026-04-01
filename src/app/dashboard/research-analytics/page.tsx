@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
@@ -163,7 +162,16 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
     const handleShare = async (platform: string) => {
         const text = `Transmission: "${post.title}" on Nyaya Sahayak`;
         if (platform === 'copy') {
-            try { await navigator.clipboard.writeText(window.location.origin + "/dashboard/research-analytics"); toast({ title: "Link Copied" }); } catch(e) {}
+            try { 
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(window.location.origin + "/dashboard/research-analytics"); 
+                    toast({ title: "Link Copied" }); 
+                } else {
+                    throw new Error("Clipboard API unavailable");
+                }
+            } catch(e) {
+                toast({ variant: "destructive", title: "Copy Failed", description: "Browser permissions restricted clipboard access." });
+            }
         } else {
             window.open(platform === 'whatsapp' ? `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}` : `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
         }
@@ -258,6 +266,9 @@ export default function ResearchAnalyticsPage() {
                     }
                 });
                 setFeed(list);
+                setLoading(false);
+            }, (serverError) => {
+                console.error("Forensic Feed Stream Restricted:", serverError);
                 setLoading(false);
             });
         });
