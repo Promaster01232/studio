@@ -19,6 +19,9 @@ export default function LawyerProfilePage(props: {
   searchParams: Promise<any>
 }) {
   const { id } = use(props.params);
+  // Unwrap searchParams just in case, to maintain Next.js 15 consistency
+  use(props.searchParams);
+
   const rtdb = useDatabase();
   const [lawyer, setLayer] = useState<Lawyer | undefined>();
   const [loading, setLoading] = useState(true);

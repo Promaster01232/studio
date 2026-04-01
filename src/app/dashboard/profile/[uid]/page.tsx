@@ -107,6 +107,9 @@ export default function UserPublicProfilePage(props: {
   searchParams: Promise<any>
 }) {
   const { uid } = use(props.params);
+  // Unwrap searchParams just in case, to maintain Next.js 15 consistency
+  use(props.searchParams);
+
   const firestore = useFirestore();
   const auth = useAuth();
   const { toast } = useToast();
