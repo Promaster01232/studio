@@ -7,13 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck, ShieldAlert, FileSignature, Globe, Layers, TicketPercent, XCircle, Mail, AlertTriangle } from "lucide-react";
+import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where, orderBy, limit } from "firebase/firestore";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck, ShieldAlert, FileSignature, Globe, Layers, TicketPercent, XCircle, Mail, AlertTriangle, ExternalLink, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
+import { formatDistanceToNow } from "date-fns";
 
 const plans = [
     {
@@ -81,6 +82,7 @@ export default function BillingPage() {
     const [loading, setLoading] = useState(true);
     const [processingId, setProcessingId] = useState<string | null>(null);
     const [syncError, setSyncError] = useState<{ paymentId: string, plan: string } | null>(null);
+    const [userTransactions, setUserTransactions] = useState<any[]>([]);
     
     // Coupon States
     const [couponCode, setCouponCode] = useState("");
@@ -93,7 +95,19 @@ export default function BillingPage() {
             setProfile(doc.data());
             setLoading(false);
         });
-        return () => unsub();
+
+        // Fetch User Transactions
+        const transRef = collection(firestore, "transactions");
+        const q = query(transRef, where("userId", "==", auth.currentUser.uid), orderBy("createdAt", "desc"), limit(10));
+        const unsubTrans = onSnapshot(q, (snap) => {
+            const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            setUserTransactions(list);
+        });
+
+        return () => {
+            unsub();
+            unsubTrans();
+        };
     }, [auth, firestore]);
 
     const validateCoupon = () => {
@@ -154,13 +168,7 @@ export default function BillingPage() {
                     else expiryDate.setDate(now.getDate() + 365);
 
                     // Atomic write: Payment data + Subscription
-                    await updateDoc(userRef, { 
-                        subscriptionType: planId,
-                        aiUsageCount: 0,
-                        clearanceExpiry: expiryDate.toISOString(),
-                        lastPaymentId: paymentId
-                    });
-
+                    // Step 1: Save transaction detail first as primary record
                     await addDoc(collection(firestore, "transactions"), {
                         userId: auth.currentUser!.uid,
                         userEmail: profile?.email,
@@ -172,6 +180,14 @@ export default function BillingPage() {
                         createdAt: serverTimestamp(),
                         expiryDate: expiryDate.toISOString(),
                         status: 'CAPTURED'
+                    });
+
+                    // Step 2: Update user profile
+                    await updateDoc(userRef, { 
+                        subscriptionType: planId,
+                        aiUsageCount: 0,
+                        clearanceExpiry: expiryDate.toISOString(),
+                        lastPaymentId: paymentId
                     });
 
                     toast({ title: "Clearance Level Upgraded", description: "Your institutional node has been recalibrated." });
@@ -238,6 +254,8 @@ export default function BillingPage() {
     if (loading) return <div className="flex h-[70vh] items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
     if (syncError) {
+        const mailtoLink = `mailto:nyayasahayakhelp@gmail.com?subject=Payment%20Sync%20Error%20-%20${syncError.paymentId}&body=Hello%20Nyaya%20Sahayak%20Support%2C%0D%0A%0D%0AMy%20payment%20was%20successful%20but%20my%20subscription%20did%20not%20activate.%0D%0A%0D%0ATransaction%20ID%3A%20${syncError.paymentId}%0D%0APlan%3A%20${syncError.plan}%0D%0A%0D%0APlease%20manually%20verify%20and%20activate%20my%20clearance.%0D%0A%0D%0ABest%20regards%2C%0D%0A${profile?.firstName}%20${profile?.lastName}`;
+
         return (
             <div className="max-w-2xl mx-auto py-20 px-4">
                 <Card className="border-amber-500/20 bg-amber-500/5 shadow-2xl rounded-[2.5rem] overflow-hidden text-left">
@@ -264,7 +282,7 @@ export default function BillingPage() {
                             <ul className="space-y-3 text-xs text-muted-foreground font-medium">
                                 <li className="flex gap-3">
                                     <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0 mt-1.5" />
-                                    Email the TXID above to <span className="text-primary font-bold">nyayasahayakhelp@gmail.com</span>.
+                                    Use the button below to initialize an official support mail with your TXID.
                                 </li>
                                 <li className="flex gap-3">
                                     <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0 mt-1.5" />
@@ -272,9 +290,16 @@ export default function BillingPage() {
                                 </li>
                             </ul>
                         </div>
-                        <Button variant="outline" className="w-full h-12 font-bold rounded-xl" onClick={() => window.location.reload()}>
-                            Restart Terminal
-                        </Button>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <Button className="flex-1 h-14 font-black uppercase tracking-widest text-[10px] rounded-xl shadow-xl shadow-primary/20" asChild>
+                                <a href={mailtoLink}>
+                                    <Mail className="mr-2 h-4 w-4" /> Resolve via Institutional Mail
+                                </a>
+                            </Button>
+                            <Button variant="outline" className="h-14 font-bold rounded-xl px-8" onClick={() => window.location.reload()}>
+                                Restart Terminal
+                            </Button>
+                        </div>
                     </CardContent>
                 </Card>
             </div>
@@ -438,6 +463,66 @@ export default function BillingPage() {
                     );
                 })}
             </div>
+
+            <section className="pt-16 space-y-8">
+                <div className="flex items-center gap-3">
+                    <History className="h-5 w-5 text-primary" />
+                    <h2 className="text-xl font-black font-headline tracking-tighter uppercase">Personal Transaction Ledger</h2>
+                </div>
+                <Card className="glass shadow-2xl rounded-[2rem] overflow-hidden border-primary/5">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                            <thead className="bg-muted/30 border-b border-primary/5">
+                                <tr>
+                                    <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Timestamp</th>
+                                    <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Registry Node</th>
+                                    <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Value</th>
+                                    <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Status</th>
+                                    <th className="px-6 py-4 text-right text-[9px] font-black uppercase tracking-widest text-muted-foreground">TXID</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-primary/5">
+                                {userTransactions.length > 0 ? userTransactions.map((tx) => (
+                                    <tr key={tx.id} className="hover:bg-primary/5 transition-colors">
+                                        <td className="px-6 py-4">
+                                            <p className="text-[10px] font-bold text-muted-foreground">
+                                                {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
+                                            </p>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <Badge variant="outline" className="font-black text-[8px] uppercase border-primary/20 text-primary bg-primary/5">
+                                                {tx.planId?.replace('_', ' ') || 'Statutory Upgrade'}
+                                            </Badge>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <p className="font-mono font-black text-xs">₹{(tx.amount || 0).toLocaleString('en-IN')}</p>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className={cn(
+                                                "flex items-center gap-1.5 font-black text-[8px] uppercase tracking-widest px-2 py-1 rounded-full w-fit border",
+                                                tx.status === 'CAPTURED' ? "text-green-600 bg-green-500/10 border-green-500/20" : 
+                                                tx.status === 'FAILED' || tx.status === 'CANCELLED_BY_USER' ? "text-red-600 bg-red-500/10 border-red-500/20" : "text-muted-foreground bg-muted/20 border-border"
+                                            )}>
+                                                {tx.status === 'CAPTURED' ? <ShieldCheck className="h-2.5 w-2.5" /> : <AlertTriangle className="h-2.5 w-2.5" />}
+                                                {tx.status}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <p className="font-mono text-[9px] opacity-40 select-all">{tx.paymentId || 'N/A'}</p>
+                                        </td>
+                                    </tr>
+                                )) : (
+                                    <tr>
+                                        <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground font-medium text-xs opacity-40 italic">
+                                            No institutional transactions recorded for this node.
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </Card>
+            </section>
 
             <div className="pt-16 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left">
                 <div className="flex gap-10">

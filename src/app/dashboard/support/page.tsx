@@ -9,13 +9,13 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { simplifyJargonAction, type JargonState } from "./actions";
-import { Loader2, Sparkles, Languages, CreditCard, Mail, Clock, ShieldCheck, Zap, AlertTriangle } from "lucide-react";
+import { Loader2, Sparkles, Languages, CreditCard, Mail, Clock, ShieldCheck, Zap, AlertTriangle, MessageSquare, Headphones, ShieldAlert } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useLanguage } from "@/components/language-provider";
 import type { Language } from "@/components/language-provider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AudioAssistant } from "@/components/audio-assistant";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const initialState: JargonState = {
     status: 'idle',
@@ -168,6 +168,36 @@ export default function SupportPage() {
                             <Button asChild className="w-full h-14 bg-amber-600 hover:bg-amber-700 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-amber-600/20 active:scale-95 transition-all">
                                 <a href="mailto:nyayasahayakhelp@gmail.com?subject=Billing%20Node%20Query">Initialize Support Link</a>
                             </Button>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="glass border-primary/5 rounded-[2rem] overflow-hidden shadow-xl">
+                        <CardHeader className="bg-primary/5 border-b border-primary/5 p-6 text-left">
+                            <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
+                                <Headphones className="h-4 w-4 text-primary" /> Accessibility Hub
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-6 space-y-4 text-left">
+                            <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-primary/5 transition-all cursor-pointer group">
+                                <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                                    <MessageSquare className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-[10px] font-black uppercase tracking-widest">Community Aid</p>
+                                    <p className="text-xs font-bold text-muted-foreground">NGO Legal Directory</p>
+                                </div>
+                                <ArrowRight className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 transition-all" />
+                            </div>
+                            <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-primary/5 transition-all cursor-pointer group">
+                                <div className="p-2 rounded-lg bg-red-500/5 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                                    <ShieldAlert className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-[10px] font-black uppercase tracking-widest">Emergency SOS</p>
+                                    <p className="text-xs font-bold text-muted-foreground">National Helplines</p>
+                                </div>
+                                <ArrowRight className="h-3 w-3 text-red-500 opacity-0 group-hover:opacity-100 transition-all" />
+                            </div>
                         </CardContent>
                     </Card>
                 </div>
