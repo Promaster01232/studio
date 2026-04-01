@@ -141,7 +141,6 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
 }
 
 export default function ManagementConsolePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // Unwrap dynamic props for Next.js 15 compliance
   use(props.params);
   use(props.searchParams);
 
@@ -174,7 +173,6 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
             setLoading(false);
         });
 
-        // Strictly query for CAPTURED (Success) transactions only
         const transRef = collection(firestore, "transactions");
         const qTrans = query(transRef, where("status", "==", "CAPTURED"));
         const unsubTrans = onSnapshot(qTrans, (snapshot) => {
@@ -182,10 +180,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
             setTransactions(list.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0)));
         });
 
-        return () => {
-            unsubUsers();
-            unsubTrans();
-        };
+        return () => { unsubUsers(); unsubTrans(); };
     });
     return () => unsubAuth();
   }, [firestore, auth, router, toast, rtdb]);

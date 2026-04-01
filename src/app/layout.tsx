@@ -22,52 +22,29 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Nyaya Sahayak | India's Premier AI Legal Assistant & Forensic Auditor",
-  description: "Access elite AI legal assistance on nyayasahayak.in. Forensic case audits, BNS statutory scanning, and automated document drafting for Bharat's citizens. Trusted AI Nyaya Mitra for 1.4 billion people.",
-  keywords: ["AI Legal Assistant India", "Nyaya Sahayak", "Legal AI Bharat", "BNS Forensic Audit", "Statutory Risk Scanner", "Indian Judicial AI", "Online Legal Advice India", "Nyaya Mitra AI", "Legal Tech India"],
+  description: "Access elite AI legal assistance on nyayasahayak.in. Forensic case audits, BNS statutory scanning, and automated document drafting for Bharat's citizens.",
+  keywords: ["AI Legal Assistant India", "Nyaya Sahayak", "Legal AI Bharat", "BNS Forensic Audit", "Statutory Risk Scanner", "Indian Judicial AI"],
   authors: [{ name: "IdeaSpark Institutional Tech" }],
-  referrer: "origin-when-cross-origin",
   metadataBase: new URL('https://nyayasahayak.in'),
-  alternates: {
-    canonical: "https://nyayasahayak.in",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
+  alternates: { canonical: "https://nyayasahayak.in" },
   openGraph: {
     title: "Nyaya Sahayak | Your AI-Powered Legal Co-Pilot",
     description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
-    images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Institutional Identity" }],
+    images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak" }],
     locale: "en_IN",
     type: "website",
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Nyaya Sahayak | AI Legal Assistant for Bharat',
-    description: 'Elite forensic AI for navigation of the Indian legal ecosystem.',
     images: ['/Logo.png'],
   },
-  icons: {
-    icon: '/Logo.png',
-    shortcut: '/Logo.png',
-    apple: '/Logo.png',
-  },
+  icons: { icon: '/Logo.png', shortcut: '/Logo.png', apple: '/Logo.png' },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "LegalService",
@@ -75,25 +52,12 @@ export default function RootLayout({
     "alternateName": "AI Nyaya Mitra",
     "url": "https://nyayasahayak.in",
     "logo": "https://nyayasahayak.in/Logo.png",
-    "image": "https://nyayasahayak.in/Logo.png",
-    "description": "Premium AI-driven legal assistance and forensic document auditing platform engineered for the Indian judicial system.",
-    "brand": {
-      "@type": "Brand",
-      "name": "Nyaya Sahayak",
-      "logo": "https://nyayasahayak.in/Logo.png"
-    },
+    "description": "Premium AI-driven legal assistance and forensic document auditing platform for the Indian judicial system.",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Digital Registry Terminal",
       "addressLocality": "New Delhi",
       "addressRegion": "Delhi",
-      "postalCode": "110001",
       "addressCountry": "IN"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": "28.6139",
-      "longitude": "77.2090"
     }
   };
 
@@ -103,26 +67,14 @@ export default function RootLayout({
     "name": "Nyaya Sahayak",
     "operatingSystem": "Web",
     "applicationCategory": "LegalApplication",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "INR"
-    }
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
   };
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script
-          id="structured-data-org"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
-        <Script
-          id="structured-data-software"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
-        />
+        <Script id="structured-data-org" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+        <Script id="structured-data-software" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>
         <ThemeProvider>

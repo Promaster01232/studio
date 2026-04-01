@@ -138,7 +138,6 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
 }
 
 export default function DashboardLayout(props: { children: ReactNode, params: Promise<any> }) {
-  // Unwrap Next.js 15 params to prevent enumeration error
   use(props.params);
   
   const { children } = props;

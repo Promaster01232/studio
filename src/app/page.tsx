@@ -20,14 +20,13 @@ import {
   Scale,
   BrainCircuit,
   Lock,
-  Globe,
-  Zap
+  Globe
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, type User as FirebaseUser } from "firebase/auth";
 import { PublicHeader } from "@/components/public-header";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Footer } from "@/components/footer";
 
 const TricolorBackground = () => {
@@ -79,7 +78,6 @@ const featureNodes = [
 ];
 
 export default function WelcomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // Unwrap Next.js 15 props to prevent enumeration errors
   use(props.params);
   use(props.searchParams);
 
@@ -118,7 +116,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                 Elite AI Legal Assistant for <br/>
                 <span className="bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">Bharat's Citizens.</span>
               </h1>
-              <p className="text-base sm:text-xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed opacity-80 px-4">
+              <p className="text-base sm:text-xl text-muted-foreground font-medium max-xl mx-auto leading-relaxed opacity-80 px-4">
                 Precision neural forensics for statutory deconstruction and navigating the complex Indian judicial landscape with absolute institutional clarity.
               </p>
             </div>
