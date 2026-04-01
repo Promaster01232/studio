@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
@@ -49,7 +50,6 @@ import {
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumarsingh23323@gmail.com',
   'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com'
 ];
@@ -264,7 +264,7 @@ export default function UserPublicProfilePage(props: {
           </Link>
         </Button>
         <div className="flex items-center gap-2">
-            <Badge variant="outline" className="h-8 border-primary/10 font-bold bg-background shadow-sm px-4 rounded-lg text-[10px] uppercase tracking-widest text-muted-foreground">
+            <Badge variant="outline" className="h-8 border-primary/10 font-bold bg-background shadow-sm px-4 rounded-lg text-10 uppercase tracking-widest text-muted-foreground">
                 registry synced // active terminal
             </Badge>
         </div>
@@ -309,11 +309,11 @@ export default function UserPublicProfilePage(props: {
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
                       <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background/50 border border-primary/10 shadow-sm">
                           <Activity className="h-3.5 w-3.5 text-primary" />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">registry synchronized</span>
+                          <span className="text-10 font-black uppercase tracking-widest text-foreground/70">registry synchronized</span>
                       </div>
                       <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background/50 border border-primary/10 shadow-sm">
                           <Globe className="h-3.5 w-3.5 text-blue-500" />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">registry status: active</span>
+                          <span className="text-10 font-black uppercase tracking-widest text-foreground/70">registry status: active</span>
                       </div>
                   </div>
               </div>
@@ -369,15 +369,15 @@ export default function UserPublicProfilePage(props: {
                       </CardHeader>
                       <CardContent className="p-6 space-y-4">
                           <div className="flex justify-between items-center py-2">
-                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Network access</span>
-                              <span className="flex items-center gap-1.5 text-green-600 text-[10px] font-black uppercase">
+                              <span className="text-10 font-bold text-muted-foreground uppercase tracking-widest">Network access</span>
+                              <span className="flex items-center gap-1.5 text-green-600 text-10 font-black uppercase">
                                   <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-ping"></div>
                                   High performance
                               </span>
                           </div>
                           <div className="flex justify-between items-center py-2 border-t border-primary/5">
-                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Registry status</span>
-                              <span className="text-[10px] font-bold uppercase text-primary">Active member</span>
+                              <span className="text-10 font-bold text-muted-foreground uppercase tracking-widest">Registry status</span>
+                              <span className="text-10 font-bold uppercase text-primary">Active member</span>
                           </div>
                       </CardContent>
                   </Card>
@@ -393,7 +393,7 @@ export default function UserPublicProfilePage(props: {
                       <CardHeader className="p-8 sm:p-10 pb-0 border-none text-left">
                           <div className="flex items-center gap-3 text-primary mb-2">
                               <Globe className="h-4 w-4" />
-                              <span className="text-[10px] font-black uppercase tracking-[0.3em]">Forensic dossier</span>
+                              <span className="text-10 font-black uppercase tracking-[0.3em]">Forensic dossier</span>
                           </div>
                           <CardTitle className="text-2xl sm:text-3xl font-black tracking-tighter">Bio & registry profile</CardTitle>
                       </CardHeader>
@@ -404,7 +404,7 @@ export default function UserPublicProfilePage(props: {
 
                           <div className="space-y-6">
                               <div className="flex items-center justify-between border-b border-primary/5 pb-2">
-                                  <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
+                                  <h3 className="text-10 font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
                                       <Star className="h-3.5 w-3.5" /> institutional badges
                                   </h3>
                                   <span className="text-[9px] font-bold text-muted-foreground uppercase">earned protocols</span>
@@ -460,7 +460,7 @@ export default function UserPublicProfilePage(props: {
                   {postsLoading ? (
                       <div className="flex flex-col items-center justify-center py-20 gap-4">
                           <Loader2 className="h-8 w-8 animate-spin text-primary opacity-20" />
-                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Syncing Registry...</p>
+                          <p className="text-10 font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Syncing Registry...</p>
                       </div>
                   ) : userPosts.length === 0 ? (
                       <Card className="border-dashed border-2 bg-transparent py-20 rounded-[2.5rem]">
@@ -481,7 +481,7 @@ export default function UserPublicProfilePage(props: {
                                 <motion.div 
                                     key={post.id}
                                     initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
+                                    animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.05 }}
                                 >
                                     <Card className="glass border-primary/10 hover:border-primary/30 transition-all rounded-[2rem] overflow-hidden group relative">
@@ -508,12 +508,12 @@ export default function UserPublicProfilePage(props: {
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl shadow-2xl glass border-primary/10">
                                                             {isAuthor ? (
-                                                                <DropdownMenuItem onSelect={() => handleDeletePost(post.id)} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
+                                                                <DropdownMenuItem onSelect={() => handleDeletePost(post.id)} className="rounded-lg font-bold text-10 h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                                                     <Trash2 className="h-3.5 w-3.5" /> 
                                                                     <span>purge record</span>
                                                                 </DropdownMenuItem>
                                                             ) : (
-                                                                <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-[10px] h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
+                                                                <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-10 h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
                                                                     <Flag className="h-3.5 w-3.5" /> 
                                                                     <span>report breach</span>
                                                                 </DropdownMenuItem>
@@ -527,7 +527,7 @@ export default function UserPublicProfilePage(props: {
                                             </p>
                                             <div className="flex items-center justify-between pt-6 border-t border-primary/5">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="flex items-center gap-1.5 text-red-500/60 text-[10px] font-black">
+                                                    <div className="flex items-center gap-1.5 text-red-500/60 text-10 font-black">
                                                         <Heart className="h-3.5 w-3.5 fill-current" />
                                                         {post.likes}
                                                     </div>

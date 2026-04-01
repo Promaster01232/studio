@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Activity, Zap, CreditCard, Sparkles } from "lucide-react";
+import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Activity, Zap, CreditCard, Sparkles, MessageSquare } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -39,10 +39,10 @@ import { SearchDialog } from "@/components/search-dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
+import { ChatListDialog } from "@/components/chat-list-dialog";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumarsingh23323@gmail.com',
   'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'
@@ -71,7 +71,7 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                                 <span className="tracking-[0.1em]">Forensic search hub...</span>
                                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[9px] font-black text-muted-foreground opacity-100 shadow-sm">
+                                    <kbd className="pointer-none inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[9px] font-black text-muted-foreground opacity-100 shadow-sm">
                                         <span className="text-[10px]">⌘</span>K
                                     </kbd>
                                 </div>
@@ -114,6 +114,16 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                         </SosDialog>
                         
                         <div className="flex items-center gap-1 sm:gap-2 border-l pl-2 sm:pl-4 ml-1">
+                            <ChatListDialog>
+                                <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-10 w-10 sm:h-11 sm:w-11 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl transition-all active:scale-95 group"
+                                >
+                                    <MessageSquare className="h-4.5 w-4.5 sm:h-5 sm:w-5 group-hover:-rotate-12 transition-transform" />
+                                </Button>
+                            </ChatListDialog>
+
                             <Button 
                                 variant="ghost" 
                                 size="icon" 

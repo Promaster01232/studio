@@ -75,7 +75,6 @@ import { useSoundEffect } from "@/hooks/use-sound-effect";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumarsingh23323@gmail.com',
   'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'

@@ -87,7 +87,6 @@ type UserProfile = {
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumarsingh23323@gmail.com',
   'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'
@@ -176,7 +175,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                             </div>
                             <div className="h-[1.5px] w-full bg-foreground/30 rounded-full" />
                             <div className="pt-3">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-foreground leading-none">Hardy Pie</p>
+                                <p className="text-10 font-black uppercase tracking-widest text-foreground leading-none">Hardy Pie</p>
                                 <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1.5">Founder & Chief Architect</p>
                             </div>
                         </div>
