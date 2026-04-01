@@ -97,11 +97,24 @@ export default function BillingPage() {
         });
 
         // Fetch User Transactions
+        // We remove orderBy and limit from the query to bypass composite index requirement
+        // Sorting and limiting is now performed client-side
         const transRef = collection(firestore, "transactions");
-        const q = query(transRef, where("userId", "==", auth.currentUser.uid), orderBy("createdAt", "desc"), limit(10));
+        const q = query(transRef, where("userId", "==", auth.currentUser.uid));
+        
         const unsubTrans = onSnapshot(q, (snap) => {
             const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            setUserTransactions(list);
+            
+            // Forensic Client-Side Sort
+            list.sort((a: any, b: any) => {
+                const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+                const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+                return timeB - timeA;
+            });
+
+            setUserTransactions(list.slice(0, 10));
+        }, (error) => {
+            console.error("Ledger Sync Failure:", error);
         });
 
         return () => {
@@ -486,7 +499,7 @@ export default function BillingPage() {
                                     <tr key={tx.id} className="hover:bg-primary/5 transition-colors">
                                         <td className="px-6 py-4">
                                             <p className="text-[10px] font-bold text-muted-foreground">
-                                                {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
+                                                {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate ? tx.createdAt.toDate() : new Date(tx.createdAt), { addSuffix: true }) : 'Processing...'}
                                             </p>
                                         </td>
                                         <td className="px-6 py-4">
