@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
@@ -162,14 +163,7 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
     const handleShare = async (platform: string) => {
         const text = `Transmission: "${post.title}" on Nyaya Sahayak`;
         if (platform === 'copy') {
-            try { 
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(window.location.origin + "/dashboard/research-analytics");
-                    toast({ title: "Link Copied" }); 
-                } else {
-                    toast({ title: "Registry Link", description: "Audit node: " + window.location.origin });
-                }
-            } catch(e) {}
+            try { await navigator.clipboard.writeText(window.location.origin + "/dashboard/research-analytics"); toast({ title: "Link Copied" }); } catch(e) {}
         } else {
             window.open(platform === 'whatsapp' ? `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}` : `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
         }
@@ -258,7 +252,6 @@ export default function ResearchAnalyticsPage() {
                     const data = d.data() as Post;
                     const ct = data.createdAt?.toMillis() || now;
                     if (now - ct > TRANSience_WINDOW) {
-                        // SECURE PURGE: Only admins can trigger database deletion
                         if (adminCheck) deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
                     } else {
                         list.push({ id: d.id, ...data });

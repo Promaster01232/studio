@@ -1,3 +1,4 @@
+
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
@@ -42,8 +43,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Nyaya Sahayak | India's Premier AI Legal Assistant",
-    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape.",
+    title: "Nyaya Sahayak | India's Most Trusted AI Legal Hub",
+    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape. Designed by IdeaSpark.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
     images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Institutional Identity" }],
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Nyaya Sahayak | AI Legal Assistant for Bharat',
-    description: 'Elite forensic AI for navigation of the Indian legal ecosystem.',
+    description: 'Elite forensic AI for navigation of the Indian legal ecosystem. Created by IdeaSpark.',
     images: ['/Logo.png'],
   },
   icons: {
@@ -89,19 +90,24 @@ export default function RootLayout({
       "addressRegion": "Delhi",
       "postalCode": "110001",
       "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "28.6139",
+      "longitude": "77.2090"
     }
   };
 
   const softwareSchema = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
+    "@type": "WebApplication",
     "name": "Nyaya Sahayak",
-    "operatingSystem": "Web",
     "applicationCategory": "LegalApplication",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "INR"
+    "operatingSystem": "All",
+    "url": "https://nyayasahayak.in",
+    "author": {
+        "@type": "Organization",
+        "name": "IdeaSpark"
     }
   };
 
@@ -114,7 +120,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
         <Script
-          id="structured-data-app"
+          id="structured-data-software"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
         />

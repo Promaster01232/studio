@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,9 @@ import {
   Mic,
   FileText,
   FileSignature,
-  Search
+  Search,
+  Scale,
+  Gavel
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
@@ -101,7 +104,7 @@ export default function WelcomePage() {
                 </div>
               </div>
               <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-headline tracking-tighter leading-[0.95] text-foreground">
-                Elite AI Legal Assistant for <br/><span className="bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">Bharat's Citizens.</span>
+                Elite AI Legal Assistant <br/><span className="bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">for Bharat's Citizens.</span>
               </h1>
               <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed opacity-80 px-4">
                 Precision neural forensics for statutory deconstruction and navigating the complex Indian judicial landscape with absolute institutional clarity.
@@ -149,6 +152,64 @@ export default function WelcomePage() {
               </motion.div>
             ))}
           </div>
+        </section>
+
+        {/* Attractive Trust Matrix Section */}
+        <section className="w-full max-w-7xl py-20 px-6">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="text-left space-y-8">
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-3 text-primary">
+                            <ShieldCheck className="h-6 w-6" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em]">The Statutory Standard</span>
+                        </div>
+                        <h2 className="text-4xl sm:text-5xl font-black font-headline tracking-tighter leading-none">Built for <span className="text-primary italic">Absolute Fairness.</span></h2>
+                        <p className="text-base text-muted-foreground font-medium leading-relaxed">
+                            Nyaya Sahayak leverages probabilistic AI nodes optimized for forensic accuracy. We empower 1.4 billion citizens by providing mathematically precise legal navigation paths through the Indian judicial complex.
+                        </p>
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-6">
+                        <div className="p-6 rounded-[2rem] bg-card border border-primary/5 shadow-xl space-y-3">
+                            <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-600 w-fit">
+                                <Scale className="h-5 w-5" />
+                            </div>
+                            <h4 className="font-black text-sm uppercase tracking-tight">Institutional Trust</h4>
+                            <p className="text-[11px] text-muted-foreground font-medium">Encrypted forensic processing ensures data sovereignty for every citizen node.</p>
+                        </div>
+                        <div className="p-6 rounded-[2rem] bg-card border border-primary/5 shadow-xl space-y-3">
+                            <div className="p-3 rounded-2xl bg-amber-500/10 text-amber-600 w-fit">
+                                <Gavel className="h-5 w-5" />
+                            </div>
+                            <h4 className="font-black text-sm uppercase tracking-tight">Judicial Ingress</h4>
+                            <p className="text-[11px] text-muted-foreground font-medium">Seamless navigation from FIR applications to Supreme Court writ jurisdictions.</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="relative">
+                    <div className="absolute -inset-10 bg-primary/5 blur-[100px] rounded-full animate-pulse"></div>
+                    <Card className="relative glass border-primary/10 rounded-[3rem] overflow-hidden shadow-3xl">
+                        <CardContent className="p-10 text-center space-y-8">
+                            <div className="flex justify-center">
+                                <div className="p-6 rounded-full bg-primary/10 shadow-inner">
+                                    <Logo className="h-32 w-32 shadow-none border-none p-0 bg-transparent" priority={false} />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-primary">System Integrity Status</p>
+                                <div className="flex items-center justify-center gap-3">
+                                    <div className="h-2 w-2 rounded-full bg-green-500 animate-ping"></div>
+                                    <span className="text-xl font-black tracking-tighter">100% Neural Operational</span>
+                                </div>
+                            </div>
+                            <div className="pt-6 border-t border-primary/5">
+                                <Button asChild className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl">
+                                    <Link href="/register">Join Citizen Registry</Link>
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
         </section>
       </main>
       <Footer />

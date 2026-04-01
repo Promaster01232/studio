@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -39,7 +40,6 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 
 interface UserRecord {
   uid: string;
@@ -166,6 +166,7 @@ export default function ManagementConsolePage() {
             setLoading(false);
         });
 
+        // Strictly query for CAPTURED (Success) transactions only
         const transRef = collection(firestore, "transactions");
         const qTrans = query(transRef, where("status", "==", "CAPTURED"));
         onSnapshot(qTrans, (snapshot) => {
@@ -292,11 +293,11 @@ export default function ManagementConsolePage() {
                                     </TableRow>
                                 )) : (
                                     <TableRow>
-                                        <TableCell colSpan={4} className="h-32 text-center text-muted-foreground font-medium text-xs opacity-40">Registry clear. No successful captures found.</TableCell>
+                                        <TableCell colSpan={4} className="px-6 py-16 text-center text-muted-foreground font-medium text-xs opacity-40">Registry clear. No successful captures found.</TableCell>
                                     </TableRow>
                                 )}
-                            </TableBody>
-                        </Table>
+                            </tbody>
+                        </table>
                         <ScrollBar orientation="horizontal" />
                     </ScrollArea>
                 </CardContent>
