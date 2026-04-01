@@ -40,7 +40,9 @@ import {
   Sparkles,
   Download,
   CalendarClock,
-  History
+  History,
+  MessageSquare,
+  Shield
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -113,31 +115,31 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                     </div>
                     <div className="space-y-2">
                         <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-primary">Institutional Statutory Authority</h2>
-                        <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter text-foreground uppercase leading-none">Certificate of <br/> <span className="text-primary italic">Elite Clearance</span></h1>
+                        <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter text-foreground uppercase leading-none">Certificate of <br/> <span className="text-primary italic">Clearance Upgrade</span></h1>
                     </div>
                 </header>
 
                 <div className="space-y-8 max-w-2xl mx-auto text-center">
                     <p className="text-sm sm:text-base font-medium text-muted-foreground leading-relaxed">
-                        This document formally certifies that the node identified as <span className="text-foreground font-black uppercase tracking-tight">{profile.firstName} {profile.lastName}</span> has been granted the status of <span className="text-primary font-black uppercase tracking-tight">Institutional Annual Clearance</span> within the Nyaya Sahayak neural legal ecosystem.
+                        This document formally certifies that the node identified as <span className="text-foreground font-black uppercase tracking-tight">{profile.firstName} {profile.lastName}</span> has been granted an <span className="text-primary font-black uppercase tracking-tight">Upgraded Statutory Node</span> within the Nyaya Sahayak neural legal ecosystem.
                     </p>
                     <p className="text-xs sm:text-sm font-medium text-muted-foreground/80 leading-relaxed italic">
-                        Subject to the Terms of Protocol and Forensic Security Standards of Bharat. Access to absolute neural auditing and high-fidelity drafting terminals is authorized effective immediately.
+                        Subject to the Terms of Protocol and Forensic Security Standards of Bharat. Access to advanced neural auditing and statutory drafting terminals is authorized.
                     </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 pt-8 items-end">
                     <div className="text-left space-y-6">
                         <div className="space-y-1">
-                            <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Issue Date</p>
+                            <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Verification Date</p>
                             <p className="text-xs font-bold text-foreground">{today}</p>
                         </div>
                         <div className="space-y-1">
-                            <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Registry ID</p>
-                            <p className="text-[10px] font-mono font-bold text-primary">NS-CERT-{profile.uid.substring(0, 8).toUpperCase()}</p>
+                            <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Registry Node ID</p>
+                            <p className="text-[10px] font-mono font-bold text-primary">NS-REG-{profile.uid.substring(0, 8).toUpperCase()}</p>
                         </div>
                         <div className="pt-2">
-                            <p className="text-[8px] font-bold text-muted-foreground opacity-40 uppercase">Valid Until: {expiryDate}</p>
+                            <p className="text-[8px] font-bold text-muted-foreground opacity-40 uppercase">Clearance active until: {expiryDate}</p>
                         </div>
                     </div>
                     
@@ -190,12 +192,14 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
 }
 
 function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdmin: boolean }) {
+    const isUpgraded = profile.subscriptionType !== 'free';
     const systemId = isAdmin ? `NS-ROOT-AUTH-99` : `NS-REG-${profile.uid.substring(0, 4).toUpperCase()}-${profile.uid.substring(profile.uid.length - 4).toUpperCase()}`;
+    
     return (
         <div className="relative w-full aspect-[1.586/1] rounded-[1.5rem] overflow-hidden shadow-2xl group transition-all hover:scale-[1.02] active:scale-0.98 text-left">
             <div className={cn(
                 "absolute inset-0 bg-gradient-to-br transition-all duration-700",
-                isAdmin ? "from-amber-600 via-amber-500 to-amber-800" : "from-[#1a1a1a] via-[#333333] to-[#000000]"
+                isAdmin || isUpgraded ? "from-amber-600 via-amber-500 to-amber-800" : "from-[#1a1a1a] via-[#333333] to-[#000000]"
             )}></div>
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
             
@@ -222,7 +226,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                     <div className="bg-white/10 backdrop-blur-xl px-3 py-1.5 rounded-xl border border-white/10 shadow-lg">
                         <span className="text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
                             <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                            {isAdmin ? "System Root" : "Registry Verified"}
+                            {isAdmin || isUpgraded ? "Elite Registry" : "Citizen Registry"}
                         </span>
                     </div>
                 </div>
@@ -258,8 +262,8 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <p className="text-[7px] font-bold uppercase opacity-40 tracking-widest">Clearance Node</p>
                         <p className={cn(
                             "text-[9px] font-black uppercase tracking-tighter",
-                            isAdmin ? "text-amber-400" : "text-green-400"
-                        )}>{isAdmin ? "Absolute Statutory Hub" : "Identity Ingress Level 4"}</p>
+                            isAdmin || isUpgraded ? "text-amber-400" : "text-green-400"
+                        )}>{isAdmin ? "Absolute Statutory Hub" : isUpgraded ? "Premium Forensic Node" : "Standard Identity Ingress"}</p>
                     </div>
                 </div>
             </div>
@@ -463,6 +467,7 @@ export default function ProfilePage() {
   if (loading) return <div className="flex h-full items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
   const isAdmin = email && ADMIN_EMAILS.includes(email.toLowerCase());
+  const isUpgraded = userProfile?.subscriptionType !== 'free' || isAdmin;
   const isLimited = !userProfile?.subscriptionType?.includes('unlimited') && !isAdmin;
   const isElite = (userProfile?.subscriptionType?.includes('unlimited') || isAdmin);
   const isProtected = isAdmin;
@@ -647,22 +652,60 @@ export default function ProfilePage() {
                 </Card>
 
                 <AnimatePresence>
-                    {isElite && userProfile && (
+                    {isUpgraded && userProfile && (
                         <motion.div 
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="space-y-6"
+                            className="space-y-8"
                         >
                             <div className="flex items-center justify-between px-4">
                                 <div className="flex items-center gap-3">
                                     <Award className="h-5 w-5 text-amber-500" />
-                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-foreground">Institutional Authorization Certificate</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-foreground">Institutional Authorization Card</h3>
                                 </div>
                                 <Button variant="ghost" size="sm" className="h-8 px-4 rounded-xl font-black text-[9px] uppercase tracking-widest gap-2">
                                     <Download className="h-3 w-3" /> Export Statutory Record
                                 </Button>
                             </div>
                             <EliteCertificateNode profile={userProfile} />
+
+                            <Card className="border-amber-500/20 bg-amber-500/5 shadow-2xl rounded-[2.5rem] overflow-hidden">
+                                <CardHeader className="p-8 sm:p-10 border-b border-amber-500/10 bg-amber-500/10 text-left">
+                                    <div className="flex items-center gap-3 text-amber-600 mb-2">
+                                        <Shield className="h-5 w-5" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">Institutional Support Hub</span>
+                                    </div>
+                                    <CardTitle className="text-2xl font-black tracking-tighter text-amber-700 uppercase">Premium Billing Assistance</CardTitle>
+                                    <CardDescription className="text-xs font-medium text-amber-700/70">As a premium node, you have priority ingress to our statutory billing support team.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="p-8 sm:p-10 space-y-8 text-left">
+                                    <div className="grid sm:grid-cols-2 gap-6">
+                                        <div className="p-5 rounded-2xl bg-white/50 dark:bg-black/40 border border-amber-500/10 flex items-start gap-4">
+                                            <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 shadow-inner">
+                                                <MailCheck className="h-4 w-4" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-[8px] font-black uppercase text-amber-600 tracking-widest mb-1">Direct Audit Link</p>
+                                                <p className="text-sm font-black truncate text-amber-900 dark:text-amber-100">nyayasahayakhelp@gmail.com</p>
+                                            </div>
+                                        </div>
+                                        <div className="p-5 rounded-2xl bg-white/50 dark:bg-black/40 border border-amber-500/10 flex items-start gap-4">
+                                            <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 shadow-inner">
+                                                <Activity className="h-4 w-4" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-[8px] font-black uppercase text-amber-600 tracking-widest mb-1">Response Protocol</p>
+                                                <p className="text-xs font-bold text-amber-800 dark:text-amber-200">24-Hour Statutory Response</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <Button asChild className="w-full h-14 bg-amber-600 hover:bg-amber-700 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-amber-600/20 active:scale-95 transition-all">
+                                        <a href="mailto:nyayasahayakhelp@gmail.com?subject=Premium%20Billing%20Audit">
+                                            <MessageSquare className="mr-3 h-4 w-4" /> Initialize Support Handshake
+                                        </a>
+                                    </Button>
+                                </CardContent>
+                            </Card>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -674,7 +717,7 @@ export default function ProfilePage() {
                                 <CreditCard className="h-4 w-4" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em]">Statutory Clearance</span>
                             </div>
-                            <CardTitle className="text-2xl font-black tracking-tight leading-none uppercase">Subscription Hub</CardTitle>
+                            <CardTitle className="text-2xl font-black tracking-tight leading-none uppercase">Subscription Summary</CardTitle>
                         </div>
                         <Badge variant="secondary" className={cn(
                             "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm",
