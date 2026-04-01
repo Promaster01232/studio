@@ -1,7 +1,8 @@
 
 "use client";
 
-import { useParams, notFound } from "next/navigation";
+import { use, useState, useMemo } from "react";
+import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -12,15 +13,20 @@ import {
   Languages
 } from "lucide-react";
 import { topics } from "../data";
-import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export default function LearnTopicDetailPage() {
-    const params = useParams<{ slug: string }>();
+export default function LearnTopicDetailPage(props: { 
+  params: Promise<{ slug: string }>,
+  searchParams: Promise<any>
+}) {
+    const unwrappedParams = use(props.params);
+    const _searchParams = use(props.searchParams);
+    const slug = unwrappedParams.slug;
+    
     const [displayLang, setDisplayLang] = useState<'en' | 'hi'>('en');
 
-    const topic = topics.find((t) => t.slug === params.slug);
+    const topic = topics.find((t) => t.slug === slug);
 
     const contentData = useMemo(() => {
         if (!topic) return { en: "", hi: "" };
