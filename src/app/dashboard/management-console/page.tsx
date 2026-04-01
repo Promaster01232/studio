@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -29,7 +28,8 @@ import {
   CreditCard,
   History,
   TrendingUp,
-  Receipt
+  Receipt,
+  Smartphone
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -135,7 +135,7 @@ export default function ManagementConsolePage() {
 
         // Transactions Listener
         const transCol = collection(firestore, "transactions");
-        const qTrans = query(transCol, orderBy("createdAt", "desc"), limit(50));
+        const qTrans = query(transCol, orderBy("createdAt", "desc"), limit(100));
         const unsubscribeTrans = onSnapshot(qTrans, (snapshot) => {
             const list = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as TransactionRecord));
             setTransactions(list);
@@ -226,7 +226,8 @@ export default function ManagementConsolePage() {
 
   const filteredUsers = users.filter(u => 
     `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    u.email.toLowerCase().includes(searchQuery.toLowerCase())
+    u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    u.mobileNumber?.includes(searchQuery)
   );
 
   const stats = {
@@ -234,7 +235,7 @@ export default function ManagementConsolePage() {
       verified: users.filter(u => u.securityStatus === 'verified').length,
       unlimited: users.filter(u => u.subscriptionType?.includes('unlimited') || ADMIN_EMAILS.includes(u.email.toLowerCase())).length,
       flagged: users.filter(u => u.isBlocked).length,
-      totalRevenue: transactions.reduce((acc, curr) => acc + curr.amount, 0)
+      totalRevenue: transactions.reduce((acc, curr) => acc + (curr.amount || 0), 0)
   };
 
   if (loading) return (
@@ -309,7 +310,7 @@ export default function ManagementConsolePage() {
                         <div className="relative group w-full md:w-80">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input 
-                                placeholder="Search identity records..." 
+                                placeholder="Search by name, email or mobile..." 
                                 className="pl-9 h-11 w-full bg-background border-primary/10 rounded-xl text-xs font-bold focus:border-primary shadow-sm" 
                                 value={searchQuery}
                                 onChange={(e) => setSearchSearchQuery(e.target.value)}
@@ -323,6 +324,7 @@ export default function ManagementConsolePage() {
                             <TableHeader className="bg-muted/20">
                                 <TableRow>
                                     <TableHead className="font-black text-[10px] uppercase tracking-widest pl-6 h-12">User Identity</TableHead>
+                                    <TableHead className="font-black text-[10px] uppercase tracking-widest h-12">Contact Node</TableHead>
                                     <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Tier</TableHead>
                                     <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Usage</TableHead>
                                     <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Status</TableHead>
@@ -357,6 +359,12 @@ export default function ManagementConsolePage() {
                                                             </div>
                                                             <span className="text-[10px] text-muted-foreground font-medium lowercase">{user.email}</span>
                                                         </div>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="flex items-center gap-2 text-muted-foreground">
+                                                        <Smartphone className="h-3.5 w-3.5 opacity-40" />
+                                                        <span className="text-[11px] font-mono font-bold tracking-tighter text-foreground">{user.mobileNumber || 'NOT_SET'}</span>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="text-center">
@@ -418,7 +426,7 @@ export default function ManagementConsolePage() {
                                         );
                                     }) : (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="h-32 text-center text-muted-foreground font-bold uppercase tracking-widest opacity-40">
+                                            <TableCell colSpan={7} className="h-32 text-center text-muted-foreground font-bold uppercase tracking-widest opacity-40">
                                                 No matching Firestore documents.
                                             </TableCell>
                                         </TableRow>
@@ -468,11 +476,11 @@ export default function ManagementConsolePage() {
                                         </TableCell>
                                         <TableCell>
                                             <Badge variant="outline" className="font-black text-[8px] uppercase tracking-widest border-primary/20 text-primary bg-primary/5">
-                                                {tx.planId.replace('_', ' ')}
+                                                {tx.planId?.replace('_', ' ')}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-center font-mono font-black text-xs">
-                                            ₹{tx.amount.toLocaleString('en-IN')}
+                                            ₹{(tx.amount || 0).toLocaleString('en-IN')}
                                         </TableCell>
                                         <TableCell className="text-center">
                                             <div className="flex items-center justify-center gap-1.5 text-green-600 font-black text-[8px] uppercase tracking-widest bg-green-500/10 px-2 py-1 rounded-full w-fit mx-auto border border-green-500/20">

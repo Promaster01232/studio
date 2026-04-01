@@ -9,14 +9,14 @@ import {
   onAuthStateChanged, 
   updateProfile
 } from "firebase/auth";
-import { doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { ref, set } from "firebase/database";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle2, Scale } from "lucide-react";
+import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle2, Scale, Smartphone } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -62,11 +62,19 @@ export default function RegisterPage() {
     const trimmedEmail = email.trim().toLowerCase();
     const cleanFirstName = firstName.trim();
     const cleanLastName = lastName.trim();
-    const cleanMobile = mobileNumber.trim();
+    const cleanMobile = mobileNumber.trim().replace(/\s+/g, '');
     
+    // Indian Mobile Regex: Optional +91 followed by 10 digits starting with 6-9
+    const mobileRegex = /^(\+91)?([6-9]\d{9})$/;
+
     if (!cleanFirstName || !cleanLastName || !trimmedEmail || !cleanMobile || !password || !confirmPassword) {
       toast({ variant: "destructive", title: "Information missing", description: "All fields are required for enrollment." });
       return;
+    }
+
+    if (!mobileRegex.test(cleanMobile)) {
+        toast({ variant: "destructive", title: "Invalid Mobile Number", description: "Please provide a valid 10-digit Indian mobile number." });
+        return;
     }
 
     if (password !== confirmPassword) {
@@ -78,7 +86,17 @@ export default function RegisterPage() {
     setIsValidating(true);
 
     try {
-      // AI Email Audit with Resilient Fallback
+      // 1. Mobile Uniqueness Audit
+      const mobileQuery = query(collection(firestore, "users"), where("mobileNumber", "==", cleanMobile));
+      const mobileSnap = await getDocs(mobileQuery);
+      if (!mobileSnap.empty) {
+          toast({ variant: "destructive", title: "Mobile Node Collision", description: "This mobile number is already registered in the registry." });
+          setLoading(false);
+          setIsValidating(false);
+          return;
+      }
+
+      // 2. AI Email Audit with Resilient Fallback
       let securityStatus = 'verified';
       try {
         const emailValidation = await verifyEmailAuthenticity({ email: trimmedEmail });
@@ -98,7 +116,7 @@ export default function RegisterPage() {
       
       setIsValidating(false);
 
-      // Auth Node Creation
+      // 3. Auth Node Creation
       const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
       const user = userCredential.user;
 
@@ -195,7 +213,10 @@ export default function RegisterPage() {
 
               <div className="grid gap-2 text-left">
                   <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Mobile Number</Label>
-                  <Input type="tel" placeholder="+91 98765 43210" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} disabled={loading} className="h-11 font-bold" />
+                  <div className="relative">
+                    <Input type="tel" placeholder="9876543210" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} disabled={loading} className="h-11 font-bold pl-10" />
+                    <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-40" />
+                  </div>
               </div>
 
               <div className="grid gap-2 text-left">
