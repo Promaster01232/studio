@@ -39,15 +39,20 @@ const TricolorBackground = () => {
           <svg className="ashoka-rotate w-[600px] h-[600px] lg:w-[1000px] lg:h-[1000px] text-[#000080]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.05">
               <circle cx="50" cy="50" r="45" />
               <circle cx="50" cy="50" r="5" fill="currentColor" />
-              {mounted && Array.from({ length: 24 }).map((_, i) => (
-                  <line 
-                    key={i} 
-                    x1="50" 
-                    y1="50" 
-                    x2={50 + 45 * Math.cos((i * 15 * Math.PI) / 180)} 
-                    y2={50 + 45 * Math.sin((i * 15 * Math.PI) / 180)} 
-                  />
-              ))}
+              {mounted && Array.from({ length: 24 }).map((_, i) => {
+                  const angle = (i * 15 * Math.PI) / 180;
+                  const x2 = 50 + 45 * Math.cos(angle);
+                  const y2 = 50 + 45 * Math.sin(angle);
+                  return (
+                    <line 
+                      key={i} 
+                      x1="50" 
+                      y1="50" 
+                      x2={x2} 
+                      y2={y2} 
+                    />
+                  );
+              })}
           </svg>
       </div>
     </div>

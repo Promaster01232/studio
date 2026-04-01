@@ -371,7 +371,6 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
 
 export default function ProfilePage() {
   const { theme, setTheme } = useTheme();
-  const [isMounted, setIsMounted] = useState(false);
   const auth = useAuth();
   const firestore = useFirestore();
   const rtdb = useDatabase();
@@ -395,7 +394,6 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setIsMounted(true);
     if (auth.currentUser) {
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
       const unsub = onSnapshot(userDocRef, (userDoc) => {

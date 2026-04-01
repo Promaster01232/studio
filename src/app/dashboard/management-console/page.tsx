@@ -7,9 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useFirestore, useAuth, useDatabase } from "@/firebase";
-import { collection, doc, getDoc, onSnapshot, updateDoc, query, where, getDocs, writeBatch } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc, query, where, getDocs, writeBatch, deleteDoc } from "firebase/firestore";
 import { ref, remove, update } from "firebase/database";
-import { sendPasswordResetEmail, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { 
   ShieldCheck, 
   Loader2, 
@@ -21,7 +21,6 @@ import {
   Activity,
   KeyRound,
   Zap,
-  RefreshCw,
   Lock,
   Database,
   Cloud,
@@ -36,7 +35,8 @@ import {
   XCircle,
   RotateCcw,
   PlusCircle,
-  User
+  User,
+  CheckCircle2
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -55,8 +55,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
-import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
-import { motion, AnimatePresence } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDistanceToNow, format } from "date-fns";
 
@@ -114,6 +112,10 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                 <div className="space-y-6">
                     <div className="p-6 rounded-2xl border space-y-4 shadow-inner bg-green-500/5 border-green-500/10">
                         <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Status</span>
+                            <span className="text-sm font-black text-green-600 uppercase tracking-widest">SUCCESS</span>
+                        </div>
+                        <div className="flex justify-between items-center">
                             <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Value</span>
                             <span className="text-lg font-black tracking-tight">₹{(tx.amount || 0).toLocaleString('en-IN')}</span>
                         </div>
@@ -126,18 +128,17 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                     <div className="space-y-4">
                         <div className="grid gap-4">
                             <div className="flex items-start gap-3">
-                                <div className="p-2 rounded-lg bg-muted shadow-inner"><User className="h-3.5 w-3.5 text-muted-foreground" /></div>
-                                <div className="text-left">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Citizen Identity</p>
-                                    <p className="text-xs font-bold">{tx.userName}</p>
-                                    <p className="text-[10px] font-medium text-muted-foreground opacity-80">{tx.userEmail}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-start gap-3">
                                 <div className="p-2 rounded-lg bg-muted shadow-inner"><Calendar className="h-3.5 w-3.5 text-muted-foreground" /></div>
                                 <div className="text-left">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Timestamp</p>
                                     <p className="text-xs font-bold">{tx.createdAt ? format(tx.createdAt.toDate(), 'PPP p') : 'N/A'}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <div className="p-2 rounded-lg bg-muted shadow-inner"><History className="h-3.5 w-3.5 text-muted-foreground" /></div>
+                                <div className="text-left">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">TXID Registry</p>
+                                    <p className="text-[10px] font-mono font-bold break-all opacity-80">{tx.paymentId}</p>
                                 </div>
                             </div>
                         </div>
@@ -158,7 +159,6 @@ export default function ManagementConsolePage() {
   const [users, setUsers] = useState<UserRecord[]>([]);
   const [transactions, setTransactions] = useState<TransactionRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isLive, setIsLive] = useState(false);
   const [searchQuery, setSearchSearchQuery] = useState("");
   const [processingUid, setProcessingUid] = useState<string | null>(null);
   const [userToPurge, setUserToPurge] = useState<UserRecord | null>(null);
@@ -167,7 +167,8 @@ export default function ManagementConsolePage() {
     const unsubAuth = onAuthStateChanged(auth, async (user) => {
         if (!user) { router.replace('/login'); return; }
         const adminDoc = await getDoc(doc(firestore, "users", user.uid));
-        if (!ADMIN_EMAILS.includes(user.email?.toLowerCase() || '') && !adminDoc.data()?.isAdmin) {
+        const adminData = adminDoc.data() as any;
+        if (!ADMIN_EMAILS.includes(user.email?.toLowerCase() || '') && !adminData?.isAdmin) {
             toast({ variant: "destructive", title: "Access Denied" });
             router.replace('/dashboard');
             return;
@@ -276,7 +277,7 @@ export default function ManagementConsolePage() {
           <TabsContent value="transactions">
             <Card className="border-primary/5 shadow-2xl rounded-[2.5rem] overflow-hidden bg-card text-left">
                 <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6">
-                    <CardTitle className="font-black text-xl text-green-600">Statutory Ledger</CardTitle>
+                    <CardTitle className="font-black text-xl text-green-600">Verified Statutory Ledger</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
                     <ScrollArea className="w-full">
@@ -284,7 +285,7 @@ export default function ManagementConsolePage() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead className="font-black text-[10px] uppercase pl-6 h-12">Timestamp</TableHead>
-                                    <TableHead className="font-black text-[10px] uppercase h-12">Identity</TableHead>
+                                    <TableHead className="font-black text-[10px] uppercase text-center h-12">Authorization Status</TableHead>
                                     <TableHead className="font-black text-[10px] uppercase text-center h-12">Value (₹)</TableHead>
                                     <TableHead className="font-black text-[10px] uppercase text-right pr-6 h-12">Audit</TableHead>
                                 </TableRow>
@@ -293,10 +294,10 @@ export default function ManagementConsolePage() {
                                 {transactions.map((tx) => (
                                     <TableRow key={tx.id} className="hover:bg-muted/5 border-b border-primary/5">
                                         <TableCell className="pl-6 py-4 text-[10px] font-bold text-muted-foreground">{tx.createdAt ? format(tx.createdAt.toDate(), 'PP p') : 'Syncing...'}</TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-col">
-                                                <span className="font-bold text-xs">{tx.userName}</span>
-                                                <span className="text-[10px] opacity-60">{tx.userEmail}</span>
+                                        <TableCell className="text-center">
+                                            <div className="flex items-center justify-center gap-2 text-green-600">
+                                                <CheckCircle2 className="h-3.5 w-3.5" />
+                                                <span className="font-black text-[9px] uppercase tracking-widest">Payment Success</span>
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center font-mono font-black text-xs">₹{(tx.amount || 0).toLocaleString('en-IN')}</TableCell>
@@ -320,11 +321,13 @@ export default function ManagementConsolePage() {
               </AlertDialogHeader>
               <div className="flex gap-3 mt-6">
                   <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1">Abort</AlertDialogCancel>
-                  <Button onClick={() => {
-                      deleteDoc(doc(firestore, "users", userToPurge!.uid));
-                      remove(ref(rtdb, `users/${userToPurge!.uid}`));
-                      setUserToPurge(null);
-                      toast({ title: "Purge Complete" });
+                  <Button onClick={async () => {
+                      if (userToPurge) {
+                        await deleteDoc(doc(firestore, "users", userToPurge.uid));
+                        await remove(ref(rtdb, `users/${userToPurge.uid}`));
+                        setUserToPurge(null);
+                        toast({ title: "Purge Complete" });
+                      }
                   }} variant="destructive" className="font-black h-12 rounded-xl flex-1 uppercase">Execute Purge</Button>
               </div>
           </AlertDialogContent>
