@@ -110,7 +110,7 @@ export default function WelcomePage() {
                   <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Institutional Terminal // Alpha v4.2</span>
                 </div>
               </div>
-              <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black font-headline tracking-tighter leading-[0.9] text-foreground">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-headline tracking-tighter leading-[0.9] text-foreground">
                 Elite AI Legal Assistant for <br/>
                 <span className="bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">Bharat's Citizens.</span>
               </h1>

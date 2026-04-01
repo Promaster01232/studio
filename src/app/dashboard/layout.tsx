@@ -111,7 +111,7 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                             </Button>
                         </SosDialog>
                         
-                        <div className="flex items-center gap-1 sm:gap-2 border-l pl-1.5 sm:pl-4 ml-0.5 sm:ml-1">
+                        <div className="flex items-center gap-1.5 sm:gap-2 border-l pl-1.5 sm:pl-4 ml-0.5 sm:ml-1">
                             <Button 
                                 variant="ghost" 
                                 size="icon" 

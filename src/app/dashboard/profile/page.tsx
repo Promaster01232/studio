@@ -30,6 +30,7 @@ import {
   Download,
   Lightbulb,
   Mail,
+  User,
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
@@ -130,7 +131,8 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
             doc.setTextColor(0, 0, 0);
             doc.text(`Registry Node ID: NS-REG-${profile.uid.substring(0, 12).toUpperCase()}`, 25, 170);
             doc.text(`Verification Date: ${today}`, 25, 178);
-            doc.text(`Web: https://nyayasahayak.in`, 25, 186);
+            doc.text(`Support: nyayasahayakhelp@gmail.com`, 25, 186);
+            doc.text(`Web: https://nyayasahayak.in`, 25, 194);
 
             // 5. Signature
             doc.setFont("helvetica", "bolditalic");
