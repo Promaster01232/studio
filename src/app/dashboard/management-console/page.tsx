@@ -30,7 +30,10 @@ import {
   History,
   TrendingUp,
   Receipt,
-  Smartphone
+  Smartphone,
+  Eye,
+  FileText,
+  Calendar
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -46,12 +49,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 
 interface UserRecord {
   uid: string;
@@ -77,16 +81,85 @@ interface TransactionRecord {
     planId: string;
     amount: number;
     paymentId: string;
+    orderId: string;
     createdAt: any;
+    expiryDate?: string;
     status: string;
 }
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'
 ];
+
+function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary transition-all">
+                    <Eye className="h-4 w-4" />
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md rounded-[2.5rem] border-none shadow-2xl glass p-8 text-left">
+                <DialogHeader className="border-none mb-6">
+                    <div className="flex items-center gap-3 mb-2 text-primary">
+                        <Receipt className="h-5 w-5" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">Forensic Ledger Audit</span>
+                    </div>
+                    <DialogTitle className="text-2xl font-black tracking-tighter">Transaction Protocol</DialogTitle>
+                    <DialogDescription className="text-xs font-medium">Detailed telemetry for capture ID: {tx.paymentId}</DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-6">
+                    <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-4">
+                        <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Status</span>
+                            <Badge className="bg-green-500/10 text-green-600 border-green-500/20 font-black text-[9px] uppercase tracking-widest">{tx.status}</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Value</span>
+                            <span className="text-lg font-black tracking-tight">₹{tx.amount.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Clearance Node</span>
+                            <Badge variant="outline" className="font-bold text-[10px] uppercase tracking-widest border-primary/20">{tx.planId.replace('_', ' ')}</Badge>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div className="grid gap-4">
+                            <div className="flex items-start gap-3">
+                                <div className="p-2 rounded-lg bg-muted shadow-inner"><User className="h-3.5 w-3.5 text-muted-foreground" /></div>
+                                <div className="text-left">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Citizen Identity</p>
+                                    <p className="text-xs font-bold">{tx.userName}</p>
+                                    <p className="text-[10px] font-medium text-muted-foreground opacity-80">{tx.userEmail}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <div className="p-2 rounded-lg bg-muted shadow-inner"><Calendar className="h-3.5 w-3.5 text-muted-foreground" /></div>
+                                <div className="text-left">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Statutory Dates</p>
+                                    <p className="text-xs font-bold">Invoiced: {tx.createdAt ? format(tx.createdAt.toDate(), 'PPP p') : 'N/A'}</p>
+                                    {tx.expiryDate && <p className="text-[10px] font-medium text-amber-600">Clearance Expiry: {format(new Date(tx.expiryDate), 'PPP')}</p>}
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <div className="p-2 rounded-lg bg-muted shadow-inner"><FileText className="h-3.5 w-3.5 text-muted-foreground" /></div>
+                                <div className="text-left">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">System Registry</p>
+                                    <p className="text-[10px] font-mono font-bold">Order: {tx.orderId || 'N/A'}</p>
+                                    <p className="text-[10px] font-mono font-bold opacity-60">Payment: {tx.paymentId}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+}
 
 export default function ManagementConsolePage() {
   const firestore = useFirestore();
@@ -120,7 +193,6 @@ export default function ManagementConsolePage() {
             return;
         }
 
-        // Users Listener
         const usersCol = collection(firestore, "users");
         const unsubscribeSnapshot = onSnapshot(usersCol, (snapshot) => {
             setIsLive(!snapshot.metadata.fromCache);
@@ -133,7 +205,6 @@ export default function ManagementConsolePage() {
             setLoading(false);
         });
 
-        // Transactions Listener
         const transCol = collection(firestore, "transactions");
         const qTrans = query(transCol, orderBy("createdAt", "desc"), limit(100));
         const unsubscribeTrans = onSnapshot(qTrans, (snapshot) => {
@@ -310,7 +381,7 @@ export default function ManagementConsolePage() {
                         <div className="relative group w-full md:w-80">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input 
-                                placeholder="Search by name, email or mobile..." 
+                                placeholder="Search registry..." 
                                 className="pl-9 h-11 w-full bg-background border-primary/10 rounded-xl text-xs font-bold focus:border-primary shadow-sm" 
                                 value={searchQuery}
                                 onChange={(e) => setSearchSearchQuery(e.target.value)}
@@ -456,7 +527,7 @@ export default function ManagementConsolePage() {
                                     <TableHead className="font-black text-[10px] uppercase tracking-widest h-12">Clearance Node</TableHead>
                                     <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Value (₹)</TableHead>
                                     <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Statutory Status</TableHead>
-                                    <TableHead className="font-black text-[10px] uppercase tracking-widest text-right pr-6 h-12">TxID (RXP)</TableHead>
+                                    <TableHead className="font-black text-[10px] uppercase tracking-widest text-right pr-6 h-12">Audit Detail</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -488,8 +559,8 @@ export default function ManagementConsolePage() {
                                                 {tx.status}
                                             </div>
                                         </TableCell>
-                                        <TableCell className="text-right pr-6 font-mono text-[9px] opacity-40 uppercase">
-                                            {tx.paymentId}
+                                        <TableCell className="text-right pr-6">
+                                            <TransactionDetailDialog tx={tx} />
                                         </TableCell>
                                     </TableRow>
                                 )) : (

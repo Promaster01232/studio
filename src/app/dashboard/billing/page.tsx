@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck, ShieldAlert, FileSignature, Globe, Layers, TicketPercent, XCircle } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Sparkles, Activity, Star, Crown, ArrowRight, History, BadgeCheck, ShieldAlert, FileSignature, Globe, Layers, TicketPercent, XCircle, Mail, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -80,6 +80,7 @@ export default function BillingPage() {
     const [profile, setProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [processingId, setProcessingId] = useState<string | null>(null);
+    const [syncError, setSyncError] = useState<{ paymentId: string, plan: string } | null>(null);
     
     // Coupon States
     const [couponCode, setCouponCode] = useState("");
@@ -134,7 +135,6 @@ export default function BillingPage() {
             }
         }
 
-        // Razorpay Live Integration Protocol
         const options = {
             key: "rzp_live_SWZcLhmqajCvPv",
             amount: Math.round(finalAmount * 100), 
@@ -143,32 +143,31 @@ export default function BillingPage() {
             description: `Clearance Upgrade: ${plan.name} ${appliedDiscount ? `(${appliedDiscount.code})` : ''}`,
             image: "/Logo.png",
             handler: async function (response: any) {
+                const paymentId = response.razorpay_payment_id;
                 try {
                     const userRef = doc(firestore, "users", auth.currentUser!.uid);
                     
-                    // Calculate Expiry Node
                     const now = new Date();
                     let expiryDate = new Date();
                     if (planId.includes('monthly')) expiryDate.setDate(now.getDate() + 30);
                     else if (planId.includes('yearly')) expiryDate.setFullYear(now.getFullYear() + 1);
-                    else expiryDate.setDate(now.getDate() + 365); // Default to a year for one-off pro
+                    else expiryDate.setDate(now.getDate() + 365);
 
-                    // Statutory Updates
+                    // Atomic write: Payment data + Subscription
                     await updateDoc(userRef, { 
                         subscriptionType: planId,
                         aiUsageCount: 0,
                         clearanceExpiry: expiryDate.toISOString(),
-                        lastPaymentId: response.razorpay_payment_id
+                        lastPaymentId: paymentId
                     });
 
-                    // Admin Audit Write
                     await addDoc(collection(firestore, "transactions"), {
                         userId: auth.currentUser!.uid,
                         userEmail: profile?.email,
                         userName: `${profile?.firstName} ${profile?.lastName}`,
                         planId: planId,
                         amount: finalAmount,
-                        paymentId: response.razorpay_payment_id,
+                        paymentId: paymentId,
                         orderId: response.razorpay_order_id,
                         createdAt: serverTimestamp(),
                         expiryDate: expiryDate.toISOString(),
@@ -176,15 +175,13 @@ export default function BillingPage() {
                     });
 
                     toast({ title: "Clearance Level Upgraded", description: "Your institutional node has been recalibrated." });
-                    
+                    setProcessingId(null);
                     router.refresh();
-                    setTimeout(() => {
-                        router.push('/dashboard/profile');
-                    }, 800);
+                    setTimeout(() => router.push('/dashboard/profile'), 1000);
                 } catch (err) {
-                    console.error("Payment Sync Error:", err);
-                    toast({ variant: "destructive", title: "Registry Error", description: "Payment successful but node synchronization failed. Contact support." });
-                } finally {
+                    console.error("Critical Sync Error:", err);
+                    // Subscription failed but payment captured - show specialized help UI
+                    setSyncError({ paymentId, plan: plan.name });
                     setProcessingId(null);
                 }
             },
@@ -193,14 +190,8 @@ export default function BillingPage() {
                 email: profile?.email,
                 contact: profile?.mobileNumber
             },
-            theme: {
-                color: "#994B00"
-            },
-            modal: {
-                ondismiss: function() {
-                    setProcessingId(null);
-                }
-            }
+            theme: { color: "#994B00" },
+            modal: { ondismiss: () => setProcessingId(null) }
         };
 
         try {
@@ -213,6 +204,50 @@ export default function BillingPage() {
     };
 
     if (loading) return <div className="flex h-[70vh] items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
+
+    if (syncError) {
+        return (
+            <div className="max-w-2xl mx-auto py-20 px-4">
+                <Card className="border-amber-500/20 bg-amber-500/5 shadow-2xl rounded-[2.5rem] overflow-hidden text-left">
+                    <div className="bg-amber-500/10 p-10 flex justify-center border-b border-amber-500/10">
+                        <AlertTriangle className="h-20 w-20 text-amber-600 animate-pulse" />
+                    </div>
+                    <CardHeader className="p-8 sm:p-10 text-center">
+                        <div className="flex items-center justify-center gap-2 text-amber-600 mb-2">
+                            <ShieldAlert className="h-4 w-4" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Critical Synchronization Event</span>
+                        </div>
+                        <CardTitle className="text-3xl font-black font-headline tracking-tighter">Capture Successful, Node Pending</CardTitle>
+                        <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4">
+                            Your payment for <span className="text-foreground font-bold">{syncError.plan}</span> was captured, but an internal node error occurred during registry synchronization.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="px-8 pb-10 space-y-6">
+                        <div className="p-6 rounded-2xl bg-white dark:bg-black/40 border border-amber-500/10 shadow-inner">
+                            <p className="text-[9px] font-black uppercase text-muted-foreground opacity-60 mb-2">Transaction Reference (TXID)</p>
+                            <p className="font-mono font-black text-amber-600 select-all">{syncError.paymentId}</p>
+                        </div>
+                        <div className="space-y-4">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-foreground">Next Protocol Steps:</h4>
+                            <ul className="space-y-3 text-xs text-muted-foreground font-medium">
+                                <li className="flex gap-3">
+                                    <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0 mt-1.5" />
+                                    Email the TXID above to <span className="text-primary font-bold">nyayasahayakhelp@gmail.com</span>.
+                                </li>
+                                <li className="flex gap-3">
+                                    <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0 mt-1.5" />
+                                    Our support node will manually authorize your clearance within 24 business hours.
+                                </li>
+                            </ul>
+                        </div>
+                        <Button variant="outline" className="w-full h-12 font-bold rounded-xl" onClick={() => window.location.reload()}>
+                            Restart Terminal
+                        </Button>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
 
     const currentPlan = profile?.subscriptionType || 'free';
     const currentUsage = profile?.aiUsageCount || 0;
@@ -248,7 +283,7 @@ export default function BillingPage() {
                         </div>
                         <div className="flex gap-2">
                             <Input 
-                                placeholder="Enter code (e.g., PIYUSH11)" 
+                                placeholder="Enter code" 
                                 value={couponCode}
                                 onChange={(e) => setCouponCode(e.target.value)}
                                 className="h-11 font-bold bg-background border-primary/10 uppercase"
@@ -372,44 +407,6 @@ export default function BillingPage() {
                 })}
             </div>
 
-            <Card className="glass border-primary/5 rounded-[2.5rem] overflow-hidden shadow-xl mt-12">
-                <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
-                    <div className="flex items-center gap-3 text-primary mb-2">
-                        <Layers className="h-5 w-5" />
-                        <CardTitle className="text-xl font-black uppercase tracking-tight">Institutional Feature Matrix</CardTitle>
-                    </div>
-                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comparative deconstruction of tier-based forensic capabilities.</CardDescription>
-                </CardHeader>
-                <CardContent className="p-8">
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <div className="space-y-4">
-                            <h4 className="text-xs font-black uppercase text-primary tracking-widest border-b pb-2">Forensic Sectors</h4>
-                            <ul className="space-y-2 text-[11px] font-medium text-muted-foreground">
-                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Neural Violation Mapping</li>
-                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Statutory Clause Extraction</li>
-                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Jurisdictional Roadmap</li>
-                            </ul>
-                        </div>
-                        <div className="space-y-4">
-                            <h4 className="text-xs font-black uppercase text-blue-500 tracking-widest border-b pb-2">Institutional Tools</h4>
-                            <ul className="space-y-2 text-[11px] font-medium text-muted-foreground">
-                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Custom Petition Generator</li>
-                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Bond Structural Drafter</li>
-                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Case Management Terminal</li>
-                            </ul>
-                        </div>
-                        <div className="space-y-4">
-                            <h4 className="text-xs font-black uppercase text-amber-600 tracking-widest border-b pb-2">Enterprise Nodes</h4>
-                            <ul className="space-y-2 text-[11px] font-medium text-muted-foreground">
-                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Corporate Compliance Audit</li>
-                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Multi-lingual Dialect Sync</li>
-                                <li className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-green-500" /> Priority API Queue</li>
-                            </ul>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
             <div className="pt-16 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left">
                 <div className="flex gap-10">
                     <div className="flex items-center gap-3">
@@ -426,7 +423,7 @@ export default function BillingPage() {
                             <Globe className="h-5 w-5" />
                         </div>
                         <div className="text-left">
-                            <p className="text-[10px] font-black uppercase text-blue-600 tracking-widest leading-none">Global Standard</p>
+                            <p className="text-[10px] font-black uppercase text-blue-600 tracking-widest leading-none">UPI & QR Ready</p>
                             <p className="text-[9px] font-bold text-muted-foreground mt-1">Digital India Ingress</p>
                         </div>
                     </div>
