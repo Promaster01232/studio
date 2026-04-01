@@ -136,7 +136,7 @@ export default function BillingPage() {
         }
 
         const options = {
-            key: "rzp_live_SWZcLhmqajCvPv",
+            key: "rzp_live_SY4T9oT2oLGhiS",
             amount: Math.round(finalAmount * 100), 
             currency: "INR",
             name: "Nyaya Sahayak",
