@@ -10,8 +10,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { LogOut, SunMoon, Loader2, User, Search, Bell, ShieldAlert, ShieldX, Activity, Zap, CreditCard, Sparkles } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { LogOut, Loader2, Search, Bell, ShieldAlert, Activity, Zap, CreditCard, Crown, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -37,7 +37,7 @@ import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 

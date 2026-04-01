@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, AlertTriangle, Mail } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, AlertTriangle, Mail, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
@@ -239,9 +238,9 @@ export default function BillingPage() {
                 <div className="flex items-center justify-between border-b border-primary/5 pb-4">
                     <div className="flex items-center gap-3">
                         <History className="h-5 w-5 text-primary" />
-                        <h2 className="text-xl font-black font-headline tracking-tighter uppercase">Verified Capture Ledger</h2>
+                        <h2 className="text-xl font-black font-headline tracking-tighter uppercase leading-none">Verified Capture Ledger</h2>
                     </div>
-                    <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest bg-primary/5 text-primary/60 border-primary/10">Success-Only Protocol</Badge>
+                    <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest bg-primary/5 text-primary/60 border-primary/10">Success Protocol Only</Badge>
                 </div>
                 <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
                     <div className="overflow-x-auto">
@@ -250,6 +249,7 @@ export default function BillingPage() {
                                 <tr>
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Timestamp</th>
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Clearance Node</th>
+                                    <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground text-center">Status</th>
                                     <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Value</th>
                                     <th className="px-6 py-4 text-right text-[9px] font-black uppercase tracking-widest text-muted-foreground pr-10">TXID</th>
                                 </tr>
@@ -258,7 +258,8 @@ export default function BillingPage() {
                                 {userTransactions.length > 0 ? userTransactions.map((tx) => (
                                     <tr key={tx.id} className="hover:bg-primary/5 transition-colors">
                                         <td className="px-6 py-4">
-                                            <p className="text-[10px] font-bold text-muted-foreground">
+                                            <p className="text-[10px] font-bold text-muted-foreground flex items-center gap-2">
+                                                <Clock className="h-3 w-3 opacity-40" />
                                                 {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate ? tx.createdAt.toDate() : new Date(tx.createdAt), { addSuffix: true }) : 'Syncing...'}
                                             </p>
                                         </td>
@@ -266,6 +267,11 @@ export default function BillingPage() {
                                             <Badge variant="outline" className="font-black text-[8px] uppercase border-primary/20 text-primary bg-primary/5">
                                                 {tx.planId?.replace('_', ' ') || 'Statutory Upgrade'}
                                             </Badge>
+                                        </td>
+                                        <td className="px-6 py-4 text-center">
+                                            <div className="flex items-center justify-center gap-1.5 text-green-600 font-black text-[8px] uppercase tracking-widest">
+                                                <CheckCircle2 className="h-3 w-3" /> SUCCESS
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <p className="font-mono font-black text-xs">₹{(tx.amount || 0).toLocaleString('en-IN')}</p>
@@ -276,7 +282,7 @@ export default function BillingPage() {
                                     </tr>
                                 )) : (
                                     <tr>
-                                        <td colSpan={4} className="px-6 py-16 text-center text-muted-foreground font-medium text-xs opacity-40 italic">
+                                        <td colSpan={5} className="px-6 py-16 text-center text-muted-foreground font-medium text-xs opacity-40 italic">
                                             Registry clear. Only successful captures are recorded.
                                         </td>
                                     </tr>
