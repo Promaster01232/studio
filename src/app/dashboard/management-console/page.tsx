@@ -651,13 +651,14 @@ export default function ManagementConsolePage() {
               <AlertDialogHeader className="text-left">
                   <div className="p-4 rounded-full bg-destructive/10 w-fit mx-auto mb-4"><ShieldAlert className="h-10 w-10 text-destructive animate-pulse" /></div>
                   <AlertDialogTitle className="font-black text-2xl tracking-tighter text-center">Confirm Statutory Purge</AlertDialogTitle>
+                  <AlertDialogAction className="sr-only">Confirm Purge</AlertDialogAction>
                   <AlertDialogDescription className="text-center text-sm font-medium leading-relaxed">
                       Terminal deactivation of node <strong>{userToPurge?.firstName}</strong>. This atomic forensic erasure will remove all profile data and associated transmissions. Irreversible.
                   </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
                   <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10">Abort</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleExecutePurge} className="bg-destructive text-white hover:bg-destructive/90 font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px]">Execute Purge</AlertDialogAction>
+                  <Button onClick={handleExecutePurge} variant="destructive" className="font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px]">Execute Purge</Button>
               </div>
           </AlertDialogContent>
       </AlertDialog>

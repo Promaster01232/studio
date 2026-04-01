@@ -1,5 +1,5 @@
 'use client';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode } from 'react';
 import { FirebaseProvider } from './provider';
 import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
@@ -29,6 +29,9 @@ try {
     localCache: persistentLocalCache({
       tabManager: persistentMultipleTabManager(),
     }),
+    // Enable auto-detection of long-polling to handle restricted network environments
+    // and prevent "Could not reach Cloud Firestore backend" errors.
+    experimentalAutoDetectLongPolling: true,
   });
 } catch (error) {
   firestore = getFirestore(app);
@@ -38,8 +41,6 @@ const rtdb = getDatabase(app);
 const instances = { app, auth, firestore, rtdb };
 
 export function FirebaseClientProvider({ children }: { children: ReactNode }) {
-  // We render the provider immediately to match server hydration.
-  // The instances are already initialized outside the component.
   return (
     <FirebaseProvider value={instances}>
       {children}
