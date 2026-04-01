@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -140,7 +140,11 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
     );
 }
 
-export default function ManagementConsolePage() {
+export default function ManagementConsolePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Unwrap dynamic props for Next.js 15 compliance
+  use(props.params);
+  use(props.searchParams);
+
   const firestore = useFirestore();
   const rtdb = useDatabase();
   const auth = useAuth();
@@ -184,7 +188,7 @@ export default function ManagementConsolePage() {
         };
     });
     return () => unsubAuth();
-  }, [firestore, auth, router, toast]);
+  }, [firestore, auth, router, toast, rtdb]);
 
   const handleToggleStatus = async (user: UserRecord, isBlocked: boolean) => {
     if (ADMIN_EMAILS.includes(user.email.toLowerCase())) return;
@@ -304,9 +308,11 @@ export default function ManagementConsolePage() {
                             <TableBody>
                                 {transactions.length > 0 ? transactions.map((tx) => (
                                     <TableRow key={tx.id} className="hover:bg-muted/5 border-b border-primary/5 transition-colors">
-                                        <TableCell className="pl-6 py-4 text-[10px] font-bold text-muted-foreground flex items-center gap-2">
-                                            <Clock className="h-3 w-3 opacity-40" />
-                                            {tx.createdAt ? format(tx.createdAt.toDate(), 'PP p') : 'Syncing...'}
+                                        <TableCell className="pl-6 py-4">
+                                            <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground">
+                                                <Clock className="h-3 w-3 opacity-40" />
+                                                {tx.createdAt ? format(tx.createdAt.toDate(), 'PP p') : 'Syncing...'}
+                                            </div>
                                         </TableCell>
                                         <TableCell className="text-center">
                                             <div className="flex items-center justify-center gap-2 text-green-600 px-4 py-1.5 rounded-full bg-green-500/5 border border-green-500/10 w-fit mx-auto">
@@ -314,8 +320,12 @@ export default function ManagementConsolePage() {
                                                 <span className="font-black text-[9px] uppercase tracking-widest">Payment Success</span>
                                             </div>
                                         </TableCell>
-                                        <TableCell className="text-center font-mono font-black text-xs text-foreground">₹{(tx.amount || 0).toLocaleString('en-IN')}</TableCell>
-                                        <TableCell className="text-right pr-6"><TransactionDetailDialog tx={tx} /></TableCell>
+                                        <TableCell className="text-center">
+                                            <p className="font-mono font-black text-xs text-foreground">₹{(tx.amount || 0).toLocaleString('en-IN')}</p>
+                                        </TableCell>
+                                        <TableCell className="text-right pr-6">
+                                            <TransactionDetailDialog tx={tx} />
+                                        </TableCell>
                                     </TableRow>
                                 )) : (
                                     <TableRow>
@@ -356,7 +366,9 @@ export default function ManagementConsolePage() {
                         setUserToPurge(null);
                         toast({ title: "Node Purged", description: "Registry data erased successfully." });
                       }
-                  }} variant="destructive" className="font-black h-14 rounded-2xl flex-1 uppercase tracking-widest text-xs shadow-xl shadow-destructive/20 active:scale-95 transition-all">Execute Purge</Button>
+                  }} variant="destructive" className="font-black h-14 rounded-2xl flex-1 uppercase tracking-widest text-xs shadow-xl shadow-destructive/20 active:scale-95 transition-all">
+                      <Trash2 className="mr-2 h-4 w-4" /> Execute Purge
+                  </Button>
               </div>
           </AlertDialogContent>
       </AlertDialog>

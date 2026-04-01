@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { 
   ArrowRight, 
   Loader2, 
@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
-import { onAuthStateChanged, type User } from "firebase/auth";
+import { onAuthStateChanged, type User as FirebaseUser } from "firebase/auth";
 import { PublicHeader } from "@/components/public-header";
 import { motion, AnimatePresence } from "framer-motion";
 import { Footer } from "@/components/footer";
@@ -49,8 +49,8 @@ const TricolorBackground = () => {
               <circle cx="50" cy="50" r="5" fill="currentColor" />
               {Array.from({ length: 24 }).map((_, i) => {
                   const angle = (i * 15 * Math.PI) / 180;
-                  const x2 = 50 + 45 * Math.cos(angle);
-                  const y2 = 50 + 45 * Math.sin(angle);
+                  const x2 = (50 + 45 * Math.cos(angle)).toFixed(10);
+                  const y2 = (50 + 45 * Math.sin(angle)).toFixed(10);
                   return (
                     <line 
                       key={i} 
@@ -78,9 +78,13 @@ const featureNodes = [
   { icon: Globe, title: "Advocate Directory", sector: "Sector: Professional", desc: "Connect with AI-authenticated and manually verified legal professionals across India.", href: "/dashboard/lawyer-connect", color: "text-amber-600", bg: "bg-amber-600/5" },
 ];
 
-export default function WelcomePage() {
+export default function WelcomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Unwrap Next.js 15 props to prevent enumeration errors
+  use(props.params);
+  use(props.searchParams);
+
   const auth = useAuth();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

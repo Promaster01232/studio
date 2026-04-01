@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import {
   Mic,
   Search,
@@ -433,7 +433,11 @@ const SectionHeader = ({ children, icon: Icon, sector }: { children: React.React
     </div>
 )
 
-export default function DashboardHomePage() {
+export default function DashboardHomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Unwrap Next.js 15 dynamic props
+  use(props.params);
+  use(props.searchParams);
+
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const fullText = 'Sahayak';
@@ -477,6 +481,7 @@ export default function DashboardHomePage() {
                 const createdAtMillis = data.createdAt?.toMillis() || now;
                 
                 if (now - createdAtMillis > TRANSience_WINDOW) {
+                    // Strictly restrict autonomous purge to administrative nodes
                     if (isAdmin) {
                         deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
                     }
@@ -488,7 +493,7 @@ export default function DashboardHomePage() {
             setLatestPosts(list);
             setPostsLoading(false);
         }, (serverError) => {
-            console.error("Feed error:", serverError);
+            console.error("Forensic Feed Stream Restricted:", serverError);
             setPostsLoading(false);
         });
     });

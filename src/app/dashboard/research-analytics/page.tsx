@@ -1,7 +1,7 @@
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,6 @@ import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, orderBy, onSnapshot, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
-import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -135,7 +134,7 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
         }).then(() => {
             if (!userHasLiked && !isAuthor) {
                 addDoc(collection(firestore, "notifications"), {
-                    userId: post.authorUid, type: 'like', title: 'Transmision Liked',
+                    userId: post.authorUid, type: 'like', title: 'Transmission Liked',
                     description: `${userProfile?.firstName || 'A citizen'} liked your post.`,
                     isRead: false, createdAt: serverTimestamp()
                 }).catch(() => {});
@@ -160,7 +159,7 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
     };
 
     const handleShare = async (platform: string) => {
-        const text = `Transmission: "${post.title}" on Nyaya Sahayak`;
+        const shareText = `Transmission: "${post.title}" on Nyaya Sahayak`;
         if (platform === 'copy') {
             try { 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -173,7 +172,7 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
                 toast({ variant: "destructive", title: "Copy Failed", description: "Browser permissions restricted clipboard access." });
             }
         } else {
-            window.open(platform === 'whatsapp' ? `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}` : `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+            window.open(platform === 'whatsapp' ? `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}` : `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
         }
     };
 
@@ -238,7 +237,11 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
     );
 }
 
-export default function ResearchAnalyticsPage() {
+export default function ResearchAnalyticsPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+    // Unwrap dynamic props for Next.js 15 compliance
+    use(props.params);
+    use(props.searchParams);
+
     const firestore = useFirestore();
     const auth = useAuth();
     const [feed, setFeed] = useState<Post[]>([]);
@@ -251,7 +254,7 @@ export default function ResearchAnalyticsPage() {
             const adminCheck = u?.email ? ADMIN_EMAILS.includes(u.email.toLowerCase()) : false;
             setIsAdmin(adminCheck);
             if (u) {
-                getDoc(doc(firestore, "users", u.uid)).then(d => d.exists() && setUserProfile(d.data() as UserProfile));
+                getDoc(doc(firestore, "users", u.uid)).then(d => d.exists() && setUserProfile(d.data()));
             }
             onSnapshot(query(collection(firestore, "posts"), orderBy("createdAt", "desc")), snap => {
                 const now = Date.now();
@@ -260,6 +263,7 @@ export default function ResearchAnalyticsPage() {
                     const data = d.data() as Post;
                     const ct = data.createdAt?.toMillis() || now;
                     if (now - ct > TRANSience_WINDOW) {
+                        // Strictly restrict purge write operations to Authorized Root nodes
                         if (adminCheck) deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
                     } else {
                         list.push({ id: d.id, ...data });

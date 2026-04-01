@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LogOut, Loader2, Search, Bell, ShieldAlert, Activity, Zap, User } from "lucide-react";
 import { Logo } from "@/components/logo";
-import { ReactNode, useEffect, useState, useRef } from "react";
+import { ReactNode, useEffect, useState, useRef, use } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Footer } from "@/components/footer";
 import Link from "next/link";
@@ -137,7 +137,11 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
     );
 }
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+export default function DashboardLayout(props: { children: ReactNode, params: Promise<any> }) {
+  // Unwrap Next.js 15 params to prevent enumeration error
+  use(props.params);
+  
+  const { children } = props;
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
   const { theme, setTheme } = useTheme();
