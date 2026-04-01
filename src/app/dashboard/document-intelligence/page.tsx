@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useActionState, useRef, useState, useEffect } from "react";
@@ -9,12 +8,11 @@ import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb, Languages, FileText, ShieldCheck, Sparkles, CheckCircle2, ArrowLeft } from "lucide-react";
+import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb, Languages, FileText, ShieldCheck, Sparkles, CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
 import { AudioAssistant } from "@/components/audio-assistant";
 import Link from "next/link";
-import { AIUsageGuard } from "@/components/ai-usage-guard";
 import { useFirestore, useAuth } from "@/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
 
@@ -40,7 +38,6 @@ export default function DocumentIntelligencePage() {
     }
   };
 
-  // Track usage on successful generation
   useEffect(() => {
     if (state.status === 'success' && auth.currentUser) {
         const userRef = doc(firestore, "users", auth.currentUser.uid);
@@ -49,8 +46,7 @@ export default function DocumentIntelligencePage() {
   }, [state.status, auth.currentUser, firestore]);
 
   return (
-    <AIUsageGuard featureName="Document Audit">
-        <div className="space-y-10 max-w-7xl mx-auto pb-20 px-2 sm:px-0 text-left">
+    <div className="space-y-10 max-w-7xl mx-auto pb-20 px-4 sm:px-0 text-left">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
             <PageHeader
             title="Document Audit"
@@ -64,11 +60,7 @@ export default function DocumentIntelligencePage() {
         </motion.div>
 
         <div className="grid lg:grid-cols-12 gap-8 items-start">
-            <motion.div 
-                initial={{ opacity: 0, x: -30 }} 
-                animate={{ opacity: 1, x: 0 }}
-                className="lg:col-span-5 space-y-6"
-            >
+            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-5 space-y-6">
             <Card className="glass shadow-2xl overflow-hidden rounded-[2rem] border-primary/5">
                 <CardHeader className="bg-primary/5 border-b border-primary/10 p-8">
                 <div className="flex items-center gap-3 mb-2">
@@ -144,30 +136,9 @@ export default function DocumentIntelligencePage() {
                 </form>
                 </CardContent>
             </Card>
-            
-            <Card className="bg-primary/5 border-primary/10 rounded-3xl p-6 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-[0.05]">
-                    <ShieldCheck className="h-20 w-20" />
-                </div>
-                <div className="flex gap-4 relative z-10">
-                    <div className="p-3 rounded-2xl bg-white/50 dark:bg-black/50 shadow-sm border border-primary/5 shrink-0 h-fit">
-                        <Sparkles className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="space-y-1 text-left">
-                        <p className="text-[10px] font-black text-primary uppercase tracking-widest">Accuracy Protocol</p>
-                        <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                            Our neural engine is optimized for 99.8% forensic accuracy in clause extraction and risk identification.
-                        </p>
-                    </div>
-                </div>
-            </Card>
             </motion.div>
 
-            <motion.div 
-                initial={{ opacity: 0, x: 30 }} 
-                animate={{ opacity: 1, x: 0 }}
-                className="lg:col-span-7"
-            >
+            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-7">
             <Card className="glass shadow-2xl min-h-[600px] flex flex-col rounded-[2.5rem] overflow-hidden border-primary/5">
                 <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8 sm:p-10">
                 <div className="space-y-1 text-left">
@@ -187,28 +158,16 @@ export default function DocumentIntelligencePage() {
                 <CardContent className="p-8 sm:p-10 flex-1">
                 <AnimatePresence mode="wait">
                     {state.status === 'loading' && (
-                        <motion.div 
-                            initial={{ opacity: 0 }} 
-                            animate={{ opacity: 1 }} 
-                            exit={{ opacity: 0 }}
-                            className="flex flex-col items-center justify-center h-full py-20 text-center gap-8"
-                        >
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8">
                             <div className="relative">
-                                <motion.div 
-                                    animate={{ rotate: 360 }} 
-                                    transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-                                    className="p-12 rounded-full border-4 border-dashed border-primary/20"
-                                >
+                                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 4, ease: "linear" }} className="p-12 rounded-full border-4 border-dashed border-primary/20">
                                     <Bot className="h-16 w-16 text-primary/40" />
                                 </motion.div>
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="h-4 w-4 bg-primary rounded-full animate-ping"></div>
                                 </div>
                             </div>
-                            <div className="space-y-3">
-                                <p className="font-black text-2xl tracking-tighter">Deconstructing Clauses...</p>
-                                <p className="text-sm text-muted-foreground font-medium max-w-[280px] mx-auto leading-relaxed">Performing deep-layer forensic audit and statutory risk mapping.</p>
-                            </div>
+                            <p className="font-black text-2xl tracking-tighter">Deconstructing Clauses...</p>
                         </motion.div>
                     )}
 
@@ -218,7 +177,7 @@ export default function DocumentIntelligencePage() {
                                 <AlertTriangle className="h-6 w-6 mr-4" />
                                 <div className="space-y-1 text-left">
                                     <AlertTitle className="font-black uppercase tracking-widest text-xs">Critical Failure</AlertTitle>
-                                    <AlertDescription className="text-sm font-medium leading-relaxed opacity-80">{state.error}</AlertDescription>
+                                    <AlertDescription className="text-sm font-medium opacity-80">{state.error}</AlertDescription>
                                 </div>
                             </Alert>
                         </motion.div>
@@ -273,7 +232,7 @@ export default function DocumentIntelligencePage() {
                             <div className="space-y-2">
                                 <p className="font-black text-xl tracking-tighter uppercase">Awaiting Ingestion</p>
                                 <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto leading-relaxed">
-                                    Upload an institutional legal document to initialize the neural forensic scanning protocol.
+                                    Upload a document to initialize the neural forensic scanning protocol.
                                 </p>
                             </div>
                         </motion.div>
@@ -283,7 +242,6 @@ export default function DocumentIntelligencePage() {
             </Card>
             </motion.div>
         </div>
-        </div>
-    </AIUsageGuard>
+    </div>
   );
 }

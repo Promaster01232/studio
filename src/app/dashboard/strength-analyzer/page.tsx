@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
@@ -15,9 +14,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AudioAssistant } from "@/components/audio-assistant";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { AIUsageGuard } from "@/components/ai-usage-guard";
 import { useFirestore, useAuth } from "@/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
+import { cn } from "@/lib/utils";
 
 const initialState: CaseStrengthState = {
   status: "idle",
@@ -58,8 +57,7 @@ export default function StrengthAnalyzerPage() {
   };
 
   return (
-    <AIUsageGuard featureName="Case Strength Matrix">
-        <div className="space-y-10 max-w-5xl mx-auto pb-20 px-2 sm:px-0">
+    <div className="space-y-10 max-w-5xl mx-auto pb-20 px-4 sm:px-0">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
             <PageHeader
             title="Case Strength Matrix"
@@ -84,7 +82,7 @@ export default function StrengthAnalyzerPage() {
             <form action={formAction} className="space-y-8 text-left">
                 <div className="space-y-3">
                 <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Forensic Description</Label>
-                <Textarea id="caseDescription" name="caseDescription" placeholder="Dossier details: persons involved, statutory sections, dates, and evidence nodes..." rows={8} required className="glass rounded-[2rem] p-6 text-sm font-medium leading-relaxed" />
+                <Textarea id="caseDescription" name="caseDescription" placeholder="Dossier details..." rows={8} required className="glass rounded-[2rem] p-6 text-sm font-medium leading-relaxed" />
                 </div>
                 
                 <div className="space-y-3">
@@ -120,7 +118,7 @@ export default function StrengthAnalyzerPage() {
             )}
 
             {state.status === "error" && (
-                <Alert variant="destructive" className="rounded-3xl border-destructive/20 bg-destructive/5 p-6">
+                <Alert variant="destructive" className="rounded-3xl border-destructive/20 bg-destructive/5 p-6 text-left">
                     <AlertTitle className="text-xs font-black uppercase tracking-widest">Audit Failed</AlertTitle>
                     <AlertDescription className="text-sm font-medium">{state.error}</AlertDescription>
                 </Alert>
@@ -156,37 +154,11 @@ export default function StrengthAnalyzerPage() {
                                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary mb-4">Statutory Summary</h3>
                                 <p className="text-sm sm:text-base font-bold leading-relaxed text-foreground/80">{state.data.summary}</p>
                             </div>
-                            
-                            <div className="grid md:grid-cols-2 gap-8 text-left">
-                                <div className="space-y-4">
-                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-red-600 flex items-center gap-2"><ShieldAlert className="h-4 w-4"/> Forensic Risk Nodes</h3>
-                                    <ul className="space-y-3">
-                                        {state.data.riskIndicators.map((item, i) => (
-                                            <li key={i} className="flex gap-3 text-xs font-medium text-muted-foreground leading-relaxed">
-                                                <div className="h-1.5 w-1.5 rounded-full bg-red-500 shrink-0 mt-1.5" />
-                                                {item}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                <div className="space-y-4">
-                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-green-600 flex items-center gap-2"><Lightbulb className="h-4 w-4"/> Recommended Protocols</h3>
-                                    <ul className="space-y-3">
-                                        {state.data.recommendedActions.map((item, i) => (
-                                            <li key={i} className="flex gap-3 text-xs font-medium text-muted-foreground leading-relaxed">
-                                                <div className="h-1.5 w-1.5 rounded-full bg-green-500 shrink-0 mt-1.5" />
-                                                {item}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
                         </CardContent>
                     </Card>
                 </motion.div>
             )}
         </AnimatePresence>
-        </div>
-    </AIUsageGuard>
+    </div>
   );
 }
