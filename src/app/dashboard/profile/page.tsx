@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -87,7 +86,6 @@ type UserProfile = {
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'
 ];
@@ -639,7 +637,7 @@ export default function ProfilePage() {
                             <Button 
                                 onClick={handleSaveChanges} 
                                 disabled={saving || !hasChanges} 
-                                className="w-full sm:w-auto h-14 px-12 font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary/20 rounded-2xl active:scale-[0.98] transition-all"
+                                className="w-full sm:w-auto h-14 px-12 font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 rounded-2xl active:scale-[0.98] transition-all"
                             >
                                 {saving ? <Loader2 className="mr-3 h-5 w-5 animate-spin" /> : <Edit className="mr-3 h-4 w-4" />}
                                 Synchronize Registry

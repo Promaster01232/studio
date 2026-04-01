@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -43,7 +42,6 @@ import { ChatListDialog } from "@/components/chat-list-dialog";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'
 ];

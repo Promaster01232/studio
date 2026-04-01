@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -75,7 +74,6 @@ import { useSoundEffect } from "@/hooks/use-sound-effect";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'
 ];
@@ -259,17 +257,21 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     };
 
     const handleDelete = async () => {
-        const msg = isGlobalAdmin && !isAuthor ? "ADMIN PURGE: Confirm record erasure?" : "Confirm record purge from community registry?";
+        const msg = isGlobalAdmin && !isAuthor ? "ADMIN PURGE: Confirm record erasure from community registry?" : "Confirm record purge from community registry?";
         if (!confirm(msg)) return;
         
         const postRef = doc(firestore, "posts", post.id);
-        deleteDoc(postRef).catch((serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: postRef.path,
-                operation: 'delete',
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
-        });
+        deleteDoc(postRef)
+            .then(() => {
+                toast({ title: "Post Purged", description: "Registry data erased permanently." });
+            })
+            .catch((serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: postRef.path,
+                    operation: 'delete',
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
+            });
     };
 
     const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {

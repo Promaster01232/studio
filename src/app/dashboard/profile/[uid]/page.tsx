@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
@@ -50,8 +49,8 @@ import {
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumrsingh23323@gmail.com',
-  'piyushkumrsingh23399@gmail.com'
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
 ];
 
 const containerVariants = {
@@ -507,10 +506,10 @@ export default function UserPublicProfilePage(props: {
                                                             </Button>
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl shadow-2xl glass border-primary/10">
-                                                            {isAuthor ? (
+                                                            {(isAuthor || isUserAdmin) ? (
                                                                 <DropdownMenuItem onSelect={() => handleDeletePost(post.id)} className="rounded-lg font-bold text-10 h-9 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
                                                                     <Trash2 className="h-3.5 w-3.5" /> 
-                                                                    <span>purge record</span>
+                                                                    <span>{isUserAdmin && !isAuthor ? 'Admin Purge' : 'purge record'}</span>
                                                                 </DropdownMenuItem>
                                                             ) : (
                                                                 <DropdownMenuItem onSelect={handleReport} className="rounded-lg font-bold text-10 h-9 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">

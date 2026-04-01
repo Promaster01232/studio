@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useToast } from "@/hooks/use-toast";
@@ -52,8 +51,6 @@ import { Logo } from "@/components/logo";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
-  'piyushkumarsingh23323@gmail.com',
-  'piyushkumrsingh23323@gmail.com',
   'piyushkumrsingh23399@gmail.com',
   'nyayasahayakhelp@gmail.com'
 ];
@@ -607,7 +604,7 @@ export default function ResearchAnalyticsPage() {
                         </div>
                     </div>
                 </div>
-                <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.6em] text-muted-foreground/30 shrink-0">NYAYASAHAYAK.IN // NS-STREAM-V4</p>
+                <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground/30 shrink-0">NYAYASAHAYAK.IN // NS-STREAM-V4</p>
             </div>
         </div>
     );
