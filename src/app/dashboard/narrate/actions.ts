@@ -33,8 +33,10 @@ export async function summarizeCaseAction(
   try {
     const audioDataUri = await fileToDataURI(file);
     
-    // INSTITUTIONAL RESILIENCE PROTOCOL: 5-Stage Retry
-    let retries = 5;
+    // INSTITUTIONAL RESILIENCE PROTOCOL: 7-Stage Retry with Jittered Cooling
+    let retries = 7;
+    let delay = 10000;
+
     while (retries >= 0) {
         try {
             const result = await generateCaseSummary({
@@ -47,11 +49,13 @@ export async function summarizeCaseAction(
                 error.message?.includes('429') || 
                 error.status === 429 || 
                 error.message?.toLowerCase().includes('busy') ||
-                error.message?.toLowerCase().includes('quota');
+                error.message?.toLowerCase().includes('quota') ||
+                error.message?.toLowerCase().includes('limit');
 
             if (retries > 0 && isTransient) {
-                console.warn(`[AI NARRATE NODE] Neural cooling active. Retrying in 15s...`);
-                await new Promise(r => setTimeout(r, 15000));
+                console.warn(`[AI NARRATE NODE] Neural cooling active. Retrying in ${delay/1000}s...`);
+                await new Promise(r => setTimeout(r, delay));
+                delay = Math.min(delay * 1.5 + Math.random() * 5000, 45000);
                 retries--;
                 continue;
             }
@@ -61,6 +65,6 @@ export async function summarizeCaseAction(
     throw new Error("Timeout");
   } catch (error) {
     console.error("[AI NARRATE NODE] Failure:", error);
-    return { status: "error", data: null, error: "Failed to deconstruct narration. The AI forensic engine is currently processing a high volume of requests. Please try again shortly." };
+    return { status: "error", data: null, error: "Failed to deconstruct narration. The AI forensic engine is currently processing a high volume of requests. Please wait 30 seconds and try again." };
   }
 }

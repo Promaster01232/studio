@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use } from "react";
@@ -86,7 +85,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                 </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md rounded-[2.5rem] border-none shadow-2xl glass p-8 text-left">
-                <DialogHeader className="border-none mb-6">
+                <DialogHeader className="border-none mb-6 text-left">
                     <div className="flex items-center gap-3 mb-2 text-primary">
                         <Receipt className="h-5 w-5" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">Forensic Ledger Audit</span>
@@ -142,7 +141,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
 }
 
 export default function ManagementConsolePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  const _params = use(props.params); // Next.js 15: params should be unwrapped
+  const _params = use(props.params); 
   const _searchParams = use(props.searchParams);
 
   const firestore = useFirestore();

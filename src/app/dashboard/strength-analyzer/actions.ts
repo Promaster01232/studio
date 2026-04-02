@@ -33,8 +33,10 @@ export async function analyzeCaseStrengthAction(
     };
   }
 
-  // INSTITUTIONAL RESILIENCE PROTOCOL: 5-Stage Retry with Neural Cooling
-  let retries = 5;
+  // INSTITUTIONAL RESILIENCE PROTOCOL: 7-Stage Retry with Jittered Neural Cooling
+  let retries = 7;
+  let delay = 10000; // Base delay of 10s
+
   while (retries >= 0) {
     try {
       const result = await analyzeCaseStrength(validatedFields.data as AnalyzeCaseStrengthInput);
@@ -45,11 +47,14 @@ export async function analyzeCaseStrengthAction(
         error.status === 429 || 
         error.message?.toLowerCase().includes('busy') || 
         error.message?.toLowerCase().includes('quota') ||
-        error.message?.toLowerCase().includes('rate limit');
+        error.message?.toLowerCase().includes('rate limit') ||
+        error.message?.toLowerCase().includes('too many requests');
       
       if (retries > 0 && isTransientError) {
-        console.warn(`[AI STRENGTH NODE] Neural load high. Initializing Cooling Phase (${retries} left). Retrying in 15s...`);
-        await new Promise(resolve => setTimeout(resolve, 15000));
+        console.warn(`[AI STRENGTH NODE] Neural load high. Initializing Cooling Phase (${retries} left). Retrying in ${delay/1000}s...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        // Exponential backoff with jitter
+        delay = Math.min(delay * 1.5 + Math.random() * 5000, 45000);
         retries--;
         continue;
       }
@@ -58,10 +63,10 @@ export async function analyzeCaseStrengthAction(
       return { 
         status: "error", 
         data: null, 
-        error: "The Statutory Analysis Hub is under heavy neural load. Our forensic engines are currently saturated. Please re-initialize the audit in a few moments." 
+        error: "The Statutory Analysis Hub is under extreme neural load. Our forensic engines are currently processing a massive volume of reports. Please wait 30 seconds and initialize the audit again." 
       };
     }
   }
   
-  return { status: "error", data: null, error: "AI Audit Node timed out after 5 attempts. Please try again later." };
+  return { status: "error", data: null, error: "AI Audit Node timed out after 7 attempts. The neural gateway is currently saturated." };
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState, use } from "react";
 import { analyzeCaseStrengthAction, type CaseStrengthState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Lightbulb, Loader2, ShieldAlert, Sparkles, ArrowLeft, BrainCircuit, FileText, AlertTriangle } from "lucide-react";
+import { Lightbulb, Loader2, ShieldAlert, Sparkles, ArrowLeft, BrainCircuit, FileText, AlertTriangle, Activity } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AudioAssistant } from "@/components/audio-assistant";
 import Link from "next/link";
@@ -24,7 +24,11 @@ const initialState: CaseStrengthState = {
   error: null,
 };
 
-export default function StrengthAnalyzerPage() {
+export default function StrengthAnalyzerPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Next.js 15: unwrap dynamic props
+  use(props.params);
+  use(props.searchParams);
+
   const [state, formAction] = useActionState(analyzeCaseStrengthAction, initialState);
   const [progress, setProgress] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
@@ -41,20 +45,10 @@ export default function StrengthAnalyzerPage() {
           updateDoc(userRef, { aiUsageCount: increment(1) }).catch(console.error);
       }
       return () => clearTimeout(timer);
+    } else if (state.status === "loading" || state.status === "idle") {
+        setProgress(0);
     }
   }, [state, auth.currentUser, firestore]);
-
-  const getStrengthColor = (score: number) => {
-    if (score <= 30) return "bg-red-500";
-    if (score <= 65) return "bg-yellow-500";
-    return "bg-green-500";
-  };
-
-  const getStrengthText = (score: number) => {
-    if (score <= 30) return "Weak";
-    if (score <= 65) return "Moderate";
-    return "Strong";
-  };
 
   return (
     <div className="space-y-10 max-w-5xl mx-auto pb-20 px-4 sm:px-0 text-left">
@@ -109,29 +103,37 @@ export default function StrengthAnalyzerPage() {
             </CardContent>
         </Card>
         
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
             {state.status === 'loading' && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 text-center space-y-4">
-                    <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto opacity-20" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse text-center">Running Statutory Simulations...</p>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-20 text-center space-y-6">
+                    <div className="relative w-fit mx-auto">
+                        <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <Activity className="h-6 w-6 text-primary animate-pulse" />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <p className="text-xl font-black tracking-tight text-foreground uppercase">Executing Forensic Audit</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Scanning statutory precedents & simulating outcomes...</p>
+                    </div>
                 </motion.div>
             )}
 
             {state.status === "error" && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                     <Card className="glass border-destructive/20 shadow-2xl rounded-[2rem] overflow-hidden">
                         <div className="p-8 sm:p-10 flex flex-col items-center text-center gap-6">
-                            <div className="p-4 rounded-2xl bg-destructive/10 text-destructive">
+                            <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-inner">
                                 <AlertTriangle className="h-10 w-10" />
                             </div>
                             <div className="space-y-2">
-                                <h3 className="text-xl font-black uppercase tracking-tight text-destructive">Audit Failed</h3>
-                                <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto">
+                                <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Audit Delayed</h3>
+                                <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto px-4">
                                     {state.error}
                                 </p>
                             </div>
-                            <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl font-bold h-11 px-8 border-destructive/20 text-destructive hover:bg-destructive/5">
-                                Re-initialize Protocol
+                            <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
+                                Re-initialize Node Protocol
                             </Button>
                         </div>
                     </Card>
@@ -159,18 +161,21 @@ export default function StrengthAnalyzerPage() {
                             <div className="text-center space-y-6">
                                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em] text-center">Forensic Strength Score</p>
                                 <div className="flex items-center justify-center gap-6">
-                                    <span className={cn("text-4xl font-black uppercase tracking-tighter", getStrengthColor(state.data.strengthScore).replace('bg-', 'text-'))}>
-                                        {getStrengthText(state.data.strengthScore)}
+                                    <span className={cn("text-4xl font-black uppercase tracking-tighter", 
+                                        state.data.strengthScore <= 30 ? "text-red-500" : state.data.strengthScore <= 65 ? "text-yellow-500" : "text-green-500")}>
+                                        {state.data.strengthScore <= 30 ? "Weak" : state.data.strengthScore <= 65 ? "Moderate" : "Strong"}
                                     </span>
                                     <div className="h-12 w-px bg-primary/10 hidden sm:block"></div>
                                     <span className="text-6xl font-black font-mono tracking-tighter">{state.data.strengthScore}%</span>
                                 </div>
-                                <Progress value={progress} className="h-4 bg-muted/30 rounded-full" indicatorClassName={getStrengthColor(state.data.strengthScore)} />
+                                <Progress value={progress} className="h-4 bg-muted/30 rounded-full" indicatorClassName={cn(
+                                    state.data.strengthScore <= 30 ? "bg-red-500" : state.data.strengthScore <= 65 ? "bg-yellow-500" : "bg-green-500"
+                                )} />
                             </div>
                             
                             <div className="p-8 bg-primary/5 rounded-[2rem] border border-primary/10 shadow-inner text-left">
                                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary mb-4 text-left">Statutory Summary</h3>
-                                <p className="text-sm sm:text-base text-foreground font-bold leading-relaxed text-left">{state.data.summary}</p>
+                                <p className="text-sm sm:text-base text-foreground font-bold leading-relaxed text-left whitespace-pre-line">{state.data.summary}</p>
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-8 text-left">
@@ -180,7 +185,7 @@ export default function StrengthAnalyzerPage() {
                                     </h3>
                                     <div className="space-y-3 text-left">
                                         {state.data.riskIndicators.map((risk, idx) => (
-                                            <div key={idx} className="flex gap-3 p-4 rounded-xl bg-red-500/5 border border-red-500/10 text-xs font-bold leading-relaxed text-left">
+                                            <div key={idx} className="flex gap-3 p-4 rounded-xl bg-red-500/5 border border-red-500/10 text-xs font-bold leading-relaxed text-left shadow-sm">
                                                 <div className="h-1.5 w-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
                                                 {risk}
                                             </div>
@@ -193,7 +198,7 @@ export default function StrengthAnalyzerPage() {
                                     </h3>
                                     <div className="space-y-3 text-left">
                                         {state.data.recommendedActions.map((action, idx) => (
-                                            <div key={idx} className="flex gap-3 p-4 rounded-xl bg-green-500/5 border border-green-500/10 text-xs font-bold leading-relaxed text-left">
+                                            <div key={idx} className="flex gap-3 p-4 rounded-xl bg-green-500/5 border border-green-500/10 text-xs font-bold leading-relaxed text-left shadow-sm">
                                                 <div className="h-1.5 w-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
                                                 {action}
                                             </div>
