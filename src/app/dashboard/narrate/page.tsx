@@ -4,7 +4,7 @@ import { useActionState, useState, useRef, useEffect, startTransition } from "re
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Bot, FileText, StepForward, Loader2, Languages, FileSearch, Upload, Sparkles, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Mic, Bot, FileText, StepForward, Loader2, Languages, FileSearch, Upload, Sparkles, ShieldCheck, CheckCircle2, AlertTriangle, Activity } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -198,8 +198,13 @@ export default function NarrateProblemPage() {
                         <AnimatePresence mode="wait">
                             {isLoading ? (
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-10">
-                                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                                    <p className="font-black text-2xl tracking-tighter">Deconstructing Narration...</p>
+                                    <div className="relative w-fit mx-auto">
+                                        <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <Activity className="h-6 w-6 text-primary animate-pulse" />
+                                        </div>
+                                    </div>
+                                    <p className="font-black text-2xl tracking-tighter uppercase">Deconstructing Narration...</p>
                                 </motion.div>
                             ) : state.status === "success" && state.data ? (
                                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 pb-10 text-left">
@@ -216,6 +221,49 @@ export default function NarrateProblemPage() {
                                             {state.data.detailedAnalysis}
                                         </div>
                                     </div>
+                                </motion.div>
+                            ) : state.status === 'error' ? (
+                                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
+                                    <Card className="glass border-destructive/20 shadow-2xl rounded-[2rem] overflow-hidden">
+                                        <div className="p-8 sm:p-10 flex flex-col items-center text-center gap-6">
+                                            <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-inner">
+                                                <AlertTriangle className="h-10 w-10" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Audit Delayed</h3>
+                                                <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto px-4">
+                                                    {state.error}
+                                                </p>
+                                            </div>
+                                            <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 transition-all">
+                                                Re-initialize Capture
+                                            </Button>
+                                        </div>
+                                    </Card>
+
+                                    {state.resolution && (
+                                        <Card className="glass border-primary/10 shadow-xl rounded-[2.5rem] overflow-hidden">
+                                            <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
+                                                <div className="flex items-center gap-3 text-primary mb-1">
+                                                    <ShieldCheck className="h-5 w-5" />
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.3em]">Resolution Registry</span>
+                                                </div>
+                                                <CardTitle className="text-2xl font-black tracking-tight">How to solve this problem</CardTitle>
+                                            </CardHeader>
+                                            <CardContent className="p-8 sm:p-10 space-y-6">
+                                                <div className="grid gap-4">
+                                                    {state.resolution.map((step, idx) => (
+                                                        <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-background border border-primary/5 shadow-sm transition-all hover:bg-primary/5 text-left group">
+                                                            <div className="h-6 w-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-black text-xs shrink-0 group-hover:scale-110 transition-transform">
+                                                                {idx + 1}
+                                                            </div>
+                                                            <p className="text-sm font-bold text-muted-foreground group-hover:text-foreground transition-colors">{step}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    )}
                                 </motion.div>
                             ) : (
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">

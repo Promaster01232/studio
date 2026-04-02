@@ -6,6 +6,7 @@ export type CaseSummaryState = {
   status: "idle" | "loading" | "success" | "error";
   data: GenerateCaseSummaryOutput | null;
   error: string | null;
+  resolution?: string[];
 };
 
 async function fileToDataURI(file: File): Promise<string> {
@@ -33,8 +34,8 @@ export async function summarizeCaseAction(
   try {
     const audioDataUri = await fileToDataURI(file);
     
-    // INSTITUTIONAL RESILIENCE PROTOCOL: 7-Stage Retry with Jittered Cooling
-    let retries = 7;
+    // INSTITUTIONAL RESILIENCE PROTOCOL: 10-Stage Retry with Jittered Cooling
+    let retries = 10;
     let delay = 10000;
 
     while (retries >= 0) {
@@ -62,9 +63,19 @@ export async function summarizeCaseAction(
             throw error;
         }
     }
-    throw new Error("Timeout");
+    throw new Error("Timeout after 10 attempts.");
   } catch (error) {
     console.error("[AI NARRATE NODE] Failure:", error);
-    return { status: "error", data: null, error: "Failed to deconstruct narration. The AI forensic engine is currently processing a high volume of requests. Please wait 30 seconds and try again." };
+    return { 
+        status: "error", 
+        data: null, 
+        error: "Failed to deconstruct narration. The AI forensic engine is saturated.",
+        resolution: [
+            "Ensure the audio recording is clear and within 2 minutes.",
+            "Avoid background noise that might confuse the neural audit.",
+            "Retry the narration in Simple English for faster processing.",
+            "Wait 60 seconds for the node capacity to reset."
+        ]
+    };
   }
 }

@@ -7,6 +7,7 @@ export type CaseStrengthState = {
   status: "idle" | "loading" | "success" | "error";
   data: AnalyzeCaseStrengthOutput | null;
   error: string | null;
+  resolution?: string[];
 };
 
 const StrengthSchema = z.object({
@@ -33,25 +34,24 @@ export async function analyzeCaseStrengthAction(
     };
   }
 
-  // INSTITUTIONAL RESILIENCE PROTOCOL: 7-Stage Retry with Jittered Neural Cooling
-  let retries = 7;
-  let delay = 10000; // Base delay of 10s
+  // INSTITUTIONAL RESILIENCE PROTOCOL: 10-Stage Retry with Jittered Neural Cooling
+  let retries = 10;
+  let delay = 10000;
 
   while (retries >= 0) {
     try {
       const result = await analyzeCaseStrength(validatedFields.data as AnalyzeCaseStrengthInput);
       return { status: "success", data: result, error: null };
     } catch (error: any) {
-      const isTransientError = 
+      const isTransient = 
         error.message?.includes('429') || 
         error.status === 429 || 
         error.message?.toLowerCase().includes('busy') || 
         error.message?.toLowerCase().includes('quota') ||
-        error.message?.toLowerCase().includes('rate limit') ||
-        error.message?.toLowerCase().includes('too many requests');
+        error.message?.toLowerCase().includes('limit');
       
-      if (retries > 0 && isTransientError) {
-        console.warn(`[AI STRENGTH NODE] Neural load high. Initializing Cooling Phase (${retries} left). Retrying in ${delay/1000}s...`);
+      if (retries > 0 && isTransient) {
+        console.warn(`[AI STRENGTH NODE] Neural load high. Cooling Phase (${retries} left). Retrying in ${delay/1000}s...`);
         await new Promise(resolve => setTimeout(resolve, delay));
         // Exponential backoff with jitter
         delay = Math.min(delay * 1.5 + Math.random() * 5000, 45000);
@@ -63,10 +63,21 @@ export async function analyzeCaseStrengthAction(
       return { 
         status: "error", 
         data: null, 
-        error: "The Statutory Analysis Hub is under extreme neural load. Our forensic engines are currently processing a massive volume of reports. Please wait 30 seconds and initialize the audit again." 
+        error: "The Statutory Analysis Hub is under extreme neural load after 10 failed attempts.",
+        resolution: [
+            "Wait for the 60-second statutory cooldown period to end.",
+            "Simplify the case description to be more concise and factual.",
+            "Verify your internet ingress stability.",
+            "Try re-initializing the node in a few minutes."
+        ]
       };
     }
   }
   
-  return { status: "error", data: null, error: "AI Audit Node timed out after 7 attempts. The neural gateway is currently saturated." };
+  return { 
+    status: "error", 
+    data: null, 
+    error: "AI Audit Node timed out. Neural gateway saturated.",
+    resolution: ["Please wait 2-3 minutes and initialize the audit protocol again."]
+  };
 }

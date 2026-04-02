@@ -6,6 +6,7 @@ export type DocumentIntelligenceState = {
   status: "idle" | "loading" | "success" | "error";
   data: UnderstandLegalDocumentOutput | null;
   error: string | null;
+  resolution?: string[];
 };
 
 async function fileToDataURI(file: File): Promise<string> {
@@ -33,8 +34,8 @@ export async function understandDocumentAction(
   try {
     const documentDataUri = await fileToDataURI(file);
     
-    // INSTITUTIONAL RESILIENCE PROTOCOL: 7-Stage Retry with Jittered Cooling
-    let retries = 7;
+    // INSTITUTIONAL RESILIENCE PROTOCOL: 10-Stage Retry with Jittered Cooling
+    let retries = 10;
     let delay = 10000;
 
     while (retries >= 0) {
@@ -62,9 +63,19 @@ export async function understandDocumentAction(
             throw error;
         }
     }
-    throw new Error("Timeout");
+    throw new Error("Timeout after 10 attempts.");
   } catch (error) {
     console.error("[AI DOC NODE] Failure:", error);
-    return { status: "error", data: null, error: "Failed to analyze document node. The forensic engine is currently handling a high volume of statutory audits. Please wait 30 seconds and re-initialize." };
+    return { 
+        status: "error", 
+        data: null, 
+        error: "Failed to analyze document node. The forensic engine is saturated.",
+        resolution: [
+            "Ensure the document is a legible PDF or Image (not a text file).",
+            "Reduce file size to under 5MB for faster neural processing.",
+            "Verify that the document contains legal or statutory clauses.",
+            "Try again during off-peak institutional hours."
+        ]
+    };
   }
 }
