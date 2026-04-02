@@ -1,4 +1,3 @@
-
 'use client';
 import { ReactNode } from 'react';
 import { FirebaseProvider } from './provider';
@@ -26,16 +25,20 @@ const auth = getAuth(app);
 
 let firestore: Firestore;
 try {
-  // Institutional Hardening: Use explicit initialization with resilient connection protocols
+  /**
+   * INSTITUTIONAL CONNECTIVITY HARDENING:
+   * 
+   * Force Long-Polling to overcome restrictive cloud network environments (proxies/firewalls)
+   * and resolve the "@firebase/firestore: Could not reach Cloud Firestore backend" timeout error.
+   * 
+   * experimentalForceLongPolling: true ensures definitive ingress by avoiding streaming nodes.
+   */
   firestore = initializeFirestore(app, {
     localCache: persistentLocalCache({
       tabManager: persistentMultipleTabManager(),
     }),
-    // Force auto-detection of long-polling to overcome restrictive firewalls/proxies
-    // and prevent "Could not reach Cloud Firestore backend" errors.
-    experimentalAutoDetectLongPolling: true,
-    // Disabling fetch streams often improves stability in cloud-based dev environments
-    experimentalForceLongPolling: false, 
+    experimentalForceLongPolling: true,
+    experimentalAutoDetectLongPolling: false,
   });
 } catch (error) {
   console.warn("[FIREBASE] Re-initializing existing Firestore node.");
