@@ -35,7 +35,7 @@ export async function understandDocumentAction(
     const documentDataUri = await fileToDataURI(file);
     
     // Resilient Execution Protocol
-    let retries = 2;
+    let retries = 3;
     while (retries >= 0) {
         try {
             const result = await understandLegalDocument({
@@ -45,6 +45,7 @@ export async function understandDocumentAction(
             return { status: "success", data: result, error: null };
         } catch (error: any) {
             if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
+                console.warn(`[AI Audit] Rate limit hit. Retrying in 5s...`);
                 await new Promise(r => setTimeout(r, 5000));
                 retries--;
                 continue;

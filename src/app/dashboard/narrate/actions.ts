@@ -35,7 +35,7 @@ export async function summarizeCaseAction(
     const audioDataUri = await fileToDataURI(file);
     
     // Resilient Execution Protocol
-    let retries = 2;
+    let retries = 3;
     while (retries >= 0) {
         try {
             const result = await generateCaseSummary({
@@ -45,7 +45,7 @@ export async function summarizeCaseAction(
             return { status: "success", data: result, error: null };
         } catch (error: any) {
             if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
-                console.warn(`[AI Transcribe] Rate limit hit. Retrying...`);
+                console.warn(`[AI Transcribe] Rate limit hit. Retrying in 5s...`);
                 await new Promise(r => setTimeout(r, 5000));
                 retries--;
                 continue;

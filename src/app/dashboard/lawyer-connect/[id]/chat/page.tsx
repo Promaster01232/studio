@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, use } from "react";
@@ -18,6 +19,9 @@ export default function ChatPage(props: {
   searchParams: Promise<any>
 }) {
   const { id } = use(props.params);
+  // Unwrap searchParams for Next.js 15 consistency
+  use(props.searchParams);
+
   const rtdb = useDatabase();
   const [lawyer, setLayer] = useState<Lawyer | undefined>();
   const [loading, setLoading] = useState(true);
