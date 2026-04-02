@@ -53,6 +53,7 @@ export default function BondGeneratorPage() {
   const [bondType, setBondType] = useState("Bail Bond");
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("Simple English");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -164,7 +165,7 @@ export default function BondGeneratorPage() {
               </div>
               <div className="space-y-3">
                 <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Registry</Label>
-                <Select name="language" defaultValue="Simple English" required>
+                <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
                   <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
