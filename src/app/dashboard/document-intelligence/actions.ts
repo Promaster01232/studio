@@ -33,8 +33,8 @@ export async function understandDocumentAction(
   try {
     const documentDataUri = await fileToDataURI(file);
     
-    // Resilient Execution Protocol
-    let retries = 3;
+    // INSTITUTIONAL RESILIENCE PROTOCOL: 5-Stage Retry
+    let retries = 5;
     while (retries >= 0) {
         try {
             const result = await understandLegalDocument({
@@ -43,9 +43,15 @@ export async function understandDocumentAction(
             });
             return { status: "success", data: result, error: null };
         } catch (error: any) {
-            if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
-                console.warn(`[AI Audit] Rate limit hit. Retrying in 5s...`);
-                await new Promise(r => setTimeout(r, 5000));
+            const isTransient = 
+                error.message?.includes('429') || 
+                error.status === 429 || 
+                error.message?.toLowerCase().includes('busy') ||
+                error.message?.toLowerCase().includes('quota');
+
+            if (retries > 0 && isTransient) {
+                console.warn(`[AI DOC NODE] Rate limit hit. Initializing cooling phase. Retrying in 15s...`);
+                await new Promise(r => setTimeout(r, 15000));
                 retries--;
                 continue;
             }
@@ -54,7 +60,7 @@ export async function understandDocumentAction(
     }
     throw new Error("Timeout");
   } catch (error) {
-    console.error("[AI Audit] Failure:", error);
-    return { status: "error", data: null, error: "Failed to analyze document node. The forensic engine is under heavy load." };
+    console.error("[AI DOC NODE] Failure:", error);
+    return { status: "error", data: null, error: "Failed to analyze document node. The forensic engine is currently handling a high volume of statutory audits. Please re-initialize in a few moments." };
   }
 }

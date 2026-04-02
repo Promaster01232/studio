@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Lightbulb, Loader2, ShieldAlert, Sparkles, ArrowLeft, BrainCircuit, FileText } from "lucide-react";
+import { Lightbulb, Loader2, ShieldAlert, Sparkles, ArrowLeft, BrainCircuit, FileText, AlertTriangle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AudioAssistant } from "@/components/audio-assistant";
 import Link from "next/link";
@@ -82,7 +82,7 @@ export default function StrengthAnalyzerPage() {
             <form action={formAction} className="space-y-8 text-left">
                 <div className="space-y-3">
                 <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Forensic Description</Label>
-                <Textarea id="caseDescription" name="caseDescription" placeholder="Dossier details..." rows={8} required className="glass rounded-[2rem] p-6 text-sm font-medium leading-relaxed" />
+                <Textarea id="caseDescription" name="caseDescription" placeholder="Provide a chronological description of events, evidence, and people involved for a precise forensic audit..." rows={8} required className="glass rounded-[2rem] p-6 text-sm font-medium leading-relaxed" />
                 </div>
                 
                 <div className="space-y-3">
@@ -118,10 +118,24 @@ export default function StrengthAnalyzerPage() {
             )}
 
             {state.status === "error" && (
-                <Alert variant="destructive" className="rounded-3xl border-destructive/20 bg-destructive/5 p-6 text-left">
-                    <AlertTitle className="text-xs font-black uppercase tracking-widest text-left">Audit Failed</AlertTitle>
-                    <AlertDescription className="text-sm font-medium text-left">{state.error}</AlertDescription>
-                </Alert>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                    <Card className="glass border-destructive/20 shadow-2xl rounded-[2rem] overflow-hidden">
+                        <div className="p-8 sm:p-10 flex flex-col items-center text-center gap-6">
+                            <div className="p-4 rounded-2xl bg-destructive/10 text-destructive">
+                                <AlertTriangle className="h-10 w-10" />
+                            </div>
+                            <div className="space-y-2">
+                                <h3 className="text-xl font-black uppercase tracking-tight text-destructive">Audit Failed</h3>
+                                <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto">
+                                    {state.error}
+                                </p>
+                            </div>
+                            <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl font-bold h-11 px-8 border-destructive/20 text-destructive hover:bg-destructive/5">
+                                Re-initialize Protocol
+                            </Button>
+                        </div>
+                    </Card>
+                </motion.div>
             )}
 
             {state.status === "success" && state.data && (

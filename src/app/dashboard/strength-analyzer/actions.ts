@@ -1,4 +1,3 @@
-
 "use server";
 
 import { analyzeCaseStrength, type AnalyzeCaseStrengthOutput, AnalyzeCaseStrengthInput } from "@/ai/flows/analyze-case-strength";
@@ -34,30 +33,35 @@ export async function analyzeCaseStrengthAction(
     };
   }
 
-  // Resilient Execution Protocol: Retries on transient "Busy" errors
-  let retries = 3;
+  // INSTITUTIONAL RESILIENCE PROTOCOL: 5-Stage Retry with Neural Cooling
+  let retries = 5;
   while (retries >= 0) {
     try {
       const result = await analyzeCaseStrength(validatedFields.data as AnalyzeCaseStrengthInput);
       return { status: "success", data: result, error: null };
     } catch (error: any) {
-      const isRateLimit = error.message?.includes('429') || error.status === 429 || error.message?.includes('busy');
+      const isTransientError = 
+        error.message?.includes('429') || 
+        error.status === 429 || 
+        error.message?.toLowerCase().includes('busy') || 
+        error.message?.toLowerCase().includes('quota') ||
+        error.message?.toLowerCase().includes('rate limit');
       
-      if (retries > 0 && isRateLimit) {
-        console.warn(`[AI Audit] Rate limit hit. Retrying in 5s... (${retries} left)`);
-        await new Promise(resolve => setTimeout(resolve, 5000));
+      if (retries > 0 && isTransientError) {
+        console.warn(`[AI STRENGTH NODE] Neural load high. Initializing Cooling Phase (${retries} left). Retrying in 15s...`);
+        await new Promise(resolve => setTimeout(resolve, 15000));
         retries--;
         continue;
       }
       
-      console.error("[AI Audit] Fatal node error:", error);
+      console.error("[AI STRENGTH NODE] Fatal error:", error);
       return { 
         status: "error", 
         data: null, 
-        error: "Statutory Analysis Hub Busy. Our neural engine is currently processing a high volume of audits. Please re-initialize in 30 seconds." 
+        error: "The Statutory Analysis Hub is under heavy neural load. Our forensic engines are currently saturated. Please re-initialize the audit in a few moments." 
       };
     }
   }
   
-  return { status: "error", data: null, error: "AI Audit Node timed out. Please try again." };
+  return { status: "error", data: null, error: "AI Audit Node timed out after 5 attempts. Please try again later." };
 }

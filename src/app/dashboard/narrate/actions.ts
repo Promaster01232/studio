@@ -33,8 +33,8 @@ export async function summarizeCaseAction(
   try {
     const audioDataUri = await fileToDataURI(file);
     
-    // Resilient Execution Protocol
-    let retries = 3;
+    // INSTITUTIONAL RESILIENCE PROTOCOL: 5-Stage Retry
+    let retries = 5;
     while (retries >= 0) {
         try {
             const result = await generateCaseSummary({
@@ -43,9 +43,15 @@ export async function summarizeCaseAction(
             });
             return { status: "success", data: result, error: null };
         } catch (error: any) {
-            if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
-                console.warn(`[AI Transcribe] Rate limit hit. Retrying in 5s...`);
-                await new Promise(r => setTimeout(r, 5000));
+            const isTransient = 
+                error.message?.includes('429') || 
+                error.status === 429 || 
+                error.message?.toLowerCase().includes('busy') ||
+                error.message?.toLowerCase().includes('quota');
+
+            if (retries > 0 && isTransient) {
+                console.warn(`[AI NARRATE NODE] Neural cooling active. Retrying in 15s...`);
+                await new Promise(r => setTimeout(r, 15000));
                 retries--;
                 continue;
             }
@@ -54,7 +60,7 @@ export async function summarizeCaseAction(
     }
     throw new Error("Timeout");
   } catch (error) {
-    console.error("[AI Transcribe] Failure:", error);
-    return { status: "error", data: null, error: "Failed to deconstruct narration. AI forensic engine is currently busy." };
+    console.error("[AI NARRATE NODE] Failure:", error);
+    return { status: "error", data: null, error: "Failed to deconstruct narration. The AI forensic engine is currently processing a high volume of requests. Please try again shortly." };
   }
 }
