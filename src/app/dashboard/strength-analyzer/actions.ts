@@ -11,7 +11,7 @@ export type CaseStrengthState = {
 };
 
 const StrengthSchema = z.object({
-  caseDescription: z.string().min(20, "Please provide a detailed case description (min 20 chars)."),
+  caseDescription: z.string().min(10, "Please provide more detail for a precise audit."),
   language: z.string().min(1, "Please select a language."),
 });
 
@@ -34,9 +34,9 @@ export async function analyzeCaseStrengthAction(
     };
   }
 
-  // INSTITUTIONAL RESILIENCE PROTOCOL: 15-Stage Retry with Jittered Neural Cooling
-  let retries = 15;
-  let delay = 2000;
+  // INSTITUTIONAL RESILIENCE PROTOCOL: 20-Stage Retry with Jittered Neural Cooling
+  let retries = 20;
+  let delay = 3000;
 
   while (retries >= 0) {
     try {
@@ -51,10 +51,10 @@ export async function analyzeCaseStrengthAction(
         error.message?.toLowerCase().includes('limit');
       
       if (retries > 0 && isTransient) {
-        console.warn(`[AI STRENGTH NODE] High load detected. Attempting re-entry in ${delay/1000}s... (${retries} retries left)`);
+        console.warn(`[AI SUCCESS NODE] Hub Saturation. Retry ${20 - retries}/20 in ${delay/1000}s...`);
         await new Promise(resolve => setTimeout(resolve, delay));
-        // Gradual backoff with jitter
-        delay = Math.min(delay * 1.3 + Math.random() * 1000, 20000);
+        // Linear scaling with random jitter to maximize gateway access
+        delay = Math.min(delay + 2000 + Math.random() * 1000, 25000);
         retries--;
         continue;
       }
@@ -63,12 +63,12 @@ export async function analyzeCaseStrengthAction(
       return { 
         status: "error", 
         data: null, 
-        error: "The Statutory Analysis Hub is currently saturated after 15 audit attempts.",
+        error: "The Statutory Research Hub is currently saturated after 20 audit attempts.",
         resolution: [
-            "Wait for the 60-second statutory cooldown period to end.",
-            "Simplify the case description to remove complex legal jargon.",
-            "Verify that your input is strictly factual.",
-            "Initialize the audit again during off-peak hours."
+            "Wait 60 seconds for the node capacity to reset.",
+            "Simplify the input to focus on core facts.",
+            "Try re-initializing the audit during off-peak hours.",
+            "Check your internet ingress stability."
         ]
       };
     }
@@ -77,7 +77,7 @@ export async function analyzeCaseStrengthAction(
   return { 
     status: "error", 
     data: null, 
-    error: "AI Audit Node timed out. Neural gateway saturated.",
+    error: "AI Research Node timed out. Neural gateway saturated.",
     resolution: ["Please wait 2 minutes and initialize the audit protocol again."]
   };
 }

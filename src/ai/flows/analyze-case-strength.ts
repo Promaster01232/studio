@@ -1,11 +1,7 @@
 'use server';
 
 /**
- * @fileOverview An AI agent to analyze the strength of a legal case.
- *
- * - analyzeCaseStrength - A function that analyzes the case strength.
- * - AnalyzeCaseStrengthInput - The input type for the analyzeCaseStrength function.
- * - AnalyzeCaseStrengthOutput - The return type for the analyzeCaseStrength function.
+ * @fileOverview An AI agent to analyze the strength of a legal case with Deep Research capabilities.
  */
 
 import {ai} from '@/ai/genkit';
@@ -38,6 +34,7 @@ const AnalyzeCaseStrengthOutputSchema = z.object({
     .describe(
       'A concise summary of the case strength analysis, including key findings.'
     ),
+  forensicResearch: z.string().describe('A deep, research-based legal analysis of the case precedents and statutes.'),
 });
 export type AnalyzeCaseStrengthOutput = z.infer<typeof AnalyzeCaseStrengthOutputSchema>;
 
@@ -51,15 +48,22 @@ const analyzeCaseStrengthPrompt = ai.definePrompt({
   name: 'analyzeCaseStrengthPrompt',
   input: {schema: AnalyzeCaseStrengthInputSchema},
   output: {schema: AnalyzeCaseStrengthOutputSchema},
-  prompt: `You are an AI legal assistant that analyzes the strength of a legal case based on the provided information.
+  prompt: `You are an expert AI forensic legal researcher specializing in Indian Law. 
 
-Analyze the following case description and provide a strength score (0-100), identify key risk indicators, recommend actions to improve the case, and provide a summary of your analysis.
+Perform an exhaustive, high-fidelity research audit on the following case description. 
 
 Case Description: {{{caseDescription}}}
 
+Output Requirements:
+1. Strength Score: A precise probability of litigation success (0-100).
+2. Risk Indicators: Identify hidden statutory risks or procedural pitfalls.
+3. Recommended Actions: Provide actionable steps to harden the case position.
+4. Summary: A layman-friendly executive summary.
+5. Forensic Research: A deep, professional legal analysis including potential Bharatiya Nyaya Sanhita (BNS) sections, judicial precedents, and jurisdictional nuances. 
+
 Provide the response in the following language: {{{language}}}
 
-Respond in a well structured and complete way. Your analysis should be comprehensive based on the details provided in the case description.`,
+Be thorough, professional, and precise. Every report must look like a formal legal dossier.`,
 });
 
 const analyzeCaseStrengthFlow = ai.defineFlow(
