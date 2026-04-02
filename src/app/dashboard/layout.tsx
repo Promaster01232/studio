@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -107,7 +106,7 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                     <>
                         <SosDialog>
                             <Button variant="destructive" size="sm" className="font-black gap-2 animate-pulse px-2.5 sm:px-5 h-9 sm:h-11 text-[8px] sm:text-[9px] rounded-xl shadow-xl shadow-destructive/20 active:scale-95 transition-all">
-                                <ShieldAlert className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                <ShieldAlert className="h-3.5 w-3.5 sm:h-4 w-4" />
                                 <span className="hidden xs:inline tracking-[0.2em] uppercase">SOS</span>
                             </Button>
                         </SosDialog>

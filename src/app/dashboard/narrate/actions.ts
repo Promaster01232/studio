@@ -1,4 +1,3 @@
-
 "use server";
 
 import { generateCaseSummary, type GenerateCaseSummaryOutput } from "@/ai/flows/generate-case-summary";
