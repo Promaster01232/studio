@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -78,8 +79,8 @@ const featureNodes = [
 ];
 
 export default function WelcomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  const params = use(props.params);
-  const searchParams = use(props.searchParams);
+  const _params = use(props.params); // Next.js 15: params should be unwrapped
+  const _searchParams = use(props.searchParams);
 
   const auth = useAuth();
   const [user, setUser] = useState<FirebaseUser | null>(null);

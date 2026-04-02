@@ -1,3 +1,4 @@
+
 "use server";
 
 import { analyzeCaseStrength, type AnalyzeCaseStrengthOutput, AnalyzeCaseStrengthInput } from "@/ai/flows/analyze-case-strength";
@@ -33,27 +34,30 @@ export async function analyzeCaseStrengthAction(
     };
   }
 
-  // Resilient Execution Protocol
+  // Resilient Execution Protocol: Retries on transient "Busy" errors
   let retries = 3;
   while (retries >= 0) {
     try {
       const result = await analyzeCaseStrength(validatedFields.data as AnalyzeCaseStrengthInput);
       return { status: "success", data: result, error: null };
     } catch (error: any) {
-      if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
+      const isRateLimit = error.message?.includes('429') || error.status === 429 || error.message?.includes('busy');
+      
+      if (retries > 0 && isRateLimit) {
         console.warn(`[AI Audit] Rate limit hit. Retrying in 5s... (${retries} left)`);
         await new Promise(resolve => setTimeout(resolve, 5000));
         retries--;
         continue;
       }
+      
       console.error("[AI Audit] Fatal node error:", error);
       return { 
         status: "error", 
         data: null, 
-        error: "Statutory Analysis Hub Busy. Please re-initialize in 30 seconds." 
+        error: "Statutory Analysis Hub Busy. Our neural engine is currently processing a high volume of audits. Please re-initialize in 30 seconds." 
       };
     }
   }
   
-  return { status: "error", data: null, error: "AI Audit Node timed out. Please try again later." };
+  return { status: "error", data: null, error: "AI Audit Node timed out. Please try again." };
 }
