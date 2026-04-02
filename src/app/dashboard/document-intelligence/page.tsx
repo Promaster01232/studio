@@ -62,7 +62,7 @@ export default function DocumentIntelligencePage() {
         <div className="grid lg:grid-cols-12 gap-8 items-start">
             <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-5 space-y-6">
             <Card className="glass shadow-2xl overflow-hidden rounded-[2rem] border-primary/5">
-                <CardHeader className="bg-primary/5 border-b border-primary/10 p-8">
+                <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
                 <div className="flex items-center gap-3 mb-2">
                     <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
                         <FileUp className="h-5 w-5" />
@@ -146,7 +146,7 @@ export default function DocumentIntelligencePage() {
                         <Bot className="h-4 w-4" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">AI Intelligence</span>
                     </div>
-                    <CardTitle className="text-2xl font-black tracking-tight leading-none">Analysis Registry</CardTitle>
+                    <CardTitle className="text-2xl font-black tracking-tight leading-none text-left">Analysis Registry</CardTitle>
                 </div>
                 {state.status === 'success' && state.data && (
                     <AudioAssistant 
@@ -173,7 +173,7 @@ export default function DocumentIntelligencePage() {
 
                     {state.status === "error" && (
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-                            <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-3xl p-6">
+                            <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-3xl p-6 text-left">
                                 <AlertTriangle className="h-6 w-6 mr-4" />
                                 <div className="space-y-1 text-left">
                                     <AlertTitle className="font-black uppercase tracking-widest text-xs">Critical Failure</AlertTitle>
@@ -185,7 +185,7 @@ export default function DocumentIntelligencePage() {
 
                     {state.status === "success" && state.data && (
                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 pb-10 text-left">
-                            <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10 shadow-inner group transition-all hover:bg-primary/10">
+                            <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10 shadow-inner group transition-all hover:bg-primary/10 text-left">
                                 <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4 flex items-center gap-3">
                                     <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></div>
                                     Executive Summary
@@ -193,14 +193,14 @@ export default function DocumentIntelligencePage() {
                                 <p className="text-sm sm:text-base text-foreground font-bold leading-relaxed">{state.data.summary}</p>
                             </div>
                             
-                            <div className="grid sm:grid-cols-2 gap-6">
-                                <Card className="bg-red-500/5 rounded-3xl border-red-500/10 p-6 hover:bg-red-500/10 transition-all duration-500">
+                            <div className="grid sm:grid-cols-2 gap-6 text-left">
+                                <Card className="bg-red-500/5 rounded-3xl border-red-500/10 p-6 hover:bg-red-500/10 transition-all duration-500 text-left">
                                     <h3 className="text-[10px] font-black text-red-600 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                                         <AlertTriangle className="h-4 w-4" /> Forensic Risks
                                     </h3>
                                     <p className="text-xs text-muted-foreground font-bold leading-relaxed">{state.data.legalRisks}</p>
                                 </Card>
-                                <Card className="bg-amber-500/5 rounded-3xl border-amber-500/10 p-6 hover:bg-amber-500/10 transition-all duration-500">
+                                <Card className="bg-amber-500/5 rounded-3xl border-amber-500/10 p-6 hover:bg-amber-500/10 transition-all duration-500 text-left">
                                     <h3 className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                                         <CalendarClock className="h-4 w-4" /> Critical Timelines
                                     </h3>
@@ -208,15 +208,15 @@ export default function DocumentIntelligencePage() {
                                 </Card>
                             </div>
 
-                            <div className="p-6 bg-background rounded-3xl border border-primary/10 shadow-sm transition-all hover:shadow-xl hover:shadow-primary/5">
-                                <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                            <div className="p-6 bg-background rounded-3xl border border-primary/10 shadow-sm transition-all hover:shadow-xl hover:shadow-primary/5 text-left">
+                                <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-4 flex items-center gap-2 text-left">
                                     <ListChecks className="h-4 w-4" /> Recommended Strategy
                                 </h3>
                                 <p className="text-xs text-muted-foreground font-bold leading-relaxed whitespace-pre-line">{state.data.requiredActions}</p>
                             </div>
 
-                            <div className="p-6 bg-destructive/5 rounded-3xl border border-destructive/10">
-                                <h3 className="text-[10px] font-black text-destructive uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                            <div className="p-6 bg-destructive/5 rounded-3xl border border-destructive/10 text-left">
+                                <h3 className="text-[10px] font-black text-destructive uppercase tracking-[0.2em] mb-4 flex items-center gap-2 text-left">
                                     <Bomb className="h-4 w-4" /> Procedural Consequences
                                 </h3>
                                 <p className="text-xs text-muted-foreground font-bold leading-relaxed">{state.data.consequences}</p>
@@ -229,9 +229,9 @@ export default function DocumentIntelligencePage() {
                             <div className="p-8 rounded-[2rem] bg-muted/50 border-2 border-dashed border-primary/10">
                                 <FileUp className="h-16 w-16 text-muted-foreground" />
                             </div>
-                            <div className="space-y-2">
-                                <p className="font-black text-xl tracking-tighter uppercase">Awaiting Ingestion</p>
-                                <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto leading-relaxed">
+                            <div className="space-y-2 text-center">
+                                <p className="font-black text-xl tracking-tighter uppercase text-center">Awaiting Ingestion</p>
+                                <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto leading-relaxed text-center">
                                     Upload a document to initialize the neural forensic scanning protocol.
                                 </p>
                             </div>

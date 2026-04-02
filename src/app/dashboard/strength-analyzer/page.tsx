@@ -58,7 +58,7 @@ export default function StrengthAnalyzerPage() {
 
   return (
     <div className="space-y-10 max-w-5xl mx-auto pb-20 px-4 sm:px-0 text-left">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8 text-left">
             <PageHeader
             title="Case Strength Matrix"
             description="Institutional AI assessment of litigation success probability based on forensic data."
@@ -71,7 +71,7 @@ export default function StrengthAnalyzerPage() {
         </motion.div>
 
         <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
-            <CardHeader className="bg-primary/5 border-b border-primary/5 p-8">
+            <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
             <div className="flex items-center gap-3 text-primary mb-2">
                 <BrainCircuit className="h-5 w-5" />
                 <CardTitle className="text-xl font-black uppercase tracking-tight">Narrative Ingestion</CardTitle>
@@ -113,37 +113,37 @@ export default function StrengthAnalyzerPage() {
             {state.status === 'loading' && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 text-center space-y-4">
                     <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto opacity-20" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">Running Statutory Simulations...</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse text-center">Running Statutory Simulations...</p>
                 </motion.div>
             )}
 
             {state.status === "error" && (
                 <Alert variant="destructive" className="rounded-3xl border-destructive/20 bg-destructive/5 p-6 text-left">
-                    <AlertTitle className="text-xs font-black uppercase tracking-widest">Audit Failed</AlertTitle>
-                    <AlertDescription className="text-sm font-medium">{state.error}</AlertDescription>
+                    <AlertTitle className="text-xs font-black uppercase tracking-widest text-left">Audit Failed</AlertTitle>
+                    <AlertDescription className="text-sm font-medium text-left">{state.error}</AlertDescription>
                 </Alert>
             )}
 
             {state.status === "success" && state.data && (
-                <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+                <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 text-left">
                     <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
-                        <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8">
+                        <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8 text-left">
                             <div className="space-y-1 text-left">
                                 <div className="flex items-center gap-2 mb-1">
                                     <FileText className="h-5 w-5 text-primary" />
                                     <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Official AI Report Node Active</span>
                                 </div>
-                                <CardTitle className="text-2xl font-black uppercase tracking-tight">Audit Output: Strength Matrix</CardTitle>
-                                <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">AI-Generated Success Matrix</CardDescription>
+                                <CardTitle className="text-2xl font-black uppercase tracking-tight text-left">Audit Output: Strength Matrix</CardTitle>
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60 text-left">AI-Generated Success Matrix</CardDescription>
                             </div>
                             <AudioAssistant 
                                 text={`${state.data.summary}. The case strength score is ${state.data.strengthScore} percent.`} 
                                 language={selectedLanguage} 
                             />
                         </CardHeader>
-                        <CardContent className="p-8 sm:p-12 space-y-10">
+                        <CardContent className="p-8 sm:p-12 space-y-10 text-left">
                             <div className="text-center space-y-6">
-                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em]">Forensic Strength Score</p>
+                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em] text-center">Forensic Strength Score</p>
                                 <div className="flex items-center justify-center gap-6">
                                     <span className={cn("text-4xl font-black uppercase tracking-tighter", getStrengthColor(state.data.strengthScore).replace('bg-', 'text-'))}>
                                         {getStrengthText(state.data.strengthScore)}
@@ -155,31 +155,31 @@ export default function StrengthAnalyzerPage() {
                             </div>
                             
                             <div className="p-8 bg-primary/5 rounded-[2rem] border border-primary/10 shadow-inner text-left">
-                                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary mb-4">Statutory Summary</h3>
-                                <p className="text-sm sm:text-base font-bold leading-relaxed text-foreground/80">{state.data.summary}</p>
+                                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary mb-4 text-left">Statutory Summary</h3>
+                                <p className="text-sm sm:text-base text-foreground font-bold leading-relaxed text-left">{state.data.summary}</p>
                             </div>
 
-                            <div className="grid md:grid-cols-2 gap-8">
-                                <div className="space-y-4">
-                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-red-600 flex items-center gap-2">
+                            <div className="grid md:grid-cols-2 gap-8 text-left">
+                                <div className="space-y-4 text-left">
+                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-red-600 flex items-center gap-2 text-left">
                                         <ShieldAlert className="h-4 w-4" /> Risk Indicators
                                     </h3>
-                                    <div className="space-y-3">
+                                    <div className="space-y-3 text-left">
                                         {state.data.riskIndicators.map((risk, idx) => (
-                                            <div key={idx} className="flex gap-3 p-4 rounded-xl bg-red-500/5 border border-red-500/10 text-xs font-bold leading-relaxed">
+                                            <div key={idx} className="flex gap-3 p-4 rounded-xl bg-red-500/5 border border-red-500/10 text-xs font-bold leading-relaxed text-left">
                                                 <div className="h-1.5 w-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
                                                 {risk}
                                             </div>
                                         ))}
                                     </div>
                                 </div>
-                                <div className="space-y-4">
-                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-green-600 flex items-center gap-2">
+                                <div className="space-y-4 text-left">
+                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-green-600 flex items-center gap-2 text-left">
                                         <Lightbulb className="h-4 w-4" /> Recommended Actions
                                     </h3>
-                                    <div className="space-y-3">
+                                    <div className="space-y-3 text-left">
                                         {state.data.recommendedActions.map((action, idx) => (
-                                            <div key={idx} className="flex gap-3 p-4 rounded-xl bg-green-500/5 border border-green-500/10 text-xs font-bold leading-relaxed">
+                                            <div key={idx} className="flex gap-3 p-4 rounded-xl bg-green-500/5 border border-green-500/10 text-xs font-bold leading-relaxed text-left">
                                                 <div className="h-1.5 w-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
                                                 {action}
                                             </div>

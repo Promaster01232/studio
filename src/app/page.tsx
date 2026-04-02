@@ -78,8 +78,8 @@ const featureNodes = [
 ];
 
 export default function WelcomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  use(props.params);
-  use(props.searchParams);
+  const params = use(props.params);
+  const searchParams = use(props.searchParams);
 
   const auth = useAuth();
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -112,9 +112,9 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                   <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Institutional Terminal // Alpha v4.2</span>
                 </div>
               </div>
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-headline tracking-tighter leading-[0.9] text-foreground">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-headline tracking-tighter leading-[0.9] text-foreground text-center">
                 Elite AI Legal Assistant for <br/>
-                <span className="bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic">Bharat's Citizens.</span>
+                <span className="bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#128807] bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto] italic font-black">Bharat's Citizens.</span>
               </h1>
               <p className="text-base sm:text-xl text-muted-foreground font-medium max-xl mx-auto leading-relaxed opacity-80 px-4">
                 Precision neural forensics for statutory deconstruction and navigating the complex Indian judicial landscape with absolute institutional clarity.
@@ -182,15 +182,15 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
               <h2 className="text-4xl sm:text-6xl font-black tracking-tighter">Engineered for <span className="text-primary italic">Integrity.</span></h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-12">
-              <div className="space-y-3">
+              <div className="space-y-3 text-center">
                 <div className="text-4xl font-black text-foreground">100%</div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Forensic Privacy</p>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3 text-center">
                 <div className="text-4xl font-black text-foreground">60+</div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Statutory Protocols</p>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3 text-center">
                 <div className="text-4xl font-black text-foreground">24/7</div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Statutory Access</p>
               </div>

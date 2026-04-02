@@ -141,8 +141,8 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
 }
 
 export default function ManagementConsolePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  use(props.params);
-  use(props.searchParams);
+  const params = use(props.params);
+  const searchParams = use(props.searchParams);
 
   const firestore = useFirestore();
   const rtdb = useDatabase();
@@ -214,7 +214,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
           <TabsContent value="users">
             <Card className="border-primary/5 shadow-2xl rounded-[2.5rem] overflow-hidden bg-card text-left">
                 <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="space-y-1">
+                    <div className="space-y-1 text-left">
                         <CardTitle className="font-black text-xl text-primary uppercase tracking-tight">Citizen Registry Dossier</CardTitle>
                         <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Identity nodes active in system.</CardDescription>
                     </div>
@@ -283,7 +283,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
           <TabsContent value="transactions">
             <Card className="border-primary/5 shadow-2xl rounded-[2.5rem] overflow-hidden bg-card text-left">
                 <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6 flex items-center justify-between">
-                    <div className="space-y-1">
+                    <div className="space-y-1 text-left">
                         <CardTitle className="font-black text-xl text-green-600 uppercase tracking-tight">Verified Statutory Ledger</CardTitle>
                         <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Success-only financial captures.</CardDescription>
                     </div>

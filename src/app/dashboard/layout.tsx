@@ -65,7 +65,7 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
                         <div className="w-full max-w-md cursor-pointer group active:scale-[0.99] transition-transform">
-                            <div className="hidden md:flex items-center w-full pl-10 pr-16 h-11 font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm relative">
+                            <div className="hidden md:flex items-center w-full pl-10 pr-16 h-11 font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 rounded-xl bg-muted/40 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/60 transition-all shadow-sm relative text-left">
                                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                                 <span className="tracking-[0.1em]">Forensic search hub...</span>
                                 <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -138,8 +138,7 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
 }
 
 export default function DashboardLayout(props: { children: ReactNode, params: Promise<any> }) {
-  use(props.params);
-  
+  const params = use(props.params);
   const { children } = props;
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);

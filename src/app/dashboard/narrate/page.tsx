@@ -128,7 +128,7 @@ export default function NarrateProblemPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-4 space-y-6">
                 <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
-                    <CardHeader className="bg-primary/5 border-b border-primary/10 p-8">
+                    <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
                         <div className="flex items-center gap-3 mb-2 text-primary">
                             <Mic className="h-5 w-5" />
                             <CardTitle className="text-xl font-black tracking-tight uppercase">Capture Protocol</CardTitle>
@@ -206,13 +206,13 @@ export default function NarrateProblemPage() {
                                     <div className="p-6 sm:p-8 glass rounded-[2rem] border-primary/5 italic text-sm font-medium text-muted-foreground leading-relaxed shadow-inner">
                                         "{state.data.transcription}"
                                     </div>
-                                    <Card className="p-8 glass rounded-[2.5rem] border-primary/10">
+                                    <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left">
                                         <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4">Case Summary</h3>
                                         <p className="text-sm font-black leading-relaxed tracking-tight text-foreground">{state.data.caseSummary}</p>
                                     </Card>
                                     <div className="space-y-4">
                                         <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3"><FileSearch className="h-4 w-4" /> Forensic Statutory Audit</h3>
-                                        <div className="p-8 sm:p-10 glass rounded-[2.5rem] border-primary/10 text-sm font-medium leading-relaxed whitespace-pre-line">
+                                        <div className="p-8 sm:p-10 glass rounded-[2.5rem] border-primary/10 text-sm font-medium leading-relaxed whitespace-pre-line text-left">
                                             {state.data.detailedAnalysis}
                                         </div>
                                     </div>
@@ -220,7 +220,7 @@ export default function NarrateProblemPage() {
                             ) : (
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
                                     <Mic className="h-20 w-20 text-muted-foreground" />
-                                    <p className="font-black text-xl tracking-tighter uppercase">Awaiting Transmission</p>
+                                    <p className="font-black text-xl tracking-tighter uppercase text-center">Awaiting Transmission</p>
                                 </motion.div>
                             )}
                         </AnimatePresence>
