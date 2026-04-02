@@ -25,7 +25,8 @@ import {
   Globe,
   Clock,
   ShieldCheck,
-  Zap
+  Zap,
+  PlusCircle
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
@@ -120,8 +121,12 @@ export default function BondGeneratorPage() {
       toast({ title: "Draft Synchronized", description: "Changes saved to active registry session." });
   };
 
+  const handleReset = () => {
+      window.location.reload();
+  };
+
   return (
-    <div className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0 text-left">
+    <div className="space-y-10 max-w-6xl mx-auto pb-20 px-4 sm:px-0 text-left">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
         <PageHeader
           title="Bond Structural Terminal"
@@ -134,192 +139,213 @@ export default function BondGeneratorPage() {
         </Button>
       </motion.div>
       
-      <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
-        <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
-          <div className="flex items-center gap-3 mb-2 text-primary">
-              <Zap className="h-5 w-5" />
-              <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup: {bondType}</CardTitle>
-          </div>
-          <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize statutory conditions for your official bond node.</CardDescription>
-        </CardHeader>
-        <CardContent className="p-8 sm:p-10">
-          <form action={formAction} className="space-y-8 text-left">
-            <div className="grid sm:grid-cols-2 gap-8">
-              <div className="space-y-3">
-                <Label htmlFor="bondType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory Type</Label>
-                <Select name="bondType" required value={bondType} onValueChange={setBondType}>
-                  <SelectTrigger id="bondType" className="h-12 glass border-primary/5 font-bold rounded-xl">
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
-                    <SelectItem value="Bail Bond" className="font-bold">Bail Bond</SelectItem>
-                    <SelectItem value="Personal Bond" className="font-bold">Personal Bond</SelectItem>
-                    <SelectItem value="Indemnity Bond" className="font-bold">Indemnity Bond</SelectItem>
-                    <SelectItem value="Surety Bond" className="font-bold">Surety Bond</SelectItem>
-                    <SelectItem value="Performance Bond" className="font-bold">Performance Bond</SelectItem>
-                    <SelectItem value="Mortgage Bond" className="font-bold">Mortgage Bond</SelectItem>
-                    <SelectItem value="Employment Bond" className="font-bold">Employment Bond</SelectItem>
-                    <SelectItem value="Affidavit" className="font-bold">Affidavit</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-3">
-                <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Registry</Label>
-                <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
-                  <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
-                    <SelectItem value="Simple English" className="font-bold">Simple English</SelectItem>
-                    <SelectItem value="Legal English" className="font-bold">Legal English</SelectItem>
-                    <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-                <FormSectionTitle>Case & Identity Matrix</FormSectionTitle>
-                <div className="grid md:grid-cols-2 gap-6">
-                    <Input name="caseNumber" placeholder="FIR / Case / Registry No." required className="h-12 glass font-bold rounded-xl" />
-                    <Input name="courtName" placeholder="Full Court / Authority Name" required className="h-12 glass font-bold rounded-xl" />
-                </div>
-                <Input name="bondAmount" placeholder="Instrument Value (in words & figures)" required className="h-12 glass font-bold rounded-xl" />
-                <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                        <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Primary Node Name</Label>
-                        <Input name="accusedName" placeholder="Full Name of Party" required className="h-12 glass font-bold rounded-xl" />
-                    </div>
-                    <div className="space-y-3">
-                        <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Party Address</Label>
-                        <Textarea name="accusedAddress" placeholder="Full permanent address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
-                    </div>
-                </div>
-            </div>
-
-            <Button type="submit" disabled={state.status === "loading"} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem]">
-              {state.status === "loading" ? (
-                <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Neural Generation Active...</>
-              ): (
-                <><FileSignature className="mr-3 h-5 w-5" /> Initialize Bond Generation</>
-              )}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-        
       <AnimatePresence mode="wait">
-        {state.status === 'success' && state.data && (
-            <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-                <Card className="glass border-primary shadow-3xl overflow-hidden rounded-[3rem] mt-10 relative">
-                    {/* Official Watermark */}
-                    <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
-                        <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
+        {state.status !== 'success' ? (
+          <motion.div 
+            key="input-form"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
+              <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
+                <div className="flex items-center gap-3 mb-2 text-primary">
+                    <Zap className="h-5 w-5" />
+                    <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup: {bondType}</CardTitle>
+                </div>
+                <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize statutory conditions for your official bond node.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 sm:p-10">
+                <form action={formAction} className="space-y-8 text-left">
+                  <div className="grid sm:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <Label htmlFor="bondType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory Type</Label>
+                      <Select name="bondType" required value={bondType} onValueChange={setBondType}>
+                        <SelectTrigger id="bondType" className="h-12 glass border-primary/5 font-bold rounded-xl">
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                        <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
+                          <SelectItem value="Bail Bond" className="font-bold">Bail Bond</SelectItem>
+                          <SelectItem value="Personal Bond" className="font-bold">Personal Bond</SelectItem>
+                          <SelectItem value="Indemnity Bond" className="font-bold">Indemnity Bond</SelectItem>
+                          <SelectItem value="Surety Bond" className="font-bold">Surety Bond</SelectItem>
+                          <SelectItem value="Performance Bond" className="font-bold">Performance Bond</SelectItem>
+                          <SelectItem value="Mortgage Bond" className="font-bold">Mortgage Bond</SelectItem>
+                          <SelectItem value="Employment Bond" className="font-bold">Employment Bond</SelectItem>
+                          <SelectItem value="Affidavit" className="font-bold">Affidavit</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
+                    <div className="space-y-3">
+                      <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Registry</Label>
+                      <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
+                        <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
+                          <SelectItem value="Simple English" className="font-bold">Simple English</SelectItem>
+                          <SelectItem value="Legal English" className="font-bold">Legal English</SelectItem>
+                          <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
 
-                    <CardHeader className="bg-primary text-primary-foreground p-8 sm:p-12 relative z-10">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-                            <div className="text-left space-y-4">
-                                <div className="flex flex-wrap items-center gap-3">
-                                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20">
-                                        <FileText className="h-4 w-4" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Official AI Report Node Active</span>
-                                    </div>
-                                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-[0.2em] border-white/20 text-white/80">NS-BOND-ST-4.2</Badge>
+                  <div className="space-y-6">
+                      <FormSectionTitle>Case & Identity Matrix</FormSectionTitle>
+                      <div className="grid md:grid-cols-2 gap-6">
+                          <Input name="caseNumber" placeholder="FIR / Case / Registry No." required className="h-12 glass font-bold rounded-xl" />
+                          <Input name="courtName" placeholder="Full Court / Authority Name" required className="h-12 glass font-bold rounded-xl" />
+                      </div>
+                      <Input name="bondAmount" placeholder="Instrument Value (in words & figures)" required className="h-12 glass font-bold rounded-xl" />
+                      <div className="grid md:grid-cols-2 gap-6">
+                          <div className="space-y-3">
+                              <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Primary Node Name</Label>
+                              <Input name="accusedName" placeholder="Full Name of Party" required className="h-12 glass font-bold rounded-xl" />
+                          </div>
+                          <div className="space-y-3">
+                              <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Party Address</Label>
+                              <Textarea name="accusedAddress" placeholder="Full permanent address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                          </div>
+                      </div>
+                  </div>
+
+                  <Button type="submit" disabled={state.status === "loading"} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem]">
+                    {state.status === "loading" ? (
+                      <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Neural Generation Active...</>
+                    ): (
+                      <><FileSignature className="mr-3 h-5 w-5" /> Initialize Bond Generation</>
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ) : (
+          <motion.div 
+            key="success-report"
+            initial={{ opacity: 0, y: 40 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            className="space-y-8"
+          >
+            <Card className="glass border-primary shadow-3xl overflow-hidden rounded-[3rem] relative">
+                {/* Official Watermark */}
+                <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
+                    <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
+                </div>
+
+                <CardHeader className="bg-primary text-primary-foreground p-8 sm:p-12 relative z-10">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                        <div className="text-left space-y-4">
+                            <div className="flex flex-wrap items-center gap-3">
+                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20">
+                                    <FileText className="h-4 w-4" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest">Official AI Report Node Active</span>
                                 </div>
-                                <div className="space-y-1">
-                                    <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">Draft Node <span className="italic opacity-80">Ready.</span></CardTitle>
-                                    <p className="text-[10px] font-bold text-white/60 uppercase tracking-[0.3em] flex items-center gap-2">
-                                        <Globe className="h-3 w-3" /> Registry: {bondType} // {selectedLanguage} Protocol
-                                    </p>
-                                </div>
+                                <Badge variant="outline" className="text-[9px] font-black uppercase tracking-[0.2em] border-white/20 text-white/80">NS-BOND-ST-4.2</Badge>
                             </div>
-                            <div className="flex flex-wrap items-center gap-3 shrink-0">
-                                <Button 
-                                    variant="secondary" 
-                                    size="sm" 
-                                    onClick={() => isEditing ? handleSave() : setIsEditing(true)} 
-                                    className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
-                                >
-                                    {isEditing ? <><Save className="h-4 w-4" /> Save Registry</> : <><Edit3 className="h-4 w-4" /> Protocol Edit</>}
-                                </Button>
-                                <Button 
-                                    variant="secondary" 
-                                    size="sm" 
-                                    onClick={() => handleDownloadPdf(editedContent, `Generated ${bondType}`)} 
-                                    className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
-                                >
-                                    <Download className="h-4 w-4" /> Statutory PDF
-                                </Button>
-                                <Button 
-                                    variant="secondary" 
-                                    size="sm" 
-                                    onClick={() => handlePrint(editedContent, `Generated ${bondType}`)} 
-                                    className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
-                                >
-                                    <Printer className="h-4 w-4" /> Print
-                                </Button>
-                            </div>
-                        </div>
-                    </CardHeader>
-                    
-                    <CardContent className="p-8 sm:p-12 relative z-10">
-                        <div className="bg-muted/20 rounded-[2.5rem] p-1 border border-primary/5 shadow-inner">
-                            <div className="bg-white dark:bg-zinc-950 rounded-[2.2rem] shadow-2xl p-10 sm:p-16 min-h-[80vh] text-left border-2 border-primary/10">
-                                <div className="max-w-4xl mx-auto space-y-10">
-                                    <div className="flex justify-between items-start border-b-2 border-primary/10 pb-8 mb-8">
-                                        <div className="space-y-1">
-                                            <p className="text-[9px] font-black uppercase text-primary/40 tracking-widest leading-none">Draft Node Ingress</p>
-                                            <p className="text-xs font-mono font-bold text-primary">NS-BOND-{Math.random().toString(36).substring(7).toUpperCase()}</p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest leading-none">Audit Timestamp</p>
-                                            <p className="text-xs font-bold flex items-center justify-end gap-2 mt-1">
-                                                <Clock className="h-3 w-3 text-primary" /> {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {isEditing ? (
-                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-                                            <div className="flex items-center gap-2 text-primary mb-4">
-                                                <Edit3 className="h-4 w-4" />
-                                                <span className="text-[10px] font-black uppercase tracking-widest">Workspace Protocol Active</span>
-                                            </div>
-                                            <Textarea 
-                                                value={editedContent}
-                                                onChange={(e) => setEditedContent(e.target.value)}
-                                                className="w-full min-h-[70vh] font-body text-base sm:text-lg leading-relaxed border-none focus-visible:ring-0 p-0 resize-none bg-transparent"
-                                                placeholder="Begin manual statutory refinements..."
-                                            />
-                                        </motion.div>
-                                    ) : (
-                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="prose dark:prose-invert max-w-none">
-                                            <pre className="whitespace-pre-wrap font-body text-foreground leading-relaxed text-sm sm:text-lg text-left selection:bg-primary/10">
-                                                {editedContent}
-                                            </pre>
-                                        </motion.div>
-                                    )}
-
-                                    <div className="pt-16 mt-16 border-t-2 border-primary/10 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
-                                        <div className="flex items-center gap-4">
-                                            <div className="p-3 rounded-2xl bg-primary/5 text-primary">
-                                                <ShieldCheck className="h-6 w-6" />
-                                            </div>
-                                            <div className="text-left">
-                                                <p className="text-[10px] font-black uppercase tracking-widest">Statutory Security</p>
-                                                <p className="text-[9px] font-bold">This node is protected under attorney-client transience.</p>
-                                            </div>
-                                        </div>
-                                        <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // TERMINAL NS-BOND</p>
-                                    </div>
-                                </div>
+                            <div className="space-y-1">
+                                <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">Draft Node <span className="italic opacity-80">Ready.</span></CardTitle>
+                                <p className="text-[10px] font-bold text-white/60 uppercase tracking-[0.3em] flex items-center gap-2">
+                                    <Globe className="h-3 w-3" /> Registry: {bondType} // {selectedLanguage} Protocol
+                                </p>
                             </div>
                         </div>
-                    </CardContent>
-                    <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
-                </Card>
-            </motion.div>
+                        <div className="flex flex-wrap items-center gap-3 shrink-0">
+                            <Button 
+                                variant="secondary" 
+                                size="sm" 
+                                onClick={handleReset}
+                                className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                            >
+                                <PlusCircle className="h-4 w-4" /> New Bond
+                            </Button>
+                            <Button 
+                                variant="secondary" 
+                                size="sm" 
+                                onClick={() => isEditing ? handleSave() : setIsEditing(true)} 
+                                className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                            >
+                                {isEditing ? <><Save className="h-4 w-4" /> Save Registry</> : <><Edit3 className="h-4 w-4" /> Protocol Edit</>}
+                            </Button>
+                            <Button 
+                                variant="secondary" 
+                                size="sm" 
+                                onClick={() => handleDownloadPdf(editedContent, `Generated ${bondType}`)} 
+                                className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                            >
+                                <Download className="h-4 w-4" /> Statutory PDF
+                            </Button>
+                            <Button 
+                                variant="secondary" 
+                                size="sm" 
+                                onClick={() => handlePrint(editedContent, `Generated ${bondType}`)} 
+                                className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                            >
+                                <Printer className="h-4 w-4" /> Print
+                            </Button>
+                        </div>
+                    </div>
+                </CardHeader>
+                
+                <CardContent className="p-8 sm:p-12 relative z-10">
+                    <div className="bg-muted/20 rounded-[2.5rem] p-1 border border-primary/5 shadow-inner">
+                        <div className="bg-white dark:bg-zinc-950 rounded-[2.2rem] shadow-2xl p-10 sm:p-16 min-h-[80vh] text-left border-2 border-primary/10">
+                            <div className="max-w-4xl mx-auto space-y-10">
+                                <div className="flex justify-between items-start border-b-2 border-primary/10 pb-8 mb-8">
+                                    <div className="space-y-1">
+                                        <p className="text-[9px] font-black uppercase text-primary/40 tracking-widest leading-none">Draft Node Ingress</p>
+                                        <p className="text-xs font-mono font-bold text-primary">NS-BOND-{Math.random().toString(36).substring(7).toUpperCase()}</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest leading-none">Audit Timestamp</p>
+                                        <p className="text-xs font-bold flex items-center justify-end gap-2 mt-1">
+                                            <Clock className="h-3 w-3 text-primary" /> {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {isEditing ? (
+                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+                                        <div className="flex items-center gap-2 text-primary mb-4">
+                                            <Edit3 className="h-4 w-4" />
+                                            <span className="text-[10px] font-black uppercase tracking-widest">Workspace Protocol Active</span>
+                                        </div>
+                                        <Textarea 
+                                            value={editedContent}
+                                            onChange={(e) => setEditedContent(e.target.value)}
+                                            className="w-full min-h-[70vh] font-body text-base sm:text-lg leading-relaxed border-none focus-visible:ring-0 p-0 resize-none bg-transparent"
+                                            placeholder="Begin manual statutory refinements..."
+                                        />
+                                    </motion.div>
+                                ) : (
+                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="prose dark:prose-invert max-w-none">
+                                        <pre className="whitespace-pre-wrap font-body text-foreground leading-relaxed text-sm sm:text-lg text-left selection:bg-primary/10">
+                                            {editedContent}
+                                        </pre>
+                                    </motion.div>
+                                )}
+
+                                <div className="pt-16 mt-16 border-t-2 border-primary/10 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-3 rounded-2xl bg-primary/5 text-primary">
+                                            <ShieldCheck className="h-6 w-6" />
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="text-[10px] font-black uppercase tracking-widest">Statutory Security</p>
+                                            <p className="text-[9px] font-bold">This node is protected under attorney-client transience.</p>
+                                        </div>
+                                    </div>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // TERMINAL NS-BOND</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </CardContent>
+                <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+            </Card>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

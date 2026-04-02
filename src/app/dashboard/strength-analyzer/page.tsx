@@ -25,8 +25,9 @@ import {
   FileText,
   Clock,
   Globe,
-  Fingerprint
-} from "lucide-react";
+  Fingerprint,
+  PlusCircle
+} from "lucide-material";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AudioAssistant } from "@/components/audio-assistant";
 import Link from "next/link";
@@ -67,6 +68,10 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
     }
   }, [state, auth.currentUser, firestore]);
 
+  const handleReset = () => {
+      window.location.reload();
+  };
+
   return (
     <div className="space-y-10 max-w-6xl mx-auto pb-20 px-4 sm:px-0 text-left">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8 text-left">
@@ -81,44 +86,56 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
             </Button>
         </motion.div>
 
-        <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
-            <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
-            <div className="flex items-center gap-3 text-primary mb-2">
-                <BrainCircuit className="h-5 w-5" />
-                <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Narrative Research Ingestion</CardTitle>
-            </div>
-            <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Provide case context for an exhaustive statutory audit.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-8 sm:p-10">
-            <form action={formAction} className="space-y-8 text-left">
-                <div className="space-y-3 text-left">
-                <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Forensic Description</Label>
-                <Textarea id="caseDescription" name="caseDescription" placeholder="Enter chronological events, evidence details, and party identities for a deep research report..." rows={8} required className="glass rounded-[2rem] p-6 text-sm font-medium leading-relaxed" />
-                </div>
-                
-                <div className="space-y-3 text-left">
-                    <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Audit Protocol</Label>
-                    <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
-                    <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
-                        <SelectItem value="English" className="font-bold">English (Forensic)</SelectItem>
-                        <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
-                    </SelectContent>
-                    </Select>
-                </div>
+        <AnimatePresence mode="wait">
+            {state.status !== 'success' ? (
+                <motion.div 
+                    key="input-form"
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
+                        <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
+                        <div className="flex items-center gap-3 text-primary mb-2">
+                            <BrainCircuit className="h-5 w-5" />
+                            <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Narrative Research Ingestion</CardTitle>
+                        </div>
+                        <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Provide case context for an exhaustive statutory audit.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-8 sm:p-10">
+                        <form action={formAction} className="space-y-8 text-left">
+                            <div className="space-y-3 text-left">
+                            <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Forensic Description</Label>
+                            <Textarea id="caseDescription" name="caseDescription" placeholder="Enter chronological events, evidence details, and party identities for a deep research report..." rows={8} required className="glass rounded-[2rem] p-6 text-sm font-medium leading-relaxed" />
+                            </div>
+                            
+                            <div className="space-y-3 text-left">
+                                <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Audit Protocol</Label>
+                                <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
+                                <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
+                                    <SelectItem value="English" className="font-bold">English (Forensic)</SelectItem>
+                                    <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
+                                </SelectContent>
+                                </Select>
+                            </div>
 
-                <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem]">
-                {state.status === 'loading' ? (
-                    <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Neural Research Node Active...</>
-                ) : (
-                    <><Sparkles className="mr-3 h-5 w-5" /> Initialize Research Audit</>
-                )}
-                </Button>
-            </form>
-            </CardContent>
-        </Card>
+                            <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem]">
+                            {state.status === 'loading' ? (
+                                <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Neural Research Node Active...</>
+                            ) : (
+                                <><Sparkles className="mr-3 h-5 w-5" /> Initialize Research Audit</>
+                            )}
+                            </Button>
+                        </form>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+            ) : null}
+        </AnimatePresence>
         
         <AnimatePresence mode="wait">
             {state.status === 'loading' && (
@@ -137,7 +154,11 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
             )}
 
             {state.status === "success" && state.data && (
-                <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 text-left">
+                <motion.div 
+                    initial={{ opacity: 0, y: 40 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    className="space-y-10 text-left"
+                >
                     <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative">
                         {/* Dossier Background Watermark */}
                         <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none grayscale">
@@ -166,10 +187,15 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                                 </div>
                             </div>
                             <div className="flex flex-col items-center sm:items-end gap-4 shrink-0">
-                                <AudioAssistant 
-                                    text={`${state.data.summary}. The case strength score is ${state.data.strengthScore} percent.`} 
-                                    language={selectedLanguage} 
-                                />
+                                <div className="flex gap-3">
+                                    <Button onClick={handleReset} variant="outline" size="sm" className="h-9 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-sm border-primary/10 hover:bg-primary/5">
+                                        <PlusCircle className="h-4 w-4" /> New Audit
+                                    </Button>
+                                    <AudioAssistant 
+                                        text={`${state.data.summary}. The case strength score is ${state.data.strengthScore} percent.`} 
+                                        language={selectedLanguage} 
+                                    />
+                                </div>
                                 <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-background border border-primary/10 shadow-sm">
                                     <Activity className="h-3.5 w-3.5 text-green-500 animate-pulse" />
                                     <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Audit Finalized</span>

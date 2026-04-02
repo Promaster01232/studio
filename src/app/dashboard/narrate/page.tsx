@@ -23,7 +23,9 @@ import {
   Clock,
   Globe,
   Fingerprint,
-  Landmark
+  Landmark,
+  PlusCircle,
+  ArrowLeft
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
@@ -35,6 +37,7 @@ import { cn } from "@/lib/utils";
 import { useFirestore, useAuth } from "@/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { Logo } from "@/components/logo";
+import Link from "next/link";
 
 const initialState: CaseSummaryState = {
   status: "idle",
@@ -135,6 +138,10 @@ export default function NarrateProblemPage() {
     return `${mins}:${secs}`;
   };
 
+  const handleReset = () => {
+      window.location.reload();
+  };
+
   const isLoading = state.status === "loading";
 
   return (
@@ -146,59 +153,72 @@ export default function NarrateProblemPage() {
             />
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-4 space-y-6">
-                <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
-                    <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
-                        <div className="flex items-center gap-3 mb-2 text-primary">
-                            <Mic className="h-5 w-5" />
-                            <CardTitle className="text-xl font-black tracking-tight uppercase">Capture Protocol</CardTitle>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="flex flex-col items-center justify-center space-y-8 pt-10 pb-10">
-                        <div className="w-full space-y-4 px-2 text-left">
-                            <div className="space-y-3">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Dialect Registry</Label>
-                                <Select value={language} onValueChange={setLanguage} disabled={isRecording || isLoading}>
-                                    <SelectTrigger className="h-12 glass border-primary/5 font-bold rounded-xl">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
-                                        <SelectItem value="English" className="font-bold">English (Forensic)</SelectItem>
-                                        <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
+        <div className={cn("grid grid-cols-1 gap-8 items-start", state.status !== 'success' ? "lg:grid-cols-12" : "lg:grid-cols-1")}>
+            <AnimatePresence mode="wait">
+                {state.status !== 'success' ? (
+                    <motion.div 
+                        key="input-form"
+                        initial={{ opacity: 0, x: -30 }} 
+                        animate={{ opacity: 1, x: 0 }} 
+                        exit={{ opacity: 0, y: -20 }}
+                        className="lg:col-span-4 space-y-6"
+                    >
+                        <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
+                            <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
+                                <div className="flex items-center gap-3 mb-2 text-primary">
+                                    <Mic className="h-5 w-5" />
+                                    <CardTitle className="text-xl font-black tracking-tight uppercase">Capture Protocol</CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="flex flex-col items-center justify-center space-y-8 pt-10 pb-10">
+                                <div className="w-full space-y-4 px-2 text-left">
+                                    <div className="space-y-3">
+                                        <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Dialect Registry</Label>
+                                        <Select value={language} onValueChange={setLanguage} disabled={isRecording || isLoading}>
+                                            <SelectTrigger className="h-12 glass border-primary/5 font-bold rounded-xl">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
+                                                <SelectItem value="English" className="font-bold">English (Forensic)</SelectItem>
+                                                <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
 
-                        <Button
-                            onClick={isRecording ? stopRecording : startRecording}
-                            disabled={!hasPermission || isLoading}
-                            className={cn(
-                                "h-32 w-32 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col gap-3 transition-all duration-500",
-                                isRecording ? 'bg-red-500 hover:bg-red-600 scale-110 text-white' : 'bg-primary text-white'
-                            )}
-                        >
-                            {isRecording ? <div className="h-10 w-10 bg-white rounded-xl animate-pulse" /> : <Mic className="h-12 w-12" />}
-                            <span className="text-[10px] font-black uppercase tracking-widest">{isRecording ? "Stop" : "Initialize"}</span>
-                        </Button>
+                                <Button
+                                    onClick={isRecording ? stopRecording : startRecording}
+                                    disabled={!hasPermission || isLoading}
+                                    className={cn(
+                                        "h-32 w-32 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col gap-3 transition-all duration-500",
+                                        isRecording ? 'bg-red-500 hover:bg-red-600 scale-110 text-white' : 'bg-primary text-white'
+                                    )}
+                                >
+                                    {isRecording ? <div className="h-10 w-10 bg-white rounded-xl animate-pulse" /> : <Mic className="h-12 w-12" />}
+                                    <span className="text-[10px] font-black uppercase tracking-widest">{isRecording ? "Stop" : "Initialize"}</span>
+                                </Button>
 
-                        <div className="text-center space-y-2">
-                            <p className={cn("text-5xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-primary")}>{formatTime(timer)}</p>
-                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">{isRecording ? "Transmission Active" : isLoading ? "AI Processing Unit..." : "Ready"}</p>
-                        </div>
+                                <div className="text-center space-y-2">
+                                    <p className={cn("text-5xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-primary")}>{formatTime(timer)}</p>
+                                    <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">{isRecording ? "Transmission Active" : isLoading ? "AI Processing Unit..." : "Ready"}</p>
+                                </div>
 
-                        <div className="w-full pt-6 border-t border-primary/5">
-                            <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="audio/*" className="hidden" />
-                            <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || isLoading} className="w-full text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary gap-3">
-                                <Upload className="h-4 w-4" /> Ingest Registry File
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            </motion.div>
+                                <div className="w-full pt-6 border-t border-primary/5">
+                                    <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="audio/*" className="hidden" />
+                                    <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || isLoading} className="w-full text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary gap-3">
+                                        <Upload className="h-4 w-4" /> Ingest Registry File
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                ) : null}
+            </AnimatePresence>
 
-            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-8">
+            <motion.div 
+                layout
+                className={cn("space-y-6", state.status !== 'success' ? "lg:col-span-8" : "lg:col-span-12")}
+            >
                 <Card className="glass shadow-2xl min-h-[600px] flex flex-col rounded-[2.5rem] overflow-hidden border-primary/5">
                     <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8 sm:p-12 text-left gap-8 relative z-10">
                         <div className="space-y-4 text-left flex-1 min-w-0">
@@ -220,12 +240,21 @@ export default function NarrateProblemPage() {
                                 </p>
                             </div>
                         </div>
-                        {state.status === "success" && state.data && (
-                            <AudioAssistant 
-                                text={`Summary: ${state.data.caseSummary}. Legal Violations: ${state.data.detailedAnalysis}.`} 
-                                language={language}
-                            />
-                        )}
+                        <div className="flex flex-col items-center sm:items-end gap-4 shrink-0">
+                            <AnimatePresence>
+                                {state.status === 'success' && (
+                                    <div className="flex gap-3">
+                                        <Button onClick={handleReset} variant="outline" size="sm" className="h-9 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-sm border-primary/10 hover:bg-primary/5">
+                                            <PlusCircle className="h-4 w-4" /> New Narration
+                                        </Button>
+                                        <AudioAssistant 
+                                            text={`Summary: ${state.data?.caseSummary}. Legal Violations: ${state.data?.detailedAnalysis}.`} 
+                                            language={language}
+                                        />
+                                    </div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </CardHeader>
                     <CardContent className="p-8 sm:p-12 flex-1 relative z-10">
                         {/* Background Watermark */}
@@ -235,7 +264,7 @@ export default function NarrateProblemPage() {
 
                         <AnimatePresence mode="wait">
                             {isLoading ? (
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-10">
+                                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-10">
                                     <div className="relative w-fit mx-auto">
                                         <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
                                         <div className="absolute inset-0 flex items-center justify-center">
@@ -245,7 +274,7 @@ export default function NarrateProblemPage() {
                                     <p className="font-black text-2xl tracking-tighter uppercase">Deconstructing Narration...</p>
                                 </motion.div>
                             ) : state.status === "success" && state.data ? (
-                                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12 pb-10 text-left relative z-10">
+                                <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12 pb-10 text-left relative z-10">
                                     <div className="p-8 glass rounded-[2.5rem] border-primary/5 italic text-sm sm:text-base font-medium text-muted-foreground leading-relaxed shadow-inner bg-muted/5">
                                         <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
                                             <Fingerprint className="h-4 w-4" />
@@ -282,7 +311,7 @@ export default function NarrateProblemPage() {
                                     </div>
                                 </motion.div>
                             ) : state.status === 'error' ? (
-                                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
+                                <motion.div key="error" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
                                     <Card className="glass border-destructive/20 shadow-2xl rounded-[2rem] overflow-hidden">
                                         <div className="p-8 sm:p-10 flex flex-col items-center text-center gap-6">
                                             <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-inner">
@@ -294,14 +323,14 @@ export default function NarrateProblemPage() {
                                                     {state.error}
                                                 </p>
                                             </div>
-                                            <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
+                                            <Button onClick={handleReset} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
                                                 Re-initialize Capture
                                             </Button>
                                         </div>
                                     </Card>
                                 </motion.div>
                             ) : (
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
+                                <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
                                     <Mic className="h-20 w-20 text-muted-foreground" />
                                     <p className="font-black text-xl tracking-tighter uppercase text-center">Awaiting Transmission</p>
                                 </motion.div>
