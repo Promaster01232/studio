@@ -109,7 +109,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                         </div>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-4 text-left">
                         <div className="grid gap-4">
                             <div className="flex items-start gap-3">
                                 <div className="p-2 rounded-lg bg-muted shadow-inner"><User className="h-3.5 w-3.5 text-muted-foreground" /></div>
@@ -220,7 +220,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                     </div>
                     <div className="relative group">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                        <Input placeholder="Search identity..." className="w-64 h-11 rounded-xl pl-10 font-bold border-primary/5" value={searchQuery} onChange={(e) => setSearchSearchQuery(e.target.value)} />
+                        <Input placeholder="Search identity..." className="w-64 h-11 rounded-xl pl-10 font-bold border-primary/5 shadow-none" value={searchQuery} onChange={(e) => setSearchSearchQuery(e.target.value)} />
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -361,7 +361,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                         setUserToPurge(null);
                         toast({ title: "Node Purged", description: "Registry data erased successfully." });
                       }
-                  }} variant="destructive" className="font-black h-14 rounded-2xl flex-1 uppercase tracking-widest text-xs shadow-xl shadow-destructive/20 active:scale-95 transition-all">
+                  }} variant="destructive" className="font-black h-14 rounded-2xl flex-1 uppercase tracking-widest text-xs shadow-xl shadow-destructive/20 active:scale-95 transition-all text-center">
                       <Trash2 className="mr-2 h-4 w-4" /> Execute Purge
                   </Button>
               </div>

@@ -123,7 +123,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
 
             <nav className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
               {!loading ? (
-                <Button asChild className="h-16 w-full sm:w-auto min-w-[280px] px-10 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 rounded-2xl transition-all group overflow-hidden relative">
+                <Button asChild className="h-16 w-full sm:w-auto min-w-[280px] px-10 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 rounded-2xl transition-all group overflow-hidden relative text-center">
                   <Link href="/dashboard">
                     <span className="relative z-10 flex items-center gap-3">
                       Initialize Dashboard <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />

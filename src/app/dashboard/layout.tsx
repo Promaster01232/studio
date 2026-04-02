@@ -16,7 +16,7 @@ import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef, use } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Footer } from "@/components/footer";
-import Link from "next/link";
+import Link from "link";
 import { usePathname, useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -236,7 +236,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Expansion</span>
                         </div>
                         <p className="text-[10px] font-medium text-muted-foreground leading-relaxed">Unlock unlimited forensic scans and institutional tools.</p>
-                        <Button asChild size="sm" className="w-full h-10 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/30">
+                        <Button asChild size="sm" className="w-full h-10 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/30 text-center">
                             <Link href="/dashboard/billing">Upgrade Clearance</Link>
                         </Button>
                     </div>

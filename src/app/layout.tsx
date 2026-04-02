@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Nyaya Sahayak | India's Premier AI Legal Assistant & Forensic Auditor",
   description: "Access elite AI legal assistance on nyayasahayak.in. Forensic case audits, BNS statutory scanning, and automated document drafting for Bharat's citizens.",
-  keywords: ["AI Legal Assistant India", "Nyaya Sahayak", "Legal AI Bharat", "BNS Forensic Audit", "Statutory Risk Scanner", "Indian Judicial AI"],
+  keywords: ["AI Legal Assistant India", "Nyaya Sahayak", "Legal AI Bharat", "BNS Forensic Audit", "Statutory Risk Scanner", "Indian Judicial AI", "Legal AI Assistant", "Online Legal Help India", "IdeaSpark"],
   authors: [{ name: "IdeaSpark Institutional Tech" }],
   metadataBase: new URL('https://nyayasahayak.in'),
   alternates: { canonical: "https://nyayasahayak.in" },
