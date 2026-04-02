@@ -36,7 +36,7 @@ export async function analyzeCaseStrengthAction(
 
   // INSTITUTIONAL RESILIENCE PROTOCOL: 15-Stage Retry with Jittered Neural Cooling
   let retries = 15;
-  let delay = 5000;
+  let delay = 2000;
 
   while (retries >= 0) {
     try {
@@ -54,7 +54,7 @@ export async function analyzeCaseStrengthAction(
         console.warn(`[AI STRENGTH NODE] High load detected. Attempting re-entry in ${delay/1000}s... (${retries} retries left)`);
         await new Promise(resolve => setTimeout(resolve, delay));
         // Gradual backoff with jitter
-        delay = Math.min(delay * 1.3 + Math.random() * 2000, 30000);
+        delay = Math.min(delay * 1.3 + Math.random() * 1000, 20000);
         retries--;
         continue;
       }

@@ -36,7 +36,7 @@ export async function understandDocumentAction(
     
     // INSTITUTIONAL RESILIENCE PROTOCOL: 15-Stage Retry with Jittered Cooling
     let retries = 15;
-    let delay = 5000;
+    let delay = 2000;
 
     while (retries >= 0) {
         try {
@@ -56,7 +56,7 @@ export async function understandDocumentAction(
             if (retries > 0 && isTransient) {
                 console.warn(`[AI DOC NODE] Hub busy. Retrying in ${delay/1000}s... (${retries} left)`);
                 await new Promise(r => setTimeout(r, delay));
-                delay = Math.min(delay * 1.3 + Math.random() * 2000, 30000);
+                delay = Math.min(delay * 1.3 + Math.random() * 1000, 20000);
                 retries--;
                 continue;
             }

@@ -55,15 +55,23 @@ const verifyEmailAuthenticityFlow = ai.defineFlow(
     outputSchema: VerifyEmailOutputSchema,
   },
   async input => {
-    let retries = 3;
+    let retries = 10;
+    let delay = 3000;
     while (retries >= 0) {
       try {
         const { output } = await prompt(input);
         return output!;
       } catch (error: any) {
-        if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
-          console.warn(`AI Rate Limit hit in verifyEmailAuthenticity. Retrying in 35s...`);
-          await new Promise(resolve => setTimeout(resolve, 35000));
+        const isTransient = 
+            error.message?.includes('429') || 
+            error.status === 429 || 
+            error.message?.toLowerCase().includes('busy') || 
+            error.message?.toLowerCase().includes('quota');
+
+        if (retries > 0 && isTransient) {
+          console.warn(`AI Rate Limit hit in verifyEmailAuthenticity. Retrying in ${delay/1000}s...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay = Math.min(delay * 1.5, 15000);
           retries--;
           continue;
         }
