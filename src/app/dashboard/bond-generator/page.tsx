@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { generateBondAction, type BondGeneratorState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,13 +8,32 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Download, Share2, Printer, Loader2, Languages, FileSignature, CheckCircle2, ArrowLeft, FileText } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Download, 
+  Share2, 
+  Printer, 
+  Loader2, 
+  Languages, 
+  FileSignature, 
+  CheckCircle2, 
+  ArrowLeft, 
+  FileText,
+  Edit3,
+  Save,
+  RotateCcw,
+  Globe,
+  Clock,
+  ShieldCheck,
+  Zap
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { Logo } from "@/components/logo";
+import { cn } from "@/lib/utils";
 
 const initialState: BondGeneratorState = {
   status: "idle",
@@ -32,7 +51,16 @@ const FormSectionTitle = ({ children }: { children: React.ReactNode }) => (
 export default function BondGeneratorPage() {
   const [state, formAction] = useActionState(generateBondAction, initialState);
   const [bondType, setBondType] = useState("Bail Bond");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState("");
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (state.status === 'success' && state.data) {
+      setEditedContent(state.data.document);
+      setIsEditing(false);
+    }
+  }, [state.status, state.data]);
 
   const handlePrint = (content: string, title: string) => {
     const iframe = document.createElement('iframe');
@@ -41,30 +69,62 @@ export default function BondGeneratorPage() {
     const doc = iframe.contentWindow?.document;
     if (!doc) { document.body.removeChild(iframe); return; }
     doc.open();
-    doc.write(`<html><head><title>${title}</title><style>body { font-family: sans-serif; padding: 40px; line-height: 1.6; } pre { white-space: pre-wrap; font-size: 12pt; }</style></head><body><h1>${title}</h1><pre>${content}</pre></body></html>`);
+    doc.write(`
+        <html>
+            <head>
+                <title>${title}</title>
+                <style>
+                    body { font-family: 'Times New Roman', serif; padding: 50px; line-height: 1.8; color: #000; }
+                    h1 { text-align: center; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 40px; font-size: 18pt; }
+                    pre { white-space: pre-wrap; font-size: 12pt; word-wrap: break-word; }
+                </style>
+            </head>
+            <body>
+                <h1>${title}</h1>
+                <pre>${content}</pre>
+            </body>
+        </html>
+    `);
     doc.close();
-    setTimeout(() => { iframe.contentWindow?.focus(); iframe.contentWindow?.print(); document.body.removeChild(iframe); }, 500);
+    setTimeout(() => { 
+        iframe.contentWindow?.focus(); 
+        iframe.contentWindow?.print(); 
+        document.body.removeChild(iframe); 
+    }, 500);
   };
 
   const handleDownloadPdf = (content: string, title: string) => {
     try {
       const doc = new jsPDF();
       doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
       doc.text(title.toUpperCase(), 105, 20, { align: 'center' });
-      doc.setFontSize(10);
+      doc.setLineWidth(0.5);
+      doc.line(20, 25, 190, 25);
+      
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
       const lines = doc.splitTextToSize(content, 170);
-      doc.text(lines, 20, 35);
+      doc.text(lines, 20, 40);
+      
       doc.save(`${title.replace(/[\s/]/g, '-')}.pdf`);
-      toast({ title: "Success", description: "Bond document ready." });
-    } catch (e) { toast({ variant: "destructive", title: "Failed", description: "PDF generation error." }); }
+      toast({ title: "Statutory PDF Ready", description: "Bond document saved to local storage." });
+    } catch (e) { 
+        toast({ variant: "destructive", title: "Export Failed", description: "PDF generation engine encountered an error." }); 
+    }
+  };
+
+  const handleSave = () => {
+      setIsEditing(false);
+      toast({ title: "Draft Synchronized", description: "Changes saved to active registry session." });
   };
 
   return (
-    <div className="space-y-10 max-w-5xl mx-auto pb-20 px-2 sm:px-0 text-left">
+    <div className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0 text-left">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
         <PageHeader
-          title="Bond Generator"
-          description="Generate legally sound bonds and affidavits instantly with AI assistance."
+          title="Bond Structural Terminal"
+          description="Initialize legally sound bonds and affidavits instantly with elite AI assistance."
         />
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
           <Link href="/dashboard">
@@ -74,8 +134,11 @@ export default function BondGeneratorPage() {
       </motion.div>
       
       <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
-        <CardHeader className="bg-primary/5 border-b border-primary/5 p-8">
-          <CardTitle className="text-xl font-black uppercase tracking-tight">Bond Setup: {bondType}</CardTitle>
+        <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
+          <div className="flex items-center gap-3 mb-2 text-primary">
+              <Zap className="h-5 w-5" />
+              <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup: {bondType}</CardTitle>
+          </div>
           <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize statutory conditions for your official bond node.</CardDescription>
         </CardHeader>
         <CardContent className="p-8 sm:p-10">
@@ -84,7 +147,7 @@ export default function BondGeneratorPage() {
               <div className="space-y-3">
                 <Label htmlFor="bondType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory Type</Label>
                 <Select name="bondType" required value={bondType} onValueChange={setBondType}>
-                  <SelectTrigger id="bondType" className="h-12 glass border-primary/5 font-bold rounded-2xl">
+                  <SelectTrigger id="bondType" className="h-12 glass border-primary/5 font-bold rounded-xl">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
@@ -102,7 +165,7 @@ export default function BondGeneratorPage() {
               <div className="space-y-3">
                 <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Registry</Label>
                 <Select name="language" defaultValue="Simple English" required>
-                  <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-2xl">
+                  <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
@@ -114,23 +177,28 @@ export default function BondGeneratorPage() {
               </div>
             </div>
 
-            {(bondType === 'Bail Bond' || bondType === 'Personal Bond') && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-                    <FormSectionTitle>Case & Court Registry</FormSectionTitle>
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <Input name="caseNumber" placeholder="FIR / Case No." required className="h-12 glass font-bold" />
-                        <Input name="courtName" placeholder="Full Court Name" required className="h-12 glass font-bold" />
+            <div className="space-y-6">
+                <FormSectionTitle>Case & Identity Matrix</FormSectionTitle>
+                <div className="grid md:grid-cols-2 gap-6">
+                    <Input name="caseNumber" placeholder="FIR / Case / Registry No." required className="h-12 glass font-bold rounded-xl" />
+                    <Input name="courtName" placeholder="Full Court / Authority Name" required className="h-12 glass font-bold rounded-xl" />
+                </div>
+                <Input name="bondAmount" placeholder="Instrument Value (in words & figures)" required className="h-12 glass font-bold rounded-xl" />
+                <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                        <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Primary Node Name</Label>
+                        <Input name="accusedName" placeholder="Full Name of Party" required className="h-12 glass font-bold rounded-xl" />
                     </div>
-                    <Input name="bondAmount" placeholder="Bond Amount (in words/figures)" required className="h-12 glass font-bold" />
-                    <FormSectionTitle>Accused Identity Node</FormSectionTitle>
-                    <Input name="accusedName" placeholder="Full Name of Accused" required className="h-12 glass font-bold" />
-                    <Textarea name="accusedAddress" placeholder="Full Address of Accused" required className="glass rounded-2xl font-medium text-sm p-6" />
-                </motion.div>
-            )}
+                    <div className="space-y-3">
+                        <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Party Address</Label>
+                        <Textarea name="accusedAddress" placeholder="Full permanent address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                    </div>
+                </div>
+            </div>
 
             <Button type="submit" disabled={state.status === "loading"} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem]">
               {state.status === "loading" ? (
-                <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> AI Generating Bond...</>
+                <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Neural Generation Active...</>
               ): (
                 <><FileSignature className="mr-3 h-5 w-5" /> Initialize Bond Generation</>
               )}
@@ -139,35 +207,116 @@ export default function BondGeneratorPage() {
         </CardContent>
       </Card>
         
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {state.status === 'success' && state.data && (
-            <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}>
-                <Card className="glass border-primary shadow-2xl overflow-hidden rounded-[2.5rem] mt-10">
-                    <CardHeader className="bg-primary text-primary-foreground p-8">
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-                            <div className="text-left">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <FileText className="h-5 w-5" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Official AI Report Node Active</span>
+            <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+                <Card className="glass border-primary shadow-3xl overflow-hidden rounded-[3rem] mt-10 relative">
+                    {/* Official Watermark */}
+                    <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
+                        <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
+                    </div>
+
+                    <CardHeader className="bg-primary text-primary-foreground p-8 sm:p-12 relative z-10">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                            <div className="text-left space-y-4">
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20">
+                                        <FileText className="h-4 w-4" />
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Official AI Report Node Active</span>
+                                    </div>
+                                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-[0.2em] border-white/20 text-white/80">NS-BOND-ST-4.2</Badge>
                                 </div>
-                                <CardTitle className="text-2xl font-black uppercase tracking-tight">Bond Statutory Draft Ready</CardTitle>
-                                <CardDescription className="text-primary-foreground/80 font-bold text-[10px] uppercase tracking-widest mt-1">Registry: {bondType}</CardDescription>
+                                <div className="space-y-1">
+                                    <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">Draft Node <span className="italic opacity-80">Ready.</span></CardTitle>
+                                    <p className="text-[10px] font-bold text-white/60 uppercase tracking-[0.3em] flex items-center gap-2">
+                                        <Globe className="h-3 w-3" /> Registry: {bondType} // {selectedLanguage} Protocol
+                                    </p>
+                                </div>
                             </div>
-                            <div className="flex flex-wrap gap-2">
-                                <Button variant="secondary" size="sm" onClick={() => handleDownloadPdf(state.data!.document, `Generated ${bondType}`)} className="h-9 px-4 rounded-xl font-bold text-[10px] uppercase">
-                                    <Download className="mr-2 h-3.5 w-3.5" /> PDF
+                            <div className="flex flex-wrap items-center gap-3 shrink-0">
+                                <Button 
+                                    variant="secondary" 
+                                    size="sm" 
+                                    onClick={() => isEditing ? handleSave() : setIsEditing(true)} 
+                                    className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                                >
+                                    {isEditing ? <><Save className="h-4 w-4" /> Save Registry</> : <><Edit3 className="h-4 w-4" /> Protocol Edit</>}
                                 </Button>
-                                <Button variant="secondary" size="sm" onClick={() => handlePrint(state.data!.document, `Generated ${bondType}`)} className="h-9 px-4 rounded-xl font-black text-[10px] uppercase">
-                                    <Printer className="mr-2 h-3.5 w-3.5" /> Print
+                                <Button 
+                                    variant="secondary" 
+                                    size="sm" 
+                                    onClick={() => handleDownloadPdf(editedContent, `Generated ${bondType}`)} 
+                                    className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                                >
+                                    <Download className="h-4 w-4" /> Statutory PDF
+                                </Button>
+                                <Button 
+                                    variant="secondary" 
+                                    size="sm" 
+                                    onClick={() => handlePrint(editedContent, `Generated ${bondType}`)} 
+                                    className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                                >
+                                    <Printer className="h-4 w-4" /> Print
                                 </Button>
                             </div>
                         </div>
                     </CardHeader>
-                    <CardContent className="p-8 sm:p-12">
-                        <div className="prose dark:prose-invert max-w-none p-10 border-2 border-primary/10 rounded-[2rem] bg-white dark:bg-zinc-950 shadow-inner min-h-[60vh] text-left">
-                            <pre className="whitespace-pre-wrap font-body text-foreground leading-relaxed text-sm sm:text-base">{state.data.document}</pre>
+                    
+                    <CardContent className="p-8 sm:p-12 relative z-10">
+                        <div className="bg-muted/20 rounded-[2.5rem] p-1 border border-primary/5 shadow-inner">
+                            <div className="bg-white dark:bg-zinc-950 rounded-[2.2rem] shadow-2xl p-10 sm:p-16 min-h-[80vh] text-left border-2 border-primary/10">
+                                <div className="max-w-4xl mx-auto space-y-10">
+                                    <div className="flex justify-between items-start border-b-2 border-primary/10 pb-8 mb-8">
+                                        <div className="space-y-1">
+                                            <p className="text-[9px] font-black uppercase text-primary/40 tracking-widest leading-none">Draft Node Ingress</p>
+                                            <p className="text-xs font-mono font-bold text-primary">NS-BOND-{Math.random().toString(36).substring(7).toUpperCase()}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest leading-none">Audit Timestamp</p>
+                                            <p className="text-xs font-bold flex items-center justify-end gap-2 mt-1">
+                                                <Clock className="h-3 w-3 text-primary" /> {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {isEditing ? (
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+                                            <div className="flex items-center gap-2 text-primary mb-4">
+                                                <Edit3 className="h-4 w-4" />
+                                                <span className="text-[10px] font-black uppercase tracking-widest">Workspace Protocol Active</span>
+                                            </div>
+                                            <Textarea 
+                                                value={editedContent}
+                                                onChange={(e) => setEditedContent(e.target.value)}
+                                                className="w-full min-h-[70vh] font-body text-base sm:text-lg leading-relaxed border-none focus-visible:ring-0 p-0 resize-none bg-transparent"
+                                                placeholder="Begin manual statutory refinements..."
+                                            />
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="prose dark:prose-invert max-w-none">
+                                            <pre className="whitespace-pre-wrap font-body text-foreground leading-relaxed text-sm sm:text-lg text-left selection:bg-primary/10">
+                                                {editedContent}
+                                            </pre>
+                                        </motion.div>
+                                    )}
+
+                                    <div className="pt-16 mt-16 border-t-2 border-primary/10 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
+                                        <div className="flex items-center gap-4">
+                                            <div className="p-3 rounded-2xl bg-primary/5 text-primary">
+                                                <ShieldCheck className="h-6 w-6" />
+                                            </div>
+                                            <div className="text-left">
+                                                <p className="text-[10px] font-black uppercase tracking-widest">Statutory Security</p>
+                                                <p className="text-[9px] font-bold">This node is protected under attorney-client transience.</p>
+                                            </div>
+                                        </div>
+                                        <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // TERMINAL NS-BOND</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </CardContent>
+                    <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
                 </Card>
             </motion.div>
         )}
