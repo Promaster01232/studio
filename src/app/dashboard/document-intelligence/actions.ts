@@ -34,9 +34,9 @@ export async function understandDocumentAction(
   try {
     const documentDataUri = await fileToDataURI(file);
     
-    // INSTITUTIONAL RESILIENCE PROTOCOL: 10-Stage Retry with Jittered Cooling
-    let retries = 10;
-    let delay = 10000;
+    // INSTITUTIONAL RESILIENCE PROTOCOL: 15-Stage Retry with Jittered Cooling
+    let retries = 15;
+    let delay = 5000;
 
     while (retries >= 0) {
         try {
@@ -49,32 +49,32 @@ export async function understandDocumentAction(
             const isTransient = 
                 error.message?.includes('429') || 
                 error.status === 429 || 
-                error.message?.toLowerCase().includes('busy') ||
+                error.message?.toLowerCase().includes('busy') || 
                 error.message?.toLowerCase().includes('quota') ||
                 error.message?.toLowerCase().includes('limit');
 
             if (retries > 0 && isTransient) {
-                console.warn(`[AI DOC NODE] Rate limit hit. Initializing cooling phase. Retrying in ${delay/1000}s...`);
+                console.warn(`[AI DOC NODE] Hub busy. Retrying in ${delay/1000}s... (${retries} left)`);
                 await new Promise(r => setTimeout(r, delay));
-                delay = Math.min(delay * 1.5 + Math.random() * 5000, 45000);
+                delay = Math.min(delay * 1.3 + Math.random() * 2000, 30000);
                 retries--;
                 continue;
             }
             throw error;
         }
     }
-    throw new Error("Timeout after 10 attempts.");
+    throw new Error("Threshold reached.");
   } catch (error) {
-    console.error("[AI DOC NODE] Failure:", error);
+    console.error("[AI DOC NODE] Analysis Failure:", error);
     return { 
         status: "error", 
         data: null, 
         error: "Failed to analyze document node. The forensic engine is saturated.",
         resolution: [
-            "Ensure the document is a legible PDF or Image (not a text file).",
-            "Reduce file size to under 5MB for faster neural processing.",
-            "Verify that the document contains legal or statutory clauses.",
-            "Try again during off-peak institutional hours."
+            "Ensure the document is a legible PDF or Image.",
+            "Verify file size is under 5MB for optimal scanning.",
+            "Check that the document contains clear statutory clauses.",
+            "Try re-uploading in 60 seconds."
         ]
     };
   }

@@ -34,9 +34,9 @@ export async function summarizeCaseAction(
   try {
     const audioDataUri = await fileToDataURI(file);
     
-    // INSTITUTIONAL RESILIENCE PROTOCOL: 10-Stage Retry with Jittered Cooling
-    let retries = 10;
-    let delay = 10000;
+    // INSTITUTIONAL RESILIENCE PROTOCOL: 15-Stage Retry with Jittered Cooling
+    let retries = 15;
+    let delay = 5000;
 
     while (retries >= 0) {
         try {
@@ -49,32 +49,32 @@ export async function summarizeCaseAction(
             const isTransient = 
                 error.message?.includes('429') || 
                 error.status === 429 || 
-                error.message?.toLowerCase().includes('busy') ||
+                error.message?.toLowerCase().includes('busy') || 
                 error.message?.toLowerCase().includes('quota') ||
                 error.message?.toLowerCase().includes('limit');
 
             if (retries > 0 && isTransient) {
-                console.warn(`[AI NARRATE NODE] Neural cooling active. Retrying in ${delay/1000}s...`);
+                console.warn(`[AI NARRATE NODE] Saturation detected. Retrying in ${delay/1000}s... (${retries} left)`);
                 await new Promise(r => setTimeout(r, delay));
-                delay = Math.min(delay * 1.5 + Math.random() * 5000, 45000);
+                delay = Math.min(delay * 1.3 + Math.random() * 2000, 30000);
                 retries--;
                 continue;
             }
             throw error;
         }
     }
-    throw new Error("Timeout after 10 attempts.");
+    throw new Error("Maximum retry threshold reached.");
   } catch (error) {
-    console.error("[AI NARRATE NODE] Failure:", error);
+    console.error("[AI NARRATE NODE] Neural Failure:", error);
     return { 
         status: "error", 
         data: null, 
         error: "Failed to deconstruct narration. The AI forensic engine is saturated.",
         resolution: [
-            "Ensure the audio recording is clear and within 2 minutes.",
-            "Avoid background noise that might confuse the neural audit.",
-            "Retry the narration in Simple English for faster processing.",
-            "Wait 60 seconds for the node capacity to reset."
+            "Ensure the audio recording is clear and under 2 minutes.",
+            "Avoid significant background noise during capture.",
+            "Retry with a shorter, more direct narration.",
+            "Wait 60 seconds for node capacity to reset."
         ]
     };
   }

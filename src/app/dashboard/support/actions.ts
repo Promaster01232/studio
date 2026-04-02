@@ -32,11 +32,25 @@ export async function simplifyJargonAction(
     };
   }
 
-  try {
-    const result = await simplifyJargon(validatedFields.data);
-    return { status: "success", data: result, error: null };
-  } catch (error) {
-    console.error(error);
-    return { status: "error", data: null, error: "Failed to simplify the term. Please try again." };
+  // INSTITUTIONAL RESILIENCE: 5-Stage Retry for Support Node
+  let retries = 5;
+  let delay = 3000;
+
+  while (retries >= 0) {
+    try {
+      const result = await simplifyJargon(validatedFields.data);
+      return { status: "success", data: result, error: null };
+    } catch (error: any) {
+      if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 1.5;
+        retries--;
+        continue;
+      }
+      console.error("[AI JARGON] Failure:", error);
+      return { status: "error", data: null, error: "Simplification node busy. Please try again." };
+    }
   }
+
+  return { status: "error", data: null, error: "Neural gateway timeout." };
 }
