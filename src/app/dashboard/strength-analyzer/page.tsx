@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useEffect, useState, use } from "react";
@@ -8,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Loader2, Sparkles, ArrowLeft, BrainCircuit, FileText, ShieldAlert, Activity, CheckCircle2, ShieldCheck, AlertTriangle, Lightbulb, Search, Landmark } from "lucide-react";
+import { Loader2, Sparkles, ArrowLeft, BrainCircuit, FileText, ShieldAlert, Activity, CheckCircle2, ShieldCheck, AlertTriangle, Lightbulb, Search, Landmark, Cpu } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AudioAssistant } from "@/components/audio-assistant";
 import Link from "next/link";
@@ -118,68 +119,29 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                 </motion.div>
             )}
 
-            {state.status === "error" && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-10">
-                    <Card className="glass border-destructive/20 shadow-2xl rounded-[2rem] overflow-hidden">
-                        <div className="p-8 sm:p-10 flex flex-col items-center text-center gap-6">
-                            <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-inner">
-                                <AlertTriangle className="h-10 w-10" />
-                            </div>
-                            <div className="space-y-2">
-                                <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Research Interrupted</h3>
-                                <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto px-4">
-                                    {state.error}
-                                </p>
-                            </div>
-                            <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
-                                Re-initialize Research Node
-                            </Button>
-                        </div>
-                    </Card>
-
-                    {state.resolution && (
-                        <Card className="glass border-primary/10 shadow-xl rounded-[2.5rem] overflow-hidden">
-                            <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
-                                <div className="flex items-center gap-3 text-primary mb-1">
-                                    <ShieldCheck className="h-5 w-5" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.3em]">Statutory Resolutions</span>
-                                </div>
-                                <CardTitle className="text-2xl font-black tracking-tight">How to complete this audit</CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-8 sm:p-10 space-y-6">
-                                <div className="grid gap-4">
-                                    {state.resolution.map((step, idx) => (
-                                        <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-background border border-primary/5 shadow-sm transition-all hover:bg-primary/5 text-left group">
-                                            <div className="h-6 w-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-black text-xs shrink-0 group-hover:scale-110 transition-transform">
-                                                {idx + 1}
-                                            </div>
-                                            <p className="text-sm font-bold text-muted-foreground group-hover:text-foreground transition-colors">{step}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )}
-                </motion.div>
-            )}
-
             {state.status === "success" && state.data && (
                 <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 text-left">
-                    {/* Main Score Header */}
                     <Card className="glass border-primary shadow-2xl rounded-[3rem] overflow-hidden relative">
                         <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
                             <Landmark className="h-64 w-64" />
                         </div>
-                        <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8 sm:p-12 text-left">
+                        <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-col md:flex-row items-center justify-between p-8 sm:p-12 text-left gap-6">
                             <div className="space-y-2 text-left">
                                 <div className="flex items-center gap-3 text-primary mb-1">
                                     <ShieldCheck className="h-6 w-6" />
-                                    <span className="text-[11px] font-black uppercase tracking-[0.4em] opacity-80">Official AI Research Dossier Active</span>
+                                    <span className="text-[11px] font-black uppercase tracking-[0.4em] opacity-80">Official Statutory Record Active</span>
                                 </div>
                                 <CardTitle className="text-3xl sm:text-5xl font-black tracking-tighter text-left leading-none">FORENSIC STRENGTH REPORT</CardTitle>
-                                <CardDescription className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 text-left">Registry Node: NS-STRENGTH-ALPHA-4.2</CardDescription>
+                                <div className="flex items-center gap-3 mt-2">
+                                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-[0.2em] border-primary/20 opacity-60">NS-STRENGTH-ALPHA-4.2</Badge>
+                                    {state.isSimulated && (
+                                        <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest">
+                                            <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
+                                        </Badge>
+                                    )}
+                                </div>
                             </div>
-                            <div className="flex flex-col items-end gap-4">
+                            <div className="flex flex-col items-end gap-4 shrink-0">
                                 <AudioAssistant 
                                     text={`${state.data.summary}. The case strength score is ${state.data.strengthScore} percent.`} 
                                     language={selectedLanguage} 
@@ -188,7 +150,6 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                             </div>
                         </CardHeader>
                         <CardContent className="p-8 sm:p-16 space-y-16 text-left">
-                            {/* Score Matrix */}
                             <div className="flex flex-col md:flex-row items-center gap-12 sm:gap-20">
                                 <div className="relative h-48 w-48 sm:h-64 sm:w-64 flex items-center justify-center shrink-0">
                                     <svg className="h-full w-full transform -rotate-90">
@@ -211,7 +172,6 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                                 </div>
                             </div>
 
-                            {/* Risk & Recommendation Grid */}
                             <div className="grid md:grid-cols-2 gap-10 text-left">
                                 <Card className="bg-red-500/5 rounded-[2.5rem] border-red-500/10 p-8 sm:p-10 shadow-inner group transition-all hover:bg-red-500/10">
                                     <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-red-600 flex items-center gap-3 mb-6">
@@ -241,7 +201,6 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                                 </Card>
                             </div>
 
-                            {/* Full Research Deep-Dive */}
                             <div className="space-y-8 text-left border-t border-primary/5 pt-16">
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 rounded-2xl bg-primary/10 text-primary">
