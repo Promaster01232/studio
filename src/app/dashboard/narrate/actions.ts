@@ -1,3 +1,4 @@
+
 "use server";
 
 import { generateCaseSummary, type GenerateCaseSummaryOutput } from "@/ai/flows/generate-case-summary";
@@ -34,9 +35,9 @@ export async function summarizeCaseAction(
   try {
     const audioDataUri = await fileToDataURI(file);
     
-    // INSTITUTIONAL RESILIENCE PROTOCOL: 20-Stage Retry with Jittered Cooling
-    let retries = 20;
-    let delay = 3000;
+    // INSTITUTIONAL RESILIENCE PROTOCOL: 25-Stage Retry with Jittered Neural Cooling
+    let retries = 25;
+    let delay = 2000;
 
     while (retries >= 0) {
         try {
@@ -54,9 +55,9 @@ export async function summarizeCaseAction(
                 error.message?.toLowerCase().includes('limit');
 
             if (retries > 0 && isTransient) {
-                console.warn(`[AI SUCCESS NODE] Hub Saturation. Retry ${20 - retries}/20 in ${delay/1000}s...`);
+                console.warn(`[AI SUCCESS NODE] Hub Saturation. Retry ${25 - retries}/25 in ${delay/1000}s...`);
                 await new Promise(r => setTimeout(r, delay));
-                delay = Math.min(delay + 2000 + Math.random() * 1000, 25000);
+                delay = Math.min(delay + 1500 + Math.random() * 1000, 20000);
                 retries--;
                 continue;
             }
@@ -69,7 +70,7 @@ export async function summarizeCaseAction(
     return { 
         status: "error", 
         data: null, 
-        error: "Failed to deconstruct narration. The AI forensic hub is saturated after 20 attempts.",
+        error: "Failed to deconstruct narration. The AI forensic hub is saturated after 25 attempts.",
         resolution: [
             "Ensure the audio recording is clear and under 2 minutes.",
             "Wait 60 seconds for the node capacity to reset.",

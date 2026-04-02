@@ -1,3 +1,4 @@
+
 'use client';
 import { ReactNode } from 'react';
 import { FirebaseProvider } from './provider';
@@ -25,15 +26,19 @@ const auth = getAuth(app);
 
 let firestore: Firestore;
 try {
+  // Institutional Hardening: Use explicit initialization with resilient connection protocols
   firestore = initializeFirestore(app, {
     localCache: persistentLocalCache({
       tabManager: persistentMultipleTabManager(),
     }),
-    // Enable auto-detection of long-polling to handle restricted network environments
+    // Force auto-detection of long-polling to overcome restrictive firewalls/proxies
     // and prevent "Could not reach Cloud Firestore backend" errors.
     experimentalAutoDetectLongPolling: true,
+    // Disabling fetch streams often improves stability in cloud-based dev environments
+    experimentalForceLongPolling: false, 
   });
 } catch (error) {
+  console.warn("[FIREBASE] Re-initializing existing Firestore node.");
   firestore = getFirestore(app);
 }
 

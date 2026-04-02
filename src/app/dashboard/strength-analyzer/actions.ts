@@ -1,3 +1,4 @@
+
 "use server";
 
 import { analyzeCaseStrength, type AnalyzeCaseStrengthOutput, AnalyzeCaseStrengthInput } from "@/ai/flows/analyze-case-strength";
@@ -34,9 +35,9 @@ export async function analyzeCaseStrengthAction(
     };
   }
 
-  // INSTITUTIONAL RESILIENCE PROTOCOL: 20-Stage Retry with Jittered Neural Cooling
-  let retries = 20;
-  let delay = 3000;
+  // INSTITUTIONAL RESILIENCE PROTOCOL: 25-Stage Retry with Jittered Neural Cooling
+  let retries = 25;
+  let delay = 2000;
 
   while (retries >= 0) {
     try {
@@ -51,10 +52,10 @@ export async function analyzeCaseStrengthAction(
         error.message?.toLowerCase().includes('limit');
       
       if (retries > 0 && isTransient) {
-        console.warn(`[AI SUCCESS NODE] Hub Saturation. Retry ${20 - retries}/20 in ${delay/1000}s...`);
+        console.warn(`[AI SUCCESS NODE] Hub Saturation. Retry ${25 - retries}/25 in ${delay/1000}s...`);
         await new Promise(resolve => setTimeout(resolve, delay));
-        // Linear scaling with random jitter to maximize gateway access
-        delay = Math.min(delay + 2000 + Math.random() * 1000, 25000);
+        // Optimized linear scaling with jitter
+        delay = Math.min(delay + 1500 + Math.random() * 1000, 20000);
         retries--;
         continue;
       }
@@ -63,7 +64,7 @@ export async function analyzeCaseStrengthAction(
       return { 
         status: "error", 
         data: null, 
-        error: "The Statutory Research Hub is currently saturated after 20 audit attempts.",
+        error: "The Statutory Research Hub is currently saturated after 25 audit attempts.",
         resolution: [
             "Wait 60 seconds for the node capacity to reset.",
             "Simplify the input to focus on core facts.",
