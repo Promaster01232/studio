@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useActionState, useState } from "react";
@@ -10,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Download, Share2, Printer, Loader2, Languages, FileSignature, CheckCircle2, ArrowLeft } from "lucide-react";
+import { Download, Share2, Printer, Loader2, Languages, FileSignature, CheckCircle2, ArrowLeft, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
 import { useToast } from "@/hooks/use-toast";
@@ -61,7 +60,7 @@ export default function BondGeneratorPage() {
   };
 
   return (
-    <div className="space-y-10 max-w-5xl mx-auto pb-20 px-2 sm:px-0">
+    <div className="space-y-10 max-w-5xl mx-auto pb-20 px-2 sm:px-0 text-left">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
         <PageHeader
           title="Bond Generator"
@@ -142,19 +141,23 @@ export default function BondGeneratorPage() {
         
       <AnimatePresence>
         {state.status === 'success' && state.data && (
-            <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}>
+            <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}>
                 <Card className="glass border-primary shadow-2xl overflow-hidden rounded-[2.5rem] mt-10">
                     <CardHeader className="bg-primary text-primary-foreground p-8">
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
                             <div className="text-left">
-                                <CardTitle className="text-2xl font-black uppercase tracking-tight">Bond Node Ready</CardTitle>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <FileText className="h-5 w-5" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Official AI Report Node Active</span>
+                                </div>
+                                <CardTitle className="text-2xl font-black uppercase tracking-tight">Bond Statutory Draft Ready</CardTitle>
                                 <CardDescription className="text-primary-foreground/80 font-bold text-[10px] uppercase tracking-widest mt-1">Registry: {bondType}</CardDescription>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 <Button variant="secondary" size="sm" onClick={() => handleDownloadPdf(state.data!.document, `Generated ${bondType}`)} className="h-9 px-4 rounded-xl font-bold text-[10px] uppercase">
                                     <Download className="mr-2 h-3.5 w-3.5" /> PDF
                                 </Button>
-                                <Button variant="secondary" size="sm" onClick={() => handlePrint(state.data!.document, `Generated ${bondType}`)} className="h-9 px-4 rounded-xl font-bold text-[10px] uppercase">
+                                <Button variant="secondary" size="sm" onClick={() => handlePrint(state.data!.document, `Generated ${bondType}`)} className="h-9 px-4 rounded-xl font-black text-[10px] uppercase">
                                     <Printer className="mr-2 h-3.5 w-3.5" /> Print
                                 </Button>
                             </div>

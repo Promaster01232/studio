@@ -13,6 +13,7 @@ export default function GuideDetailPage(props: {
   searchParams: Promise<any>
 }) {
     const { slug } = use(props.params);
+    use(props.searchParams);
 
     const guide = guides.find((g) => g.slug === slug);
 

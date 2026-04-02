@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Lightbulb, Loader2, ShieldAlert, Sparkles, ArrowLeft, BrainCircuit } from "lucide-react";
+import { Lightbulb, Loader2, ShieldAlert, Sparkles, ArrowLeft, BrainCircuit, FileText } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AudioAssistant } from "@/components/audio-assistant";
 import Link from "next/link";
@@ -57,7 +57,7 @@ export default function StrengthAnalyzerPage() {
   };
 
   return (
-    <div className="space-y-10 max-w-5xl mx-auto pb-20 px-4 sm:px-0">
+    <div className="space-y-10 max-w-5xl mx-auto pb-20 px-4 sm:px-0 text-left">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
             <PageHeader
             title="Case Strength Matrix"
@@ -125,11 +125,15 @@ export default function StrengthAnalyzerPage() {
             )}
 
             {state.status === "success" && state.data && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+                <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
                     <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
                         <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8">
                             <div className="space-y-1 text-left">
-                                <CardTitle className="text-2xl font-black uppercase tracking-tight">Audit Output</CardTitle>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <FileText className="h-5 w-5 text-primary" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Official AI Report Node Active</span>
+                                </div>
+                                <CardTitle className="text-2xl font-black uppercase tracking-tight">Audit Output: Strength Matrix</CardTitle>
                                 <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">AI-Generated Success Matrix</CardDescription>
                             </div>
                             <AudioAssistant 
@@ -153,6 +157,35 @@ export default function StrengthAnalyzerPage() {
                             <div className="p-8 bg-primary/5 rounded-[2rem] border border-primary/10 shadow-inner text-left">
                                 <h3 className="text-[10px] font-black uppercase tracking-widest text-primary mb-4">Statutory Summary</h3>
                                 <p className="text-sm sm:text-base font-bold leading-relaxed text-foreground/80">{state.data.summary}</p>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <div className="space-y-4">
+                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-red-600 flex items-center gap-2">
+                                        <ShieldAlert className="h-4 w-4" /> Risk Indicators
+                                    </h3>
+                                    <div className="space-y-3">
+                                        {state.data.riskIndicators.map((risk, idx) => (
+                                            <div key={idx} className="flex gap-3 p-4 rounded-xl bg-red-500/5 border border-red-500/10 text-xs font-bold leading-relaxed">
+                                                <div className="h-1.5 w-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
+                                                {risk}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="space-y-4">
+                                    <h3 className="text-[10px] font-black uppercase tracking-widest text-green-600 flex items-center gap-2">
+                                        <Lightbulb className="h-4 w-4" /> Recommended Actions
+                                    </h3>
+                                    <div className="space-y-3">
+                                        {state.data.recommendedActions.map((action, idx) => (
+                                            <div key={idx} className="flex gap-3 p-4 rounded-xl bg-green-500/5 border border-green-500/10 text-xs font-bold leading-relaxed">
+                                                <div className="h-1.5 w-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
+                                                {action}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>

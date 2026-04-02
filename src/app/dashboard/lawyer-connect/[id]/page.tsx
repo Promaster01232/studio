@@ -19,7 +19,6 @@ export default function LawyerProfilePage(props: {
   searchParams: Promise<any>
 }) {
   const { id } = use(props.params);
-  // Unwrap searchParams just in case, to maintain Next.js 15 consistency
   use(props.searchParams);
 
   const rtdb = useDatabase();
@@ -68,7 +67,7 @@ export default function LawyerProfilePage(props: {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="space-y-6 max-w-5xl mx-auto"
+        className="space-y-6 max-w-5xl mx-auto text-left"
     >
        <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" className="hover:bg-primary/5 text-primary font-bold h-9 rounded-xl" asChild>
