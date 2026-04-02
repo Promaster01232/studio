@@ -4,7 +4,27 @@ import { useActionState, useState, useRef, useEffect, startTransition } from "re
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Bot, FileText, StepForward, Loader2, Languages, FileSearch, Upload, Sparkles, ShieldCheck, CheckCircle2, AlertTriangle, Activity, Cpu } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Mic, 
+  Bot, 
+  FileText, 
+  StepForward, 
+  Loader2, 
+  Languages, 
+  FileSearch, 
+  Upload, 
+  Sparkles, 
+  ShieldCheck, 
+  CheckCircle2, 
+  AlertTriangle, 
+  Activity, 
+  Cpu,
+  Clock,
+  Globe,
+  Fingerprint,
+  Landmark
+} from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,7 +34,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useFirestore, useAuth } from "@/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
-import { Badge } from "@/components/ui/badge";
+import { Logo } from "@/components/logo";
 
 const initialState: CaseSummaryState = {
   status: "idle",
@@ -136,8 +156,8 @@ export default function NarrateProblemPage() {
                         </div>
                     </CardHeader>
                     <CardContent className="flex flex-col items-center justify-center space-y-8 pt-10 pb-10">
-                        <div className="w-full space-y-4 px-2">
-                            <div className="space-y-3 text-left">
+                        <div className="w-full space-y-4 px-2 text-left">
+                            <div className="space-y-3">
                                 <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Dialect Registry</Label>
                                 <Select value={language} onValueChange={setLanguage} disabled={isRecording || isLoading}>
                                     <SelectTrigger className="h-12 glass border-primary/5 font-bold rounded-xl">
@@ -180,18 +200,25 @@ export default function NarrateProblemPage() {
 
             <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-8">
                 <Card className="glass shadow-2xl min-h-[600px] flex flex-col rounded-[2.5rem] overflow-hidden border-primary/5">
-                    <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8">
-                        <div className="space-y-1 text-left">
-                            <div className="flex items-center gap-2 text-primary mb-1">
-                                <Bot className="h-4 w-4" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Institutional AI</span>
+                    <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8 sm:p-12 text-left gap-8 relative z-10">
+                        <div className="space-y-4 text-left flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-3">
+                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                                    <Bot className="h-3.5 w-3.5 text-primary" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Institutional AI</span>
+                                </div>
+                                {state.isSimulated && (
+                                    <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest">
+                                        <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
+                                    </Badge>
+                                )}
                             </div>
-                            <CardTitle className="text-2xl font-black tracking-tight leading-none uppercase">Audit Output</CardTitle>
-                            {state.isSimulated && (
-                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest mt-2 w-fit">
-                                    <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
-                                </Badge>
-                            )}
+                            <div className="space-y-1">
+                                <CardTitle className="text-2xl sm:text-4xl font-black tracking-tighter uppercase leading-none">Voice Audit <span className="text-primary italic">Output</span></CardTitle>
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.3em] flex items-center gap-2">
+                                    <Clock className="h-3 w-3" /> Transience Node // BNS-V4.2
+                                </p>
+                            </div>
                         </div>
                         {state.status === "success" && state.data && (
                             <AudioAssistant 
@@ -200,7 +227,12 @@ export default function NarrateProblemPage() {
                             />
                         )}
                     </CardHeader>
-                    <CardContent className="p-8 sm:p-10 flex-1">
+                    <CardContent className="p-8 sm:p-12 flex-1 relative z-10">
+                        {/* Background Watermark */}
+                        <div className="absolute inset-0 p-12 opacity-[0.01] pointer-events-none flex items-center justify-center grayscale">
+                            <Logo className="h-[500px] w-[500px] border-none p-0" priority={false} />
+                        </div>
+
                         <AnimatePresence mode="wait">
                             {isLoading ? (
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-10">
@@ -213,17 +245,38 @@ export default function NarrateProblemPage() {
                                     <p className="font-black text-2xl tracking-tighter uppercase">Deconstructing Narration...</p>
                                 </motion.div>
                             ) : state.status === "success" && state.data ? (
-                                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 pb-10 text-left">
-                                    <div className="p-6 sm:p-8 glass rounded-[2rem] border-primary/5 italic text-sm font-medium text-muted-foreground leading-relaxed shadow-inner">
+                                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12 pb-10 text-left relative z-10">
+                                    <div className="p-8 glass rounded-[2.5rem] border-primary/5 italic text-sm sm:text-base font-medium text-muted-foreground leading-relaxed shadow-inner bg-muted/5">
+                                        <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
+                                            <Fingerprint className="h-4 w-4" />
+                                            <span className="text-[10px] font-black uppercase tracking-widest">Transcription Registry</span>
+                                        </div>
                                         "{state.data.transcription}"
                                     </div>
-                                    <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left">
-                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4">Case Summary</h3>
-                                        <p className="text-sm font-black leading-relaxed tracking-tight text-foreground">{state.data.caseSummary}</p>
-                                    </Card>
-                                    <div className="space-y-4">
-                                        <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3"><FileSearch className="h-4 w-4" /> Forensic Statutory Audit</h3>
-                                        <div className="p-8 sm:p-10 glass rounded-[2.5rem] border-primary/10 text-sm font-medium leading-relaxed whitespace-pre-line text-left">
+
+                                    <div className="grid md:grid-cols-2 gap-8">
+                                        <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left bg-primary/[0.02]">
+                                            <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                                                <StepForward className="h-4 w-4" /> Case Summary
+                                            </h3>
+                                            <p className="text-sm sm:text-base font-black leading-relaxed tracking-tight text-foreground">{state.data.caseSummary}</p>
+                                        </Card>
+                                        <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left bg-blue-500/[0.02]">
+                                            <h3 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                                                <Landmark className="h-4 w-4" /> Next Protocols
+                                            </h3>
+                                            <p className="text-sm font-bold leading-relaxed text-foreground/80">{state.data.nextActions}</p>
+                                        </Card>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        <div className="flex items-center justify-between border-b border-primary/10 pb-4">
+                                            <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
+                                                <FileSearch className="h-5 w-5" /> Forensic Statutory Audit
+                                            </h3>
+                                            <Badge variant="outline" className="text-[9px] font-black uppercase border-primary/20 opacity-40">Sectional Ingress Active</Badge>
+                                        </div>
+                                        <div className="p-8 sm:p-12 glass rounded-[3rem] border-primary/10 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-lg bg-muted/10">
                                             {state.data.detailedAnalysis}
                                         </div>
                                     </div>
@@ -241,7 +294,7 @@ export default function NarrateProblemPage() {
                                                     {state.error}
                                                 </p>
                                             </div>
-                                            <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 transition-all">
+                                            <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
                                                 Re-initialize Capture
                                             </Button>
                                         </div>
@@ -255,6 +308,7 @@ export default function NarrateProblemPage() {
                             )}
                         </AnimatePresence>
                     </CardContent>
+                    <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
                 </Card>
             </motion.div>
         </div>

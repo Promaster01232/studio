@@ -7,15 +7,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FileUp, Bot, AlertTriangle, CalendarClock, ListChecks, Bomb, Languages, FileText, ShieldCheck, CheckCircle2, ArrowLeft, Loader2, Activity, Cpu } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { 
+  FileUp, 
+  Bot, 
+  AlertTriangle, 
+  CalendarClock, 
+  ListChecks, 
+  Bomb, 
+  Languages, 
+  FileText, 
+  ShieldCheck, 
+  CheckCircle2, 
+  ArrowLeft, 
+  Loader2, 
+  Activity, 
+  Cpu,
+  Clock,
+  Globe,
+  Fingerprint
+} from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
 import { AudioAssistant } from "@/components/audio-assistant";
 import Link from "next/link";
 import { useFirestore, useAuth } from "@/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
-import { Badge } from "@/components/ui/badge";
+import { Logo } from "@/components/logo";
 
 const initialState: DocumentIntelligenceState = {
   status: "idle",
@@ -64,15 +82,15 @@ export default function DocumentIntelligencePage() {
             <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-5 space-y-6">
             <Card className="glass shadow-2xl overflow-hidden rounded-[2rem] border-primary/5">
                 <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                <div className="flex items-center gap-3 mb-2 text-primary">
+                    <div className="p-2.5 rounded-xl bg-primary/10">
                         <FileUp className="h-5 w-5" />
                     </div>
-                    <CardTitle className="text-2xl font-black tracking-tight leading-none uppercase">Ingestion Terminal</CardTitle>
+                    <CardTitle className="text-2xl font-black tracking-tight leading-none uppercase text-left">Ingestion Terminal</CardTitle>
                 </div>
                 <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Secured forensic upload protocol.</CardDescription>
                 </CardHeader>
-                <CardContent className="p-8">
+                <CardContent className="p-8 text-left">
                 <form action={formAction} className="space-y-8">
                     <div className="space-y-4">
                     <Label htmlFor="document" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Document Registry</Label>
@@ -141,117 +159,130 @@ export default function DocumentIntelligencePage() {
 
             <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-7">
             <Card className="glass shadow-2xl min-h-[600px] flex flex-col rounded-[2.5rem] overflow-hidden border-primary/5">
-                <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8 sm:p-10">
-                <div className="space-y-1 text-left">
-                    <div className="flex items-center gap-2 text-primary mb-1">
-                        <Bot className="h-4 w-4" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">AI Intelligence</span>
+                <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-col md:flex-row items-center justify-between p-8 sm:p-12 text-left gap-8 relative z-10">
+                    <div className="space-y-4 text-left flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                                <Bot className="h-3.5 w-3.5 text-primary" />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-primary">AI Intelligence</span>
+                            </div>
+                            {state.isSimulated && (
+                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest">
+                                    <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
+                                </Badge>
+                            )}
+                        </div>
+                        <div className="space-y-1">
+                            <CardTitle className="text-2xl sm:text-4xl font-black tracking-tighter uppercase leading-none">Audit <span className="text-primary italic">Registry</span></CardTitle>
+                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.3em] flex items-center gap-2">
+                                <Clock className="h-3 w-3" /> Transience Node // BNS-COMPLIANT
+                            </p>
+                        </div>
                     </div>
-                    <CardTitle className="text-2xl font-black tracking-tight leading-none text-left">Analysis Registry</CardTitle>
-                    {state.isSimulated && (
-                        <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest mt-2 w-fit">
-                            <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
-                        </Badge>
+                    {state.status === 'success' && state.data && (
+                        <AudioAssistant 
+                        text={`${state.data.summary}. Legal risks identified: ${state.data.legalRisks}. Time-sensitive deadlines: ${state.data.deadlines}. Recommended actions: ${state.data.requiredActions}. Potential consequences: ${state.data.consequences}`} 
+                        language={selectedLanguage} 
+                        />
                     )}
-                </div>
-                {state.status === 'success' && state.data && (
-                    <AudioAssistant 
-                    text={`${state.data.summary}. Legal risks identified: ${state.data.legalRisks}. Time-sensitive deadlines: ${state.data.deadlines}. Recommended actions: ${state.data.requiredActions}. Potential consequences: ${state.data.consequences}`} 
-                    language={selectedLanguage} 
-                    />
-                )}
                 </CardHeader>
-                <CardContent className="p-8 sm:p-10 flex-1">
-                <AnimatePresence mode="wait">
-                    {state.status === 'loading' && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8">
-                            <div className="relative w-fit mx-auto">
-                                <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <Activity className="h-6 w-6 text-primary animate-pulse" />
-                                </div>
-                            </div>
-                            <p className="font-black text-2xl tracking-tighter">Deconstructing Clauses...</p>
-                        </motion.div>
-                    )}
+                <CardContent className="p-8 sm:p-12 flex-1 relative z-10">
+                    {/* Background Watermark */}
+                    <div className="absolute inset-0 p-12 opacity-[0.01] pointer-events-none flex items-center justify-center grayscale">
+                        <Logo className="h-[500px] w-[500px] border-none p-0" priority={false} />
+                    </div>
 
-                    {state.status === "error" && (
-                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
-                            <Card className="glass border-destructive/20 shadow-2xl rounded-[2rem] overflow-hidden">
-                                <div className="p-8 sm:p-10 flex flex-col items-center text-center gap-6">
-                                    <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-inner">
-                                        <AlertTriangle className="h-10 w-10" />
+                    <AnimatePresence mode="wait">
+                        {state.status === 'loading' && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8">
+                                <div className="relative w-fit mx-auto">
+                                    <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <Activity className="h-6 w-6 text-primary animate-pulse" />
                                     </div>
-                                    <div className="space-y-2">
-                                        <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Audit Delayed</h3>
-                                        <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto px-4">
-                                            {state.error}
-                                        </p>
-                                    </div>
-                                    <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
-                                        Re-initialize Node
-                                    </Button>
                                 </div>
-                            </Card>
-                        </motion.div>
-                    )}
+                                <p className="font-black text-2xl tracking-tighter uppercase">Deconstructing Clauses...</p>
+                            </motion.div>
+                        )}
 
-                    {state.status === "success" && state.data && (
-                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 pb-10 text-left">
-                            <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10 shadow-inner group transition-all hover:bg-primary/10 text-left">
-                                <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4 flex items-center gap-3">
-                                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></div>
-                                    Executive Summary
-                                </h3>
-                                <p className="text-sm sm:text-base text-foreground font-bold leading-relaxed">{state.data.summary}</p>
-                            </div>
-                            
-                            <div className="grid sm:grid-cols-2 gap-6 text-left">
-                                <Card className="bg-red-500/5 rounded-3xl border-red-500/10 p-6 hover:bg-red-500/10 transition-all duration-500 text-left">
-                                    <h3 className="text-[10px] font-black text-red-600 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
-                                        <AlertTriangle className="h-4 w-4" /> Forensic Risks
-                                    </h3>
-                                    <p className="text-xs text-muted-foreground font-bold leading-relaxed">{state.data.legalRisks}</p>
+                        {state.status === "error" && (
+                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
+                                <Card className="glass border-destructive/20 shadow-2xl rounded-[2rem] overflow-hidden">
+                                    <div className="p-8 sm:p-10 flex flex-col items-center text-center gap-6">
+                                        <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-inner">
+                                            <AlertTriangle className="h-10 w-10" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Audit Delayed</h3>
+                                            <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto px-4">
+                                                {state.error}
+                                            </p>
+                                        </div>
+                                        <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
+                                            Re-initialize Node
+                                        </Button>
+                                    </div>
                                 </Card>
-                                <Card className="bg-amber-500/5 rounded-3xl border-amber-500/10 p-6 hover:bg-amber-500/10 transition-all duration-500 text-left">
-                                    <h3 className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
-                                        <CalendarClock className="h-4 w-4" /> Critical Timelines
+                            </motion.div>
+                        )}
+
+                        {state.status === "success" && state.data && (
+                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-10 pb-10 text-left relative z-10">
+                                <div className="p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 shadow-inner group transition-all hover:bg-primary/10 text-left">
+                                    <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
+                                        <Fingerprint className="h-4 w-4" />
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Executive Summary</span>
+                                    </div>
+                                    <p className="text-sm sm:text-base text-foreground font-bold leading-relaxed">{state.data.summary}</p>
+                                </div>
+                                
+                                <div className="grid sm:grid-cols-2 gap-8 text-left">
+                                    <Card className="bg-red-500/[0.03] rounded-[2rem] border-red-500/10 p-8 hover:bg-red-500/[0.06] transition-all duration-500 text-left group">
+                                        <h3 className="text-[11px] font-black text-red-600 uppercase tracking-[0.2em] mb-4 flex items-center gap-3">
+                                            <AlertTriangle className="h-4 w-4" /> Forensic Risks
+                                        </h3>
+                                        <p className="text-xs sm:text-sm text-muted-foreground font-bold leading-relaxed group-hover:text-foreground transition-colors">{state.data.legalRisks}</p>
+                                    </Card>
+                                    <Card className="bg-amber-500/[0.03] rounded-[2rem] border-amber-500/10 p-8 hover:bg-amber-500/[0.06] transition-all duration-500 text-left group">
+                                        <h3 className="text-[11px] font-black text-amber-600 uppercase tracking-[0.2em] mb-4 flex items-center gap-3">
+                                            <CalendarClock className="h-4 w-4" /> Critical Timelines
+                                        </h3>
+                                        <p className="text-xs sm:text-sm text-muted-foreground font-bold leading-relaxed group-hover:text-foreground transition-colors">{state.data.deadlines}</p>
+                                    </Card>
+                                </div>
+
+                                <div className="p-8 bg-background rounded-[2.5rem] border border-primary/10 shadow-sm transition-all hover:shadow-xl hover:shadow-primary/5 text-left group">
+                                    <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.2em] mb-6 flex items-center gap-3 text-left">
+                                        <ListChecks className="h-5 w-5" /> Recommended Strategy
                                     </h3>
-                                    <p className="text-xs text-muted-foreground font-bold leading-relaxed">{state.data.deadlines}</p>
-                                </Card>
-                            </div>
+                                    <p className="text-xs sm:text-sm text-muted-foreground font-bold leading-relaxed whitespace-pre-line group-hover:text-foreground transition-colors">{state.data.requiredActions}</p>
+                                </div>
 
-                            <div className="p-6 bg-background rounded-3xl border border-primary/10 shadow-sm transition-all hover:shadow-xl hover:shadow-primary/5 text-left">
-                                <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-4 flex items-center gap-2 text-left">
-                                    <ListChecks className="h-4 w-4" /> Recommended Strategy
-                                </h3>
-                                <p className="text-xs text-muted-foreground font-bold leading-relaxed whitespace-pre-line">{state.data.requiredActions}</p>
-                            </div>
+                                <div className="p-8 bg-destructive/[0.03] rounded-[2.5rem] border border-destructive/10 text-left group hover:bg-destructive/[0.06] transition-all">
+                                    <h3 className="text-[11px] font-black text-destructive uppercase tracking-[0.2em] mb-6 flex items-center gap-3 text-left">
+                                        <Bomb className="h-5 w-5" /> Procedural Consequences
+                                    </h3>
+                                    <p className="text-xs sm:text-sm text-muted-foreground font-bold leading-relaxed group-hover:text-foreground transition-colors">{state.data.consequences}</p>
+                                </div>
+                            </motion.div>
+                        )}
 
-                            <div className="p-6 bg-destructive/5 rounded-3xl border border-destructive/10 text-left">
-                                <h3 className="text-[10px] font-black text-destructive uppercase tracking-[0.2em] mb-4 flex items-center gap-2 text-left">
-                                    <Bomb className="h-4 w-4" /> Procedural Consequences
-                                </h3>
-                                <p className="text-xs text-muted-foreground font-bold leading-relaxed">{state.data.consequences}</p>
-                            </div>
-                        </motion.div>
-                    )}
-
-                    {state.status === 'idle' && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-6 opacity-40">
-                            <div className="p-8 rounded-[2rem] bg-muted/50 border-2 border-dashed border-primary/10">
-                                <FileUp className="h-16 w-16 text-muted-foreground" />
-                            </div>
-                            <div className="space-y-2 text-center">
-                                <p className="font-black text-xl tracking-tighter uppercase text-center">Awaiting Ingestion</p>
-                                <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto leading-relaxed text-center">
-                                    Upload a document to initialize the neural forensic scanning protocol.
-                                </p>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                        {state.status === 'idle' && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-6 opacity-40">
+                                <div className="p-8 rounded-[2rem] bg-muted/50 border-2 border-dashed border-primary/10">
+                                    <FileUp className="h-16 w-16 text-muted-foreground" />
+                                </div>
+                                <div className="space-y-2 text-center">
+                                    <p className="font-black text-xl tracking-tighter uppercase text-center">Awaiting Ingestion</p>
+                                    <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto leading-relaxed text-center">
+                                        Upload a document to initialize the neural forensic scanning protocol.
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </CardContent>
+                <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
             </Card>
             </motion.div>
         </div>
