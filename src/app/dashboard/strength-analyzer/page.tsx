@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useActionState, useEffect, useState, use } from "react";
@@ -17,6 +16,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useFirestore, useAuth } from "@/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 const initialState: CaseStrengthState = {
   status: "idle",

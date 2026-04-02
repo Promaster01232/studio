@@ -4,7 +4,7 @@ import { useActionState, useState, useRef, useEffect, startTransition } from "re
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mic, Bot, FileText, StepForward, Loader2, Languages, FileSearch, Upload, Sparkles, ShieldCheck, CheckCircle2, AlertTriangle, Activity } from "lucide-react";
+import { Mic, Bot, FileText, StepForward, Loader2, Languages, FileSearch, Upload, Sparkles, ShieldCheck, CheckCircle2, AlertTriangle, Activity, Cpu } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useFirestore, useAuth } from "@/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
+import { Badge } from "@/components/ui/badge";
 
 const initialState: CaseSummaryState = {
   status: "idle",
@@ -186,6 +187,11 @@ export default function NarrateProblemPage() {
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em]">Institutional AI</span>
                             </div>
                             <CardTitle className="text-2xl font-black tracking-tight leading-none uppercase">Audit Output</CardTitle>
+                            {state.isSimulated && (
+                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest mt-2 w-fit">
+                                    <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
+                                </Badge>
+                            )}
                         </div>
                         {state.status === "success" && state.data && (
                             <AudioAssistant 
@@ -240,30 +246,6 @@ export default function NarrateProblemPage() {
                                             </Button>
                                         </div>
                                     </Card>
-
-                                    {state.resolution && (
-                                        <Card className="glass border-primary/10 shadow-xl rounded-[2.5rem] overflow-hidden">
-                                            <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
-                                                <div className="flex items-center gap-3 text-primary mb-1">
-                                                    <ShieldCheck className="h-5 w-5" />
-                                                    <span className="text-[10px] font-black uppercase tracking-[0.3em]">Resolution Registry</span>
-                                                </div>
-                                                <CardTitle className="text-2xl font-black tracking-tight">How to solve this problem</CardTitle>
-                                            </CardHeader>
-                                            <CardContent className="p-8 sm:p-10 space-y-6">
-                                                <div className="grid gap-4">
-                                                    {state.resolution.map((step, idx) => (
-                                                        <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-background border border-primary/5 shadow-sm transition-all hover:bg-primary/5 text-left group">
-                                                            <div className="h-6 w-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-black text-xs shrink-0 group-hover:scale-110 transition-transform">
-                                                                {idx + 1}
-                                                            </div>
-                                                            <p className="text-sm font-bold text-muted-foreground group-hover:text-foreground transition-colors">{step}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </CardContent>
-                                        </Card>
-                                    )}
                                 </motion.div>
                             ) : (
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
