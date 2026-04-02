@@ -1,3 +1,4 @@
+
 "use server";
 
 import { analyzeCaseStrength, type AnalyzeCaseStrengthOutput, AnalyzeCaseStrengthInput } from "@/ai/flows/analyze-case-strength";
@@ -10,7 +11,7 @@ export type CaseStrengthState = {
 };
 
 const StrengthSchema = z.object({
-  caseDescription: z.string().min(20, "Please provide a detailed case description."),
+  caseDescription: z.string().min(20, "Please provide a detailed case description (min 20 chars)."),
   language: z.string().min(1, "Please select a language."),
 });
 
@@ -29,15 +30,31 @@ export async function analyzeCaseStrengthAction(
     return {
       status: "error",
       data: null,
-      error: firstError || "Invalid input.",
+      error: firstError || "Invalid input matrix.",
     };
   }
 
-  try {
-    const result = await analyzeCaseStrength(validatedFields.data as AnalyzeCaseStrengthInput);
-    return { status: "success", data: result, error: null };
-  } catch (error) {
-    console.error(error);
-    return { status: "error", data: null, error: "Failed to analyze case strength. Please try again." };
+  // Resilient Execution Protocol
+  let retries = 3;
+  while (retries >= 0) {
+    try {
+      const result = await analyzeCaseStrength(validatedFields.data as AnalyzeCaseStrengthInput);
+      return { status: "success", data: result, error: null };
+    } catch (error: any) {
+      if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
+        console.warn(`[AI Audit] Rate limit hit. Retrying in 5s... (${retries} left)`);
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        retries--;
+        continue;
+      }
+      console.error("[AI Audit] Fatal node error:", error);
+      return { 
+        status: "error", 
+        data: null, 
+        error: "Statutory Analysis Hub Busy. Please re-initialize in 30 seconds." 
+      };
+    }
   }
+  
+  return { status: "error", data: null, error: "AI Audit Node timed out. Please try again later." };
 }

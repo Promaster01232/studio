@@ -1,3 +1,4 @@
+
 "use server";
 
 import { understandLegalDocument, type UnderstandLegalDocumentOutput } from "@/ai/flows/understand-legal-document";
@@ -26,20 +27,34 @@ export async function understandDocumentAction(
     return {
       status: "error",
       data: null,
-      error: "Please select a valid document to upload.",
+      error: "Please select a valid statutory document to upload.",
     };
   }
 
   try {
     const documentDataUri = await fileToDataURI(file);
     
-    const result = await understandLegalDocument({
-      documentDataUri,
-      language,
-    });
-    return { status: "success", data: result, error: null };
+    // Resilient Execution Protocol
+    let retries = 2;
+    while (retries >= 0) {
+        try {
+            const result = await understandLegalDocument({
+                documentDataUri,
+                language,
+            });
+            return { status: "success", data: result, error: null };
+        } catch (error: any) {
+            if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
+                await new Promise(r => setTimeout(r, 5000));
+                retries--;
+                continue;
+            }
+            throw error;
+        }
+    }
+    throw new Error("Timeout");
   } catch (error) {
-    console.error(error);
-    return { status: "error", data: null, error: "Failed to analyze the document. The file may be corrupt or in an unsupported format. Please try again." };
+    console.error("[AI Audit] Failure:", error);
+    return { status: "error", data: null, error: "Failed to analyze document node. The forensic engine is under heavy load." };
   }
 }

@@ -1,3 +1,4 @@
+
 "use server";
 
 import { generateCaseSummary, type GenerateCaseSummaryOutput } from "@/ai/flows/generate-case-summary";
@@ -26,19 +27,35 @@ export async function summarizeCaseAction(
     return {
       status: "error",
       data: null,
-      error: "Please record your problem before analyzing.",
+      error: "Please record your problem narration before initializing analysis.",
     };
   }
   
   try {
     const audioDataUri = await fileToDataURI(file);
-    const result = await generateCaseSummary({
-      problemAudio: audioDataUri,
-      language,
-    });
-    return { status: "success", data: result, error: null };
+    
+    // Resilient Execution Protocol
+    let retries = 2;
+    while (retries >= 0) {
+        try {
+            const result = await generateCaseSummary({
+                problemAudio: audioDataUri,
+                language,
+            });
+            return { status: "success", data: result, error: null };
+        } catch (error: any) {
+            if (retries > 0 && (error.message?.includes('429') || error.status === 429)) {
+                console.warn(`[AI Transcribe] Rate limit hit. Retrying...`);
+                await new Promise(r => setTimeout(r, 5000));
+                retries--;
+                continue;
+            }
+            throw error;
+        }
+    }
+    throw new Error("Timeout");
   } catch (error) {
-    console.error(error);
-    return { status: "error", data: null, error: "Failed to analyze the problem. Please try again." };
+    console.error("[AI Transcribe] Failure:", error);
+    return { status: "error", data: null, error: "Failed to deconstruct narration. AI forensic engine is currently busy." };
   }
 }
