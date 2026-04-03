@@ -4,27 +4,27 @@
 
 @layer base {
   :root {
-    /* Institutional Slate-White with High-Contrast Saffron/Green Accents */
+    /* Elite Institutional Palette: Slate-White with High-Contrast Accents */
     --background: 210 20% 98%;
     --foreground: 224 71% 4%;
     --card: 0 0% 100%;
     --card-foreground: 224 71% 4%;
     --popover: 210 20% 98%;
     --popover-foreground: 224 71% 4%;
-    --primary: 28 100% 35%; /* Saffron */
+    --primary: 28 100% 35%; /* Deep Saffron */
     --primary-foreground: 210 40% 98%;
     --secondary: 115 60% 92%;
     --secondary-foreground: 115 100% 10%;
     --muted: 210 40% 92%;
     --muted-foreground: 215.4 16.3% 25%;
-    --accent: 115 80% 15%; /* Green */
+    --accent: 115 80% 15%; /* Forensic Green */
     --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 40%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 85%;
     --input: 214.3 31.8% 85%;
     --ring: 28 100% 35%;
-    --radius: 1rem;
+    --radius: 1.5rem;
 
     --sidebar-background: 210 40% 98%;
     --sidebar-foreground: 222.2 84% 4.9%;
@@ -37,34 +37,34 @@
   }
  
   .dark {
-    /* Deep Forensic Charcoal */
-    --background: 222 47% 4%;
+    /* Deep Forensic Charcoal/Black */
+    --background: 222 47% 2%;
     --foreground: 210 40% 98%;
-    --card: 222 47% 6%;
+    --card: 222 47% 4%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 4%;
+    --popover: 222 47% 2%;
     --popover-foreground: 210 40% 98%;
     --primary: 28 100% 65%;
     --primary-foreground: 222.2 47.4% 8%;
     --secondary: 115 40% 10%;
     --secondary-foreground: 115 100% 85%;
-    --muted: 217.2 32.6% 12%;
-    --muted-foreground: 215 20.2% 75%;
+    --muted: 217.2 32.6% 8%;
+    --muted-foreground: 215 20.2% 65%;
     --accent: 115 100% 40%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 40%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 15%;
-    --input: 217.2 32.6% 15%;
+    --border: 217.2 32.6% 12%;
+    --input: 217.2 32.6% 12%;
     --ring: 28 100% 65%;
 
-    --sidebar-background: 222 47% 2%;
+    --sidebar-background: 222 47% 1%;
     --sidebar-foreground: 210 40% 98%;
     --sidebar-primary: 28 100% 65%;
     --sidebar-primary-foreground: 222.2 47.4% 8%;
-    --sidebar-accent: 115 40% 10%;
+    --sidebar-accent: 115 40% 8%;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 15%;
+    --sidebar-border: 217.2 32.6% 12%;
     --sidebar-ring: 28 100% 65%;
   }
 }
@@ -72,15 +72,19 @@
 @layer base {
   * { @apply border-border; }
   body {
-    @apply bg-background text-foreground text-sm leading-snug;
+    @apply bg-background text-foreground text-sm leading-relaxed;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-  h1, h2, h3, h4, h5, h6 { @apply tracking-tight font-black; }
+  h1, h2, h3, h4, h5, h6 { @apply tracking-tighter font-black uppercase; }
 }
 
 @layer utilities {
-  .glass { @apply bg-card/40 backdrop-blur-2xl border border-primary/5; }
+  .glass { @apply bg-card/40 backdrop-blur-3xl border border-primary/5; }
   .forensic-text { @apply font-black uppercase tracking-widest text-[9px]; }
+  
+  .shadow-3xl {
+    box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+  }
 
   @keyframes ashoka-spin {
     from { transform: rotate(0deg); }
@@ -88,5 +92,15 @@
   }
   .ashoka-rotate {
     animation: ashoka-spin 60s linear infinite;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 rounded-full hover:bg-primary/40 transition-colors;
   }
 }
