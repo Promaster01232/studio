@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect } from "react";
+import { useActionState, useState, useEffect, use } from "react";
 import { generateBondAction, type BondGeneratorState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,22 +11,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { 
   Download, 
-  Share2, 
   Printer, 
   Loader2, 
   Languages, 
   FileSignature, 
-  CheckCircle2, 
   ArrowLeft, 
   FileText,
   Edit3,
   Save,
-  RotateCcw,
   Globe,
   Clock,
   ShieldCheck,
   Zap,
-  PlusCircle
+  PlusCircle,
+  FileCheck
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
@@ -49,7 +47,11 @@ const FormSectionTitle = ({ children }: { children: React.ReactNode }) => (
     </h3>
 );
 
-export default function BondGeneratorPage() {
+export default function BondGeneratorPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Unwrap dynamic props for Next.js 15 compliance
+  use(props.params);
+  use(props.searchParams);
+
   const [state, formAction] = useActionState(generateBondAction, initialState);
   const [bondType, setBondType] = useState("Bail Bond");
   const [isEditing, setIsEditing] = useState(false);
@@ -126,10 +128,10 @@ export default function BondGeneratorPage() {
   };
 
   return (
-    <div className="space-y-10 max-w-6xl mx-auto pb-20 px-4 sm:px-0 text-left">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
+    <div className="space-y-8 max-w-7xl mx-auto pb-20 px-4 sm:px-0 text-left">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
         <PageHeader
-          title="Bond Structural Terminal"
+          title="Bond Generator"
           description="Initialize legally sound bonds and affidavits instantly with elite AI assistance."
         />
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
@@ -146,20 +148,20 @@ export default function BondGeneratorPage() {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            className="max-w-4xl mx-auto"
           >
             <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
               <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
                 <div className="flex items-center gap-3 mb-2 text-primary">
                     <Zap className="h-5 w-5" />
-                    <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup: {bondType}</CardTitle>
+                    <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup</CardTitle>
                 </div>
                 <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize statutory conditions for your official bond node.</CardDescription>
               </CardHeader>
               <CardContent className="p-8 sm:p-10">
                 <form action={formAction} className="space-y-8 text-left">
                   <div className="grid sm:grid-cols-2 gap-8">
-                    <div className="space-y-3">
+                    <div className="space-y-3 text-left">
                       <Label htmlFor="bondType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory Type</Label>
                       <Select name="bondType" required value={bondType} onValueChange={setBondType}>
                         <SelectTrigger id="bondType" className="h-12 glass border-primary/5 font-bold rounded-xl">
@@ -177,7 +179,7 @@ export default function BondGeneratorPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-3 text-left">
                       <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Registry</Label>
                       <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
                         <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
@@ -200,11 +202,11 @@ export default function BondGeneratorPage() {
                       </div>
                       <Input name="bondAmount" placeholder="Instrument Value (in words & figures)" required className="h-12 glass font-bold rounded-xl" />
                       <div className="grid md:grid-cols-2 gap-6">
-                          <div className="space-y-3">
+                          <div className="space-y-3 text-left">
                               <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Primary Node Name</Label>
                               <Input name="accusedName" placeholder="Full Name of Party" required className="h-12 glass font-bold rounded-xl" />
                           </div>
-                          <div className="space-y-3">
+                          <div className="space-y-3 text-left">
                               <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Party Address</Label>
                               <Textarea name="accusedAddress" placeholder="Full permanent address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
                           </div>
@@ -230,7 +232,7 @@ export default function BondGeneratorPage() {
             className="space-y-8"
           >
             <Card className="glass border-primary shadow-3xl overflow-hidden rounded-[3rem] relative">
-                {/* Official Watermark */}
+                {/* Background Watermark */}
                 <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
                     <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
                 </div>
@@ -240,7 +242,7 @@ export default function BondGeneratorPage() {
                         <div className="text-left space-y-4">
                             <div className="flex flex-wrap items-center gap-3">
                                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20">
-                                    <FileText className="h-4 w-4" />
+                                    <FileCheck className="h-4 w-4" />
                                     <span className="text-[10px] font-black uppercase tracking-widest">Official AI Report Node Active</span>
                                 </div>
                                 <Badge variant="outline" className="text-[9px] font-black uppercase tracking-[0.2em] border-white/20 text-white/80">NS-BOND-ST-4.2</Badge>

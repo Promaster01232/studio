@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { LogOut, Loader2, Search, Bell, ShieldAlert, Activity, Zap, User, Command } from "lucide-react";
+import { LogOut, Loader2, Search, Bell, ShieldAlert, Activity, Zap, User } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef, use } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";

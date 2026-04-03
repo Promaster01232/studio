@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect } from "react";
+import { useActionState, useState, useEffect, use } from "react";
 import { generateDocumentAction, type DocumentGeneratorState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +11,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { 
   Download, 
-  Share2, 
   Printer, 
   Loader2, 
   Languages, 
@@ -23,7 +22,8 @@ import {
   Clock,
   ShieldCheck,
   Zap,
-  PlusCircle
+  PlusCircle,
+  FileCheck
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
@@ -31,6 +31,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+import { cn } from "@/lib/utils";
 
 const initialState: DocumentGeneratorState = {
   status: "idle",
@@ -45,7 +46,11 @@ const FormSectionTitle = ({ children }: { children: React.ReactNode }) => (
     </h3>
 );
 
-export default function DocumentGeneratorPage() {
+export default function DocumentGeneratorPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Unwrap dynamic props for Next.js 15 compliance
+  use(props.params);
+  use(props.searchParams);
+
   const [state, formAction] = useActionState(generateDocumentAction, initialState);
   const [documentType, setDocumentType] = useState("Legal Notice");
   const [isEditing, setIsEditing] = useState(false);
@@ -112,17 +117,6 @@ export default function DocumentGeneratorPage() {
     }
   };
 
-  const handleShare = async (content: string, title: string) => {
-    if (navigator.share) {
-      try { await navigator.share({ title, text: content }); } catch (e) {}
-    } else {
-      try {
-        await navigator.clipboard.writeText(content);
-        toast({ title: "Registry Copied", description: "Content saved to clipboard buffer." });
-      } catch (err) {}
-    }
-  };
-
   const handleSave = () => {
       setIsEditing(false);
       toast({ title: "Draft Synchronized", description: "Changes saved to active registry session." });
@@ -133,10 +127,10 @@ export default function DocumentGeneratorPage() {
   };
 
   return (
-    <div className="space-y-10 max-w-6xl mx-auto pb-20 px-4 sm:px-0 text-left">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
+    <div className="space-y-8 max-w-7xl mx-auto pb-20 px-4 sm:px-0 text-left">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
         <PageHeader
-          title="Statutory Drafting Terminal"
+          title="Drafting Terminal"
           description="Draft professional legal instruments in seconds using high-fidelity AI assistance."
         />
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
@@ -153,13 +147,13 @@ export default function DocumentGeneratorPage() {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            className="max-w-4xl mx-auto"
           >
             <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
               <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
                 <div className="flex items-center gap-3 mb-2 text-primary">
                     <Zap className="h-5 w-5" />
-                    <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup: {documentType}</CardTitle>
+                    <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup</CardTitle>
                 </div>
                 <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Fill in the identity nodes to generate your legal draft.</CardDescription>
               </CardHeader>
@@ -199,16 +193,16 @@ export default function DocumentGeneratorPage() {
                   <div className="space-y-6">
                       <FormSectionTitle>Statutory Registry Nodes</FormSectionTitle>
                       <div className="grid sm:grid-cols-2 gap-6">
-                          <div className="space-y-3">
+                          <div className="space-y-3 text-left">
                               <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Sender/Complainant Name</Label>
                               <Input name="senderName" placeholder="Full name of party" required className="h-12 glass font-bold rounded-xl" />
                           </div>
-                          <div className="space-y-3">
+                          <div className="space-y-3 text-left">
                               <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Instrument Address</Label>
                               <Input name="senderAddress" placeholder="Full official address..." required className="h-12 glass font-bold rounded-xl" />
                           </div>
                       </div>
-                      <div className="space-y-3">
+                      <div className="space-y-3 text-left">
                           <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Case Forensic Narrative</Label>
                           <Textarea name="caseDetails" placeholder="Elaborate on the facts and circumstances..." rows={6} required className="glass rounded-xl font-medium text-sm p-6 shadow-inner" />
                       </div>
@@ -233,7 +227,7 @@ export default function DocumentGeneratorPage() {
             className="space-y-8"
           >
             <Card className="glass border-primary shadow-3xl overflow-hidden rounded-[3rem] relative">
-                {/* Official Watermark */}
+                {/* Background Watermark */}
                 <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
                     <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
                 </div>
@@ -243,7 +237,7 @@ export default function DocumentGeneratorPage() {
                         <div className="text-left space-y-4">
                             <div className="flex flex-wrap items-center gap-3">
                                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20">
-                                    <FileText className="h-4 w-4" />
+                                    <FileCheck className="h-4 w-4" />
                                     <span className="text-[10px] font-black uppercase tracking-widest">Official AI Report Node Active</span>
                                 </div>
                                 <Badge variant="outline" className="text-[9px] font-black uppercase tracking-[0.2em] border-white/20 text-white/80">NS-DRAFT-STAT-4.2</Badge>

@@ -237,10 +237,10 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
     );
 }
 
-export default function ResearchAnalyticsPage({ params, searchParams }: { params: Promise<any>, searchParams: Promise<any> }) {
+export default function ResearchAnalyticsPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
     // Unwrap dynamic props for Next.js 15 compliance
-    use(params);
-    use(searchParams);
+    use(props.params);
+    use(props.searchParams);
 
     const firestore = useFirestore();
     const auth = useAuth();
@@ -286,14 +286,14 @@ export default function ResearchAnalyticsPage({ params, searchParams }: { params
             <motion.div 
                 initial={{ opacity: 0, y: -20 }} 
                 animate={{ opacity: 1, y: 0 }} 
-                className="relative p-6 sm:p-8 md:p-10 rounded-[2rem] overflow-hidden bg-card/40 backdrop-blur-xl border border-primary/10 shadow-2xl group"
+                className="relative p-6 sm:p-8 rounded-[2rem] overflow-hidden bg-card/40 backdrop-blur-xl border border-primary/10 shadow-2xl group"
             >
                 <div className="absolute top-0 right-0 p-6 opacity-[0.02] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
                     <Logo className="h-48 w-48 grayscale" priority={true} />
                 </div>
                 
                 <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                    <div className="space-y-4">
+                    <div className="space-y-4 text-left">
                         <motion.div 
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -320,7 +320,7 @@ export default function ResearchAnalyticsPage({ params, searchParams }: { params
                                 transition={{ delay: 0.4 }}
                                 className="text-xs sm:text-sm text-muted-foreground font-medium max-w-lg leading-relaxed opacity-80"
                             >
-                                Publicly audited statutory ideas. Every community node is purged from the registry after 56 hours.
+                                Publicly audited statutory ideas. Every node is purged after 56 hours.
                             </motion.p>
                         </div>
                     </div>
