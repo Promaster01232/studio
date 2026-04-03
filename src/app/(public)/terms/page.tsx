@@ -1,4 +1,3 @@
-
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -8,7 +7,6 @@ import {
   ShieldCheck, 
   AlertTriangle, 
   Scale, 
-  Mail, 
   History, 
   Fingerprint, 
   Gavel, 
@@ -20,47 +18,49 @@ import {
   Zap
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Logo } from "@/components/logo";
+import { Badge } from "@/components/ui/badge";
 
 const termSections = [
   {
     title: "1. Acceptance of Protocol",
     icon: ShieldCheck,
-    content: "By accessing the Nyaya Sahayak digital node at nyayasahayak.in, you explicitly agree to be bound by these Terms of Service. If you do not accept every clause of this institutional agreement, you must immediately terminate your registry session and disconnect from all dashboard modules."
+    content: "By accessing the Nyaya Sahayak node at nyayasahayak.in, you agree to be bound by these Terms of Service. Failure to accept every clause requires immediate termination of your session and disconnection from all terminals."
   },
   {
     title: "2. The AI Intelligence Mandate",
     icon: Bot,
-    content: "Nyaya Sahayak utilizes probabilistic AI nodes to provide forensic legal intelligence. You acknowledge that AI outputs—including case summaries, document drafts, and strength assessments—are generated via neural processing and do not constitute 'Legal Advice' as defined by statutory regulations. All outputs are for informational and navigational purposes only."
+    content: "Nyaya Sahayak utilizes probabilistic AI nodes. AI outputs—including case summaries and document drafts—are generated via neural processing and do not constitute 'Legal Advice' as defined by statutory regulations."
   },
   {
     title: "3. Human Review Requirement",
     icon: Gavel,
-    content: "CRITICAL: Any legal document generated via nyayasahayak.in (including Legal Notices, FIR Applications, or Bonds) must be reviewed, edited, and finalized by a qualified human advocate before service or filing in any judicial complex. Reliance on raw AI output for official filing is strictly prohibited."
+    content: "CRITICAL: Any legal document generated via nyayasahayak.in must be reviewed, edited, and finalized by a qualified human advocate before filing. Reliance on raw AI output for official filing is strictly prohibited."
   },
   {
     title: "4. Registry Identity & Security",
     icon: Fingerprint,
-    content: "Users must provide 100% authentic data during the Citizen Registry enrollment. Submission of fraudulent Bar IDs, false contact details, or deceptive narrations will trigger an immediate and permanent Node Deactivation on nyayasahayak.in. You are solely responsible for maintaining the security of your authentication registry."
+    content: "Users must provide 100% authentic data during enrollment. Submission of fraudulent Bar IDs or deceptive narrations will trigger immediate Node Deactivation. You are responsible for your authentication registry."
   },
   {
     title: "5. Lawyer Connect Ecosystem",
     icon: Globe,
-    content: "The Advocate Registry is a directory of independent legal professionals. Nyaya Sahayak facilitates connection nodes but does not employ or endorse specific advocates. Any attorney-client relationship formed via this hub is strictly between the user and the professional; nyayasahayak.in is not a party to such agreements."
+    content: "The Advocate Registry is a directory of independent professionals. Nyaya Sahayak facilitates connection nodes but does not employ specific advocates. Attorney-client relationships are strictly private."
   },
   {
     title: "6. Forensic Data Usage",
     icon: Lock,
-    content: "Your data is processed according to our Privacy Protocol. We utilize AES-256 encryption for data at rest. You maintain sovereign authority over your data nodes, including the right to trigger a 'Registry Purge' to permanently erase all associated case logs and document history from nyayasahayak.in."
+    content: "Your data is processed according to our Privacy Protocol using AES-256 encryption. You maintain sovereign authority over your data, including the right to trigger a 'Registry Purge' at any time."
   },
   {
     title: "7. Prohibited Node Activities",
     icon: Ban,
-    content: "Users are prohibited from: (a) Attempting to reverse-engineer AI logic; (b) Submitting malicious code to the registry; (c) Using the 'Narrate' tool to harass or defame individuals; (d) Automating data extraction from the eCourts search node via unauthorized bots on nyayasahayak.in."
+    content: "Users are prohibited from reverse-engineering AI logic, submitting malicious code, or automating data extraction via unauthorized bots on the nyayasahayak.in dashboard."
   },
   {
-    title: "8. Limitation of Institutional Liability",
+    title: "8. Limitation of Liability",
     icon: Scale,
-    content: "IdeaSpark and the Nyaya Sahayak institutional nodes are not liable for any direct or indirect damages resulting from the use of this platform. This includes, but is not limited to, legal outcomes, lost data, or errors in judicial procedure navigation provided by the AI assistant at nyayasahayak.in."
+    content: "IdeaSpark and Nyaya Sahayak nodes are not liable for any damages resulting from platform use, including legal outcomes, lost data, or errors in judicial procedure navigation."
   }
 ];
 
@@ -83,66 +83,74 @@ const itemVariants = {
 
 export default function TermsPage() {
   return (
-    <div className="max-w-5xl mx-auto space-y-10 pb-20 px-4 text-left">
+    <div className="max-w-6xl mx-auto space-y-10 pb-20 px-4 sm:px-6 text-left">
       <motion.div 
         initial={{ opacity: 0, y: -10 }} 
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8"
       >
         <PageHeader
           title="Institutional Terms of Service"
           description="Official protocols governing the usage of Nyaya Sahayak digital nodes on nyayasahayak.in."
         />
+        <div className="flex items-center gap-2">
+            <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">System Access Agreement</Badge>
+        </div>
       </motion.div>
 
-      {/* Main Terms Container */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="space-y-10"
       >
-        <Card className="border-primary/10 shadow-2xl rounded-[2.5rem] overflow-hidden bg-card/40 backdrop-blur-md border-none ring-1 ring-primary/10">
+        <Card className="border-primary/10 shadow-3xl rounded-[3rem] overflow-hidden bg-card/40 backdrop-blur-md relative">
+          <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none grayscale">
+              <Logo className="h-64 w-64" />
+          </div>
+          
           <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 sm:p-12 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
-                <Cpu className="h-40 w-40" />
-            </div>
-            <div className="flex items-center gap-5 relative z-10">
-              <div className="bg-primary/10 p-4 rounded-[1.5rem] shrink-0 shadow-inner ring-1 ring-primary/20">
-                <FileText className="h-8 w-8 text-primary" />
+            <div className="flex flex-col sm:flex-row items-center gap-6 relative z-10 text-center sm:text-left">
+              <div className="bg-primary p-5 rounded-[1.5rem] shrink-0 shadow-2xl shadow-primary/20 ring-4 ring-white/10">
+                <FileText className="h-8 w-8 text-white" />
               </div>
-              <div className="text-left min-w-0">
-                <CardTitle className="text-2xl sm:text-4xl font-black tracking-tighter truncate leading-tight">System Access Agreement</CardTitle>
-                <CardDescription className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 flex items-center gap-2">
-                    <Zap className="h-3 w-3" /> Version 4.2.0-Forensic // March 2024
+              <div className="space-y-1">
+                <CardTitle className="text-3xl sm:text-5xl font-black tracking-tighter uppercase leading-tight">Access Protocol</CardTitle>
+                <CardDescription className="text-[10px] font-black uppercase tracking-[0.3em] text-primary flex items-center justify-center sm:justify-start gap-2">
+                    <Zap className="h-3.5 w-3.5 animate-pulse" /> Version 4.2.0-Forensic // March 2024
                 </CardDescription>
               </div>
             </div>
           </CardHeader>
-          <CardContent className="p-6 sm:p-12 space-y-12">
+          
+          <CardContent className="p-8 sm:p-16 space-y-16">
             
             {/* Warning Callout */}
             <motion.div 
               variants={itemVariants}
-              className="bg-destructive/5 border border-destructive/20 rounded-[2rem] p-6 sm:p-8 flex gap-5 items-start text-left shadow-inner"
+              className="bg-destructive/5 border border-destructive/20 rounded-[2.5rem] p-8 sm:p-10 flex flex-col sm:flex-row gap-6 items-start text-left shadow-inner relative overflow-hidden"
             >
-              <div className="p-3 rounded-2xl bg-destructive/10">
-                <AlertTriangle className="h-6 w-6 text-destructive" />
+              <div className="absolute top-0 right-0 p-4 opacity-[0.05]">
+                <ShieldCheck className="h-20 w-20 text-destructive" />
               </div>
-              <p className="text-xs sm:text-base font-bold text-destructive/80 leading-relaxed">
-                NOTICE: Nyaya Sahayak is an AI-driven legal intelligence platform. It does NOT provide official legal advice. Every document generated on nyayasahayak.in MUST be reviewed and signed by a qualified human advocate.
+              <div className="p-4 rounded-2xl bg-destructive/10 shrink-0">
+                <AlertTriangle className="h-8 w-8 text-destructive" />
+              </div>
+              <p className="text-sm sm:text-lg font-black text-destructive/80 leading-relaxed uppercase tracking-tight">
+                Nyaya Sahayak is an AI legal intelligence platform. It does NOT provide official legal advice. Every document generated MUST be reviewed by a human advocate.
               </p>
             </motion.div>
 
-            <div className="grid gap-10">
+            <div className="grid gap-12 sm:grid-cols-2">
               {termSections.map((section, index) => (
                 <motion.div key={index} variants={itemVariants} className="flex gap-6 group text-left">
-                  <div className="bg-muted/50 p-4 h-14 w-14 rounded-[1.2rem] flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-sm border border-primary/5 ring-1 ring-primary/5">
+                  <div className="bg-muted/50 p-4 h-14 w-14 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-inner border border-primary/5">
                     <section.icon className="h-6 w-6" />
                   </div>
-                  <div className="space-y-2 flex-1 text-left">
-                    <h4 className="font-black text-lg sm:text-xl tracking-tight group-hover:text-primary transition-colors">{section.title}</h4>
-                    <p className="text-xs sm:text-base text-muted-foreground font-medium leading-relaxed">
+                  <div className="space-y-3 flex-1 text-left">
+                    <h4 className="font-black text-xl tracking-tight group-hover:text-primary transition-colors uppercase">{section.title}</h4>
+                    <p className="text-[11px] sm:text-xs text-muted-foreground font-medium leading-relaxed">
                       {section.content}
                     </p>
                   </div>
@@ -150,16 +158,16 @@ export default function TermsPage() {
               ))}
             </div>
           </CardContent>
-          <div className="h-1.5 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+          <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
         </Card>
 
         {/* Footer Acknowledgement */}
         <motion.div variants={itemVariants} className="text-center space-y-4 pt-4 px-4">
-          <div className="flex items-center justify-center gap-2 text-muted-foreground/40 font-black uppercase tracking-[0.2em] text-[9px] sm:text-[10px]">
+          <div className="flex items-center justify-center gap-2 text-muted-foreground/40 font-black uppercase tracking-[0.2em] text-[10px]">
             <History className="h-3 w-3" /> Agreement Persistence: Active
           </div>
-          <p className="text-[9px] sm:text-[11px] text-muted-foreground/60 font-medium max-w-2xl mx-auto leading-relaxed italic">
-            "By utilizing the nyayasahayak.in dashboard, you confirm your understanding that judicial proceedings are inherently complex and that AI intelligence serves as a supplementary navigational node, not a final procedural authority."
+          <p className="text-[10px] sm:text-xs text-muted-foreground/60 font-bold max-w-3xl mx-auto leading-relaxed italic uppercase tracking-tighter">
+            "By utilizing the nyayasahayak.in dashboard, you confirm your understanding that judicial proceedings are inherently complex and that AI serves as a navigational node, not a final procedural authority."
           </p>
         </motion.div>
       </motion.div>
