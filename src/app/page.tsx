@@ -31,7 +31,7 @@ import { Footer } from "@/components/footer";
 const MinimalBackground = () => {
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02]">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.01]">
           <svg className="ashoka-rotate w-[600px] h-[600px] lg:w-[1000px] lg:h-[1000px] text-primary" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.05">
               <circle cx="50" cy="50" r="45" />
               <circle cx="50" cy="50" r="5" fill="currentColor" />
@@ -40,13 +40,7 @@ const MinimalBackground = () => {
                   const x2 = (50 + 45 * Math.cos(angle)).toFixed(10);
                   const y2 = (50 + 45 * Math.sin(angle)).toFixed(10);
                   return (
-                    <line 
-                      key={i} 
-                      x1="50" 
-                      y1="50" 
-                      x2={x2} 
-                      y2={y2} 
-                    />
+                    <line key={i} x1="50" y1="50" x2={x2} y2={y2} />
                   );
               })}
           </svg>
@@ -56,10 +50,10 @@ const MinimalBackground = () => {
 };
 
 const featureNodes = [
-  { icon: Mic, title: "Voice Ingress", desc: "Speak your problem naturally. Our neural engine deconstructs your narrative into simple statutory facts.", href: "/dashboard/narrate", badge: "Live Node" },
-  { icon: Search, title: "Forensic Audit", desc: "Upload any legal instrument for a deep statutory scan. Identify hidden risks and procedural traps instantly.", href: "/dashboard/document-intelligence", badge: "BNS Ready" },
-  { icon: FileText, title: "Drafting Terminal", desc: "Generate professional petitions, notices, and applications using elite AI forensic logic.", href: "/dashboard/document-generator", badge: "Official Format" },
-  { icon: Globe, title: "Advocate Registry", desc: "Connect with authenticated legal professionals for high-fidelity strategy and representation.", href: "/dashboard/lawyer-connect", badge: "Verified" },
+  { icon: Mic, title: "Voice Ingress", desc: "Speak your problem naturally for immediate deconstruction.", href: "/dashboard/narrate", badge: "Live" },
+  { icon: Search, title: "Forensic Audit", desc: "Scan legal instruments for statutory risks instantly.", href: "/dashboard/document-intelligence", badge: "BNS" },
+  { icon: FileText, title: "Drafting terminal", desc: "Generate professional petitions with AI forensic logic.", href: "/dashboard/document-generator", badge: "Direct" },
+  { icon: Globe, title: "Advocate registry", desc: "Connect with verified professionals for strategy.", href: "/dashboard/lawyer-connect", badge: "Auth" },
 ];
 
 export default function WelcomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
@@ -84,147 +78,118 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
       <MinimalBackground />
       
       <main className="flex-1 flex flex-col items-center relative z-10">
-        {/* Hero Section */}
-        <section className="w-full max-w-7xl pt-16 pb-12 sm:pt-32 sm:pb-32 px-6 text-center space-y-12">
+        {/* Hero Section - Reduced Top Gap */}
+        <section className="w-full max-w-7xl pt-8 pb-10 sm:pt-12 sm:pb-16 px-6 text-center space-y-8">
           <motion.div 
-            initial={{ opacity: 0, y: 30 }} 
+            initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.8, ease: "easeOut" }} 
-            className="space-y-12"
+            transition={{ duration: 0.6 }} 
+            className="space-y-8"
           >
-            <header className="flex flex-col items-center gap-6">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-primary/10 rounded-full blur-2xl animate-pulse"></div>
-                <Logo className="h-24 w-24 sm:h-36 sm:w-32 shadow-2xl relative z-10" priority={true} />
-              </div>
-              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 shadow-sm">
-                <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
-                <span className="text-[10px] font-black tracking-wider text-primary/80">Neural Statutory Hub Alpha</span>
+            <header className="flex flex-col items-center gap-4">
+              <Logo className="h-20 w-24 sm:h-28 sm:w-28 shadow-xl" priority={true} />
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
+                <Sparkles className="h-3 w-3 text-primary" />
+                <span className="text-[9px] font-black tracking-wider text-primary/80 uppercase">Neural Statutory Hub</span>
               </div>
             </header>
 
-            <div className="space-y-6 max-w-5xl mx-auto">
-              <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-tight text-foreground text-center">
-                India's premier <br/>
-                <span className="text-primary italic">AI legal terminal.</span>
+            <div className="space-y-4 max-w-4xl mx-auto">
+              <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-foreground text-center">
+                India's premier <span className="text-primary italic">AI legal terminal.</span>
               </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed">
-                Empowering every citizen with precise forensic audits, BNS statutory scanning, and automated drafting nodes. Simple, Satik knowledge.
+              <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
+                Empowering citizens with precise forensic audits, BNS statutory scanning, and automated drafting nodes. Simple, Satik knowledge.
               </p>
             </div>
 
-            <nav className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
+            <nav className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
               {!loading ? (
-                <Button asChild className="h-16 w-full sm:w-auto min-w-[300px] px-12 text-sm font-black tracking-wide shadow-2xl shadow-primary/20 rounded-2xl active:scale-95 transition-all group overflow-hidden relative">
-                  <Link href="/dashboard">
-                    <span className="relative z-10 flex items-center gap-3">
-                      Initialize session <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                    </span>
-                    <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                <Button asChild className="h-14 w-full sm:w-auto min-w-[240px] px-8 text-xs font-black tracking-wide shadow-xl shadow-primary/20 rounded-xl active:scale-95 transition-all">
+                  <Link href="/dashboard" className="flex items-center gap-2">
+                    Initialize session <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
               ) : (
-                <div className="h-16 w-[300px] flex items-center justify-center bg-muted/10 rounded-2xl border border-primary/5">
-                  <Loader2 className="h-6 w-6 animate-spin text-primary opacity-30" />
+                <div className="h-14 w-[240px] flex items-center justify-center bg-muted/5 rounded-xl border border-primary/5">
+                  <Loader2 className="h-5 w-5 animate-spin text-primary opacity-30" />
                 </div>
               )}
-              <Button variant="outline" asChild className="h-16 w-full sm:w-auto min-w-[240px] px-10 text-sm font-black tracking-wide rounded-2xl border-primary/10 hover:bg-primary/5 group">
-                <Link href="/about" className="flex items-center gap-3">
-                  Forensic protocol <Activity className="h-4 w-4 opacity-40 group-hover:animate-pulse" />
+              <Button variant="outline" asChild className="h-14 w-full sm:w-auto min-w-[200px] px-8 text-xs font-black tracking-wide rounded-xl border-primary/10 hover:bg-primary/5">
+                <Link href="/about" className="flex items-center gap-2">
+                  Forensic protocol <Activity className="h-4 w-4 opacity-40" />
                 </Link>
               </Button>
             </nav>
           </motion.div>
         </section>
 
-        {/* Process Roadmap */}
-        <section className="w-full max-w-6xl py-24 px-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Process Roadmap - Tighter Spacing */}
+        <section className="w-full max-w-6xl py-12 px-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                    { step: "01", title: "Narrate problem", desc: "Transmit your legal narrative via voice or textual node for AI ingestion.", icon: Mic, color: "text-primary" },
-                    { step: "02", title: "Forensic audit", desc: "AI deconstructs facts against the latest Indian statutory framework.", icon: ShieldCheck, color: "text-primary" },
-                    { step: "03", title: "Statutory redress", desc: "Receive a professional roadmap and generated legal instruments.", icon: CheckCircle2, color: "text-primary" },
+                    { step: "01", title: "Narrate problem", desc: "Transmit your legal narrative for AI ingestion.", icon: Mic },
+                    { step: "02", title: "Forensic audit", desc: "AI deconstructs facts against the statutory framework.", icon: ShieldCheck },
+                    { step: "03", title: "Statutory redress", desc: "Receive a roadmap and legal instruments.", icon: CheckCircle2 },
                 ].map((item, i) => (
                     <motion.div 
                         key={i} 
-                        initial={{ opacity: 0, y: 30 }} 
+                        initial={{ opacity: 0, y: 20 }} 
                         whileInView={{ opacity: 1, y: 0 }} 
-                        viewport={{ once: true, amount: 0.3 }} 
-                        transition={{ duration: 0.6, delay: i * 0.15, ease: "easeOut" }}
-                        className="group relative p-8 sm:p-10 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-primary/5 shadow-sm text-left hover:border-primary/20 transition-all duration-500 hover:shadow-2xl"
+                        viewport={{ once: true }} 
+                        transition={{ delay: i * 0.1 }}
+                        className="group relative p-6 sm:p-8 rounded-[2rem] bg-card/40 backdrop-blur-xl border border-primary/5 shadow-sm hover:border-primary/20 transition-all duration-500"
                     >
-                        <div className="absolute top-6 right-8 text-4xl font-black text-primary/5 select-none transition-all duration-700 group-hover:text-primary/10 group-hover:scale-110">
+                        <div className="absolute top-4 right-6 text-2xl font-black text-primary/5 select-none">
                             {item.step}
                         </div>
-                        
-                        <div className="flex flex-col gap-6 relative z-10">
-                            <div className={cn(
-                                "h-14 w-14 rounded-2xl flex items-center justify-center shadow-lg bg-primary/5 border border-primary/10 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3", 
-                                item.color
-                            )}>
-                                <item.icon className="h-6 w-6" />
+                        <div className="flex flex-col gap-4 relative z-10">
+                            <div className="h-12 w-12 rounded-xl flex items-center justify-center shadow-md bg-primary/5 border border-primary/10 group-hover:scale-110 transition-transform">
+                                <item.icon className="h-5 w-5 text-primary" />
                             </div>
-                            
-                            <div className="space-y-3">
-                                <h3 className="text-xl font-black tracking-tight text-foreground transition-colors group-hover:text-primary">
+                            <div className="space-y-2">
+                                <h3 className="text-lg font-black tracking-tight text-foreground group-hover:text-primary transition-colors">
                                     {item.title}
                                 </h3>
-                                <p className="text-sm text-muted-foreground font-medium leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
+                                <p className="text-xs text-muted-foreground font-medium leading-relaxed opacity-70">
                                     {item.desc}
                                 </p>
                             </div>
-                        </div>
-                        
-                        {/* Interactive Ingress Line */}
-                        <div className="absolute bottom-0 left-10 right-10 h-0.5 bg-primary/10 overflow-hidden rounded-full">
-                            <motion.div 
-                                initial={{ x: "-100%" }}
-                                whileInView={{ x: "100%" }}
-                                transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: i * 0.5 }}
-                                className="h-full w-1/2 bg-gradient-to-r from-transparent via-primary/40 to-transparent"
-                            />
                         </div>
                     </motion.div>
                 ))}
             </div>
         </section>
 
-        {/* Tool Matrix */}
-        <section className="w-full max-w-7xl py-32 px-6 space-y-16">
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center gap-3 text-primary">
-              <Zap className="h-5 w-5 animate-pulse" />
-              <h2 className="text-[11px] font-black uppercase tracking-[0.5em]">Forensic tool matrix</h2>
+        {/* Tool Matrix - Sleeker Feature UI */}
+        <section className="w-full max-w-7xl py-16 px-6 space-y-10">
+          <div className="text-center space-y-2">
+            <div className="flex items-center justify-center gap-2 text-primary">
+              <Zap className="h-4 w-4 animate-pulse" />
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em]">System ingress</h2>
             </div>
-            <h3 className="text-3xl sm:text-5xl font-black tracking-tight leading-none uppercase">System ingress <span className="text-primary italic">nodes.</span></h3>
+            <h3 className="text-2xl sm:text-4xl font-black tracking-tight uppercase leading-none">Operational <span className="text-primary italic">Nodes</span></h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featureNodes.map((node, i) => (
-              <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              <motion.div key={i} initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
                 <Link href={node.href} className="block group h-full">
-                  <Card className="h-full flex flex-col glass transition-all duration-500 rounded-[2.5rem] overflow-hidden border-primary/5 group-hover:border-primary/30 group-hover:-translate-y-2 shadow-sm group-hover:shadow-3xl relative">
-                    {/* Watermark Logo */}
-                    <div className="absolute top-0 right-0 p-6 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
-                      <Logo className="h-32 w-32 grayscale" priority={false} />
-                    </div>
-                    
-                    <CardContent className="p-10 flex flex-col h-full text-left relative z-10">
-                      <div className="flex items-center justify-between mb-10">
-                        <div className="p-4 rounded-2xl shadow-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                          <node.icon className="h-7 w-7" />
+                  <Card className="h-full flex flex-col glass transition-all duration-500 rounded-[1.8rem] overflow-hidden border-primary/5 group-hover:border-primary/30 group-hover:-translate-y-1 shadow-sm hover:shadow-2xl relative">
+                    <CardContent className="p-8 flex flex-col h-full text-left relative z-10">
+                      <div className="flex items-center justify-between mb-8">
+                        <div className="p-3 rounded-lg shadow-sm bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                          <node.icon className="h-5 w-5" />
                         </div>
-                        <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full border-primary/10 text-primary opacity-60 group-hover:opacity-100 group-hover:bg-primary/5 transition-all">
+                        <Badge variant="outline" className="text-[7px] font-black uppercase border-primary/10 text-primary px-2">
                           {node.badge}
                         </Badge>
                       </div>
-                      
-                      <h3 className="text-2xl font-black tracking-tight leading-tight group-hover:text-primary transition-colors uppercase">{node.title}</h3>
-                      <p className="text-sm text-muted-foreground font-medium leading-relaxed mt-4 flex-grow opacity-80 group-hover:opacity-100">{node.desc}</p>
-                      
-                      <div className="pt-10 mt-10 border-t border-primary/5 flex items-center justify-between">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">Initialize ingress</span>
-                        <ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0" />
+                      <h3 className="text-lg font-black tracking-tight uppercase">{node.title}</h3>
+                      <p className="text-xs text-muted-foreground font-medium leading-relaxed mt-2 flex-grow opacity-80">{node.desc}</p>
+                      <div className="pt-6 mt-6 border-t border-primary/5 flex items-center justify-between">
+                        <span className="text-[8px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">Ingress active</span>
+                        <ArrowRight className="h-3.5 w-3.5 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                       </div>
                     </CardContent>
                   </Card>
@@ -234,55 +199,45 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
           </div>
         </section>
 
-        {/* Human Assistance Node */}
-        <section className="w-full bg-primary/5 border-y border-primary/10 py-32 px-6">
-            <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-16 text-center lg:text-left">
-                <div className="relative">
-                    <div className="absolute -inset-10 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="p-10 rounded-[3.5rem] bg-background shadow-3xl border border-primary/5 relative z-10 group hover:rotate-2 transition-transform duration-700">
-                        <Globe className="h-24 w-24 text-primary group-hover:scale-110 transition-transform" />
-                    </div>
+        {/* Human Assistance - Tighter Layout */}
+        <section className="w-full bg-primary/5 border-y border-primary/10 py-16 px-6">
+            <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-10 text-center lg:text-left">
+                <div className="p-8 rounded-[2.5rem] bg-background shadow-2xl border border-primary/5 relative z-10 group hover:rotate-1 transition-transform">
+                    <Globe className="h-16 w-16 text-primary group-hover:scale-105 transition-transform" />
                 </div>
-                <div className="flex-1 space-y-8">
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-center lg:justify-start gap-3 text-primary">
-                            <Activity className="h-5 w-5" />
-                            <span className="text-[11px] font-black uppercase tracking-[0.4em]">Strategic support ingress</span>
+                <div className="flex-1 space-y-6">
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-center lg:justify-start gap-2 text-primary">
+                            <Activity className="h-4 w-4" />
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em]">Support ingress</span>
                         </div>
-                        <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-none uppercase">Need human <br className="hidden sm:block"/> <span className="text-primary italic">intervention?</span></h2>
+                        <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-none uppercase">Need human <span className="text-primary italic">intervention?</span></h2>
                     </div>
-                    <p className="text-xl text-muted-foreground font-medium leading-relaxed max-w-2xl">
-                        AI provides the foundation; human advocates provide the strategy. Access our verified registry or connect with institutional support for complex litigation needs.
+                    <p className="text-base text-muted-foreground font-medium leading-relaxed max-w-xl">
+                        AI provides the foundation; human advocates provide the strategy. Access our verified registry for complex litigation needs.
                     </p>
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-6 pt-4">
-                        <Button className="rounded-2xl font-black uppercase tracking-wide text-[10px] h-16 px-12 shadow-2xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative" asChild>
-                            <Link href="/dashboard/lawyer-connect">
-                                <span className="relative z-10 flex items-center gap-3">
-                                    Browse registry <Globe className="h-4 w-4" />
-                                </span>
-                                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                            </Link>
+                    <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
+                        <Button className="rounded-xl font-black uppercase text-[9px] h-12 px-10 shadow-lg active:scale-95 transition-all" asChild>
+                            <Link href="/dashboard/lawyer-connect">Browse registry</Link>
                         </Button>
-                        <Button variant="outline" className="rounded-2xl font-black uppercase tracking-wide text-[10px] h-16 px-12 border-primary/10 hover:bg-primary/5 transition-all group" asChild>
-                            <Link href="/contact" className="flex items-center gap-3">
-                                Dispatch message <MessageCircle className="h-4 w-4 opacity-40 group-hover:animate-bounce" />
-                            </Link>
+                        <Button variant="outline" className="rounded-xl font-black uppercase text-[9px] h-12 px-10 border-primary/10 hover:bg-primary/5 transition-all" asChild>
+                            <Link href="/contact">Dispatch message</Link>
                         </Button>
                     </div>
                 </div>
             </div>
         </section>
 
-        {/* Statutory Commitment */}
-        <section className="w-full py-32 px-6">
-            <div className="max-w-4xl mx-auto text-center space-y-10">
-                <Gavel className="h-12 w-12 text-primary/20 mx-auto animate-bounce" />
-                <p className="text-2xl sm:text-4xl font-black text-foreground tracking-tighter leading-tight italic uppercase opacity-80">
-                    "Engineering Dignity through Precise <span className="text-primary">Neural Legal Intelligence.</span> We don't just provide answers; we build procedural paths to justice."
+        {/* Final Mandate */}
+        <section className="w-full py-16 px-6">
+            <div className="max-w-3xl mx-auto text-center space-y-8">
+                <Gavel className="h-8 w-8 text-primary/20 mx-auto animate-bounce" />
+                <p className="text-xl sm:text-3xl font-black text-foreground tracking-tighter leading-tight italic uppercase opacity-80">
+                    "Engineering Dignity through Precise <span className="text-primary">Neural Intelligence.</span>"
                 </p>
-                <div className="space-y-2">
-                    <p className="text-[11px] font-black uppercase tracking-[0.5em] text-primary opacity-60">Nyaya Sahayak // Node NS-ALPHA</p>
-                    <p className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-widest">Authorized Statutory Helper // Established 2024</p>
+                <div className="space-y-1">
+                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary opacity-60">Nyaya Sahayak // Node Alpha</p>
+                    <p className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-widest">Established 2024</p>
                 </div>
             </div>
         </section>

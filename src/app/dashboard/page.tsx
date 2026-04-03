@@ -23,7 +23,8 @@ import {
   Newspaper,
   Layers,
   Clock,
-  TrendingUp
+  TrendingUp,
+  Gavel
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -65,8 +66,6 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
-
 interface Post {
     id: string;
     authorUid: string;
@@ -89,9 +88,9 @@ const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, del
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 15 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-      transition={{ delay, duration: 0.2 }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+      transition={{ delay, duration: 0.3 }}
     >
       {children}
     </motion.div>
@@ -122,41 +121,41 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
     };
 
     return (
-        <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] shadow-sm hover:shadow-xl text-left">
-            <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8 rounded-lg">
+        <Card className="overflow-hidden glass border-primary/5 transition-all rounded-2xl shadow-sm hover:shadow-xl text-left">
+            <CardContent className="p-5">
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2.5">
+                        <Avatar className="h-7 w-7 rounded-lg">
                             <AvatarImage src={post.authorAvatar} />
-                            <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">{post.authorName?.charAt(0)}</AvatarFallback>
+                            <AvatarFallback className="font-black bg-primary/5 text-primary text-[9px]">{post.authorName?.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <p className="font-black text-xs tracking-tight">{post.isAnonymous ? 'Anonymous' : post.authorName}</p>
-                            <p className="text-[9px] font-bold text-muted-foreground opacity-60">
+                            <p className="font-black text-[10px] tracking-tight">{post.isAnonymous ? 'Anonymous' : post.authorName}</p>
+                            <p className="text-[8px] font-bold text-muted-foreground opacity-50">
                                 {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
                             </p>
                         </div>
                     </div>
-                    <Badge variant="outline" className="font-black text-[8px] uppercase px-2 py-0.5 rounded-full border-primary/20 text-primary">
+                    <Badge variant="outline" className="font-black text-[7px] uppercase px-2 py-0.5 border-primary/10 text-primary">
                         {post.postType || 'Transmission'}
                     </Badge>
                 </div>
-                <h3 className="font-black text-lg tracking-tight mb-2 leading-tight">{post.title}</h3>
-                <p className="text-sm text-muted-foreground font-medium leading-relaxed mb-6 line-clamp-3">{post.content}</p>
-                <div className="flex items-center justify-between pt-4 border-t border-primary/5">
+                <h3 className="font-black text-base tracking-tight mb-1.5 leading-tight">{post.title}</h3>
+                <p className="text-xs text-muted-foreground font-medium leading-relaxed mb-4 line-clamp-2">{post.content}</p>
+                <div className="flex items-center justify-between pt-3 border-t border-primary/5">
                     <Button 
                         variant="ghost" 
                         size="sm" 
-                        className={cn("h-8 px-3 rounded-lg text-[10px] font-black uppercase gap-2", userHasLiked ? "text-primary bg-primary/5" : "text-muted-foreground")}
+                        className={cn("h-7 px-2.5 rounded-lg text-[9px] font-black uppercase gap-1.5", userHasLiked ? "text-primary bg-primary/5" : "text-muted-foreground")}
                         onClick={handleLike}
                         disabled={isLiking}
                     >
-                        <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />
+                        <Heart className={cn("h-3 w-3", userHasLiked && "fill-current")} />
                         <span>{post.likes}</span>
                     </Button>
-                    <div className="flex items-center gap-2 text-[8px] font-black uppercase opacity-40">
-                        <Clock className="h-3 w-3" />
-                        <span>Transience Node</span>
+                    <div className="flex items-center gap-1.5 text-[7px] font-black uppercase opacity-30">
+                        <Clock className="h-2.5 w-2.5" />
+                        <span>Registry Node</span>
                     </div>
                 </div>
             </CardContent>
@@ -165,10 +164,10 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Forensic assessment." },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit." },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Forensic audit." },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory scan." },
     { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions." },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Legal affidavits." },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Official instruments." },
 ];
 
 export default function DashboardHomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
@@ -221,29 +220,27 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
   const isElite = isAdmin || userProfile?.subscriptionType?.includes('unlimited');
 
   return (
-    <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
+    <div className="flex flex-col h-full space-y-8 pb-16 max-w-6xl mx-auto text-left relative">
         <MotionWrapper>
-          <Card className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/10 bg-card/40 backdrop-blur-xl shadow-2xl">
-              <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none">
-                  <Logo className="h-64 w-64 grayscale" priority={true} />
+          <Card className="relative p-8 sm:p-10 rounded-[2.5rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
+                  <Logo className="h-48 w-48 grayscale" priority={true} />
               </div>
-              <div className="relative z-10 space-y-8">
-                  <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                          <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em]">
-                              Registry Node Alpha // {isElite ? 'Elite Clearance' : 'Standard Ingress'}
-                          </Badge>
-                      </div>
-                      <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-none text-foreground">
+              <div className="relative z-10 space-y-6">
+                  <div className="space-y-3">
+                      <Badge className="bg-primary/5 text-primary border-primary/10 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.2em]">
+                          Registry Node Alpha // {isElite ? 'Elite' : 'Standard'}
+                      </Badge>
+                      <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
                           Welcome, <br />
                           <span className="text-primary italic">Nyaya {text}</span>
                       </h1>
                   </div>
-                  <p className="text-lg text-muted-foreground font-medium max-w-xl leading-relaxed">
+                  <p className="text-base text-muted-foreground font-medium max-w-xl leading-relaxed">
                       Access precision AI nodes for statutory auditing and procedural navigation within Bharat&apos;s judicial ecosystem.
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
-                      <Button size="lg" className="rounded-2xl font-black uppercase tracking-widest text-xs h-14 px-10 shadow-xl" asChild>
+                      <Button size="lg" className="rounded-xl font-black uppercase tracking-widest text-[10px] h-12 px-10 shadow-xl" asChild>
                           <Link href="/dashboard/narrate">Initialize Narration</Link>
                       </Button>
                   </div>
@@ -251,28 +248,28 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
           </Card>
         </MotionWrapper>
 
-        <div className="grid lg:grid-cols-12 gap-10">
-          <div className="lg:col-span-8 space-y-10">
+        <div className="grid lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-8 space-y-8">
               <section>
-                  <div className="flex items-center justify-between mb-6 border-b border-primary/5 pb-4">
-                      <div className="flex items-center gap-3">
-                          <TrendingUp className="h-5 w-5 text-primary/40" />
-                          <h2 className="text-[13px] font-black tracking-widest text-foreground/80 uppercase">Community Audits</h2>
+                  <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-3">
+                      <div className="flex items-center gap-2.5">
+                          <TrendingUp className="h-4 w-4 text-primary/40" />
+                          <h2 className="text-[11px] font-black tracking-widest text-foreground/80 uppercase">Community Audits</h2>
                       </div>
                   </div>
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                       {postsLoading ? (
-                          <div className="space-y-5">
+                          <div className="space-y-4">
                               {[...Array(2)].map((_, i) => (
-                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-[1.5rem] bg-muted/20" />
+                                  <Card key={i} className="h-28 animate-pulse border-primary/5 rounded-2xl bg-muted/10" />
                               ))}
                           </div>
                       ) : latestPosts.length === 0 ? (
-                          <Card className="py-20 text-center glass rounded-[2rem] border-dashed border-2 border-primary/10 opacity-40">
-                              <p className="font-bold text-sm tracking-tight lowercase">registry clear // awaiting transmissions</p>
+                          <Card className="py-16 text-center glass rounded-2xl border-dashed border-2 border-primary/5 opacity-30">
+                              <p className="font-bold text-[10px] tracking-tight lowercase">awaiting transmissions...</p>
                           </Card>
                       ) : (
-                          <div className="space-y-6">
+                          <div className="grid gap-4">
                               {latestPosts.map((post) => (
                                   <PostCard key={post.id} post={post} userProfile={userProfile} isAdmin={isAdmin || false} />
                               ))}
@@ -282,25 +279,25 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
               </section>
           </div>
 
-          <div className="lg:col-span-4 space-y-10">
+          <div className="lg:col-span-4 space-y-8">
               <section>
-                  <div className="flex items-center justify-between mb-6 border-b border-primary/5 pb-4">
-                      <div className="flex items-center gap-3">
-                          <Sparkles className="h-5 w-5 text-primary/40" />
-                          <h2 className="text-[13px] font-black tracking-widest text-foreground/80 uppercase">Tool Matrix</h2>
+                  <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-3">
+                      <div className="flex items-center gap-2.5">
+                          <Sparkles className="h-4 w-4 text-primary/40" />
+                          <h2 className="text-[11px] font-black tracking-widest text-foreground/80 uppercase">Tool Matrix</h2>
                       </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 gap-3">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
-                            <Card className="h-full glass p-6 rounded-[1.5rem] border-primary/10 group-hover:border-primary/40 transition-all text-left relative overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-xl group-active:scale-95">
-                                <div className="flex items-center gap-4">
-                                    <div className="p-3 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                                        <f.icon className="h-5 w-5" />
+                            <Card className="h-full glass p-4 rounded-xl border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden shadow-sm hover:shadow-xl group-active:scale-95">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2.5 rounded-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                                        <f.icon className="h-4 w-4" />
                                     </div>
                                     <div>
-                                        <h3 className="font-black text-sm tracking-tight text-foreground uppercase leading-none">{f.title}</h3>
-                                        <p className="text-[10px] font-bold text-muted-foreground mt-1">{f.desc}</p>
+                                        <h3 className="font-black text-[11px] tracking-tight text-foreground uppercase leading-none">{f.title}</h3>
+                                        <p className="text-[9px] font-bold text-muted-foreground mt-1">{f.desc}</p>
                                     </div>
                                 </div>
                             </Card>

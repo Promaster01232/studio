@@ -53,30 +53,30 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
     
     return (
         <header className={cn(
-            "sticky top-0 z-[40] flex h-16 sm:h-20 items-center gap-4 border-b px-4 sm:px-10 transition-all",
-            "bg-background/80 backdrop-blur-3xl supports-[backdrop-filter]:bg-background/60"
+            "sticky top-0 z-[40] flex h-14 sm:h-16 items-center gap-4 border-b px-4 sm:px-8 transition-all",
+            "bg-background/90 backdrop-blur-xl"
         )}>
             <div className="flex items-center gap-3 md:hidden">
-                <SidebarTrigger className="h-10 w-10 rounded-2xl hover:bg-primary/5 active:scale-95 transition-all shadow-sm border border-primary/5" />
-                <Logo className="h-9 w-9 p-0 shadow-none border-none bg-transparent" priority={true} />
+                <SidebarTrigger className="h-9 w-9 rounded-xl hover:bg-primary/5 border border-primary/5" />
+                <Logo className="h-8 w-8 p-0 shadow-none border-none bg-transparent" priority={true} />
             </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 {!userProfile?.isBlocked && (
                     <SearchDialog>
-                        <div className="w-full max-w-lg cursor-pointer group active:scale-[0.99] transition-transform">
-                            <div className="hidden md:flex items-center w-full pl-12 pr-20 h-12 font-black text-[11px] uppercase tracking-widest text-muted-foreground/60 rounded-2xl bg-muted/30 border border-primary/5 group-hover:border-primary/20 group-hover:bg-muted/50 transition-all shadow-inner relative text-left">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                                <span className="tracking-[0.1em]">Execute Forensic Search...</span>
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-                                    <kbd className="pointer-none inline-flex h-6 select-none items-center gap-1.5 rounded-lg border bg-background px-2 font-mono text-[10px] font-black text-muted-foreground opacity-100 shadow-sm">
-                                        <Command className="h-3 w-3" />K
+                        <div className="w-full max-w-md cursor-pointer group transition-all">
+                            <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[10px] uppercase tracking-widest text-muted-foreground/50 rounded-xl bg-muted/20 border border-primary/5 group-hover:border-primary/20 transition-all relative text-left">
+                                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                <span>Forensic search...</span>
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                    <kbd className="h-5 rounded border bg-background px-1.5 font-mono text-[9px] font-black text-muted-foreground opacity-100 shadow-sm">
+                                        ⌘K
                                     </kbd>
                                 </div>
                             </div>
                             <div className="md:hidden">
-                                <Button variant="outline" size="icon" className="h-10 w-10 rounded-2xl border-primary/5 bg-muted/30 active:scale-95 transition-all">
-                                    <Search className="h-5 w-5 text-muted-foreground" />
+                                <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-primary/5 bg-muted/20">
+                                    <Search className="h-4 w-4 text-muted-foreground" />
                                 </Button>
                             </div>
                         </div>
@@ -84,48 +84,41 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                 )}
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
                 {isLimited && (
-                    <Button asChild size="sm" className="hidden lg:flex h-11 px-6 rounded-2xl bg-primary text-white font-black text-[10px] uppercase tracking-widest gap-2 active:scale-95 transition-all shadow-xl shadow-primary/20 group overflow-hidden relative">
+                    <Button asChild size="sm" className="hidden lg:flex h-9 px-5 rounded-xl bg-primary text-white font-black text-[9px] uppercase tracking-widest gap-2 shadow-lg active:scale-95 transition-all">
                         <Link href="/dashboard/billing">
-                            <span className="relative z-10 flex items-center gap-2">
-                                <Zap className="h-4 w-4 animate-pulse" />
-                                Upgrade Clearance
-                            </span>
-                            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                            <Zap className="h-3 w-3" />
+                            Upgrade
                         </Link>
                     </Button>
                 )}
 
-                <div className="hidden lg:flex items-center gap-3 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10 text-left shadow-inner">
-                    <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80">{isAdmin ? "Root Protocol: Active" : "System Node: Active"}</span>
+                <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-xl bg-primary/5 border border-primary/10">
+                    <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/80">{isAdmin ? "Root" : "System"} Node</span>
                 </div>
 
                 {!userProfile?.isBlocked && userProfile && (
                     <>
                         <SosDialog>
-                            <Button variant="destructive" size="sm" className="font-black gap-2 animate-pulse px-3 sm:px-6 h-10 sm:h-12 text-[9px] sm:text-[10px] rounded-2xl shadow-xl shadow-destructive/30 active:scale-95 transition-all">
-                                <ShieldAlert className="h-4 w-4 sm:h-5 sm:w-5" />
-                                <span className="hidden xs:inline tracking-[0.2em] uppercase leading-none">SOS</span>
+                            <Button variant="destructive" size="sm" className="font-black gap-2 px-3 h-9 sm:h-10 text-[9px] rounded-xl shadow-lg active:scale-95 transition-all">
+                                <ShieldAlert className="h-4 w-4" />
+                                <span className="hidden xs:inline tracking-wider">SOS</span>
                             </Button>
                         </SosDialog>
                         
-                        <div className="flex items-center gap-2 sm:gap-3 border-l border-primary/10 pl-2 sm:pl-6 ml-1 sm:ml-2">
+                        <div className="flex items-center gap-2 border-l border-primary/10 pl-3 ml-1">
                             <Button 
                                 variant="ghost" 
                                 size="icon" 
-                                className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-2xl transition-all active:scale-95 relative group shadow-sm border border-primary/5"
+                                className="h-9 w-9 sm:h-10 sm:w-10 text-muted-foreground hover:text-primary rounded-xl relative group border border-transparent hover:border-primary/5"
                                 asChild
                             >
                                 <Link href="/dashboard/notifications">
-                                    <Bell className="h-5 w-5 sm:h-6 sm:w-6 group-hover:rotate-12 transition-transform" />
+                                    <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
                                     {unreadCount > 0 && (
-                                        <motion.span 
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 h-2.5 w-2.5 sm:h-3 sm:w-3 bg-red-500 rounded-full border-2 border-background shadow-lg"
-                                        />
+                                        <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-background" />
                                     )}
                                 </Link>
                             </Button>
@@ -183,7 +176,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 setProfileLoading(false);
             },
             (err) => {
-                console.warn("[FIREBASE] Profile snapshot denied. Possible transient state.", err.message);
+                console.warn("[FIREBASE] Profile snapshot denied.", err.message);
                 setProfileLoading(false);
             }
         );
@@ -221,37 +214,32 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
 
   return (
     <SidebarProvider>
-      <Sidebar collapsible="icon" className="border-r border-primary/5 glass bg-white/50 dark:bg-zinc-950/50">
-        <SidebarHeader className="p-6 mb-2 overflow-hidden border-b border-primary/5">
-          <Link href="/dashboard" className="flex items-center gap-4 transition-all hover:opacity-80 active:scale-95 group-data-[collapsible=icon]:justify-center group">
-            <div className="relative shrink-0">
-                <div className="absolute -inset-1 bg-gradient-to-tr from-primary/20 via-accent/20 to-blue-400/20 blur-sm rounded-lg group-data-[collapsible=icon]:hidden"></div>
-                <Logo className="h-9 w-9 border-none shadow-none p-0 bg-transparent relative z-10" priority={true} />
-            </div>
+      <Sidebar collapsible="icon" className="border-r border-primary/5 glass">
+        <SidebarHeader className="p-5 mb-1 border-b border-primary/5">
+          <Link href="/dashboard" className="flex items-center gap-3 transition-all hover:opacity-80 active:scale-95 group-data-[collapsible=icon]:justify-center group">
+            <Logo className="h-8 w-8 border-none shadow-none p-0 bg-transparent" priority={true} />
             <div className="flex flex-col group-data-[collapsible=icon]:hidden text-left min-w-0">
-              <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent truncate leading-none">
+              <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none">
                   Nyaya Sahayak
               </span>
-              <span className="text-[7px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 leading-none mt-1.5 truncate">
-                  Forensic Operating System
+              <span className="text-[6px] font-bold uppercase tracking-[0.3em] text-muted-foreground/40 leading-none mt-1 truncate">
+                  Forensic OS
               </span>
             </div>
           </Link>
         </SidebarHeader>
-        <SidebarContent className="pt-4 px-2">
+        <SidebarContent className="pt-2 px-2">
           <SidebarNav isAdmin={isAdmin} />
           {isLimited && !profileLoading && (
-            <div className="px-4 py-8 group-data-[collapsible=icon]:hidden">
-                <Card className="bg-primary/5 border-primary/10 rounded-[2rem] overflow-hidden group/upgrade hover:border-primary/30 transition-all shadow-2xl shadow-primary/5">
-                    <div className="p-6 space-y-5 text-left">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-primary/10 text-primary">
-                                <Zap className="h-4 w-4 animate-pulse" />
-                            </div>
-                            <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary">Upgrade Node</span>
+            <div className="px-3 py-6 group-data-[collapsible=icon]:hidden">
+                <Card className="bg-primary/5 border-primary/5 rounded-2xl overflow-hidden shadow-sm">
+                    <div className="p-5 space-y-4 text-left">
+                        <div className="flex items-center gap-2">
+                            <Zap className="h-3.5 w-3.5 text-primary" />
+                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Upgrade Node</span>
                         </div>
-                        <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">Unlock unlimited forensic scans and institutional drafting terminals.</p>
-                        <Button asChild size="sm" className="w-full h-11 font-black text-[10px] uppercase tracking-widest rounded-xl shadow-xl shadow-primary/30 text-center">
+                        <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">Unlock advanced forensic scans and terminals.</p>
+                        <Button asChild size="sm" className="w-full h-9 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg text-center">
                             <Link href="/dashboard/billing">Sync Expansion</Link>
                         </Button>
                     </div>
@@ -259,43 +247,40 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
             </div>
           )}
         </SidebarContent>
-        <SidebarFooter className="p-6">
-           {profileLoading ? <Skeleton className="h-12 w-full rounded-[1.2rem]" /> : userProfile ? (
+        <SidebarFooter className="p-4">
+           {profileLoading ? <Skeleton className="h-10 w-full rounded-xl" /> : userProfile ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start items-center gap-4 p-2.5 h-auto text-left group data-[state=collapsed]:w-12 data-[state=collapsed]:justify-center hover:bg-primary/5 rounded-[1.5rem] transition-all border border-transparent hover:border-primary/10 shadow-sm">
-                  <div className="relative">
-                      <Avatar className="h-11 w-11 border-2 border-background shadow-xl transition-all group-hover:scale-105 rounded-xl">
-                          <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                          <AvatarFallback className="font-black bg-primary/10 text-primary">{userProfile.firstName?.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div className="absolute -bottom-0.5 -right-0.5 bg-green-500 h-3.5 w-3.5 rounded-full border-2 border-background shadow-lg group-data-[collapsible=icon]:hidden"></div>
-                  </div>
+                <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left group data-[state=collapsed]:w-10 data-[state=collapsed]:justify-center hover:bg-primary/5 rounded-xl transition-all">
+                  <Avatar className="h-9 w-9 border border-background shadow-md rounded-lg">
+                      <AvatarImage src={userProfile.photoURL} className="object-cover" />
+                      <AvatarFallback className="font-black bg-primary/5 text-primary text-xs">{userProfile.firstName?.charAt(0)}</AvatarFallback>
+                  </Avatar>
                   <div className="flex-1 truncate group-data-[state=collapsed]:hidden text-left">
-                    <div className="font-black text-[13px] truncate tracking-tight text-foreground leading-tight uppercase">{userProfile.firstName} {userProfile.lastName}</div>
-                    <div className="text-[9px] text-muted-foreground truncate font-black opacity-60 uppercase tracking-widest mt-0.5">{userProfile.userType}</div>
+                    <div className="font-black text-xs truncate tracking-tight text-foreground leading-tight uppercase">{userProfile.firstName}</div>
+                    <div className="text-[8px] text-muted-foreground truncate font-bold uppercase tracking-widest mt-0.5">{userProfile.userType}</div>
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="right" align="end" className="w-72 mb-6 ml-6 p-4 rounded-[2.5rem] shadow-3xl glass border-primary/10">
-                <DropdownMenuLabel className="px-3 pb-3 text-left font-black uppercase text-[10px] tracking-widest text-muted-foreground/60">Registry Dossier</DropdownMenuLabel>
-                <DropdownMenuItem asChild className="rounded-xl h-12 font-black text-[11px] uppercase tracking-widest gap-4 mb-1 cursor-pointer hover:bg-primary/5 transition-all">
-                    <Link href="/dashboard/profile"><User className="h-5 w-5 text-primary opacity-60" /> My Identity</Link>
+              <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-2xl shadow-3xl glass border-primary/5">
+                <DropdownMenuLabel className="px-2 pb-2 text-left font-black uppercase text-[9px] tracking-widest text-muted-foreground/50">Registry Dossier</DropdownMenuLabel>
+                <DropdownMenuItem asChild className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 mb-1 cursor-pointer">
+                    <Link href="/dashboard/profile"><User className="h-4 w-4 text-primary opacity-60" /> My Identity</Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="my-3 opacity-10" />
+                <DropdownMenuSeparator className="my-2 opacity-5" />
                 <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
-                    <DropdownMenuRadioItem value="light" className="rounded-xl h-12 font-black text-[11px] uppercase tracking-widest gap-4 cursor-pointer">Light Protocol</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="dark" className="rounded-xl h-12 font-black text-[11px] uppercase tracking-widest gap-4 cursor-pointer">Dark Protocol</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="light" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Light Protocol</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="dark" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Dark Protocol</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
-                <DropdownMenuSeparator className="my-3 opacity-10" />
-                <DropdownMenuItem onClick={handleLogout} className="rounded-xl h-14 font-black text-[11px] uppercase tracking-[0.2em] text-destructive focus:bg-destructive/10 focus:text-destructive gap-4 cursor-pointer transition-all">
-                    <LogOut className="h-5 w-5" /> Terminate Node
+                <DropdownMenuSeparator className="my-2 opacity-5" />
+                <DropdownMenuItem onClick={handleLogout} className="rounded-lg h-12 font-black text-[10px] uppercase tracking-widest text-destructive focus:text-destructive focus:bg-destructive/5 gap-3 cursor-pointer transition-all">
+                    <LogOut className="h-4 w-4" /> Terminate Node
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-             <Button asChild className="w-full rounded-[1.5rem] h-14 font-black tracking-widest uppercase text-xs shadow-xl shadow-primary/20">
-                <Link href="/login">Initialize Session</Link>
+             <Button asChild className="w-full rounded-xl h-12 font-black tracking-widest uppercase text-[10px] shadow-lg">
+                <Link href="/login">Initialize</Link>
              </Button>
           )}
         </SidebarFooter>
@@ -305,16 +290,13 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         <main className="flex-1 overflow-y-auto custom-scrollbar relative">
             <AnimatePresence mode="wait">
                 {showContent ? (
-                    <motion.div key="dashboard-content" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="p-4 sm:p-12 min-h-[calc(100vh-80px)] flex flex-col">
+                    <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-4 sm:p-8 min-h-[calc(100vh-64px)] flex flex-col">
                         <div className="flex-1">{children}</div>
                         <Footer />
                     </motion.div>
                 ) : (
                     <div className="flex h-full items-center justify-center">
-                        <div className="flex flex-col items-center gap-6 opacity-20">
-                            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                            <p className="font-black text-[10px] uppercase tracking-[0.5em]">Synchronizing Registry...</p>
-                        </div>
+                        <Loader2 className="h-10 w-10 animate-spin text-primary opacity-10" />
                     </div>
                 )}
             </AnimatePresence>
