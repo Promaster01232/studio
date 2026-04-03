@@ -4,68 +4,67 @@
 
 @layer base {
   :root {
-    /* Elite Institutional Palette: Slate-White with High-Contrast Accents */
-    --background: 210 20% 98%;
-    --foreground: 224 71% 4%;
+    /* Triple-Tone Protocol: White, Black, Deep Saffron */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
     --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
-    --popover: 210 20% 98%;
-    --popover-foreground: 224 71% 4%;
-    --primary: 28 100% 35%; /* Deep Saffron */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 115 60% 92%;
-    --secondary-foreground: 115 100% 10%;
-    --muted: 210 40% 92%;
-    --muted-foreground: 215.4 16.3% 25%;
-    --accent: 115 80% 15%; /* Forensic Green */
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 84.2% 40%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 85%;
-    --input: 214.3 31.8% 85%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 28 100% 35%; /* Institutional Saffron */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 0% 0%; /* Black as secondary accent */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 40%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
     --ring: 28 100% 35%;
-    --radius: 1.5rem;
+    --radius: 1rem;
 
-    --sidebar-background: 210 40% 98%;
-    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 0%;
     --sidebar-primary: 28 100% 35%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 115 60% 94%;
-    --sidebar-accent-foreground: 115 100% 10%;
-    --sidebar-border: 214.3 31.8% 85%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 0%;
+    --sidebar-border: 0 0% 90%;
     --sidebar-ring: 28 100% 35%;
   }
  
   .dark {
-    /* Deep Forensic Charcoal/Black */
-    --background: 222 47% 2%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 4%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 2%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 28 100% 65%;
-    --primary-foreground: 222.2 47.4% 8%;
-    --secondary: 115 40% 10%;
-    --secondary-foreground: 115 100% 85%;
-    --muted: 217.2 32.6% 8%;
-    --muted-foreground: 215 20.2% 65%;
-    --accent: 115 100% 40%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 40%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 12%;
-    --input: 217.2 32.6% 12%;
-    --ring: 28 100% 65%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 2%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 28 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 0 0% 100%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 62% 40%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 28 100% 50%;
 
-    --sidebar-background: 222 47% 1%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 28 100% 65%;
-    --sidebar-primary-foreground: 222.2 47.4% 8%;
-    --sidebar-accent: 115 40% 8%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 12%;
-    --sidebar-ring: 28 100% 65%;
+    --sidebar-background: 0 0% 2%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 28 100% 50%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 8%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 28 100% 50%;
   }
 }
 
@@ -79,7 +78,7 @@
 }
 
 @layer utilities {
-  .glass { @apply bg-card/40 backdrop-blur-3xl border border-primary/5; }
+  .glass { @apply bg-card/40 backdrop-blur-3xl border border-primary/10; }
   .forensic-text { @apply font-black uppercase tracking-widest text-[9px]; }
   
   .shadow-3xl {

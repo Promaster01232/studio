@@ -10,32 +10,20 @@ import {
   FileText,
   FileSignature,
   BrainCircuit,
-  Library,
-  Landmark,
   ArrowRight,
   Sparkles,
   Activity,
   Heart,
-  Plus,
   Zap,
-  CheckCircle2,
-  MoreVertical,
-  Flag,
-  Trash2,
-  TrendingUp,
   BadgeCheck,
-  CreditCard,
   Crown,
   ShieldCheck,
-  Globe,
   Bot,
   Loader2,
-  Share2,
-  Twitter,
-  Bookmark,
-  MessageCircle,
+  Newspaper,
   Layers,
-  Clock
+  Clock,
+  TrendingUp
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -69,8 +57,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Logo } from "@/components/logo";
-import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 import { useSoundEffect } from "@/hooks/use-sound-effect";
 
 const ADMIN_EMAILS = [
@@ -89,26 +75,12 @@ interface Post {
     createdAt: Timestamp;
     title: string;
     content: string;
-    image?: string;
-    link?: string;
-    poll?: {
-        options: { text: string; votes: number }[];
-        voters?: string[];
-    };
     likes: number;
     likedBy?: string[];
-    comments: number;
-    postType?: 'Idea' | 'Question' | 'Suggestion' | 'Poll';
-    tags?: string[];
+    postType?: string;
+    poll?: any;
     isAnonymous?: boolean;
 }
-
-const typeConfig: Record<string, { color: string, bg: string, border: string, icon: any, gradient: string, glow: string }> = {
-    'Idea': { color: 'text-amber-600', bg: 'bg-amber-500/10', border: 'border-amber-500/20', icon: Sparkles, gradient: 'from-amber-500/5', glow: 'shadow-amber-500/10' },
-    'Question': { color: 'text-blue-600', bg: 'bg-blue-500/10', border: 'border-blue-500/20', icon: Bot, gradient: 'from-blue-500/5', glow: 'shadow-blue-500/10' },
-    'Suggestion': { color: 'text-emerald-600', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', icon: Zap, gradient: 'from-emerald-500/5', glow: 'shadow-emerald-500/10' },
-    'Poll': { color: 'text-purple-600', bg: 'bg-purple-500/10', border: 'border-purple-500/20', icon: Layers, gradient: 'from-purple-500/5', glow: 'shadow-purple-500/10' },
-};
 
 const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
   const ref = useRef(null);
@@ -126,37 +98,7 @@ const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, del
   );
 };
 
-function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
-    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
-    const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
-    const fallback = post.isAnonymous ? 'A' : (authorName?.charAt(0) || '');
-
-    return (
-        <Link 
-            href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} 
-            className={cn(
-                "flex items-center gap-3",
-                post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer"
-            )}
-        >
-            <Avatar className="h-9 w-9 border border-background shadow-md rounded-lg">
-                {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
-                <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 text-left">
-                <div className="flex items-center gap-1.5">
-                    <p className="font-black text-xs tracking-tight">{authorName}</p>
-                    {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
-                </div>
-                <p className="text-[10px] text-muted-foreground font-bold opacity-60">
-                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
-                </p>
-            </div>
-        </Link>
-    );
-}
-
-function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
+function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any, isAdmin: boolean }) {
     const { toast } = useToast();
     const { playSound } = useSoundEffect();
     const firestore = useFirestore();
@@ -164,277 +106,72 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any }) {
     const { currentUser } = auth;
     
     const [isLiking, setIsLiking] = useState(false);
-    const [isVoting, setIsVoting] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [optimisticLikes, setOptimisticLikes] = useState(post.likes);
-    const [optimisticLikedBy, setOptimisticLikedBy] = useState(post.likedBy || []);
-    const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
-
-    const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
-    const isAuthor = post.authorUid === currentUser?.uid;
-    const isGlobalAdmin = currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
-    
-    const userHasVotedOnPoll = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
-    const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, option) => acc + option.votes, 0) : 0;
-    
-    const contentLimit = 200;
-    const shouldShowReadMore = post.content && post.content.length > contentLimit;
-    const displayedContent = isExpanded ? post.content : (post.content?.slice(0, contentLimit) + (shouldShowReadMore ? "..." : ""));
-
-    const config = typeConfig[post.postType || 'Idea'] || typeConfig['Idea'];
+    const userHasLiked = post.likedBy?.includes(currentUser?.uid ?? '');
 
     const handleLike = () => {
-        if (!currentUser) {
-            toast({ title: "Authentication Required", description: "Initialize dashboard ingress to participate in audits." });
-            return;
-        }
-        if (isLiking) return;
+        if (!currentUser || isLiking) return;
         setIsLiking(true);
-
         const postRef = doc(firestore, "posts", post.id);
-        const updateData = {
+        
+        updateDoc(postRef, {
             likes: increment(userHasLiked ? -1 : 1),
             likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
-        };
-
-        setOptimisticLikes(prev => userHasLiked ? prev - 1 : prev + 1);
-        setOptimisticLikedBy(prev => userHasLiked ? prev.filter(uid => uid !== currentUser.uid) : [...prev, currentUser.uid]);
-
-        updateDoc(postRef, updateData)
-            .then(() => {
-                playSound(userHasLiked ? 'click' : 'success');
-                if (!userHasLiked && post.authorUid !== currentUser.uid) {
-                    addDoc(collection(firestore, "notifications"), {
-                        userId: post.authorUid,
-                        type: 'like',
-                        title: 'Transmission Liked',
-                        description: `${userProfile?.firstName || 'A citizen'} liked your post: "${post.title}"`,
-                        isRead: false,
-                        createdAt: serverTimestamp()
-                    }).catch(() => {});
-                }
-            })
-            .catch(async (serverError) => {
-                setOptimisticLikes(post.likes);
-                setOptimisticLikedBy(post.likedBy || []);
-                const permissionError = new FirestorePermissionError({
-                    path: postRef.path,
-                    operation: 'update',
-                    requestResourceData: updateData,
-                } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
-            })
-            .finally(() => setIsLiking(false));
-    };
-
-    const handleVote = (optionIndex: number) => {
-        if (!currentUser || !optimisticPoll || isVoting || userHasVotedOnPoll) {
-            if (!currentUser) toast({ title: "Consensus Required", description: "Initialize dashboard ingress to participate in community polls." });
-            return;
-        }
-        setIsVoting(true);
-        playSound('success');
-
-        const postRef = doc(firestore, "posts", post.id);
-        const newOptions = [...optimisticPoll.options];
-        newOptions[optionIndex] = { ...newOptions[optionIndex], votes: newOptions[optionIndex].votes + 1 };
-        
-        const newPollState = {
-            ...optimisticPoll,
-            options: newOptions,
-            voters: [...(optimisticPoll.voters || []), currentUser.uid]
-        };
-
-        setOptimisticPoll(newPollState);
-
-        updateDoc(postRef, { poll: newPollState })
-            .catch((serverError) => {
-                setOptimisticPoll(post.poll);
-                const permissionError = new FirestorePermissionError({
-                    path: postRef.path,
-                    operation: 'update',
-                } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
-            })
-            .finally(() => setIsVoting(false));
-    };
-
-    const handleDelete = async () => {
-        const msg = isGlobalAdmin && !isAuthor ? "ADMIN PURGE: Confirm record erasure from community registry?" : "Confirm record purge from community registry?";
-        if (!confirm(msg)) return;
-        
-        const postRef = doc(firestore, "posts", post.id);
-        deleteDoc(postRef)
-            .then(() => {
-                toast({ title: "Post Purged", description: "Registry data erased permanently." });
-            })
-            .catch((serverError) => {
-                const permissionError = new FirestorePermissionError({
-                    path: postRef.path,
-                    operation: 'delete',
-                } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
-            });
-    };
-
-    const handleShare = async (platform: 'whatsapp' | 'twitter' | 'copy') => {
-        const shareText = `Statutory Transmission: "${post.title}"\n\nAnalyze this node on Nyaya Sahayak: ${window.location.origin}/dashboard/research-analytics`;
-        
-        if (platform === 'whatsapp') {
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
-        } else if (platform === 'twitter') {
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
-        } else if (platform === 'copy') {
-            try {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(shareText);
-                    toast({ title: "Registry Link Copied", description: "Transmission data saved to clipboard." });
-                } else {
-                    throw new Error('Clipboard API unavailable');
-                }
-            } catch (err) {
-                toast({ variant: "destructive", title: "Copy Failed", description: "Browser permissions restricted clipboard access." });
-            }
-        }
+        }).then(() => {
+            playSound(userHasLiked ? 'click' : 'success');
+        }).finally(() => setIsLiking(false));
     };
 
     return (
-        <motion.div layout className="w-full">
-            <Card className={cn(
-                "overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] flex flex-col relative shadow-sm hover:shadow-xl",
-                config.glow
-            )}>
-                <div className={cn("absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b", config.gradient)}></div>
-                
-                <div className="flex-1 flex flex-col p-6 text-left ml-1">
-                    <div className="flex items-center justify-between mb-5">
-                        <AuthorIdentityNode post={post} isAdmin={ADMIN_EMAILS.includes(post.authorUid)} />
-                        <div className="flex items-center gap-2">
-                            <Badge className={cn("bg-primary/10 text-primary border-primary/10 font-bold text-[9px] px-2.5 py-0.5 rounded-full", config.bg, config.color)}>
-                                {post.postType || 'Transmission'}
-                            </Badge>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/5">
-                                        <MoreVertical className="h-4 w-4 text-muted-foreground" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-52 p-2 rounded-xl shadow-2xl shadow-black/10 glass border-primary/10">
-                                    {(isAuthor || isGlobalAdmin) ? (
-                                        <DropdownMenuItem onSelect={handleDelete} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
-                                            <Trash2 className="h-4 w-4" /> 
-                                            <span>Purge record</span>
-                                        </DropdownMenuItem>
-                                    ) : (
-                                        <DropdownMenuItem className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-2.5 hover:bg-red-500/5 hover:text-red-500">
-                                            <Flag className="h-4 w-4" /> 
-                                            <span>Report breach</span>
-                                        </DropdownMenuItem>
-                                    )}
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+        <Card className="overflow-hidden glass border-primary/10 transition-all rounded-[1.5rem] shadow-sm hover:shadow-xl text-left">
+            <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8 rounded-lg">
+                            <AvatarImage src={post.authorAvatar} />
+                            <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">{post.authorName?.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <p className="font-black text-xs tracking-tight">{post.isAnonymous ? 'Anonymous' : post.authorName}</p>
+                            <p className="text-[9px] font-bold text-muted-foreground opacity-60">
+                                {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
+                            </p>
                         </div>
                     </div>
-
-                    <div className="space-y-2 flex-1 mb-6">
-                        <h3 className="text-lg sm:text-xl font-black tracking-tight leading-tight text-foreground/90">{post.title}</h3>
-                        {post.content && (
-                            <div className="space-y-2">
-                                <p className="text-sm text-muted-foreground font-medium leading-relaxed whitespace-pre-line">
-                                    {displayedContent}
-                                </p>
-                                {shouldShowReadMore && (
-                                    <button 
-                                        onClick={() => setIsExpanded(!isExpanded)}
-                                        className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
-                                    >
-                                        {isExpanded ? "Show less" : "Read more"}
-                                    </button>
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    {optimisticPoll && (
-                        <div className="space-y-3 mb-6">
-                            {optimisticPoll.options.map((option, idx) => {
-                                const percentage = totalVotes > 0 ? (option.votes / totalVotes) * 100 : 0;
-                                return (
-                                    <button
-                                        key={idx}
-                                        onClick={() => handleVote(idx)}
-                                        onMouseEnter={() => playSound('hover')}
-                                        disabled={userHasVotedOnPoll || isVoting}
-                                        className={cn(
-                                            "w-full relative h-12 rounded-xl border border-primary/5 overflow-hidden transition-all text-left px-4 group/option",
-                                            userHasVotedOnPoll ? "bg-muted/10 cursor-default" : "bg-white dark:bg-black/20 hover:border-primary/30 active:scale-[0.99]"
-                                        )}
-                                    >
-                                        <AnimatePresence>
-                                            {userHasVotedOnPoll && (
-                                                <motion.div 
-                                                    initial={{ width: 0 }}
-                                                    animate={{ width: `${percentage}%` }}
-                                                    className="absolute inset-y-0 left-0 bg-primary/10 border-r border-primary/20"
-                                                />
-                                            )}
-                                        </AnimatePresence>
-                                        <div className="relative z-10 flex items-center justify-between h-full">
-                                            <span className="font-bold text-sm tracking-tight">{option.text}</span>
-                                            {userHasVotedOnPoll && <span className="font-black text-xs text-primary">{percentage.toFixed(0)}%</span>}
-                                        </div>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    )}
-
-                    <div className="flex items-center justify-between pt-5 border-t border-primary/5">
-                        <div className="flex gap-2">
-                            <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className={cn(
-                                    "h-9 px-4 rounded-xl text-[11px] font-bold gap-2.5 transition-all", 
-                                    userHasLiked ? "text-red-500 bg-red-500/5 shadow-inner" : "text-primary hover:bg-primary/5"
-                                )}
-                                onClick={handleLike}
-                                disabled={isLiking}
-                            >
-                                {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} />}
-                                <span className="font-black">{optimisticLikes}</span>
-                            </Button>
-                        </div>
-                        <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                            <Activity className="h-3 w-3" />
-                            <span>Registry Transient</span>
-                        </div>
+                    <Badge variant="outline" className="font-black text-[8px] uppercase px-2 py-0.5 rounded-full border-primary/20 text-primary">
+                        {post.postType || 'Transmission'}
+                    </Badge>
+                </div>
+                <h3 className="font-black text-lg tracking-tight mb-2 leading-tight">{post.title}</h3>
+                <p className="text-sm text-muted-foreground font-medium leading-relaxed mb-6 line-clamp-3">{post.content}</p>
+                <div className="flex items-center justify-between pt-4 border-t border-primary/5">
+                    <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className={cn("h-8 px-3 rounded-lg text-[10px] font-black uppercase gap-2", userHasLiked ? "text-primary bg-primary/5" : "text-muted-foreground")}
+                        onClick={handleLike}
+                        disabled={isLiking}
+                    >
+                        <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />
+                        <span>{post.likes}</span>
+                    </Button>
+                    <div className="flex items-center gap-2 text-[8px] font-black uppercase opacity-40">
+                        <Clock className="h-3 w-3" />
+                        <span>Transience Node</span>
                     </div>
                 </div>
-            </Card>
-        </motion.div>
+            </CardContent>
+        </Card>
     );
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "analyzer", desc: "Forensic assessment.", color: "text-blue-500", bg: "bg-blue-500/5", sector: "Sector: Forensic" },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "doc intel", desc: "Statutory audit.", color: "text-emerald-500", bg: "bg-emerald-500/5", sector: "Sector: Statutory" },
-    { href: "/dashboard/document-generator", icon: FileText, title: "drafting", desc: "Legal petitions.", color: "text-amber-500", bg: "bg-amber-500/5", sector: "Sector: Civil" },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "bonds", desc: "Legal affidavits.", color: "text-purple-500", bg: "bg-purple-500/5", sector: "Sector: Registry" },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Forensic assessment." },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory audit." },
+    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions." },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Legal affidavits." },
 ];
 
-const SectionHeader = ({ children, icon: Icon, sector }: { children: React.ReactNode, icon?: any, sector?: string }) => (
-    <div className="flex items-center justify-between mb-6 border-b border-primary/5 pb-4">
-        <div className="flex items-center gap-3">
-            {Icon && <Icon className="h-5 w-5 text-primary/40" />}
-            <h2 className="text-[13px] font-black tracking-tight text-foreground/80 lowercase first-letter:uppercase">{children}</h2>
-        </div>
-        {sector && <span className="text-[11px] font-bold text-muted-foreground/40">{sector}</span>}
-    </div>
-)
-
 export default function DashboardHomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // Unwrap Next.js 15 dynamic props
   use(props.params);
   use(props.searchParams);
 
@@ -449,66 +186,25 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
   const [postsLoading, setPostsLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<any>(null);
 
-  const postsUnsubscribeRef = useRef<(() => void) | null>(null);
-
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-        if (postsUnsubscribeRef.current) {
-            postsUnsubscribeRef.current();
-            postsUnsubscribeRef.current = null;
-        }
-
-        const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
-
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
         if (user) {
-            const userDocRef = doc(firestore, "users", user.uid);
-            getDoc(userDocRef).then(docSnap => {
-                if (docSnap.exists()) setUserProfile(docSnap.data());
-            });
-        } else {
-            setUserProfile(null);
+            getDoc(doc(firestore, "users", user.uid)).then(d => d.exists() && setUserProfile(d.data()));
         }
-
-        const postsRef = collection(firestore, "posts");
-        const q = query(postsRef, orderBy("createdAt", "desc"), limit(5));
-        
-        postsUnsubscribeRef.current = onSnapshot(q, (snap) => {
-            const now = Date.now();
-            const list: Post[] = [];
-            
-            snap.docs.forEach(d => {
-                const data = d.data() as Post;
-                const createdAtMillis = data.createdAt?.toMillis() || now;
-                
-                if (now - createdAtMillis > TRANSience_WINDOW) {
-                    // Strictly restrict autonomous purge to administrative nodes
-                    if (isAdmin) {
-                        deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
-                    }
-                } else {
-                    list.push({ id: d.id, ...data });
-                }
-            });
-            
+        onSnapshot(query(collection(firestore, "posts"), orderBy("createdAt", "desc"), limit(5)), (snap) => {
+            const list: Post[] = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
             setLatestPosts(list);
-            setPostsLoading(false);
-        }, (serverError) => {
-            console.error("Forensic Feed Stream Restricted:", serverError);
             setPostsLoading(false);
         });
     });
-
-    return () => {
-        unsubscribeAuth();
-        if (postsUnsubscribeRef.current) postsUnsubscribeRef.current();
-    };
-  }, [firestore, auth]);
+    return () => unsubAuth();
+  }, [auth, firestore]);
   
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (isTyping) {
       if (text.length < fullText.length) {
-        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 50); 
+        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 100); 
       } else {
         timeoutId = setTimeout(() => setIsTyping(false), 2000);
       }
@@ -516,71 +212,39 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
       timeoutId = setTimeout(() => {
         setText('');
         setIsTyping(true);
-      }, 800);
+      }, 1000);
     }
     return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
 
   const isAdmin = userProfile?.email && ADMIN_EMAILS.includes(userProfile.email.toLowerCase());
   const isElite = isAdmin || userProfile?.subscriptionType?.includes('unlimited');
-  const isLimited = userProfile && !isElite;
-  const isMonthly = userProfile?.subscriptionType === 'unlimited_monthly';
-  const isYearly = userProfile?.subscriptionType === 'unlimited_yearly' || isAdmin;
 
   return (
     <div className="flex flex-col h-full space-y-12 pb-20 max-w-6xl mx-auto text-left relative">
         <MotionWrapper>
-          <Card className={cn(
-              "relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/5 backdrop-blur-xl shadow-2xl transition-all duration-700",
-              (isYearly || isMonthly) ? "bg-gradient-to-br from-primary/10 via-amber-500/5 to-primary/5 shadow-primary/10 border-primary/20" : "bg-card/40 shadow-primary/5"
-          )}>
-              <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none text-left">
-                  <div className="bg-white rounded-full p-10 grayscale">
-                    <Logo className="h-56 w-56 border-none p-0 bg-transparent shadow-none" priority={true} />
-                  </div>
+          <Card className="relative p-8 sm:p-12 rounded-[2.5rem] overflow-hidden border-primary/10 bg-card/40 backdrop-blur-xl shadow-2xl">
+              <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none">
+                  <Logo className="h-64 w-64 grayscale" priority={true} />
               </div>
               <div className="relative z-10 space-y-8">
                   <div className="space-y-4">
-                      <div className="flex flex-wrap items-center gap-3 mb-4">
-                          {isLimited ? (
-                            <Link href="/dashboard/billing">
-                                <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] hover:bg-primary/20 transition-all cursor-pointer">
-                                    Tier: {(userProfile?.subscriptionType || 'Free').replace('_', ' ')} // Upgrade Now
-                                </Badge>
-                            </Link>
-                          ) : (
-                            <motion.div
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                className="flex gap-2"
-                            >
-                                <Badge className="bg-green-500/10 text-green-600 border-green-500/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                                    {isYearly ? <ShieldCheck className="h-3 w-3" /> : <Crown className="h-3 w-3" />}
-                                    Clearance: {isYearly ? 'Institutional Annual' : 'Unlimited Monthly'} Node
-                                </Badge>
-                            </motion.div>
-                          )}
+                      <div className="flex items-center gap-3">
+                          <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em]">
+                              Registry Node Alpha // {isElite ? 'Elite Clearance' : 'Standard Ingress'}
+                          </Badge>
                       </div>
-                      <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground text-left">
-                          Greetings, <br />
-                          <span className={cn(
-                              "bg-gradient-to-r bg-clip-text text-transparent italic",
-                              (isYearly || isMonthly) ? "from-primary via-amber-500 to-orange-600 animate-animated-gradient bg-[200%_auto]" : "from-primary via-orange-400 to-accent"
-                          )}>Nyaya {text}</span>
+                      <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-none text-foreground">
+                          Welcome, <br />
+                          <span className="text-primary italic">Nyaya {text}</span>
                       </h1>
                   </div>
-                  <p className="text-sm sm:text-base text-muted-foreground font-medium max-xl leading-relaxed text-left">
-                      Access precision AI nodes for statutory auditing within the Indian judicial ecosystem. 
-                      <span className="block mt-2 font-black text-[10px] uppercase text-primary/60 tracking-widest flex items-center gap-2">
-                        <Activity className="h-3 w-3" /> Transience protocol active: Posts purge after 56H.
-                      </span>
+                  <p className="text-lg text-muted-foreground font-medium max-w-xl leading-relaxed">
+                      Access precision AI nodes for statutory auditing and procedural navigation within Bharat&apos;s judicial ecosystem.
                   </p>
                   <div className="flex flex-wrap gap-4 pt-2">
-                      <Button size="sm" className={cn(
-                          "rounded-xl font-bold px-8 h-14 shadow-xl transition-all text-xs",
-                          (isYearly || isMonthly) ? "bg-primary shadow-primary/30 hover:scale-105" : "shadow-primary/20"
-                      )} asChild>
-                          <Link href="/dashboard/narrate">initialize narration</Link>
+                      <Button size="lg" className="rounded-2xl font-black uppercase tracking-widest text-xs h-14 px-10 shadow-xl" asChild>
+                          <Link href="/dashboard/narrate">Initialize Narration</Link>
                       </Button>
                   </div>
               </div>
@@ -590,22 +254,27 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
         <div className="grid lg:grid-cols-12 gap-10">
           <div className="lg:col-span-8 space-y-10">
               <section>
-                  <SectionHeader icon={TrendingUp} sector="Sector: Community">live transient stream</SectionHeader>
+                  <div className="flex items-center justify-between mb-6 border-b border-primary/5 pb-4">
+                      <div className="flex items-center gap-3">
+                          <TrendingUp className="h-5 w-5 text-primary/40" />
+                          <h2 className="text-[13px] font-black tracking-widest text-foreground/80 uppercase">Community Audits</h2>
+                      </div>
+                  </div>
                   <div className="space-y-6">
                       {postsLoading ? (
                           <div className="space-y-5">
                               {[...Array(2)].map((_, i) => (
-                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-2xl bg-muted/20 shadow-sm" />
+                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-[1.5rem] bg-muted/20" />
                               ))}
                           </div>
                       ) : latestPosts.length === 0 ? (
-                          <Card className="py-20 text-center glass rounded-[2.5rem] border-dashed border-2 border-primary/10 opacity-40">
-                              <p className="font-bold text-sm tracking-tight">registry clear // awaiting transmissions</p>
+                          <Card className="py-20 text-center glass rounded-[2rem] border-dashed border-2 border-primary/10 opacity-40">
+                              <p className="font-bold text-sm tracking-tight lowercase">registry clear // awaiting transmissions</p>
                           </Card>
                       ) : (
                           <div className="space-y-6">
                               {latestPosts.map((post) => (
-                                  <PostCard key={post.id} post={post} userProfile={userProfile} isAdmin={isAdmin} />
+                                  <PostCard key={post.id} post={post} userProfile={userProfile} isAdmin={isAdmin || false} />
                               ))}
                           </div>
                       )}
@@ -615,22 +284,24 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
 
           <div className="lg:col-span-4 space-y-10">
               <section>
-                  <SectionHeader icon={Sparkles} sector="Status: Optimized">system matrix</SectionHeader>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center justify-between mb-6 border-b border-primary/5 pb-4">
+                      <div className="flex items-center gap-3">
+                          <Sparkles className="h-5 w-5 text-primary/40" />
+                          <h2 className="text-[13px] font-black tracking-widest text-foreground/80 uppercase">Tool Matrix</h2>
+                      </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
-                            <Card className="h-full glass p-5 rounded-[1.5rem] border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden flex flex-col justify-between min-h-[130px] group-hover:scale-[1.02] group-active:scale-[0.98] shadow-sm hover:shadow-xl shadow-primary/5">
-                                <div className="absolute top-0 right-0 p-3 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                                    <f.icon className="h-8 w-8" />
-                                </div>
-                                <div>
-                                    <div className={cn("p-2.5 rounded-xl w-fit mb-3 transition-transform group-hover:scale-110 shadow-sm", f.bg, f.color)}>
-                                        <f.icon className="h-4 w-4" />
+                            <Card className="h-full glass p-6 rounded-[1.5rem] border-primary/10 group-hover:border-primary/40 transition-all text-left relative overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-xl group-active:scale-95">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                                        <f.icon className="h-5 w-5" />
                                     </div>
-                                    <h3 className="font-black text-[12px] tracking-tight text-foreground leading-none lowercase first-letter:uppercase">{f.title}</h3>
-                                </div>
-                                <div className="mt-3.5 pt-3 border-t border-primary/5">
-                                    <span className="text-[9px] font-bold text-primary/40 tracking-wider">{f.sector}</span>
+                                    <div>
+                                        <h3 className="font-black text-sm tracking-tight text-foreground uppercase leading-none">{f.title}</h3>
+                                        <p className="text-[10px] font-bold text-muted-foreground mt-1">{f.desc}</p>
+                                    </div>
                                 </div>
                             </Card>
                         </Link>
