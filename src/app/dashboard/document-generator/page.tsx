@@ -23,7 +23,11 @@ import {
   ShieldCheck,
   Zap,
   PlusCircle,
-  FileCheck
+  FileCheck,
+  User,
+  MapPin,
+  Calendar,
+  AlertTriangle
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
@@ -131,11 +135,11 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
         <PageHeader
           title="Drafting Terminal"
-          description="Draft professional legal instruments in seconds using high-fidelity AI assistance."
+          description="Initialize professional legal instruments with high-fidelity AI assistance."
         />
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
           <Link href="/dashboard">
-            <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Terminal
+            <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Dashboard
           </Link>
         </Button>
       </motion.div>
@@ -155,13 +159,13 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                     <Zap className="h-5 w-5" />
                     <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup</CardTitle>
                 </div>
-                <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Fill in the identity nodes to generate your legal draft.</CardDescription>
+                <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize statutory conditions for your legal draft.</CardDescription>
               </CardHeader>
               <CardContent className="p-8 sm:p-10">
-                <form action={formAction} className="space-y-8 text-left">
+                <form action={formAction} className="space-y-10 text-left">
                   <div className="grid sm:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <Label htmlFor="documentType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Instrument Type</Label>
+                      <Label htmlFor="documentType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory Type</Label>
                       <Select name="documentType" required value={documentType} onValueChange={setDocumentType}>
                         <SelectTrigger id="documentType" className="h-12 glass border-primary/5 font-bold rounded-xl">
                           <SelectValue placeholder="Select type" />
@@ -176,7 +180,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                       </Select>
                     </div>
                     <div className="space-y-3">
-                      <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Node</Label>
+                      <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Registry</Label>
                       <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
                         <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
                           <SelectValue />
@@ -190,27 +194,95 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                     </div>
                   </div>
 
-                  <div className="space-y-6">
-                      <FormSectionTitle>Statutory Registry Nodes</FormSectionTitle>
-                      <div className="grid sm:grid-cols-2 gap-6">
-                          <div className="space-y-3 text-left">
-                              <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Sender/Complainant Name</Label>
-                              <Input name="senderName" placeholder="Full name of party" required className="h-12 glass font-bold rounded-xl" />
-                          </div>
-                          <div className="space-y-3 text-left">
-                              <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Instrument Address</Label>
-                              <Input name="senderAddress" placeholder="Full official address..." required className="h-12 glass font-bold rounded-xl" />
+                  <div className="space-y-8">
+                      <div className="space-y-6">
+                          <FormSectionTitle>Author/Sender Node</FormSectionTitle>
+                          <div className="grid sm:grid-cols-2 gap-6">
+                              <div className="space-y-2">
+                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Full Name</Label>
+                                  <div className="relative">
+                                      <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
+                                      <Input name="senderName" placeholder="e.g., Rajesh Kumar" required className="h-12 glass font-bold pl-12 rounded-xl" />
+                                  </div>
+                              </div>
+                              <div className="space-y-2">
+                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Full Address</Label>
+                                  <div className="relative">
+                                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
+                                      <Input name="senderAddress" placeholder="Permanent or current address..." required className="h-12 glass font-bold pl-12 rounded-xl" />
+                                  </div>
+                              </div>
                           </div>
                       </div>
-                      <div className="space-y-3 text-left">
-                          <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Case Forensic Narrative</Label>
-                          <Textarea name="caseDetails" placeholder="Elaborate on the facts and circumstances..." rows={6} required className="glass rounded-xl font-medium text-sm p-6 shadow-inner" />
+
+                      <div className="space-y-6">
+                          <FormSectionTitle>Opposing Node / Authority</FormSectionTitle>
+                          <div className="grid sm:grid-cols-2 gap-6">
+                              <div className="space-y-2">
+                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Recipient/Dept. Name</Label>
+                                  <Input name="recipientName" placeholder="Person, Company, or Govt Dept." required={documentType !== 'Police Complaint' && documentType !== 'FIR Application'} className="h-12 glass font-bold rounded-xl" />
+                              </div>
+                              <div className="space-y-2">
+                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Recipient/Office Address</Label>
+                                  <Input name="recipientAddress" placeholder="Official or residence address..." required className="h-12 glass font-bold rounded-xl" />
+                              </div>
+                          </div>
+                      </div>
+
+                      { (documentType === 'Police Complaint' || documentType === 'FIR Application') && (
+                          <div className="space-y-6">
+                              <FormSectionTitle>Incident Context</FormSectionTitle>
+                              <div className="grid sm:grid-cols-2 gap-6">
+                                  <div className="space-y-2">
+                                      <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Date & Time</Label>
+                                      <div className="relative">
+                                          <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
+                                          <Input name="incidentDate" type="datetime-local" required className="h-12 glass font-bold pl-12 rounded-xl" />
+                                      </div>
+                                  </div>
+                                  <div className="space-y-2">
+                                      <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Place of Incident</Label>
+                                      <Input name="incidentPlace" placeholder="Specific location..." required className="h-12 glass font-bold rounded-xl" />
+                                  </div>
+                              </div>
+                              <div className="space-y-2">
+                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Accused Details (If known)</Label>
+                                  <Input name="accusedDetails" placeholder="Name, description, or vehicle number..." className="h-12 glass font-bold rounded-xl" />
+                              </div>
+                          </div>
+                      )}
+
+                      { documentType === 'Consumer Complaint' && (
+                          <div className="space-y-6">
+                              <FormSectionTitle>Transaction Ledger</FormSectionTitle>
+                              <Input name="productDetails" placeholder="Product Name, Invoice No., Price Paid" required className="h-12 glass font-bold rounded-xl" />
+                          </div>
+                      )}
+
+                      <div className="space-y-6">
+                          <FormSectionTitle>Forensic Narrative & Redress</FormSectionTitle>
+                          <div className="space-y-4">
+                              <div className="space-y-2">
+                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Chronological Facts</Label>
+                                  <Textarea name="caseDetails" placeholder="State the sequence of events clearly..." rows={6} required className="glass rounded-[1.5rem] font-medium text-base p-6 shadow-inner min-h-[150px]" />
+                              </div>
+                              { documentType !== 'RTI Application' && (
+                                  <div className="space-y-2">
+                                      <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Relief/Remedy Requested</Label>
+                                      <div className="relative">
+                                          <AlertTriangle className="absolute left-4 top-6 h-4 w-4 text-primary opacity-40" />
+                                          <Textarea name="remedySought" placeholder="What specific action do you want the recipient to take? (e.g., Refund ₹5000, Issue apology, Register FIR)" required className="glass rounded-[1.5rem] font-medium text-base p-6 pl-12 shadow-inner min-h-[100px]" />
+                                      </div>
+                                  </div>
+                              )}
+                          </div>
                       </div>
                   </div>
 
-                  <Button type="submit" disabled={state.status === "loading"} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem]">
+                  <Button type="submit" disabled={state.status === "loading"} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem] mt-8 group overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                     {state.status === "loading" ? (
-                      <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Neural Ingress Active...</>
+                      <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Neural Ingress Processing...</>
                     ): (
                       <><FileText className="mr-3 h-5 w-5" /> Initialize Statutory Draft</>
                     )}
@@ -233,8 +305,8 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                 </div>
 
                 <CardHeader className="bg-primary text-primary-foreground p-8 sm:p-12 relative z-10">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-                        <div className="text-left space-y-4">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 text-left">
+                        <div className="space-y-4">
                             <div className="flex flex-wrap items-center gap-3">
                                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20">
                                     <FileCheck className="h-4 w-4" />

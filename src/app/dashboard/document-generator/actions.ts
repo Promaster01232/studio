@@ -60,8 +60,8 @@ export async function generateDocumentAction(
     }
     case 'Police Complaint':
     case 'FIR Application': {
-      const complainantName = get(formData, 'complainantName');
-      const complainantAddress = get(formData, 'complainantAddress');
+      const complainantName = get(formData, 'senderName');
+      const complainantAddress = get(formData, 'senderAddress');
       const incidentDate = get(formData, 'incidentDate');
       const incidentPlace = get(formData, 'incidentPlace');
       const caseDetails = get(formData, 'caseDetails');
@@ -87,10 +87,10 @@ export async function generateDocumentAction(
       break;
     }
     case 'Consumer Complaint': {
-        const complainantName = get(formData, 'complainantName');
-        const complainantAddress = get(formData, 'complainantAddress');
-        const sellerName = get(formData, 'sellerName');
-        const sellerAddress = get(formData, 'sellerAddress');
+        const complainantName = get(formData, 'senderName');
+        const complainantAddress = get(formData, 'senderAddress');
+        const sellerName = get(formData, 'recipientName');
+        const sellerAddress = get(formData, 'recipientAddress');
         const productDetails = get(formData, 'productDetails');
         const caseDetails = get(formData, 'caseDetails');
         const remedySought = get(formData, 'remedySought');
@@ -119,9 +119,9 @@ export async function generateDocumentAction(
         break;
     }
     case 'RTI Application': {
-        const applicantName = get(formData, 'applicantName');
-        const applicantAddress = get(formData, 'applicantAddress');
-        const departmentAddress = get(formData, 'departmentAddress');
+        const applicantName = get(formData, 'senderName');
+        const applicantAddress = get(formData, 'senderAddress');
+        const departmentAddress = get(formData, 'recipientAddress');
         const caseDetails = get(formData, 'caseDetails');
 
         if (!applicantName || !applicantAddress || !departmentAddress || !caseDetails) {
@@ -137,7 +137,6 @@ export async function generateDocumentAction(
             Address: ${applicantAddress}
             ---
             AUTHORITY DETAILS:
-            Public Information Officer: ${get(formData, 'pioName') || 'Not Specified'}
             Department/Office Address: ${departmentAddress}
             ---
             INFORMATION REQUESTED:
