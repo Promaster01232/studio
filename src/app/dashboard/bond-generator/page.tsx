@@ -151,7 +151,7 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
         </Button>
       </motion.div>
       
-      {/* SECTION 1: INGRESS FORM (Always Visible) */}
+      {/* SECTION 1: INGRESS FORM */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -232,62 +232,55 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
         </Card>
       </motion.div>
 
-      {/* SECTION 2: PROCESSING & RESULTS (Down Side) */}
-      <AnimatePresence mode="wait">
-        {state.status === 'loading' ? (
-          <motion.div 
-            key="loading"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center py-20 text-center gap-8"
-          >
-            <div className="relative w-fit mx-auto">
-                <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <Activity className="h-8 w-8 text-primary animate-pulse" />
-                </div>
-            </div>
-            <div className="space-y-3">
-                <h2 className="font-black text-2xl tracking-tighter uppercase text-foreground">Generating Neural Bond...</h2>
-                <p className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Initializing forensic instrument node // BNS-V4.2 Ingress</p>
-            </div>
-          </motion.div>
-        ) : state.status === 'success' && state.data ? (
-          <motion.div 
-            key="success-report"
-            ref={reportRef}
-            initial={{ opacity: 0, y: 40 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            className="space-y-8 scroll-mt-20"
-          >
-            <div className="flex flex-col items-center gap-4 mb-4">
-                <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
-                <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Instrument Finalized Below</Badge>
+      {/* SECTION 2: ALWAYS VISIBLE REPORT CARD */}
+      <div ref={reportRef} className="space-y-8 scroll-mt-20">
+        <div className="flex flex-col items-center gap-4 mb-4">
+            <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
+            <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Statutory Instrument Node</Badge>
+        </div>
+
+        <Card className="glass border-primary/20 shadow-3xl overflow-hidden rounded-[3rem] relative min-h-[600px] flex flex-col">
+            <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
+                <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
             </div>
 
-            <Card className="glass border-primary/20 shadow-3xl overflow-hidden rounded-[3rem] relative">
-                <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
-                    <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
-                </div>
-
-                <CardHeader className="bg-primary text-primary-foreground p-8 sm:p-12 relative z-10">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 text-left">
-                        <div className="space-y-4">
-                            <div className="flex flex-wrap items-center gap-3">
-                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20">
-                                    <FileCheck className="h-4 w-4" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest">Official AI Report Node Active</span>
-                                </div>
-                                <Badge variant="outline" className="text-[9px] font-black uppercase tracking-[0.2em] border-white/20 text-white/80">NS-BOND-ST-4.2</Badge>
+            <CardHeader className={cn(
+                "p-8 sm:p-12 relative z-10 transition-colors duration-500",
+                state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-primary/5 text-foreground"
+            )}>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 text-left">
+                    <div className="space-y-4">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <div className={cn(
+                                "flex items-center gap-2 px-3 py-1 rounded-full border",
+                                state.status === 'success' ? "bg-white/10 border-white/20" : "bg-primary/10 border-primary/20"
+                            )}>
+                                <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
+                                <span className={cn("text-[10px] font-black uppercase tracking-widest", state.status === 'success' ? "text-white" : "text-primary")}>
+                                    Official AI Report Node Active
+                                </span>
                             </div>
-                            <div className="space-y-1">
-                                <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">Draft Node <span className="italic opacity-80">Ready.</span></CardTitle>
-                                <p className="text-[10px] font-bold text-white/60 uppercase tracking-[0.3em] flex items-center gap-2">
-                                    <Globe className="h-3 w-3" /> Registry: {bondType} // {selectedLanguage} Protocol
-                                </p>
-                            </div>
+                            <Badge variant="outline" className={cn(
+                                "text-[9px] font-black uppercase tracking-[0.2em]",
+                                state.status === 'success' ? "border-white/20 text-white/80" : "border-primary/20 text-primary/60"
+                            )}>
+                                NS-BOND-ST-4.2
+                            </Badge>
                         </div>
+                        <div className="space-y-1">
+                            <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">
+                                {state.status === 'success' ? <><span className="italic opacity-80">Draft Node</span> Ready.</> : "Awaiting Bond Ingress"}
+                            </CardTitle>
+                            <p className={cn(
+                                "text-[10px] font-bold uppercase tracking-[0.3em] flex items-center gap-2",
+                                state.status === 'success' ? "text-white/60" : "text-muted-foreground"
+                            )}>
+                                <Globe className="h-3 w-3" /> Registry: {bondType} // {selectedLanguage} Protocol
+                            </p>
+                        </div>
+                    </div>
+                    
+                    {state.status === 'success' && (
                         <div className="flex flex-wrap items-center gap-3 shrink-0">
                             <Button 
                                 variant="secondary" 
@@ -322,82 +315,137 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
                                 <Printer className="h-4 w-4" /> Print
                             </Button>
                         </div>
-                    </div>
-                </CardHeader>
-                
-                <CardContent className="p-8 sm:p-12 relative z-10">
-                    <div className="bg-muted/20 rounded-[2.5rem] p-1 border border-primary/5 shadow-inner">
-                        <div className="bg-white dark:bg-zinc-950 rounded-[2.2rem] shadow-2xl p-10 sm:p-16 min-h-[80vh] text-left border-2 border-primary/10 relative overflow-hidden">
-                            {/* Inner Watermark */}
-                            <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
-                                <Logo className="h-[400px] w-[400px] border-none shadow-none" priority={false} />
-                            </div>
-
-                            <div className="max-w-4xl mx-auto space-y-10 relative z-10">
-                                <div className="flex justify-between items-start border-b-2 border-primary/10 pb-8 mb-8">
-                                    <div className="space-y-1">
-                                        <p className="text-[9px] font-black uppercase text-primary/40 tracking-widest leading-none">Draft Node Ingress</p>
-                                        <p className="text-xs font-mono font-bold text-primary">NS-BOND-{Math.random().toString(36).substring(7).toUpperCase()}</p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest leading-none">Audit Timestamp</p>
-                                        <p className="text-xs font-bold flex items-center justify-end gap-2 mt-1">
-                                            <Clock className="h-3 w-3 text-primary" /> {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {isEditing ? (
-                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-                                        <div className="flex items-center gap-2 text-primary mb-4">
-                                            <Edit3 className="h-4 w-4" />
-                                            <span className="text-[10px] font-black uppercase tracking-widest">Workspace Protocol Active</span>
-                                        </div>
-                                        <Textarea 
-                                            value={editedContent}
-                                            onChange={(e) => setEditedContent(e.target.value)}
-                                            className="w-full min-h-[70vh] font-body text-base sm:text-lg leading-relaxed border-none focus-visible:ring-0 p-0 resize-none bg-transparent"
-                                            placeholder="Begin manual statutory refinements..."
-                                        />
-                                    </motion.div>
-                                ) : (
-                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="prose dark:prose-invert max-w-none">
-                                        <pre className="whitespace-pre-wrap font-body text-foreground leading-relaxed text-sm sm:text-lg text-left selection:bg-primary/10">
-                                            {editedContent}
-                                        </pre>
-                                    </motion.div>
-                                )}
-
-                                <div className="pt-16 mt-16 border-t-2 border-primary/10 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
-                                    <div className="flex items-center gap-4">
-                                        <div className="p-3 rounded-2xl bg-primary/5 text-primary">
-                                            <ShieldCheck className="h-6 w-6" />
-                                        </div>
-                                        <div className="text-left">
-                                            <p className="text-[10px] font-black uppercase tracking-widest">Statutory Security</p>
-                                            <p className="text-[9px] font-bold">This node is protected under attorney-client transience.</p>
-                                        </div>
-                                    </div>
-                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // TERMINAL NS-BOND</p>
+                    )}
+                </div>
+            </CardHeader>
+            
+            <CardContent className="p-8 sm:p-12 flex-1 relative z-10">
+                <AnimatePresence mode="wait">
+                    {state.status === 'loading' ? (
+                        <motion.div 
+                            key="loading"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="flex flex-col items-center justify-center h-full py-20 text-center gap-10"
+                        >
+                            <div className="relative w-fit mx-auto">
+                                <Loader2 className="h-20 w-20 animate-spin text-primary opacity-20" />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <Activity className="h-8 w-8 text-primary animate-pulse" />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </CardContent>
-                <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
-            </Card>
-          </motion.div>
-        ) : state.status === 'error' ? (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto mt-8">
-                <Card className="glass border-destructive/20 bg-destructive/5 p-8 flex flex-col items-center text-center gap-4 rounded-[2rem]">
-                    <AlertTriangle className="h-10 w-10 text-destructive" />
-                    <h3 className="font-black text-xl uppercase tracking-tight">Bond Node Error</h3>
-                    <p className="text-sm font-medium text-muted-foreground">{state.error}</p>
-                    <Button onClick={handleReset} variant="outline" className="mt-2 border-destructive/20 text-destructive hover:bg-destructive/5 rounded-xl">Clear Protocol</Button>
-                </Card>
-            </motion.div>
-        ) : null}
-      </AnimatePresence>
+                            <div className="space-y-3">
+                                <p className="font-black text-2xl tracking-tighter uppercase">Analyzing Requirements...</p>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Initializing forensic instrument node // BNS-V4.2 Ingress</p>
+                            </div>
+                        </motion.div>
+                    ) : state.status === 'success' && state.data ? (
+                        <motion.div 
+                            key="report-content"
+                            initial={{ opacity: 0, y: 20 }} 
+                            animate={{ opacity: 1, y: 0 }}
+                            className="h-full"
+                        >
+                            <div className="bg-muted/20 rounded-[2.5rem] p-1 border border-primary/5 shadow-inner">
+                                <div className="bg-white dark:bg-zinc-950 rounded-[2.2rem] shadow-2xl p-10 sm:p-16 min-h-[80vh] text-left border-2 border-primary/10 relative overflow-hidden">
+                                    {/* Inner Watermark */}
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+                                        <Logo className="h-[400px] w-[400px] border-none shadow-none" priority={false} />
+                                    </div>
+
+                                    <div className="max-w-4xl mx-auto space-y-10 relative z-10">
+                                        <div className="flex justify-between items-start border-b-2 border-primary/10 pb-8 mb-8">
+                                            <div className="space-y-1">
+                                                <p className="text-[9px] font-black uppercase text-primary/40 tracking-widest leading-none">Draft Node Ingress</p>
+                                                <p className="text-xs font-mono font-bold text-primary">NS-BOND-{Math.random().toString(36).substring(7).toUpperCase()}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest leading-none">Audit Timestamp</p>
+                                                <p className="text-xs font-bold flex items-center justify-end gap-2 mt-1">
+                                                    <Clock className="h-3 w-3 text-primary" /> {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {isEditing ? (
+                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+                                                <div className="flex items-center gap-2 text-primary mb-4">
+                                                    <Edit3 className="h-4 w-4" />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">Workspace Protocol Active</span>
+                                                </div>
+                                                <Textarea 
+                                                    value={editedContent}
+                                                    onChange={(e) => setEditedContent(e.target.value)}
+                                                    className="w-full min-h-[70vh] font-body text-base sm:text-lg leading-relaxed border-none focus-visible:ring-0 p-0 resize-none bg-transparent"
+                                                    placeholder="Begin manual statutory refinements..."
+                                                />
+                                            </motion.div>
+                                        ) : (
+                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="prose dark:prose-invert max-w-none">
+                                                <pre className="whitespace-pre-wrap font-body text-foreground leading-relaxed text-sm sm:text-lg text-left selection:bg-primary/10">
+                                                    {editedContent}
+                                                </pre>
+                                            </motion.div>
+                                        )}
+
+                                        <div className="pt-16 mt-16 border-t-2 border-primary/10 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-3 rounded-2xl bg-primary/5 text-primary">
+                                                    <ShieldCheck className="h-6 w-6" />
+                                                </div>
+                                                <div className="text-left">
+                                                    <p className="text-[10px] font-black uppercase tracking-widest">Statutory Security</p>
+                                                    <p className="text-[9px] font-bold">This node is protected under attorney-client transience.</p>
+                                                </div>
+                                            </div>
+                                            <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // TERMINAL NS-BOND</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ) : state.status === 'error' ? (
+                        <motion.div key="error" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center py-20 text-center gap-6">
+                            <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-inner">
+                                <AlertTriangle className="h-10 w-10" />
+                            </div>
+                            <div className="space-y-2">
+                                <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Bond Node Error</h3>
+                                <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto">
+                                    {state.error}
+                                </p>
+                            </div>
+                            <Button onClick={handleReset} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5">
+                                Clear Protocol
+                            </Button>
+                        </motion.div>
+                    ) : (
+                        <motion.div 
+                            key="idle" 
+                            initial={{ opacity: 0, scale: 0.95 }} 
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="flex flex-col items-center justify-center py-32 text-center gap-10"
+                        >
+                            <div className="relative">
+                                <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl animate-pulse"></div>
+                                <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 group-hover:scale-110 transition-transform duration-700">
+                                    <FileSearch className="h-20 w-20 text-primary opacity-20" />
+                                </div>
+                            </div>
+                            <div className="space-y-4 max-w-sm px-6">
+                                <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting Ingress</h3>
+                                <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
+                                    Initialize the forensic node by providing the statutory details for neural bond generation.
+                                </p>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </CardContent>
+            <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+        </Card>
+      </div>
     </div>
   );
 }
