@@ -32,7 +32,8 @@ import {
   User,
   MapPin,
   Calendar,
-  Gavel
+  Gavel,
+  Cpu
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
@@ -395,7 +396,7 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
                 state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-primary/5 text-foreground"
             )}>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 text-left">
-                    <div className="space-y-4">
+                    <div className="space-y-4 text-left flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-3">
                             <div className={cn(
                                 "flex items-center gap-2 px-3 py-1 rounded-full border",
@@ -412,6 +413,11 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
                             )}>
                                 NS-BOND-ST-4.2
                             </Badge>
+                            {state.isSimulated && (
+                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest">
+                                    <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
+                                </Badge>
+                            )}
                         </div>
                         <div className="space-y-1">
                             <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">
@@ -502,7 +508,7 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
 
                                     <div className="max-w-4xl mx-auto space-y-10 relative z-10">
                                         <div className="flex justify-between items-start border-b-2 border-primary/10 pb-8 mb-8">
-                                            <div className="space-y-1">
+                                            <div className="space-y-1 text-left">
                                                 <p className="text-[9px] font-black uppercase text-primary/40 tracking-widest leading-none">Draft Node Ingress</p>
                                                 <p className="text-xs font-mono font-bold text-primary">NS-BOND-{Math.random().toString(36).substring(7).toUpperCase()}</p>
                                             </div>
@@ -515,7 +521,7 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
                                         </div>
 
                                         {isEditing ? (
-                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 text-left">
                                                 <div className="flex items-center gap-2 text-primary mb-4">
                                                     <Edit3 className="h-4 w-4" />
                                                     <span className="text-[10px] font-black uppercase tracking-widest">Workspace Protocol Active</span>
@@ -528,7 +534,7 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
                                                 />
                                             </motion.div>
                                         ) : (
-                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="prose dark:prose-invert max-w-none">
+                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="prose dark:prose-invert max-w-none text-left">
                                                 <pre className="whitespace-pre-wrap font-body text-foreground leading-relaxed text-sm sm:text-lg text-left selection:bg-primary/10">
                                                     {editedContent}
                                                 </pre>
@@ -556,7 +562,7 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
                             <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-inner">
                                 <AlertTriangle className="h-10 w-10" />
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-2 text-center">
                                 <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Bond Node Error</h3>
                                 <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto">
                                     {state.error}
@@ -579,7 +585,7 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
                                     <FileSearch className="h-20 w-20 text-primary opacity-20" />
                                 </div>
                             </div>
-                            <div className="space-y-4 max-w-sm px-6">
+                            <div className="space-y-4 max-w-sm px-6 text-center">
                                 <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting Ingress</h3>
                                 <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
                                     Initialize the forensic node by providing the statutory details for neural bond generation.

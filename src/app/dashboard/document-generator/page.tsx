@@ -31,7 +31,8 @@ import {
   Activity,
   FileSearch,
   ChevronDown,
-  Smartphone
+  Smartphone,
+  Cpu
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
@@ -171,7 +172,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
           <CardContent className="p-8 sm:p-10">
             <form action={formAction} className="space-y-10 text-left">
               <div className="grid sm:grid-cols-2 gap-8">
-                <div className="space-y-3">
+                <div className="space-y-3 text-left">
                   <Label htmlFor="documentType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory Type</Label>
                   <Select name="documentType" required value={documentType} onValueChange={setDocumentType}>
                     <SelectTrigger id="documentType" className="h-12 glass border-primary/5 font-bold rounded-xl">
@@ -186,7 +187,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-3 text-left">
                   <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Registry</Label>
                   <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
                     <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
@@ -205,14 +206,14 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                   <div className="space-y-6">
                       <FormSectionTitle>Author/Sender Node</FormSectionTitle>
                       <div className="grid sm:grid-cols-2 gap-6">
-                          <div className="space-y-2">
+                          <div className="space-y-2 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Full Name</Label>
                               <div className="relative">
                                   <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
                                   <Input name="senderName" placeholder="e.g., Rajesh Kumar" required className="h-12 glass font-bold pl-12 rounded-xl" />
                               </div>
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-2 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Full Address</Label>
                               <div className="relative">
                                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
@@ -221,7 +222,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                           </div>
                       </div>
                       {documentType === 'Legal Notice' && (
-                          <div className="space-y-2">
+                          <div className="space-y-2 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Contact Node (Mobile)</Label>
                               <div className="relative">
                                   <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
@@ -234,11 +235,11 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                   <div className="space-y-6">
                       <FormSectionTitle>Opposing Node / Authority</FormSectionTitle>
                       <div className="grid sm:grid-cols-2 gap-6">
-                          <div className="space-y-2">
+                          <div className="space-y-2 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Recipient/Dept. Name</Label>
                               <Input name="recipientName" placeholder="Person, Company, or Govt Dept." required={documentType !== 'Police Complaint' && documentType !== 'FIR Application'} className="h-12 glass font-bold rounded-xl" />
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-2 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Recipient/Office Address</Label>
                               <Input name="recipientAddress" placeholder="Official or residence address..." required className="h-12 glass font-bold rounded-xl" />
                           </div>
@@ -249,19 +250,19 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                       <div className="space-y-6">
                           <FormSectionTitle>Incident Context</FormSectionTitle>
                           <div className="grid sm:grid-cols-2 gap-6">
-                              <div className="space-y-2">
+                              <div className="space-y-2 text-left">
                                   <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Date & Time</Label>
                                   <div className="relative">
                                       <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
                                       <Input name="incidentDate" type="datetime-local" required className="h-12 glass font-bold pl-12 rounded-xl" />
                                   </div>
                               </div>
-                              <div className="space-y-2">
+                              <div className="space-y-2 text-left">
                                   <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Place of Incident</Label>
                                   <Input name="incidentPlace" placeholder="Specific location..." required className="h-12 glass font-bold rounded-xl" />
                               </div>
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-2 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Accused Details (If known)</Label>
                               <Input name="accusedDetails" placeholder="Name, description, or vehicle number..." className="h-12 glass font-bold rounded-xl" />
                           </div>
@@ -278,12 +279,12 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                   <div className="space-y-6">
                       <FormSectionTitle>Forensic Narrative & Redress</FormSectionTitle>
                       <div className="space-y-4">
-                          <div className="space-y-2">
+                          <div className="space-y-2 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Chronological Facts</Label>
                               <Textarea name="caseDetails" placeholder="State the sequence of events clearly..." rows={6} required className="glass rounded-[1.5rem] font-medium text-base p-6 shadow-inner min-h-[150px]" />
                           </div>
                           { documentType !== 'RTI Application' && (
-                              <div className="space-y-2">
+                              <div className="space-y-2 text-left">
                                   <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Relief/Remedy Requested</Label>
                                   <div className="relative">
                                       <AlertTriangle className="absolute left-4 top-6 h-4 w-4 text-primary opacity-40" />
@@ -325,7 +326,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                 state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-primary/5 text-foreground"
             )}>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 text-left">
-                    <div className="space-y-4">
+                    <div className="space-y-4 text-left flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-3">
                             <div className={cn(
                                 "flex items-center gap-2 px-3 py-1 rounded-full border",
@@ -342,6 +343,11 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                             )}>
                                 NS-DRAFT-STAT-4.2
                             </Badge>
+                            {state.isSimulated && (
+                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest">
+                                    <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
+                                </Badge>
+                            )}
                         </div>
                         <div className="space-y-1">
                             <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">
@@ -432,7 +438,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                                     
                                     <div className="max-w-4xl mx-auto space-y-10 relative z-10">
                                         <div className="flex justify-between items-start border-b-2 border-primary/10 pb-8 mb-8">
-                                            <div className="space-y-1">
+                                            <div className="space-y-1 text-left">
                                                 <p className="text-[9px] font-black uppercase text-primary/40 tracking-widest leading-none">Draft Node Ingress</p>
                                                 <p className="text-xs font-mono font-bold text-primary">NS-DRAFT-{Math.random().toString(36).substring(7).toUpperCase()}</p>
                                             </div>
@@ -445,7 +451,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                                         </div>
 
                                         {isEditing ? (
-                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 text-left">
                                                 <div className="flex items-center gap-2 text-primary mb-4">
                                                     <Edit3 className="h-4 w-4" />
                                                     <span className="text-[10px] font-black uppercase tracking-widest">Workspace Protocol Active</span>
@@ -458,7 +464,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                                                 />
                                             </motion.div>
                                         ) : (
-                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="prose dark:prose-invert max-w-none">
+                                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="prose dark:prose-invert max-w-none text-left">
                                                 <pre className="whitespace-pre-wrap font-body text-foreground leading-relaxed text-sm sm:text-lg text-left selection:bg-primary/10">
                                                     {editedContent}
                                                 </pre>
@@ -486,13 +492,13 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                             <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-inner">
                                 <AlertTriangle className="h-10 w-10" />
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-2 text-center">
                                 <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Draft Node Error</h3>
-                                <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto">
+                                <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto px-4">
                                     {state.error}
                                 </p>
                             </div>
-                            <Button onClick={handleReset} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5">
+                            <Button onClick={handleReset} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
                                 Clear Protocol
                             </Button>
                         </motion.div>
@@ -506,10 +512,10 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                             <div className="relative">
                                 <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl animate-pulse"></div>
                                 <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
-                                    <FileSearch className="h-20 w-20 text-primary opacity-20" />
+                                    <FileSearch className="h-20 w-20 text-primary opacity-40 group-hover:opacity-100 transition-opacity" />
                                 </div>
                             </div>
-                            <div className="space-y-4 max-w-sm px-6">
+                            <div className="space-y-4 max-w-sm px-6 text-center">
                                 <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting Ingress</h3>
                                 <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
                                     Initialize the forensic node by providing the statutory details for neural draft generation.
