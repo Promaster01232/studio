@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
@@ -283,28 +282,78 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
     if (loading) return <div className="flex h-[70vh] items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
     return (
-        <div className="space-y-12 max-w-4xl mx-auto pb-20 px-2 sm:px-0 text-left">
-            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="relative p-8 sm:p-16 rounded-[3rem] overflow-hidden bg-card/40 backdrop-blur-xl border border-primary/10 shadow-3xl">
-                <div className="absolute top-0 right-0 p-10 opacity-[0.04] pointer-events-none"><Logo className="h-64 w-64 grayscale" priority={true} /></div>
-                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20"><Sparkles className="h-4 w-4 text-primary animate-pulse" /><span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Transience Protocol Active</span></div>
-                        </div>
-                        <h1 className="text-4xl sm:text-7xl font-black font-headline tracking-tighter uppercase leading-[0.9] text-foreground">Live <span className="text-primary italic font-black">Transmissions.</span></h1>
-                        <p className="text-xs sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed">Publicly audited statutory ideas. Every node is purged after 56 hours.</p>
-                    </div>
-                    <Button size="lg" className="h-16 px-10 rounded-2xl font-black uppercase text-[11px] shadow-2xl group active:scale-95 transition-all shrink-0 w-full md:w-auto" asChild>
-                        <Link href="/dashboard/research-analytics/new"><PlusCircle className="mr-3 h-5 w-5" /> Initialize Post</Link>
-                    </Button>
+        <div className="space-y-8 max-w-4xl mx-auto pb-20 px-2 sm:px-0 text-left">
+            <motion.div 
+                initial={{ opacity: 0, y: -20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                className="relative p-6 sm:p-8 md:p-10 rounded-[2rem] overflow-hidden bg-card/40 backdrop-blur-xl border border-primary/10 shadow-2xl group"
+            >
+                <div className="absolute top-0 right-0 p-6 opacity-[0.02] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
+                    <Logo className="h-48 w-48 grayscale" priority={true} />
                 </div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div className="space-y-4">
+                        <motion.div 
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="flex items-center gap-2"
+                        >
+                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-lg">
+                                <Sparkles className="h-3 w-3 mr-1.5 animate-pulse" /> Transience Active
+                            </Badge>
+                        </motion.div>
+                        
+                        <div className="space-y-1">
+                            <motion.h1 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="text-2xl sm:text-4xl font-black font-headline tracking-tighter uppercase leading-none text-foreground"
+                            >
+                                Live <span className="text-primary italic">Transmissions.</span>
+                            </motion.h1>
+                            <motion.p 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="text-xs sm:text-sm text-muted-foreground font-medium max-w-lg leading-relaxed opacity-80"
+                            >
+                                Publicly audited statutory ideas. Every community node is purged from the registry after 56 hours.
+                            </motion.p>
+                        </div>
+                    </div>
+
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="shrink-0 w-full md:w-auto"
+                    >
+                        <Button size="lg" className="h-12 px-8 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all w-full md:w-auto" asChild>
+                            <Link href="/dashboard/research-analytics/new">
+                                <PlusCircle className="mr-2 h-4 w-4" /> Initialize Post
+                            </Link>
+                        </Button>
+                    </motion.div>
+                </div>
+                
+                <div className="h-1 w-full bg-gradient-to-r from-primary/20 via-primary to-primary/20 absolute bottom-0 left-0"></div>
             </motion.div>
-            <div className="grid gap-10">
+
+            <div className="grid gap-8">
                 {feed.length > 0 ? feed.map((item, i) => (
-                    <motion.div key={item.id} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}><PostCard post={item} userProfile={userProfile} isAdmin={isAdmin} /></motion.div>
+                    <motion.div key={item.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + (i * 0.05) }}>
+                        <PostCard post={item} userProfile={userProfile} isAdmin={isAdmin} />
+                    </motion.div>
                 )) : (
                     <div className="py-32 text-center opacity-40 flex flex-col items-center gap-10">
-                        <Newspaper className="h-20 w-20" /><div className="space-y-3"><p className="font-black text-3xl uppercase">Registry Clear</p><p className="text-sm italic">"Awaiting institutional transmissions."</p></div>
+                        <Newspaper className="h-20 w-20" />
+                        <div className="space-y-3">
+                            <p className="font-black text-3xl uppercase tracking-tighter">Registry Clear</p>
+                            <p className="text-sm italic">"Awaiting institutional transmissions."</p>
+                        </div>
                     </div>
                 )}
             </div>
