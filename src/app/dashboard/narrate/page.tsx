@@ -330,9 +330,21 @@ export default function NarrateProblemPage() {
                                     </Card>
                                 </motion.div>
                             ) : (
-                                <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-8 opacity-40">
-                                    <Mic className="h-20 w-20 text-muted-foreground" />
-                                    <p className="font-black text-xl tracking-tighter uppercase text-center">Awaiting Transmission</p>
+                                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="py-12">
+                                    <Card className="glass border-dashed border-2 border-primary/10 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center gap-10 shadow-inner group hover:border-primary/20 transition-all duration-500">
+                                        <div className="relative">
+                                            <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl animate-pulse group-hover:bg-primary/10 transition-colors"></div>
+                                            <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
+                                                <Mic className="h-20 w-20 text-primary opacity-40 group-hover:opacity-100 transition-opacity" />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-4 max-w-sm px-6">
+                                            <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting Audio Transmission</h3>
+                                            <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
+                                                Initialize the forensic node by providing your case narration for analysis.
+                                            </p>
+                                        </div>
+                                    </Card>
                                 </motion.div>
                             )}
                         </AnimatePresence>

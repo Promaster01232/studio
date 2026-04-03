@@ -96,7 +96,7 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                     transition={{ duration: 0.3 }}
                 >
                     <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
-                        <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
+                        <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
                         <div className="flex items-center gap-3 text-primary mb-2">
                             <BrainCircuit className="h-5 w-5" />
                             <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Narrative Research Ingestion</CardTitle>
@@ -280,7 +280,7 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                                     <div className="flex items-center gap-4">
                                         <div className="p-4 rounded-[1.2rem] bg-primary/10 text-primary shadow-lg">
-                                            <Landmark className="h-7 w-7" />
+                                            <search className="h-7 w-7" />
                                         </div>
                                         <div className="text-left space-y-1">
                                             <h3 className="text-2xl sm:text-3xl font-black tracking-tight leading-none uppercase">Research Deep-Dive</h3>
@@ -309,16 +309,21 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
             )}
 
             {state.status === 'idle' && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-32 text-center gap-10 opacity-40">
-                    <div className="p-10 rounded-[3rem] bg-muted/50 border-4 border-dashed border-primary/10 transition-transform hover:scale-105 duration-700">
-                        <BrainCircuit className="h-24 w-24 text-muted-foreground" />
-                    </div>
-                    <div className="space-y-3 text-center">
-                        <p className="font-black text-3xl tracking-tighter uppercase text-center">Awaiting Forensic Ingress</p>
-                        <p className="text-sm text-muted-foreground font-medium max-w-[320px] mx-auto leading-relaxed text-center italic">
-                            "Provide your case narrative to initialize the 20-stage deep neural research protocol."
-                        </p>
-                    </div>
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="py-12">
+                    <Card className="glass border-dashed border-2 border-primary/10 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center gap-10 shadow-inner group hover:border-primary/20 transition-all duration-500">
+                        <div className="relative">
+                            <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl animate-pulse group-hover:bg-primary/10 transition-colors"></div>
+                            <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
+                                <BrainCircuit className="h-20 w-20 text-primary opacity-40 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                        </div>
+                        <div className="space-y-4 max-w-sm px-6">
+                            <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting Forensic Ingress</h3>
+                            <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
+                                Provide your case narrative to initialize the 20-stage deep neural research protocol.
+                            </p>
+                        </div>
+                    </Card>
                 </motion.div>
             )}
         </AnimatePresence>

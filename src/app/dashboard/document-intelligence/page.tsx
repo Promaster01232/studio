@@ -26,7 +26,8 @@ import {
   Clock,
   Globe,
   Fingerprint,
-  PlusCircle
+  PlusCircle,
+  FileSearch
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
@@ -296,16 +297,21 @@ export default function DocumentIntelligencePage() {
                             )}
 
                             {state.status === 'idle' && (
-                                <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-6 opacity-40">
-                                    <div className="p-8 rounded-[2rem] bg-muted/50 border-2 border-dashed border-primary/10">
-                                        <FileUp className="h-16 w-16 text-muted-foreground" />
-                                    </div>
-                                    <div className="space-y-2 text-center">
-                                        <p className="font-black text-xl tracking-tighter uppercase text-center">Awaiting Ingestion</p>
-                                        <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto leading-relaxed text-center">
-                                            Upload a document to initialize the neural forensic scanning protocol.
-                                        </p>
-                                    </div>
+                                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="py-12">
+                                    <Card className="glass border-dashed border-2 border-primary/10 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center gap-10 shadow-inner group hover:border-primary/20 transition-all duration-500">
+                                        <div className="relative">
+                                            <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl animate-pulse group-hover:bg-primary/10 transition-colors"></div>
+                                            <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
+                                                <FileSearch className="h-20 w-20 text-primary opacity-40 group-hover:opacity-100 transition-opacity" />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-4 max-w-sm px-6">
+                                            <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting Document Ingress</h3>
+                                            <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
+                                                Upload a statutory document to initialize the neural forensic scanning protocol.
+                                            </p>
+                                        </div>
+                                    </Card>
                                 </motion.div>
                             )}
                         </AnimatePresence>
