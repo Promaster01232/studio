@@ -360,21 +360,6 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                       ))}
                   </div>
               </section>
-              
-              <section className="pt-2">
-                  <Card className="bg-primary/5 border-primary/10 rounded-2xl p-6 text-center space-y-4">
-                      <div className="bg-primary/10 p-3 rounded-2xl w-fit mx-auto">
-                          <ShieldAlert className="h-6 w-6 text-primary" />
-                      </div>
-                      <div className="space-y-1">
-                          <h3 className="font-black text-xs uppercase tracking-tight">Need Legal Support?</h3>
-                          <p className="text-[10px] text-muted-foreground font-medium leading-relaxed">Our verified advocate registry is available for specialized strategy.</p>
-                      </div>
-                      <Button variant="outline" className="w-full h-9 rounded-xl font-black uppercase tracking-widest text-[9px] border-primary/20 text-primary hover:bg-primary/5" asChild>
-                          <Link href="/dashboard/lawyer-connect">Sync with Advocate</Link>
-                      </Button>
-                  </Card>
-              </section>
           </div>
         </div>
     </div>
