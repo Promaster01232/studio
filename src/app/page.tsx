@@ -99,26 +99,26 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
               </div>
               <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 shadow-sm">
                 <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/80">Neural Statutory Hub Alpha</span>
+                <span className="text-[10px] font-black tracking-wider text-primary/80">Neural Statutory Hub Alpha</span>
               </div>
             </header>
 
             <div className="space-y-6 max-w-5xl mx-auto">
-              <h1 className="text-5xl sm:text-8xl font-black tracking-tighter leading-[0.9] text-foreground text-center uppercase">
-                India's Premier <br/>
-                <span className="text-primary italic">AI Legal Terminal.</span>
+              <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-tight text-foreground text-center">
+                India's premier <br/>
+                <span className="text-primary italic">AI legal terminal.</span>
               </h1>
-              <p className="text-lg sm:text-2xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed">
-                Empowering every citizen with precise forensic audits, BNS statutory scanning, and automated drafting nodes. Simple, SATIK knowledge.
+              <p className="text-lg sm:text-xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed">
+                Empowering every citizen with precise forensic audits, BNS statutory scanning, and automated drafting nodes. Simple, Satik knowledge.
               </p>
             </div>
 
             <nav className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
               {!loading ? (
-                <Button asChild className="h-16 w-full sm:w-auto min-w-[300px] px-12 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 rounded-2xl active:scale-95 transition-all group overflow-hidden relative">
+                <Button asChild className="h-16 w-full sm:w-auto min-w-[300px] px-12 text-sm font-black tracking-wide shadow-2xl shadow-primary/20 rounded-2xl active:scale-95 transition-all group overflow-hidden relative">
                   <Link href="/dashboard">
                     <span className="relative z-10 flex items-center gap-3">
-                      Initialize Session <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                      Initialize session <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                     </span>
                     <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                   </Link>
@@ -128,9 +128,9 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                   <Loader2 className="h-6 w-6 animate-spin text-primary opacity-30" />
                 </div>
               )}
-              <Button variant="outline" asChild className="h-16 w-full sm:w-auto min-w-[240px] px-10 text-xs font-black uppercase tracking-[0.2em] rounded-2xl border-primary/10 hover:bg-primary/5 group">
+              <Button variant="outline" asChild className="h-16 w-full sm:w-auto min-w-[240px] px-10 text-sm font-black tracking-wide rounded-2xl border-primary/10 hover:bg-primary/5 group">
                 <Link href="/about" className="flex items-center gap-3">
-                  Forensic Protocol <Activity className="h-4 w-4 opacity-40 group-hover:animate-pulse" />
+                  Forensic protocol <Activity className="h-4 w-4 opacity-40 group-hover:animate-pulse" />
                 </Link>
               </Button>
             </nav>
@@ -141,9 +141,9 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
         <section className="w-full max-w-6xl py-24 px-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {[
-                    { step: "01", title: "Narrate Problem", desc: "Transmit your legal narrative via voice or textual node for AI ingestion.", icon: Mic, color: "text-primary" },
-                    { step: "02", title: "Forensic Audit", desc: "AI deconstructs facts against the latest Indian statutory framework.", icon: ShieldCheck, color: "text-primary" },
-                    { step: "03", title: "Statutory Redress", desc: "Receive a professional roadmap and generated legal instruments.", icon: CheckCircle2, color: "text-primary" },
+                    { step: "01", title: "Narrate problem", desc: "Transmit your legal narrative via voice or textual node for AI ingestion.", icon: Mic, color: "text-primary" },
+                    { step: "02", title: "Forensic audit", desc: "AI deconstructs facts against the latest Indian statutory framework.", icon: ShieldCheck, color: "text-primary" },
+                    { step: "03", title: "Statutory redress", desc: "Receive a professional roadmap and generated legal instruments.", icon: CheckCircle2, color: "text-primary" },
                 ].map((item, i) => (
                     <motion.div 
                         key={i} 
@@ -166,7 +166,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                             </div>
                             
                             <div className="space-y-3">
-                                <h3 className="text-xl sm:text-2xl font-black tracking-tight text-foreground transition-colors group-hover:text-primary">
+                                <h3 className="text-xl font-black tracking-tight text-foreground transition-colors group-hover:text-primary">
                                     {item.title}
                                 </h3>
                                 <p className="text-sm text-muted-foreground font-medium leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
@@ -194,9 +194,9 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center gap-3 text-primary">
               <Zap className="h-5 w-5 animate-pulse" />
-              <h2 className="text-[11px] font-black uppercase tracking-[0.5em]">Forensic Tool Matrix</h2>
+              <h2 className="text-[11px] font-black uppercase tracking-[0.5em]">Forensic tool matrix</h2>
             </div>
-            <h3 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase leading-none">System Ingress <span className="text-primary italic">Nodes.</span></h3>
+            <h3 className="text-3xl sm:text-5xl font-black tracking-tight leading-none uppercase">System ingress <span className="text-primary italic">nodes.</span></h3>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -219,11 +219,11 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                         </Badge>
                       </div>
                       
-                      <h3 className="text-2xl font-black tracking-tighter leading-tight group-hover:text-primary transition-colors uppercase">{node.title}</h3>
+                      <h3 className="text-2xl font-black tracking-tight leading-tight group-hover:text-primary transition-colors uppercase">{node.title}</h3>
                       <p className="text-sm text-muted-foreground font-medium leading-relaxed mt-4 flex-grow opacity-80 group-hover:opacity-100">{node.desc}</p>
                       
                       <div className="pt-10 mt-10 border-t border-primary/5 flex items-center justify-between">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">Initialize Ingress</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">Initialize ingress</span>
                         <ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0" />
                       </div>
                     </CardContent>
@@ -247,25 +247,25 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                     <div className="space-y-4">
                         <div className="flex items-center justify-center lg:justify-start gap-3 text-primary">
                             <Activity className="h-5 w-5" />
-                            <span className="text-[11px] font-black uppercase tracking-[0.4em]">Strategic Support Ingress</span>
+                            <span className="text-[11px] font-black uppercase tracking-[0.4em]">Strategic support ingress</span>
                         </div>
-                        <h2 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none uppercase">Need Human <br className="hidden sm:block"/> <span className="text-primary italic">Intervention?</span></h2>
+                        <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-none uppercase">Need human <br className="hidden sm:block"/> <span className="text-primary italic">intervention?</span></h2>
                     </div>
                     <p className="text-xl text-muted-foreground font-medium leading-relaxed max-w-2xl">
                         AI provides the foundation; human advocates provide the strategy. Access our verified registry or connect with institutional support for complex litigation needs.
                     </p>
                     <div className="flex flex-wrap justify-center lg:justify-start gap-6 pt-4">
-                        <Button className="rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-16 px-12 shadow-2xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative" asChild>
+                        <Button className="rounded-2xl font-black uppercase tracking-wide text-[10px] h-16 px-12 shadow-2xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative" asChild>
                             <Link href="/dashboard/lawyer-connect">
                                 <span className="relative z-10 flex items-center gap-3">
-                                    Browse Registry <Globe className="h-4 w-4" />
+                                    Browse registry <Globe className="h-4 w-4" />
                                 </span>
                                 <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                             </Link>
                         </Button>
-                        <Button variant="outline" className="rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-16 px-12 border-primary/10 hover:bg-primary/5 transition-all group" asChild>
+                        <Button variant="outline" className="rounded-2xl font-black uppercase tracking-wide text-[10px] h-16 px-12 border-primary/10 hover:bg-primary/5 transition-all group" asChild>
                             <Link href="/contact" className="flex items-center gap-3">
-                                Dispatch Message <MessageCircle className="h-4 w-4 opacity-40 group-hover:animate-bounce" />
+                                Dispatch message <MessageCircle className="h-4 w-4 opacity-40 group-hover:animate-bounce" />
                             </Link>
                         </Button>
                     </div>
