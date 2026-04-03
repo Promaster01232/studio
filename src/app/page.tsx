@@ -56,10 +56,10 @@ const featureNodes = [
   { icon: Globe, title: "Advocate registry", desc: "Connect with verified professionals for strategy.", href: "/dashboard/lawyer-connect", badge: "Auth" },
 ];
 
-export default function WelcomePage({ params, searchParams }: { params: Promise<any>, searchParams: Promise<any> }) {
+export default function WelcomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
   // Unwrap dynamic props for Next.js 15 compliance
-  use(params);
-  use(searchParams);
+  use(props.params);
+  use(props.searchParams);
 
   const auth = useAuth();
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -79,7 +79,6 @@ export default function WelcomePage({ params, searchParams }: { params: Promise<
       <MinimalBackground />
       
       <main className="flex-1 flex flex-col items-center relative z-10">
-        {/* Hero Section - Reduced Top Gap */}
         <section className="w-full max-w-7xl pt-8 pb-10 sm:pt-12 sm:pb-16 px-6 text-center space-y-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
@@ -125,7 +124,6 @@ export default function WelcomePage({ params, searchParams }: { params: Promise<
           </motion.div>
         </section>
 
-        {/* Process Roadmap - Tighter Spacing */}
         <section className="w-full max-w-6xl py-12 px-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
@@ -162,7 +160,6 @@ export default function WelcomePage({ params, searchParams }: { params: Promise<
             </div>
         </section>
 
-        {/* Tool Matrix - Sleeker Feature UI */}
         <section className="w-full max-w-7xl py-16 px-6 space-y-10">
           <div className="text-center space-y-2">
             <div className="flex items-center justify-center gap-2 text-primary">
@@ -200,7 +197,6 @@ export default function WelcomePage({ params, searchParams }: { params: Promise<
           </div>
         </section>
 
-        {/* Human Assistance - Tighter Layout */}
         <section className="w-full bg-primary/5 border-y border-primary/10 py-16 px-6">
             <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-10 text-center lg:text-left">
                 <div className="p-8 rounded-[2.5rem] bg-background shadow-2xl border border-primary/5 relative z-10 group hover:rotate-1 transition-transform">
@@ -222,14 +218,15 @@ export default function WelcomePage({ params, searchParams }: { params: Promise<
                             <Link href="/dashboard/lawyer-connect">Browse registry</Link>
                         </Button>
                         <Button variant="outline" className="rounded-xl font-black uppercase text-[9px] h-12 px-10 border-primary/10 hover:bg-primary/5 transition-all" asChild>
-                            <Link href="/contact">Dispatch message</Link>
+                            <Link href="/contact" className="flex items-center gap-3">
+                                Dispatch message <MessageCircle className="h-4 w-4 opacity-40 group-hover:animate-bounce" />
+                            </Link>
                         </Button>
                     </div>
                 </div>
             </div>
         </section>
 
-        {/* Final Mandate */}
         <section className="w-full py-16 px-6">
             <div className="max-w-3xl mx-auto text-center space-y-8">
                 <Gavel className="h-8 w-8 text-primary/20 mx-auto animate-bounce" />

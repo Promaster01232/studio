@@ -13,13 +13,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useDatabase } from "@/firebase";
 import { ref, onValue } from "firebase/database";
 
-export default function ChatPage({ params, searchParams }: { 
+export default function ChatPage(props: { 
   params: Promise<{ id: string }>,
   searchParams: Promise<any>
 }) {
   // Unwrap dynamic props for Next.js 15 compliance
-  const { id } = use(params);
-  use(searchParams);
+  const { id } = use(props.params);
+  use(props.searchParams);
 
   const rtdb = useDatabase();
   const [lawyer, setLayer] = useState<Lawyer | undefined>();

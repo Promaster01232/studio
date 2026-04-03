@@ -14,13 +14,13 @@ import { motion } from "framer-motion";
 import { useDatabase } from '@/firebase';
 import { ref, get } from 'firebase/database';
 
-export default function LawyerProfilePage({ params, searchParams }: { 
+export default function LawyerProfilePage(props: { 
   params: Promise<{ id: string }>,
   searchParams: Promise<any>
 }) {
   // Unwrap dynamic props for Next.js 15 compliance
-  const { id } = use(params);
-  use(searchParams);
+  const { id } = use(props.params);
+  use(props.searchParams);
 
   const rtdb = useDatabase();
   const [lawyer, setLayer] = useState<Lawyer | undefined>();

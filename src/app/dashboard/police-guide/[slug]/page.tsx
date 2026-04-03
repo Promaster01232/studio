@@ -8,13 +8,13 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { guides } from "../data";
 
-export default function GuideDetailPage({ params, searchParams }: { 
+export default function GuideDetailPage(props: { 
   params: Promise<{ slug: string }>,
   searchParams: Promise<any>
 }) {
     // Unwrap dynamic props for Next.js 15 compliance
-    const { slug } = use(params);
-    use(searchParams);
+    const { slug } = use(props.params);
+    use(props.searchParams);
 
     const guide = guides.find((g) => g.slug === slug);
 

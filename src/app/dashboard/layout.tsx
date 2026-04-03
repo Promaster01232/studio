@@ -131,9 +131,9 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
     );
 }
 
-export default function DashboardLayout({ children, params }: { children: ReactNode, params: Promise<any> }) {
+export default function DashboardLayout(props: { children: ReactNode, params: Promise<any> }) {
   // Unwrap dynamic props for Next.js 15 compliance
-  use(params);
+  use(props.params);
 
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
@@ -220,7 +220,7 @@ export default function DashboardLayout({ children, params }: { children: ReactN
         <SidebarHeader className="p-5 mb-1 border-b border-primary/5">
           <Link href="/dashboard" className="flex items-center gap-3 transition-all hover:opacity-80 active:scale-95 group-data-[collapsible=icon]:justify-center group">
             <Logo className="h-8 w-8 border-none shadow-none p-0 bg-transparent" priority={true} />
-            <div className="flex flex-col group-data-[collapsible=icon]:hidden text-left min-w-0">
+            <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
               <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none">
                   Nyaya Sahayak
               </span>
@@ -293,7 +293,7 @@ export default function DashboardLayout({ children, params }: { children: ReactN
             <AnimatePresence mode="wait">
                 {showContent ? (
                     <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-4 sm:p-8 min-h-[calc(100vh-64px)] flex flex-col">
-                        <div className="flex-1">{children}</div>
+                        <div className="flex-1">{props.children}</div>
                         <Footer />
                     </motion.div>
                 ) : (

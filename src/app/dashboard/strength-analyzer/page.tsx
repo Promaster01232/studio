@@ -43,10 +43,10 @@ const initialState: CaseStrengthState = {
   error: null,
 };
 
-export default function StrengthAnalyzerPage({ params, searchParams }: { params: Promise<any>, searchParams: Promise<any> }) {
+export default function StrengthAnalyzerPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
   // Unwrap dynamic props for Next.js 15 compliance
-  use(params);
-  use(searchParams);
+  use(props.params);
+  use(props.searchParams);
 
   const [state, formAction] = useActionState(analyzeCaseStrengthAction, initialState);
   const [progress, setProgress] = useState(0);
@@ -161,7 +161,6 @@ export default function StrengthAnalyzerPage({ params, searchParams }: { params:
                     className="space-y-10 text-left"
                 >
                     <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative">
-                        {/* Dossier Background Watermark */}
                         <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none grayscale">
                             <Logo className="h-96 w-96 border-none p-0" priority={false} />
                         </div>
@@ -205,7 +204,6 @@ export default function StrengthAnalyzerPage({ params, searchParams }: { params:
                         </CardHeader>
 
                         <CardContent className="p-8 sm:p-16 space-y-16 text-left relative z-10">
-                            {/* Strength Score Matrix */}
                             <div className="flex flex-col md:flex-row items-center gap-12 sm:gap-20">
                                 <div className="relative h-48 w-48 sm:h-64 sm:w-64 flex items-center justify-center shrink-0 group">
                                     <div className="absolute -inset-4 bg-primary/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
@@ -240,7 +238,6 @@ export default function StrengthAnalyzerPage({ params, searchParams }: { params:
                                 </div>
                             </div>
 
-                            {/* Risk & Action Matrix */}
                             <div className="grid md:grid-cols-2 gap-8 text-left">
                                 <Card className="bg-red-500/[0.03] rounded-[2.5rem] border-red-500/10 p-8 sm:p-10 shadow-inner group transition-all hover:bg-red-500/[0.06]">
                                     <div className="flex items-center justify-between mb-8">
@@ -276,7 +273,6 @@ export default function StrengthAnalyzerPage({ params, searchParams }: { params:
                                 </Card>
                             </div>
 
-                            {/* Deep Research Node */}
                             <div className="space-y-10 text-left border-t border-primary/10 pt-16">
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                                     <div className="flex items-center gap-4">

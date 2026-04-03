@@ -140,10 +140,10 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
     );
 }
 
-export default function ManagementConsolePage({ params, searchParams }: { params: Promise<any>, searchParams: Promise<any> }) {
+export default function ManagementConsolePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
   // Unwrap dynamic props for Next.js 15 compliance
-  use(params); 
-  use(searchParams);
+  use(props.params); 
+  use(props.searchParams);
 
   const firestore = useFirestore();
   const rtdb = useDatabase();
