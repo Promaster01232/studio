@@ -280,7 +280,7 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                                     <div className="flex items-center gap-4">
                                         <div className="p-4 rounded-[1.2rem] bg-primary/10 text-primary shadow-lg">
-                                            <search className="h-7 w-7" />
+                                            <Search className="h-7 w-7" />
                                         </div>
                                         <div className="text-left space-y-1">
                                             <h3 className="text-2xl sm:text-3xl font-black tracking-tight leading-none uppercase">Research Deep-Dive</h3>
