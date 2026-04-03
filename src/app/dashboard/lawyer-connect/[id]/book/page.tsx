@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, use } from "react";
@@ -23,13 +22,13 @@ const timeSlots = [
     "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "02:00 PM", "02:30 PM", "03:00 PM"
 ];
 
-export default function BookConsultationPage(props: { 
+export default function BookConsultationPage({ params, searchParams }: { 
   params: Promise<{ id: string }>,
   searchParams: Promise<any>
 }) {
-  const { id } = use(props.params);
-  // Unwrap searchParams for Next.js 15 consistency
-  use(props.searchParams);
+  // Unwrap dynamic props for Next.js 15 compliance
+  const { id } = use(params);
+  use(searchParams);
 
   const rtdb = useDatabase();
   const { toast } = useToast();

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { use, useState, useMemo } from "react";
@@ -16,13 +15,13 @@ import { topics } from "../data";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export default function LearnTopicDetailPage(props: { 
+export default function LearnTopicDetailPage({ params, searchParams }: { 
   params: Promise<{ slug: string }>,
   searchParams: Promise<any>
 }) {
-    const { slug } = use(props.params);
-    // Unwrap searchParams just in case, to maintain Next.js 15 consistency
-    use(props.searchParams);
+    // Unwrap dynamic props for Next.js 15 compliance
+    const { slug } = use(params);
+    use(searchParams);
     
     const [displayLang, setDisplayLang] = useState<'en' | 'hi'>('en');
 

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use } from 'react';
@@ -15,12 +14,13 @@ import { motion } from "framer-motion";
 import { useDatabase } from '@/firebase';
 import { ref, get } from 'firebase/database';
 
-export default function LawyerProfilePage(props: { 
+export default function LawyerProfilePage({ params, searchParams }: { 
   params: Promise<{ id: string }>,
   searchParams: Promise<any>
 }) {
-  const { id } = use(props.params);
-  use(props.searchParams);
+  // Unwrap dynamic props for Next.js 15 compliance
+  const { id } = use(params);
+  use(searchParams);
 
   const rtdb = useDatabase();
   const [lawyer, setLayer] = useState<Lawyer | undefined>();

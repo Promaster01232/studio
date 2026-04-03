@@ -1,4 +1,3 @@
-
 "use client";
 
 import { use } from "react";
@@ -9,12 +8,13 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { guides } from "../data";
 
-export default function GuideDetailPage(props: { 
+export default function GuideDetailPage({ params, searchParams }: { 
   params: Promise<{ slug: string }>,
   searchParams: Promise<any>
 }) {
-    const { slug } = use(props.params);
-    use(props.searchParams);
+    // Unwrap dynamic props for Next.js 15 compliance
+    const { slug } = use(params);
+    use(searchParams);
 
     const guide = guides.find((g) => g.slug === slug);
 

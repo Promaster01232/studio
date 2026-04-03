@@ -172,9 +172,10 @@ const aiFeatures = [
     { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Official instruments." },
 ];
 
-export default function DashboardHomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  use(props.params);
-  use(props.searchParams);
+export default function DashboardHomePage({ params, searchParams }: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Unwrap dynamic props for Next.js 15 compliance
+  use(params);
+  use(searchParams);
 
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
@@ -103,13 +102,13 @@ interface Post {
     postType?: string;
 }
 
-export default function UserPublicProfilePage(props: { 
+export default function UserPublicProfilePage({ params, searchParams }: { 
   params: Promise<{ uid: string }>,
   searchParams: Promise<any>
 }) {
-  const { uid } = use(props.params);
-  // Unwrap searchParams just in case, to maintain Next.js 15 consistency
-  use(props.searchParams);
+  // Unwrap dynamic props for Next.js 15 compliance
+  const { uid } = use(params);
+  use(searchParams);
 
   const firestore = useFirestore();
   const auth = useAuth();

@@ -56,9 +56,10 @@ const featureNodes = [
   { icon: Globe, title: "Advocate registry", desc: "Connect with verified professionals for strategy.", href: "/dashboard/lawyer-connect", badge: "Auth" },
 ];
 
-export default function WelcomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  const _params = use(props.params);
-  const _searchParams = use(props.searchParams);
+export default function WelcomePage({ params, searchParams }: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Unwrap dynamic props for Next.js 15 compliance
+  use(params);
+  use(searchParams);
 
   const auth = useAuth();
   const [user, setUser] = useState<FirebaseUser | null>(null);

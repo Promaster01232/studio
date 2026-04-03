@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -132,9 +131,10 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
     );
 }
 
-export default function DashboardLayout(props: { children: ReactNode, params: Promise<any> }) {
-  const _params = use(props.params);
-  const { children } = props;
+export default function DashboardLayout({ children, params }: { children: ReactNode, params: Promise<any> }) {
+  // Unwrap dynamic props for Next.js 15 compliance
+  use(params);
+
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
   const { theme, setTheme } = useTheme();

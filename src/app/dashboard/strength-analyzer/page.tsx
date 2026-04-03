@@ -43,9 +43,10 @@ const initialState: CaseStrengthState = {
   error: null,
 };
 
-export default function StrengthAnalyzerPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  const _params = use(props.params);
-  const _searchParams = use(props.searchParams);
+export default function StrengthAnalyzerPage({ params, searchParams }: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Unwrap dynamic props for Next.js 15 compliance
+  use(params);
+  use(searchParams);
 
   const [state, formAction] = useActionState(analyzeCaseStrengthAction, initialState);
   const [progress, setProgress] = useState(0);

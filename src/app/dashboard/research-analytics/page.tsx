@@ -39,8 +39,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import { Logo } from "@/components/logo";
+import Link from "next/link";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -237,10 +237,10 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
     );
 }
 
-export default function ResearchAnalyticsPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+export default function ResearchAnalyticsPage({ params, searchParams }: { params: Promise<any>, searchParams: Promise<any> }) {
     // Unwrap dynamic props for Next.js 15 compliance
-    use(props.params);
-    use(props.searchParams);
+    use(params);
+    use(searchParams);
 
     const firestore = useFirestore();
     const auth = useAuth();
