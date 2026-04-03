@@ -19,7 +19,8 @@ import {
   Sparkles,
   Zap,
   Activity,
-  Gavel
+  Gavel,
+  MessageCircle
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
@@ -109,7 +110,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                 <span className="text-primary italic">AI Legal Terminal.</span>
               </h1>
               <p className="text-lg sm:text-2xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed">
-                Empowering 1.4 Billion citizens with precise forensic audits, BNS statutory scanning, and automated drafting nodes.
+                Empowering every citizen with precise forensic audits, BNS statutory scanning, and automated drafting nodes. Simple, SATIK knowledge.
               </p>
             </div>
 
