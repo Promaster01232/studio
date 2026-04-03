@@ -171,20 +171,29 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
 
       if (user) {
         const userDocRef = doc(firestore, "users", user.uid);
-        profileUnsubscribeRef.current = onSnapshot(userDocRef, (userDoc) => {
-            if (userDoc.exists()) {
-              setUserProfile(userDoc.data());
-            } else {
-              if (pathname !== '/create-profile' && pathname !== '/login' && pathname !== '/register') {
-                router.replace('/create-profile');
-              }
+        profileUnsubscribeRef.current = onSnapshot(userDocRef, 
+            (userDoc) => {
+                if (userDoc.exists()) {
+                  setUserProfile(userDoc.data());
+                } else {
+                  if (pathname !== '/create-profile' && pathname !== '/login' && pathname !== '/register') {
+                    router.replace('/create-profile');
+                  }
+                }
+                setProfileLoading(false);
+            },
+            (err) => {
+                console.warn("[FIREBASE] Profile snapshot denied. Possible transient state.", err.message);
+                setProfileLoading(false);
             }
-            setProfileLoading(false);
-        });
+        );
 
         const notifRef = collection(firestore, "notifications");
         const q = query(notifRef, where("userId", "==", user.uid), where("isRead", "==", false));
-        notifUnsubscribeRef.current = onSnapshot(q, (snap) => setUnreadCount(snap.size));
+        notifUnsubscribeRef.current = onSnapshot(q, 
+            (snap) => setUnreadCount(snap.size),
+            (err) => console.warn("[FIREBASE] Notifications snapshot denied.", err.message)
+        );
 
       } else {
         setProfileLoading(false);

@@ -84,10 +84,16 @@ export default function BillingPage() {
 
     useEffect(() => {
         if (!auth.currentUser) return;
-        const unsub = onSnapshot(doc(firestore, "users", auth.currentUser.uid), (doc) => {
-            setProfile(doc.data());
-            setLoading(false);
-        });
+        const unsub = onSnapshot(doc(firestore, "users", auth.currentUser.uid), 
+            (doc) => {
+                setProfile(doc.data());
+                setLoading(false);
+            },
+            (err) => {
+                console.warn("[FIREBASE] Billing profile snapshot denied.", err.message);
+                setLoading(false);
+            }
+        );
 
         // Strictly query for CAPTURED (Success) transactions only
         const transRef = collection(firestore, "transactions");
@@ -97,15 +103,18 @@ export default function BillingPage() {
             where("status", "==", "CAPTURED")
         );
         
-        const unsubTrans = onSnapshot(q, (snap) => {
-            const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            list.sort((a: any, b: any) => {
-                const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
-                const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
-                return Number(timeB) - Number(timeA);
-            });
-            setUserTransactions(list);
-        });
+        const unsubTrans = onSnapshot(q, 
+            (snap) => {
+                const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                list.sort((a: any, b: any) => {
+                    const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
+                    const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
+                    return Number(timeB) - Number(timeA);
+                });
+                setUserTransactions(list);
+            },
+            (err) => console.warn("[FIREBASE] Transaction ledger snapshot denied.", err.message)
+        );
 
         return () => { unsub(); unsubTrans(); };
     }, [auth, firestore]);

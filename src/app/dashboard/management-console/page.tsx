@@ -167,18 +167,27 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
             return;
         }
 
-        const unsubUsers = onSnapshot(collection(firestore, "users"), (snapshot) => {
-            const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
-            setUsers(list.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0)));
-            setLoading(false);
-        });
+        const unsubUsers = onSnapshot(collection(firestore, "users"), 
+            (snapshot) => {
+                const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
+                setUsers(list.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0)));
+                setLoading(false);
+            },
+            (err) => {
+                console.warn("[FIREBASE] Admin user snapshot denied.", err.message);
+                setLoading(false);
+            }
+        );
 
         const transRef = collection(firestore, "transactions");
         const qTrans = query(transRef, where("status", "==", "CAPTURED"));
-        const unsubTrans = onSnapshot(qTrans, (snapshot) => {
-            const list = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as TransactionRecord));
-            setTransactions(list.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0)));
-        });
+        const unsubTrans = onSnapshot(qTrans, 
+            (snapshot) => {
+                const list = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as TransactionRecord));
+                setTransactions(list.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0)));
+            },
+            (err) => console.warn("[FIREBASE] Admin transaction snapshot denied.", err.message)
+        );
 
         return () => { unsubUsers(); unsubTrans(); };
     });
