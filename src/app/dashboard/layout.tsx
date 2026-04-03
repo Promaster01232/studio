@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -38,6 +39,7 @@ import { SearchDialog } from "@/components/search-dialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
+import { FloatingHub } from "@/components/floating-hub";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -262,7 +264,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-2xl shadow-3xl glass border-primary/5">
+              <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-2xl shadow-3xl glass border-primary/10">
                 <DropdownMenuLabel className="px-2 pb-2 text-left font-black uppercase text-[9px] tracking-widest text-muted-foreground/50">Registry Dossier</DropdownMenuLabel>
                 <DropdownMenuItem asChild className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 mb-1 cursor-pointer">
                     <Link href="/dashboard/profile"><User className="h-4 w-4 text-primary opacity-60" /> My Identity</Link>
@@ -301,6 +303,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 )}
             </AnimatePresence>
         </main>
+        <FloatingHub />
       </SidebarInset>
     </SidebarProvider>
   );
