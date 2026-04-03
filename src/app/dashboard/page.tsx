@@ -24,7 +24,9 @@ import {
   Layers,
   Clock,
   TrendingUp,
-  Gavel
+  Gavel,
+  ShieldAlert,
+  ChevronRight
 } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -220,42 +222,94 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
   const isElite = isAdmin || userProfile?.subscriptionType?.includes('unlimited');
 
   return (
-    <div className="flex flex-col h-full space-y-8 pb-16 max-w-6xl mx-auto text-left relative">
+    <div className="flex flex-col h-full space-y-6 pb-12 max-w-6xl mx-auto text-left relative pt-2">
         <MotionWrapper>
-          <Card className="relative p-8 sm:p-10 rounded-[2.5rem] overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl">
-              <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
-                  <Logo className="h-48 w-48 grayscale" priority={true} />
+          <Card className="relative overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-[0_30px_100px_rgba(0,0,0,0.1)] rounded-[2.5rem] group hover:border-primary/20 transition-all duration-700">
+              {/* Dynamic Design Canvas Background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-primary/[0.01] -z-10"></div>
+              <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.06] group-hover:scale-110 transition-all duration-1000 pointer-events-none grayscale">
+                  <Logo className="h-64 w-64" priority={true} />
               </div>
-              <div className="relative z-10 space-y-6">
-                  <div className="space-y-3">
-                      <Badge className="bg-primary/5 text-primary border-primary/10 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.2em]">
-                          Registry Node Alpha // {isElite ? 'Elite' : 'Standard'}
-                      </Badge>
-                      <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-none text-foreground">
-                          Welcome, <br />
-                          <span className="text-primary italic">Nyaya {text}</span>
-                      </h1>
+              
+              <div className="p-8 sm:p-12 relative z-10 flex flex-col lg:flex-row items-center gap-10">
+                  <div className="flex-1 space-y-8 text-center lg:text-left">
+                      <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
+                          <Badge variant="outline" className="h-8 border-primary/10 font-black bg-background/50 shadow-sm px-4 rounded-xl text-[9px] uppercase tracking-[0.2em] text-primary/80">
+                              Registry Node Alpha // {isElite ? 'Elite Access' : 'Standard Ingress'}
+                          </Badge>
+                          <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-green-500/5 border border-green-500/10">
+                              <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                              <span className="text-[8px] font-black uppercase tracking-widest text-green-600">Secure Ingress Active</span>
+                          </div>
+                      </div>
+
+                      <div className="space-y-4">
+                          <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-[0.9] text-foreground">
+                              Welcome, <br />
+                              <span className="text-primary italic">Nyaya {text}</span>
+                          </h1>
+                          <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed">
+                              Access precision AI nodes for statutory auditing and procedural navigation within Bharat's judicial ecosystem. Simple, Satik, and professional.
+                          </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                          <Button size="lg" className="rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-14 px-10 shadow-2xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative" asChild>
+                              <Link href="/dashboard/narrate">
+                                  <span className="relative z-10 flex items-center gap-2">
+                                      Initialize Narration <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                  </span>
+                                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                              </Link>
+                          </Button>
+                          <Button variant="ghost" className="h-14 rounded-2xl px-8 font-black uppercase tracking-widest text-[9px] hover:bg-primary/5 text-primary border border-transparent hover:border-primary/10" asChild>
+                              <Link href="/dashboard/learn">
+                                  Explore Registry
+                              </Link>
+                          </Button>
+                      </div>
                   </div>
-                  <p className="text-base text-muted-foreground font-medium max-w-xl leading-relaxed">
-                      Access precision AI nodes for statutory auditing and procedural navigation within Bharat&apos;s judicial ecosystem.
-                  </p>
-                  <div className="flex flex-wrap gap-4 pt-2">
-                      <Button size="lg" className="rounded-xl font-black uppercase tracking-widest text-[10px] h-12 px-10 shadow-xl" asChild>
-                          <Link href="/dashboard/narrate">Initialize Narration</Link>
-                      </Button>
+
+                  <div className="hidden lg:flex w-72 shrink-0 flex-col gap-4">
+                      <Card className="bg-background/50 border-primary/5 p-5 rounded-2xl shadow-inner group/node hover:border-primary/20 transition-all">
+                          <div className="flex items-center gap-3 mb-3">
+                              <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover/node:bg-primary group-hover/node:text-white transition-all">
+                                  <Activity className="h-4 w-4" />
+                              </div>
+                              <p className="font-black text-[10px] uppercase tracking-widest">System Load</p>
+                          </div>
+                          <div className="h-1 w-full bg-primary/5 rounded-full overflow-hidden">
+                              <motion.div initial={{ width: 0 }} animate={{ width: '42%' }} className="h-full bg-primary" />
+                          </div>
+                          <p className="text-[8px] font-bold text-muted-foreground mt-2 uppercase tracking-widest">Optimal Performance</p>
+                      </Card>
+                      <Card className="bg-background/50 border-primary/5 p-5 rounded-2xl shadow-inner group/node hover:border-primary/20 transition-all">
+                          <div className="flex items-center gap-3 mb-3">
+                              <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover/node:bg-primary group-hover/node:text-white transition-all">
+                                  <ShieldCheck className="h-4 w-4" />
+                              </div>
+                              <p className="font-black text-[10px] uppercase tracking-widest">Auth Protocol</p>
+                          </div>
+                          <p className="text-xs font-bold truncate">TLS 1.3 // AES-256</p>
+                          <p className="text-[8px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Registry Encryption Active</p>
+                      </Card>
                   </div>
               </div>
+              <div className="h-1.5 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
           </Card>
         </MotionWrapper>
 
         <div className="grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-8 space-y-6">
               <section>
-                  <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-3">
-                      <div className="flex items-center gap-2.5">
-                          <TrendingUp className="h-4 w-4 text-primary/40" />
-                          <h2 className="text-[11px] font-black tracking-widest text-foreground/80 uppercase">Community Audits</h2>
+                  <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-2">
+                      <div className="flex items-center gap-2.5 text-primary/40">
+                          <TrendingUp className="h-4 w-4" />
+                          <h2 className="text-[10px] font-black tracking-[0.3em] text-foreground/80 uppercase">Community Audits</h2>
                       </div>
+                      <Button variant="link" className="h-auto p-0 text-[10px] font-black uppercase tracking-widest" asChild>
+                          <Link href="/dashboard/research-analytics">View Full Stream</Link>
+                      </Button>
                   </div>
                   <div className="space-y-4">
                       {postsLoading ? (
@@ -265,7 +319,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                               ))}
                           </div>
                       ) : latestPosts.length === 0 ? (
-                          <Card className="py-16 text-center glass rounded-2xl border-dashed border-2 border-primary/5 opacity-30">
+                          <Card className="py-16 text-center glass rounded-[2rem] border-dashed border-2 border-primary/5 opacity-30">
                               <p className="font-bold text-[10px] tracking-tight lowercase">awaiting transmissions...</p>
                           </Card>
                       ) : (
@@ -279,31 +333,47 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
               </section>
           </div>
 
-          <div className="lg:col-span-4 space-y-8">
+          <div className="lg:col-span-4 space-y-6">
               <section>
-                  <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-3">
-                      <div className="flex items-center gap-2.5">
-                          <Sparkles className="h-4 w-4 text-primary/40" />
-                          <h2 className="text-[11px] font-black tracking-widest text-foreground/80 uppercase">Tool Matrix</h2>
+                  <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-2">
+                      <div className="flex items-center gap-2.5 text-primary/40">
+                          <Sparkles className="h-4 w-4" />
+                          <h2 className="text-[10px] font-black tracking-[0.3em] text-foreground/80 uppercase">Tool Matrix</h2>
                       </div>
                   </div>
                   <div className="grid grid-cols-1 gap-3">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
-                            <Card className="h-full glass p-4 rounded-xl border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden shadow-sm hover:shadow-xl group-active:scale-95">
+                            <Card className="h-full glass p-4 rounded-2xl border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden shadow-sm hover:shadow-xl group-active:scale-95">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2.5 rounded-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                                    <div className="p-2.5 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                                         <f.icon className="h-4 w-4" />
                                     </div>
-                                    <div>
+                                    <div className="flex-1">
                                         <h3 className="font-black text-[11px] tracking-tight text-foreground uppercase leading-none">{f.title}</h3>
                                         <p className="text-[9px] font-bold text-muted-foreground mt-1">{f.desc}</p>
                                     </div>
+                                    <ChevronRight className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                                 </div>
                             </Card>
                         </Link>
                       ))}
                   </div>
+              </section>
+              
+              <section className="pt-2">
+                  <Card className="bg-primary/5 border-primary/10 rounded-2xl p-6 text-center space-y-4">
+                      <div className="bg-primary/10 p-3 rounded-2xl w-fit mx-auto">
+                          <ShieldAlert className="h-6 w-6 text-primary" />
+                      </div>
+                      <div className="space-y-1">
+                          <h3 className="font-black text-xs uppercase tracking-tight">Need Legal Support?</h3>
+                          <p className="text-[10px] text-muted-foreground font-medium leading-relaxed">Our verified advocate registry is available for specialized strategy.</p>
+                      </div>
+                      <Button variant="outline" className="w-full h-9 rounded-xl font-black uppercase tracking-widest text-[9px] border-primary/20 text-primary hover:bg-primary/5" asChild>
+                          <Link href="/dashboard/lawyer-connect">Sync with Advocate</Link>
+                      </Button>
+                  </Card>
               </section>
           </div>
         </div>
