@@ -15,7 +15,6 @@ import {
   Search,
   Globe,
   CheckCircle2,
-  UserCheck,
   Sparkles,
   Zap,
   Activity,
@@ -139,27 +138,52 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
         </section>
 
         {/* Process Roadmap */}
-        <section className="w-full max-w-6xl py-20 px-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <section className="w-full max-w-6xl py-24 px-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {[
-                    { step: "01", title: "Narrate", desc: "Transmit your legal narrative via voice or textual node.", icon: Mic, color: "text-primary" },
-                    { step: "02", title: "Audit", desc: "AI deconstructs facts against the latest statutory framework.", icon: ShieldCheck, color: "text-primary" },
-                    { step: "03", title: "Redress", desc: "Receive a professional roadmap and generated instruments.", icon: CheckCircle2, color: "text-primary" },
+                    { step: "01", title: "Narrate Problem", desc: "Transmit your legal narrative via voice or textual node for AI ingestion.", icon: Mic, color: "text-primary" },
+                    { step: "02", title: "Forensic Audit", desc: "AI deconstructs facts against the latest Indian statutory framework.", icon: ShieldCheck, color: "text-primary" },
+                    { step: "03", title: "Statutory Redress", desc: "Receive a professional roadmap and generated legal instruments.", icon: CheckCircle2, color: "text-primary" },
                 ].map((item, i) => (
                     <motion.div 
                         key={i} 
-                        initial={{ opacity: 0, y: 20 }} 
+                        initial={{ opacity: 0, y: 30 }} 
                         whileInView={{ opacity: 1, y: 0 }} 
-                        viewport={{ once: true }} 
-                        transition={{ delay: i * 0.2 }}
-                        className="group relative p-10 rounded-[2.5rem] bg-card border border-primary/5 shadow-sm text-left hover:border-primary/20 transition-all hover:shadow-2xl"
+                        viewport={{ once: true, amount: 0.3 }} 
+                        transition={{ duration: 0.6, delay: i * 0.15, ease: "easeOut" }}
+                        className="group relative p-8 sm:p-10 rounded-[2.5rem] bg-card/40 backdrop-blur-xl border border-primary/5 shadow-sm text-left hover:border-primary/20 transition-all duration-500 hover:shadow-2xl"
                     >
-                        <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center mb-8 shadow-inner bg-primary/5 border border-primary/5 transition-transform group-hover:scale-110", item.color)}>
-                            <item.icon className="h-6 w-6" />
+                        <div className="absolute top-6 right-8 text-4xl font-black text-primary/5 select-none transition-all duration-700 group-hover:text-primary/10 group-hover:scale-110">
+                            {item.step}
                         </div>
-                        <div className="absolute top-8 right-10 text-6xl font-black text-primary/5 select-none transition-colors group-hover:text-primary/10">{item.step}</div>
-                        <h3 className="text-2xl font-black tracking-tighter mb-3 uppercase leading-none">{item.title}</h3>
-                        <p className="text-sm text-muted-foreground font-medium leading-relaxed opacity-80">{item.desc}</p>
+                        
+                        <div className="flex flex-col gap-6 relative z-10">
+                            <div className={cn(
+                                "h-14 w-14 rounded-2xl flex items-center justify-center shadow-lg bg-primary/5 border border-primary/10 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3", 
+                                item.color
+                            )}>
+                                <item.icon className="h-6 w-6" />
+                            </div>
+                            
+                            <div className="space-y-3">
+                                <h3 className="text-xl sm:text-2xl font-black tracking-tight text-foreground transition-colors group-hover:text-primary">
+                                    {item.title}
+                                </h3>
+                                <p className="text-sm text-muted-foreground font-medium leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
+                                    {item.desc}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        {/* Interactive Ingress Line */}
+                        <div className="absolute bottom-0 left-10 right-10 h-0.5 bg-primary/10 overflow-hidden rounded-full">
+                            <motion.div 
+                                initial={{ x: "-100%" }}
+                                whileInView={{ x: "100%" }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: i * 0.5 }}
+                                className="h-full w-1/2 bg-gradient-to-r from-transparent via-primary/40 to-transparent"
+                            />
+                        </div>
                     </motion.div>
                 ))}
             </div>
@@ -216,7 +240,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                 <div className="relative">
                     <div className="absolute -inset-10 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
                     <div className="p-10 rounded-[3.5rem] bg-background shadow-3xl border border-primary/5 relative z-10 group hover:rotate-2 transition-transform duration-700">
-                        <UserCheck className="h-24 w-24 text-primary group-hover:scale-110 transition-transform" />
+                        <Globe className="h-24 w-24 text-primary group-hover:scale-110 transition-transform" />
                     </div>
                 </div>
                 <div className="flex-1 space-y-8">
