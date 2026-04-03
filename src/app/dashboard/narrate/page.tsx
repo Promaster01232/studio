@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useRef, useEffect, startTransition } from "react";
+import { useActionState, useState, useRef, useEffect, startTransition, use } from "react";
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,8 +10,6 @@ import {
   Bot, 
   StepForward, 
   Loader2, 
-  Languages, 
-  FileSearch, 
   Upload, 
   ShieldCheck, 
   Activity, 
@@ -21,7 +19,7 @@ import {
   Fingerprint,
   PlusCircle,
   ArrowLeft,
-  X,
+  FileSearch,
   ChevronDown
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
@@ -42,7 +40,11 @@ const initialState: CaseSummaryState = {
   error: null,
 };
 
-export default function NarrateProblemPage() {
+export default function NarrateProblemPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Next.js 15: Explicitly unwrap dynamic properties to prevent enumeration errors
+  use(props.params);
+  use(props.searchParams);
+
   const [state, formAction] = useActionState(summarizeCaseAction, initialState);
   const { toast } = useToast();
   const firestore = useFirestore();
@@ -80,7 +82,6 @@ export default function NarrateProblemPage() {
         const userRef = doc(firestore, "users", auth.currentUser.uid);
         updateDoc(userRef, { aiUsageCount: increment(1) }).catch(console.error);
         
-        // Kinetic Scroll to the report node
         setTimeout(() => {
             reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 300);
@@ -165,7 +166,6 @@ export default function NarrateProblemPage() {
             </Button>
         </motion.div>
 
-        {/* SECTION 1: INGRESS TERMINAL */}
         <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -245,14 +245,13 @@ export default function NarrateProblemPage() {
             </Card>
         </motion.div>
 
-        {/* SECTION 2: ALWAYS VISIBLE REPORT CARD */}
         <div ref={reportRef} className="space-y-8 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-4">
                 <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
                 <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Official Voice Audit Node</Badge>
             </div>
 
-            <Card className="glass border-primary/20 shadow-3xl overflow-hidden rounded-[3rem] relative min-h-[600px] flex flex-col">
+            <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col">
                 <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
                     <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
                 </div>

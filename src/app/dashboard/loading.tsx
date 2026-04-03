@@ -17,7 +17,7 @@ export default function Loading() {
         <div className="relative">
           <div className="p-1 rounded-full bg-primary/5 shadow-2xl">
             <div className="bg-white rounded-full p-2 shadow-inner">
-              <Logo className="h-16 w-16 shadow-none border-none p-0" priority={true} />
+              <Logo className="h-16 w-16 shadow-none border-none p-0 bg-transparent" priority={true} />
             </div>
           </div>
           

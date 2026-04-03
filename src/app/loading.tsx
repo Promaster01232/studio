@@ -8,7 +8,6 @@ export default function Loading() {
   return (
     <div className="fixed inset-0 z-[300] flex flex-col items-center justify-center bg-background/95 backdrop-blur-md">
       <div className="relative mb-6">
-        {/* Rapid Neural Pulse */}
         <motion.div
           animate={{ 
             scale: [1, 1.1, 1],

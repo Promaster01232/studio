@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef, useState, useEffect } from "react";
+import { useActionState, useRef, useState, useEffect, use } from "react";
 import { understandDocumentAction, type DocumentIntelligenceState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +28,8 @@ import {
   Fingerprint,
   PlusCircle,
   FileSearch,
-  ChevronDown
+  ChevronDown,
+  X
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,7 +46,11 @@ const initialState: DocumentIntelligenceState = {
   error: null,
 };
 
-export default function DocumentIntelligencePage() {
+export default function DocumentIntelligencePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+  // Next.js 15: Explicitly unwrap dynamic properties to prevent enumeration errors
+  use(props.params);
+  use(props.searchParams);
+
   const [state, formAction] = useActionState(understandDocumentAction, initialState);
   const [fileName, setFileName] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("English");
@@ -67,7 +72,6 @@ export default function DocumentIntelligencePage() {
         const userRef = doc(firestore, "users", auth.currentUser.uid);
         updateDoc(userRef, { aiUsageCount: increment(1) }).catch(console.error);
         
-        // Kinetic Scroll to the report node
         setTimeout(() => {
             reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 300);
@@ -92,7 +96,6 @@ export default function DocumentIntelligencePage() {
             </Button>
         </motion.div>
 
-        {/* SECTION 1: INGRESS TERMINAL */}
         <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -171,14 +174,13 @@ export default function DocumentIntelligencePage() {
             </Card>
         </motion.div>
 
-        {/* SECTION 2: ALWAYS VISIBLE REPORT CARD */}
         <div ref={reportRef} className="space-y-8 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-4">
                 <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
                 <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Statutory Intelligence Node</Badge>
             </div>
 
-            <Card className="glass border-primary/20 shadow-3xl overflow-hidden rounded-[3rem] relative min-h-[600px] flex flex-col">
+            <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col">
                 <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
                     <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
                 </div>

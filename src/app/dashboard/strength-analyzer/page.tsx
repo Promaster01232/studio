@@ -45,7 +45,7 @@ const initialState: CaseStrengthState = {
 };
 
 export default function StrengthAnalyzerPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // Unwrap dynamic props for Next.js 15 compliance
+  // Next.js 15: Explicitly unwrap dynamic properties to prevent enumeration errors
   use(props.params);
   use(props.searchParams);
 
@@ -62,7 +62,6 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
           const userRef = doc(firestore, "users", auth.currentUser.uid);
           updateDoc(userRef, { aiUsageCount: increment(1) }).catch(console.error);
       }
-      // Kinetic Scroll to the report node
       setTimeout(() => {
         reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 300);
@@ -87,7 +86,6 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
             </Button>
         </motion.div>
 
-        {/* SECTION 1: INGRESS TERMINAL */}
         <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -133,7 +131,6 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
             </Card>
         </motion.div>
 
-        {/* SECTION 2: ALWAYS VISIBLE REPORT CARD */}
         <div ref={reportRef} className="space-y-8 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-4">
                 <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
@@ -141,7 +138,7 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
             </div>
 
             <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col">
-                <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
+                <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
                     <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
                 </div>
 
@@ -259,7 +256,7 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                                                 state.data.strengthScore <= 30 ? "bg-red-500/10 text-red-600 border-red-500/20" : state.data.strengthScore <= 65 ? "bg-yellow-500/10 text-yellow-600 border-yellow-500/20" : "bg-green-500/10 text-green-600 border-green-500/20")}>
                                                 Litigation Category: {state.data.strengthScore <= 30 ? "High Procedural Risk" : state.data.strengthScore <= 65 ? "Statutory Moderate" : "Research Optimized"}
                                             </Badge>
-                                            <h3 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-tight">Executive <span className="text-primary italic">Summary</span></h3>
+                                            <h3 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">Executive <span className="text-primary italic">Summary</span></h3>
                                         </div>
                                         <p className="text-lg sm:text-xl font-bold leading-relaxed text-foreground/80 max-w-2xl">
                                             {state.data.summary}
@@ -277,7 +274,7 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                                         </div>
                                         <div className="space-y-4">
                                             {state.data.riskIndicators.map((risk, idx) => (
-                                                <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-red-500/10 text-sm font-bold leading-relaxed text-foreground/80 shadow-sm group-hover:scale-[1.02] transition-transform">
+                                                <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-red-500/10 text-sm font-bold leading-relaxed text-foreground/80 shadow-sm group-hover:scale-[1.02] transition-transform text-left">
                                                     <div className="h-2 w-2 rounded-full bg-red-500 mt-1.5 shrink-0 animate-pulse" />
                                                     {risk}
                                                 </div>
@@ -293,7 +290,7 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                                         </div>
                                         <div className="space-y-4">
                                             {state.data.recommendedActions.map((action, idx) => (
-                                                <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-green-500/10 text-sm font-bold leading-relaxed text-foreground/80 shadow-sm group-hover:scale-[1.02] transition-transform">
+                                                <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-green-500/10 text-sm font-bold leading-relaxed text-foreground/80 shadow-sm group-hover:scale-[1.02] transition-transform text-left">
                                                     <div className="h-2 w-2 rounded-full bg-green-500 mt-1.5 shrink-0" />
                                                     {action}
                                                 </div>
