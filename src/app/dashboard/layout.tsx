@@ -222,14 +222,19 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon" className="border-r border-primary/5 glass bg-white/50 dark:bg-zinc-950/50">
-        <SidebarHeader className="p-8 overflow-hidden">
-          <Link href="/dashboard" className="flex items-center gap-5 transition-all hover:scale-105 active:scale-95 group-data-[collapsible=icon]:justify-center group">
-            <Logo className="h-10 w-10 border-none shadow-none p-0 bg-transparent" priority={true} />
-            <div className="flex flex-col group-data-[collapsible=icon]:hidden text-left">
-              <span className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent truncate">
+        <SidebarHeader className="p-6 mb-2 overflow-hidden border-b border-primary/5">
+          <Link href="/dashboard" className="flex items-center gap-4 transition-all hover:opacity-80 active:scale-95 group-data-[collapsible=icon]:justify-center group">
+            <div className="relative shrink-0">
+                <div className="absolute -inset-1 bg-gradient-to-tr from-primary/20 via-accent/20 to-blue-400/20 blur-sm rounded-lg group-data-[collapsible=icon]:hidden"></div>
+                <Logo className="h-9 w-9 border-none shadow-none p-0 bg-transparent relative z-10" priority={true} />
+            </div>
+            <div className="flex flex-col group-data-[collapsible=icon]:hidden text-left min-w-0">
+              <span className="text-xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent truncate leading-none">
                   Nyaya Sahayak
               </span>
-              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 leading-none mt-1">Forensic Operating System</span>
+              <span className="text-[7px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 leading-none mt-1.5 truncate">
+                  Forensic Operating System
+              </span>
             </div>
           </Link>
         </SidebarHeader>
