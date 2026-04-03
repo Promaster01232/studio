@@ -25,7 +25,8 @@ import {
   Fingerprint,
   Landmark,
   PlusCircle,
-  ArrowLeft
+  ArrowLeft,
+  X
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
@@ -70,7 +71,7 @@ export default function NarrateProblemPage() {
         toast({
           variant: "destructive",
           title: "Capture Protocol Denied",
-          description: "Enable microphone permissions in browser settings.",
+          description: "Please enable microphone permissions in your browser settings.",
         });
       }
     };
@@ -108,18 +109,22 @@ export default function NarrateProblemPage() {
                 formData.append("language", language);
                 startTransition(() => formAction(formData));
             } else {
-                 toast({ variant: "destructive", title: "Capture Insufficient" });
+                 toast({ variant: "destructive", title: "Transmission Insufficient", description: "Audio capture too short for deconstruction." });
             }
             setIsRecording(false);
         };
         recorder.start();
     } catch(err) {
         setIsRecording(false);
+        if (timerInterval.current) clearInterval(timerInterval.current);
+        toast({ variant: "destructive", title: "Ingress Error", description: "Could not initialize audio capture node." });
     }
   };
 
   const stopRecording = () => {
-    if (mediaRecorder.current && isRecording) mediaRecorder.current.stop();
+    if (mediaRecorder.current && isRecording) {
+        mediaRecorder.current.stop();
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,12 +150,17 @@ export default function NarrateProblemPage() {
   const isLoading = state.status === "loading";
 
   return (
-    <div className="space-y-10 max-w-7xl mx-auto pb-20 px-4 sm:px-0 text-left">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+    <div className="space-y-8 max-w-6xl mx-auto pb-20 px-4 sm:px-0 text-left">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
             <PageHeader
-                title="Neural Voice Narrator"
-                description="Speak naturally to generate a comprehensive forensic legal report."
+                title="Voice Narrator"
+                description="Initialize neural deconstruction of your legal narrative via voice ingress."
             />
+            <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
+                <Link href="/dashboard">
+                    <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Terminal
+                </Link>
+            </Button>
         </motion.div>
 
         <div className={cn("grid grid-cols-1 gap-8 items-start", state.status !== 'success' ? "lg:grid-cols-12" : "lg:grid-cols-1")}>
@@ -158,24 +168,27 @@ export default function NarrateProblemPage() {
                 {state.status !== 'success' ? (
                     <motion.div 
                         key="input-form"
-                        initial={{ opacity: 0, x: -30 }} 
+                        initial={{ opacity: 0, x: -20 }} 
                         animate={{ opacity: 1, x: 0 }} 
                         exit={{ opacity: 0, y: -20 }}
-                        className="lg:col-span-4 space-y-6"
+                        className="lg:col-span-5 space-y-6"
                     >
                         <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
                             <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
                                 <div className="flex items-center gap-3 mb-2 text-primary">
-                                    <Mic className="h-5 w-5" />
-                                    <CardTitle className="text-xl font-black tracking-tight uppercase">Capture Protocol</CardTitle>
+                                    <div className="p-2.5 rounded-xl bg-primary/10">
+                                        <Mic className="h-5 w-5" />
+                                    </div>
+                                    <CardTitle className="text-xl font-black uppercase tracking-tight">Capture Protocol</CardTitle>
                                 </div>
+                                <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize secured voice transmission.</CardDescription>
                             </CardHeader>
                             <CardContent className="flex flex-col items-center justify-center space-y-8 pt-10 pb-10">
                                 <div className="w-full space-y-4 px-2 text-left">
                                     <div className="space-y-3">
-                                        <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Dialect Registry</Label>
+                                        <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Audit Language</Label>
                                         <Select value={language} onValueChange={setLanguage} disabled={isRecording || isLoading}>
-                                            <SelectTrigger className="h-12 glass border-primary/5 font-bold rounded-xl">
+                                            <SelectTrigger className="h-12 glass border-primary/5 font-bold rounded-xl active:scale-95 transition-all">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
@@ -186,27 +199,49 @@ export default function NarrateProblemPage() {
                                     </div>
                                 </div>
 
-                                <Button
-                                    onClick={isRecording ? stopRecording : startRecording}
-                                    disabled={!hasPermission || isLoading}
-                                    className={cn(
-                                        "h-32 w-32 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col gap-3 transition-all duration-500",
-                                        isRecording ? 'bg-red-500 hover:bg-red-600 scale-110 text-white' : 'bg-primary text-white'
-                                    )}
-                                >
-                                    {isRecording ? <div className="h-10 w-10 bg-white rounded-xl animate-pulse" /> : <Mic className="h-12 w-12" />}
-                                    <span className="text-[10px] font-black uppercase tracking-widest">{isRecording ? "Stop" : "Initialize"}</span>
-                                </Button>
+                                <div className="relative flex flex-col items-center gap-6">
+                                    <AnimatePresence>
+                                        {isRecording && (
+                                            <motion.div 
+                                                initial={{ opacity: 0, scale: 0.8 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0.8 }}
+                                                className="absolute -top-12 flex items-center gap-1"
+                                            >
+                                                {[1, 2, 3, 4, 5].map((i) => (
+                                                    <motion.div 
+                                                        key={i}
+                                                        animate={{ height: [4, 16, 4] }}
+                                                        transition={{ repeat: Infinity, duration: 0.5, delay: i * 0.1 }}
+                                                        className="w-1 bg-red-500 rounded-full"
+                                                    />
+                                                ))}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
 
-                                <div className="text-center space-y-2">
-                                    <p className={cn("text-5xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-primary")}>{formatTime(timer)}</p>
-                                    <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">{isRecording ? "Transmission Active" : isLoading ? "AI Processing Unit..." : "Ready"}</p>
+                                    <Button
+                                        onClick={isRecording ? stopRecording : startRecording}
+                                        disabled={!hasPermission || isLoading}
+                                        className={cn(
+                                            "h-32 w-32 rounded-[2.5rem] shadow-3xl flex flex-col gap-3 transition-all duration-500 active:scale-90",
+                                            isRecording ? 'bg-red-500 hover:bg-red-600 scale-110 text-white' : 'bg-primary text-white'
+                                        )}
+                                    >
+                                        {isRecording ? <div className="h-10 w-10 bg-white rounded-xl animate-pulse" /> : <Mic className="h-12 w-12" />}
+                                        <span className="text-[10px] font-black uppercase tracking-widest">{isRecording ? "Terminate" : isLoading ? "Deconstructing" : "Speak Now"}</span>
+                                    </Button>
+                                    
+                                    <div className="text-center space-y-1">
+                                        <p className={cn("text-5xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-primary")}>{formatTime(timer)}</p>
+                                        <p className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em]">{isRecording ? "Forensic Node Ingress" : isLoading ? "Neural Analysis Active" : "Awaiting transmission"}</p>
+                                    </div>
                                 </div>
 
-                                <div className="w-full pt-6 border-t border-primary/5">
+                                <div className="w-full pt-6 border-t border-primary/5 text-center">
                                     <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="audio/*" className="hidden" />
-                                    <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || isLoading} className="w-full text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary gap-3">
-                                        <Upload className="h-4 w-4" /> Ingest Registry File
+                                    <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || isLoading} className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary gap-3 rounded-xl">
+                                        <Upload className="h-4 w-4" /> Ingest From Registry
                                     </Button>
                                 </div>
                             </CardContent>
@@ -217,7 +252,7 @@ export default function NarrateProblemPage() {
 
             <motion.div 
                 layout
-                className={cn("space-y-6", state.status !== 'success' ? "lg:col-span-8" : "lg:col-span-12")}
+                className={cn("space-y-6", state.status !== 'success' ? "lg:col-span-7" : "lg:col-span-12")}
             >
                 <Card className="glass shadow-2xl min-h-[600px] flex flex-col rounded-[2.5rem] overflow-hidden border-primary/5">
                     <CardHeader className="bg-primary/5 border-b border-primary/10 flex flex-row items-center justify-between p-8 sm:p-12 text-left gap-8 relative z-10">
@@ -225,7 +260,7 @@ export default function NarrateProblemPage() {
                             <div className="flex flex-wrap items-center gap-3">
                                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
                                     <Bot className="h-3.5 w-3.5 text-primary" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Institutional AI</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Official AI Report</span>
                                 </div>
                                 {state.isSimulated && (
                                     <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest">
@@ -234,9 +269,9 @@ export default function NarrateProblemPage() {
                                 )}
                             </div>
                             <div className="space-y-1">
-                                <CardTitle className="text-2xl sm:text-4xl font-black tracking-tighter uppercase leading-none">Voice Audit <span className="text-primary italic">Output</span></CardTitle>
+                                <CardTitle className="text-2xl sm:text-4xl font-black tracking-tighter uppercase leading-none">Voice Audit <span className="text-primary italic">Dossier</span></CardTitle>
                                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.3em] flex items-center gap-2">
-                                    <Clock className="h-3 w-3" /> Transience Node // BNS-V4.2
+                                    <Globe className="h-3 w-3" /> Transience Node // BNS-V4.2
                                 </p>
                             </div>
                         </div>
@@ -248,7 +283,7 @@ export default function NarrateProblemPage() {
                                             <PlusCircle className="h-4 w-4" /> New Narration
                                         </Button>
                                         <AudioAssistant 
-                                            text={`Summary: ${state.data?.caseSummary}. Legal Violations: ${state.data?.detailedAnalysis}.`} 
+                                            text={`Summary: ${state.data?.caseSummary}. Next Steps: ${state.data?.nextActions}. Full Analysis: ${state.data?.detailedAnalysis}.`} 
                                             language={language}
                                         />
                                     </div>
@@ -266,16 +301,19 @@ export default function NarrateProblemPage() {
                             {isLoading ? (
                                 <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center gap-10">
                                     <div className="relative w-fit mx-auto">
-                                        <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
+                                        <Loader2 className="h-20 w-20 animate-spin text-primary opacity-20" />
                                         <div className="absolute inset-0 flex items-center justify-center">
-                                            <Activity className="h-6 w-6 text-primary animate-pulse" />
+                                            <Activity className="h-8 w-8 text-primary animate-pulse" />
                                         </div>
                                     </div>
-                                    <p className="font-black text-2xl tracking-tighter uppercase">Deconstructing Narration...</p>
+                                    <div className="space-y-3">
+                                        <p className="font-black text-2xl tracking-tighter uppercase">Deconstructing Transmission...</p>
+                                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Running forensic sectional scan // BNS-2023</p>
+                                    </div>
                                 </motion.div>
                             ) : state.status === "success" && state.data ? (
                                 <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12 pb-10 text-left relative z-10">
-                                    <div className="p-8 glass rounded-[2.5rem] border-primary/5 italic text-sm sm:text-base font-medium text-muted-foreground leading-relaxed shadow-inner bg-muted/5">
+                                    <div className="p-8 glass rounded-[2rem] border-primary/5 italic text-sm sm:text-base font-medium text-muted-foreground leading-relaxed shadow-inner bg-muted/5">
                                         <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
                                             <Fingerprint className="h-4 w-4" />
                                             <span className="text-[10px] font-black uppercase tracking-widest">Transcription Registry</span>
@@ -284,15 +322,15 @@ export default function NarrateProblemPage() {
                                     </div>
 
                                     <div className="grid md:grid-cols-2 gap-8">
-                                        <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left bg-primary/[0.02]">
+                                        <Card className="p-8 glass rounded-[2rem] border-primary/10 text-left bg-primary/[0.02] shadow-sm hover:shadow-xl transition-all">
                                             <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
                                                 <StepForward className="h-4 w-4" /> Case Summary
                                             </h3>
                                             <p className="text-sm sm:text-base font-black leading-relaxed tracking-tight text-foreground">{state.data.caseSummary}</p>
                                         </Card>
-                                        <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left bg-blue-500/[0.02]">
+                                        <Card className="p-8 glass rounded-[2rem] border-primary/10 text-left bg-blue-500/[0.02] shadow-sm hover:shadow-xl transition-all">
                                             <h3 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
-                                                <Landmark className="h-4 w-4" /> Next Protocols
+                                                <Landmark className="h-4 w-4" /> Procedural Roadmap
                                             </h3>
                                             <p className="text-sm font-bold leading-relaxed text-foreground/80">{state.data.nextActions}</p>
                                         </Card>
@@ -303,11 +341,27 @@ export default function NarrateProblemPage() {
                                             <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
                                                 <FileSearch className="h-5 w-5" /> Forensic Statutory Audit
                                             </h3>
-                                            <Badge variant="outline" className="text-[9px] font-black uppercase border-primary/20 opacity-40">Sectional Ingress Active</Badge>
+                                            <Badge variant="outline" className="text-[9px] font-black uppercase border-primary/20 opacity-40">Sectional Ingress: COMPLETE</Badge>
                                         </div>
-                                        <div className="p-8 sm:p-12 glass rounded-[3rem] border-primary/10 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-lg bg-muted/10">
+                                        <div className="p-8 sm:p-12 glass rounded-[2.5rem] border-primary/10 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-lg bg-muted/10 relative overflow-hidden">
+                                            <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
+                                                <ScaleIcon className="h-40 w-40" />
+                                            </div>
                                             {state.data.detailedAnalysis}
                                         </div>
+                                    </div>
+                                    
+                                    <div className="pt-10 mt-10 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
+                                        <div className="flex items-center gap-4">
+                                            <div className="p-3 rounded-2xl bg-primary/5 text-primary">
+                                                <ShieldCheck className="h-6 w-6" />
+                                            </div>
+                                            <div className="text-left">
+                                                <p className="text-[10px] font-black uppercase tracking-widest">Institutional Security</p>
+                                                <p className="text-[9px] font-bold">This node is protected under attorney-client transience protocols.</p>
+                                            </div>
+                                        </div>
+                                        <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // TERMINAL NS-VOICE</p>
                                     </div>
                                 </motion.div>
                             ) : state.status === 'error' ? (
@@ -318,13 +372,13 @@ export default function NarrateProblemPage() {
                                                 <AlertTriangle className="h-10 w-10" />
                                             </div>
                                             <div className="space-y-2">
-                                                <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Audit Delayed</h3>
+                                                <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Ingress Delayed</h3>
                                                 <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto px-4">
                                                     {state.error}
                                                 </p>
                                             </div>
                                             <Button onClick={handleReset} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
-                                                Re-initialize Capture
+                                                Re-initialize Protocol
                                             </Button>
                                         </div>
                                     </Card>
@@ -339,9 +393,9 @@ export default function NarrateProblemPage() {
                                             </div>
                                         </div>
                                         <div className="space-y-4 max-w-sm px-6">
-                                            <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting Audio Transmission</h3>
+                                            <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting Transmission</h3>
                                             <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
-                                                Initialize the forensic node by providing your case narration for analysis.
+                                                Initialize the forensic node by providing your case narration for neural analysis.
                                             </p>
                                         </div>
                                     </Card>
@@ -355,4 +409,27 @@ export default function NarrateProblemPage() {
         </div>
     </div>
   );
+}
+
+function ScaleIcon(props: any) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" />
+            <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" />
+            <path d="M7 21h10" />
+            <path d="M12 3v18" />
+            <path d="M3 7h2c2 0 5-1 7-2 3 1 5 2 7 2h2" />
+        </svg>
+    )
 }
