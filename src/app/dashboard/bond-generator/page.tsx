@@ -28,7 +28,11 @@ import {
   Activity,
   FileSearch,
   ChevronDown,
-  AlertTriangle
+  AlertTriangle,
+  User,
+  MapPin,
+  Calendar,
+  Gavel
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
@@ -139,7 +143,7 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-32 px-4 sm:px-0 text-left">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6 text-left">
         <PageHeader
           title="Bond Generator"
           description="Initialize legally sound bonds and affidavits instantly with elite AI assistance."
@@ -202,27 +206,169 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
               </div>
 
               <div className="space-y-6">
-                  <FormSectionTitle>Case & Identity Matrix</FormSectionTitle>
-                  <div className="grid md:grid-cols-2 gap-6">
-                      <Input name="caseNumber" placeholder="FIR / Case / Registry No." required className="h-12 glass font-bold rounded-xl" />
-                      <Input name="courtName" placeholder="Full Court / Authority Name" required className="h-12 glass font-bold rounded-xl" />
-                  </div>
-                  <Input name="bondAmount" placeholder="Instrument Value (in words & figures)" required className="h-12 glass font-bold rounded-xl" />
-                  <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-3 text-left">
-                          <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Primary Node Name</Label>
-                          <Input name="accusedName" placeholder="Full Name of Party" required className="h-12 glass font-bold rounded-xl" />
-                      </div>
-                      <div className="space-y-3 text-left">
-                          <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Party Address</Label>
-                          <Textarea name="accusedAddress" placeholder="Full permanent address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
-                      </div>
-                  </div>
+                  {/* DYNAMIC FIELDS BASED ON BOND TYPE */}
+                  {(bondType === 'Bail Bond' || bondType === 'Personal Bond') && (
+                      <>
+                        <FormSectionTitle>Case & Court Registry</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="caseNumber" placeholder="FIR / Case / Registry No." required className="h-12 glass font-bold rounded-xl" />
+                            <Input name="courtName" placeholder="Full Court / Authority Name" required className="h-12 glass font-bold rounded-xl" />
+                        </div>
+                        <Input name="bondAmount" placeholder="Instrument Value (e.g., ₹50,000)" required className="h-12 glass font-bold rounded-xl" />
+                        
+                        <FormSectionTitle>Accused Node (Party)</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="accusedName" placeholder="Full Name of Accused" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="accusedAddress" placeholder="Full permanent address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+
+                        {bondType === 'Bail Bond' && (
+                            <>
+                                <FormSectionTitle>Surety Node (Guarantor)</FormSectionTitle>
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <Input name="suretyName" placeholder="Full Name of Surety" required className="h-12 glass font-bold rounded-xl" />
+                                    <Textarea name="suretyAddress" placeholder="Full permanent address of Surety..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                                </div>
+                            </>
+                        )}
+
+                        {bondType === 'Personal Bond' && (
+                            <div className="space-y-3">
+                                <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Special Conditions</Label>
+                                <Textarea name="conditions" placeholder="Any specific conditions set by the court..." className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                            </div>
+                        )}
+                      </>
+                  )}
+
+                  {bondType === 'Indemnity Bond' && (
+                      <>
+                        <FormSectionTitle>Indemnifier Node (Author)</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="indemnifierName" placeholder="Full Name" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="indemnifierAddress" placeholder="Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Indemnity Holder Node</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="indemnityHolderName" placeholder="Full Name / Dept" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="indemnityHolderAddress" placeholder="Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Statutory Purpose</FormSectionTitle>
+                        <Textarea name="indemnityDetails" placeholder="Reason for indemnity (e.g., Loss of share certificate, execution of deed)..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        <Input name="bondAmount" placeholder="Indemnity Value (if any)" className="h-12 glass font-bold rounded-xl" />
+                      </>
+                  )}
+
+                  {bondType === 'Surety Bond' && (
+                      <>
+                        <FormSectionTitle>Principal Node</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="principalName" placeholder="Full Name of Principal" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="principalAddress" placeholder="Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Obligee Node</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="obligeeName" placeholder="Full Name of Obligee" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="obligeeAddress" placeholder="Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Surety Node</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="suretyName" placeholder="Full Name of Surety" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="suretyAddress" placeholder="Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Instrument Details</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="bondPurpose" placeholder="Purpose of Bond" required className="h-12 glass font-bold rounded-xl" />
+                            <Input name="bondAmount" placeholder="Bond Value" required className="h-12 glass font-bold rounded-xl" />
+                        </div>
+                      </>
+                  )}
+
+                  {bondType === 'Performance Bond' && (
+                      <>
+                        <FormSectionTitle>Obligor Node (Contractor)</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="obligorName" placeholder="Enterprise / Name" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="obligorAddress" placeholder="Official Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Obligee Node (Client)</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="obligeeName" placeholder="Enterprise / Name" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="obligeeAddress" placeholder="Official Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Project Specs</FormSectionTitle>
+                        <Textarea name="projectDetails" placeholder="Detailed description of project/contract..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        <div className="grid md:grid-cols-2 gap-6 mt-4">
+                            <Input name="bondAmount" placeholder="Performance Value (₹)" required className="h-12 glass font-bold rounded-xl" />
+                            <Input name="expiryDate" type="date" className="h-12 glass font-bold rounded-xl" />
+                        </div>
+                      </>
+                  )}
+
+                  {bondType === 'Mortgage Bond' && (
+                      <>
+                        <FormSectionTitle>Mortgagor Node (Borrower)</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="mortgagorName" placeholder="Full Name" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="mortgagorAddress" placeholder="Permanent Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Mortgagee Node (Lender)</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="mortgageeName" placeholder="Name / Financial Institution" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="mortgageeAddress" placeholder="Official Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Asset Registry</FormSectionTitle>
+                        <Textarea name="propertyDetails" placeholder="Full description of mortgaged property..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        <div className="grid md:grid-cols-2 gap-6 mt-4">
+                            <Input name="loanAmount" placeholder="Loan Principal (₹)" required className="h-12 glass font-bold rounded-xl" />
+                            <Input name="interestRate" placeholder="Interest Rate (%)" className="h-12 glass font-bold rounded-xl" />
+                        </div>
+                      </>
+                  )}
+
+                  {bondType === 'Employment Bond' && (
+                      <>
+                        <FormSectionTitle>Employee Node</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="employeeName" placeholder="Full Name" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="employeeAddress" placeholder="Permanent Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Employer Node</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="employerName" placeholder="Enterprise Name" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="employerAddress" placeholder="Registered Office..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Engagement Terms</FormSectionTitle>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            <Input name="position" placeholder="Designation" className="h-12 glass font-bold rounded-xl" />
+                            <Input name="bondDuration" placeholder="Duration (Years)" required className="h-12 glass font-bold rounded-xl" />
+                            <Input name="bondAmount" placeholder="Penalty Value (₹)" required className="h-12 glass font-bold rounded-xl" />
+                        </div>
+                      </>
+                  )}
+
+                  {bondType === 'Affidavit' && (
+                      <>
+                        <FormSectionTitle>Deponent Node</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="deponentName" placeholder="Full Name of Deponent" required className="h-12 glass font-bold rounded-xl" />
+                            <Textarea name="deponentAddress" placeholder="Full Residential Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                        </div>
+                        <FormSectionTitle>Statement of Facts</FormSectionTitle>
+                        <Textarea name="statementOfFacts" placeholder="Chronological list of facts to be affirmed..." required className="glass rounded-xl font-medium text-sm p-6 min-h-[200px]" />
+                        <FormSectionTitle>Verification Metadata</FormSectionTitle>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <Input name="verificationPlace" placeholder="Place of Verification" required className="h-12 glass font-bold rounded-xl" />
+                            <Input name="verificationDate" type="date" required className="h-12 glass font-bold rounded-xl" />
+                        </div>
+                      </>
+                  )}
               </div>
 
-              <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem]">
+              <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem] mt-8 group overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 {state.status === 'loading' ? (
-                    <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Analyzing Requirements...</>
+                    <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Deconstructing Requirements...</>
                 ) : (
                     <><FileSignature className="mr-3 h-5 w-5" /> Initialize Bond Generation</>
                 )}
@@ -429,7 +575,7 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
                         >
                             <div className="relative">
                                 <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl animate-pulse"></div>
-                                <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 group-hover:scale-110 transition-transform duration-700">
+                                <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
                                     <FileSearch className="h-20 w-20 text-primary opacity-20" />
                                 </div>
                             </div>

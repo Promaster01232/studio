@@ -30,7 +30,8 @@ import {
   AlertTriangle,
   Activity,
   FileSearch,
-  ChevronDown
+  ChevronDown,
+  Smartphone
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
@@ -141,7 +142,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-32 px-4 sm:px-0 text-left">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6 text-left">
         <PageHeader
           title="Drafting Terminal"
           description="Initialize professional legal instruments with high-fidelity AI assistance."
@@ -219,6 +220,15 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                               </div>
                           </div>
                       </div>
+                      {documentType === 'Legal Notice' && (
+                          <div className="space-y-2">
+                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Contact Node (Mobile)</Label>
+                              <div className="relative">
+                                  <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
+                                  <Input name="senderMobile" placeholder="e.g., +91 98765 43210" className="h-12 glass font-bold pl-12 rounded-xl" />
+                              </div>
+                          </div>
+                      )}
                   </div>
 
                   <div className="space-y-6">
@@ -495,7 +505,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                         >
                             <div className="relative">
                                 <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl animate-pulse"></div>
-                                <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 group-hover:scale-110 transition-transform duration-700">
+                                <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
                                     <FileSearch className="h-20 w-20 text-primary opacity-20" />
                                 </div>
                             </div>
