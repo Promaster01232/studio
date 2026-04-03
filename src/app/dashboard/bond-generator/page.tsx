@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect, use } from "react";
+import { useActionState, useState, useEffect, useRef, use } from "react";
 import { generateBondAction, type BondGeneratorState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,7 +26,9 @@ import {
   PlusCircle,
   FileCheck,
   Activity,
-  FileSearch
+  FileSearch,
+  ChevronDown,
+  AlertTriangle
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
@@ -60,11 +62,17 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
   const [editedContent, setEditedContent] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("Simple English");
   const { toast } = useToast();
+  
+  const reportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (state.status === 'success' && state.data) {
       setEditedContent(state.data.document);
       setIsEditing(false);
+      // Kinetic Scroll to the report node
+      setTimeout(() => {
+        reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
     }
   }, [state.status, state.data]);
 
@@ -130,7 +138,7 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
   };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-20 px-4 sm:px-0 text-left">
+    <div className="space-y-8 max-w-7xl mx-auto pb-32 px-4 sm:px-0 text-left">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
         <PageHeader
           title="Bond Generator"
@@ -143,34 +151,122 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
         </Button>
       </motion.div>
       
+      {/* SECTION 1: INGRESS FORM (Always Visible) */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="max-w-4xl mx-auto"
+      >
+        <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
+          <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
+            <div className="flex items-center gap-3 mb-2 text-primary">
+                <Zap className="h-5 w-5" />
+                <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup</CardTitle>
+            </div>
+            <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize statutory conditions for your official bond node.</CardDescription>
+          </CardHeader>
+          <CardContent className="p-8 sm:p-10">
+            <form action={formAction} className="space-y-8 text-left">
+              <div className="grid sm:grid-cols-2 gap-8">
+                <div className="space-y-3 text-left">
+                  <Label htmlFor="bondType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory Type</Label>
+                  <Select name="bondType" required value={bondType} onValueChange={setBondType}>
+                    <SelectTrigger id="bondType" className="h-12 glass border-primary/5 font-bold rounded-xl">
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
+                      <SelectItem value="Bail Bond" className="font-bold">Bail Bond</SelectItem>
+                      <SelectItem value="Personal Bond" className="font-bold">Personal Bond</SelectItem>
+                      <SelectItem value="Indemnity Bond" className="font-bold">Indemnity Bond</SelectItem>
+                      <SelectItem value="Surety Bond" className="font-bold">Surety Bond</SelectItem>
+                      <SelectItem value="Performance Bond" className="font-bold">Performance Bond</SelectItem>
+                      <SelectItem value="Mortgage Bond" className="font-bold">Mortgage Bond</SelectItem>
+                      <SelectItem value="Employment Bond" className="font-bold">Employment Bond</SelectItem>
+                      <SelectItem value="Affidavit" className="font-bold">Affidavit</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-3 text-left">
+                  <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Registry</Label>
+                  <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
+                    <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
+                      <SelectItem value="Simple English" className="font-bold">Simple English</SelectItem>
+                      <SelectItem value="Legal English" className="font-bold">Legal English</SelectItem>
+                      <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                  <FormSectionTitle>Case & Identity Matrix</FormSectionTitle>
+                  <div className="grid md:grid-cols-2 gap-6">
+                      <Input name="caseNumber" placeholder="FIR / Case / Registry No." required className="h-12 glass font-bold rounded-xl" />
+                      <Input name="courtName" placeholder="Full Court / Authority Name" required className="h-12 glass font-bold rounded-xl" />
+                  </div>
+                  <Input name="bondAmount" placeholder="Instrument Value (in words & figures)" required className="h-12 glass font-bold rounded-xl" />
+                  <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-3 text-left">
+                          <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Primary Node Name</Label>
+                          <Input name="accusedName" placeholder="Full Name of Party" required className="h-12 glass font-bold rounded-xl" />
+                      </div>
+                      <div className="space-y-3 text-left">
+                          <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Party Address</Label>
+                          <Textarea name="accusedAddress" placeholder="Full permanent address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                      </div>
+                  </div>
+              </div>
+
+              <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem]">
+                {state.status === 'loading' ? (
+                    <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Analyzing Requirements...</>
+                ) : (
+                    <><FileSignature className="mr-3 h-5 w-5" /> Initialize Bond Generation</>
+                )}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* SECTION 2: PROCESSING & RESULTS (Down Side) */}
       <AnimatePresence mode="wait">
         {state.status === 'loading' ? (
           <motion.div 
             key="loading"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center py-32 text-center gap-10"
+            className="flex flex-col items-center justify-center py-20 text-center gap-8"
           >
             <div className="relative w-fit mx-auto">
-                <Loader2 className="h-24 w-24 animate-spin text-primary opacity-20" />
+                <Loader2 className="h-16 w-16 animate-spin text-primary opacity-20" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <Activity className="h-10 w-10 text-primary animate-pulse" />
+                    <Activity className="h-8 w-8 text-primary animate-pulse" />
                 </div>
             </div>
             <div className="space-y-3">
-                <h2 className="font-black text-3xl tracking-tighter uppercase text-foreground">Generating Neural Bond...</h2>
-                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Initializing forensic instrument node // BNS-V4.2 Ingress</p>
+                <h2 className="font-black text-2xl tracking-tighter uppercase text-foreground">Generating Neural Bond...</h2>
+                <p className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Initializing forensic instrument node // BNS-V4.2 Ingress</p>
             </div>
           </motion.div>
         ) : state.status === 'success' && state.data ? (
           <motion.div 
             key="success-report"
+            ref={reportRef}
             initial={{ opacity: 0, y: 40 }} 
             animate={{ opacity: 1, y: 0 }} 
-            className="space-y-8"
+            className="space-y-8 scroll-mt-20"
           >
-            <Card className="glass border-primary shadow-3xl overflow-hidden rounded-[3rem] relative">
+            <div className="flex flex-col items-center gap-4 mb-4">
+                <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
+                <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Instrument Finalized Below</Badge>
+            </div>
+
+            <Card className="glass border-primary/20 shadow-3xl overflow-hidden rounded-[3rem] relative">
                 <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
                     <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
                 </div>
@@ -291,85 +387,16 @@ export default function BondGeneratorPage(props: { params: Promise<any>, searchP
                 <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
             </Card>
           </motion.div>
-        ) : (
-          <motion.div 
-            key="input-form"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="max-w-4xl mx-auto"
-          >
-            <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
-              <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
-                <div className="flex items-center gap-3 mb-2 text-primary">
-                    <Zap className="h-5 w-5" />
-                    <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup</CardTitle>
-                </div>
-                <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize statutory conditions for your official bond node.</CardDescription>
-              </CardHeader>
-              <CardContent className="p-8 sm:p-10">
-                <form action={formAction} className="space-y-8 text-left">
-                  <div className="grid sm:grid-cols-2 gap-8">
-                    <div className="space-y-3 text-left">
-                      <Label htmlFor="bondType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory Type</Label>
-                      <Select name="bondType" required value={bondType} onValueChange={setBondType}>
-                        <SelectTrigger id="bondType" className="h-12 glass border-primary/5 font-bold rounded-xl">
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
-                          <SelectItem value="Bail Bond" className="font-bold">Bail Bond</SelectItem>
-                          <SelectItem value="Personal Bond" className="font-bold">Personal Bond</SelectItem>
-                          <SelectItem value="Indemnity Bond" className="font-bold">Indemnity Bond</SelectItem>
-                          <SelectItem value="Surety Bond" className="font-bold">Surety Bond</SelectItem>
-                          <SelectItem value="Performance Bond" className="font-bold">Performance Bond</SelectItem>
-                          <SelectItem value="Mortgage Bond" className="font-bold">Mortgage Bond</SelectItem>
-                          <SelectItem value="Employment Bond" className="font-bold">Employment Bond</SelectItem>
-                          <SelectItem value="Affidavit" className="font-bold">Affidavit</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-3 text-left">
-                      <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Registry</Label>
-                      <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
-                        <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
-                          <SelectItem value="Simple English" className="font-bold">Simple English</SelectItem>
-                          <SelectItem value="Legal English" className="font-bold">Legal English</SelectItem>
-                          <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
-                      <FormSectionTitle>Case & Identity Matrix</FormSectionTitle>
-                      <div className="grid md:grid-cols-2 gap-6">
-                          <Input name="caseNumber" placeholder="FIR / Case / Registry No." required className="h-12 glass font-bold rounded-xl" />
-                          <Input name="courtName" placeholder="Full Court / Authority Name" required className="h-12 glass font-bold rounded-xl" />
-                      </div>
-                      <Input name="bondAmount" placeholder="Instrument Value (in words & figures)" required className="h-12 glass font-bold rounded-xl" />
-                      <div className="grid md:grid-cols-2 gap-6">
-                          <div className="space-y-3 text-left">
-                              <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Primary Node Name</Label>
-                              <Input name="accusedName" placeholder="Full Name of Party" required className="h-12 glass font-bold rounded-xl" />
-                          </div>
-                          <div className="space-y-3 text-left">
-                              <Label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-1">Party Address</Label>
-                              <Textarea name="accusedAddress" placeholder="Full permanent address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
-                          </div>
-                      </div>
-                  </div>
-
-                  <Button type="submit" className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem]">
-                    <FileSignature className="mr-3 h-5 w-5" /> Initialize Bond Generation
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
+        ) : state.status === 'error' ? (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto mt-8">
+                <Card className="glass border-destructive/20 bg-destructive/5 p-8 flex flex-col items-center text-center gap-4 rounded-[2rem]">
+                    <AlertTriangle className="h-10 w-10 text-destructive" />
+                    <h3 className="font-black text-xl uppercase tracking-tight">Bond Node Error</h3>
+                    <p className="text-sm font-medium text-muted-foreground">{state.error}</p>
+                    <Button onClick={handleReset} variant="outline" className="mt-2 border-destructive/20 text-destructive hover:bg-destructive/5 rounded-xl">Clear Protocol</Button>
+                </Card>
+            </motion.div>
+        ) : null}
       </AnimatePresence>
     </div>
   );
