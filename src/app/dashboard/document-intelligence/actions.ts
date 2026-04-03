@@ -22,11 +22,11 @@ async function fileToDataURI(file: File): Promise<string> {
 function generateDeterministicAudit(lang: string): UnderstandLegalDocumentOutput {
     const isHindi = lang.toLowerCase().includes('hindi');
     return {
-        summary: isHindi ? "दस्तावेज़ का स्थानीय ऑडिट पूर्ण। यह एक वैधानिक रिपोर्ट है।" : "Local document audit complete. This is a statutory report.",
-        legalRisks: isHindi ? "स्थानीय नोड द्वारा मध्यम जोखिम की पहचान की गई। प्रक्रियात्मक जांच आवश्यक है।" : "Medium risks identified by local node. Procedural checks are required.",
-        deadlines: isHindi ? "कृपया महत्वपूर्ण तिथियों के लिए दस्तावेज़ की मैन्युअल रूप से जाँच करें।" : "Please check document manually for critical dates.",
-        requiredActions: isHindi ? "अधिवक्ता के साथ नोड सिंक करें।" : "Sync node with an advocate.",
-        consequences: isHindi ? "प्रक्रियात्मक देरी की संभावना।" : "Procedural delays likely."
+        summary: isHindi ? "दस्तावेज़ का स्थानीय ऑडिट पूर्ण। यह आपके विवरण पर आधारित एक प्रारंभिक वैधानिक रिपोर्ट है।" : "Local document audit complete. This is a preliminary statutory report based on the uploaded instrument.",
+        legalRisks: isHindi ? "स्थानीय नोड द्वारा मध्यम जोखिम की पहचान की गई। प्रक्रियात्मक साक्ष्य की जांच आवश्यक है।" : "Medium risks identified by local node. Procedural evidence verification is required.",
+        deadlines: isHindi ? "कृपया महत्वपूर्ण तिथियों और वैधानिक सीमाओं के लिए दस्तावेज़ की मैन्युअल रूप से जाँच करें।" : "Please check document manually for critical dates and statutory limitations.",
+        requiredActions: isHindi ? "नोड को सत्यापित अधिवक्ता के साथ सिंक करें।" : "Sync node with a verified advocate via Lawyer Connect.",
+        consequences: isHindi ? "प्रक्रियात्मक देरी या वैधानिक चूक की संभावना।" : "Procedural delays or statutory lapses are possible without review."
     };
 }
 
