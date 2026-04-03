@@ -27,7 +27,7 @@ import {
   Globe,
   Fingerprint,
   PlusCircle
-} from "lucide-material";
+} from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AudioAssistant } from "@/components/audio-assistant";
 import Link from "next/link";
