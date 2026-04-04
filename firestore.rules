@@ -9,15 +9,17 @@ service cloud.firestore {
     }
 
     // Super Admin: Absolute authority check based on token email
+    // Hardened to safely handle missing or uninitialized email tokens
     function isSuperAdmin() {
-      return isAuthenticated() && (
+      return isAuthenticated() && 
+             request.auth.token.email != null && (
         request.auth.token.email.lower() == 'enterspaceindia@gmail.com' || 
         request.auth.token.email.lower() == 'piyushkumrsingh23399@gmail.com' ||
         request.auth.token.email.lower() == 'nyayasahayakhelp@gmail.com'
       );
     }
 
-    // General Admin check - Refined for robustness
+    // General Admin check - Refined for robustness and fault-tolerance
     function isAdmin() {
       return isSuperAdmin() || (
         isAuthenticated() && 
@@ -55,10 +57,10 @@ service cloud.firestore {
       allow delete: if isAuthenticated() && (resource.data.authorUid == request.auth.uid || isAdmin());
     }
 
-    // Notifications collection - Optimized for List operations
+    // Notifications collection - Optimized for List operations and Ownership checks
     match /notifications/{notificationId} {
-      allow get: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow list: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      // Explicitly optimized read rule for query matching (list & get)
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
       allow create: if isAuthenticated();
       allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
       allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
