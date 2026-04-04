@@ -210,7 +210,7 @@ export default function LoginPage() {
         className="p-8 sm:p-12 flex flex-col justify-center"
       >
         <div className="flex items-center gap-3 mb-8">
-            <Logo className="h-12 w-12" />
+            <Logo className="h-12 w-12" priority={true} />
             <div className="flex flex-col">
                 <h1 className="text-2xl font-black tracking-tight text-primary leading-none">
                     Nyaya Sahayak
@@ -315,7 +315,7 @@ export default function LoginPage() {
       
       <div className="hidden md:flex flex-col items-center justify-center relative bg-muted/30 border-l border-primary/5 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none grayscale flex items-center justify-center">
-            <Logo className="h-96 w-96" />
+            <Logo className="h-96 w-96" priority={true} />
         </div>
         <div className="p-12 text-center space-y-8 relative z-10">
             <div className="bg-primary/5 p-10 rounded-[2.5rem] inline-block animate-pulse shadow-inner border border-primary/5">

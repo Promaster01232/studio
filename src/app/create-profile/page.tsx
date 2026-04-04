@@ -146,7 +146,7 @@ export default function CreateProfilePage() {
     <div className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden shadow-2xl rounded-[2.5rem] border border-primary/5 bg-card text-left">
       <div className="hidden md:flex flex-col items-center justify-center bg-primary/5 p-12 relative overflow-hidden border-r border-primary/5">
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
-            <Logo className="h-[500px] w-[500px]" priority={false} />
+            <Logo className="h-[500px] w-[500px]" priority={true} />
         </div>
         <div className="relative z-10 space-y-10 text-center">
             <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] shadow-2xl border border-primary/10 inline-block group">
@@ -248,7 +248,7 @@ export default function CreateProfilePage() {
               name="userType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Statutory Role</FormLabel>
+                  <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory Role</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary">
