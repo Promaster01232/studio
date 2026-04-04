@@ -1,7 +1,7 @@
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
-import React, { useState, useEffect, useRef, use } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -223,10 +223,7 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
     );
 }
 
-export default function ResearchAnalyticsPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-    use(props.params);
-    use(props.searchParams);
-
+export default function ResearchAnalyticsPage() {
     const firestore = useFirestore();
     const auth = useAuth();
     const [feed, setFeed] = useState<Post[]>([]);
@@ -256,8 +253,7 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
                 setFeed(list);
                 setLoading(false);
             }, (err) => {
-                // SILENT RECOVERY: Handles permission denied gracefully for public feed
-                console.warn("[STATUTORY SYNC] Public feed restricted.");
+                console.warn("[STATUTORY SYNC] Public feed restricted or permission denied.");
                 setLoading(false);
             });
 

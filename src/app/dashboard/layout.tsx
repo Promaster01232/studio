@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LogOut, Loader2, Search, ShieldAlert, Zap, User, LogIn, Lock, Activity, ChevronRight } from "lucide-react";
 import { Logo } from "@/components/logo";
-import { ReactNode, useEffect, useState, useRef, use } from "react";
+import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Footer } from "@/components/footer";
 import Link from "next/link";
@@ -156,9 +156,7 @@ function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }
     );
 }
 
-export default function DashboardLayout(props: { children: ReactNode, params: Promise<any> }) {
-  const resolvedParams = use(props.params);
-
+export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -314,7 +312,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
             <AnimatePresence mode="wait">
                 {showContent ? (
                     <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-4 sm:p-8 min-h-[calc(100vh-64px)] flex flex-col">
-                        <div className="flex-1">{props.children}</div>
+                        <div className="flex-1">{children}</div>
                         <Footer />
                     </motion.div>
                 ) : (

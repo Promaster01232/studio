@@ -108,7 +108,7 @@ export default function CreateProfilePage() {
       
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
       
-      setDoc(userDocRef, userProfile).catch(async (serverError) => {
+      await setDoc(userDocRef, userProfile).catch(async (serverError) => {
           const permissionError = new FirestorePermissionError({
               path: userDocRef.path,
               operation: 'create',
@@ -117,7 +117,7 @@ export default function CreateProfilePage() {
           errorEmitter.emit('permission-error', permissionError);
       });
       
-      set(ref(rtdb, `users/${auth.currentUser.uid}`), {
+      await set(ref(rtdb, `users/${auth.currentUser.uid}`), {
           ...userProfile,
           createdAt: Date.now()
       }).catch(err => console.warn("RTDB sync deferred."));
@@ -170,13 +170,13 @@ export default function CreateProfilePage() {
       </div>
 
       <div className="p-8 sm:p-16 flex flex-col justify-center">
-        <div className="space-y-1 mb-10">
+        <div className="space-y-1 mb-10 text-left">
             <h1 className="text-3xl font-black font-headline tracking-tighter uppercase text-foreground leading-none">Onboarding</h1>
             <p className="text-sm text-muted-foreground font-medium">Map your personal registry nodes.</p>
         </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-left">
             <div className="grid sm:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
@@ -248,7 +248,7 @@ export default function CreateProfilePage() {
               name="userType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory Role</FormLabel>
+                  <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory Role</Label>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary">
