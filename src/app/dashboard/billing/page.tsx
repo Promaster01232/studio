@@ -13,8 +13,6 @@ import { cn } from "@/lib/utils";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
-import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const plans = [
     {
@@ -93,7 +91,7 @@ export default function BillingPage() {
                 setLoading(false);
             },
             async (err) => {
-                // SILENT RECOVERY: As per user request
+                // SILENT RECOVERY: Fallback to local profile node if permission denied
                 console.warn("[STATUTORY SYNC] Profile restricted or busy.");
                 setLoading(false);
             }
@@ -118,8 +116,7 @@ export default function BillingPage() {
                 setUserTransactions(list);
             },
             async (err) => {
-                // SILENT RECOVERY: As per user request ("remove if not working")
-                // We do not emit a fatal FirestorePermissionError here for non-critical history.
+                // SILENT RECOVERY: Display empty ledger if permission denied
                 console.warn("[STATUTORY SYNC] Transaction ledger restricted or busy.");
                 setUserTransactions([]);
             }
@@ -164,27 +161,12 @@ export default function BillingPage() {
                         status: 'CAPTURED'
                     };
 
-                    addDoc(collection(firestore, "transactions"), transactionData).catch(async (err) => {
-                        const permissionError = new FirestorePermissionError({
-                            path: collection(firestore, "transactions").path,
-                            operation: 'create',
-                            requestResourceData: transactionData,
-                        } satisfies SecurityRuleContext, err);
-                        errorEmitter.emit('permission-error', permissionError);
-                    });
-
-                    updateDoc(userRef, { 
+                    await addDoc(collection(firestore, "transactions"), transactionData);
+                    await updateDoc(userRef, { 
                         subscriptionType: planId,
                         aiUsageCount: 0,
                         clearanceExpiry: expiryDate.toISOString(),
                         lastPaymentId: paymentId
-                    }).catch(async (err) => {
-                        const permissionError = new FirestorePermissionError({
-                            path: userRef.path,
-                            operation: 'update',
-                            requestResourceData: { subscriptionType: planId },
-                        } satisfies SecurityRuleContext, err);
-                        errorEmitter.emit('permission-error', permissionError);
                     });
 
                     toast({ title: "Clearance Upgraded", description: "Terminal recalibrated." });

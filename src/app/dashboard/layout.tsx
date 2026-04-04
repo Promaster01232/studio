@@ -39,8 +39,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
 import { FloatingHub } from "@/components/floating-hub";
-import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -232,8 +230,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         notifUnsubscribeRef.current = onSnapshot(q, 
             (snap) => setUnreadCount(snap.size),
             async (err) => {
-                // SILENT RECOVERY: As per user request ("remove if not working")
-                // We do not emit a fatal FirestorePermissionError here for non-critical alerts.
+                // SILENT RECOVERY: Default to restricted state if busy or denied
                 console.warn("[STATUTORY SYNC] Notification node restricted or busy.");
                 setUnreadCount(0);
             }
@@ -363,7 +360,12 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                     </motion.div>
                 ) : (
                     <div className="flex h-full items-center justify-center">
-                        <Loader2 className="h-10 w-10 animate-spin text-primary opacity-10" />
+                        <div className="relative">
+                            <Loader2 className="h-10 w-10 animate-spin text-primary opacity-10" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <Activity className="h-4 w-4 text-primary opacity-20 animate-pulse" />
+                            </div>
+                        </div>
                     </div>
                 )}
             </AnimatePresence>
