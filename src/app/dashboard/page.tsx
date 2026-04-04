@@ -15,10 +15,8 @@ import {
   Activity,
   Heart,
   Zap,
-  BadgeCheck,
   ShieldCheck,
   Loader2,
-  Newspaper,
   Clock,
   TrendingUp,
   ChevronRight
@@ -48,12 +46,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/logo";
 import { useSoundEffect } from "@/hooks/use-sound-effect";
 
-const ADMIN_EMAILS = [
-  'enterspaceindia@gmail.com', 
-  'piyushkumrsingh23399@gmail.com',
-  'nyayasahayakhelp@gmail.com'
-];
-
 interface Post {
     id: string;
     authorUid: string;
@@ -64,9 +56,6 @@ interface Post {
     content: string;
     likes: number;
     likedBy?: string[];
-    postType?: string;
-    poll?: any;
-    isAnonymous?: boolean;
 }
 
 const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
@@ -85,7 +74,7 @@ const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, del
   );
 };
 
-function PostCard({ post, userProfile }: { post: Post, userProfile: any, isAdmin: boolean }) {
+function PostCard({ post }: { post: Post }) {
     const { playSound } = useSoundEffect();
     const firestore = useFirestore();
     const auth = useAuth();
@@ -108,42 +97,35 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any, isAdmin
     };
 
     return (
-        <Card className="overflow-hidden glass border-primary/5 transition-all rounded-2xl shadow-sm hover:shadow-xl text-left">
+        <Card className="overflow-hidden bg-card border-primary/5 hover:border-primary/20 transition-all rounded-2xl shadow-sm text-left">
             <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2.5">
-                        <Avatar className="h-7 w-7 rounded-lg">
+                        <Avatar className="h-8 w-8 rounded-lg">
                             <AvatarImage src={post.authorAvatar} />
-                            <AvatarFallback className="font-black bg-primary/5 text-primary text-[9px]">{post.authorName?.charAt(0)}</AvatarFallback>
+                            <AvatarFallback className="bg-primary/5 text-primary text-[10px] font-bold">{post.authorName?.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <p className="font-bold text-[10px] tracking-tight">{post.isAnonymous ? 'Anonymous' : post.authorName}</p>
-                            <p className="text-[8px] font-medium text-muted-foreground opacity-50">
+                            <p className="font-bold text-[11px]">{post.authorName}</p>
+                            <p className="text-[9px] text-muted-foreground opacity-60">
                                 {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
                             </p>
                         </div>
                     </div>
-                    <Badge variant="outline" className="font-black text-[7px] uppercase px-2 py-0.5 border-primary/10 text-primary">
-                        {post.postType || 'Discussion'}
-                    </Badge>
                 </div>
-                <h3 className="font-bold text-base tracking-tight mb-1.5 leading-tight">{post.title}</h3>
-                <p className="text-xs text-muted-foreground font-medium leading-relaxed mb-4 line-clamp-2">{post.content}</p>
+                <h3 className="font-bold text-sm mb-1.5 leading-tight">{post.title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed mb-4 line-clamp-2">{post.content}</p>
                 <div className="flex items-center justify-between pt-3 border-t border-primary/5">
                     <Button 
                         variant="ghost" 
                         size="sm" 
-                        className={cn("h-7 px-2.5 rounded-lg text-[9px] font-black uppercase gap-1.5", userHasLiked ? "text-primary bg-primary/5" : "text-muted-foreground")}
+                        className={cn("h-8 px-3 rounded-lg text-xs font-bold gap-2", userHasLiked ? "text-primary bg-primary/5" : "text-muted-foreground")}
                         onClick={handleLike}
                         disabled={isLiking}
                     >
-                        <Heart className={cn("h-3 w-3", userHasLiked && "fill-current")} />
+                        <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />
                         <span>{post.likes}</span>
                     </Button>
-                    <div className="flex items-center gap-1.5 text-[7px] font-black uppercase opacity-30">
-                        <Clock className="h-2.5 w-2.5" />
-                        <span>Recent Update</span>
-                    </div>
                 </div>
             </CardContent>
         </Card>
@@ -170,14 +152,10 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
   const auth = useAuth();
   const [latestPosts, setLatestPosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
-  const [userProfile, setUserProfile] = useState<any>(null);
 
   useEffect(() => {
-    const unsubAuth = onAuthStateChanged(auth, (user) => {
-        if (user) {
-            getDoc(doc(firestore, "users", user.uid)).then(d => d.exists() && setUserProfile(d.data()));
-        }
-        const q = query(collection(firestore, "posts"), orderBy("createdAt", "desc"), limit(5));
+    const unsubAuth = onAuthStateChanged(auth, () => {
+        const q = query(collection(firestore, "posts"), orderBy("createdAt", "desc"), limit(3));
         return onSnapshot(q, (snap) => {
             const list: Post[] = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
             setLatestPosts(list);
@@ -191,7 +169,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
     let timeoutId: NodeJS.Timeout;
     if (isTyping) {
       if (text.length < fullText.length) {
-        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 100); 
+        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 150); 
       } else {
         timeoutId = setTimeout(() => setIsTyping(false), 2000);
       }
@@ -204,102 +182,77 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
     return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
 
-  const isAdmin = userProfile?.email && ADMIN_EMAILS.includes(userProfile.email.toLowerCase());
-
   return (
-    <div className="flex flex-col h-full space-y-6 pb-12 max-w-6xl mx-auto text-left relative pt-2">
+    <div className="flex flex-col h-full space-y-8 pb-12 max-w-6xl mx-auto text-left relative pt-2">
         <MotionWrapper>
-          <Card className="relative overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl rounded-[2.5rem] group hover:border-primary/20 transition-all duration-700">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-primary/[0.01] -z-10"></div>
-              <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.06] group-hover:scale-110 transition-all duration-1000 pointer-events-none grayscale">
-                  <Logo className="h-64 w-64" priority={true} />
-              </div>
-              
+          <Card className="relative overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl rounded-3xl group hover:border-primary/20 transition-all duration-500">
               <div className="p-8 sm:p-12 relative z-10 flex flex-col lg:flex-row items-center gap-10">
                   <div className="flex-1 space-y-8 text-center lg:text-left">
                       <div className="space-y-4">
-                          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
-                              Welcome to <br />
-                              <span className="text-primary italic font-semibold tracking-normal">Nyaya {text}</span>
+                          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-foreground leading-[1.1]">
+                              Nyaya <span className="text-primary italic">{text}</span>
                           </h1>
-                          <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed">
-                              India's premier legal assistant. Analyze cases, draft documents, and get answers to your legal questions.
+                          <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-xl">
+                              India's premier legal helper. Analyze cases, draft documents, and get answers instantly.
                           </p>
                       </div>
 
-                      <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
-                          <Button size="lg" className="rounded-2xl font-bold uppercase tracking-wider text-[10px] h-14 px-10 shadow-xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative" asChild>
+                      <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                          <Button size="lg" className="rounded-xl font-bold h-12 px-8 shadow-xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden" asChild>
                               <Link href="/dashboard/narrate">
-                                  <span className="relative z-10 flex items-center gap-2">
-                                      Record Case <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                  </span>
-                                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                  Record Case <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" />
                               </Link>
                           </Button>
-                          <Button variant="ghost" className="h-14 rounded-2xl px-8 font-bold uppercase tracking-widest text-[9px] hover:bg-primary/5 text-primary border border-transparent hover:border-primary/10" asChild>
-                              <Link href="/dashboard/learn">
-                                  Knowledge Base
-                              </Link>
+                          <Button variant="ghost" className="h-12 rounded-xl px-6 font-bold hover:bg-primary/5 text-primary" asChild>
+                              <Link href="/dashboard/learn">Knowledge Base</Link>
                           </Button>
                       </div>
                   </div>
 
-                  <div className="hidden lg:flex w-72 shrink-0 flex-col gap-4">
-                      <Card className="bg-background/50 border-primary/5 p-5 rounded-2xl shadow-inner group/node hover:border-primary/20 transition-all">
-                          <div className="flex items-center gap-3 mb-3">
-                              <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover/node:bg-primary group-hover/node:text-white transition-all">
-                                  <Activity className="h-4 w-4" />
-                              </div>
-                              <p className="font-bold text-[10px] uppercase tracking-widest">Platform Status</p>
+                  <div className="hidden lg:flex w-64 shrink-0 flex-col gap-4">
+                      <Card className="bg-background/50 border-primary/5 p-4 rounded-2xl shadow-sm">
+                          <div className="flex items-center gap-3 mb-2">
+                              <Activity className="h-4 w-4 text-primary" />
+                              <p className="font-bold text-[10px] uppercase tracking-widest">System Status</p>
                           </div>
-                          <div className="h-1 w-full bg-primary/5 rounded-full overflow-hidden">
-                              <motion.div initial={{ width: 0 }} animate={{ width: '100%' }} className="h-full bg-primary" />
-                          </div>
-                          <p className="text-[8px] font-bold text-muted-foreground mt-2 uppercase tracking-widest">Ready</p>
+                          <p className="text-xs font-bold text-green-600">Online & Ready</p>
                       </Card>
-                      <Card className="bg-background/50 border-primary/5 p-5 rounded-2xl shadow-inner group/node hover:border-primary/20 transition-all">
-                          <div className="flex items-center gap-3 mb-3">
-                              <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover/node:bg-primary group-hover/node:text-white transition-all">
-                                  <ShieldCheck className="h-4 w-4" />
-                              </div>
-                              <p className="font-bold text-[10px] uppercase tracking-widest">Security Status</p>
+                      <Card className="bg-background/50 border-primary/5 p-4 rounded-2xl shadow-sm">
+                          <div className="flex items-center gap-3 mb-2">
+                              <ShieldCheck className="h-4 w-4 text-primary" />
+                              <p className="font-bold text-[10px] uppercase tracking-widest">Security</p>
                           </div>
-                          <p className="text-xs font-bold truncate">Secure Connection</p>
-                          <p className="text-[8px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Encrypted</p>
+                          <p className="text-xs font-bold">Encrypted Session</p>
                       </Card>
                   </div>
               </div>
-              <div className="h-1 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+              <div className="h-1 w-full bg-gradient-to-r from-primary via-blue-400 to-primary"></div>
           </Card>
         </MotionWrapper>
 
         <div className="grid lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 space-y-6">
               <section>
-                  <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-2">
-                      <div className="flex items-center gap-2.5 text-primary/40">
+                  <div className="flex items-center justify-between mb-4 pb-2 border-b border-primary/5">
+                      <div className="flex items-center gap-2 text-primary/60">
                           <TrendingUp className="h-4 w-4" />
-                          <h2 className="text-[10px] font-bold tracking-widest text-foreground/80 uppercase">Community Discussions</h2>
+                          <h2 className="text-xs font-bold tracking-widest uppercase">Community Feed</h2>
                       </div>
-                      <Button variant="link" className="h-auto p-0 text-[10px] font-bold uppercase tracking-widest" asChild>
-                          <Link href="/dashboard/research-analytics">View All Posts</Link>
+                      <Button variant="link" className="h-auto p-0 text-xs font-bold text-primary" asChild>
+                          <Link href="/dashboard/research-analytics">View All</Link>
                       </Button>
                   </div>
                   <div className="space-y-4">
                       {postsLoading ? (
                           <div className="space-y-4">
                               {[...Array(2)].map((_, i) => (
-                                  <Card key={i} className="h-28 animate-pulse border-primary/5 rounded-2xl bg-muted/10" />
+                                  <Card key={i} className="h-24 animate-pulse border-primary/5 rounded-2xl bg-muted/10" />
                               ))}
                           </div>
-                      ) : latestPosts.length === 0 ? (
-                          <Card className="py-16 text-center glass rounded-[2rem] border-dashed border-2 border-primary/5 opacity-30">
-                              <p className="font-bold text-[10px] tracking-tight">No discussions yet...</p>
-                          </Card>
                       ) : (
                           <div className="grid gap-4">
                               {latestPosts.map((post) => (
-                                  <PostCard key={post.id} post={post} userProfile={userProfile} isAdmin={isAdmin || false} />
+                                  <PostCard key={post.id} post={post} />
                               ))}
                           </div>
                       )}
@@ -309,23 +262,21 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
 
           <div className="lg:col-span-4 space-y-6">
               <section>
-                  <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-2">
-                      <div className="flex items-center gap-2.5 text-primary/40">
-                          <Sparkles className="h-4 w-4" />
-                          <h2 className="text-[10px] font-bold tracking-widest text-foreground/80 uppercase">Tools & Features</h2>
-                      </div>
+                  <div className="flex items-center gap-2 text-primary/60 mb-4 pb-2 border-b border-primary/5">
+                      <Sparkles className="h-4 w-4" />
+                      <h2 className="text-xs font-bold tracking-widest uppercase">Tools</h2>
                   </div>
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="grid grid-cols-1 gap-2">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
-                            <Card className="h-full glass p-4 rounded-2xl border-primary/5 group-hover:border-primary/20 transition-all text-left relative overflow-hidden shadow-sm hover:shadow-xl group-active:scale-95">
+                            <Card className="p-4 rounded-xl border-primary/5 hover:border-primary/20 hover:bg-primary/5 transition-all text-left shadow-sm group-active:scale-[0.98]">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2.5 rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                                    <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                                         <f.icon className="h-4 w-4" />
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="font-bold text-[11px] tracking-tight text-foreground uppercase leading-none">{f.title}</h3>
-                                        <p className="text-[9px] font-medium text-muted-foreground mt-1">{f.desc}</p>
+                                        <h3 className="font-bold text-xs tracking-tight text-foreground uppercase leading-none">{f.title}</h3>
+                                        <p className="text-[10px] text-muted-foreground mt-1">{f.desc}</p>
                                     </div>
                                     <ChevronRight className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                                 </div>
