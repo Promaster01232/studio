@@ -26,11 +26,9 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 
 function ProtocolRestorationDialog() {
     const [email, setEmail] = useState("");
-    const [systemId, setSystemId] = useState("");
     const [loading, setLoading] = useState(false);
     const [generatedLink, setGeneratedLink] = useState<string | null>(null);
     const { toast } = useToast();
-    const firestore = useFirestore();
     const auth = useAuth();
 
     const handleRestore = async () => {
@@ -100,7 +98,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -121,18 +119,41 @@ export default function LoginPage() {
     return () => unsubscribe();
   }, [auth, firestore, router]);
 
-  const handleEmailLogin = async () => {
-    if (!email || !password) {
+  const handleLogin = async () => {
+    if (!identifier || !password) {
         toast({ variant: "destructive", title: "Information missing", description: "Please enter both credentials."});
         return;
     }
     setLoading(true);
     try {
-        await signInWithEmailAndPassword(auth, email.trim(), password);
-        // Redirection handled by onAuthStateChanged
+        let loginEmail = identifier.trim().toLowerCase();
+        
+        // Mobile Ingress Detection Protocol
+        if (!loginEmail.includes('@')) {
+            const cleanMobile = loginEmail.replace(/\s+/g, '').replace(/^\+91/, '');
+            
+            // Search for mobile in registry
+            const usersRef = collection(firestore, "users");
+            const q = query(usersRef, where("mobileNumber", "in", [cleanMobile, "+91" + cleanMobile]));
+            const querySnapshot = await getDocs(q);
+            
+            if (querySnapshot.empty) {
+                toast({ 
+                    variant: "destructive", 
+                    title: "Node Not Found", 
+                    description: "Mobile number is not registered in the institutional registry." 
+                });
+                setLoading(false);
+                return;
+            }
+            loginEmail = querySnapshot.docs[0].data().email;
+        }
+
+        await signInWithEmailAndPassword(auth, loginEmail, password);
     } catch (error: any) {
         let message = "Invalid email or password.";
         if (error.code === 'auth/invalid-credential') message = "Authentication failed. Check your credentials.";
+        if (error.code === 'auth/user-not-found') message = "Identity node not found.";
         
         toast({ 
             variant: "destructive", 
@@ -174,13 +195,13 @@ export default function LoginPage() {
         <div className="grid gap-4">
             <div className="space-y-4">
                 <div className="space-y-2">
-                    <Label htmlFor="email" className="font-bold opacity-70 text-[11px] uppercase tracking-widest">Email address</Label>
+                    <Label htmlFor="identifier" className="font-bold opacity-70 text-[11px] uppercase tracking-widest">Email or Mobile Number</Label>
                     <Input
-                        id="email"
-                        type="email"
-                        placeholder="m@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        id="identifier"
+                        type="text"
+                        placeholder="Enter Registered Email or Mobile"
+                        value={identifier}
+                        onChange={(e) => setIdentifier(e.target.value)}
                         disabled={loading}
                         className="font-bold h-11"
                     />
@@ -223,7 +244,7 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <Button className="w-full font-bold h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all" onClick={handleEmailLogin} disabled={loading || !acceptedTerms}>
+                <Button className="w-full font-bold h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all" onClick={handleLogin} disabled={loading || !acceptedTerms}>
                     {loading ? <Loader2 className="animate-spin" /> : "Initialize Login"}
                 </Button>
             </div>
