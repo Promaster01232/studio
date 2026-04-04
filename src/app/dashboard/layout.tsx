@@ -40,6 +40,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
 import { FloatingHub } from "@/components/floating-hub";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -217,17 +219,27 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 }
                 setProfileLoading(false);
             },
-            (err) => {
-                console.warn("Profile load issue.", err.message);
+            async (err) => {
+                const permissionError = new FirestorePermissionError({
+                    path: userDocRef.path,
+                    operation: 'get',
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
                 setProfileLoading(false);
             }
         );
 
-        const notifRef = collection(firestore, "notifications");
-        const q = query(notifRef, where("userId", "==", user.uid), where("isRead", "==", false));
+        const notifCol = collection(firestore, "notifications");
+        const q = query(notifCol, where("userId", "==", user.uid), where("isRead", "==", false));
         notifUnsubscribeRef.current = onSnapshot(q, 
             (snap) => setUnreadCount(snap.size),
-            (err) => console.warn("Notification sync issue.", err.message)
+            async (err) => {
+                const permissionError = new FirestorePermissionError({
+                    path: notifCol.path,
+                    operation: 'list',
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
+            }
         );
 
       } else {

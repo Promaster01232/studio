@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -13,6 +14,8 @@ import { cn } from "@/lib/utils";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const plans = [
     {
@@ -84,21 +87,26 @@ export default function BillingPage() {
 
     useEffect(() => {
         if (!auth.currentUser) return;
-        const unsub = onSnapshot(doc(firestore, "users", auth.currentUser.uid), 
+        const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+        const unsub = onSnapshot(userDocRef, 
             (doc) => {
                 setProfile(doc.data());
                 setLoading(false);
             },
-            (err) => {
-                console.warn("[FIREBASE] Billing profile snapshot denied.", err.message);
+            async (err) => {
+                const permissionError = new FirestorePermissionError({
+                    path: userDocRef.path,
+                    operation: 'get',
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
                 setLoading(false);
             }
         );
 
         // Strictly query for CAPTURED (Success) transactions only
-        const transRef = collection(firestore, "transactions");
+        const transCol = collection(firestore, "transactions");
         const q = query(
-            transRef, 
+            transCol, 
             where("userId", "==", auth.currentUser.uid),
             where("status", "==", "CAPTURED")
         );
@@ -113,7 +121,13 @@ export default function BillingPage() {
                 });
                 setUserTransactions(list);
             },
-            (err) => console.warn("[FIREBASE] Transaction ledger snapshot denied.", err.message)
+            async (err) => {
+                const permissionError = new FirestorePermissionError({
+                    path: transCol.path,
+                    operation: 'list',
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
+            }
         );
 
         return () => { unsub(); unsubTrans(); };
@@ -143,7 +157,7 @@ export default function BillingPage() {
                     else expiryDate.setFullYear(now.getFullYear() + 1);
 
                     // Strictly record ONLY captured transactions
-                    await addDoc(collection(firestore, "transactions"), {
+                    const transactionData = {
                         userId: auth.currentUser!.uid,
                         userEmail: profile?.email,
                         userName: `${profile?.firstName} ${profile?.lastName}`,
@@ -153,6 +167,15 @@ export default function BillingPage() {
                         createdAt: serverTimestamp(),
                         expiryDate: expiryDate.toISOString(),
                         status: 'CAPTURED'
+                    };
+
+                    await addDoc(collection(firestore, "transactions"), transactionData).catch(async (err) => {
+                        const permissionError = new FirestorePermissionError({
+                            path: collection(firestore, "transactions").path,
+                            operation: 'create',
+                            requestResourceData: transactionData,
+                        } satisfies SecurityRuleContext, err);
+                        errorEmitter.emit('permission-error', permissionError);
                     });
 
                     await updateDoc(userRef, { 
@@ -160,6 +183,13 @@ export default function BillingPage() {
                         aiUsageCount: 0,
                         clearanceExpiry: expiryDate.toISOString(),
                         lastPaymentId: paymentId
+                    }).catch(async (err) => {
+                        const permissionError = new FirestorePermissionError({
+                            path: userRef.path,
+                            operation: 'update',
+                            requestResourceData: { subscriptionType: planId },
+                        } satisfies SecurityRuleContext, err);
+                        errorEmitter.emit('permission-error', permissionError);
                     });
 
                     toast({ title: "Clearance Upgraded", description: "Terminal recalibrated." });

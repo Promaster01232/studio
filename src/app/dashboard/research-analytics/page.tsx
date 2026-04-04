@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
@@ -41,6 +42,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -256,7 +259,10 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
             if (u) {
                 getDoc(doc(firestore, "users", u.uid)).then(d => d.exists() && setUserProfile(d.data()));
             }
-            onSnapshot(query(collection(firestore, "posts"), orderBy("createdAt", "desc")), snap => {
+            const postsCol = collection(firestore, "posts");
+            const feedQuery = query(postsCol, orderBy("createdAt", "desc"));
+            
+            onSnapshot(feedQuery, snap => {
                 const now = Date.now();
                 const list: Post[] = [];
                 snap.docs.forEach(d => {
@@ -271,8 +277,12 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
                 });
                 setFeed(list);
                 setLoading(false);
-            }, (serverError) => {
-                console.error("Forensic Feed Stream Restricted:", serverError);
+            }, async (serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: postsCol.path,
+                    operation: 'list',
+                } satisfies SecurityRuleContext, serverError);
+                errorEmitter.emit('permission-error', permissionError);
                 setLoading(false);
             });
         });

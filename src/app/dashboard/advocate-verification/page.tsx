@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -174,9 +175,15 @@ export default function AdvocateVerificationPage() {
             const userMap: Record<string, UserRecord> = {};
             snap.docs.forEach(d => { userMap[d.id] = { ...d.data(), uid: d.id } as UserRecord });
             setUsers(userMap);
+        }, async (err) => {
+            const permissionError = new FirestorePermissionError({
+                path: usersCol.path,
+                operation: 'list',
+            } satisfies SecurityRuleContext, err);
+            errorEmitter.emit('permission-error', permissionError);
         });
 
-        // Setup Advocate Listener
+        // Setup Advocate Listener (RTDB - Pattern doesn't apply to RTDB, but handled gracefully)
         const advocatesRef = ref(rtdb, "advocates");
         const unsubAdvocates = onValue(advocatesRef, (snap) => {
             if (snap.exists()) {

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -12,6 +13,8 @@ import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 interface NotificationNode {
     id: string;
@@ -32,9 +35,9 @@ export default function NotificationsPage() {
   useEffect(() => {
     if (!auth.currentUser) return;
 
-    const notifRef = collection(firestore, "notifications");
+    const notifCol = collection(firestore, "notifications");
     const q = query(
-        notifRef, 
+        notifCol, 
         where("userId", "==", auth.currentUser.uid)
     );
 
@@ -53,8 +56,12 @@ export default function NotificationsPage() {
             setNotifications(list);
             setLoading(false);
         },
-        (err) => {
-            console.warn("[FIREBASE] Notifications snapshot ingress denied. Access restricted.", err.message);
+        async (err) => {
+            const permissionError = new FirestorePermissionError({
+                path: notifCol.path,
+                operation: 'list',
+            } satisfies SecurityRuleContext, err);
+            errorEmitter.emit('permission-error', permissionError);
             setLoading(false);
         }
     );
