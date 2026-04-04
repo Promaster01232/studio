@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,8 @@ import {
   Loader2,
   Clock,
   TrendingUp,
-  ChevronRight
+  ChevronRight,
+  Lock
 } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -182,75 +184,83 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
     return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
 
+  const isGuest = !auth.currentUser;
+
   return (
-    <div className="flex flex-col h-full space-y-8 pb-12 max-w-6xl mx-auto text-left relative pt-2">
+    <div className="flex flex-col h-full space-y-10 pb-12 max-w-6xl mx-auto text-left relative pt-2">
         <MotionWrapper>
-          <Card className="relative overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl rounded-3xl group hover:border-primary/20 transition-all duration-500">
-              <div className="p-8 sm:p-12 relative z-10 flex flex-col lg:flex-row items-center gap-10">
-                  <div className="flex-1 space-y-8 text-center lg:text-left">
-                      <div className="space-y-4">
-                          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-foreground leading-[1.1]">
+          <Card className="relative overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl rounded-[2.5rem] group hover:border-primary/20 transition-all duration-500">
+              <div className="p-10 sm:p-16 relative z-10 flex flex-col lg:flex-row items-center gap-12">
+                  <div className="flex-1 space-y-10 text-center lg:text-left">
+                      <div className="space-y-6">
+                          <h1 className="text-4xl sm:text-7xl font-black tracking-tight text-foreground leading-[1.1]">
                               Nyaya <span className="text-primary italic">{text}</span>
                           </h1>
-                          <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-xl">
-                              India's premier legal helper. Analyze cases, draft documents, and get answers instantly.
+                          <p className="text-base sm:text-xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
+                              India's premier AI legal assistant. Analyze cases, draft documents, and get answers instantly with professional-grade intelligence.
                           </p>
                       </div>
 
-                      <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-                          <Button size="lg" className="rounded-xl font-bold h-12 px-8 shadow-xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden" asChild>
+                      <div className="flex flex-wrap items-center justify-center lg:justify-start gap-5">
+                          <Button size="lg" className="rounded-2xl font-bold h-14 px-10 shadow-2xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden" asChild>
                               <Link href="/dashboard/narrate">
-                                  Record Case <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" />
+                                  Record Your Case <ArrowRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1" />
                               </Link>
                           </Button>
-                          <Button variant="ghost" className="h-12 rounded-xl px-6 font-bold hover:bg-primary/5 text-primary" asChild>
-                              <Link href="/dashboard/learn">Knowledge Base</Link>
+                          <Button variant="ghost" className="h-14 rounded-2xl px-8 font-bold hover:bg-primary/5 text-primary text-base" asChild>
+                              <Link href="/dashboard/learn">Knowledge Hub</Link>
                           </Button>
                       </div>
                   </div>
 
-                  <div className="hidden lg:flex w-64 shrink-0 flex-col gap-4">
-                      <Card className="bg-background/50 border-primary/5 p-4 rounded-2xl shadow-sm">
-                          <div className="flex items-center gap-3 mb-2">
-                              <Activity className="h-4 w-4 text-primary" />
-                              <p className="font-bold text-[10px] uppercase tracking-widest">System Status</p>
+                  <div className="hidden lg:flex w-72 shrink-0 flex-col gap-5">
+                      <Card className="bg-background/50 border-primary/5 p-6 rounded-[1.5rem] shadow-md hover:shadow-lg transition-all group/status">
+                          <div className="flex items-center gap-3 mb-3">
+                              <div className="p-2 rounded-lg bg-green-500/10 group-hover/status:bg-green-500/20 transition-colors">
+                                <Activity className="h-4 w-4 text-green-600 animate-pulse" />
+                              </div>
+                              <p className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground">System Status</p>
                           </div>
-                          <p className="text-xs font-bold text-green-600">Online & Ready</p>
+                          <p className="text-sm font-black text-green-600">Online & Synchronized</p>
                       </Card>
-                      <Card className="bg-background/50 border-primary/5 p-4 rounded-2xl shadow-sm">
-                          <div className="flex items-center gap-3 mb-2">
-                              <ShieldCheck className="h-4 w-4 text-primary" />
-                              <p className="font-bold text-[10px] uppercase tracking-widest">Security</p>
+                      <Card className="bg-background/50 border-primary/5 p-6 rounded-[1.5rem] shadow-md hover:shadow-lg transition-all group/sec">
+                          <div className="flex items-center gap-3 mb-3">
+                              <div className="p-2 rounded-lg bg-primary/10 group-hover/sec:bg-primary/20 transition-colors">
+                                <ShieldCheck className="h-4 w-4 text-primary" />
+                              </div>
+                              <p className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground">Encryption</p>
                           </div>
-                          <p className="text-xs font-bold">Encrypted Session</p>
+                          <p className="text-sm font-black text-primary">Secure Session Node</p>
                       </Card>
                   </div>
               </div>
-              <div className="h-1 w-full bg-gradient-to-r from-primary via-blue-400 to-primary"></div>
+              <div className="h-1.5 w-full bg-gradient-to-r from-primary via-blue-400 to-primary"></div>
           </Card>
         </MotionWrapper>
 
-        <div className="grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8 space-y-6">
+        <div className="grid lg:grid-cols-12 gap-10">
+          <div className="lg:col-span-8 space-y-8">
               <section>
-                  <div className="flex items-center justify-between mb-4 pb-2 border-b border-primary/5">
-                      <div className="flex items-center gap-2 text-primary/60">
-                          <TrendingUp className="h-4 w-4" />
-                          <h2 className="text-xs font-bold tracking-widest uppercase">Community Feed</h2>
+                  <div className="flex items-center justify-between mb-6 pb-2 border-b border-primary/5">
+                      <div className="flex items-center gap-3 text-primary/60">
+                          <TrendingUp className="h-5 w-5" />
+                          <h2 className="text-sm font-black tracking-[0.2em] uppercase">Community Registry</h2>
                       </div>
-                      <Button variant="link" className="h-auto p-0 text-xs font-bold text-primary" asChild>
-                          <Link href="/dashboard/research-analytics">View All</Link>
+                      <Button variant="link" className="h-auto p-0 text-sm font-bold text-primary hover:no-underline" asChild>
+                          <Link href="/dashboard/research-analytics" className="flex items-center gap-1">
+                            Explore All <ChevronRight className="h-4 w-4" />
+                          </Link>
                       </Button>
                   </div>
-                  <div className="space-y-4">
+                  <div className="grid gap-6">
                       {postsLoading ? (
-                          <div className="space-y-4">
+                          <div className="space-y-6">
                               {[...Array(2)].map((_, i) => (
-                                  <Card key={i} className="h-24 animate-pulse border-primary/5 rounded-2xl bg-muted/10" />
+                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-[1.5rem] bg-muted/10" />
                               ))}
                           </div>
                       ) : (
-                          <div className="grid gap-4">
+                          <div className="grid gap-6">
                               {latestPosts.map((post) => (
                                   <PostCard key={post.id} post={post} />
                               ))}
@@ -260,26 +270,34 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
               </section>
           </div>
 
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-8">
               <section>
-                  <div className="flex items-center gap-2 text-primary/60 mb-4 pb-2 border-b border-primary/5">
-                      <Sparkles className="h-4 w-4" />
-                      <h2 className="text-xs font-bold tracking-widest uppercase">Tools</h2>
+                  <div className="flex items-center gap-3 text-primary/60 mb-6 pb-2 border-b border-primary/5">
+                      <Sparkles className="h-5 w-5" />
+                      <h2 className="text-sm font-black tracking-[0.2em] uppercase">Intelligence Tools</h2>
                   </div>
-                  <div className="grid grid-cols-1 gap-2">
+                  <div className="grid grid-cols-1 gap-3">
                       {aiFeatures.map((f) => (
                         <Link key={f.href} href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
-                            <Card className="p-4 rounded-xl border-primary/5 hover:border-primary/20 hover:bg-primary/5 transition-all text-left shadow-sm group-active:scale-[0.98]">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
-                                        <f.icon className="h-4 w-4" />
+                            <Card className="p-5 rounded-2xl border-primary/5 hover:border-primary/20 hover:bg-primary/5 transition-all text-left shadow-md group-active:scale-[0.98] relative overflow-hidden">
+                                <div className="flex items-center gap-4 relative z-10">
+                                    <div className={cn(
+                                        "p-3 rounded-xl transition-all shadow-lg",
+                                        "bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white"
+                                    )}>
+                                        <f.icon className="h-5 w-5" />
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="font-bold text-xs tracking-tight text-foreground uppercase leading-none">{f.title}</h3>
-                                        <p className="text-[10px] text-muted-foreground mt-1">{f.desc}</p>
+                                        <h3 className="font-black text-sm tracking-tight text-foreground uppercase leading-none">{f.title}</h3>
+                                        <p className="text-[11px] text-muted-foreground font-medium mt-1.5">{f.desc}</p>
                                     </div>
-                                    <ChevronRight className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                                    {isGuest ? (
+                                        <Lock className="h-3.5 w-3.5 text-muted-foreground opacity-30" />
+                                    ) : (
+                                        <ChevronRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                                    )}
                                 </div>
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                             </Card>
                         </Link>
                       ))}

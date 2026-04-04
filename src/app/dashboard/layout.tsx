@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { LogOut, Loader2, Search, Bell, ShieldAlert, Zap, User, LogIn } from "lucide-react";
+import { LogOut, Loader2, Search, Bell, ShieldAlert, Zap, User, LogIn, Lock } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef, use } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -47,7 +47,18 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-const PUBLIC_DASHBOARD_ROUTES = ['/dashboard', '/dashboard/research-analytics'];
+const PUBLIC_DASHBOARD_ROUTES = [
+  '/dashboard',
+  '/dashboard/research-analytics',
+  '/dashboard/learn',
+  '/dashboard/police-guide',
+  '/dashboard/about',
+  '/dashboard/terms',
+  '/dashboard/privacy',
+  '/dashboard/cookie-policy',
+  '/dashboard/disclaimer',
+  '/dashboard/contact',
+];
 
 function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unreadCount: number, isAdmin: boolean }) {
     const isElite = isAdmin || userProfile?.subscriptionType?.includes('unlimited');
@@ -64,26 +75,24 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
             </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
-                {!userProfile?.isBlocked && (
-                    <SearchDialog>
-                        <div className="w-full max-w-md cursor-pointer group transition-all">
-                            <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[10px] uppercase tracking-widest text-muted-foreground/50 rounded-xl bg-muted/20 border border-primary/5 group-hover:border-primary/20 transition-all relative text-left">
-                                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                <span>Search for tools and laws...</span>
-                                <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                    <kbd className="h-5 rounded border bg-background px-1.5 font-mono text-[9px] font-black text-muted-foreground opacity-100 shadow-sm">
-                                        ⌘K
-                                    </kbd>
-                                </div>
-                            </div>
-                            <div className="md:hidden">
-                                <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-primary/5 bg-muted/20">
-                                    <Search className="h-4 w-4 text-muted-foreground" />
-                                </Button>
+                <SearchDialog>
+                    <div className="w-full max-w-md cursor-pointer group transition-all">
+                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[10px] uppercase tracking-widest text-muted-foreground/50 rounded-xl bg-muted/20 border border-primary/5 group-hover:border-primary/20 transition-all relative text-left">
+                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                            <span>Search for tools and laws...</span>
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                <kbd className="h-5 rounded border bg-background px-1.5 font-mono text-[9px] font-black text-muted-foreground opacity-100 shadow-sm">
+                                    ⌘K
+                                </kbd>
                             </div>
                         </div>
-                    </SearchDialog>
-                )}
+                        <div className="md:hidden">
+                            <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-primary/5 bg-muted/20">
+                                <Search className="h-4 w-4 text-muted-foreground" />
+                            </Button>
+                        </div>
+                    </div>
+                </SearchDialog>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
@@ -208,7 +217,6 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         setProfileLoading(false);
         setUserProfile(null);
         setUnreadCount(0);
-        // Removed automatic redirect to login to allow public access
       }
     });
 
@@ -218,6 +226,22 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         if (notifUnsubscribeRef.current) notifUnsubscribeRef.current();
     };
   }, [auth, firestore, pathname, router]);
+
+  // AUTH PROTECTION PROTOCOL: Redirect guests attempting to access Feature Nodes
+  useEffect(() => {
+    if (!profileLoading && !auth.currentUser) {
+        const isPublic = PUBLIC_DASHBOARD_ROUTES.includes(pathname) || 
+                         pathname.startsWith('/dashboard/learn/') || 
+                         pathname.startsWith('/dashboard/police-guide/') ||
+                         pathname.startsWith('/dashboard/profile/');
+        
+        const isProtectedFeature = !isPublic || pathname === '/dashboard/profile';
+        
+        if (isProtectedFeature && pathname.startsWith('/dashboard/')) {
+            router.replace('/login');
+        }
+    }
+  }, [auth.currentUser, profileLoading, pathname, router]);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -236,13 +260,13 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
             <Logo className="h-8 w-8 border-none shadow-none p-0 bg-transparent" priority={true} />
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
               <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none">
-                  Nyaya Sahayak
+                  Nyaya Assistant
               </span>
             </div>
           </Link>
         </SidebarHeader>
         <SidebarContent className="pt-2 px-2">
-          <SidebarNav isAdmin={isAdmin} />
+          <SidebarNav isAdmin={isAdmin} isGuest={!userProfile} />
           {isLimited && !profileLoading && (
             <div className="px-3 py-6 group-data-[collapsible=icon]:hidden">
                 <Card className="bg-primary/5 border-primary/5 rounded-2xl overflow-hidden shadow-sm">

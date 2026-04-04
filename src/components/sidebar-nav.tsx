@@ -29,6 +29,7 @@ import {
   ChevronRight,
   Settings,
   CreditCard,
+  Lock,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -49,6 +50,7 @@ const navigationItems = [
   {
     title: "AI Tools",
     icon: BrainCircuit,
+    isFeature: true,
     items: [
       { href: "/dashboard/narrate", icon: Mic, label: "Record Case" },
       { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Analyze Document" },
@@ -62,7 +64,7 @@ const navigationItems = [
     title: "Resources",
     icon: Library,
     items: [
-      { href: "/dashboard/my-cases", icon: FolderKanban, label: "My Cases" },
+      { href: "/dashboard/my-cases", icon: FolderKanban, label: "My Cases", isFeature: true },
       { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "Legal Aid" },
       { href: "/dashboard/learn", icon: Library, label: "Knowledge Base" },
       { href: "/dashboard/police-guide", icon: Shield, label: "Guides" },
@@ -72,6 +74,7 @@ const navigationItems = [
   {
     title: "Business",
     icon: Landmark,
+    isFeature: true,
     items: [
       { href: "/dashboard/business-msme", icon: Briefcase, label: "MSME Support" },
       { href: "/dashboard/finances-billing", icon: Landmark, label: "Fees & Billing" },
@@ -81,8 +84,8 @@ const navigationItems = [
     title: "Account",
     icon: CircleUserRound,
     items: [
-      { href: "/dashboard/profile", icon: CircleUserRound, label: "Profile" },
-      { href: "/dashboard/billing", icon: CreditCard, label: "Billing" },
+      { href: "/dashboard/profile", icon: CircleUserRound, label: "Profile", isFeature: true },
+      { href: "/dashboard/billing", icon: CreditCard, label: "Billing", isFeature: true },
       { href: "/dashboard/support", icon: LifeBuoy, label: "Support" },
     ],
   },
@@ -96,7 +99,7 @@ const navigationItems = [
   },
 ];
 
-export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
+export function SidebarNav({ isAdmin = false, isGuest = false }: { isAdmin?: boolean, isGuest?: boolean }) {
   const pathname = usePathname();
 
   const isSubItemActive = (href: string) => {
@@ -149,12 +152,13 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
                 >
                   <item.icon className="h-5 w-5" />
                   <span className="font-bold flex-1 text-left">{item.title}</span>
+                  {isGuest && item.isFeature && <Lock className="h-3 w-3 opacity-30 mr-2" />}
                   <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub className="ml-4 mt-1 border-l-2 border-primary/10 gap-1 pl-2">
-                  {item.items.map((subItem) => (
+                  {item.items.map((subItem: any) => (
                     <SidebarMenuSubItem key={subItem.label}>
                       <SidebarMenuSubButton
                         asChild
@@ -163,7 +167,8 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
                       >
                         <Link href={subItem.href} className="flex items-center gap-3">
                           <subItem.icon className="h-4 w-4 opacity-70" />
-                          <span className="text-sm font-medium">{subItem.label}</span>
+                          <span className="text-sm font-medium flex-1">{subItem.label}</span>
+                          {isGuest && subItem.isFeature && <Lock className="h-2.5 w-2.5 opacity-20" />}
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
