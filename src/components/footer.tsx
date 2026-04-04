@@ -53,7 +53,7 @@ export function Footer() {
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
-                  { label: "Privacy Policy", href: "/privacy", icon: ShieldCheck },
+                  { label: "Privacy Protocol", href: "/privacy", icon: ShieldCheck },
                   { label: "Terms & Conditions", href: "/terms", icon: FileText },
                   { label: "Refund Policy", href: "/refund-policy", icon: CreditCard },
                   { label: "Cookie Policy", href: "/cookie-policy", icon: Cookie },

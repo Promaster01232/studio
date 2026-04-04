@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { LogOut, Loader2, Search, ShieldAlert, Zap, User, LogIn, Lock, Activity } from "lucide-react";
+import { LogOut, Loader2, Search, ShieldAlert, Zap, User, LogIn, Lock, Activity, ChevronRight } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef, use } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -175,17 +175,14 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
     setIsMounted(true);
   }, []);
 
-  // Stable Auth Lifecycle
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      // Clear existing listeners upon state transition
       if (profileUnsubscribeRef.current) {
         profileUnsubscribeRef.current();
         profileUnsubscribeRef.current = null;
       }
 
       if (user) {
-        // 1. Profile Registry Listener
         const userDocRef = doc(firestore, "users", user.uid);
         profileUnsubscribeRef.current = onSnapshot(userDocRef, 
             (userDoc) => {
@@ -197,12 +194,10 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 setProfileLoading(false);
             },
             async (err) => {
-                // SILENT RECOVERY: Handles permission restriction gracefully
                 console.warn("[STATUTORY SYNC] Profile registry restricted or busy.");
                 setProfileLoading(false);
             }
         );
-
       } else {
         setProfileLoading(false);
         setUserProfile(null);
@@ -215,7 +210,6 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
     };
   }, [auth, firestore]);
 
-  // Routing & Identity Guards
   useEffect(() => {
     if (!profileLoading) {
         if (!auth.currentUser) {
@@ -230,7 +224,6 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 router.replace('/login');
             }
         } else if (!userProfile && pathname !== '/create-profile' && !pathname.startsWith('/login') && !pathname.startsWith('/register')) {
-            // Identity Synchronization Check
             router.replace('/create-profile');
         }
     }
@@ -300,7 +293,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
                     <DropdownMenuRadioItem value="light" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Light Mode</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="dark" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Dark Mode</DropdownMenuRadioGroup>
+                    <DropdownMenuRadioItem value="dark" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Dark Mode</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 <DropdownMenuItem onClick={handleLogout} className="rounded-lg h-12 font-black text-[10px] uppercase tracking-widest text-destructive focus:text-destructive focus:bg-destructive/5 gap-3 cursor-pointer transition-all">

@@ -88,7 +88,7 @@ const navigationItems = [
     icon: Scale,
     items: [
       { href: "/dashboard/terms", icon: FileText, label: "Terms & Conditions" },
-      { href: "/dashboard/privacy", icon: ShieldCheck, label: "Privacy Policy" },
+      { href: "/dashboard/privacy", icon: ShieldCheck, label: "Privacy Protocol" },
       { href: "/dashboard/refund-policy", icon: CreditCard, label: "Refund Policy" },
       { href: "/dashboard/cookie-policy", icon: Cookie, label: "Cookie Policy" },
       { href: "/dashboard/disclaimer", icon: ShieldAlert, label: "Legal Disclaimer" },
