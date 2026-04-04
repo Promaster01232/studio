@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/firebase";
 
 interface Message {
     role: 'user' | 'ai';
@@ -35,6 +36,10 @@ interface Message {
 
 export function FloatingHub() {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const auth = useAuth();
+
+  // Without login, do not show the Hub nodes
+  if (!auth.currentUser) return null;
 
   return (
     <>
