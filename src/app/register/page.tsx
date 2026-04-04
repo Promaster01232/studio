@@ -64,7 +64,6 @@ export default function RegisterPage() {
     const cleanLastName = lastName.trim();
     const cleanMobile = mobileNumber.trim().replace(/\s+/g, '');
     
-    // Indian Mobile Regex: Optional +91 followed by 10 digits starting with 6-9
     const mobileRegex = /^(\+91)?([6-9]\d{9})$/;
 
     if (!cleanFirstName || !cleanLastName || !trimmedEmail || !cleanMobile || !password || !confirmPassword) {
@@ -86,17 +85,15 @@ export default function RegisterPage() {
     setIsValidating(true);
 
     try {
-      // 1. Mobile Uniqueness Audit
       const mobileQuery = query(collection(firestore, "users"), where("mobileNumber", "==", cleanMobile));
       const mobileSnap = await getDocs(mobileQuery);
       if (!mobileSnap.empty) {
-          toast({ variant: "destructive", title: "Mobile Node Collision", description: "This mobile number is already registered in the registry." });
+          toast({ variant: "destructive", title: "Mobile Already Registered", description: "This mobile number is already in our records." });
           setLoading(false);
           setIsValidating(false);
           return;
       }
 
-      // 2. AI Email Audit with Resilient Fallback
       let securityStatus = 'verified';
       try {
         const emailValidation = await verifyEmailAuthenticity({ email: trimmedEmail });
@@ -109,14 +106,12 @@ export default function RegisterPage() {
         }
         setEmailStatus('valid');
       } catch (aiError) {
-        console.warn("AI Validation node busy, proceeding with pending audit.");
         setEmailStatus('pending');
         securityStatus = 'pending_audit';
       }
       
       setIsValidating(false);
 
-      // 3. Auth Node Creation
       const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
       const user = userCredential.user;
 
@@ -140,21 +135,19 @@ export default function RegisterPage() {
         createdAt: serverTimestamp(),
       };
 
-      // Persistent Sync
       await setDoc(doc(firestore, "users", user.uid), userProfile);
       await set(ref(rtdb, `users/${user.uid}`), {
           ...userProfile,
           createdAt: Date.now()
       });
 
-      toast({ title: "Registry Enrollment Complete", description: "Welcome to Nyaya Sahayak terminal." });
+      toast({ title: "Registration Complete", description: "Welcome to Nyaya Sahayak." });
       router.push("/dashboard");
 
     } catch (error: any) {
       console.error("Enrollment failed:", error);
-      let errorMsg = "Enrollment refused by system.";
-      if (error.code === 'auth/email-already-in-use') errorMsg = "This email is already in the registry.";
-      if (error.code === 'auth/weak-password') errorMsg = "Password protocol insufficient.";
+      let errorMsg = "Registration failed. Please try again.";
+      if (error.code === 'auth/email-already-in-use') errorMsg = "This email is already registered.";
       
       toast({ variant: "destructive", title: "Enrollment Failure", description: errorMsg });
       setLoading(false);
@@ -171,12 +164,12 @@ export default function RegisterPage() {
       >
           <div className="flex items-center gap-3 mb-6">
               <Logo className="h-12 w-12" />
-              <h1 className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold tracking-tight text-primary">
                   Nyaya Sahayak
               </h1>
           </div>
-          <h2 className="text-3xl font-black tracking-tighter">Citizen Registry</h2>
-          <p className="text-muted-foreground mt-2 mb-8 font-medium">Direct institutional enrollment protocol.</p>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Join Registry</h2>
+          <p className="text-muted-foreground mt-2 mb-8 font-medium">Create your institutional account.</p>
           
           <div className="grid gap-4">
               <div className="grid grid-cols-2 gap-4">
@@ -254,15 +247,15 @@ export default function RegisterPage() {
 
               <Button className="w-full h-12 font-bold shadow-xl shadow-primary/20 active:scale-95 transition-all mt-4" onClick={handleRegister} disabled={loading || !acceptedTerms}>
                   {loading ? <Loader2 className="animate-spin h-5 w-5" /> : <ShieldCheck className="h-5 w-5 mr-2" />}
-                  {loading ? "ENROLLING..." : "COMPLETE ENROLLMENT"}
+                  {loading ? "Registering..." : "Complete Registration"}
               </Button>
           </div>
           
-          <div className="mt-6 text-center text-sm font-medium">Already in registry? <Link href="/login" className="font-bold text-primary hover:underline">Sign in</Link></div>
+          <div className="mt-6 text-center text-sm font-medium">Already registered? <Link href="/login" className="font-bold text-primary hover:underline">Sign in</Link></div>
       </motion.div>
       <div className="hidden md:flex flex-col items-center justify-center bg-muted/30 border-l border-primary/5">
         <Scale className="h-24 w-24 text-primary opacity-40 animate-pulse" />
-        <h3 className="text-2xl font-black tracking-tighter mt-6">Identity Enrollment</h3>
+        <h3 className="text-2xl font-bold tracking-tight mt-6 text-foreground">Identity Enrollment</h3>
         <p className="text-sm text-muted-foreground font-medium max-w-[280px] text-center px-8">Secure your digital presence within the Nyaya Sahayak ecosystem.</p>
       </div>
     </Card>

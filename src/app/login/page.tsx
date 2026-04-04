@@ -62,7 +62,7 @@ function ProtocolRestorationDialog() {
                         <KeyRound className="h-4 w-4" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">Identity Recovery</span>
                     </div>
-                    <DialogTitle className="text-2xl font-black tracking-tighter">Restore Credentials</DialogTitle>
+                    <DialogTitle className="text-2xl font-bold tracking-tight">Restore Credentials</DialogTitle>
                     <DialogDescription className="text-xs font-medium">
                         Enter your institutional email to receive a secure restoration link.
                     </DialogDescription>
@@ -74,7 +74,7 @@ function ProtocolRestorationDialog() {
                             <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Registry Email</Label>
                             <Input value={email} onChange={e => setEmail(e.target.value)} placeholder="m@example.com" className="h-11 font-bold" />
                         </div>
-                        <Button onClick={handleRestore} disabled={loading} className="w-full h-12 font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20">
+                        <Button onClick={handleRestore} disabled={loading} className="w-full h-12 font-bold text-xs uppercase tracking-widest shadow-xl shadow-primary/20">
                             {loading ? <Loader2 className="animate-spin h-4 w-4" /> : "Dispatch Restore Link"}
                         </Button>
                     </div>
@@ -144,11 +144,8 @@ export default function LoginPage() {
     try {
         let loginEmail = identifier.trim().toLowerCase();
         
-        // Mobile Ingress Detection Protocol
         if (!loginEmail.includes('@')) {
             const cleanMobile = loginEmail.replace(/\s+/g, '').replace(/^\+91/, '');
-            
-            // Search for mobile in registry
             const usersRef = collection(firestore, "users");
             const q = query(usersRef, where("mobileNumber", "in", [cleanMobile, "+91" + cleanMobile]));
             const querySnapshot = await getDocs(q);
@@ -156,8 +153,8 @@ export default function LoginPage() {
             if (querySnapshot.empty) {
                 toast({ 
                     variant: "destructive", 
-                    title: "Node Not Found", 
-                    description: "Mobile number is not registered in the institutional registry." 
+                    title: "Not Found", 
+                    description: "Mobile number is not registered." 
                 });
                 setIsEmailLoading(false);
                 return;
@@ -169,7 +166,6 @@ export default function LoginPage() {
     } catch (error: any) {
         let message = "Invalid email or password.";
         if (error.code === 'auth/invalid-credential') message = "Authentication failed. Check your credentials.";
-        if (error.code === 'auth/user-not-found') message = "Identity node not found.";
         
         toast({ 
             variant: "destructive", 
@@ -193,7 +189,6 @@ export default function LoginPage() {
     setIsGoogleLoading(true);
     try {
       const provider = new GoogleAuthProvider();
-      // Ensure smooth account selection for institutional fresh starts
       provider.setCustomParameters({ prompt: 'select_account' });
       await signInWithPopup(auth, provider);
     } catch (error: any) {
@@ -212,11 +207,11 @@ export default function LoginPage() {
       <div className="p-8 sm:p-12 flex flex-col justify-center">
         <div className="flex items-center gap-3 mb-6">
             <Logo className="h-12 w-12" />
-            <h1 className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold tracking-tight text-primary">
                 Nyaya Sahayak
             </h1>
         </div>
-        <h2 className="text-3xl font-black tracking-tighter">Welcome Back</h2>
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">Welcome Back</h2>
         <p className="text-muted-foreground mt-2 mb-8 font-medium">
             Access your secure institutional hub.
         </p>
@@ -275,20 +270,20 @@ export default function LoginPage() {
 
                 <Button className="w-full font-bold h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all" onClick={handleLogin} disabled={isLoading || !acceptedTerms}>
                     {isEmailLoading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : null}
-                    {isEmailLoading ? "Authorizing Node..." : "Initialize Login"}
+                    {isEmailLoading ? "Authorizing..." : "Login"}
                 </Button>
             </div>
             
             <div className="relative py-4">
                 <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-primary/10" /></div>
-                <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.3em]">
-                    <span className="bg-background px-4 text-muted-foreground/40">Statutory Access Node</span>
+                <div className="relative flex justify-center text-[10px] font-bold uppercase tracking-widest">
+                    <span className="bg-background px-4 text-muted-foreground/40">Secure Access</span>
                 </div>
             </div>
 
             <Button 
               variant="outline" 
-              className="w-full font-black text-[10px] uppercase tracking-widest h-12 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group" 
+              className="w-full font-bold text-[10px] uppercase tracking-widest h-12 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group" 
               onClick={handleGoogleLogin} 
               disabled={isLoading || !acceptedTerms}
             >
@@ -299,7 +294,7 @@ export default function LoginPage() {
                     <GoogleIcon />
                   </div>
                 )}
-                {isGoogleLoading ? "Synchronizing Google Node..." : "Authorize via Google"}
+                {isGoogleLoading ? "Synchronizing..." : "Continue with Google"}
             </Button>
         </div>
         
@@ -315,11 +310,11 @@ export default function LoginPage() {
                 <Scale className="h-24 w-24 text-primary opacity-40" />
             </div>
             <div className="space-y-2">
-                <h3 className="text-2xl font-black tracking-tighter">Statutory Ingress</h3>
+                <h3 className="text-2xl font-bold tracking-tight text-foreground">Statutory Ingress</h3>
                 <p className="text-sm text-muted-foreground font-medium max-w-[280px]">Mathematically precise legal assistant for Indian citizens.</p>
             </div>
         </div>
-        <div className="absolute bottom-8 left-8 text-[10px] font-black uppercase tracking-widest opacity-20 text-left">Nyaya Sahayak Node // ACCESS</div>
+        <div className="absolute bottom-8 left-8 text-[10px] font-black uppercase tracking-widest opacity-20 text-left">Nyaya Sahayak // ACCESS</div>
       </div>
     </Card>
   );

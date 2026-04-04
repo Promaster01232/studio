@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Lightbulb } from "lucide-react";
 import { motion } from "framer-motion";
@@ -27,7 +26,7 @@ export default function ContactUsPage() {
 
             {/* Header Section */}
             <div className="space-y-2 sm:space-y-3">
-              <h1 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter text-foreground">
+              <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground">
                 Contact Us
               </h1>
               <p className="text-lg sm:text-xl font-bold text-primary/80">
@@ -42,8 +41,8 @@ export default function ContactUsPage() {
 
             {/* Specific Inquiry Section */}
             <div className="space-y-4 pt-2 sm:pt-4">
-              <h3 className="text-lg sm:text-xl font-black tracking-tight text-foreground/90">
-                General Inquiries, Support & Feedback
+              <h3 className="text-lg sm:text-xl font-bold tracking-tight text-foreground/90">
+                General Inquiries & Support
               </h3>
               <div className="space-y-3">
                 <p className="text-[10px] sm:text-sm font-bold text-muted-foreground uppercase tracking-widest">
@@ -51,7 +50,7 @@ export default function ContactUsPage() {
                 </p>
                 <a 
                   href={mailtoLink} 
-                  className="flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-2xl font-black text-primary hover:opacity-80 transition-opacity break-all px-2"
+                  className="flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-2xl font-bold text-primary hover:opacity-80 transition-opacity break-all px-2"
                 >
                   <Mail className="h-5 w-5 sm:h-7 sm:w-7 shrink-0" />
                   <span className="underline underline-offset-4 decoration-primary/30">nyayasahayakhelp@gmail.com</span>
@@ -83,7 +82,7 @@ export default function ContactUsPage() {
             </p>
             <div className="flex items-center justify-center gap-2 transition-transform group-hover:scale-105 duration-300">
                 <Lightbulb className="h-6 w-6 sm:h-7 sm:w-7 text-primary fill-primary/10" />
-                <h2 className="text-xl sm:text-2xl font-black font-headline text-primary tracking-tighter">
+                <h2 className="text-xl sm:text-2xl font-bold text-primary tracking-tight">
                     IdeaSpark
                 </h2>
             </div>

@@ -51,7 +51,7 @@ const MinimalBackground = () => {
 
 const featureNodes = [
   { icon: Mic, title: "Voice Assistant", desc: "Tell your problem and get an immediate case analysis.", href: "/dashboard/narrate", badge: "AI" },
-  { icon: Search, title: "Document Audit", desc: "Scan legal papers for risks and important clauses.", href: "/dashboard/document-intelligence", badge: "Safe" },
+  { icon: Search, title: "Document Analysis", desc: "Scan legal papers for risks and important clauses.", href: "/dashboard/document-intelligence", badge: "Safe" },
   { icon: FileText, title: "Drafting Tools", desc: "Generate professional legal notices and applications.", href: "/dashboard/document-generator", badge: "New" },
   { icon: Globe, title: "Lawyer Connect", desc: "Connect with verified legal professionals for expert help.", href: "/dashboard/lawyer-connect", badge: "Live" },
 ];
@@ -79,7 +79,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
       <MinimalBackground />
       
       <main className="flex-1 flex flex-col items-center relative z-10">
-        <section className="w-full max-w-7xl pt-8 pb-10 sm:pt-12 sm:pb-16 px-6 text-center space-y-8">
+        <section className="w-full max-w-7xl pt-8 pb-10 sm:pt-12 sm:pb-16 px-6 text-center space-y-10">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
@@ -94,16 +94,16 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
               </div>
             </header>
 
-            <div className="space-y-4 max-w-4xl mx-auto">
-              <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-foreground text-center">
+            <div className="space-y-6 max-w-4xl mx-auto">
+              <h1 className="text-4xl sm:text-6xl font-bold tracking-tight leading-[1.1] text-foreground text-center">
                 India's premier <span className="text-primary italic">AI legal assistant.</span>
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
                 Simple and professional legal help for everyone. Analyze cases, scan documents, and get the guidance you need in seconds.
               </p>
             </div>
 
-            <nav className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <nav className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               {!loading ? (
                 <Button asChild className="h-14 w-full sm:w-auto min-w-[240px] px-8 text-xs font-black tracking-wide shadow-xl shadow-primary/20 rounded-xl active:scale-95 transition-all">
                   <Link href="/dashboard" className="flex items-center gap-2">
@@ -147,7 +147,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                                 <item.icon className="h-5 w-5 text-primary" />
                             </div>
                             <div className="space-y-2">
-                                <h3 className="text-lg font-black tracking-tight text-foreground group-hover:text-primary transition-colors">
+                                <h3 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
                                     {item.title}
                                 </h3>
                                 <p className="text-xs text-muted-foreground font-medium leading-relaxed opacity-70">
@@ -166,7 +166,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
               <Zap className="h-4 w-4 animate-pulse" />
               <h2 className="text-[10px] font-black uppercase tracking-[0.4em]">Feature Access</h2>
             </div>
-            <h3 className="text-2xl sm:text-4xl font-black tracking-tight uppercase leading-none">Our <span className="text-primary italic">Services</span></h3>
+            <h3 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">Our <span className="text-primary">Services</span></h3>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -183,10 +183,10 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                           {node.badge}
                         </Badge>
                       </div>
-                      <h3 className="text-lg font-black tracking-tight uppercase">{node.title}</h3>
+                      <h3 className="text-lg font-bold tracking-tight text-foreground">{node.title}</h3>
                       <p className="text-xs text-muted-foreground font-medium leading-relaxed mt-2 flex-grow opacity-80">{node.desc}</p>
                       <div className="pt-6 mt-6 border-t border-primary/5 flex items-center justify-between">
-                        <span className="text-[8px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">Open Dashboard</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">Open Terminal</span>
                         <ArrowRight className="h-3.5 w-3.5 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                       </div>
                     </CardContent>
@@ -208,16 +208,16 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                             <Activity className="h-4 w-4" />
                             <span className="text-[9px] font-black uppercase tracking-[0.3em]">Support Access</span>
                         </div>
-                        <h2 className="text-2xl sm:text-4xl font-black tracking-tight uppercase leading-none">Talk to a <span className="text-primary italic">Human Expert?</span></h2>
+                        <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground leading-none">Talk to a <span className="text-primary italic">Human Expert?</span></h2>
                     </div>
                     <p className="text-base text-muted-foreground font-medium leading-relaxed max-w-xl">
                         AI provides the analysis, but human advocates provide the strategy. Connect with verified professionals for your complex legal needs.
                     </p>
                     <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
-                        <Button className="rounded-xl font-black uppercase text-[9px] h-12 px-10 shadow-lg active:scale-95 transition-all" asChild>
+                        <Button className="rounded-xl font-bold uppercase text-[9px] h-12 px-10 shadow-lg active:scale-95 transition-all" asChild>
                             <Link href="/dashboard/lawyer-connect">Find a Lawyer</Link>
                         </Button>
-                        <Button variant="outline" className="rounded-xl font-black uppercase text-[9px] h-12 px-10 border-primary/10 hover:bg-primary/5 transition-all" asChild>
+                        <Button variant="outline" className="rounded-xl font-bold uppercase text-[9px] h-12 px-10 border-primary/10 hover:bg-primary/5 transition-all" asChild>
                             <Link href="/contact" className="flex items-center gap-3">
                                 Send a Message <MessageCircle className="h-4 w-4 opacity-40 group-hover:animate-bounce" />
                             </Link>
@@ -230,7 +230,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
         <section className="w-full py-16 px-6">
             <div className="max-w-3xl mx-auto text-center space-y-8">
                 <Gavel className="h-8 w-8 text-primary/20 mx-auto animate-bounce" />
-                <p className="text-xl sm:text-3xl font-black text-foreground tracking-tighter leading-tight italic uppercase opacity-80 text-center">
+                <p className="text-xl sm:text-3xl font-bold text-foreground tracking-tight leading-tight italic uppercase opacity-80 text-center">
                     "Empowering citizens with simple and <span className="text-primary">Reliable AI Assistance.</span>"
                 </p>
                 <div className="space-y-1">

@@ -21,29 +21,29 @@ import { Logo } from "@/components/logo";
 
 const features = [
   {
-    title: "Forensic Case Auditor",
-    desc: "Our neural engine processes complex legal narratives in milliseconds, providing mathematically precise forensic reports and summaries.",
+    title: "Case Analysis",
+    desc: "Our AI engine processes complex legal narratives in milliseconds, providing precise summaries and procedural guidance.",
     icon: BrainCircuit,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
   },
   {
     title: "Procedural Roadmap",
-    desc: "AI-optimized legal navigation paths that dynamically guide citizens through the complexities of the Indian judicial system.",
+    desc: "AI-optimized legal navigation paths that dynamically guide citizens through the complexities of the judicial system.",
     icon: Scale,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
   },
   {
-    title: "Legal Drafting Node",
-    desc: "Master the art of legal communication with AI-driven notice generation and sophisticated bond structural drafting.",
+    title: "Document Drafting",
+    desc: "Master legal communication with AI-driven notice generation and sophisticated document structural drafting.",
     icon: FileText,
     color: "text-indigo-500",
     bg: "bg-indigo-500/10",
   },
   {
-    title: "Registry Intelligence",
-    desc: "Access a strictly verified registry of legal professionals, ensuring identity authenticity through multi-stage forensic audits.",
+    title: "Verified Directory",
+    desc: "Access a verified registry of legal professionals, ensuring identity authenticity through multi-stage manual audits.",
     icon: ShieldCheck,
     color: "text-green-600",
     bg: "bg-green-600/10",
@@ -55,14 +55,14 @@ const leadership = [
     name: "Hardy Pie",
     role: "Founder & Architect",
     initials: "HP",
-    bio: "As the visionary and primary architect of Nyaya Sahayak, Hardy Pie engineered the core forensic logic and high-fidelity interfaces that power our ecosystem. With a commitment to technical excellence and precision engineering, he has dedicated thousands of hours to refining the citizen journey.",
+    bio: "As the visionary and primary architect, Hardy Pie engineered the core logic and high-fidelity interfaces that power our ecosystem. With a commitment to technical excellence and precision engineering, he has dedicated thousands of hours to refining the citizen journey.",
     icon: Cpu
   },
   {
     name: "Piyush Singh",
     role: "CEO & Co-founder",
     initials: "PS",
-    bio: "As the CEO and Co-founder, Piyush Singh steers the strategic trajectory of Nyaya Sahayak. His leadership is focused on institutional growth, strategic partnerships, and the democratization of elite legal tools, ensuring that Nyaya Sahayak remains the global gold standard.",
+    bio: "As the CEO and Co-founder, Piyush Singh steers the strategic trajectory of Nyaya Sahayak. His leadership is focused on institutional growth, strategic partnerships, and the democratization of elite legal tools.",
     icon: ShieldCheck
   }
 ];
@@ -105,10 +105,12 @@ export default function AboutPage() {
         <div className="space-y-2">
             <div className="flex items-center justify-center gap-3 text-primary mb-2">
                 <Sparkles className="h-5 w-5 animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Protocol</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest">Official Portal</span>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black font-headline tracking-tighter uppercase">Our <span className="text-primary italic">Mandate</span></h1>
-            <p className="text-sm sm:text-xl text-muted-foreground font-medium">The pinnacle of AI-driven legal empowerment, created by IdeaSpark.</p>
+            <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground text-center">
+              Our <span className="text-primary">Mission</span>
+            </h1>
+            <p className="text-sm sm:text-xl text-muted-foreground font-medium max-w-2xl mx-auto">The pinnacle of AI-driven legal empowerment, created by IdeaSpark.</p>
         </div>
       </motion.div>
 
@@ -123,21 +125,21 @@ export default function AboutPage() {
               <div className="p-3 rounded-2xl bg-primary/10 shadow-inner">
                 <Target className="h-6 w-6 animate-pulse" />
               </div>
-              <span className="text-[11px] font-black uppercase tracking-[0.5em]">The Statutory Mandate</span>
+              <span className="text-[11px] font-bold uppercase tracking-widest">Institutional Mandate</span>
             </div>
             <div className="space-y-8 max-w-4xl">
-              <h2 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[0.9] uppercase">
+              <h2 className="text-4xl sm:text-7xl font-bold tracking-tight leading-[0.9] text-foreground">
                 Democratizing <br />
                 <span className="text-primary italic">Legal Intelligence.</span>
               </h2>
               <p className="text-lg sm:text-2xl text-muted-foreground font-medium leading-relaxed">
-                Nyaya Sahayak is built on the belief that every citizen deserves <span className="text-foreground font-bold">elite-grade legal assistance.</span> Our mission is to bridge the gap between complex judicial protocols and citizen needs through precision AI engineering, delivering forensic document audits and personalized roadmaps that empower users to navigate the law with absolute confidence.
+                Nyaya Sahayak is built on the belief that every citizen deserves <span className="text-foreground font-bold">accessible legal assistance.</span> Our mission is to bridge the gap between complex judicial protocols and citizen needs through precision AI engineering, delivering automated document drafting and personalized roadmaps that empower users to navigate the law with confidence.
               </p>
             </div>
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-primary/5 border border-primary/10">
                 <Zap className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">AI Forensics Active</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">AI Powered</span>
               </div>
               <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-green-500/5 border border-green-500/10">
                 <UserCheck className="h-4 w-4 text-green-600" />
@@ -145,7 +147,7 @@ export default function AboutPage() {
               </div>
               <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-blue-500/5 border border-blue-500/10">
                 <Activity className="h-4 w-4 text-blue-600" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">Institutional Ready</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">Always Ready</span>
               </div>
             </div>
           </CardContent>
@@ -166,7 +168,7 @@ export default function AboutPage() {
                   <feature.icon className={`h-8 w-8 ${feature.color}`} />
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-black tracking-tighter uppercase leading-tight">{feature.title}</h3>
+                  <h3 className="text-2xl font-bold tracking-tight text-foreground leading-tight">{feature.title}</h3>
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-medium">
                     {feature.desc}
                   </p>
@@ -182,10 +184,10 @@ export default function AboutPage() {
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-2 text-primary mb-1">
             <Activity className="h-4 w-4 animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-[0.5em]">Institutional Core</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest">Platform Core</span>
           </div>
-          <h3 className="text-4xl sm:text-7xl font-black font-headline tracking-tighter uppercase">Platform <span className="text-primary italic">Leadership</span></h3>
-          <p className="text-sm sm:text-xl text-muted-foreground font-medium max-w-2xl mx-auto">The visionaries behind the forensic engine, dedicated to legal excellence across Bharat.</p>
+          <h3 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground">Meet the <span className="text-primary">Leadership</span></h3>
+          <p className="text-sm sm:text-xl text-muted-foreground font-medium max-w-2xl mx-auto">The visionaries behind the engine, dedicated to legal excellence across Bharat.</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-10 sm:gap-16">
@@ -203,8 +205,8 @@ export default function AboutPage() {
                       </div>
                   </div>
                   <div className="text-left space-y-2">
-                    <CardTitle className="font-black tracking-tighter text-3xl sm:text-4xl uppercase">{leader.name}</CardTitle>
-                    <Badge variant="secondary" className="text-[10px] font-black text-primary uppercase tracking-[0.2em] py-1 px-4 rounded-full bg-primary/5 border-primary/10">{leader.role}</Badge>
+                    <CardTitle className="font-bold tracking-tight text-3xl sm:text-4xl text-foreground">{leader.name}</CardTitle>
+                    <Badge variant="secondary" className="text-[10px] font-bold text-primary uppercase tracking-widest py-1 px-4 rounded-full bg-primary/5 border-primary/10">{leader.role}</Badge>
                   </div>
                 </CardHeader>
                 <CardContent className="p-10 sm:p-12 text-left flex-1 flex flex-col justify-center relative z-10">
@@ -223,12 +225,12 @@ export default function AboutPage() {
       <motion.div variants={itemVariants} className="text-center pt-20 border-t border-primary/5">
           <div className="max-w-3xl mx-auto space-y-10">
               <Award className="h-16 w-16 text-primary/20 mx-auto animate-bounce" />
-              <p className="text-2xl sm:text-4xl font-black text-foreground tracking-tighter leading-tight italic uppercase">
-                  "Engineering Dignity through Precise <span className="text-primary">Neural Legal Intelligence.</span> We don't just provide answers; we build procedural paths to justice."
+              <p className="text-2xl sm:text-4xl font-bold text-foreground tracking-tight leading-tight italic uppercase">
+                  "Engineering Dignity through Precise <span className="text-primary">Legal Intelligence.</span> We don't just provide answers; we build procedural paths to justice."
               </p>
               <div className="space-y-2">
-                <p className="text-[11px] font-black uppercase tracking-[0.5em] text-primary">Nyaya Sahayak // Node NS-ALPHA</p>
-                <p className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-widest">Authorized Registry // Since 2024</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-primary">Nyaya Sahayak // Official Portal</p>
+                <p className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-widest">Since 2024</p>
               </div>
           </div>
       </motion.div>

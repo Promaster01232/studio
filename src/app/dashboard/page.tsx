@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -118,8 +117,8 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any, isAdmin
                             <AvatarFallback className="font-black bg-primary/5 text-primary text-[9px]">{post.authorName?.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <p className="font-black text-[10px] tracking-tight">{post.isAnonymous ? 'Anonymous' : post.authorName}</p>
-                            <p className="text-[8px] font-bold text-muted-foreground opacity-50">
+                            <p className="font-bold text-[10px] tracking-tight">{post.isAnonymous ? 'Anonymous' : post.authorName}</p>
+                            <p className="text-[8px] font-medium text-muted-foreground opacity-50">
                                 {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
                             </p>
                         </div>
@@ -128,7 +127,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any, isAdmin
                         {post.postType || 'Discussion'}
                     </Badge>
                 </div>
-                <h3 className="font-black text-base tracking-tight mb-1.5 leading-tight">{post.title}</h3>
+                <h3 className="font-bold text-base tracking-tight mb-1.5 leading-tight">{post.title}</h3>
                 <p className="text-xs text-muted-foreground font-medium leading-relaxed mb-4 line-clamp-2">{post.content}</p>
                 <div className="flex items-center justify-between pt-3 border-t border-primary/5">
                     <Button 
@@ -219,9 +218,9 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
               <div className="p-8 sm:p-12 relative z-10 flex flex-col lg:flex-row items-center gap-10">
                   <div className="flex-1 space-y-8 text-center lg:text-left">
                       <div className="space-y-4">
-                          <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-[0.9] text-foreground">
+                          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
                               Welcome to <br />
-                              <span className="text-primary italic">Nyaya {text}</span>
+                              <span className="text-primary italic font-semibold tracking-normal">Nyaya {text}</span>
                           </h1>
                           <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed">
                               India's premier legal assistant. Analyze cases, draft documents, and get answers to your legal questions.
@@ -229,17 +228,17 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                       </div>
 
                       <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
-                          <Button size="lg" className="rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-14 px-10 shadow-xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative" asChild>
+                          <Button size="lg" className="rounded-2xl font-bold uppercase tracking-wider text-[10px] h-14 px-10 shadow-xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative" asChild>
                               <Link href="/dashboard/narrate">
                                   <span className="relative z-10 flex items-center gap-2">
-                                      Analyze Case <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                      Record Case <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                                   </span>
                                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                               </Link>
                           </Button>
-                          <Button variant="ghost" className="h-14 rounded-2xl px-8 font-black uppercase tracking-widest text-[9px] hover:bg-primary/5 text-primary border border-transparent hover:border-primary/10" asChild>
+                          <Button variant="ghost" className="h-14 rounded-2xl px-8 font-bold uppercase tracking-widest text-[9px] hover:bg-primary/5 text-primary border border-transparent hover:border-primary/10" asChild>
                               <Link href="/dashboard/learn">
-                                  View Knowledge Base
+                                  Knowledge Base
                               </Link>
                           </Button>
                       </div>
@@ -251,26 +250,26 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                               <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover/node:bg-primary group-hover/node:text-white transition-all">
                                   <Activity className="h-4 w-4" />
                               </div>
-                              <p className="font-black text-[10px] uppercase tracking-widest">Platform Status</p>
+                              <p className="font-bold text-[10px] uppercase tracking-widest">Platform Status</p>
                           </div>
                           <div className="h-1 w-full bg-primary/5 rounded-full overflow-hidden">
                               <motion.div initial={{ width: 0 }} animate={{ width: '100%' }} className="h-full bg-primary" />
                           </div>
-                          <p className="text-[8px] font-bold text-muted-foreground mt-2 uppercase tracking-widest">Active</p>
+                          <p className="text-[8px] font-bold text-muted-foreground mt-2 uppercase tracking-widest">Ready</p>
                       </Card>
                       <Card className="bg-background/50 border-primary/5 p-5 rounded-2xl shadow-inner group/node hover:border-primary/20 transition-all">
                           <div className="flex items-center gap-3 mb-3">
                               <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover/node:bg-primary group-hover/node:text-white transition-all">
                                   <ShieldCheck className="h-4 w-4" />
                               </div>
-                              <p className="font-black text-[10px] uppercase tracking-widest">Security Status</p>
+                              <p className="font-bold text-[10px] uppercase tracking-widest">Security Status</p>
                           </div>
-                          <p className="text-xs font-bold truncate">Encrypted Connection</p>
-                          <p className="text-[8px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Data Secure</p>
+                          <p className="text-xs font-bold truncate">Secure Connection</p>
+                          <p className="text-[8px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Encrypted</p>
                       </Card>
                   </div>
               </div>
-              <div className="h-1.5 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+              <div className="h-1 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
           </Card>
         </MotionWrapper>
 
@@ -280,9 +279,9 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                   <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-2">
                       <div className="flex items-center gap-2.5 text-primary/40">
                           <TrendingUp className="h-4 w-4" />
-                          <h2 className="text-[10px] font-black tracking-[0.3em] text-foreground/80 uppercase">Community Discussions</h2>
+                          <h2 className="text-[10px] font-bold tracking-widest text-foreground/80 uppercase">Community Discussions</h2>
                       </div>
-                      <Button variant="link" className="h-auto p-0 text-[10px] font-black uppercase tracking-widest" asChild>
+                      <Button variant="link" className="h-auto p-0 text-[10px] font-bold uppercase tracking-widest" asChild>
                           <Link href="/dashboard/research-analytics">View All Posts</Link>
                       </Button>
                   </div>
@@ -313,7 +312,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                   <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-2">
                       <div className="flex items-center gap-2.5 text-primary/40">
                           <Sparkles className="h-4 w-4" />
-                          <h2 className="text-[10px] font-black tracking-[0.3em] text-foreground/80 uppercase">Tools & Features</h2>
+                          <h2 className="text-[10px] font-bold tracking-widest text-foreground/80 uppercase">Tools & Features</h2>
                       </div>
                   </div>
                   <div className="grid grid-cols-1 gap-3">
@@ -325,8 +324,8 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                                         <f.icon className="h-4 w-4" />
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="font-black text-[11px] tracking-tight text-foreground uppercase leading-none">{f.title}</h3>
-                                        <p className="text-[9px] font-bold text-muted-foreground mt-1">{f.desc}</p>
+                                        <h3 className="font-bold text-[11px] tracking-tight text-foreground uppercase leading-none">{f.title}</h3>
+                                        <p className="text-[9px] font-medium text-muted-foreground mt-1">{f.desc}</p>
                                     </div>
                                     <ChevronRight className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                                 </div>
