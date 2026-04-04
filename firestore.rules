@@ -11,20 +11,18 @@ service cloud.firestore {
     // Super Admin: Absolute authority check based on token email
     function isSuperAdmin() {
       return isAuthenticated() && (
-        request.auth.token.email.lower() in [
-          'enterspaceindia@gmail.com', 
-          'piyushkumrsingh23399@gmail.com',
-          'nyayasahayakhelp@gmail.com'
-        ]
+        request.auth.token.email.lower() == 'enterspaceindia@gmail.com' || 
+        request.auth.token.email.lower() == 'piyushkumrsingh23399@gmail.com' ||
+        request.auth.token.email.lower() == 'nyayasahayakhelp@gmail.com'
       );
     }
 
-    // General Admin check
+    // General Admin check - Refined for robustness
     function isAdmin() {
       return isSuperAdmin() || (
         isAuthenticated() && 
         exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('isAdmin', false) == true
       );
     }
 
@@ -57,9 +55,10 @@ service cloud.firestore {
       allow delete: if isAuthenticated() && (resource.data.authorUid == request.auth.uid || isAdmin());
     }
 
-    // Notifications collection
+    // Notifications collection - Optimized for List operations
     match /notifications/{notificationId} {
-      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow get: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
       allow create: if isAuthenticated();
       allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
       allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;

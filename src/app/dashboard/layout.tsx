@@ -148,7 +148,6 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                                         </Link>
                                     </Button>
 
-                                    {/* Profile Icon Node */}
                                     <Button 
                                         variant="ghost" 
                                         size="icon" 
@@ -234,6 +233,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         notifUnsubscribeRef.current = onSnapshot(q, 
             (snap) => setUnreadCount(snap.size),
             async (err) => {
+                // If it's a permission error, we emit it for the global listener
                 const permissionError = new FirestorePermissionError({
                     path: notifCol.path,
                     operation: 'list',
@@ -256,7 +256,6 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
     };
   }, [auth, firestore, pathname, router]);
 
-  // AUTH PROTECTION PROTOCOL: Redirect guests attempting to access Feature Nodes
   useEffect(() => {
     if (!profileLoading && !auth.currentUser) {
         const isPublic = PUBLIC_DASHBOARD_ROUTES.includes(pathname) || 
