@@ -300,12 +300,12 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
                     <DropdownMenuRadioItem value="light" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Light Mode</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="dark" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Dark Mode</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="dark" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Dark Mode</DropdownMenuRadioGroup>
                 </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 <DropdownMenuItem onClick={handleLogout} className="rounded-lg h-12 font-black text-[10px] uppercase tracking-widest text-destructive focus:text-destructive focus:bg-destructive/5 gap-3 cursor-pointer transition-all">
                     <LogOut className="h-4 w-4" /> Sign Out
-                </MenuItem>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
