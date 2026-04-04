@@ -101,18 +101,25 @@ export default function LoginPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+
+  const isLoading = isEmailLoading || isGoogleLoading;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userDocRef = doc(firestore, "users", user.uid);
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-            router.replace('/dashboard');
-        } else {
-            router.replace('/create-profile');
+        try {
+            const userDocRef = doc(firestore, "users", user.uid);
+            const userDoc = await getDoc(userDocRef);
+            if (userDoc.exists()) {
+                router.replace('/dashboard');
+            } else {
+                router.replace('/create-profile');
+            }
+        } catch (e) {
+            console.error("Auth redirect error:", e);
         }
       }
     });
@@ -124,7 +131,7 @@ export default function LoginPage() {
         toast({ variant: "destructive", title: "Information missing", description: "Please enter both credentials."});
         return;
     }
-    setLoading(true);
+    setIsEmailLoading(true);
     try {
         let loginEmail = identifier.trim().toLowerCase();
         
@@ -143,7 +150,7 @@ export default function LoginPage() {
                     title: "Node Not Found", 
                     description: "Mobile number is not registered in the institutional registry." 
                 });
-                setLoading(false);
+                setIsEmailLoading(false);
                 return;
             }
             loginEmail = querySnapshot.docs[0].data().email;
@@ -160,21 +167,34 @@ export default function LoginPage() {
             title: "Login failed", 
             description: message 
         });
-        setLoading(false);
+        setIsEmailLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
+    if (!acceptedTerms) {
+        toast({ 
+            variant: "destructive", 
+            title: "Protocol Refused", 
+            description: "Please acknowledge the system terms before initializing authorization." 
+        });
+        return;
+    }
+    
+    setIsGoogleLoading(true);
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
+      const provider = new GoogleAuthProvider();
+      // Ensure smooth account selection for institutional fresh starts
+      provider.setCustomParameters({ prompt: 'select_account' });
+      await signInWithPopup(auth, provider);
     } catch (error: any) {
+      console.error("Google Access Error:", error);
       toast({
         variant: "destructive",
         title: "Google Access Failed",
-        description: "Authentication node busy. Please try again.",
+        description: "Authentication node busy or restricted. Please try again.",
       });
-      setLoading(false);
+      setIsGoogleLoading(false);
     }
   };
 
@@ -202,7 +222,7 @@ export default function LoginPage() {
                         placeholder="Enter Registered Email or Mobile"
                         value={identifier}
                         onChange={(e) => setIdentifier(e.target.value)}
-                        disabled={loading}
+                        disabled={isLoading}
                         className="font-bold h-11"
                     />
                 </div>
@@ -217,7 +237,7 @@ export default function LoginPage() {
                             type={showPassword ? "text" : "password"} 
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            disabled={loading}
+                            disabled={isLoading}
                             className="font-bold h-11 pr-10"
                         />
                         <button
@@ -244,8 +264,9 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <Button className="w-full font-bold h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all" onClick={handleLogin} disabled={loading || !acceptedTerms}>
-                    {loading ? <Loader2 className="animate-spin" /> : "Initialize Login"}
+                <Button className="w-full font-bold h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all" onClick={handleLogin} disabled={isLoading || !acceptedTerms}>
+                    {isEmailLoading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : null}
+                    {isEmailLoading ? "Authorizing Node..." : "Initialize Login"}
                 </Button>
             </div>
             
@@ -256,9 +277,9 @@ export default function LoginPage() {
                 </div>
             </div>
 
-            <Button variant="outline" className="w-full font-bold h-12 border-primary/10 hover:border-primary/30" onClick={handleGoogleLogin} disabled={loading || !acceptedTerms}>
-                {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Scale className="mr-2 h-4 w-4 text-primary" />}
-                Google Authorization
+            <Button variant="outline" className="w-full font-bold h-12 border-primary/10 hover:border-primary/30 active:scale-95 transition-all" onClick={handleGoogleLogin} disabled={isLoading || !acceptedTerms}>
+                {isGoogleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Scale className="mr-2 h-4 w-4 text-primary" />}
+                {isGoogleLoading ? "Connecting Google Node..." : "Google Authorization"}
             </Button>
         </div>
         
