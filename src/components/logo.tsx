@@ -1,6 +1,12 @@
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
+/**
+ * Institutional Identity Node (Logo)
+ * 
+ * Optimized for Largest Contentful Paint (LCP) with priority rendering
+ * to ensure immediate brand visibility during secure session handshakes.
+ */
 export function Logo({ className, imageClassName, priority = true }: { className?: string, imageClassName?: string, priority?: boolean }) {
   return (
     <div className={cn(

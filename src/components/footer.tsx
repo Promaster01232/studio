@@ -51,7 +51,7 @@ export function Footer() {
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary border-b border-primary/10 pb-2 w-fit mx-auto sm:mx-0">
                 Security & Payments
               </h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   { label: "Privacy Policy", href: "/privacy", icon: ShieldCheck },
                   { label: "Terms & Conditions", href: "/terms", icon: FileText },

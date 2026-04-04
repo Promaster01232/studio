@@ -97,8 +97,8 @@ export default function BillingPage() {
                 setLoading(false);
             },
             async (err) => {
-                // SILENT RECOVERY: Handle permission denial gracefully
-                console.warn("[STATUTORY SYNC] Profile registry restricted.");
+                // SILENT RECOVERY: Handles permission restriction gracefully
+                console.warn("[STATUTORY SYNC] Profile registry restricted or busy.");
                 setLoading(false);
             }
         );
@@ -122,7 +122,7 @@ export default function BillingPage() {
                 setUserTransactions(list);
             },
             async (err) => {
-                // SILENT RECOVERY: Display empty ledger if permission denied
+                // SILENT RECOVERY: Handles permission restriction gracefully for transaction ledger
                 console.warn("[STATUTORY SYNC] Transaction ledger restricted.");
                 setUserTransactions([]);
             }

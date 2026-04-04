@@ -44,26 +44,27 @@ service cloud.firestore {
 
     // Notifications collection: Institutional Alerts
     match /notifications/{notificationId} {
-      // Owner provability node
-      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
-      // Administrative oversight node
-      allow read: if isAdmin();
+      // ADDITIVE RULE PROVABILITY: Split owner and admin for query engine optimization
+      allow get, list: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow get, list: if isAdmin();
+      
       allow create: if isAuthenticated();
       allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
 
     // Transactions collection: Statutory Ledger
     match /transactions/{transactionId} {
-      // Owner provability node
-      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
-      // Administrative oversight node
-      allow read: if isAdmin();
+      // ADDITIVE RULE PROVABILITY: Split owner and admin for query engine optimization
+      allow get, list: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow get, list: if isAdmin();
+      
       allow create: if isAuthenticated();
     }
 
     // Posts collection: Community Transmissions (Publicly Readable)
     match /posts/{postId} {
       allow get, list: if true;
+      
       allow create: if isAuthenticated() && request.resource.data.authorUid == request.auth.uid;
       allow update, delete: if isAuthenticated() && (resource.data.authorUid == request.auth.uid || isAdmin());
     }
