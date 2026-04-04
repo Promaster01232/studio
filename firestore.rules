@@ -8,7 +8,7 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Super Admin: Absolute authority based on token email registry
+    // Super Admin check based on token email registry
     function isSuperAdmin() {
       return isAuthenticated() && 
              'email' in request.auth.token && 
@@ -19,7 +19,7 @@ service cloud.firestore {
       );
     }
 
-    // General Admin check: Safely evaluate identity node existence
+    // General Admin check: Safely evaluate identity node
     function isAdmin() {
       return isSuperAdmin() || (
         isAuthenticated() && 
@@ -28,7 +28,7 @@ service cloud.firestore {
       );
     }
 
-    // GLOBAL ADMIN OVERRIDE: Absolute clearance for Root Nodes
+    // GLOBAL ADMIN OVERRIDE
     match /{document=**} {
       allow read, write: if isSuperAdmin();
     }
@@ -42,33 +42,35 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // Notifications collection: Institutional Alerts (Decommissioned but rules preserved for safety)
+    // Notifications collection: Institutional Alerts
     match /notifications/{notificationId} {
+      // Owner provability node
       allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Administrative oversight node
       allow read: if isAdmin();
       allow create: if isAuthenticated();
-      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
-      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
 
     // Transactions collection: Statutory Ledger
     match /transactions/{transactionId} {
+      // Owner provability node
       allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Administrative oversight node
       allow read: if isAdmin();
       allow create: if isAuthenticated();
     }
 
-    // Posts collection: Community Transmissions
+    // Posts collection: Community Transmissions (Publicly Readable)
     match /posts/{postId} {
-      allow read: if true; // Publicly readable for Community Hub
+      allow get, list: if true;
       allow create: if isAuthenticated() && request.resource.data.authorUid == request.auth.uid;
-      allow update: if isAuthenticated() && (resource.data.authorUid == request.auth.uid || isAdmin());
-      allow delete: if isAuthenticated() && (resource.data.authorUid == request.auth.uid || isAdmin());
+      allow update, delete: if isAuthenticated() && (resource.data.authorUid == request.auth.uid || isAdmin());
     }
 
-    // Advocates collection: Professional Registry
+    // Advocates collection: Professional Registry (Publicly Readable)
     match /advocates/{advocateId} {
-      allow read: if true; // Publicly readable for Lawyer Connect
+      allow get, list: if true;
       allow write: if isAuthenticated() && (advocateId == request.auth.uid || isAdmin());
     }
   }

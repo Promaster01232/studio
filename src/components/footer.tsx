@@ -1,6 +1,5 @@
-
 import { Logo } from "@/components/logo";
-import { ShieldCheck, FileText, Cookie, CreditCard, Info, Mail } from "lucide-react";
+import { ShieldCheck, FileText, Cookie, CreditCard, Info, Mail, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {
@@ -54,10 +53,11 @@ export function Footer() {
               </h3>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Privacy", href: "/privacy", icon: ShieldCheck },
-                  { label: "Terms", href: "/terms", icon: FileText },
-                  { label: "Refunds", href: "/refund-policy", icon: CreditCard },
-                  { label: "Cookies", href: "/cookie-policy", icon: Cookie }
+                  { label: "Privacy Policy", href: "/privacy", icon: ShieldCheck },
+                  { label: "Terms & Conditions", href: "/terms", icon: FileText },
+                  { label: "Refund Policy", href: "/refund-policy", icon: CreditCard },
+                  { label: "Cookie Policy", href: "/cookie-policy", icon: Cookie },
+                  { label: "Legal Disclaimer", href: "/disclaimer", icon: ShieldAlert }
                 ].map((item) => (
                   <Link key={item.label} href={item.href} className="group flex items-center gap-3 px-4 py-3 rounded-2xl glass hover:bg-primary/5 hover:border-primary/20 transition-all text-[11px] font-black uppercase tracking-widest text-foreground/70 active:scale-95">
                     <div className="p-1.5 rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform shrink-0 shadow-sm">

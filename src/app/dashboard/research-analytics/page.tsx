@@ -2,8 +2,7 @@
 
 import { useToast } from "@/hooks/use-toast";
 import React, { useState, useEffect, useRef, use } from "react";
-import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
@@ -28,7 +27,7 @@ import {
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, orderBy, onSnapshot, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove, deleteDoc, serverTimestamp } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove, deleteDoc } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -48,7 +47,6 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-// 56 hours in milliseconds for Transience Protocol
 const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
 
 interface Post {
@@ -101,7 +99,7 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
     );
 }
 
-function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any, isAdmin: boolean }) {
+function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
     const { toast } = useToast();
     const firestore = useFirestore();
     const auth = useAuth();
@@ -146,7 +144,7 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
 
     const handleDelete = () => {
         if (!isAdmin && !isAuthor) return;
-        if (!confirm("Permanent Purge: Confirm record erasure from Firestore?")) return;
+        if (!confirm("Confirm Record Purge?")) return;
         deleteDoc(doc(firestore, "posts", post.id)).then(() => toast({ title: "Post Purged" }));
     };
 
@@ -154,14 +152,10 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
         const shareText = `Transmission: "${post.title}" on Nyaya Sahayak`;
         if (platform === 'copy') {
             try { 
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(window.location.origin + "/dashboard/research-analytics"); 
-                    toast({ title: "Link Copied" }); 
-                } else {
-                    throw new Error("Clipboard API unavailable");
-                }
+                await navigator.clipboard.writeText(window.location.origin + "/dashboard/research-analytics"); 
+                toast({ title: "Link Copied" }); 
             } catch(e) {
-                toast({ variant: "destructive", title: "Copy Failed", description: "Browser permissions restricted clipboard access." });
+                toast({ variant: "destructive", title: "Copy Failed" });
             }
         } else {
             window.open(platform === 'whatsapp' ? `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}` : `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
@@ -200,7 +194,7 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
                         {optimisticPoll.options.map((o, i) => {
                             const p = totalVotes > 0 ? (o.votes / totalVotes) * 100 : 0;
                             return (
-                                <button key={i} onClick={() => handleVote(i)} disabled={userHasVoted} className="w-full relative h-12 rounded-2xl border border-primary/5 overflow-hidden transition-all text-left px-4 bg-white dark:bg-black/20 hover:border-primary/20 active:scale-[0.99]">
+                                <button key={i} onClick={() => handleVote(i)} disabled={userHasVoted} className="w-full relative h-12 rounded-2xl border border-primary/5 overflow-hidden transition-all text-left px-4 bg-white dark:bg-black/20 hover:border-primary/20">
                                     {userHasVoted && <motion.div initial={{ width: 0 }} animate={{ width: `${p}%` }} className="absolute inset-y-0 left-0 bg-primary/10 border-r border-primary/20" />}
                                     <div className="relative z-10 flex justify-between h-full items-center"><span className="font-bold text-xs">{o.text}</span>{userHasVoted && <span className="font-black text-xs text-primary">{p.toFixed(0)}%</span>}</div>
                                 </button>
@@ -237,16 +231,12 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
     const auth = useAuth();
     const [feed, setFeed] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
-    const [userProfile, setUserProfile] = useState<any>(null);
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const unsubAuth = onAuthStateChanged(auth, u => {
             const adminCheck = u?.email ? ADMIN_EMAILS.includes(u.email.toLowerCase()) : false;
             setIsAdmin(adminCheck);
-            if (u) {
-                getDoc(doc(firestore, "users", u.uid)).then(d => d.exists() && setUserProfile(d.data()));
-            }
             
             const postsCol = collection(firestore, "posts");
             const feedQuery = query(postsCol, orderBy("createdAt", "desc"));
@@ -266,8 +256,8 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
                 setFeed(list);
                 setLoading(false);
             }, (err) => {
-                // SILENT RECOVERY: Handle permission denied for non-critical community feed
-                console.warn("[STATUTORY SYNC] Community feed restricted.");
+                // SILENT RECOVERY: Handles permission denied gracefully for public feed
+                console.warn("[STATUTORY SYNC] Public feed restricted.");
                 setLoading(false);
             });
 
@@ -291,65 +281,42 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
                 
                 <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div className="space-y-4 text-left">
-                        <motion.div 
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="flex items-center gap-2"
-                        >
+                        <div className="flex items-center gap-2">
                             <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-lg">
                                 <Sparkles className="h-3 w-3 mr-1.5 animate-pulse" /> Transience Active
                             </Badge>
-                        </motion.div>
+                        </div>
                         
                         <div className="space-y-1">
-                            <motion.h1 
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3 }}
-                                className="text-2xl sm:text-4xl font-black font-headline tracking-tighter uppercase leading-none text-foreground"
-                            >
-                                Live <span className="text-primary italic">{ "Transmissions." }</span>
-                            </motion.h1>
-                            <motion.p 
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4 }}
-                                className="text-xs sm:text-sm text-muted-foreground font-medium max-w-lg leading-relaxed opacity-80"
-                            >
+                            <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter uppercase leading-none text-foreground">
+                                Live <span className="text-primary italic">Transmissions.</span>
+                            </h1>
+                            <p className="text-xs sm:text-sm text-muted-foreground font-medium max-w-lg leading-relaxed opacity-80" >
                                 Publicly audited statutory ideas. Every node is purged after 56 hours.
-                            </motion.p>
+                            </p>
                         </div>
                     </div>
 
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className="shrink-0 w-full md:w-auto"
-                    >
-                        <Button size="lg" className="h-12 px-8 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all w-full md:w-auto" asChild>
-                            <Link href="/dashboard/research-analytics/new">
-                                <PlusCircle className="mr-2 h-4 w-4" /> Initialize Post
-                            </Link>
-                        </Button>
-                    </motion.div>
+                    <Button size="lg" className="h-12 px-8 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all w-full md:w-auto" asChild>
+                        <Link href="/dashboard/research-analytics/new">
+                            <PlusCircle className="mr-2 h-4 w-4" /> Initialize Post
+                        </Link>
+                    </Button>
                 </div>
-                
                 <div className="h-1 w-full bg-gradient-to-r from-primary/20 via-primary to-primary/20 absolute bottom-0 left-0"></div>
             </motion.div>
 
             <div className="grid gap-8">
                 {feed.length > 0 ? feed.map((item, i) => (
                     <motion.div key={item.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + (i * 0.05) }}>
-                        <PostCard post={item} userProfile={userProfile} isAdmin={isAdmin} />
+                        <PostCard post={item} isAdmin={isAdmin} />
                     </motion.div>
                 )) : (
                     <div className="py-32 text-center opacity-40 flex flex-col items-center gap-10">
                         <Newspaper className="h-20 w-20" />
                         <div className="space-y-3">
                             <p className="font-black text-3xl uppercase tracking-tighter">Registry Clear</p>
-                            <p className="text-sm italic">{ "\"Awaiting institutional transmissions.\"" }</p>
+                            <p className="text-sm italic">"Awaiting institutional transmissions."</p>
                         </div>
                     </div>
                 )}

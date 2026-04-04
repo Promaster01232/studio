@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -30,6 +29,10 @@ import {
   Settings,
   CreditCard,
   Lock,
+  Scale,
+  ShieldCheck,
+  Cookie,
+  ShieldAlert,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -81,6 +84,16 @@ const navigationItems = [
     ],
   },
   {
+    title: "Legal Protocols",
+    icon: Scale,
+    items: [
+      { href: "/dashboard/terms", icon: FileText, label: "Terms & Conditions" },
+      { href: "/dashboard/privacy", icon: ShieldCheck, label: "Privacy Policy" },
+      { href: "/dashboard/cookie-policy", icon: Cookie, label: "Cookie Policy" },
+      { href: "/dashboard/disclaimer", icon: ShieldAlert, label: "Legal Disclaimer" },
+    ],
+  },
+  {
     title: "Account",
     icon: CircleUserRound,
     items: [
@@ -95,6 +108,7 @@ const navigationItems = [
     isAdminOnly: true,
     items: [
       { href: "/dashboard/management-console", icon: Shield, label: "Control Panel" },
+      { href: "/dashboard/advocate-verification", icon: Gavel, label: "Advocate Audit" },
     ],
   },
 ];
