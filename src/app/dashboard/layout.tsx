@@ -195,6 +195,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+      // Clear existing listeners
       if (profileUnsubscribeRef.current) {
         profileUnsubscribeRef.current();
         profileUnsubscribeRef.current = null;
@@ -205,6 +206,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
       }
 
       if (user) {
+        // User Profile Listener
         const userDocRef = doc(firestore, "users", user.uid);
         profileUnsubscribeRef.current = onSnapshot(userDocRef, 
             (userDoc) => {
@@ -227,12 +229,14 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
             }
         );
 
+        // Notifications Listener
         const notifCol = collection(firestore, "notifications");
         const q = query(notifCol, where("userId", "==", user.uid), where("isRead", "==", false));
+        
         notifUnsubscribeRef.current = onSnapshot(q, 
             (snap) => setUnreadCount(snap.size),
             async (err) => {
-                // If it's a permission error, we emit it for the global listener
+                // Construct contextual error for the global emitter
                 const permissionError = new FirestorePermissionError({
                     path: notifCol.path,
                     operation: 'list',
