@@ -25,16 +25,6 @@ export function Footer() {
             <p className="text-xs text-muted-foreground leading-relaxed font-medium max-w-sm">
               Engineered for the future of justice. Our neural forensic nodes provide mathematically precise legal intelligence and institutional navigational roadmaps.
             </p>
-            {/* Original Logo Display Section */}
-            <div className="flex items-center gap-4 pt-2">
-                <div className="flex items-center gap-3">
-                    <Logo className="h-10 w-10 border-none shadow-none p-0 bg-transparent" priority={false} />
-                    <div className="flex flex-col text-left">
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-foreground/60">Official Identity Node</span>
-                        <span className="text-[8px] font-bold text-muted-foreground/40 uppercase">Original Statutory Brand</span>
-                    </div>
-                </div>
-            </div>
           </div>
 
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-10">
