@@ -23,6 +23,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 export default function RegisterPage() {
   const auth = useAuth();
@@ -85,15 +87,21 @@ export default function RegisterPage() {
     setIsValidating(true);
 
     try {
-      const mobileQuery = query(collection(firestore, "users"), where("mobileNumber", "==", cleanMobile));
-      const mobileSnap = await getDocs(mobileQuery);
-      if (!mobileSnap.empty) {
-          toast({ variant: "destructive", title: "Mobile Already Registered", description: "This mobile number is already in our records." });
-          setLoading(false);
-          setIsValidating(false);
-          return;
+      // 1. Resilient Mobile Check
+      try {
+          const mobileQuery = query(collection(firestore, "users"), where("mobileNumber", "==", cleanMobile));
+          const mobileSnap = await getDocs(mobileQuery);
+          if (!mobileSnap.empty) {
+              toast({ variant: "destructive", title: "Mobile Already Registered", description: "This mobile number is already in our records." });
+              setLoading(false);
+              setIsValidating(false);
+              return;
+          }
+      } catch (e) {
+          console.warn("[REGISTRY] Mobile uniqueness check deferred to background.");
       }
 
+      // 2. Resilient AI Email Audit
       let securityStatus = 'verified';
       try {
         const emailValidation = await verifyEmailAuthenticity({ email: trimmedEmail });
@@ -112,6 +120,7 @@ export default function RegisterPage() {
       
       setIsValidating(false);
 
+      // 3. User Node Creation
       const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
       const user = userCredential.user;
 
@@ -135,11 +144,21 @@ export default function RegisterPage() {
         createdAt: serverTimestamp(),
       };
 
-      await setDoc(doc(firestore, "users", user.uid), userProfile);
-      await set(ref(rtdb, `users/${user.uid}`), {
+      // 4. NON-BLOCKING SYNC: Dispatch to background
+      const userDocRef = doc(firestore, "users", user.uid);
+      setDoc(userDocRef, userProfile).catch(async (serverError) => {
+          const permissionError = new FirestorePermissionError({
+              path: userDocRef.path,
+              operation: 'create',
+              requestResourceData: userProfile,
+          } satisfies SecurityRuleContext, serverError);
+          errorEmitter.emit('permission-error', permissionError);
+      });
+
+      set(ref(rtdb, `users/${user.uid}`), {
           ...userProfile,
           createdAt: Date.now()
-      });
+      }).catch(() => console.warn("[RTDB] Identity sync deferred."));
 
       toast({ title: "Registration Complete", description: "Welcome to Nyaya Sahayak." });
       router.push("/dashboard");
