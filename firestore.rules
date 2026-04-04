@@ -61,18 +61,17 @@ service cloud.firestore {
 
     // Notifications collection: Institutional Alerts
     match /notifications/{notificationId} {
-      // Use 'read' to cover both 'get' and 'list' operations for queries
-      // Hardened with safe-getters to prevent evaluation failure on missing fields
-      allow read: if isAuthenticated() && (resource.data.get('userId', '') == request.auth.uid || isAdmin());
+      // Use direct field access for userId to ensure query matching for 'list' operations
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
       allow create: if isAuthenticated();
-      allow update: if isAuthenticated() && resource.data.get('userId', '') == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
-      allow delete: if isAuthenticated() && resource.data.get('userId', '') == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
 
     // Transactions collection: Verified Statutory Ledger
     match /transactions/{transactionId} {
-      // Use 'read' to cover both 'get' and 'list' operations for queries
-      allow read: if isAuthenticated() && (resource.data.get('userId', '') == request.auth.uid || isAdmin());
+      // Explicitly authorize 'read' (get and list) for owners and admins
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
       allow create: if isAuthenticated();
     }
 

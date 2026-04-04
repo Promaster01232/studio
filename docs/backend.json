@@ -61,6 +61,67 @@
                 "email",
                 "userType"
             ]
+        },
+        "Notification": {
+            "title": "Notification",
+            "description": "Represents an alert for a user.",
+            "type": "object",
+            "properties": {
+                "userId": { "type": "string" },
+                "type": { "type": "string" },
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "isRead": { "type": "boolean" },
+                "createdAt": { "type": "object" },
+                "link": { "type": "string" }
+            },
+            "required": ["userId", "title", "isRead"]
+        },
+        "Transaction": {
+            "title": "Transaction",
+            "description": "Represents a payment record.",
+            "type": "object",
+            "properties": {
+                "userId": { "type": "string" },
+                "userEmail": { "type": "string" },
+                "userName": { "type": "string" },
+                "planId": { "type": "string" },
+                "amount": { "type": "number" },
+                "paymentId": { "type": "string" },
+                "createdAt": { "type": "object" },
+                "status": { "type": "string" }
+            },
+            "required": ["userId", "amount", "paymentId", "status"]
+        },
+        "Post": {
+            "title": "Post",
+            "description": "A community transmission node.",
+            "type": "object",
+            "properties": {
+                "authorUid": { "type": "string" },
+                "authorName": { "type": "string" },
+                "authorAvatar": { "type": "string" },
+                "title": { "type": "string" },
+                "content": { "type": "string" },
+                "likes": { "type": "number" },
+                "postType": { "type": "string" },
+                "createdAt": { "type": "object" }
+            },
+            "required": ["authorUid", "title", "content"]
+        },
+        "Advocate": {
+            "title": "Advocate",
+            "description": "Professional advocate details.",
+            "type": "object",
+            "properties": {
+                "uid": { "type": "string" },
+                "name": { "type": "string" },
+                "specialty": { "type": "string" },
+                "barId": { "type": "string" },
+                "isVerified": { "type": "boolean" },
+                "isApproved": { "type": "boolean" }
+            },
+            "required": ["uid", "name", "barId"]
         }
     },
     "auth": {
@@ -73,7 +134,32 @@
         "/users/{userId}": {
             "schema": {
                 "$ref": "#/entities/UserProfile"
-            }
+            },
+            "description": "Identity registry."
+        },
+        "/notifications/{notificationId}": {
+            "schema": {
+                "$ref": "#/entities/Notification"
+            },
+            "description": "Institutional alerts."
+        },
+        "/transactions/{transactionId}": {
+            "schema": {
+                "$ref": "#/entities/Transaction"
+            },
+            "description": "Statutory ledger."
+        },
+        "/posts/{postId}": {
+            "schema": {
+                "$ref": "#/entities/Post"
+            },
+            "description": "Community transmissions."
+        },
+        "/advocates/{advocateId}": {
+            "schema": {
+                "$ref": "#/entities/Advocate"
+            },
+            "description": "Professional registry."
         }
     }
 }
