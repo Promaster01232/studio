@@ -83,16 +83,22 @@ export default function BillingPage() {
     const [userTransactions, setUserTransactions] = useState<any[]>([]);
 
     useEffect(() => {
-        if (!auth.currentUser) return;
-        const userDocRef = doc(firestore, "users", auth.currentUser.uid);
+        if (!auth.currentUser) {
+            setLoading(false);
+            return;
+        }
+        
+        const userId = auth.currentUser.uid;
+        const userDocRef = doc(firestore, "users", userId);
+        
         const unsub = onSnapshot(userDocRef, 
             (doc) => {
                 setProfile(doc.data());
                 setLoading(false);
             },
             async (err) => {
-                // SILENT RECOVERY: Fallback to local profile node if permission denied
-                console.warn("[STATUTORY SYNC] Profile restricted or busy.");
+                // SILENT RECOVERY: Handle permission denial gracefully
+                console.warn("[STATUTORY SYNC] Profile registry restricted.");
                 setLoading(false);
             }
         );
@@ -101,7 +107,7 @@ export default function BillingPage() {
         const transCol = collection(firestore, "transactions");
         const q = query(
             transCol, 
-            where("userId", "==", auth.currentUser.uid),
+            where("userId", "==", userId),
             where("status", "==", "CAPTURED")
         );
         
@@ -117,7 +123,7 @@ export default function BillingPage() {
             },
             async (err) => {
                 // SILENT RECOVERY: Display empty ledger if permission denied
-                console.warn("[STATUTORY SYNC] Transaction ledger restricted or busy.");
+                console.warn("[STATUTORY SYNC] Transaction ledger restricted.");
                 setUserTransactions([]);
             }
         );

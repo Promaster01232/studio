@@ -221,7 +221,8 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         if (!auth.currentUser) {
             const isPublic = PUBLIC_DASHBOARD_ROUTES.includes(pathname) || 
                              pathname.startsWith('/dashboard/learn/') || 
-                             pathname.startsWith('/dashboard/police-guide/');
+                             pathname.startsWith('/dashboard/police-guide/') ||
+                             pathname.startsWith('/dashboard/research-analytics');
             
             const isProtectedFeature = !isPublic || pathname === '/dashboard/profile';
             

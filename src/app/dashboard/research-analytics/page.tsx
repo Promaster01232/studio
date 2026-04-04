@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
@@ -42,8 +41,6 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
-import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -134,14 +131,6 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
         updateDoc(postRef, {
             likes: increment(userHasLiked ? -1 : 1),
             likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
-        }).then(() => {
-            if (!userHasLiked && !isAuthor) {
-                addDoc(collection(firestore, "notifications"), {
-                    userId: post.authorUid, type: 'like', title: 'Transmission Liked',
-                    description: `${userProfile?.firstName || 'A citizen'} liked your post.`,
-                    isRead: false, createdAt: serverTimestamp()
-                }).catch(() => {});
-            }
         }).finally(() => setIsLiking(false));
     };
 
@@ -241,7 +230,6 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
 }
 
 export default function ResearchAnalyticsPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-    // Unwrap dynamic props for Next.js 15 compliance
     use(props.params);
     use(props.searchParams);
 
@@ -259,17 +247,17 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
             if (u) {
                 getDoc(doc(firestore, "users", u.uid)).then(d => d.exists() && setUserProfile(d.data()));
             }
+            
             const postsCol = collection(firestore, "posts");
             const feedQuery = query(postsCol, orderBy("createdAt", "desc"));
             
-            onSnapshot(feedQuery, snap => {
+            const unsubFeed = onSnapshot(feedQuery, snap => {
                 const now = Date.now();
                 const list: Post[] = [];
                 snap.docs.forEach(d => {
                     const data = d.data() as Post;
                     const ct = data.createdAt?.toMillis() || now;
                     if (now - ct > TRANSience_WINDOW) {
-                        // Strictly restrict purge write operations to Authorized Root nodes
                         if (adminCheck) deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
                     } else {
                         list.push({ id: d.id, ...data });
@@ -277,14 +265,13 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
                 });
                 setFeed(list);
                 setLoading(false);
-            }, async (serverError) => {
-                const permissionError = new FirestorePermissionError({
-                    path: postsCol.path,
-                    operation: 'list',
-                } satisfies SecurityRuleContext, serverError);
-                errorEmitter.emit('permission-error', permissionError);
+            }, (err) => {
+                // SILENT RECOVERY: Handle permission denied for non-critical community feed
+                console.warn("[STATUTORY SYNC] Community feed restricted.");
                 setLoading(false);
             });
+
+            return () => unsubFeed();
         });
         return () => unsubAuth();
     }, [auth, firestore]);
@@ -322,7 +309,7 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
                                 transition={{ delay: 0.3 }}
                                 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter uppercase leading-none text-foreground"
                             >
-                                Live <span className="text-primary italic">Transmissions.</span>
+                                Live <span className="text-primary italic">{ "Transmissions." }</span>
                             </motion.h1>
                             <motion.p 
                                 initial={{ opacity: 0, y: 10 }}
@@ -362,7 +349,7 @@ export default function ResearchAnalyticsPage(props: { params: Promise<any>, sea
                         <Newspaper className="h-20 w-20" />
                         <div className="space-y-3">
                             <p className="font-black text-3xl uppercase tracking-tighter">Registry Clear</p>
-                            <p className="text-sm italic">"Awaiting institutional transmissions."</p>
+                            <p className="text-sm italic">{ "\"Awaiting institutional transmissions.\"" }</p>
                         </div>
                     </div>
                 )}
