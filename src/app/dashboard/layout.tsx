@@ -193,9 +193,10 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
     setIsMounted(true);
   }, []);
 
+  // Stable Auth Lifecycle
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      // Clear existing listeners
+      // Clear existing listeners upon state transition
       if (profileUnsubscribeRef.current) {
         profileUnsubscribeRef.current();
         profileUnsubscribeRef.current = null;
@@ -206,16 +207,14 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
       }
 
       if (user) {
-        // User Profile Listener
+        // 1. Profile Registry Listener
         const userDocRef = doc(firestore, "users", user.uid);
         profileUnsubscribeRef.current = onSnapshot(userDocRef, 
             (userDoc) => {
                 if (userDoc.exists()) {
                   setUserProfile(userDoc.data());
                 } else {
-                  if (pathname !== '/create-profile' && pathname !== '/login' && pathname !== '/register') {
-                    router.replace('/create-profile');
-                  }
+                  setUserProfile(null);
                 }
                 setProfileLoading(false);
             },
@@ -229,14 +228,13 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
             }
         );
 
-        // Notifications Listener
+        // 2. Notifications Registry Listener
         const notifCol = collection(firestore, "notifications");
         const q = query(notifCol, where("userId", "==", user.uid), where("isRead", "==", false));
         
         notifUnsubscribeRef.current = onSnapshot(q, 
             (snap) => setUnreadCount(snap.size),
             async (err) => {
-                // Construct contextual error for the global emitter
                 const permissionError = new FirestorePermissionError({
                     path: notifCol.path,
                     operation: 'list',
@@ -257,22 +255,27 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
         if (notifUnsubscribeRef.current) notifUnsubscribeRef.current();
     };
-  }, [auth, firestore, pathname, router]);
+  }, [auth, firestore]);
 
+  // Routing & Identity Guards
   useEffect(() => {
-    if (!profileLoading && !auth.currentUser) {
-        const isPublic = PUBLIC_DASHBOARD_ROUTES.includes(pathname) || 
-                         pathname.startsWith('/dashboard/learn/') || 
-                         pathname.startsWith('/dashboard/police-guide/') ||
-                         pathname.startsWith('/dashboard/profile/');
-        
-        const isProtectedFeature = !isPublic || pathname === '/dashboard/profile';
-        
-        if (isProtectedFeature && pathname.startsWith('/dashboard/')) {
-            router.replace('/login');
+    if (!profileLoading) {
+        if (!auth.currentUser) {
+            const isPublic = PUBLIC_DASHBOARD_ROUTES.includes(pathname) || 
+                             pathname.startsWith('/dashboard/learn/') || 
+                             pathname.startsWith('/dashboard/police-guide/');
+            
+            const isProtectedFeature = !isPublic || pathname === '/dashboard/profile';
+            
+            if (isProtectedFeature && pathname.startsWith('/dashboard/')) {
+                router.replace('/login');
+            }
+        } else if (!userProfile && pathname !== '/create-profile' && !pathname.startsWith('/login') && !pathname.startsWith('/register')) {
+            // Identity Synchronization Check
+            router.replace('/create-profile');
         }
     }
-  }, [auth.currentUser, profileLoading, pathname, router]);
+  }, [auth.currentUser, profileLoading, pathname, router, userProfile]);
 
   const handleLogout = async () => {
     await signOut(auth);
