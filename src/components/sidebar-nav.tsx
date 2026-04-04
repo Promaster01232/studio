@@ -40,63 +40,63 @@ import {
 
 const navigationItems = [
   {
-    title: "main",
+    title: "Main",
     icon: Home,
     href: "/dashboard",
     items: [],
   },
   {
-    title: "ai legal tools",
+    title: "AI Analysis",
     icon: BrainCircuit,
     items: [
-      { href: "/dashboard/narrate", icon: Mic, label: "voice record case" },
-      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "document analysis" },
-      { href: "/dashboard/document-generator", icon: FileText, label: "document generator" },
-      { href: "/dashboard/bond-generator", icon: FileSignature, label: "bond generator" },
-      { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "case strength" },
-      { href: "/dashboard/court-assistant", icon: Gavel, label: "court assistant" },
+      { href: "/dashboard/narrate", icon: Mic, label: "Voice Record Case" },
+      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Analyze Document" },
+      { href: "/dashboard/document-generator", icon: FileText, label: "Draft Documents" },
+      { href: "/dashboard/bond-generator", icon: FileSignature, label: "Generate Bonds" },
+      { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "Case Strength" },
+      { href: "/dashboard/court-assistant", icon: Gavel, label: "Court Assistant" },
     ],
   },
   {
-    title: "resources & help",
+    title: "Resources",
     icon: Library,
     items: [
-      { href: "/dashboard/my-cases", icon: FolderKanban, label: "case management" },
-      { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "ngo & legal aid" },
-      { href: "/dashboard/learn", icon: Library, label: "legal knowledge hub" },
-      { href: "/dashboard/police-guide", icon: Shield, label: "police & court guides" },
-      { href: "/dashboard/research-analytics", icon: Newspaper, label: "news & community" },
+      { href: "/dashboard/my-cases", icon: FolderKanban, label: "My Cases" },
+      { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "Legal Aid" },
+      { href: "/dashboard/learn", icon: Library, label: "Knowledge Hub" },
+      { href: "/dashboard/police-guide", icon: Shield, label: "Police Guides" },
+      { href: "/dashboard/research-analytics", icon: Newspaper, label: "Community Feed" },
     ],
   },
   {
-    title: "finances",
+    title: "Business",
     icon: Landmark,
     items: [
-      { href: "/dashboard/business-msme", icon: Briefcase, label: "business & msme" },
-      { href: "/dashboard/finances-billing", icon: Landmark, label: "fees & billing" },
+      { href: "/dashboard/business-msme", icon: Briefcase, label: "MSME Support" },
+      { href: "/dashboard/finances-billing", icon: Landmark, label: "Fees & Billing" },
     ],
   },
   {
-    title: "account",
+    title: "Subscription",
     icon: CreditCard,
     items: [
-      { href: "/dashboard/billing", icon: CreditCard, label: "upgrade & credits" },
+      { href: "/dashboard/billing", icon: CreditCard, label: "My Plan" },
     ],
   },
   {
-    title: "admin",
+    title: "Settings",
     icon: Settings,
     isAdminOnly: true,
     items: [
-      { href: "/dashboard/management-console", icon: Shield, label: "admin console" },
+      { href: "/dashboard/management-console", icon: Shield, label: "Admin Panel" },
     ],
   },
   {
-    title: "general",
+    title: "General",
     icon: CircleUserRound,
     items: [
-      { href: "/dashboard/profile", icon: CircleUserRound, label: "my profile" },
-      { href: "/dashboard/support", icon: LifeBuoy, label: "support" },
+      { href: "/dashboard/profile", icon: CircleUserRound, label: "Profile" },
+      { href: "/dashboard/support", icon: LifeBuoy, label: "Help & Support" },
     ],
   },
 ];
@@ -131,7 +131,7 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
               >
                 <Link href={item.href!}>
                   <item.icon className="h-5 w-5" />
-                  <span className="font-black lowercase first-letter:uppercase">{item.title}</span>
+                  <span className="font-bold">{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -153,7 +153,7 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
                   className="h-11 px-4 hover:bg-primary/5"
                 >
                   <item.icon className="h-5 w-5" />
-                  <span className="font-black flex-1 lowercase first-letter:uppercase text-left">{item.title}</span>
+                  <span className="font-bold flex-1 text-left">{item.title}</span>
                   <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
@@ -168,7 +168,7 @@ export function SidebarNav({ isAdmin = false }: { isAdmin?: boolean }) {
                       >
                         <Link href={subItem.href} className="flex items-center gap-3">
                           <subItem.icon className="h-4 w-4 opacity-70" />
-                          <span className="text-sm font-medium lowercase first-letter:uppercase">{subItem.label}</span>
+                          <span className="text-sm font-medium">{subItem.label}</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>

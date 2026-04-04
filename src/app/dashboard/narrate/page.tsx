@@ -41,7 +41,6 @@ const initialState: CaseSummaryState = {
 };
 
 export default function NarrateProblemPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // Next.js 15: Explicitly unwrap dynamic properties to prevent enumeration errors
   use(props.params);
   use(props.searchParams);
 
@@ -69,8 +68,8 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
         setHasPermission(false);
         toast({
           variant: "destructive",
-          title: "Capture Protocol Denied",
-          description: "Please enable microphone permissions in your browser settings.",
+          title: "Microphone Denied",
+          description: "Please allow microphone access in your settings to use this feature.",
         });
       }
     };
@@ -112,7 +111,7 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                 formData.append("language", language);
                 startTransition(() => formAction(formData));
             } else {
-                 toast({ variant: "destructive", title: "Transmission Insufficient", description: "Audio capture too short for deconstruction." });
+                 toast({ variant: "destructive", title: "Too Short", description: "Your recording was too short to analyze." });
             }
             setIsRecording(false);
         };
@@ -120,7 +119,7 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
     } catch(err) {
         setIsRecording(false);
         if (timerInterval.current) clearInterval(timerInterval.current);
-        toast({ variant: "destructive", title: "Ingress Error", description: "Could not initialize audio capture node." });
+        toast({ variant: "destructive", title: "Error", description: "Could not start recording." });
     }
   };
 
@@ -156,12 +155,12 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
     <div className="space-y-10 max-w-6xl mx-auto pb-32 px-4 sm:px-0 text-left">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
             <PageHeader
-                title="Voice Narrator"
-                description="Initialize neural deconstruction of your legal narrative via voice ingress."
+                title="Voice Assistant"
+                description="Describe your case using your voice for a quick AI summary."
             />
             <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
                 <Link href="/dashboard">
-                    <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Dashboard
+                    <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Home
                 </Link>
             </Button>
         </motion.div>
@@ -175,21 +174,21 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                 <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
                     <div className="flex items-center gap-3 mb-2 text-primary">
                         <Mic className="h-5 w-5" />
-                        <CardTitle className="text-xl font-black uppercase tracking-tight">Capture Protocol</CardTitle>
+                        <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Voice Recording</CardTitle>
                     </div>
-                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize secured voice transmission node.</CardDescription>
+                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Record your case for a detailed summary.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center space-y-10 pt-10 pb-10">
                     <div className="w-full max-w-sm space-y-4 px-2 text-left">
                         <div className="space-y-3">
-                            <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Audit Language</Label>
+                            <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Language</Label>
                             <Select value={language} onValueChange={setLanguage} disabled={isRecording || isLoading}>
                                 <SelectTrigger className="h-12 glass border-primary/5 font-bold rounded-xl active:scale-95 transition-all">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
-                                    <SelectItem value="English" className="font-bold">English (Forensic)</SelectItem>
-                                    <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
+                                    <SelectItem value="English" className="font-bold">English</SelectItem>
+                                    <SelectItem value="Hindi" className="font-bold">Hindi</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -226,19 +225,19 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                         >
                             <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             {isRecording ? <div className="h-12 w-12 bg-white rounded-2xl animate-pulse z-10" /> : <Mic className="h-14 w-14 z-10" />}
-                            <span className="text-[10px] font-black uppercase tracking-widest z-10">{isRecording ? "Terminate" : isLoading ? "Deconstructing" : "Speak Now"}</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest z-10">{isRecording ? "Stop" : isLoading ? "Analyzing" : "Tap to Speak"}</span>
                         </Button>
                         
                         <div className="text-center space-y-2">
                             <p className={cn("text-6xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-primary")}>{formatTime(timer)}</p>
-                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em]">{isRecording ? "Forensic Node Ingress" : isLoading ? "Neural Analysis Active" : "Awaiting transmission signal"}</p>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em]">{isRecording ? "Recording..." : isLoading ? "Processing with AI" : "Ready to listen"}</p>
                         </div>
                     </div>
 
                     <div className="w-full pt-8 border-t border-primary/5 text-center">
                         <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="audio/*" className="hidden" />
                         <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || isLoading} className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary gap-3 rounded-xl hover:bg-primary/5 px-6">
-                            <Upload className="h-4 w-4" /> Ingest From Registry
+                            <Upload className="h-4 w-4" /> Upload Recording
                         </Button>
                     </div>
                 </CardContent>
@@ -248,7 +247,7 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
         <div ref={reportRef} className="space-y-8 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-4">
                 <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
-                <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Official Voice Audit Node</Badge>
+                <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">AI Analysis Report</Badge>
             </div>
 
             <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col">
@@ -262,37 +261,26 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                 )}>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 text-left">
                         <div className="space-y-4 text-left flex-1 min-w-0">
-                            <div className="flex flex-wrap items-center gap-3">
+                            <div className="flex items-center gap-3">
                                 <div className={cn(
                                     "flex items-center gap-2 px-3 py-1 rounded-full border",
                                     state.status === 'success' ? "bg-white/10 border-white/20" : "bg-primary/10 border-primary/20"
                                 )}>
                                     <Bot className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
                                     <span className={cn("text-[10px] font-black uppercase tracking-widest", state.status === 'success' ? "text-white" : "text-primary")}>
-                                        Forensic AI Audit Active
+                                        Official AI Analysis
                                     </span>
                                 </div>
-                                <Badge variant="outline" className={cn(
-                                    "text-[9px] font-black uppercase tracking-[0.2em]",
-                                    state.status === 'success' ? "border-white/20 text-white/80" : "border-primary/20 text-primary/60"
-                                )}>
-                                    NS-VOICE-ALPHA-4.2
-                                </Badge>
-                                {state.isSimulated && (
-                                    <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest">
-                                        <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
-                                    </Badge>
-                                )}
                             </div>
                             <div className="space-y-1">
                                 <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">
-                                    {state.status === 'success' ? <><span className="italic opacity-80">Voice Dossier</span> Ready.</> : "Awaiting Transmission"}
+                                    {state.status === 'success' ? <><span className="italic opacity-80">Your Report</span> is Ready.</> : "Awaiting Recording"}
                                 </CardTitle>
                                 <p className={cn(
                                     "text-[10px] font-bold uppercase tracking-[0.3em] flex items-center gap-2",
                                     state.status === 'success' ? "text-white/60" : "text-muted-foreground"
                                 )}>
-                                    <Globe className="h-3 w-3" /> Transience Node // BNS-COMPLIANT REGISTRY
+                                    <Globe className="h-3 w-3" /> Secure AI Terminal
                                 </p>
                             </div>
                         </div>
@@ -305,7 +293,7 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                                     onClick={handleReset}
                                     className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
                                 >
-                                    <PlusCircle className="h-4 w-4" /> New Narration
+                                    <PlusCircle className="h-4 w-4" /> Start New
                                 </Button>
                                 <AudioAssistant 
                                     text={`Summary: ${state.data?.caseSummary}. Next Steps: ${state.data?.nextActions}.`} 
@@ -333,8 +321,8 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                                     </div>
                                 </div>
                                 <div className="space-y-3">
-                                    <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Deconstructing Transmission...</p>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Running forensic sectional scan // BNS-2023</p>
+                                    <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Analyzing Your Voice...</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Checking laws and providing solutions...</p>
                                 </div>
                             </motion.div>
                         ) : state.status === "success" && state.data ? (
@@ -347,7 +335,7 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                                 <div className="p-8 glass rounded-[2rem] border-primary/5 italic text-sm sm:text-base font-medium text-muted-foreground leading-relaxed shadow-inner bg-muted/5">
                                     <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
                                         <Fingerprint className="h-4 w-4" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Transcription Registry</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Voice Transcription</span>
                                     </div>
                                     "{state.data.transcription}"
                                 </div>
@@ -361,7 +349,7 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                                     </Card>
                                     <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left bg-blue-500/[0.02] shadow-sm hover:shadow-xl transition-all group">
                                         <h3 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <Globe className="h-4 w-4" /> Procedural Roadmap
+                                            <Globe className="h-4 w-4" /> Next Steps
                                         </h3>
                                         <p className="text-sm font-bold leading-relaxed text-foreground/80">{state.data.nextActions}</p>
                                     </Card>
@@ -370,9 +358,8 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                                 <div className="space-y-6">
                                     <div className="flex items-center justify-between border-b border-primary/10 pb-4">
                                         <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
-                                            <FileSearch className="h-5 w-5" /> Forensic Statutory Audit
+                                            <FileSearch className="h-5 w-5" /> Detailed Analysis
                                         </h3>
-                                        <Badge variant="outline" className="text-[9px] font-black uppercase border-primary/20 opacity-40">Sectional Ingress: COMPLETE</Badge>
                                     </div>
                                     <div className="p-8 sm:p-12 glass rounded-[3rem] border-primary/10 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-lg bg-muted/10 relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
@@ -388,11 +375,11 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                                             <ShieldCheck className="h-6 w-6" />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-[10px] font-black uppercase tracking-widest">Institutional Security</p>
-                                            <p className="text-[9px] font-bold">This node is protected under attorney-client transience protocols.</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest">Secure Session</p>
+                                            <p className="text-[9px] font-bold">Your case data is encrypted and kept private.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // TERMINAL NS-VOICE</p>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN</p>
                                 </div>
                             </motion.div>
                         ) : (
@@ -409,9 +396,9 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                                     </div>
                                 </div>
                                 <div className="space-y-4 max-w-sm px-6 text-center">
-                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting Transmission</h3>
+                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready to Help</h3>
                                     <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
-                                        Initialize the forensic node by providing your case narration for neural analysis.
+                                        Please record or upload your case description to start the AI analysis.
                                     </p>
                                 </div>
                             </motion.div>

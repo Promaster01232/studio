@@ -50,10 +50,10 @@ const MinimalBackground = () => {
 };
 
 const featureNodes = [
-  { icon: Mic, title: "Voice Ingress", desc: "Speak your problem naturally for immediate deconstruction.", href: "/dashboard/narrate", badge: "Live" },
-  { icon: Search, title: "Forensic Audit", desc: "Scan legal instruments for statutory risks instantly.", href: "/dashboard/document-intelligence", badge: "BNS" },
-  { icon: FileText, title: "Drafting terminal", desc: "Generate professional petitions with AI forensic logic.", href: "/dashboard/document-generator", badge: "Direct" },
-  { icon: Globe, title: "Advocate registry", desc: "Connect with verified professionals for strategy.", href: "/dashboard/lawyer-connect", badge: "Auth" },
+  { icon: Mic, title: "Voice Assistant", desc: "Tell your problem and get an immediate case analysis.", href: "/dashboard/narrate", badge: "AI" },
+  { icon: Search, title: "Document Audit", desc: "Scan legal papers for risks and important clauses.", href: "/dashboard/document-intelligence", badge: "Safe" },
+  { icon: FileText, title: "Drafting Tools", desc: "Generate professional legal notices and applications.", href: "/dashboard/document-generator", badge: "New" },
+  { icon: Globe, title: "Lawyer Connect", desc: "Connect with verified legal professionals for expert help.", href: "/dashboard/lawyer-connect", badge: "Live" },
 ];
 
 export default function WelcomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
@@ -90,16 +90,16 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
               <Logo className="h-20 w-24 sm:h-28 sm:w-28 shadow-xl" priority={true} />
               <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
                 <Sparkles className="h-3 w-3 text-primary" />
-                <span className="text-[9px] font-black tracking-wider text-primary/80 uppercase">Neural Statutory Hub</span>
+                <span className="text-[9px] font-black tracking-wider text-primary/80 uppercase">AI Legal Portal</span>
               </div>
             </header>
 
             <div className="space-y-4 max-w-4xl mx-auto">
               <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-foreground text-center">
-                India's premier <span className="text-primary italic">AI legal terminal.</span>
+                India's premier <span className="text-primary italic">AI legal assistant.</span>
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
-                Empowering citizens with precise forensic audits, BNS statutory scanning, and automated drafting nodes. Simple, Satik knowledge.
+                Simple and professional legal help for everyone. Analyze cases, scan documents, and get the guidance you need in seconds.
               </p>
             </div>
 
@@ -107,7 +107,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
               {!loading ? (
                 <Button asChild className="h-14 w-full sm:w-auto min-w-[240px] px-8 text-xs font-black tracking-wide shadow-xl shadow-primary/20 rounded-xl active:scale-95 transition-all">
                   <Link href="/dashboard" className="flex items-center gap-2">
-                    Initialize session <ArrowRight className="h-4 w-4" />
+                    Get Started Now <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
               ) : (
@@ -117,7 +117,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
               )}
               <Button variant="outline" asChild className="h-14 w-full sm:w-auto min-w-[200px] px-8 text-xs font-black tracking-wide rounded-xl border-primary/10 hover:bg-primary/5">
                 <Link href="/about" className="flex items-center gap-2">
-                  Forensic protocol <Activity className="h-4 w-4 opacity-40" />
+                  Learn More <Activity className="h-4 w-4 opacity-40" />
                 </Link>
               </Button>
             </nav>
@@ -127,9 +127,9 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
         <section className="w-full max-w-6xl py-12 px-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                    { step: "01", title: "Narrate problem", desc: "Transmit your legal narrative for AI ingestion.", icon: Mic },
-                    { step: "02", title: "Forensic audit", desc: "AI deconstructs facts against the statutory framework.", icon: ShieldCheck },
-                    { step: "03", title: "Statutory redress", desc: "Receive a roadmap and legal instruments.", icon: CheckCircle2 },
+                    { step: "01", title: "Tell your problem", desc: "Voice record or upload your legal query.", icon: Mic },
+                    { step: "02", title: "AI Analysis", desc: "Our AI checks your case against the latest laws.", icon: ShieldCheck },
+                    { step: "03", title: "Get Solutions", desc: "Receive a clear roadmap and the next steps.", icon: CheckCircle2 },
                 ].map((item, i) => (
                     <motion.div 
                         key={i} 
@@ -164,9 +164,9 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
           <div className="text-center space-y-2">
             <div className="flex items-center justify-center gap-2 text-primary">
               <Zap className="h-4 w-4 animate-pulse" />
-              <h2 className="text-[10px] font-black uppercase tracking-[0.4em]">System ingress</h2>
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em]">Feature Access</h2>
             </div>
-            <h3 className="text-2xl sm:text-4xl font-black tracking-tight uppercase leading-none">Operational <span className="text-primary italic">Nodes</span></h3>
+            <h3 className="text-2xl sm:text-4xl font-black tracking-tight uppercase leading-none">Our <span className="text-primary italic">Services</span></h3>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -186,7 +186,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                       <h3 className="text-lg font-black tracking-tight uppercase">{node.title}</h3>
                       <p className="text-xs text-muted-foreground font-medium leading-relaxed mt-2 flex-grow opacity-80">{node.desc}</p>
                       <div className="pt-6 mt-6 border-t border-primary/5 flex items-center justify-between">
-                        <span className="text-[8px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">Ingress active</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">Open Dashboard</span>
                         <ArrowRight className="h-3.5 w-3.5 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                       </div>
                     </CardContent>
@@ -206,20 +206,20 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                     <div className="space-y-2">
                         <div className="flex items-center justify-center lg:justify-start gap-2 text-primary">
                             <Activity className="h-4 w-4" />
-                            <span className="text-[9px] font-black uppercase tracking-[0.3em]">Support ingress</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em]">Support Access</span>
                         </div>
-                        <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-none uppercase">Need human <span className="text-primary italic">intervention?</span></h2>
+                        <h2 className="text-2xl sm:text-4xl font-black tracking-tight uppercase leading-none">Talk to a <span className="text-primary italic">Human Expert?</span></h2>
                     </div>
                     <p className="text-base text-muted-foreground font-medium leading-relaxed max-w-xl">
-                        AI provides the foundation; human advocates provide the strategy. Access our verified registry for complex litigation needs.
+                        AI provides the analysis, but human advocates provide the strategy. Connect with verified professionals for your complex legal needs.
                     </p>
                     <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
                         <Button className="rounded-xl font-black uppercase text-[9px] h-12 px-10 shadow-lg active:scale-95 transition-all" asChild>
-                            <Link href="/dashboard/lawyer-connect">Browse registry</Link>
+                            <Link href="/dashboard/lawyer-connect">Find a Lawyer</Link>
                         </Button>
                         <Button variant="outline" className="rounded-xl font-black uppercase text-[9px] h-12 px-10 border-primary/10 hover:bg-primary/5 transition-all" asChild>
                             <Link href="/contact" className="flex items-center gap-3">
-                                Dispatch message <MessageCircle className="h-4 w-4 opacity-40 group-hover:animate-bounce" />
+                                Send a Message <MessageCircle className="h-4 w-4 opacity-40 group-hover:animate-bounce" />
                             </Link>
                         </Button>
                     </div>
@@ -230,12 +230,12 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
         <section className="w-full py-16 px-6">
             <div className="max-w-3xl mx-auto text-center space-y-8">
                 <Gavel className="h-8 w-8 text-primary/20 mx-auto animate-bounce" />
-                <p className="text-xl sm:text-3xl font-black text-foreground tracking-tighter leading-tight italic uppercase opacity-80">
-                    "Engineering Dignity through Precise <span className="text-primary">Neural Intelligence.</span>"
+                <p className="text-xl sm:text-3xl font-black text-foreground tracking-tighter leading-tight italic uppercase opacity-80 text-center">
+                    "Empowering citizens with simple and <span className="text-primary">Reliable AI Assistance.</span>"
                 </p>
                 <div className="space-y-1">
-                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary opacity-60">Nyaya Sahayak // Node Alpha</p>
-                    <p className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-widest">Established 2024</p>
+                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary opacity-60">Nyaya Sahayak // Portal</p>
+                    <p className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-widest">Since 2024</p>
                 </div>
             </div>
         </section>

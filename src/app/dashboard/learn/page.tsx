@@ -1,4 +1,3 @@
-
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -45,10 +44,10 @@ export default function LearnPage() {
         <div className="space-y-1 text-left">
             <div className="flex items-center gap-2 text-primary mb-1">
                 <Sparkles className="h-4 w-4 animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Neural Statutory Hub</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Legal Assistant Hub</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter">Knowledge <span className="text-primary italic">Matrix</span></h1>
-            <p className="text-sm text-muted-foreground font-medium">Accessing a high-fidelity registry of 60+ Indian law protocols.</p>
+            <h1 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter">Knowledge <span className="text-primary italic">Library</span></h1>
+            <p className="text-sm text-muted-foreground font-medium">Access detailed guides on 60+ Indian law topics.</p>
         </div>
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
           <Link href="/dashboard">
@@ -61,7 +60,7 @@ export default function LearnPage() {
         <div className="relative group max-w-xl w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input 
-            placeholder="Search Registry IDs, sections, or statutes..." 
+            placeholder="Search topics, sections, or laws..." 
             className="pl-12 h-14 glass rounded-[1.2rem] font-bold text-base shadow-xl border-primary/5 focus:border-primary transition-all"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -102,7 +101,6 @@ export default function LearnPage() {
                             "h-full flex flex-col glass relative overflow-hidden transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-1 rounded-[2.5rem] border-primary/5",
                             "group-hover:border-primary/30"
                         )}>
-                            {/* Colorful Kinetic Background */}
                             <div className={cn(
                                 "absolute inset-0 bg-gradient-to-br via-transparent to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-700",
                                 style.glow
@@ -148,14 +146,13 @@ export default function LearnPage() {
                                         activeCategory === "All" ? "group-hover:bg-primary group-hover:shadow-primary/20" : `group-hover:${style.bg.replace('/10', '')} group-hover:shadow-current/20`
                                     )}>
                                         <Link href={`/dashboard/learn/${topic.slug}`}>
-                                            <span>Initialize Audit</span>
+                                            <span>Read Guide</span>
                                             <ArrowRight className="ml-2 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                                         </Link>
                                     </Button>
                                 </div>
                             </CardContent>
                             
-                            {/* Institutional Progress Line */}
                             <div className={cn("h-1 w-0 group-hover:w-full transition-all duration-700 bg-gradient-to-r", style.glow.replace('from-', 'from-').replace('/20', ''), "to-transparent")} />
                         </Card>
                     </motion.div>
@@ -170,21 +167,21 @@ export default function LearnPage() {
             <Search className="h-16 w-16 text-muted-foreground" />
           </div>
           <div className="space-y-2">
-            <p className="font-black text-2xl tracking-tighter uppercase">Registry Record Not Found</p>
-            <p className="text-xs text-muted-foreground font-medium italic">"No institutional statutes match the current query filter."</p>
+            <p className="font-black text-2xl tracking-tighter uppercase">Topic Not Found</p>
+            <p className="text-xs text-muted-foreground font-medium italic">"Try searching for another topic or law."</p>
           </div>
         </motion.div>
       )}
 
-      <div className="pt-16 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8">
+      <div className="pt-16 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30 text-center sm:text-left">
         <div className="flex flex-wrap justify-center gap-8">
             <div className="flex items-center gap-4 group">
                 <div className="p-3 rounded-2xl bg-primary/5 text-primary group-hover:scale-110 transition-transform">
                     <ShieldCheck className="h-5 w-5" />
                 </div>
                 <div className="text-left">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Forensic Compliance</p>
-                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">Verified for current amendments.</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Accurate Info</p>
+                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">Verified legal resources.</p>
                 </div>
             </div>
             <div className="flex items-center gap-4 group">
@@ -192,8 +189,8 @@ export default function LearnPage() {
                     <Layers className="h-5 w-5" />
                 </div>
                 <div className="text-left">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Registry Density</p>
-                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">60+ Statutory Protocols Active.</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Wide Range</p>
+                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">60+ Topics covered.</p>
                 </div>
             </div>
             <div className="flex items-center gap-4 group">
@@ -201,12 +198,12 @@ export default function LearnPage() {
                     <Globe className="h-5 w-5" />
                 </div>
                 <div className="text-left">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500">Access Protocol</p>
-                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">Open Network Registry.</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500">Public Access</p>
+                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">Open for all citizens.</p>
                 </div>
             </div>
         </div>
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/40 shrink-0">Knowledge Matrix // NYAYASAHAYAK.IN</p>
+        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/40 shrink-0">NYAYASAHAYAK.IN</p>
       </div>
     </div>
   );
