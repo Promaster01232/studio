@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { LogOut, Loader2, Search, Bell, ShieldAlert, Activity, Zap, User } from "lucide-react";
+import { LogOut, Loader2, Search, Bell, ShieldAlert, Zap, User } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef, use } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -68,7 +68,7 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                         <div className="w-full max-w-md cursor-pointer group transition-all">
                             <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[10px] uppercase tracking-widest text-muted-foreground/50 rounded-xl bg-muted/20 border border-primary/5 group-hover:border-primary/20 transition-all relative text-left">
                                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                <span>Forensic search...</span>
+                                <span>Search for tools and laws...</span>
                                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
                                     <kbd className="h-5 rounded border bg-background px-1.5 font-mono text-[9px] font-black text-muted-foreground opacity-100 shadow-sm">
                                         ⌘K
@@ -96,8 +96,7 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                 )}
 
                 <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-xl bg-primary/5 border border-primary/10">
-                    <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/80">{isAdmin ? "Root" : "System"} Node</span>
+                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/80">{isAdmin ? "Admin" : "User"} Account</span>
                 </div>
 
                 {!userProfile?.isBlocked && userProfile && (
@@ -132,7 +131,6 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
 }
 
 export default function DashboardLayout(props: { children: ReactNode, params: Promise<any> }) {
-  // Unwrap dynamic props for Next.js 15 compliance
   use(props.params);
 
   const pathname = usePathname();
@@ -178,7 +176,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 setProfileLoading(false);
             },
             (err) => {
-                console.warn("[FIREBASE] Profile snapshot ingress denied. Node restricted.", err.message);
+                console.warn("[FIREBASE] Profile load issue.", err.message);
                 setProfileLoading(false);
             }
         );
@@ -187,7 +185,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         const q = query(notifRef, where("userId", "==", user.uid), where("isRead", "==", false));
         notifUnsubscribeRef.current = onSnapshot(q, 
             (snap) => setUnreadCount(snap.size),
-            (err) => console.warn("[FIREBASE] Notifications snapshot ingress denied.", err.message)
+            (err) => console.warn("[FIREBASE] Notification sync issue.", err.message)
         );
 
       } else {
@@ -225,7 +223,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                   Nyaya Sahayak
               </span>
               <span className="text-[6px] font-bold uppercase tracking-[0.3em] text-muted-foreground/40 leading-none mt-1 truncate">
-                  Forensic OS
+                  Legal Assistant
               </span>
             </div>
           </Link>
@@ -238,9 +236,9 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                     <div className="p-5 space-y-4 text-left">
                         <div className="flex items-center gap-2">
                             <Zap className="h-3.5 w-3.5 text-primary" />
-                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Upgrade Node</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Upgrade Account</span>
                         </div>
-                        <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">Unlock advanced forensic scans and terminals.</p>
+                        <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">Unlock advanced legal analysis and drafting tools.</p>
                         <Button asChild size="sm" className="w-full h-9 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg text-center">
                             <Link href="/dashboard/billing">Sync Expansion</Link>
                         </Button>
@@ -265,18 +263,18 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-2xl shadow-3xl glass border-primary/10">
-                <DropdownMenuLabel className="px-2 pb-2 text-left font-black uppercase text-[9px] tracking-widest text-muted-foreground/50">Registry Dossier</DropdownMenuLabel>
+                <DropdownMenuLabel className="px-2 pb-2 text-left font-black uppercase text-[9px] tracking-widest text-muted-foreground/50">My Account</DropdownMenuLabel>
                 <DropdownMenuItem asChild className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 mb-1 cursor-pointer">
-                    <Link href="/dashboard/profile"><User className="h-4 w-4 text-primary opacity-60" /> My Identity</Link>
+                    <Link href="/dashboard/profile"><User className="h-4 w-4 text-primary opacity-60" /> Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
-                    <DropdownMenuRadioItem value="light" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Light Protocol</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="dark" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Dark Protocol</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="light" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Light Mode</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="dark" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Dark Mode</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 <DropdownMenuItem onClick={handleLogout} className="rounded-lg h-12 font-black text-[10px] uppercase tracking-widest text-destructive focus:text-destructive focus:bg-destructive/5 gap-3 cursor-pointer transition-all">
-                    <LogOut className="h-4 w-4" /> Terminate Node
+                    <LogOut className="h-4 w-4" /> Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

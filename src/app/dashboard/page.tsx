@@ -16,19 +16,14 @@ import {
   Heart,
   Zap,
   BadgeCheck,
-  Crown,
   ShieldCheck,
-  Bot,
   Loader2,
   Newspaper,
-  Layers,
   Clock,
   TrendingUp,
-  Gavel,
-  ShieldAlert,
   ChevronRight
 } from "lucide-react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -44,21 +39,12 @@ import {
   increment, 
   arrayUnion, 
   arrayRemove, 
-  deleteDoc, 
-  addDoc, 
-  serverTimestamp,
   getDoc
 } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Logo } from "@/components/logo";
 import { useSoundEffect } from "@/hooks/use-sound-effect";
 
@@ -99,8 +85,7 @@ const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, del
   );
 };
 
-function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any, isAdmin: boolean }) {
-    const { toast } = useToast();
+function PostCard({ post, userProfile }: { post: Post, userProfile: any, isAdmin: boolean }) {
     const { playSound } = useSoundEffect();
     const firestore = useFirestore();
     const auth = useAuth();
@@ -139,7 +124,7 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
                         </div>
                     </div>
                     <Badge variant="outline" className="font-black text-[7px] uppercase px-2 py-0.5 border-primary/10 text-primary">
-                        {post.postType || 'Transmission'}
+                        {post.postType || 'Discussion'}
                     </Badge>
                 </div>
                 <h3 className="font-black text-base tracking-tight mb-1.5 leading-tight">{post.title}</h3>
@@ -157,7 +142,7 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
                     </Button>
                     <div className="flex items-center gap-1.5 text-[7px] font-black uppercase opacity-30">
                         <Clock className="h-2.5 w-2.5" />
-                        <span>Registry Node</span>
+                        <span>Recent Activity</span>
                     </div>
                 </div>
             </CardContent>
@@ -166,14 +151,13 @@ function PostCard({ post, userProfile, isAdmin }: { post: Post, userProfile: any
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Analyzer", desc: "Forensic audit." },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Intel", desc: "Statutory scan." },
-    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Legal petitions." },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Official instruments." },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Case Strength", desc: "Win probability audit." },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Analysis", desc: "Scan for risks." },
+    { href: "/dashboard/document-generator", icon: FileText, title: "Legal Drafting", desc: "Draft petitions." },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Legal instruments." },
 ];
 
 export default function DashboardHomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // Unwrap dynamic props for Next.js 15 compliance
   use(props.params);
   use(props.searchParams);
 
@@ -193,11 +177,12 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
         if (user) {
             getDoc(doc(firestore, "users", user.uid)).then(d => d.exists() && setUserProfile(d.data()));
         }
-        onSnapshot(query(collection(firestore, "posts"), orderBy("createdAt", "desc"), limit(5)), (snap) => {
+        const q = query(collection(firestore, "posts"), orderBy("createdAt", "desc"), limit(5));
+        return onSnapshot(q, (snap) => {
             const list: Post[] = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
             setLatestPosts(list);
             setPostsLoading(false);
-        });
+        }, () => setPostsLoading(false));
     });
     return () => unsubAuth();
   }, [auth, firestore]);
@@ -220,13 +205,11 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
   }, [text, isTyping]);
 
   const isAdmin = userProfile?.email && ADMIN_EMAILS.includes(userProfile.email.toLowerCase());
-  const isElite = isAdmin || userProfile?.subscriptionType?.includes('unlimited');
 
   return (
     <div className="flex flex-col h-full space-y-6 pb-12 max-w-6xl mx-auto text-left relative pt-2">
         <MotionWrapper>
           <Card className="relative overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-[0_30px_100px_rgba(0,0,0,0.1)] rounded-[2.5rem] group hover:border-primary/20 transition-all duration-700">
-              {/* Dynamic Design Canvas Background */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-primary/[0.01] -z-10"></div>
               <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.06] group-hover:scale-110 transition-all duration-1000 pointer-events-none grayscale">
                   <Logo className="h-64 w-64" priority={true} />
@@ -235,12 +218,9 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
               <div className="p-8 sm:p-12 relative z-10 flex flex-col lg:flex-row items-center gap-10">
                   <div className="flex-1 space-y-8 text-center lg:text-left">
                       <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
-                          <Badge variant="outline" className="h-8 border-primary/10 font-black bg-background/50 shadow-sm px-4 rounded-xl text-[9px] uppercase tracking-[0.2em] text-primary/80">
-                              Registry Node Alpha // {isElite ? 'Elite Access' : 'Standard Ingress'}
-                          </Badge>
                           <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-green-500/5 border border-green-500/10">
                               <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                              <span className="text-[8px] font-black uppercase tracking-widest text-green-600">Secure Ingress Active</span>
+                              <span className="text-[8px] font-black uppercase tracking-widest text-green-600">Verified Session Active</span>
                           </div>
                       </div>
 
@@ -250,7 +230,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                               <span className="text-primary italic">Nyaya {text}</span>
                           </h1>
                           <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed">
-                              Access precision AI nodes for statutory auditing and procedural navigation within Bharat's judicial ecosystem. Simple, Satik, and professional.
+                              Your personal AI legal assistant for case analysis, document help, and procedural guidance. Accurate and simple.
                           </p>
                       </div>
 
@@ -258,14 +238,14 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                           <Button size="lg" className="rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-14 px-10 shadow-2xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative" asChild>
                               <Link href="/dashboard/narrate">
                                   <span className="relative z-10 flex items-center gap-2">
-                                      Initialize Narration <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                      Record Your Case <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                                   </span>
                                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                               </Link>
                           </Button>
                           <Button variant="ghost" className="h-14 rounded-2xl px-8 font-black uppercase tracking-widest text-[9px] hover:bg-primary/5 text-primary border border-transparent hover:border-primary/10" asChild>
                               <Link href="/dashboard/learn">
-                                  Explore Registry
+                                  Legal Knowledge Hub
                               </Link>
                           </Button>
                       </div>
@@ -277,22 +257,22 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                               <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover/node:bg-primary group-hover/node:text-white transition-all">
                                   <Activity className="h-4 w-4" />
                               </div>
-                              <p className="font-black text-[10px] uppercase tracking-widest">System Load</p>
+                              <p className="font-black text-[10px] uppercase tracking-widest">Platform Status</p>
                           </div>
                           <div className="h-1 w-full bg-primary/5 rounded-full overflow-hidden">
-                              <motion.div initial={{ width: 0 }} animate={{ width: '42%' }} className="h-full bg-primary" />
+                              <motion.div initial={{ width: 0 }} animate={{ width: '100%' }} className="h-full bg-primary" />
                           </div>
-                          <p className="text-[8px] font-bold text-muted-foreground mt-2 uppercase tracking-widest">Optimal Performance</p>
+                          <p className="text-[8px] font-bold text-muted-foreground mt-2 uppercase tracking-widest">All Systems Operational</p>
                       </Card>
                       <Card className="bg-background/50 border-primary/5 p-5 rounded-2xl shadow-inner group/node hover:border-primary/20 transition-all">
                           <div className="flex items-center gap-3 mb-3">
                               <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover/node:bg-primary group-hover/node:text-white transition-all">
                                   <ShieldCheck className="h-4 w-4" />
                               </div>
-                              <p className="font-black text-[10px] uppercase tracking-widest">Auth Protocol</p>
+                              <p className="font-black text-[10px] uppercase tracking-widest">Security Status</p>
                           </div>
-                          <p className="text-xs font-bold truncate">TLS 1.3 // AES-256</p>
-                          <p className="text-[8px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Registry Encryption Active</p>
+                          <p className="text-xs font-bold truncate">Secure & Encrypted Session</p>
+                          <p className="text-[8px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Data Protection Active</p>
                       </Card>
                   </div>
               </div>
@@ -306,10 +286,10 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                   <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-2">
                       <div className="flex items-center gap-2.5 text-primary/40">
                           <TrendingUp className="h-4 w-4" />
-                          <h2 className="text-[10px] font-black tracking-[0.3em] text-foreground/80 uppercase">Community Audits</h2>
+                          <h2 className="text-[10px] font-black tracking-[0.3em] text-foreground/80 uppercase">Legal Discussions</h2>
                       </div>
                       <Button variant="link" className="h-auto p-0 text-[10px] font-black uppercase tracking-widest" asChild>
-                          <Link href="/dashboard/research-analytics">View Full Stream</Link>
+                          <Link href="/dashboard/research-analytics">View All Posts</Link>
                       </Button>
                   </div>
                   <div className="space-y-4">
@@ -321,7 +301,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                           </div>
                       ) : latestPosts.length === 0 ? (
                           <Card className="py-16 text-center glass rounded-[2rem] border-dashed border-2 border-primary/5 opacity-30">
-                              <p className="font-bold text-[10px] tracking-tight lowercase">awaiting transmissions...</p>
+                              <p className="font-bold text-[10px] tracking-tight">No recent posts...</p>
                           </Card>
                       ) : (
                           <div className="grid gap-4">

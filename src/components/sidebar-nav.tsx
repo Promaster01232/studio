@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -50,11 +49,11 @@ const navigationItems = [
     title: "ai legal tools",
     icon: BrainCircuit,
     items: [
-      { href: "/dashboard/narrate", icon: Mic, label: "narrate problem" },
-      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "document intelligence" },
+      { href: "/dashboard/narrate", icon: Mic, label: "voice record case" },
+      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "document analysis" },
       { href: "/dashboard/document-generator", icon: FileText, label: "document generator" },
       { href: "/dashboard/bond-generator", icon: FileSignature, label: "bond generator" },
-      { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "case strength analyzer" },
+      { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "case strength" },
       { href: "/dashboard/court-assistant", icon: Gavel, label: "court assistant" },
     ],
   },
@@ -66,30 +65,30 @@ const navigationItems = [
       { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "ngo & legal aid" },
       { href: "/dashboard/learn", icon: Library, label: "legal knowledge hub" },
       { href: "/dashboard/police-guide", icon: Shield, label: "police & court guides" },
-      { href: "/dashboard/research-analytics", icon: Newspaper, label: "news & analytics" },
+      { href: "/dashboard/research-analytics", icon: Newspaper, label: "news & community" },
     ],
   },
   {
-    title: "professional",
-    icon: Briefcase,
+    title: "finances",
+    icon: Landmark,
     items: [
       { href: "/dashboard/business-msme", icon: Briefcase, label: "business & msme" },
-      { href: "/dashboard/finances-billing", icon: Landmark, label: "finances & billing" },
+      { href: "/dashboard/finances-billing", icon: Landmark, label: "fees & billing" },
     ],
   },
   {
-    title: "billing & usage",
+    title: "account",
     icon: CreditCard,
     items: [
       { href: "/dashboard/billing", icon: CreditCard, label: "upgrade & credits" },
     ],
   },
   {
-    title: "system",
+    title: "admin",
     icon: Settings,
     isAdminOnly: true,
     items: [
-      { href: "/dashboard/management-console", icon: Shield, label: "management console" },
+      { href: "/dashboard/management-console", icon: Shield, label: "admin console" },
     ],
   },
   {
