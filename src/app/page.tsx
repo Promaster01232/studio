@@ -114,8 +114,8 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
                 <Button asChild size="lg" className="h-16 w-full sm:w-auto min-w-[260px] px-10 text-xs font-black uppercase tracking-widest shadow-2xl shadow-primary/30 rounded-2xl active:scale-95 transition-all group overflow-hidden relative">
                   <Link href="/dashboard" className="flex items-center gap-3 relative z-10">
                     Get Started Now <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                   </Link>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 </Button>
               ) : (
                 <div className="h-16 w-[260px] flex items-center justify-center bg-muted/10 rounded-2xl border border-primary/10">
