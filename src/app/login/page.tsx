@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Loader2, Eye, EyeOff, Scale, ShieldCheck, QrCode, KeyRound, Copy, CheckCircle2, Search, ArrowRight, Sparkles } from "lucide-react";
+import { Loader2, Eye, EyeOff, Scale, ShieldCheck, QrCode, KeyRound, Copy, CheckCircle2, Search, ArrowRight, Sparkles, Lock, Activity } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
   signInWithEmailAndPassword,
@@ -52,38 +52,38 @@ function ProtocolRestorationDialog() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <button className="ml-auto inline-block text-[11px] font-bold text-primary hover:underline bg-transparent border-none p-0 cursor-pointer">
-                    Forgot password?
+                <button className="ml-auto inline-block text-[10px] font-black uppercase tracking-widest text-primary hover:underline bg-transparent border-none p-0 cursor-pointer transition-all">
+                    Restore Key?
                 </button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md rounded-2xl p-8 text-left">
+            <DialogContent className="sm:max-w-md rounded-[2rem] p-8 text-left border-none shadow-2xl glass">
                 <DialogHeader className="mb-6 border-none text-left">
                     <div className="flex items-center gap-2 text-primary mb-2">
                         <KeyRound className="h-4 w-4" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em]">Identity Recovery</span>
                     </div>
-                    <DialogTitle className="text-2xl font-bold tracking-tight">Restore Credentials</DialogTitle>
+                    <DialogTitle className="text-2xl font-black tracking-tighter uppercase">Restore Credentials</DialogTitle>
                     <DialogDescription className="text-xs font-medium">
                         Enter your institutional email to receive a secure restoration link.
                     </DialogDescription>
                 </DialogHeader>
 
                 {!generatedLink ? (
-                    <div className="space-y-4">
-                        <div className="space-y-2">
-                            <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Registry Email</Label>
-                            <Input value={email} onChange={e => setEmail(e.target.value)} placeholder="m@example.com" className="h-11 font-bold" />
+                    <div className="space-y-6">
+                        <div className="space-y-3">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Registry Email</Label>
+                            <Input value={email} onChange={e => setEmail(e.target.value)} placeholder="m@example.com" className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary" />
                         </div>
-                        <Button onClick={handleRestore} disabled={loading} className="w-full h-12 font-bold text-xs uppercase tracking-widest shadow-xl shadow-primary/20">
+                        <Button onClick={handleRestore} disabled={loading} className="w-full h-12 font-black uppercase tracking-widest text-[10px] shadow-xl shadow-primary/20 rounded-xl active:scale-95 transition-all">
                             {loading ? <Loader2 className="animate-spin h-4 w-4" /> : "Dispatch Restore Link"}
                         </Button>
                     </div>
                 ) : (
                     <div className="text-center py-6 space-y-4">
-                        <div className="bg-primary/5 p-6 rounded-2xl border border-primary/10">
+                        <div className="bg-primary/5 p-8 rounded-[2rem] border border-primary/10 shadow-inner">
                             <CheckCircle2 className="h-12 w-12 text-primary mx-auto mb-4" />
-                            <p className="font-bold text-sm">Restoration link dispatched.</p>
-                            <p className="text-[10px] text-muted-foreground font-medium mt-1">Please check your inbox and spam folders.</p>
+                            <p className="font-black text-sm uppercase tracking-tight">Restoration link dispatched.</p>
+                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-2 opacity-60">Check inbox nodes.</p>
                         </div>
                     </div>
                 )}
@@ -169,7 +169,7 @@ export default function LoginPage() {
         
         toast({ 
             variant: "destructive", 
-            title: "Login failed", 
+            title: "Access Denied", 
             description: message 
         });
         setIsEmailLoading(false);
@@ -203,36 +203,44 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl rounded-2xl border-primary/5 bg-card text-left">
-      <div className="p-8 sm:p-12 flex flex-col justify-center">
-        <div className="flex items-center gap-3 mb-6">
+    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl rounded-[2rem] border-primary/5 bg-card text-left">
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="p-8 sm:p-12 flex flex-col justify-center"
+      >
+        <div className="flex items-center gap-3 mb-8">
             <Logo className="h-12 w-12" />
-            <h1 className="text-3xl font-bold tracking-tight text-primary">
-                Nyaya Sahayak
-            </h1>
+            <div className="flex flex-col">
+                <h1 className="text-2xl font-black tracking-tight text-primary leading-none">
+                    Nyaya Sahayak
+                </h1>
+                <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground mt-1">Institutional Hub</span>
+            </div>
         </div>
-        <h2 className="text-3xl font-bold tracking-tight text-foreground">Welcome Back</h2>
-        <p className="text-muted-foreground mt-2 mb-8 font-medium">
-            Access your secure institutional hub.
-        </p>
+        
+        <div className="space-y-1 mb-10">
+            <h2 className="text-3xl font-black font-headline tracking-tighter text-foreground uppercase">Authorizing</h2>
+            <p className="text-sm text-muted-foreground font-medium">Access your secure institutional terminal.</p>
+        </div>
 
-        <div className="grid gap-4">
-            <div className="space-y-4">
-                <div className="space-y-2">
-                    <Label htmlFor="identifier" className="font-bold opacity-70 text-[11px] uppercase tracking-widest">Email or Mobile Number</Label>
+        <div className="grid gap-6">
+            <div className="space-y-5">
+                <div className="space-y-3">
+                    <Label htmlFor="identifier" className="font-black text-muted-foreground text-[10px] uppercase tracking-[0.2em] ml-1">Identity Node (Email/Mobile)</Label>
                     <Input
                         id="identifier"
                         type="text"
-                        placeholder="Enter Registered Email or Mobile"
+                        placeholder="Registry Identity"
                         value={identifier}
                         onChange={(e) => setIdentifier(e.target.value)}
                         disabled={isLoading}
-                        className="font-bold h-11"
+                        className="font-bold h-12 rounded-xl border-primary/10 focus:border-primary px-5"
                     />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                     <div className="flex items-center">
-                        <Label htmlFor="password" className="font-bold opacity-70 text-[11px] uppercase tracking-widest">Password</Label>
+                        <Label htmlFor="password" className="font-black text-muted-foreground text-[10px] uppercase tracking-[0.2em] ml-1">Access Key</Label>
                         <ProtocolRestorationDialog />
                     </div>
                     <div className="relative">
@@ -242,19 +250,19 @@ export default function LoginPage() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={isLoading}
-                            className="font-bold h-11 pr-10"
+                            className="font-bold h-12 pr-12 rounded-xl border-primary/10 focus:border-primary px-5"
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
                         >
                             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                     </div>
                 </div>
 
-                <div className="flex items-start space-x-3 text-left p-3 rounded-xl bg-primary/5 border border-primary/10">
+                <div className="flex items-start space-x-3 text-left p-4 rounded-2xl bg-primary/5 border border-primary/10">
                     <Checkbox 
                         id="login-terms" 
                         checked={acceptedTerms} 
@@ -262,59 +270,73 @@ export default function LoginPage() {
                         className="mt-1 border-primary/30 data-[state=checked]:bg-primary"
                     />
                     <div className="grid gap-1">
-                        <Label htmlFor="login-terms" className="text-[10px] font-bold text-muted-foreground leading-snug cursor-pointer">
-                            I acknowledge the system protocols and <Link href="/terms" className="text-primary hover:underline">Privacy Policy</Link>.
+                        <Label htmlFor="login-terms" className="text-[10px] font-bold text-muted-foreground leading-relaxed cursor-pointer">
+                            I acknowledge the institutional protocols and <Link href="/privacy" className="text-primary hover:underline font-black">Privacy Protocol</Link>.
                         </Label>
                     </div>
                 </div>
 
-                <Button className="w-full font-bold h-12 shadow-lg shadow-primary/20 active:scale-95 transition-all" onClick={handleLogin} disabled={isLoading || !acceptedTerms}>
-                    {isEmailLoading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : null}
-                    {isEmailLoading ? "Authorizing..." : "Login"}
+                <Button className="w-full font-black uppercase tracking-[0.2em] h-14 shadow-2xl shadow-primary/20 active:scale-95 transition-all rounded-xl text-[10px] group relative overflow-hidden" onClick={handleLogin} disabled={isLoading || !acceptedTerms}>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    {isEmailLoading ? <Loader2 className="animate-spin h-5 w-5 mr-3" /> : <ShieldCheck className="h-5 w-5 mr-3" />}
+                    {isEmailLoading ? "AUTHORIZING..." : "INITIALIZE TERMINAL"}
                 </Button>
             </div>
             
             <div className="relative py-4">
                 <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-primary/10" /></div>
-                <div className="relative flex justify-center text-[10px] font-bold uppercase tracking-widest">
-                    <span className="bg-background px-4 text-muted-foreground/40">Secure Access</span>
+                <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.4em]">
+                    <span className="bg-background px-4 text-muted-foreground/40">Secure Ingress</span>
                 </div>
             </div>
 
             <Button 
               variant="outline" 
-              className="w-full font-bold text-[10px] uppercase tracking-widest h-12 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group" 
+              className="w-full font-black text-[10px] uppercase tracking-widest h-14 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group rounded-xl" 
               onClick={handleGoogleLogin} 
               disabled={isLoading || !acceptedTerms}
             >
                 {isGoogleLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" />
+                  <Loader2 className="mr-3 h-5 w-5 animate-spin text-primary" />
                 ) : (
                   <div className="mr-3 transition-transform group-hover:scale-110">
                     <GoogleIcon />
                   </div>
                 )}
-                {isGoogleLoading ? "Synchronizing..." : "Continue with Google"}
+                {isGoogleLoading ? "SYNCHRONIZING..." : "CONTINUE WITH GOOGLE"}
             </Button>
         </div>
         
-        <div className="mt-6 text-center text-sm font-medium">
+        <div className="mt-8 text-center text-xs font-bold text-muted-foreground">
             New to registry?{" "}
-            <Link href="/register" className="font-bold text-primary hover:underline">Register Node</Link>
+            <Link href="/register" className="font-black text-primary hover:underline uppercase tracking-widest ml-1">Enroll Node</Link>
         </div>
-      </div>
+      </motion.div>
       
       <div className="hidden md:flex flex-col items-center justify-center relative bg-muted/30 border-l border-primary/5 overflow-hidden">
-        <div className="p-12 text-center space-y-6 relative z-10">
-            <div className="bg-primary/5 p-8 rounded-full inline-block animate-pulse">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none grayscale flex items-center justify-center">
+            <Logo className="h-96 w-96" />
+        </div>
+        <div className="p-12 text-center space-y-8 relative z-10">
+            <div className="bg-primary/5 p-10 rounded-[2.5rem] inline-block animate-pulse shadow-inner border border-primary/5">
                 <Scale className="h-24 w-24 text-primary opacity-40" />
             </div>
-            <div className="space-y-2">
-                <h3 className="text-2xl font-bold tracking-tight text-foreground">Statutory Ingress</h3>
-                <p className="text-sm text-muted-foreground font-medium max-w-[280px]">Mathematically precise legal assistant for Indian citizens.</p>
+            <div className="space-y-3">
+                <h3 className="text-2xl font-black font-headline tracking-tighter uppercase text-foreground leading-tight">Statutory <br /> Ingress</h3>
+                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest max-w-[240px] mx-auto leading-relaxed">Mathematically precise legal assistant for Indian citizens.</p>
+            </div>
+            <div className="flex items-center justify-center gap-4 pt-4">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-background border border-primary/10 shadow-sm">
+                    <Activity className="h-3 w-3 text-primary animate-pulse" />
+                    <span className="text-[8px] font-black uppercase tracking-widest">System Ready</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-background border border-primary/10 shadow-sm">
+                    <Lock className="h-3 w-3 text-primary" />
+                    <span className="text-[8px] font-black uppercase tracking-widest">TLS 1.3 Active</span>
+                </div>
             </div>
         </div>
-        <div className="absolute bottom-8 left-8 text-[10px] font-black uppercase tracking-widest opacity-20 text-left">Nyaya Sahayak // ACCESS</div>
+        <div className="absolute bottom-8 left-8 text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/30 text-left">NYAYASAHAYAK.IN // TERMINAL ACCESS</div>
       </div>
     </Card>
   );
