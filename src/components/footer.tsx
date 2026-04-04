@@ -19,7 +19,7 @@ export function Footer() {
                   </div>
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-black font-headline tracking-tighter bg-gradient-to-r from-primary via-accent to-blue-400 bg-clip-text text-transparent animate-animated-gradient bg-[200%_auto]">
+                <span className="text-2xl font-black font-headline tracking-tighter text-foreground">
                   Nyaya Sahayak
                 </span>
                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 leading-none mt-1 group-hover:text-primary transition-colors">
