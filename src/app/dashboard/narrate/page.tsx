@@ -20,7 +20,8 @@ import {
   PlusCircle,
   ArrowLeft,
   FileSearch,
-  ChevronDown
+  ChevronDown,
+  X
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
@@ -153,10 +154,10 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
 
   return (
     <div className="space-y-10 max-w-6xl mx-auto pb-32 px-4 sm:px-0 text-left">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6 text-left">
             <PageHeader
                 title="Voice Assistant"
-                description="Describe your case using your voice for a quick AI summary."
+                description="Describe your case using your voice for an instant AI summary and legal roadmap."
             />
             <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
                 <Link href="/dashboard">
@@ -395,7 +396,7 @@ export default function NarrateProblemPage(props: { params: Promise<any>, search
                                         <Mic className="h-20 w-20 text-primary opacity-20" />
                                     </div>
                                 </div>
-                                <div className="space-y-4 max-w-sm px-6 text-center">
+                                <div className="space-y-4 max-sm px-6 text-center">
                                     <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready to Help</h3>
                                     <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
                                         Please record or upload your case description to start the AI analysis.

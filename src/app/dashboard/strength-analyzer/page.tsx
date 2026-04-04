@@ -76,8 +76,8 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
     <div className="space-y-10 max-w-6xl mx-auto pb-32 px-4 sm:px-0 text-left">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6 text-left">
             <PageHeader
-            title="Forensic Strength Matrix"
-            description="Deep AI research and statutory assessment of litigation success probability."
+            title="Case Strength Analysis"
+            description="Authoritative AI audit of your case probability based on Indian statutory frameworks and precedents."
             />
             <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
             <Link href="/dashboard">
@@ -102,7 +102,7 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                 <CardContent className="p-8 sm:p-10">
                 <form action={formAction} className="space-y-8 text-left">
                     <div className="space-y-3 text-left">
-                    <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Forensic Description</Label>
+                    <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Case Description</Label>
                     <Textarea id="caseDescription" name="caseDescription" placeholder="Enter chronological events, evidence details, and party identities for a deep research report..." rows={8} required className="glass rounded-[2rem] p-6 text-sm font-medium leading-relaxed" />
                     </div>
                     
@@ -121,9 +121,9 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
 
                     <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem]">
                     {state.status === 'loading' ? (
-                        <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Neural Research Node Active...</>
+                        <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Analyzing Litigation Success Probability...</>
                     ) : (
-                        <><Sparkles className="mr-3 h-5 w-5" /> Initialize Research Audit</>
+                        <><Sparkles className="mr-3 h-5 w-5" /> Run Strength Audit</>
                     )}
                     </Button>
                 </form>
@@ -148,7 +148,7 @@ export default function StrengthAnalyzerPage(props: { params: Promise<any>, sear
                 )}>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 text-left">
                         <div className="space-y-4 text-left flex-1 min-w-0">
-                            <div className="flex flex-wrap items-center gap-3">
+                            <div className="flex items-center gap-3">
                                 <div className={cn(
                                     "flex items-center gap-2 px-3 py-1 rounded-full border",
                                     state.status === 'success' ? "bg-white/10 border-white/20" : "bg-primary/10 border-primary/20"

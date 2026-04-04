@@ -21,24 +21,38 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Nyaya Sahayak | India's Premier AI Legal Assistant & Forensic Auditor",
-  description: "Access elite AI legal assistance on nyayasahayak.in. Forensic case audits, BNS statutory scanning, and automated document drafting for Bharat's citizens.",
-  keywords: ["AI Legal Assistant India", "Nyaya Sahayak", "Legal AI Bharat", "BNS Forensic Audit", "Statutory Risk Scanner", "Indian Judicial AI", "Legal AI Assistant", "Online Legal Help India", "IdeaSpark"],
+  title: "Nyaya Sahayak | India's Premier AI Legal Assistant & Case Auditor",
+  description: "Access elite AI legal assistance on nyayasahayak.in. Forensic case audits, BNS statutory scanning, and automated document drafting for Bharat's citizens. Get free legal guidance instantly.",
+  keywords: [
+    "AI Legal Assistant India", 
+    "Nyaya Sahayak", 
+    "Legal AI Bharat", 
+    "BNS Forensic Audit", 
+    "Statutory Risk Scanner", 
+    "Indian Judicial AI", 
+    "Legal AI Assistant", 
+    "Online Legal Help India", 
+    "Legal Notice Generator India",
+    "Bail Bond Generator",
+    "Case Strength Probability AI",
+    "IdeaSpark"
+  ],
   authors: [{ name: "IdeaSpark Institutional Tech" }],
   metadataBase: new URL('https://nyayasahayak.in'),
   alternates: { canonical: "https://nyayasahayak.in" },
   openGraph: {
     title: "Nyaya Sahayak | Your AI-Powered Legal Co-Pilot",
-    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape.",
+    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape. Empowering 1.4 billion citizens.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
-    images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak" }],
+    images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Logo" }],
     locale: "en_IN",
     type: "website",
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Nyaya Sahayak | AI Legal Assistant for Bharat',
+    description: 'Transforming legal access with institutional AI intelligence.',
     images: ['/Logo.png'],
   },
   icons: { icon: '/Logo.png', shortcut: '/Logo.png', apple: '/Logo.png' },
@@ -64,7 +78,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   const softwareSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Nyaya Sahayak",
+    "name": "Nyaya Sahayak AI",
     "operatingSystem": "Web",
     "applicationCategory": "LegalApplication",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
