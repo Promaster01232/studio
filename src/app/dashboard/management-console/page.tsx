@@ -122,7 +122,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                                 <div className="p-2 rounded-lg bg-muted shadow-inner"><Calendar className="h-3.5 w-3.5 text-muted-foreground" /></div>
                                 <div className="text-left">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Timestamp</p>
-                                    <p className="text-xs font-bold">{tx.createdAt ? format(tx.createdAt.toDate(), 'PPP p') : 'N/A'}</p>
+                                    <p className="text-xs font-bold">{tx.createdAt ? format(tx.createdAt.toDate ? tx.createdAt.toDate() : new Date(tx.createdAt), 'PPP p') : 'N/A'}</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-3">
@@ -171,11 +171,11 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
         const unsubUsers = onSnapshot(collection(firestore, "users"), 
             (snapshot) => {
                 const list = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as UserRecord));
-                setUsers(list.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0)));
+                setUsers(list.sort((a, b) => (b.createdAt?.toMillis ? b.createdAt.toMillis() : 0) - (a.createdAt?.toMillis ? a.createdAt.toMillis() : 0)));
                 setLoading(false);
             },
             (err) => {
-                console.warn("[FIREBASE] Admin user snapshot denied.", err.message);
+                console.warn("[FIREBASE] Admin user snapshot ingress denied.", err.message);
                 setLoading(false);
             }
         );
@@ -185,9 +185,9 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
         const unsubTrans = onSnapshot(qTrans, 
             (snapshot) => {
                 const list = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as TransactionRecord));
-                setTransactions(list.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0)));
+                setTransactions(list.sort((a, b) => (b.createdAt?.toMillis ? b.createdAt.toMillis() : 0) - (a.createdAt?.toMillis ? a.createdAt.toMillis() : 0)));
             },
-            (err) => console.warn("[FIREBASE] Admin transaction snapshot denied.", err.message)
+            (err) => console.warn("[FIREBASE] Admin transaction snapshot ingress denied.", err.message)
         );
 
         return () => { unsubUsers(); unsubTrans(); };
@@ -316,7 +316,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                                         <TableCell className="pl-6 py-4">
                                             <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground">
                                                 <Clock className="h-3 w-3 opacity-40" />
-                                                {tx.createdAt ? format(tx.createdAt.toDate(), 'PP p') : 'Syncing...'}
+                                                {tx.createdAt ? format(tx.createdAt.toDate ? tx.createdAt.toDate() : new Date(tx.createdAt), 'PP p') : 'Syncing...'}
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">

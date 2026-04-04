@@ -178,7 +178,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 setProfileLoading(false);
             },
             (err) => {
-                console.warn("[FIREBASE] Profile snapshot denied.", err.message);
+                console.warn("[FIREBASE] Profile snapshot ingress denied. Node restricted.", err.message);
                 setProfileLoading(false);
             }
         );
@@ -187,7 +187,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         const q = query(notifRef, where("userId", "==", user.uid), where("isRead", "==", false));
         notifUnsubscribeRef.current = onSnapshot(q, 
             (snap) => setUnreadCount(snap.size),
-            (err) => console.warn("[FIREBASE] Notifications snapshot denied.", err.message)
+            (err) => console.warn("[FIREBASE] Notifications snapshot ingress denied.", err.message)
         );
 
       } else {

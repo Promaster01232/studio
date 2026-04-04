@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -13,8 +12,6 @@ import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 interface NotificationNode {
     id: string;
@@ -56,12 +53,8 @@ export default function NotificationsPage() {
             setNotifications(list);
             setLoading(false);
         },
-        (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: notifRef.path,
-                operation: 'list',
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
+        (err) => {
+            console.warn("[FIREBASE] Notifications snapshot ingress denied. Access restricted.", err.message);
             setLoading(false);
         }
     );
@@ -71,28 +64,12 @@ export default function NotificationsPage() {
 
   const markAsRead = async (id: string) => {
       const notifDoc = doc(firestore, "notifications", id);
-      const updateData = { isRead: true };
-      updateDoc(notifDoc, updateData)
-        .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: notifDoc.path,
-                operation: 'update',
-                requestResourceData: updateData,
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
-        });
+      updateDoc(notifDoc, { isRead: true }).catch(err => console.warn("Failed to update read status:", err.message));
   };
 
   const deleteNotif = async (id: string) => {
       const notifDoc = doc(firestore, "notifications", id);
-      deleteDoc(notifDoc)
-        .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: notifDoc.path,
-                operation: 'delete',
-            } satisfies SecurityRuleContext, serverError);
-            errorEmitter.emit('permission-error', permissionError);
-        });
+      deleteDoc(notifDoc).catch(err => console.warn("Failed to delete notification:", err.message));
   };
 
   const markAllRead = async () => {
@@ -100,13 +77,7 @@ export default function NotificationsPage() {
       notifications.filter(n => !n.isRead).forEach(n => {
           batch.update(doc(firestore, "notifications", n.id), { isRead: true });
       });
-      batch.commit().catch(async (serverError) => {
-          const permissionError = new FirestorePermissionError({
-              path: '/notifications',
-              operation: 'update',
-          } satisfies SecurityRuleContext, serverError);
-          errorEmitter.emit('permission-error', permissionError);
-      });
+      batch.commit().catch(err => console.warn("Batch update failed:", err.message));
   };
 
   const clearRegistry = async () => {
@@ -115,13 +86,7 @@ export default function NotificationsPage() {
       notifications.forEach(n => {
           batch.delete(doc(firestore, "notifications", n.id));
       });
-      batch.commit().catch(async (serverError) => {
-          const permissionError = new FirestorePermissionError({
-              path: '/notifications',
-              operation: 'delete',
-          } satisfies SecurityRuleContext, serverError);
-          errorEmitter.emit('permission-error', permissionError);
-      });
+      batch.commit().catch(err => console.warn("Batch clear failed:", err.message));
   };
 
   const getIcon = (type: string) => {
@@ -211,7 +176,7 @@ export default function NotificationsPage() {
                                         <div className="flex items-center gap-1 text-muted-foreground text-[9px] font-black uppercase tracking-widest shrink-0">
                                             <Clock className="h-3 w-3" />
                                             {notif.createdAt ? (
-                                                <span>{formatDistanceToNow(notif.createdAt.toDate(), { addSuffix: true })}</span>
+                                                <span>{formatDistanceToNow(notif.createdAt.toDate ? notif.createdAt.toDate() : new Date(notif.createdAt), { addSuffix: true })}</span>
                                             ) : (
                                                 <span>Syncing...</span>
                                             )}
