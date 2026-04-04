@@ -6,19 +6,17 @@ import { useAuth, useFirestore, useDatabase } from "@/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { ref, set } from "firebase/database";
 import { useForm } from "react-hook-form";
-import { z } from "zform";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Scale, ShieldCheck, User, Smartphone, Globe, Activity } from "lucide-react";
+import { Loader2, ShieldCheck, User, Smartphone, Globe, Activity } from "lucide-react";
 import { validateUserDetails } from "@/ai/flows/validate-user-details";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
-import { cn } from "@/lib/utils";
 import { Logo } from "@/components/logo";
 
 const profileSchema = z.object({
@@ -86,7 +84,6 @@ export default function CreateProfilePage() {
     setLoading(true);
 
     try {
-      // 1. RESILIENT AUDIT: Non-blocking mobile check
       try {
         const validation = await validateUserDetails({
           mobileNumber: data.mobileNumber,
@@ -111,7 +108,6 @@ export default function CreateProfilePage() {
       
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
       
-      // 2. BACKGROUND SYNC: Dispatch & Redirect
       setDoc(userDocRef, userProfile).catch(async (serverError) => {
           const permissionError = new FirestorePermissionError({
               path: userDocRef.path,
@@ -134,7 +130,6 @@ export default function CreateProfilePage() {
 
     } catch (error: any) {
         console.error("Profile synchronization issue:", error);
-        // FORCE REDIRECT: Ensure user is never stuck
         router.push("/dashboard");
     }
   };
@@ -151,11 +146,11 @@ export default function CreateProfilePage() {
     <div className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden shadow-2xl rounded-[2.5rem] border border-primary/5 bg-card text-left">
       <div className="hidden md:flex flex-col items-center justify-center bg-primary/5 p-12 relative overflow-hidden border-r border-primary/5">
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
-            <Logo className="h-[500px] w-[500px]" />
+            <Logo className="h-[500px] w-[500px]" priority={false} />
         </div>
         <div className="relative z-10 space-y-10 text-center">
             <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] shadow-2xl border border-primary/10 inline-block group">
-                <Logo className="h-24 w-24 group-hover:scale-110 transition-transform duration-700" />
+                <Logo className="h-24 w-24 group-hover:scale-110 transition-transform duration-700" priority={true} />
             </div>
             <div className="space-y-3">
                 <h2 className="text-3xl font-black font-headline tracking-tighter uppercase leading-tight">Identity <br /> Calibration</h2>
@@ -236,7 +231,7 @@ export default function CreateProfilePage() {
               name="mobileNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile Node</FormLabel>
+                  <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile Node</Label>
                   <FormControl>
                     <div className="relative">
                         <Input placeholder="+91 12345 67890" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary pl-11" />
