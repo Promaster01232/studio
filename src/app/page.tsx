@@ -75,11 +75,11 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
             </header>
 
             <div className="space-y-6 max-w-4xl mx-auto">
-              <h1 className="text-4xl sm:text-7xl font-black tracking-tight text-foreground leading-[1.1] text-center">
-                Empowering every citizen with <span className="text-primary">precision legal AI</span>
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tighter text-foreground leading-[1.15] text-center">
+                Empowering every citizen with <br className="hidden md:block" /> <span className="text-primary italic">precision legal AI.</span>
               </h1>
               <p className="text-lg sm:text-xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
-                Experience the next generation of legal help. Our platform provides case analysis, document drafting, and direct access to experts.
+                Experience the next generation of legal help. Our platform provides forensic case audits, BNS statutory scanning, and direct access to experts.
               </p>
             </div>
 
