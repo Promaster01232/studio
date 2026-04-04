@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -81,7 +82,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
       
       <main className="flex-1 flex flex-col items-center relative z-10">
         {/* HERO SECTION - REDESIGNED FOR HIGH PROFESSIONAL IMPACT */}
-        <section className="w-full max-w-7xl pt-12 pb-16 sm:pt-20 sm:pb-24 px-6 text-center space-y-12">
+        <section className="w-full max-w-7xl pt-16 pb-20 sm:pt-24 sm:pb-32 px-6 text-center space-y-12">
           <motion.div 
             initial={{ opacity: 0, y: 30 }} 
             animate={{ opacity: 1, y: 0 }} 
@@ -90,35 +91,35 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
           >
             <header className="flex flex-col items-center gap-6">
               <div className="relative">
-                <div className="absolute -inset-4 bg-primary/10 rounded-full blur-2xl animate-pulse"></div>
-                <Logo className="h-24 w-24 sm:h-32 sm:w-32 shadow-2xl relative z-10" priority={true} />
+                <div className="absolute -inset-6 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+                <Logo className="h-28 w-24 sm:h-36 sm:w-32 shadow-2xl relative z-10" priority={true} />
               </div>
-              <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 shadow-sm">
-                <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
-                <span className="text-[10px] font-black tracking-[0.2em] text-primary uppercase">Institutional Intelligence</span>
+              <div className="flex items-center gap-2.5 px-5 py-2 rounded-full bg-primary/5 border border-primary/10 shadow-sm">
+                <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+                <span className="text-[11px] font-bold tracking-[0.2em] text-primary uppercase">Institutional intelligence</span>
               </div>
             </header>
 
-            <div className="space-y-6 max-w-5xl mx-auto">
-              <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-foreground text-center">
-                empowering every citizen with <br className="hidden md:block" />
-                <span className="text-primary italic">precision legal AI.</span>
+            <div className="space-y-8 max-w-5xl mx-auto">
+              <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-foreground leading-[1.05] text-center">
+                Empowering every citizen with <br className="hidden md:block" />
+                <span className="text-primary italic font-semibold">precision legal AI</span>
               </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed opacity-80">
+              <p className="text-lg sm:text-2xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed opacity-80">
                 Experience the next generation of legal empowerment. Our platform provides authoritative case analysis, professional document drafting, and direct access to justice.
               </p>
             </div>
 
-            <nav className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-6">
+            <nav className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
               {!loading ? (
-                <Button asChild size="lg" className="h-16 w-full sm:w-auto min-w-[260px] px-10 text-xs font-black uppercase tracking-widest shadow-2xl shadow-primary/30 rounded-2xl active:scale-95 transition-all group overflow-hidden relative">
+                <Button asChild size="lg" className="h-16 w-full sm:w-auto min-w-[280px] px-10 text-xs font-black uppercase tracking-widest shadow-2xl shadow-primary/30 rounded-2xl active:scale-95 transition-all group overflow-hidden relative">
                   <Link href="/dashboard" className="flex items-center gap-3 relative z-10">
                     Get Started Now <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                   </Link>
                 </Button>
               ) : (
-                <div className="h-16 w-[260px] flex items-center justify-center bg-muted/10 rounded-2xl border border-primary/10">
+                <div className="h-16 w-[280px] flex items-center justify-center bg-muted/10 rounded-2xl border border-primary/10">
                   <Loader2 className="h-6 w-6 animate-spin text-primary opacity-40" />
                 </div>
               )}
