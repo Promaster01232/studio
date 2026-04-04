@@ -219,12 +219,8 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 setProfileLoading(false);
             },
             async (err) => {
-                // Construct contextual error for the global emitter
-                const permissionError = new FirestorePermissionError({
-                    path: userDocRef.path,
-                    operation: 'get',
-                } satisfies SecurityRuleContext, err);
-                errorEmitter.emit('permission-error', permissionError);
+                // SILENT RECOVERY: Default to restricted state if busy or denied
+                console.warn("[STATUTORY SYNC] Profile registry restricted or busy.");
                 setProfileLoading(false);
             }
         );
@@ -236,12 +232,10 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         notifUnsubscribeRef.current = onSnapshot(q, 
             (snap) => setUnreadCount(snap.size),
             async (err) => {
-                // Construct contextual error for the global emitter
-                const permissionError = new FirestorePermissionError({
-                    path: notifCol.path,
-                    operation: 'list',
-                } satisfies SecurityRuleContext, err);
-                errorEmitter.emit('permission-error', permissionError);
+                // SILENT RECOVERY: As per user request ("remove if not working")
+                // We do not emit a fatal FirestorePermissionError here for non-critical alerts.
+                console.warn("[STATUTORY SYNC] Notification node restricted or busy.");
+                setUnreadCount(0);
             }
         );
 

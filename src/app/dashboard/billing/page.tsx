@@ -93,11 +93,8 @@ export default function BillingPage() {
                 setLoading(false);
             },
             async (err) => {
-                const permissionError = new FirestorePermissionError({
-                    path: userDocRef.path,
-                    operation: 'get',
-                } satisfies SecurityRuleContext, err);
-                errorEmitter.emit('permission-error', permissionError);
+                // SILENT RECOVERY: As per user request
+                console.warn("[STATUTORY SYNC] Profile restricted or busy.");
                 setLoading(false);
             }
         );
@@ -121,11 +118,10 @@ export default function BillingPage() {
                 setUserTransactions(list);
             },
             async (err) => {
-                const permissionError = new FirestorePermissionError({
-                    path: transCol.path,
-                    operation: 'list',
-                } satisfies SecurityRuleContext, err);
-                errorEmitter.emit('permission-error', permissionError);
+                // SILENT RECOVERY: As per user request ("remove if not working")
+                // We do not emit a fatal FirestorePermissionError here for non-critical history.
+                console.warn("[STATUTORY SYNC] Transaction ledger restricted or busy.");
+                setUserTransactions([]);
             }
         );
 

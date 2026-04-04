@@ -19,17 +19,13 @@ service cloud.firestore {
       );
     }
 
-    // General Admin check - Safe evaluation for query proving
+    // General Admin check - Safer evaluation for query proving
     function isAdmin() {
       return isSuperAdmin() || (
         isAuthenticated() && 
         exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('isAdmin', false) == true
       );
-    }
-
-    function isOwner(userId) {
-      return isAuthenticated() && request.auth.uid == userId;
     }
 
     // GLOBAL ADMIN OVERRIDE: Absolute clearance for Root Nodes
@@ -42,15 +38,33 @@ service cloud.firestore {
       allow get: if isAuthenticated();
       allow list: if isAdmin();
       allow create: if isAuthenticated() && userId == request.auth.uid;
-      allow update: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow update: if isAuthenticated() && (userId == request.auth.uid || isAdmin());
       allow delete: if isAdmin();
+    }
+
+    // Notifications collection: Institutional Alerts
+    match /notifications/{notificationId} {
+      // Split owner and admin checks for query provability
+      allow get, list: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow get, list: if isAdmin();
+      
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Transactions collection: Statutory Ledger
+    match /transactions/{transactionId} {
+      // Split owner and admin checks for query provability
+      allow get, list: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow get, list: if isAdmin();
+      
+      allow create: if isAuthenticated();
     }
 
     // Posts collection: Community Transmissions
     match /posts/{postId} {
-      // Split read for provability in queries
-      allow read: if isAuthenticated();
-      
+      allow get, list: if isAuthenticated();
       allow create: if isAuthenticated() && request.resource.data.authorUid == request.auth.uid;
       allow update: if isAuthenticated() && (
         resource.data.authorUid == request.auth.uid ||
@@ -59,29 +73,9 @@ service cloud.firestore {
       allow delete: if isAuthenticated() && (resource.data.authorUid == request.auth.uid || isAdmin());
     }
 
-    // Notifications collection: Institutional Alerts
-    match /notifications/{notificationId} {
-      // PROVABILITY FIX: Split owner and admin read rules
-      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
-      allow read: if isAdmin();
-      
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
-      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
-    }
-
-    // Transactions collection: Verified Statutory Ledger
-    match /transactions/{transactionId} {
-      // PROVABILITY FIX: Split owner and admin read rules
-      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
-      allow read: if isAdmin();
-      
-      allow create: if isAuthenticated();
-    }
-
     // Advocates collection: Professional Registry
     match /advocates/{advocateId} {
-      allow read: if isAuthenticated();
+      allow get, list: if isAuthenticated();
       allow write: if isAuthenticated() && (advocateId == request.auth.uid || isAdmin());
     }
   }
