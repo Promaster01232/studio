@@ -219,6 +219,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 setProfileLoading(false);
             },
             async (err) => {
+                // Construct contextual error for the global emitter
                 const permissionError = new FirestorePermissionError({
                     path: userDocRef.path,
                     operation: 'get',
@@ -235,6 +236,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         notifUnsubscribeRef.current = onSnapshot(q, 
             (snap) => setUnreadCount(snap.size),
             async (err) => {
+                // Construct contextual error for the global emitter
                 const permissionError = new FirestorePermissionError({
                     path: notifCol.path,
                     operation: 'list',

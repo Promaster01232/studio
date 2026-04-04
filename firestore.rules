@@ -19,7 +19,7 @@ service cloud.firestore {
       );
     }
 
-    // General Admin check - Refined for robustness
+    // General Admin check - Safe evaluation for query proving
     function isAdmin() {
       return isSuperAdmin() || (
         isAuthenticated() && 
@@ -59,17 +59,20 @@ service cloud.firestore {
 
     // Notifications collection: Institutional Alerts
     match /notifications/{notificationId} {
-      // Explicitly authorize 'read' (get and list) for owners and admins
-      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      // Split read into get and list for clarity and proof requirements
+      allow get: if isAuthenticated() && (resource.data.get('userId', '') == request.auth.uid || isAdmin());
+      allow list: if isAuthenticated() && (resource.data.get('userId', '') == request.auth.uid || isAdmin());
+      
       allow create: if isAuthenticated();
-      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
-      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.get('userId', '') == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
+      allow delete: if isAuthenticated() && resource.data.get('userId', '') == request.auth.uid;
     }
 
     // Transactions collection: Verified Statutory Ledger
     match /transactions/{transactionId} {
-      // Explicitly authorize 'read' (get and list) for owners and admins
-      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      // Split read into get and list for clarity and proof requirements
+      allow get: if isAuthenticated() && (resource.data.get('userId', '') == request.auth.uid || isAdmin());
+      allow list: if isAuthenticated() && (resource.data.get('userId', '') == request.auth.uid || isAdmin());
       allow create: if isAuthenticated();
     }
 
