@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { LogOut, Loader2, Search, Bell, ShieldAlert, Zap, User, LogIn, Lock, Activity } from "lucide-react";
+import { LogOut, Loader2, Search, ShieldAlert, Zap, User, LogIn, Lock, Activity } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef, use } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -37,7 +37,7 @@ import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
+import { onSnapshot, doc } from "firebase/firestore";
 import { FloatingHub } from "@/components/floating-hub";
 
 const ADMIN_EMAILS = [
@@ -59,7 +59,7 @@ const PUBLIC_DASHBOARD_ROUTES = [
   '/dashboard/contact',
 ];
 
-function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unreadCount: number, isAdmin: boolean }) {
+function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }) {
     const isElite = isAdmin || userProfile?.subscriptionType?.includes('unlimited');
     const isLimited = userProfile && !isElite;
     
@@ -134,20 +134,6 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                                     <Button 
                                         variant="ghost" 
                                         size="icon" 
-                                        className="h-9 w-9 sm:h-10 sm:w-10 text-muted-foreground hover:text-primary rounded-xl relative group border border-transparent hover:border-primary/5"
-                                        asChild
-                                    >
-                                        <Link href="/dashboard/notifications">
-                                            <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
-                                            {unreadCount > 0 && (
-                                                <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-background" />
-                                            )}
-                                        </Link>
-                                    </Button>
-
-                                    <Button 
-                                        variant="ghost" 
-                                        size="icon" 
                                         className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl border border-transparent hover:border-primary/5 hover:bg-primary/5 overflow-hidden p-0"
                                         asChild
                                     >
@@ -182,10 +168,8 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
   
   const [userProfile, setUserProfile] = useState<any>(null);
   const [profileLoading, setProfileLoading] = useState(true);
-  const [unreadCount, setUnreadCount] = useState(0);
   
   const profileUnsubscribeRef = useRef<(() => void) | null>(null);
-  const notifUnsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -198,10 +182,6 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
       if (profileUnsubscribeRef.current) {
         profileUnsubscribeRef.current();
         profileUnsubscribeRef.current = null;
-      }
-      if (notifUnsubscribeRef.current) {
-        notifUnsubscribeRef.current();
-        notifUnsubscribeRef.current = null;
       }
 
       if (user) {
@@ -223,30 +203,15 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
             }
         );
 
-        // 2. Notifications Registry Listener
-        const notifCol = collection(firestore, "notifications");
-        const q = query(notifCol, where("userId", "==", user.uid), where("isRead", "==", false));
-        
-        notifUnsubscribeRef.current = onSnapshot(q, 
-            (snap) => setUnreadCount(snap.size),
-            async (err) => {
-                // SILENT RECOVERY: Default to restricted state if busy or denied
-                console.warn("[STATUTORY SYNC] Notification node restricted or busy.");
-                setUnreadCount(0);
-            }
-        );
-
       } else {
         setProfileLoading(false);
         setUserProfile(null);
-        setUnreadCount(0);
       }
     });
 
     return () => {
         unsubscribeAuth();
         if (profileUnsubscribeRef.current) profileUnsubscribeRef.current();
-        if (notifUnsubscribeRef.current) notifUnsubscribeRef.current();
     };
   }, [auth, firestore]);
 
@@ -350,7 +315,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         </SidebarFooter>
       </Sidebar>
       <SidebarInset className="bg-background relative overflow-hidden">
-        <Header userProfile={userProfile} unreadCount={unreadCount} isAdmin={isAdmin} />
+        <Header userProfile={userProfile} isAdmin={isAdmin} />
         <main className="flex-1 overflow-y-auto custom-scrollbar relative">
             <AnimatePresence mode="wait">
                 {showContent ? (
