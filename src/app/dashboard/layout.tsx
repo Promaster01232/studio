@@ -218,7 +218,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
             },
             async (err) => {
                 // SILENT RECOVERY: Default to restricted state if busy or denied
-                console.warn("[STATUTORY SYNC] Profile registry restricted or busy.");
+                console.warn("[STATUTORY SYNC] Profile restricted or busy.");
                 setProfileLoading(false);
             }
         );
