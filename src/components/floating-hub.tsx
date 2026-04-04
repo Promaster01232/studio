@@ -36,10 +36,15 @@ interface Message {
 
 export function FloatingHub() {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const auth = useAuth();
 
-  // Without login, do not show the Hub nodes
-  if (!auth.currentUser) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Ensure consistent SSR/CSR render to avoid hydration mismatch
+  if (!mounted || !auth.currentUser) return null;
 
   return (
     <>
