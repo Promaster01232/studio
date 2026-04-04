@@ -145,6 +145,23 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                                             )}
                                         </Link>
                                     </Button>
+
+                                    {/* Profile Icon Node */}
+                                    <Button 
+                                        variant="ghost" 
+                                        size="icon" 
+                                        className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl border border-transparent hover:border-primary/5 hover:bg-primary/5 overflow-hidden p-0"
+                                        asChild
+                                    >
+                                        <Link href="/dashboard/profile">
+                                            <Avatar className="h-7 w-7 sm:h-8 sm:w-8 border border-primary/10 shadow-sm">
+                                                <AvatarImage src={userProfile.photoURL} className="object-cover" />
+                                                <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">
+                                                    {userProfile.firstName?.charAt(0)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                        </Link>
+                                    </Button>
                                 </div>
                             </>
                         )}
