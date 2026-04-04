@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -142,7 +143,7 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any, isAdmin
                     </Button>
                     <div className="flex items-center gap-1.5 text-[7px] font-black uppercase opacity-30">
                         <Clock className="h-2.5 w-2.5" />
-                        <span>Community Update</span>
+                        <span>Recent Update</span>
                     </div>
                 </div>
             </CardContent>
@@ -151,10 +152,10 @@ function PostCard({ post, userProfile }: { post: Post, userProfile: any, isAdmin
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Case Strength", desc: "Predict success rates." },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "Doc Analysis", desc: "Check for legal risks." },
-    { href: "/dashboard/document-generator", icon: FileText, title: "Legal Drafting", desc: "Create petitions." },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bonds", desc: "Generate legal papers." },
+    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Case Strength", desc: "Check success probability." },
+    { href: "/dashboard/document-intelligence", icon: Search, title: "Analysis", desc: "Scan for potential risks." },
+    { href: "/dashboard/document-generator", icon: FileText, title: "Drafting", desc: "Create legal documents." },
+    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Legal Bonds", desc: "Generate official forms." },
 ];
 
 export default function DashboardHomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
@@ -209,7 +210,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
   return (
     <div className="flex flex-col h-full space-y-6 pb-12 max-w-6xl mx-auto text-left relative pt-2">
         <MotionWrapper>
-          <Card className="relative overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-[0_30px_100px_rgba(0,0,0,0.1)] rounded-[2.5rem] group hover:border-primary/20 transition-all duration-700">
+          <Card className="relative overflow-hidden border-primary/5 bg-card/40 backdrop-blur-xl shadow-2xl rounded-[2.5rem] group hover:border-primary/20 transition-all duration-700">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-primary/[0.01] -z-10"></div>
               <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.06] group-hover:scale-110 transition-all duration-1000 pointer-events-none grayscale">
                   <Logo className="h-64 w-64" priority={true} />
@@ -217,35 +218,28 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
               
               <div className="p-8 sm:p-12 relative z-10 flex flex-col lg:flex-row items-center gap-10">
                   <div className="flex-1 space-y-8 text-center lg:text-left">
-                      <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
-                          <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-green-500/5 border border-green-500/10">
-                              <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                              <span className="text-[8px] font-black uppercase tracking-widest text-green-600">Active Session</span>
-                          </div>
-                      </div>
-
                       <div className="space-y-4">
                           <h1 className="text-4xl sm:text-6xl font-black font-headline tracking-tighter leading-[0.9] text-foreground">
                               Welcome to <br />
                               <span className="text-primary italic">Nyaya {text}</span>
                           </h1>
                           <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed">
-                              India's most accessible AI legal assistant. Analyze cases, draft documents, and get direct answers to your legal questions.
+                              India's premier legal assistant. Analyze cases, draft documents, and get answers to your legal questions.
                           </p>
                       </div>
 
                       <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
-                          <Button size="lg" className="rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-14 px-10 shadow-2xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative" asChild>
+                          <Button size="lg" className="rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-14 px-10 shadow-xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden relative" asChild>
                               <Link href="/dashboard/narrate">
                                   <span className="relative z-10 flex items-center gap-2">
-                                      Start AI Analysis <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                      Analyze Case <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                                   </span>
                                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                               </Link>
                           </Button>
                           <Button variant="ghost" className="h-14 rounded-2xl px-8 font-black uppercase tracking-widest text-[9px] hover:bg-primary/5 text-primary border border-transparent hover:border-primary/10" asChild>
                               <Link href="/dashboard/learn">
-                                  Legal Knowledge Hub
+                                  View Knowledge Base
                               </Link>
                           </Button>
                       </div>
@@ -262,7 +256,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                           <div className="h-1 w-full bg-primary/5 rounded-full overflow-hidden">
                               <motion.div initial={{ width: 0 }} animate={{ width: '100%' }} className="h-full bg-primary" />
                           </div>
-                          <p className="text-[8px] font-bold text-muted-foreground mt-2 uppercase tracking-widest">System Ready</p>
+                          <p className="text-[8px] font-bold text-muted-foreground mt-2 uppercase tracking-widest">Active</p>
                       </Card>
                       <Card className="bg-background/50 border-primary/5 p-5 rounded-2xl shadow-inner group/node hover:border-primary/20 transition-all">
                           <div className="flex items-center gap-3 mb-3">
@@ -271,8 +265,8 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                               </div>
                               <p className="font-black text-[10px] uppercase tracking-widest">Security Status</p>
                           </div>
-                          <p className="text-xs font-bold truncate">Secure Connection</p>
-                          <p className="text-[8px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Data Protection Active</p>
+                          <p className="text-xs font-bold truncate">Encrypted Connection</p>
+                          <p className="text-[8px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Data Secure</p>
                       </Card>
                   </div>
               </div>
@@ -301,7 +295,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                           </div>
                       ) : latestPosts.length === 0 ? (
                           <Card className="py-16 text-center glass rounded-[2rem] border-dashed border-2 border-primary/5 opacity-30">
-                              <p className="font-bold text-[10px] tracking-tight">No recent discussions...</p>
+                              <p className="font-bold text-[10px] tracking-tight">No discussions yet...</p>
                           </Card>
                       ) : (
                           <div className="grid gap-4">
@@ -319,7 +313,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                   <div className="flex items-center justify-between mb-4 border-b border-primary/5 pb-2">
                       <div className="flex items-center gap-2.5 text-primary/40">
                           <Sparkles className="h-4 w-4" />
-                          <h2 className="text-[10px] font-black tracking-[0.3em] text-foreground/80 uppercase">AI Features</h2>
+                          <h2 className="text-[10px] font-black tracking-[0.3em] text-foreground/80 uppercase">Tools & Features</h2>
                       </div>
                   </div>
                   <div className="grid grid-cols-1 gap-3">

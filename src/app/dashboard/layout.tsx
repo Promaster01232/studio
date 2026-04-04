@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -96,7 +97,7 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
                 )}
 
                 <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-xl bg-primary/5 border border-primary/10">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/80">{isAdmin ? "Admin" : "User"} Account</span>
+                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/80">{isAdmin ? "Admin" : "User"}</span>
                 </div>
 
                 {!userProfile?.isBlocked && userProfile && (
@@ -176,7 +177,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                 setProfileLoading(false);
             },
             (err) => {
-                console.warn("[FIREBASE] Profile load issue.", err.message);
+                console.warn("Profile load issue.", err.message);
                 setProfileLoading(false);
             }
         );
@@ -185,7 +186,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         const q = query(notifRef, where("userId", "==", user.uid), where("isRead", "==", false));
         notifUnsubscribeRef.current = onSnapshot(q, 
             (snap) => setUnreadCount(snap.size),
-            (err) => console.warn("[FIREBASE] Notification sync issue.", err.message)
+            (err) => console.warn("Notification sync issue.", err.message)
         );
 
       } else {
@@ -222,9 +223,6 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
               <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none">
                   Nyaya Sahayak
               </span>
-              <span className="text-[6px] font-bold uppercase tracking-[0.3em] text-muted-foreground/40 leading-none mt-1 truncate">
-                  Legal Assistant
-              </span>
             </div>
           </Link>
         </SidebarHeader>
@@ -238,9 +236,9 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
                             <Zap className="h-3.5 w-3.5 text-primary" />
                             <span className="text-[9px] font-black uppercase tracking-widest text-primary">Upgrade Account</span>
                         </div>
-                        <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">Unlock advanced legal analysis and drafting tools.</p>
+                        <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">Unlock advanced analysis and drafting tools.</p>
                         <Button asChild size="sm" className="w-full h-9 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg text-center">
-                            <Link href="/dashboard/billing">Sync Expansion</Link>
+                            <Link href="/dashboard/billing">View Plans</Link>
                         </Button>
                     </div>
                 </Card>
@@ -280,7 +278,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
             </DropdownMenu>
           ) : (
              <Button asChild className="w-full rounded-xl h-12 font-black tracking-widest uppercase text-[10px] shadow-lg">
-                <Link href="/login">Initialize</Link>
+                <Link href="/login">Sign In</Link>
              </Button>
           )}
         </SidebarFooter>

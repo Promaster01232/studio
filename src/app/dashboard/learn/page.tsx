@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -42,16 +43,12 @@ export default function LearnPage() {
     <div className="space-y-10 max-w-7xl mx-auto pb-20 px-2 sm:px-0 text-left">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
         <div className="space-y-1 text-left">
-            <div className="flex items-center gap-2 text-primary mb-1">
-                <Sparkles className="h-4 w-4 animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Legal Assistant Hub</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter">Knowledge <span className="text-primary italic">Library</span></h1>
+            <h1 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter">Learning <span className="text-primary italic">Center</span></h1>
             <p className="text-sm text-muted-foreground font-medium">Access detailed guides on 60+ Indian law topics.</p>
         </div>
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
           <Link href="/dashboard">
-            <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Dashboard
+            <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Home
           </Link>
         </Button>
       </motion.div>
@@ -138,7 +135,6 @@ export default function LearnPage() {
                                 <div className="pt-8 mt-6 border-t border-primary/5 flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <Bookmark className="h-3.5 w-3.5 text-muted-foreground opacity-20 group-hover:opacity-100 transition-opacity cursor-pointer hover:text-primary" />
-                                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">{topic.slug.toUpperCase().substring(0, 4)}</span>
                                     </div>
                                     <Button asChild variant="ghost" className={cn(
                                         "h-10 px-5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 group-hover:text-white",
@@ -167,8 +163,8 @@ export default function LearnPage() {
             <Search className="h-16 w-16 text-muted-foreground" />
           </div>
           <div className="space-y-2">
-            <p className="font-black text-2xl tracking-tighter uppercase">Topic Not Found</p>
-            <p className="text-xs text-muted-foreground font-medium italic">"Try searching for another topic or law."</p>
+            <p className="font-black text-2xl tracking-tighter uppercase">No Results</p>
+            <p className="text-xs text-muted-foreground font-medium italic">Try another topic.</p>
           </div>
         </motion.div>
       )}
@@ -181,7 +177,7 @@ export default function LearnPage() {
                 </div>
                 <div className="text-left">
                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Accurate Info</p>
-                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">Verified legal resources.</p>
+                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">Verified resources.</p>
                 </div>
             </div>
             <div className="flex items-center gap-4 group">
@@ -198,8 +194,8 @@ export default function LearnPage() {
                     <Globe className="h-5 w-5" />
                 </div>
                 <div className="text-left">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500">Public Access</p>
-                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">Open for all citizens.</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500">Open Access</p>
+                    <p className="text-[9px] font-bold text-muted-foreground opacity-60">Available for all.</p>
                 </div>
             </div>
         </div>

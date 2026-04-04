@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -40,16 +41,16 @@ import {
 
 const navigationItems = [
   {
-    title: "Main",
+    title: "Home",
     icon: Home,
     href: "/dashboard",
     items: [],
   },
   {
-    title: "AI Analysis",
+    title: "AI Tools",
     icon: BrainCircuit,
     items: [
-      { href: "/dashboard/narrate", icon: Mic, label: "Voice Record Case" },
+      { href: "/dashboard/narrate", icon: Mic, label: "Record Case" },
       { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Analyze Document" },
       { href: "/dashboard/document-generator", icon: FileText, label: "Draft Documents" },
       { href: "/dashboard/bond-generator", icon: FileSignature, label: "Generate Bonds" },
@@ -63,9 +64,9 @@ const navigationItems = [
     items: [
       { href: "/dashboard/my-cases", icon: FolderKanban, label: "My Cases" },
       { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "Legal Aid" },
-      { href: "/dashboard/learn", icon: Library, label: "Knowledge Hub" },
-      { href: "/dashboard/police-guide", icon: Shield, label: "Police Guides" },
-      { href: "/dashboard/research-analytics", icon: Newspaper, label: "Community Feed" },
+      { href: "/dashboard/learn", icon: Library, label: "Knowledge Base" },
+      { href: "/dashboard/police-guide", icon: Shield, label: "Guides" },
+      { href: "/dashboard/research-analytics", icon: Newspaper, label: "Feed" },
     ],
   },
   {
@@ -77,26 +78,20 @@ const navigationItems = [
     ],
   },
   {
-    title: "Subscription",
-    icon: CreditCard,
-    items: [
-      { href: "/dashboard/billing", icon: CreditCard, label: "My Plan" },
-    ],
-  },
-  {
-    title: "Settings",
-    icon: Settings,
-    isAdminOnly: true,
-    items: [
-      { href: "/dashboard/management-console", icon: Shield, label: "Admin Panel" },
-    ],
-  },
-  {
-    title: "General",
+    title: "Account",
     icon: CircleUserRound,
     items: [
       { href: "/dashboard/profile", icon: CircleUserRound, label: "Profile" },
-      { href: "/dashboard/support", icon: LifeBuoy, label: "Help & Support" },
+      { href: "/dashboard/billing", icon: CreditCard, label: "Billing" },
+      { href: "/dashboard/support", icon: LifeBuoy, label: "Support" },
+    ],
+  },
+  {
+    title: "Admin",
+    icon: Settings,
+    isAdminOnly: true,
+    items: [
+      { href: "/dashboard/management-console", icon: Shield, label: "Control Panel" },
     ],
   },
 ];
