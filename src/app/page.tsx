@@ -100,9 +100,9 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
             </header>
 
             <div className="space-y-6 max-w-5xl mx-auto">
-              <h1 className="text-5xl sm:text-7xl font-bold tracking-tighter leading-[1.05] text-foreground text-center">
-                Empowering Every Citizen with <br className="hidden md:block" />
-                <span className="text-primary italic font-semibold">Precision Legal AI.</span>
+              <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-foreground text-center">
+                empowering every citizen with <br className="hidden md:block" />
+                <span className="text-primary italic">precision legal AI.</span>
               </h1>
               <p className="text-lg sm:text-xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed opacity-80">
                 Experience the next generation of legal empowerment. Our platform provides authoritative case analysis, professional document drafting, and direct access to justice.
