@@ -195,7 +195,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
 
   // Stable Auth Lifecycle
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       // Clear existing listeners upon state transition
       if (profileUnsubscribeRef.current) {
         profileUnsubscribeRef.current();

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -169,7 +168,7 @@ export default function BillingPage() {
                         status: 'CAPTURED'
                     };
 
-                    await addDoc(collection(firestore, "transactions"), transactionData).catch(async (err) => {
+                    addDoc(collection(firestore, "transactions"), transactionData).catch(async (err) => {
                         const permissionError = new FirestorePermissionError({
                             path: collection(firestore, "transactions").path,
                             operation: 'create',
@@ -178,7 +177,7 @@ export default function BillingPage() {
                         errorEmitter.emit('permission-error', permissionError);
                     });
 
-                    await updateDoc(userRef, { 
+                    updateDoc(userRef, { 
                         subscriptionType: planId,
                         aiUsageCount: 0,
                         clearanceExpiry: expiryDate.toISOString(),
