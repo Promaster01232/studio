@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { LogOut, Loader2, Search, Bell, ShieldAlert, Zap, User } from "lucide-react";
+import { LogOut, Loader2, Search, Bell, ShieldAlert, Zap, User, LogIn } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef, use } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -87,43 +87,58 @@ function Header({ userProfile, unreadCount, isAdmin }: { userProfile: any, unrea
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
-                {isLimited && (
-                    <Button asChild size="sm" className="hidden lg:flex h-9 px-5 rounded-xl bg-primary text-white font-black text-[9px] uppercase tracking-widest gap-2 shadow-lg active:scale-95 transition-all">
-                        <Link href="/dashboard/billing">
-                            <Zap className="h-3 w-3" />
-                            Upgrade
-                        </Link>
-                    </Button>
-                )}
-
-                <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-xl bg-primary/5 border border-primary/10">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/80">{isAdmin ? "Admin" : "User"}</span>
-                </div>
-
-                {!userProfile?.isBlocked && userProfile && (
+                {!userProfile ? (
+                    <div className="flex items-center gap-2">
+                        <Button asChild variant="ghost" size="sm" className="h-9 px-4 font-bold text-[10px] uppercase tracking-widest rounded-xl hover:bg-primary/5">
+                            <Link href="/login">Login</Link>
+                        </Button>
+                        <Button asChild size="sm" className="h-9 px-5 font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg active:scale-95 transition-all">
+                            <Link href="/register">
+                                <LogIn className="mr-1.5 h-3.5 w-3.5" /> Register
+                            </Link>
+                        </Button>
+                    </div>
+                ) : (
                     <>
-                        <SosDialog>
-                            <Button variant="destructive" size="sm" className="font-black gap-2 px-3 h-9 sm:h-10 text-[9px] rounded-xl shadow-lg active:scale-95 transition-all">
-                                <ShieldAlert className="h-4 w-4" />
-                                <span className="hidden xs:inline tracking-wider">SOS</span>
-                            </Button>
-                        </SosDialog>
-                        
-                        <div className="flex items-center gap-2 border-l border-primary/10 pl-3 ml-1">
-                            <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-9 w-9 sm:h-10 sm:w-10 text-muted-foreground hover:text-primary rounded-xl relative group border border-transparent hover:border-primary/5"
-                                asChild
-                            >
-                                <Link href="/dashboard/notifications">
-                                    <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
-                                    {unreadCount > 0 && (
-                                        <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-background" />
-                                    )}
+                        {isLimited && (
+                            <Button asChild size="sm" className="hidden lg:flex h-9 px-5 rounded-xl bg-primary text-white font-black text-[9px] uppercase tracking-widest gap-2 shadow-lg active:scale-95 transition-all">
+                                <Link href="/dashboard/billing">
+                                    <Zap className="h-3 w-3" />
+                                    Upgrade
                                 </Link>
                             </Button>
+                        )}
+
+                        <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-xl bg-primary/5 border border-primary/10">
+                            <span className="text-[8px] font-black uppercase tracking-widest text-primary/80">{isAdmin ? "Admin" : "User"}</span>
                         </div>
+
+                        {!userProfile?.isBlocked && (
+                            <>
+                                <SosDialog>
+                                    <Button variant="destructive" size="sm" className="font-black gap-2 px-3 h-9 sm:h-10 text-[9px] rounded-xl shadow-lg active:scale-95 transition-all">
+                                        <ShieldAlert className="h-4 w-4" />
+                                        <span className="hidden xs:inline tracking-wider">SOS</span>
+                                    </Button>
+                                </SosDialog>
+                                
+                                <div className="flex items-center gap-2 border-l border-primary/10 pl-3 ml-1">
+                                    <Button 
+                                        variant="ghost" 
+                                        size="icon" 
+                                        className="h-9 w-9 sm:h-10 sm:w-10 text-muted-foreground hover:text-primary rounded-xl relative group border border-transparent hover:border-primary/5"
+                                        asChild
+                                    >
+                                        <Link href="/dashboard/notifications">
+                                            <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+                                            {unreadCount > 0 && (
+                                                <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-background" />
+                                            )}
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </>
+                        )}
                     </>
                 )}
             </div>
@@ -193,7 +208,7 @@ export default function DashboardLayout(props: { children: ReactNode, params: Pr
         setProfileLoading(false);
         setUserProfile(null);
         setUnreadCount(0);
-        if (!PUBLIC_DASHBOARD_ROUTES.includes(pathname)) router.replace('/login');
+        // Removed automatic redirect to login to allow public access
       }
     });
 
