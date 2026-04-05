@@ -181,89 +181,99 @@ export default function CreateProfilePage() {
               <FormField
                 control={form.control}
                 name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given Name</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input placeholder="Rajesh" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary pl-11" />
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
-                      </div>
-                    </FormControl>
-                    <FormMessage className="text-[10px] font-bold" />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given Name</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input placeholder="Rajesh" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary pl-11" />
+                          <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-[10px] font-bold" />
+                    </FormItem>
+                  );
+                }}
               />
               <FormField
                 control={form.control}
                 name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surname</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Kumar" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary" />
-                    </FormControl>
-                    <FormMessage className="text-[10px] font-bold" />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surname</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Kumar" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary" />
+                      </FormControl>
+                      <FormMessage className="text-[10px] font-bold" />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
             
             <FormField
               control={form.control}
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Registry Email</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                        <Input placeholder="rajesh.k@example.com" {...field} disabled className="h-12 font-bold opacity-50 bg-muted/20 rounded-xl pl-11" />
-                        <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-[10px] font-bold" />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Registry Email</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                          <Input placeholder="rajesh.k@example.com" {...field} disabled className="h-12 font-bold opacity-50 bg-muted/20 rounded-xl pl-11" />
+                          <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
+                      </div>
+                    </FormControl>
+                    <FormMessage className="text-[10px] font-bold" />
+                  </FormItem>
+                );
+              }}
             />
             
             <FormField
               control={form.control}
               name="mobileNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile Node</Label>
-                  <FormControl>
-                    <div className="relative">
-                        <Input placeholder="+91 12345 67890" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary pl-11" />
-                        <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-[10px] font-bold" />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile Node</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                          <Input placeholder="+91 12345 67890" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary pl-11" />
+                          <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
+                      </div>
+                    </FormControl>
+                    <FormMessage className="text-[10px] font-bold" />
+                  </FormItem>
+                );
+              }}
             />
 
             <FormField
               control={form.control}
               name="userType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory Role</Label>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary">
-                        <SelectValue placeholder="Select role" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="rounded-xl glass">
-                      <SelectItem value="citizen" className="font-bold">Citizen Node</SelectItem>
-                      <SelectItem value="businessman" className="font-bold">Business / MSME</SelectItem>
-                      <SelectItem value="student" className="font-bold">Law Student</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-[10px] font-bold" />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory Role</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary">
+                          <SelectValue placeholder="Select role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="rounded-xl glass">
+                        <SelectItem value="citizen" className="font-bold">Citizen Node</SelectItem>
+                        <SelectItem value="businessman" className="font-bold">Business / MSME</SelectItem>
+                        <SelectItem value="student" className="font-bold">Law Student</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-[10px] font-bold" />
+                  </FormItem>
+                );
+              }}
             />
 
             <Button type="submit" disabled={loading} className="w-full h-16 font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 active:scale-95 transition-all rounded-xl group relative overflow-hidden">
