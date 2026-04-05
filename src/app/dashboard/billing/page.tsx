@@ -5,9 +5,11 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, AlertTriangle, Mail, Clock } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, AlertTriangle, Mail, Clock, Ticket } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
@@ -71,6 +73,13 @@ const plans = [
     }
 ];
 
+const VALID_COUPONS: Record<string, number> = {
+    "NYAYA50": 0.5,
+    "IDEASPARK20": 0.2,
+    "PROBONO": 1.0,
+    "WELCOME10": 0.1
+};
+
 export default function BillingPage() {
     const auth = useAuth();
     const firestore = useFirestore();
@@ -81,6 +90,10 @@ export default function BillingPage() {
     const [processingId, setProcessingId] = useState<string | null>(null);
     const [syncError, setSyncError] = useState<{ paymentId: string, plan: string } | null>(null);
     const [userTransactions, setUserTransactions] = useState<any[]>([]);
+    
+    // Coupon State
+    const [couponInput, setCouponInput] = useState("");
+    const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discount: number } | null>(null);
 
     useEffect(() => {
         if (!auth.currentUser) {
@@ -97,13 +110,11 @@ export default function BillingPage() {
                 setLoading(false);
             },
             async (err) => {
-                // SILENT RECOVERY: Handles permission restriction gracefully
-                console.warn("[STATUTORY SYNC] Profile registry restricted or busy.");
+                console.warn("[STATUTORY SYNC] Profile registry restricted.");
                 setLoading(false);
             }
         );
 
-        // Strictly query for CAPTURED (Success) transactions only
         const transCol = collection(firestore, "transactions");
         const q = query(
             transCol, 
@@ -122,7 +133,6 @@ export default function BillingPage() {
                 setUserTransactions(list);
             },
             async (err) => {
-                // SILENT RECOVERY: Handles permission restriction gracefully for transaction ledger
                 console.warn("[STATUTORY SYNC] Transaction ledger restricted.");
                 setUserTransactions([]);
             }
@@ -131,19 +141,71 @@ export default function BillingPage() {
         return () => { unsub(); unsubTrans(); };
     }, [auth, firestore]);
 
+    const handleApplyCoupon = () => {
+        const code = couponInput.toUpperCase().trim();
+        if (VALID_COUPONS[code] !== undefined) {
+            setAppliedCoupon({ code, discount: VALID_COUPONS[code] });
+            toast({ title: "Coupon Applied", description: `Protocol initialized: ${VALID_COUPONS[code] * 100}% discount node.` });
+        } else {
+            toast({ variant: "destructive", title: "Invalid Code", description: "Coupon not found in statutory registry." });
+        }
+    };
+
     const handleUpgrade = async (planId: string) => {
         if (planId === profile?.subscriptionType) return;
         const plan = plans.find(p => p.id === planId);
         if (!plan || plan.amount === 0) return;
 
+        const discount = appliedCoupon ? appliedCoupon.discount : 0;
+        const finalAmount = Math.max(0, Math.round(plan.amount * (1 - discount)));
+
         setProcessingId(planId);
+
+        // If 100% discount, bypass Razorpay
+        if (finalAmount === 0) {
+            try {
+                const userRef = doc(firestore, "users", auth.currentUser!.uid);
+                const now = new Date();
+                let expiryDate = new Date();
+                if (planId.includes('monthly')) expiryDate.setDate(now.getDate() + 30);
+                else expiryDate.setFullYear(now.getFullYear() + 1);
+
+                const transactionData = {
+                    userId: auth.currentUser!.uid,
+                    userEmail: profile?.email,
+                    userName: `${profile?.firstName} ${profile?.lastName}`,
+                    planId: planId,
+                    amount: 0,
+                    paymentId: `COUPON_${appliedCoupon?.code || 'FREE'}`,
+                    createdAt: serverTimestamp(),
+                    expiryDate: expiryDate.toISOString(),
+                    status: 'CAPTURED'
+                };
+
+                await addDoc(collection(firestore, "transactions"), transactionData);
+                await updateDoc(userRef, { 
+                    subscriptionType: planId,
+                    aiUsageCount: 0,
+                    clearanceExpiry: expiryDate.toISOString(),
+                    lastPaymentId: transactionData.paymentId
+                });
+
+                toast({ title: "Clearance Upgraded", description: "Node upgraded via promo protocol." });
+                setProcessingId(null);
+                router.refresh();
+            } catch (err) {
+                toast({ variant: "destructive", title: "Sync Refused" });
+                setProcessingId(null);
+            }
+            return;
+        }
 
         const options = {
             key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_SY4T9oT2oLGhiS",
-            amount: Math.round(plan.amount * 100), 
+            amount: finalAmount * 100, 
             currency: "INR",
             name: "Nyaya Sahayak",
-            description: `Upgrade: ${plan.name}`,
+            description: `Upgrade: ${plan.name} (${appliedCoupon ? appliedCoupon.code : 'Standard'})`,
             image: "/Logo.png",
             handler: async function (response: any) {
                 const paymentId = response.razorpay_payment_id;
@@ -154,17 +216,17 @@ export default function BillingPage() {
                     if (planId.includes('monthly')) expiryDate.setDate(now.getDate() + 30);
                     else expiryDate.setFullYear(now.getFullYear() + 1);
 
-                    // Strictly record ONLY captured transactions
                     const transactionData = {
                         userId: auth.currentUser!.uid,
                         userEmail: profile?.email,
                         userName: `${profile?.firstName} ${profile?.lastName}`,
                         planId: planId,
-                        amount: plan.amount,
+                        amount: finalAmount,
                         paymentId: paymentId,
                         createdAt: serverTimestamp(),
                         expiryDate: expiryDate.toISOString(),
-                        status: 'CAPTURED'
+                        status: 'CAPTURED',
+                        couponCode: appliedCoupon?.code || null
                     };
 
                     await addDoc(collection(firestore, "transactions"), transactionData);
@@ -185,9 +247,7 @@ export default function BillingPage() {
             },
             prefill: { name: `${profile?.firstName} ${profile?.lastName}`, email: profile?.email },
             theme: { color: "#994B00" },
-            modal: { 
-                ondismiss: () => setProcessingId(null) 
-            }
+            modal: { ondismiss: () => setProcessingId(null) }
         };
 
         try {
@@ -226,15 +286,47 @@ export default function BillingPage() {
             <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
             <PageHeader title="Statutory Clearance" description="Monitor forensic credits and manage clearance nodes." />
 
+            {/* Coupon System Ingress */}
+            <div className="max-w-md ml-0 space-y-4 pb-8">
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">Promo Registry Node</Label>
+                <div className="flex gap-3">
+                    <Input 
+                        placeholder="Enter Coupon (e.g. NYAYA50)" 
+                        value={couponInput} 
+                        onChange={(e) => setCouponInput(e.target.value)}
+                        className="h-12 glass border-primary/10 font-bold uppercase rounded-xl px-5"
+                    />
+                    <Button 
+                        onClick={handleApplyCoupon}
+                        className="h-12 px-8 font-black uppercase text-[10px] tracking-widest rounded-xl shadow-lg active:scale-95"
+                    >
+                        Apply
+                    </Button>
+                </div>
+                {appliedCoupon && (
+                    <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] font-bold text-green-600 uppercase tracking-widest flex items-center gap-2">
+                        <CheckCircle2 className="h-3 w-3" /> Protocol Active: {appliedCoupon.code} ({appliedCoupon.discount * 100}% off)
+                    </motion.p>
+                )}
+            </div>
+
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
                 {plans.map((plan) => {
                     const isActive = profile?.subscriptionType === plan.id;
                     const isProcessing = processingId === plan.id;
+                    const discount = appliedCoupon ? appliedCoupon.discount : 0;
+                    const displayPrice = plan.amount === 0 ? 0 : Math.max(0, Math.round(plan.amount * (1 - discount)));
+                    
                     return (
-                        <Card key={plan.id} className={cn("h-full flex flex-col glass rounded-[2.5rem] border-primary/5", isActive && "ring-2 ring-primary")}>
+                        <Card key={plan.id} className={cn("h-full flex flex-col glass rounded-[2.5rem] border-primary/5 group transition-all duration-500 hover:shadow-2xl", isActive && "ring-2 ring-primary shadow-primary/10")}>
                             <CardHeader className="p-8 pb-4 text-left">
-                                <h3 className="text-xl font-black tracking-tight">{plan.name}</h3>
-                                <div className="pt-6"><span className="text-4xl font-black">₹{plan.amount}</span></div>
+                                <h3 className="text-xl font-black tracking-tight uppercase leading-none">{plan.name}</h3>
+                                <div className="pt-6 flex items-baseline gap-2">
+                                    <span className="text-4xl font-black">₹{displayPrice}</span>
+                                    {discount > 0 && plan.amount > 0 && (
+                                        <span className="text-sm text-muted-foreground line-through opacity-40">₹{plan.amount}</span>
+                                    )}
+                                </div>
                             </CardHeader>
                             <CardContent className="p-8 pt-4 flex-grow space-y-6 text-left">
                                 <div className="space-y-3">
@@ -247,7 +339,7 @@ export default function BillingPage() {
                                 </div>
                             </CardContent>
                             <CardFooter className="p-8 pt-0">
-                                <Button onClick={() => handleUpgrade(plan.id)} disabled={isActive || isProcessing} className="w-full h-12 font-black uppercase text-[10px] rounded-xl shadow-lg">
+                                <Button onClick={() => handleUpgrade(plan.id)} disabled={isActive || isProcessing} className="w-full h-12 font-black uppercase text-[10px] rounded-xl shadow-lg active:scale-95 group-hover:shadow-primary/20">
                                     {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "Active Tier" : "Initialize Upgrade"}
                                 </Button>
                             </CardFooter>
