@@ -75,10 +75,11 @@ const plans = [
 ];
 
 const VALID_COUPONS: Record<string, number> = {
-    "NYAYA50": 0.5,
+    "NYAYA50": 0.25, // Updated to 25% discount as requested
     "IDEASPARK20": 0.2,
     "PROBONO": 1.0,
-    "WELCOME10": 0.1
+    "WELCOME10": 0.1,
+    "ABCD12": 0.15 // New example node
 };
 
 export default function BillingPage() {
@@ -290,7 +291,7 @@ export default function BillingPage() {
                 <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">Promo Registry Node</Label>
                 <div className="flex gap-3">
                     <Input 
-                        placeholder="Enter Coupon (e.g. NYAYA50)" 
+                        placeholder="Enter Coupon (e.g. ABCD12)" 
                         value={couponInput} 
                         onChange={(e) => setCouponInput(e.target.value)}
                         className="h-12 glass border-primary/10 font-bold uppercase rounded-xl px-5"

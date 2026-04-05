@@ -4,7 +4,7 @@ import Image from 'next/image';
 /**
  * Institutional Identity Node (Logo)
  * 
- * Optimized for Largest Contentful Paint (LCP) with priority rendering.
+ * Optimized for Largest Contentful Paint (LCP) with priority rendering support.
  * Added refined shadow and scaling for professional design feel.
  */
 export function Logo({ className, imageClassName, priority = true }: { className?: string, imageClassName?: string, priority?: boolean }) {
