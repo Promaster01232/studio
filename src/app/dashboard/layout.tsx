@@ -294,7 +294,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <DropdownMenuRadioItem value="dark" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Dark Mode</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator className="my-2 opacity-5" />
-                <DropdownMenuItem onClick={handleLogout} className="rounded-lg h-12 font-black text-[10px] uppercase tracking-widest text-destructive focus:text-destructive focus:bg-destructive/10 gap-3 cursor-pointer transition-all">
+                <DropdownMenuItem onClick={handleLogout} className="rounded-lg h-12 font-black text-[10px] uppercase tracking-widest text-destructive focus:text-destructive focus:bg-destructive/5 gap-3 cursor-pointer transition-all">
                     <LogOut className="h-4 w-4" /> Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
