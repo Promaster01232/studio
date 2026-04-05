@@ -45,16 +45,18 @@ service cloud.firestore {
 
     // Notifications collection: Institutional Alerts
     match /notifications/{notificationId} {
-      allow get, list: if isAuthenticated() && resource != null && resource.data.userId == request.auth.uid;
-      allow get, list: if isAdmin();
+      allow get: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow list: if isAuthenticated() && request.query.limit <= 100 && request.query.filters.userId == request.auth.uid;
+      allow list: if isAdmin();
       allow create: if isAuthenticated();
-      allow update, delete: if isAuthenticated() && resource != null && resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
 
     // Transactions collection: Statutory Ledger
     match /transactions/{transactionId} {
-      allow get, list: if isAuthenticated() && resource != null && resource.data.userId == request.auth.uid;
-      allow get, list: if isAdmin();
+      allow get: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow list: if isAuthenticated() && request.query.filters.userId == request.auth.uid;
+      allow list: if isAdmin();
       allow create: if isAuthenticated();
     }
 

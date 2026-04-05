@@ -168,7 +168,8 @@ export default function CreateProfilePage() {
               <FormField
                 control={form.control}
                 name="firstName"
-                render={({ field }) => (
+                render={({ field }) => {
+                  return (
                     <FormItem>
                       <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given Name</FormLabel>
                       <FormControl>
@@ -179,12 +180,14 @@ export default function CreateProfilePage() {
                       </FormControl>
                       <FormMessage className="text-[10px] font-bold" />
                     </FormItem>
-                )}
+                  );
+                }}
               />
               <FormField
                 control={form.control}
                 name="lastName"
-                render={({ field }) => (
+                render={({ field }) => {
+                  return (
                     <FormItem>
                       <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surname</FormLabel>
                       <FormControl>
@@ -192,14 +195,16 @@ export default function CreateProfilePage() {
                       </FormControl>
                       <FormMessage className="text-[10px] font-bold" />
                     </FormItem>
-                )}
+                  );
+                }}
               />
             </div>
             
             <FormField
               control={form.control}
               name="email"
-              render={({ field }) => (
+              render={({ field }) => {
+                return (
                   <FormItem>
                     <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Registry Email</FormLabel>
                     <FormControl>
@@ -210,13 +215,15 @@ export default function CreateProfilePage() {
                     </FormControl>
                     <FormMessage className="text-[10px] font-bold" />
                   </FormItem>
-              )}
+                );
+              }}
             />
             
             <FormField
               control={form.control}
               name="mobileNumber"
-              render={({ field }) => (
+              render={({ field }) => {
+                return (
                   <FormItem>
                     <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile Node</FormLabel>
                     <FormControl>
@@ -227,13 +234,15 @@ export default function CreateProfilePage() {
                     </FormControl>
                     <FormMessage className="text-[10px] font-bold" />
                   </FormItem>
-              )}
+                );
+              }}
             />
 
             <FormField
               control={form.control}
               name="userType"
-              render={({ field }) => (
+              render={({ field }) => {
+                return (
                   <FormItem>
                     <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory Role</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -250,7 +259,8 @@ export default function CreateProfilePage() {
                     </Select>
                     <FormMessage className="text-[10px] font-bold" />
                   </FormItem>
-              )}
+                );
+              }}
             />
 
             <Button type="submit" disabled={loading} className="w-full h-16 font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 active:scale-95 transition-all rounded-xl group relative overflow-hidden">
