@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
+import { motion } from "framer-motion";
 
 const plans = [
     {
@@ -161,7 +162,6 @@ export default function BillingPage() {
 
         setProcessingId(planId);
 
-        // If 100% discount, bypass Razorpay
         if (finalAmount === 0) {
             try {
                 const userRef = doc(firestore, "users", auth.currentUser!.uid);
@@ -286,7 +286,6 @@ export default function BillingPage() {
             <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
             <PageHeader title="Statutory Clearance" description="Monitor forensic credits and manage clearance nodes." />
 
-            {/* Coupon System Ingress */}
             <div className="max-w-md ml-0 space-y-4 pb-8">
                 <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">Promo Registry Node</Label>
                 <div className="flex gap-3">
