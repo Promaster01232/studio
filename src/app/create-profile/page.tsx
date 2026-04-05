@@ -15,8 +15,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, ShieldCheck, User, Smartphone, Globe, Activity } from "lucide-react";
 import { validateUserDetails } from "@/ai/flows/validate-user-details";
-import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 import { Logo } from "@/components/logo";
 
 const profileSchema = z.object({
@@ -85,15 +83,12 @@ export default function CreateProfilePage() {
 
     try {
       try {
-        const validation = await validateUserDetails({
+        await validateUserDetails({
           mobileNumber: data.mobileNumber,
           userType: data.userType,
         });
-        if (!validation.isValid) {
-          console.warn("[SECURITY] Mobile audit flag:", validation.reason);
-        }
       } catch (aiError) {
-        console.warn("AI Validation Bypass: Validation node busy. Proceeding with statutory waiver.");
+        console.warn("AI Validation node busy.");
       }
 
       const userProfile = {
@@ -107,29 +102,21 @@ export default function CreateProfilePage() {
       };
       
       const userDocRef = doc(firestore, "users", auth.currentUser.uid);
-      
-      await setDoc(userDocRef, userProfile).catch(async (serverError) => {
-          const permissionError = new FirestorePermissionError({
-              path: userDocRef.path,
-              operation: 'create',
-              requestResourceData: userProfile,
-          } satisfies SecurityRuleContext, serverError);
-          errorEmitter.emit('permission-error', permissionError);
-      });
+      await setDoc(userDocRef, userProfile);
       
       await set(ref(rtdb, `users/${auth.currentUser.uid}`), {
           ...userProfile,
           createdAt: Date.now()
-      }).catch(err => console.warn("RTDB sync deferred."));
+      }).catch(() => {});
 
       toast({
-          title: "Identity Synchronized",
+          title: "Identity Activated",
           description: "Welcome to your Nyaya Sahayak terminal.",
       });
       router.push("/dashboard");
 
     } catch (error: any) {
-        console.error("Profile synchronization issue:", error);
+        console.error("Profile sync issue:", error);
         router.push("/dashboard");
     }
   };
@@ -153,7 +140,7 @@ export default function CreateProfilePage() {
                 <Logo className="h-24 w-24 group-hover:scale-110 transition-transform duration-700" priority={true} />
             </div>
             <div className="space-y-3">
-                <h2 className="text-3xl font-black font-headline tracking-tighter uppercase leading-tight">Identity <br /> Calibration</h2>
+                <h2 className="text-3xl font-black tracking-tighter uppercase leading-tight">Identity <br /> Calibration</h2>
                 <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest leading-relaxed max-w-[240px] mx-auto">Finalizing your institutional access nodes for elite AI assistance.</p>
             </div>
             <div className="flex flex-col gap-3">
@@ -171,7 +158,7 @@ export default function CreateProfilePage() {
 
       <div className="p-8 sm:p-16 flex flex-col justify-center">
         <div className="space-y-1 mb-10 text-left">
-            <h1 className="text-3xl font-black font-headline tracking-tighter uppercase text-foreground leading-none">Onboarding</h1>
+            <h1 className="text-3xl font-black tracking-tighter uppercase text-foreground leading-none">Onboarding</h1>
             <p className="text-sm text-muted-foreground font-medium">Map your personal registry nodes.</p>
         </div>
 
@@ -181,8 +168,7 @@ export default function CreateProfilePage() {
               <FormField
                 control={form.control}
                 name="firstName"
-                render={({ field }) => {
-                  return (
+                render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given Name</FormLabel>
                       <FormControl>
@@ -193,14 +179,12 @@ export default function CreateProfilePage() {
                       </FormControl>
                       <FormMessage className="text-[10px] font-bold" />
                     </FormItem>
-                  );
-                }}
+                )}
               />
               <FormField
                 control={form.control}
                 name="lastName"
-                render={({ field }) => {
-                  return (
+                render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surname</FormLabel>
                       <FormControl>
@@ -208,16 +192,14 @@ export default function CreateProfilePage() {
                       </FormControl>
                       <FormMessage className="text-[10px] font-bold" />
                     </FormItem>
-                  );
-                }}
+                )}
               />
             </div>
             
             <FormField
               control={form.control}
               name="email"
-              render={({ field }) => {
-                return (
+              render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Registry Email</FormLabel>
                     <FormControl>
@@ -228,15 +210,13 @@ export default function CreateProfilePage() {
                     </FormControl>
                     <FormMessage className="text-[10px] font-bold" />
                   </FormItem>
-                );
-              }}
+              )}
             />
             
             <FormField
               control={form.control}
               name="mobileNumber"
-              render={({ field }) => {
-                return (
+              render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile Node</FormLabel>
                     <FormControl>
@@ -247,15 +227,13 @@ export default function CreateProfilePage() {
                     </FormControl>
                     <FormMessage className="text-[10px] font-bold" />
                   </FormItem>
-                );
-              }}
+              )}
             />
 
             <FormField
               control={form.control}
               name="userType"
-              render={({ field }) => {
-                return (
+              render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory Role</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -272,8 +250,7 @@ export default function CreateProfilePage() {
                     </Select>
                     <FormMessage className="text-[10px] font-bold" />
                   </FormItem>
-                );
-              }}
+              )}
             />
 
             <Button type="submit" disabled={loading} className="w-full h-16 font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 active:scale-95 transition-all rounded-xl group relative overflow-hidden">

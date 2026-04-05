@@ -21,8 +21,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Nyaya Sahayak | India's Premier AI Legal Assistant & Case Auditor",
-  description: "Access elite AI legal assistance on nyayasahayak.in. Forensic case audits, BNS statutory scanning, and automated document drafting for Bharat's citizens. Get free legal guidance instantly.",
+  title: "Nyaya Sahayak | India's Premier AI Legal Assistant & Forensic Auditor",
+  description: "Access elite AI legal assistance on nyayasahayak.in. Forensic case audits, BNS statutory scanning, and automated document drafting for Bharat's citizens.",
   keywords: [
     "AI Legal Assistant India", 
     "Nyaya Sahayak", 
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://nyayasahayak.in" },
   openGraph: {
     title: "Nyaya Sahayak | Your AI-Powered Legal Co-Pilot",
-    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape. Empowering 1.4 billion citizens.",
+    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
     images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Logo" }],
@@ -55,7 +55,15 @@ export const metadata: Metadata = {
     description: 'Transforming legal access with institutional AI intelligence.',
     images: ['/Logo.png'],
   },
-  icons: { icon: '/Logo.png', shortcut: '/Logo.png', apple: '/Logo.png' },
+  icons: { 
+    icon: [
+      { url: '/Logo.png', sizes: '32x32', type: 'image/png' },
+      { url: '/Logo.png', sizes: '192x192', type: 'image/png' },
+      { url: '/Logo.png', sizes: '512x512', type: 'image/png' },
+    ],
+    shortcut: '/Logo.png', 
+    apple: '/Logo.png' 
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -75,20 +83,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     }
   };
 
-  const softwareSchema = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Nyaya Sahayak AI",
-    "operatingSystem": "Web",
-    "applicationCategory": "LegalApplication",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
-  };
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <Script id="structured-data-org" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
-        <Script id="structured-data-software" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>
         <ThemeProvider>

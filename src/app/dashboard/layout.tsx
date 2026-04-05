@@ -192,7 +192,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 setProfileLoading(false);
             },
             async (err) => {
-                console.warn("[STATUTORY SYNC] Profile registry restricted or busy.");
+                console.warn("[STATUTORY SYNC] Profile registry restricted.");
                 setProfileLoading(false);
             }
         );
