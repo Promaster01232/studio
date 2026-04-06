@@ -75,11 +75,12 @@ const plans = [
 ];
 
 const VALID_COUPONS: Record<string, number> = {
-    "NYAYA50": 0.25, // Updated to 25% discount as requested
+    "NYAYA50": 0.25,
     "IDEASPARK20": 0.2,
     "PROBONO": 1.0,
     "WELCOME10": 0.1,
-    "ABCD12": 0.15 // New example node
+    "ABCD12": 0.15,
+    "PIYUSH11": 0.99 // Custom node for ₹1 purchases
 };
 
 export default function BillingPage() {
@@ -147,7 +148,7 @@ export default function BillingPage() {
         const code = couponInput.toUpperCase().trim();
         if (VALID_COUPONS[code] !== undefined) {
             setAppliedCoupon({ code, discount: VALID_COUPONS[code] });
-            toast({ title: "Coupon Applied", description: `Protocol initialized: ${VALID_COUPONS[code] * 100}% discount node.` });
+            toast({ title: "Coupon Applied", description: `Protocol initialized: ${code === 'PIYUSH11' ? '₹1 special tier' : (VALID_COUPONS[code] * 100) + '% discount node'}.` });
         } else {
             toast({ variant: "destructive", title: "Invalid Code", description: "Coupon not found in statutory registry." });
         }
@@ -159,47 +160,14 @@ export default function BillingPage() {
         if (!plan || plan.amount === 0) return;
 
         const discount = appliedCoupon ? appliedCoupon.discount : 0;
-        const finalAmount = Math.max(0, Math.round(plan.amount * (1 - discount)));
+        let finalAmount = Math.max(0, Math.round(plan.amount * (1 - discount)));
+        
+        // PIYUSH11 PROTOCOL: Absolute override to 1 INR
+        if (appliedCoupon?.code === 'PIYUSH11') {
+            finalAmount = 1;
+        }
 
         setProcessingId(planId);
-
-        if (finalAmount === 0) {
-            try {
-                const userRef = doc(firestore, "users", auth.currentUser!.uid);
-                const now = new Date();
-                let expiryDate = new Date();
-                if (planId.includes('monthly')) expiryDate.setDate(now.getDate() + 30);
-                else expiryDate.setFullYear(now.getFullYear() + 1);
-
-                const transactionData = {
-                    userId: auth.currentUser!.uid,
-                    userEmail: profile?.email,
-                    userName: `${profile?.firstName} ${profile?.lastName}`,
-                    planId: planId,
-                    amount: 0,
-                    paymentId: `COUPON_${appliedCoupon?.code || 'FREE'}`,
-                    createdAt: serverTimestamp(),
-                    expiryDate: expiryDate.toISOString(),
-                    status: 'CAPTURED'
-                };
-
-                await addDoc(collection(firestore, "transactions"), transactionData);
-                await updateDoc(userRef, { 
-                    subscriptionType: planId,
-                    aiUsageCount: 0,
-                    clearanceExpiry: expiryDate.toISOString(),
-                    lastPaymentId: transactionData.paymentId
-                });
-
-                toast({ title: "Clearance Upgraded", description: "Node upgraded via promo protocol." });
-                setProcessingId(null);
-                router.refresh();
-            } catch (err) {
-                toast({ variant: "destructive", title: "Sync Refused" });
-                setProcessingId(null);
-            }
-            return;
-        }
 
         const options = {
             key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_SY4T9oT2oLGhiS",
@@ -265,8 +233,8 @@ export default function BillingPage() {
                 <Card className="border-amber-500/20 bg-amber-500/5 shadow-2xl rounded-[2.5rem] overflow-hidden">
                     <CardHeader className="p-8 sm:p-10 text-center">
                         <AlertTriangle className="h-20 w-20 text-amber-600 mx-auto mb-6" />
-                        <CardTitle className="text-3xl font-black font-headline tracking-tighter uppercase">Sync Pending</CardTitle>
-                        <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4">
+                        <CardTitle className="text-3xl font-black font-headline tracking-tighter uppercase text-left">Sync Pending</CardTitle>
+                        <CardDescription className="text-sm font-medium pt-4 text-muted-foreground leading-relaxed px-4 text-left">
                             Payment captured, but profile sync failed. Contact support with TXID: {syncError.paymentId}
                         </CardDescription>
                     </CardHeader>
@@ -291,7 +259,7 @@ export default function BillingPage() {
                 <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">Promo Registry Node</Label>
                 <div className="flex gap-3">
                     <Input 
-                        placeholder="Enter Coupon (e.g. ABCD12)" 
+                        placeholder="Enter Coupon (e.g. PIYUSH11)" 
                         value={couponInput} 
                         onChange={(e) => setCouponInput(e.target.value)}
                         className="h-12 glass border-primary/10 font-bold uppercase rounded-xl px-5"
@@ -305,7 +273,7 @@ export default function BillingPage() {
                 </div>
                 {appliedCoupon && (
                     <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] font-bold text-green-600 uppercase tracking-widest flex items-center gap-2">
-                        <CheckCircle2 className="h-3 w-3" /> Protocol Active: {appliedCoupon.code} ({appliedCoupon.discount * 100}% off)
+                        <CheckCircle2 className="h-3 w-3" /> Protocol Active: {appliedCoupon.code} {appliedCoupon.code === 'PIYUSH11' ? '(₹1 Tier)' : `(${(appliedCoupon.discount * 100)}% off)`}
                     </motion.p>
                 )}
             </div>
@@ -315,7 +283,11 @@ export default function BillingPage() {
                     const isActive = profile?.subscriptionType === plan.id;
                     const isProcessing = processingId === plan.id;
                     const discount = appliedCoupon ? appliedCoupon.discount : 0;
-                    const displayPrice = plan.amount === 0 ? 0 : Math.max(0, Math.round(plan.amount * (1 - discount)));
+                    
+                    let displayPrice = plan.amount === 0 ? 0 : Math.max(0, Math.round(plan.amount * (1 - discount)));
+                    if (appliedCoupon?.code === 'PIYUSH11' && plan.amount > 0) {
+                        displayPrice = 1;
+                    }
                     
                     return (
                         <Card key={plan.id} className={cn("h-full flex flex-col glass rounded-[2.5rem] border-primary/5 group transition-all duration-500 hover:shadow-2xl", isActive && "ring-2 ring-primary shadow-primary/10")}>
@@ -323,7 +295,7 @@ export default function BillingPage() {
                                 <h3 className="text-xl font-black tracking-tight uppercase leading-none">{plan.name}</h3>
                                 <div className="pt-6 flex items-baseline gap-2">
                                     <span className="text-4xl font-black">₹{displayPrice}</span>
-                                    {discount > 0 && plan.amount > 0 && (
+                                    {plan.amount > displayPrice && (
                                         <span className="text-sm text-muted-foreground line-through opacity-40">₹{plan.amount}</span>
                                     )}
                                 </div>
@@ -352,7 +324,7 @@ export default function BillingPage() {
                 <div className="flex items-center justify-between border-b border-primary/5 pb-4">
                     <div className="flex items-center gap-3">
                         <History className="h-5 w-5 text-primary" />
-                        <h2 className="text-xl font-black font-headline tracking-tighter uppercase leading-none">Verified Capture Ledger</h2>
+                        <h2 className="text-xl font-black font-headline tracking-tighter uppercase leading-none text-left">Verified Capture Ledger</h2>
                     </div>
                     <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest bg-primary/5 text-primary/60 border-primary/10">Success Protocol Only</Badge>
                 </div>

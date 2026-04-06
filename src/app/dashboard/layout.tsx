@@ -65,7 +65,7 @@ function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }
     
     return (
         <header className={cn(
-            "sticky top-0 z-[40] flex h-14 sm:h-16 items-center gap-4 border-b px-4 sm:px-8 transition-all",
+            "sticky top-0 z-[40] flex h-14 items-center gap-4 border-b px-4 sm:px-6 transition-all",
             "bg-background/90 backdrop-blur-xl"
         )}>
             <div className="flex items-center gap-3 md:hidden">
@@ -76,9 +76,9 @@ function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 <SearchDialog>
                     <div className="w-full max-w-md cursor-pointer group transition-all">
-                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[10px] uppercase tracking-widest text-muted-foreground/50 rounded-xl bg-muted/20 border border-primary/5 group-hover:border-primary/20 transition-all relative text-left">
+                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-9 font-bold text-[10px] uppercase tracking-widest text-muted-foreground/50 rounded-xl bg-muted/20 border border-primary/5 group-hover:border-primary/20 transition-all relative text-left">
                             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                            <span>Search for tools and laws...</span>
+                            <span>Search registry...</span>
                             <div className="absolute right-3 top-1/2 -translate-y-1/2">
                                 <kbd className="h-5 rounded border bg-background px-1.5 font-mono text-[9px] font-black text-muted-foreground opacity-100 shadow-sm">
                                     ⌘K
@@ -111,20 +111,16 @@ function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }
                         {isLimited && (
                             <Button asChild size="sm" className="hidden lg:flex h-9 px-5 rounded-xl bg-primary text-white font-black text-[9px] uppercase tracking-widest gap-2 shadow-lg active:scale-95 transition-all">
                                 <Link href="/dashboard/billing">
-                                    <Zap className="h-3 w-3" />
+                                    <Zap className="h-3" />
                                     Upgrade
                                 </Link>
                             </Button>
                         )}
 
-                        <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-xl bg-primary/5 border border-primary/10">
-                            <span className="text-[8px] font-black uppercase tracking-widest text-primary/80">{isAdmin ? "Admin" : "User"}</span>
-                        </div>
-
                         {!userProfile?.isBlocked && (
                             <>
                                 <SosDialog>
-                                    <Button variant="destructive" size="sm" className="font-black gap-2 px-3 h-9 sm:h-10 text-[9px] rounded-xl shadow-lg active:scale-95 transition-all">
+                                    <Button variant="destructive" size="sm" className="font-black gap-2 px-3 h-9 text-[9px] rounded-xl shadow-lg active:scale-95 transition-all">
                                         <ShieldAlert className="h-4 w-4" />
                                         <span className="hidden xs:inline tracking-wider">SOS</span>
                                     </Button>
@@ -134,11 +130,11 @@ function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }
                                     <Button 
                                         variant="ghost" 
                                         size="icon" 
-                                        className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl border border-transparent hover:border-primary/5 hover:bg-primary/5 overflow-hidden p-0"
+                                        className="h-9 w-9 rounded-xl border border-transparent hover:border-primary/5 hover:bg-primary/5 overflow-hidden p-0"
                                         asChild
                                     >
                                         <Link href="/dashboard/profile">
-                                            <Avatar className="h-7 w-7 sm:h-8 sm:w-8 border border-primary/10 shadow-sm">
+                                            <Avatar className="h-7 w-7 border border-primary/10 shadow-sm">
                                                 <AvatarImage src={userProfile.photoURL} className="object-cover" />
                                                 <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">
                                                     {userProfile.firstName?.charAt(0)}
@@ -239,12 +235,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon" className="border-r border-primary/5 glass">
-        <SidebarHeader className="p-5 mb-1 border-b border-primary/5">
+        <SidebarHeader className="p-4 mb-1 border-b border-primary/5">
           <Link href="/dashboard" className="flex items-center gap-3 transition-all hover:opacity-80 active:scale-95 group-data-[collapsible=icon]:justify-center group">
             <Logo className="h-8 w-8 border-none shadow-none p-0 bg-transparent" priority={true} />
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
-              <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none">
-                  Nyaya Assistant
+              <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none animate-pan">
+                  Nyaya Sahayak
               </span>
             </div>
           </Link>
@@ -252,15 +248,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <SidebarContent className="pt-2 px-2">
           <SidebarNav isAdmin={isAdmin} isGuest={!userProfile} />
           {isLimited && !profileLoading && (
-            <div className="px-3 py-6 group-data-[collapsible=icon]:hidden">
+            <div className="px-3 py-4 group-data-[collapsible=icon]:hidden">
                 <Card className="bg-primary/5 border-primary/5 rounded-2xl overflow-hidden shadow-sm">
-                    <div className="p-5 space-y-4 text-left">
+                    <div className="p-4 space-y-3 text-left">
                         <div className="flex items-center gap-2">
                             <Zap className="h-3.5 w-3.5 text-primary" />
-                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Upgrade Account</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Upgrade Node</span>
                         </div>
-                        <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">Unlock advanced analysis and drafting tools.</p>
-                        <Button asChild size="sm" className="w-full h-9 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg text-center">
+                        <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">Unlock elite forensic tools.</p>
+                        <Button asChild size="sm" className="w-full h-8 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg text-center">
                             <Link href="/dashboard/billing">View Plans</Link>
                         </Button>
                     </div>
@@ -273,9 +269,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left group data-[state=collapsed]:w-10 data-[state=collapsed]:justify-center hover:bg-primary/5 rounded-xl transition-all">
-                  <Avatar className="h-9 w-9 border border-background shadow-md rounded-lg">
+                  <Avatar className="h-8 w-8 border border-background shadow-md rounded-lg">
                       <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                      <AvatarFallback className="font-black bg-primary/5 text-primary text-xs">{userProfile.firstName?.charAt(0)}</AvatarFallback>
+                      <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">{userProfile.firstName?.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 truncate group-data-[state=collapsed]:hidden text-left">
                     <div className="font-black text-xs truncate tracking-tight text-foreground leading-tight uppercase">{userProfile.firstName}</div>
@@ -311,7 +307,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <main className="flex-1 overflow-y-auto custom-scrollbar relative">
             <AnimatePresence mode="wait">
                 {showContent ? (
-                    <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-4 sm:p-8 min-h-[calc(100vh-64px)] flex flex-col">
+                    <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-4 sm:p-6 min-h-[calc(100vh-64px)] flex flex-col">
                         <div className="flex-1">{children}</div>
                         <Footer />
                     </motion.div>

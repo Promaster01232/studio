@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -194,7 +193,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                   <div className="flex-1 space-y-10 text-center lg:text-left">
                       <div className="space-y-6">
                           <h1 className="text-4xl sm:text-7xl font-black tracking-tight text-foreground leading-[1.1]">
-                              Nyaya <span className="text-primary italic">{text}</span>
+                              Nyaya <span className="animate-pan italic">{text}</span>
                           </h1>
                           <p className="text-base sm:text-xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
                               India's premier AI legal assistant. Analyze cases, draft documents, and get answers instantly with professional-grade intelligence.
