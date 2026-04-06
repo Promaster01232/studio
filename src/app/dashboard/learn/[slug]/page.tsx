@@ -15,13 +15,13 @@ import { topics } from "../data";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export default function LearnTopicDetailPage(props: { 
-  params: Promise<{ slug: string }>,
-  searchParams: Promise<any>
+export default function LearnTopicDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }>
 }) {
-    // Unwrap dynamic props for Next.js 15 compliance
-    const { slug } = use(props.params);
-    use(props.searchParams);
+    // Unwrap dynamic params for Next.js 15 compliance
+    const { slug } = use(params);
     
     const [displayLang, setDisplayLang] = useState<'en' | 'hi'>('en');
 

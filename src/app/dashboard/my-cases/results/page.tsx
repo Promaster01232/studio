@@ -213,13 +213,16 @@ async function SearchResultsComponent({ searchParams }: { searchParams: CaseSear
 }
 
 
-export default async function SearchResultsPage(props: { 
+export default async function SearchResultsPage({ 
+  params, 
+  searchParams 
+}: { 
   params: Promise<any>, 
   searchParams: Promise<CaseSearchParams> 
 }) {
     // In Next.js 15, params and searchParams must be awaited in Server Components
-    await props.params;
-    const resolvedSearchParams = await props.searchParams;
+    await params;
+    const resolvedSearchParams = await searchParams;
     
     return (
         <Suspense fallback={<SearchResultsSkeleton />}>

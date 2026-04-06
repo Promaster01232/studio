@@ -104,13 +104,13 @@ interface Post {
     postType?: string;
 }
 
-export default function UserPublicProfilePage(props: { 
-  params: Promise<{ uid: string }>,
-  searchParams: Promise<any>
+export default function UserPublicProfilePage({ 
+  params 
+}: { 
+  params: Promise<{ uid: string }>
 }) {
-  // Unwrap dynamic props for Next.js 15 compliance
-  const { uid } = use(props.params);
-  use(props.searchParams);
+  // Unwrap dynamic params for Next.js 15 compliance
+  const { uid } = use(params);
 
   const firestore = useFirestore();
   const auth = useAuth();
