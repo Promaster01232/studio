@@ -104,7 +104,16 @@ const actionChips = [
     { label: "Scan papers", icon: Search, href: "/dashboard/document-intelligence" },
 ];
 
+<<<<<<< HEAD
 export default function DashboardHomePage() {
+=======
+  const [text, setText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
+  const fullText = 'Sahayak';
+  const { playSound } = useSoundEffect();
+  
+  const firestore = useFirestore();
+>>>>>>> f63228a (example chnage ABCD (_for element <Input>_))
   const auth = useAuth();
   const firestore = useFirestore();
   const { toast } = useToast();
