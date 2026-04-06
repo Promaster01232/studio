@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, use } from "react";
@@ -44,8 +45,6 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 interface UserRecord {
   uid: string;
@@ -179,11 +178,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                 setLoading(false);
             },
             async (err) => {
-                const permissionError = new FirestorePermissionError({
-                    path: usersCol.path,
-                    operation: 'list',
-                } satisfies SecurityRuleContext, err);
-                errorEmitter.emit('permission-error', permissionError);
+                console.error("[STATUTORY GUARD] Citizen registry listener denied:", err);
                 setLoading(false);
             }
         );
@@ -196,11 +191,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                 setTransactions(list.sort((a, b) => (b.createdAt?.toMillis ? b.createdAt.toMillis() : 0) - (a.createdAt?.toMillis ? a.createdAt.toMillis() : 0)));
             },
             async (err) => {
-                const permissionError = new FirestorePermissionError({
-                    path: transCol.path,
-                    operation: 'list',
-                } satisfies SecurityRuleContext, err);
-                errorEmitter.emit('permission-error', permissionError);
+                console.error("[STATUTORY GUARD] Ledger listener denied:", err);
             }
         );
 

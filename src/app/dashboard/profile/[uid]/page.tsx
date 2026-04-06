@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
@@ -131,6 +132,9 @@ export default function UserPublicProfilePage(props: {
         setProfile({ ...docSnap.data(), uid: docSnap.id });
       }
       setLoading(false);
+    }, (err) => {
+        console.error("[STATUTORY GUARD] Profile read denied:", err);
+        setLoading(false);
     });
 
     const postsRef = collection(firestore, "posts");
