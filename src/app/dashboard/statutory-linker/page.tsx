@@ -4,7 +4,7 @@
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Zap, ArrowLeft, Globe, Fingerprint, Activity, Layers } from "lucide-react";
+import { Zap, ArrowLeft, ArrowRight, Globe, Fingerprint, Activity, Layers } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
