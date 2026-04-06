@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -259,7 +260,7 @@ export default function BillingPage() {
                 <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-primary ml-1">Promo Registry Node</Label>
                 <div className="flex gap-3">
                     <Input 
-                        placeholder="Enter Coupon (e.g. PIYUSH11)" 
+                        placeholder="Enter Coupon (e.g. ABCD12)" 
                         value={couponInput} 
                         onChange={(e) => setCouponInput(e.target.value)}
                         className="h-12 glass border-primary/10 font-bold uppercase rounded-xl px-5"

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -146,7 +147,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
 
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
-  const fullText = 'Assistant';
+  const fullText = 'Sahayak';
   const { playSound } = useSoundEffect();
   
   const firestore = useFirestore();
