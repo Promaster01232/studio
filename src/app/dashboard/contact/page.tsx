@@ -82,7 +82,7 @@ export default function ContactUsPage() {
               Designed & Developed by
             </p>
             <div className="flex items-center justify-center gap-2 transition-transform group-hover:scale-105 duration-300">
-                <Linkbulb className="h-6 w-6 sm:h-7 sm:w-7 text-primary fill-primary/10" />
+                <Lightbulb className="h-6 w-6 sm:h-7 sm:w-7 text-primary fill-primary/10" />
                 <h2 className="text-xl sm:text-2xl font-black font-headline text-primary tracking-tighter">
                     IdeaSpark
                 </h2>
