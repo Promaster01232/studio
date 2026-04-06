@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { simplifyJargonAction, type JargonState } from "./actions";
-import { Loader2, Sparkles, Languages, CreditCard, Mail, Clock, ShieldCheck, Zap, AlertTriangle, MessageSquare, Headphones, ShieldAlert } from "lucide-react";
+import { Loader2, Sparkles, Languages, CreditCard, Mail, Clock, ShieldCheck, Zap, AlertTriangle, MessageSquare, Headphones, ShieldAlert, ArrowRight } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useLanguage } from "@/components/language-provider";
 import type { Language } from "@/components/language-provider";
