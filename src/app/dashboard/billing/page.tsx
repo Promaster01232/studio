@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -10,13 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, AlertTriangle, Mail, Clock, Ticket } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, AlertTriangle, Mail, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const plans = [
     {
@@ -81,7 +81,7 @@ const VALID_COUPONS: Record<string, number> = {
     "PROBONO": 1.0,
     "WELCOME10": 0.1,
     "ABCD12": 0.15,
-    "PIYUSH11": 0.99 // Custom node for ₹1 purchases
+    "PIYUSH11": 0.99 
 };
 
 export default function BillingPage() {
@@ -95,7 +95,6 @@ export default function BillingPage() {
     const [syncError, setSyncError] = useState<{ paymentId: string, plan: string } | null>(null);
     const [userTransactions, setUserTransactions] = useState<any[]>([]);
     
-    // Coupon State
     const [couponInput, setCouponInput] = useState("");
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discount: number } | null>(null);
 
@@ -114,7 +113,11 @@ export default function BillingPage() {
                 setLoading(false);
             },
             async (err) => {
-                console.warn("[STATUTORY SYNC] Profile registry restricted.");
+                const permissionError = new FirestorePermissionError({
+                    path: userDocRef.path,
+                    operation: 'get',
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
                 setLoading(false);
             }
         );
@@ -137,13 +140,27 @@ export default function BillingPage() {
                 setUserTransactions(list);
             },
             async (err) => {
-                console.warn("[STATUTORY SYNC] Transaction ledger restricted.");
+                const permissionError = new FirestorePermissionError({
+                    path: transCol.path,
+                    operation: 'list',
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
                 setUserTransactions([]);
             }
         );
 
         return () => { unsub(); unsubTrans(); };
     }, [auth, firestore]);
+
+    const loadRazorpay = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
 
     const handleApplyCoupon = () => {
         const code = couponInput.toUpperCase().trim();
@@ -160,10 +177,15 @@ export default function BillingPage() {
         const plan = plans.find(p => p.id === planId);
         if (!plan || plan.amount === 0) return;
 
+        const res = await loadRazorpay();
+        if (!res) {
+            toast({ variant: "destructive", title: "Gateway Failure", description: "Could not connect to the statutory payment node." });
+            return;
+        }
+
         const discount = appliedCoupon ? appliedCoupon.discount : 0;
         let finalAmount = Math.max(0, Math.round(plan.amount * (1 - discount)));
         
-        // PIYUSH11 PROTOCOL: Absolute override to 1 INR
         if (appliedCoupon?.code === 'PIYUSH11') {
             finalAmount = 1;
         }
@@ -216,7 +238,7 @@ export default function BillingPage() {
                 }
             },
             prefill: { name: `${profile?.firstName} ${profile?.lastName}`, email: profile?.email },
-            theme: { color: "#994B00" },
+            theme: { color: "#2563eb" },
             modal: { ondismiss: () => setProcessingId(null) }
         };
 
@@ -253,7 +275,6 @@ export default function BillingPage() {
 
     return (
         <div className="max-w-7xl mx-auto space-y-10 pb-20 px-4 sm:px-0 text-left">
-            <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
             <PageHeader title="Statutory Clearance" description="Monitor forensic credits and manage clearance nodes." />
 
             <div className="max-w-md ml-0 space-y-4 pb-8">

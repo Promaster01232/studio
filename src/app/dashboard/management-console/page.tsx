@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use } from "react";
@@ -144,7 +143,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
 }
 
 export default function ManagementConsolePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // Unwrap dynamic props for Next.js 15 compliance
+  // unwrap params to avoid enumeration error
   use(props.params); 
   use(props.searchParams);
 
@@ -163,7 +162,8 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, async (user) => {
         if (!user) { router.replace('/login'); return; }
-        const adminDoc = await getDoc(doc(firestore, "users", user.uid));
+        const adminDocRef = doc(firestore, "users", user.uid);
+        const adminDoc = await getDoc(adminDocRef);
         const adminData = adminDoc.data() as any;
         if (!ADMIN_EMAILS.includes(user.email?.toLowerCase() || '') && !adminData?.isAdmin) {
             toast({ variant: "destructive", title: "Access Denied" });
@@ -226,25 +226,25 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
   if (loading) return <div className="flex h-[70vh] items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
 
   return (
-    <div className="max-w-7xl auto space-y-8 pb-20 px-4 sm:px-6 text-left">
-      <PageHeader title="Management Console" description="Statutory oversight of the citizen registry and success-only transaction ledger." />
+    <div className="max-w-7xl auto space-y-6 pb-20 px-2 sm:px-4 text-left">
+      <PageHeader title="Management Console" description="Statutory oversight of the citizen registry and success-only ledger." />
 
       <Tabs defaultValue="users" className="w-full">
-          <TabsList className="h-12 bg-muted/20 p-1 rounded-xl mb-6">
-              <TabsTrigger value="users" className="font-bold text-xs uppercase tracking-widest px-8">Citizen Registry</TabsTrigger>
-              <TabsTrigger value="transactions" className="font-bold text-xs uppercase tracking-widest px-8">Verified Ledger</TabsTrigger>
+          <TabsList className="h-11 bg-muted/20 p-1 rounded-lg mb-6">
+              <TabsTrigger value="users" className="font-bold text-[10px] uppercase tracking-widest px-6">Citizen Registry</TabsTrigger>
+              <TabsTrigger value="transactions" className="font-bold text-[10px] uppercase tracking-widest px-6">Verified Ledger</TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
-            <Card className="border-primary/5 shadow-2xl rounded-[2.5rem] overflow-hidden bg-card text-left">
-                <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="space-y-1 text-left">
-                        <CardTitle className="font-black text-xl text-primary uppercase tracking-tight">Citizen Registry Dossier</CardTitle>
-                        <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Identity nodes active in system.</CardDescription>
+            <Card className="border-primary/5 shadow-2xl rounded-[2rem] overflow-hidden bg-card text-left">
+                <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="space-y-0.5 text-left">
+                        <CardTitle className="font-black text-lg text-primary uppercase tracking-tight">Citizen Registry Dossier</CardTitle>
+                        <CardDescription className="text-[9px] font-bold uppercase tracking-widest opacity-60">Identity nodes active in system.</CardDescription>
                     </div>
                     <div className="relative group">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                        <Input placeholder="Search identity..." className="w-64 h-11 rounded-xl pl-10 font-bold border-primary/5 shadow-none" value={searchQuery} onChange={(e) => setSearchSearchQuery(e.target.value)} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <Input placeholder="Search identity..." className="w-56 h-10 rounded-lg pl-9 font-bold text-xs border-primary/5" value={searchQuery} onChange={(e) => setSearchSearchQuery(e.target.value)} />
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -252,10 +252,10 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                         <Table className="min-w-[1000px]">
                             <TableHeader className="bg-muted/20">
                                 <TableRow>
-                                    <TableHead className="font-black text-[10px] uppercase tracking-widest pl-6 h-12">User Identity</TableHead>
-                                    <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Tier</TableHead>
-                                    <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Node Status</TableHead>
-                                    <TableHead className="font-black text-[10px] uppercase tracking-widest text-right pr-6 h-12">Controls</TableHead>
+                                    <TableHead className="font-black text-[9px] uppercase tracking-widest pl-6 h-10">User Identity</TableHead>
+                                    <TableHead className="font-black text-[9px] uppercase tracking-widest text-center h-10">Tier</TableHead>
+                                    <TableHead className="font-black text-[9px] uppercase tracking-widest text-center h-10">Node Status</TableHead>
+                                    <TableHead className="font-black text-[9px] uppercase tracking-widest text-right pr-6 h-10">Controls</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -263,32 +263,32 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                                     const isProtected = ADMIN_EMAILS.includes(user.email.toLowerCase());
                                     return (
                                         <TableRow key={user.uid} className="hover:bg-muted/5 border-b border-primary/5 transition-colors">
-                                            <TableCell className="pl-6 py-4">
+                                            <TableCell className="pl-6 py-3">
                                                 <div className="flex items-center gap-3">
-                                                    <Avatar className="h-10 w-10 border border-primary/10 rounded-xl shadow-sm">
+                                                    <Avatar className="h-9 w-9 border border-primary/10 rounded-lg shadow-sm">
                                                         <AvatarImage src={user.photoURL} className="object-cover" />
-                                                        <AvatarFallback className="font-black bg-primary/5 text-primary">{user.firstName?.charAt(0)}</AvatarFallback>
+                                                        <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">{user.firstName?.charAt(0)}</AvatarFallback>
                                                     </Avatar>
                                                     <div className="flex flex-col text-left">
-                                                        <span className="font-black text-sm tracking-tight">{user.firstName} {user.lastName}</span>
-                                                        <span className="text-[10px] text-muted-foreground font-medium lowercase">{user.email}</span>
+                                                        <span className="font-black text-xs tracking-tight">{user.firstName} {user.lastName}</span>
+                                                        <span className="text-[9px] text-muted-foreground font-medium lowercase">{user.email}</span>
                                                     </div>
                                                 </div>
                                             </TableCell>
                                             <TableCell className="text-center">
-                                                <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest px-3 py-1 bg-primary/5 text-primary border-primary/10">{user.subscriptionType || 'FREE'}</Badge>
+                                                <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest px-2 py-0.5 bg-primary/5 text-primary border-primary/10">{user.subscriptionType || 'FREE'}</Badge>
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <div className="flex items-center justify-center">
-                                                    <Switch checked={!user.isBlocked} onCheckedChange={(c) => handleToggleStatus(user, !c)} disabled={isProtected} className="data-[state=checked]:bg-green-500" />
+                                                    <Switch checked={!user.isBlocked} onCheckedChange={(c) => handleToggleStatus(user, !c)} disabled={isProtected} className="h-5 w-9 data-[state=checked]:bg-green-500" />
                                                 </div>
                                             </TableCell>
                                             <TableCell className="text-right pr-6">
                                                 <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild><button className="h-9 w-9 rounded-xl hover:bg-muted flex items-center justify-center transition-all active:scale-90"><MoreHorizontal className="h-4 w-4" /></button></DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end" className="w-52 p-2 rounded-xl glass border-primary/10 shadow-2xl">
-                                                        <DropdownMenuItem onClick={() => setUserToPurge(user)} className="rounded-lg h-10 font-bold text-xs cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5">
-                                                            <Trash2 className="h-4 w-4" /> <span>Purge Node Registry</span>
+                                                    <DropdownMenuTrigger asChild><button className="h-8 w-8 rounded-lg hover:bg-muted flex items-center justify-center transition-all active:scale-90"><MoreHorizontal className="h-4 w-4" /></button></DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl glass border-primary/10 shadow-2xl">
+                                                        <DropdownMenuItem onClick={() => setUserToPurge(user)} className="rounded-lg h-9 font-bold text-[10px] cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5 uppercase">
+                                                            <Trash2 className="h-3.5 w-3.5" /> <span>Purge Node</span>
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -305,38 +305,38 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
           </TabsContent>
 
           <TabsContent value="transactions">
-            <Card className="border-primary/5 shadow-2xl rounded-[2.5rem] overflow-hidden bg-card text-left">
-                <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-6 flex items-center justify-between">
-                    <div className="space-y-1 text-left">
-                        <CardTitle className="font-black text-xl text-green-600 uppercase tracking-tight">Verified Statutory Ledger</CardTitle>
-                        <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Success-only financial captures.</CardDescription>
+            <Card className="border-primary/5 shadow-2xl rounded-[2rem] overflow-hidden bg-card text-left">
+                <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-4 flex items-center justify-between">
+                    <div className="space-y-0.5 text-left">
+                        <CardTitle className="font-black text-lg text-green-600 uppercase tracking-tight">Verified Statutory Ledger</CardTitle>
+                        <CardDescription className="text-[9px] font-bold uppercase tracking-widest opacity-60">Success-only captures.</CardDescription>
                     </div>
-                    <Badge className="bg-green-500/10 text-green-600 border-green-500/20 font-black text-[8px] uppercase tracking-widest px-4 py-1.5 rounded-full">Success Protocol Active</Badge>
+                    <Badge className="bg-green-500/10 text-green-600 border-green-500/20 font-black text-[8px] uppercase tracking-widest px-3 py-1 rounded-lg">Protocol Success</Badge>
                 </CardHeader>
                 <CardContent className="p-0">
                     <ScrollArea className="w-full">
                         <Table className="min-w-[1000px]">
                             <TableHeader className="bg-muted/20">
                                 <TableRow>
-                                    <TableHead className="font-black text-[10px] uppercase tracking-widest pl-6 h-12">Timestamp</TableHead>
-                                    <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Authorization Status</TableHead>
-                                    <TableHead className="font-black text-[10px] uppercase tracking-widest text-center h-12">Value (₹)</TableHead>
-                                    <TableHead className="font-black text-[10px] uppercase tracking-widest text-right pr-6 h-12">Forensic Audit</TableHead>
+                                    <TableHead className="font-black text-[9px] uppercase tracking-widest pl-6 h-10">Timestamp</TableHead>
+                                    <TableHead className="font-black text-[9px] uppercase tracking-widest text-center h-10">Authorization Status</TableHead>
+                                    <TableHead className="font-black text-[9px] uppercase tracking-widest text-center h-10">Value (₹)</TableHead>
+                                    <TableHead className="font-black text-[9px] uppercase tracking-widest text-right pr-6 h-10">Forensic Audit</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {transactions.length > 0 ? transactions.map((tx) => (
                                     <TableRow key={tx.id} className="hover:bg-muted/5 border-b border-primary/5 transition-colors">
-                                        <TableCell className="pl-6 py-4">
+                                        <TableCell className="pl-6 py-3">
                                             <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground">
                                                 <Clock className="h-3 w-3 opacity-40" />
                                                 {tx.createdAt ? format(tx.createdAt.toDate ? tx.createdAt.toDate() : new Date(tx.createdAt), 'PP p') : 'Syncing...'}
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            <div className="flex items-center justify-center gap-2 text-green-600 px-4 py-1.5 rounded-full bg-green-500/5 border border-green-500/10 w-fit mx-auto">
-                                                <CheckCircle2 className="h-3.5 w-3.5" />
-                                                <span className="font-black text-[9px] uppercase tracking-widest">Payment Success</span>
+                                            <div className="flex items-center justify-center gap-2 text-green-600 px-3 py-1 rounded-lg bg-green-500/5 border border-green-500/10 w-fit mx-auto">
+                                                <CheckCircle2 className="h-3 w-3" />
+                                                <span className="font-black text-[8px] uppercase tracking-widest">Captured Success</span>
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">
@@ -348,10 +348,10 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                                     </TableRow>
                                 )) : (
                                     <TableRow>
-                                        <TableCell colSpan={4} className="h-48 text-center">
-                                            <div className="flex flex-col items-center gap-4 opacity-40">
-                                                <Activity className="h-12 w-12 text-muted-foreground" />
-                                                <p className="font-black text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Registry clear // No successful captures recorded.</p>
+                                        <TableCell colSpan={4} className="h-40 text-center">
+                                            <div className="flex flex-col items-center gap-3 opacity-40">
+                                                <Activity className="h-10 w-10 text-muted-foreground" />
+                                                <p className="font-black text-[9px] uppercase tracking-[0.3em] text-muted-foreground">No statutory transactions recorded.</p>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -366,27 +366,28 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
       </Tabs>
 
       <AlertDialog open={!!userToPurge} onOpenChange={(o) => !o && setUserToPurge(null)}>
-          <AlertDialogContent className="rounded-[2.5rem] p-10 border-none shadow-2xl glass text-left">
+          <AlertDialogContent className="rounded-[2rem] p-8 border-none shadow-2xl glass text-left">
               <AlertDialogHeader>
-                  <div className="bg-destructive/10 p-4 rounded-2xl w-fit mb-4">
-                    <Trash2 className="h-8 w-8 text-destructive" />
+                  <div className="bg-destructive/10 p-3 rounded-xl w-fit mb-4">
+                    <Trash2 className="h-6 w-6 text-destructive" />
                   </div>
-                  <AlertDialogTitle className="font-black text-3xl tracking-tighter uppercase leading-none">Confirm Statutory Purge</AlertDialogTitle>
-                  <AlertDialogDescription className="text-sm font-medium pt-4 leading-relaxed">
-                      You are about to execute an irreversible erasure of the node belonging to <span className="text-foreground font-black">{userToPurge?.firstName} {userToPurge?.lastName}</span>. All registry records will be purged from both Firestore and the Real-time Database.
+                  <AlertDialogTitle className="font-black text-2xl tracking-tighter uppercase leading-none">Confirm Statutory Purge</AlertDialogTitle>
+                  <AlertDialogDescription className="text-xs font-medium pt-3 leading-relaxed">
+                      You are about to execute an irreversible erasure of the node belonging to <span className="text-foreground font-black">{userToPurge?.firstName} {userToPurge?.lastName}</span>. All registry records will be purged from statutory nodes.
                   </AlertDialogDescription>
               </AlertDialogHeader>
-              <div className="flex gap-4 mt-10">
-                  <AlertDialogCancel className="font-bold h-14 rounded-2xl flex-1 border-primary/10 hover:bg-primary/5 transition-all">Abort Protocol</AlertDialogCancel>
+              <div className="flex gap-3 mt-8">
+                  <AlertDialogCancel className="font-bold h-12 rounded-xl flex-1 border-primary/10 hover:bg-primary/5 transition-all text-xs">Abort Protocol</AlertDialogCancel>
                   <Button onClick={async () => {
                       if (userToPurge) {
-                        await deleteDoc(doc(firestore, "users", userToPurge.uid));
+                        const userDocRef = doc(firestore, "users", userToPurge.uid);
+                        await deleteDoc(userDocRef);
                         await remove(ref(rtdb, `users/${userToPurge.uid}`));
                         setUserToPurge(null);
                         toast({ title: "Node Purged", description: "Registry data erased successfully." });
                       }
-                  }} variant="destructive" className="font-black h-14 rounded-2xl flex-1 uppercase tracking-widest text-xs shadow-xl shadow-destructive/20 active:scale-95 transition-all text-center">
-                      <Trash2 className="mr-2 h-4 w-4" /> Execute Purge
+                  }} variant="destructive" className="font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px] shadow-xl shadow-destructive/20 active:scale-95 transition-all text-center">
+                      Execute Purge
                   </Button>
               </div>
           </AlertDialogContent>

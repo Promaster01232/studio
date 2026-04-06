@@ -39,6 +39,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { onSnapshot, doc } from "firebase/firestore";
 import { FloatingHub } from "@/components/floating-hub";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -188,7 +190,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 setProfileLoading(false);
             },
             async (err) => {
-                console.warn("[STATUTORY SYNC] Profile registry restricted.");
+                const permissionError = new FirestorePermissionError({
+                    path: userDocRef.path,
+                    operation: 'get',
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
                 setProfileLoading(false);
             }
         );
@@ -307,7 +313,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <main className="flex-1 overflow-y-auto custom-scrollbar relative">
             <AnimatePresence mode="wait">
                 {showContent ? (
-                    <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-4 sm:p-6 min-h-[calc(100vh-64px)] flex flex-col">
+                    <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-2 sm:p-4 min-h-[calc(100vh-64px)] flex flex-col">
                         <div className="flex-1">{children}</div>
                         <Footer />
                     </motion.div>
