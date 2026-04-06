@@ -33,7 +33,10 @@ import {
   History,
   CheckCircle2,
   AlertTriangle,
-  Lightbulb
+  Lightbulb,
+  Newspaper,
+  MessageCircle,
+  BadgeCheck
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -69,6 +72,8 @@ interface Post {
     content: string;
     likes: number;
     likedBy?: string[];
+    postType?: string;
+    isAnonymous?: boolean;
 }
 
 const aiFeatures = [
@@ -91,6 +96,9 @@ export default function DashboardHomePage() {
   const [quickJargon, setQuickJargon] = useState("");
   const [isProcessingJargon, setIsProcessingJargon] = useState(false);
   const [jargonReport, setJargonReport] = useState<{ term: string, exp: string } | null>(null);
+  
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [postsLoading, setPostsLoading] = useState(true);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -108,6 +116,22 @@ export default function DashboardHomePage() {
     }
     return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
+
+  useEffect(() => {
+    const postsCol = collection(firestore, "posts");
+    const q = query(postsCol, orderBy("createdAt", "desc"), limit(3));
+    
+    const unsub = onSnapshot(q, (snap) => {
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
+        setPosts(list);
+        setPostsLoading(false);
+    }, (err) => {
+        console.warn("[DASHBOARD] Community node sync restricted.");
+        setPostsLoading(false);
+    });
+    
+    return () => unsub();
+  }, [firestore]);
 
   const handleQuickAudit = () => {
       if (!quickJargon) return;
@@ -320,6 +344,66 @@ export default function DashboardHomePage() {
                           ))}
                       </div>
                   </Card>
+              </section>
+
+              {/* SECTION: COMMUNITY TRANSMISSIONS */}
+              <section>
+                  <div className="flex items-center justify-between mb-6 pb-2 border-b border-primary/5">
+                      <div className="flex items-center gap-3 text-primary/60">
+                          <Newspaper className="h-5 w-5" />
+                          <h2 className="text-xs font-black tracking-[0.3em] uppercase">Community Transmissions</h2>
+                      </div>
+                      <Link href="/dashboard/research-analytics" className="text-[9px] font-black uppercase text-primary hover:underline">Full Stream</Link>
+                  </div>
+                  
+                  <div className="grid gap-4">
+                      {postsLoading ? (
+                          <div className="py-12 flex flex-col items-center justify-center gap-3 opacity-20">
+                              <Loader2 className="h-8 w-8 animate-spin" />
+                              <span className="text-[10px] font-black uppercase tracking-widest">Syncing Registry...</span>
+                          </div>
+                      ) : posts.length > 0 ? (
+                          posts.map((post, idx) => (
+                              <motion.div key={post.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.1 }}>
+                                  <Card className="rounded-[1.8rem] border-primary/5 bg-card/40 hover:bg-card hover:shadow-xl transition-all overflow-hidden group cursor-pointer" asChild>
+                                      <Link href={`/dashboard/profile/${post.authorUid}`}>
+                                          <div className="p-6 flex flex-col sm:flex-row gap-6">
+                                              <div className="flex items-center gap-4 sm:border-r sm:border-primary/5 sm:pr-6 sm:min-w-[180px]">
+                                                  <Avatar className="h-10 w-10 border border-primary/10 rounded-xl shadow-lg">
+                                                      {!post.isAnonymous && <AvatarImage src={post.authorAvatar} className="object-cover" />}
+                                                      <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">
+                                                          {post.isAnonymous ? 'A' : post.authorName.charAt(0)}
+                                                      </AvatarFallback>
+                                                  </Avatar>
+                                                  <div className="text-left space-y-0.5">
+                                                      <p className="font-black text-xs tracking-tight">{post.isAnonymous ? 'Anonymous' : post.authorName}</p>
+                                                      <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
+                                                          {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
+                                                      </p>
+                                                  </div>
+                                              </div>
+                                              <div className="flex-1 space-y-3 text-left">
+                                                  <div className="flex items-center justify-between gap-4">
+                                                      <h3 className="font-black text-sm tracking-tight uppercase group-hover:text-primary transition-colors line-clamp-1">{post.title}</h3>
+                                                      <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black uppercase tracking-widest shrink-0">
+                                                          {post.postType || 'Idea'}
+                                                      </Badge>
+                                                  </div>
+                                                  <p className="text-xs text-muted-foreground font-medium leading-relaxed line-clamp-2 italic">
+                                                      "{post.content || 'Polling community consensus...'}"
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </Link>
+                                  </Card>
+                              </motion.div>
+                          ))
+                      ) : (
+                          <div className="py-12 text-center bg-muted/10 rounded-3xl border-2 border-dashed border-primary/5">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">No institutional transmissions recorded.</p>
+                          </div>
+                      )}
+                  </div>
               </section>
           </div>
 
