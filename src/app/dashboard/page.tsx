@@ -1,11 +1,10 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React, { useState, useEffect, useRef, use } from "react";
+import React, { useState, useEffect, use } from "react";
 import {
   Mic,
   Search,
@@ -328,45 +327,8 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
           </div>
 
           <div className="lg:col-span-4 space-y-8">
-              {/* SIDEBAR: SYSTEM TELEMETRY */}
+              {/* SIDEBAR: ACTIONS */}
               <section className="space-y-6">
-                  <div className="flex items-center gap-3 text-primary/60 mb-4 pb-2 border-b border-primary/10">
-                      <Fingerprint className="h-5 w-5" />
-                      <h2 className="text-xs font-black tracking-[0.3em] uppercase">Neural Telemetry</h2>
-                  </div>
-                  <Card className="glass border-primary/10 rounded-[2.2rem] overflow-hidden shadow-2xl relative group">
-                      <div className="absolute top-0 right-0 p-6 opacity-[0.02] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
-                          <Logo className="h-32 w-32 grayscale" priority={false} />
-                      </div>
-                      <div className="p-8 space-y-8 relative z-10">
-                          <div className="space-y-4">
-                              <div className="flex items-center justify-between">
-                                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Neural Capacity</span>
-                                  <span className="text-[10px] font-black text-primary">Optimal</span>
-                              </div>
-                              <div className="h-1.5 w-full bg-primary/5 rounded-full overflow-hidden">
-                                  <motion.div initial={{ width: 0 }} animate={{ width: "82%" }} className="h-full bg-primary" />
-                              </div>
-                          </div>
-                          
-                          <div className="space-y-4">
-                              <div className="flex items-center justify-between">
-                                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Statutory Sync</span>
-                                  <span className="text-[10px] font-black text-green-600">Active</span>
-                              </div>
-                              <div className="h-1.5 w-full bg-green-500/5 rounded-full overflow-hidden">
-                                  <motion.div initial={{ width: 0 }} animate={{ width: "96%" }} className="h-full bg-green-500" />
-                              </div>
-                          </div>
-
-                          <div className="pt-6 border-t border-primary/5 text-center">
-                              <p className="text-[9px] font-bold text-muted-foreground italic leading-relaxed opacity-60">
-                                  "Forensic telemetry verified by core institutional auditors."
-                              </p>
-                          </div>
-                      </div>
-                  </Card>
-
                   <Card className="bg-primary border-none rounded-[2.2rem] overflow-hidden shadow-2xl shadow-primary/20 relative group cursor-pointer" asChild>
                       <Link href="/dashboard/billing">
                         <div className="p-8 text-white relative z-10 space-y-6">
