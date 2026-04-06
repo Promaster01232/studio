@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect, useRef, use } from "react";
+import { useActionState, useState, useEffect, useRef } from "react";
 import { generateDocumentAction, type DocumentGeneratorState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,11 +55,7 @@ const FormSectionTitle = ({ children }: { children: React.ReactNode }) => (
     </h3>
 );
 
-export default function DocumentGeneratorPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // Unwrap dynamic props for Next.js 15 compliance
-  use(props.params);
-  use(props.searchParams);
-
+export default function DocumentGeneratorPage() {
   const [state, formAction] = useActionState(generateDocumentAction, initialState);
   const [documentType, setDocumentType] = useState("Legal Notice");
   const [isEditing, setIsEditing] = useState(false);
@@ -418,7 +414,7 @@ export default function DocumentGeneratorPage(props: { params: Promise<any>, sea
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <p className="font-black text-2xl tracking-tighter uppercase">Deconstructing Facts...</p>
+                                <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Deconstructing Facts...</p>
                                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Initializing forensic document engine // BNS-V4.2 Ingress</p>
                             </div>
                         </motion.div>

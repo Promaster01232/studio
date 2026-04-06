@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useActionState, useEffect, useState, use, useRef } from "react";
+import { useActionState, useEffect, useState, useRef } from "react";
 import { analyzeCaseStrengthAction, type CaseStrengthState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,10 +43,7 @@ const initialState: CaseStrengthState = {
   error: null,
 };
 
-export default function StrengthAnalyzerPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  use(props.params);
-  use(props.searchParams);
-
+export default function StrengthAnalyzerPage() {
   const [state, formAction] = useActionState(analyzeCaseStrengthAction, initialState);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
   const reportRef = useRef<HTMLDivElement>(null);

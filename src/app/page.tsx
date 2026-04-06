@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { 
   ArrowRight, 
   Loader2, 
@@ -36,10 +36,7 @@ const featureNodes = [
   { icon: Globe, title: "Expert Connect", desc: "Seamlessly connect with verified legal professionals for personalized strategy.", href: "/dashboard/lawyer-connect", badge: "Verified" },
 ];
 
-export default function WelcomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  use(props.params);
-  use(props.searchParams);
-
+export default function WelcomePage() {
   const auth = useAuth();
   const [loading, setLoading] = useState(true);
 
@@ -136,7 +133,7 @@ export default function WelcomePage(props: { params: Promise<any>, searchParams:
 
         {/* TRUST BANNER */}
         <section className="w-full py-24 px-6 border-t border-primary/5 bg-muted/20">
-            <div className="max-w-4xl mx-auto text-center space-y-8">
+            <div className="max-w-4xl auto text-center space-y-8">
                 <Gavel className="h-10 w-10 text-primary/20 mx-auto" />
                 <p className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight leading-snug italic">
                     "Redefining access to justice with <span className="text-primary">Reliable AI Technology.</span>"

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Mic,
   Search,
@@ -78,10 +78,7 @@ const aiFeatures = [
     { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bond Protocol", desc: "Official bail and indemnity bonds.", color: "text-purple-600", bg: "bg-purple-500/10" },
 ];
 
-export default function DashboardHomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  use(props.params);
-  use(props.searchParams);
-
+export default function DashboardHomePage() {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const fullText = 'Sahayak';

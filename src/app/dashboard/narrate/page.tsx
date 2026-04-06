@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useRef, useEffect, startTransition, use } from "react";
+import { useActionState, useState, useRef, useEffect, startTransition } from "react";
 import { summarizeCaseAction, type CaseSummaryState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,10 +41,7 @@ const initialState: CaseSummaryState = {
   error: null,
 };
 
-export default function NarrateProblemPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  use(props.params);
-  use(props.searchParams);
-
+export default function NarrateProblemPage() {
   const [state, formAction] = useActionState(summarizeCaseAction, initialState);
   const { toast } = useToast();
   const firestore = useFirestore();

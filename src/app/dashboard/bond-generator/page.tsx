@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect, useRef, use } from "react";
+import { useActionState, useState, useEffect, useRef } from "react";
 import { generateBondAction, type BondGeneratorState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -56,11 +56,7 @@ const FormSectionTitle = ({ children }: { children: React.ReactNode }) => (
     </h3>
 );
 
-export default function BondGeneratorPage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // Unwrap dynamic props for Next.js 15 compliance
-  use(props.params);
-  use(props.searchParams);
-
+export default function BondGeneratorPage() {
   const [state, formAction] = useActionState(generateBondAction, initialState);
   const [bondType, setBondType] = useState("Bail Bond");
   const [isEditing, setIsEditing] = useState(false);

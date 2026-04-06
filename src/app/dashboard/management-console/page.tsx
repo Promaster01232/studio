@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -141,11 +140,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
     );
 }
 
-export default function ManagementConsolePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // unwrap params to avoid enumeration error
-  use(props.params); 
-  use(props.searchParams);
-
+export default function ManagementConsolePage() {
   const firestore = useFirestore();
   const rtdb = useDatabase();
   const auth = useAuth();
