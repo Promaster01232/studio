@@ -209,6 +209,66 @@ export default function DashboardHomePage() {
 
         <div className="grid lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 space-y-10">
+              {/* SECTION: COMMUNITY TRANSMISSIONS (UPPER SIDE) */}
+              <section>
+                  <div className="flex items-center justify-between mb-6 pb-2 border-b border-primary/5">
+                      <div className="flex items-center gap-3 text-primary/60">
+                          <Newspaper className="h-5 w-5" />
+                          <h2 className="text-xs font-black tracking-[0.3em] uppercase">Community Transmissions</h2>
+                      </div>
+                      <Link href="/dashboard/research-analytics" className="text-[9px] font-black uppercase text-primary hover:underline">Full Stream</Link>
+                  </div>
+                  
+                  <div className="grid gap-4">
+                      {postsLoading ? (
+                          <div className="py-12 flex flex-col items-center justify-center gap-3 opacity-20">
+                              <Loader2 className="h-8 w-8 animate-spin" />
+                              <span className="text-[10px] font-black uppercase tracking-widest">Syncing Registry...</span>
+                          </div>
+                      ) : posts.length > 0 ? (
+                          posts.map((post, idx) => (
+                              <motion.div key={post.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.1 }}>
+                                  <Card className="rounded-[1.8rem] border-primary/5 bg-card/40 hover:bg-card hover:shadow-xl transition-all overflow-hidden group cursor-pointer" asChild>
+                                      <Link href={`/dashboard/profile/${post.authorUid}`}>
+                                          <div className="p-6 flex flex-col sm:flex-row gap-6">
+                                              <div className="flex items-center gap-4 sm:border-r sm:border-primary/5 sm:pr-6 sm:min-w-[180px]">
+                                                  <Avatar className="h-10 w-10 border border-primary/10 rounded-xl shadow-lg">
+                                                      {!post.isAnonymous && <AvatarImage src={post.authorAvatar} className="object-cover" />}
+                                                      <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">
+                                                          {post.isAnonymous ? 'A' : post.authorName.charAt(0)}
+                                                      </AvatarFallback>
+                                                  </Avatar>
+                                                  <div className="text-left space-y-0.5">
+                                                      <p className="font-black text-xs tracking-tight">{post.isAnonymous ? 'Anonymous' : post.authorName}</p>
+                                                      <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
+                                                          {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
+                                                      </p>
+                                                  </div>
+                                              </div>
+                                              <div className="flex-1 space-y-3 text-left">
+                                                  <div className="flex items-center justify-between gap-4">
+                                                      <h3 className="font-black text-sm tracking-tight uppercase group-hover:text-primary transition-colors line-clamp-1">{post.title}</h3>
+                                                      <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black uppercase tracking-widest shrink-0">
+                                                          {post.postType || 'Idea'}
+                                                      </Badge>
+                                                  </div>
+                                                  <p className="text-xs text-muted-foreground font-medium leading-relaxed line-clamp-2 italic">
+                                                      "{post.content || 'Polling community consensus...'}"
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </Link>
+                                  </Card>
+                              </motion.div>
+                          ))
+                      ) : (
+                          <div className="py-12 text-center bg-muted/10 rounded-3xl border-2 border-dashed border-primary/5">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">No institutional transmissions recorded.</p>
+                          </div>
+                      )}
+                  </div>
+              </section>
+
               {/* SECTION: INSTANT FORENSIC INGRESS */}
               <section className="space-y-6">
                   <div className="flex items-center gap-3 mb-2 pb-2 border-b border-primary/5">
@@ -344,66 +404,6 @@ export default function DashboardHomePage() {
                           ))}
                       </div>
                   </Card>
-              </section>
-
-              {/* SECTION: COMMUNITY TRANSMISSIONS */}
-              <section>
-                  <div className="flex items-center justify-between mb-6 pb-2 border-b border-primary/5">
-                      <div className="flex items-center gap-3 text-primary/60">
-                          <Newspaper className="h-5 w-5" />
-                          <h2 className="text-xs font-black tracking-[0.3em] uppercase">Community Transmissions</h2>
-                      </div>
-                      <Link href="/dashboard/research-analytics" className="text-[9px] font-black uppercase text-primary hover:underline">Full Stream</Link>
-                  </div>
-                  
-                  <div className="grid gap-4">
-                      {postsLoading ? (
-                          <div className="py-12 flex flex-col items-center justify-center gap-3 opacity-20">
-                              <Loader2 className="h-8 w-8 animate-spin" />
-                              <span className="text-[10px] font-black uppercase tracking-widest">Syncing Registry...</span>
-                          </div>
-                      ) : posts.length > 0 ? (
-                          posts.map((post, idx) => (
-                              <motion.div key={post.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.1 }}>
-                                  <Card className="rounded-[1.8rem] border-primary/5 bg-card/40 hover:bg-card hover:shadow-xl transition-all overflow-hidden group cursor-pointer" asChild>
-                                      <Link href={`/dashboard/profile/${post.authorUid}`}>
-                                          <div className="p-6 flex flex-col sm:flex-row gap-6">
-                                              <div className="flex items-center gap-4 sm:border-r sm:border-primary/5 sm:pr-6 sm:min-w-[180px]">
-                                                  <Avatar className="h-10 w-10 border border-primary/10 rounded-xl shadow-lg">
-                                                      {!post.isAnonymous && <AvatarImage src={post.authorAvatar} className="object-cover" />}
-                                                      <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">
-                                                          {post.isAnonymous ? 'A' : post.authorName.charAt(0)}
-                                                      </AvatarFallback>
-                                                  </Avatar>
-                                                  <div className="text-left space-y-0.5">
-                                                      <p className="font-black text-xs tracking-tight">{post.isAnonymous ? 'Anonymous' : post.authorName}</p>
-                                                      <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
-                                                          {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
-                                                      </p>
-                                                  </div>
-                                              </div>
-                                              <div className="flex-1 space-y-3 text-left">
-                                                  <div className="flex items-center justify-between gap-4">
-                                                      <h3 className="font-black text-sm tracking-tight uppercase group-hover:text-primary transition-colors line-clamp-1">{post.title}</h3>
-                                                      <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black uppercase tracking-widest shrink-0">
-                                                          {post.postType || 'Idea'}
-                                                      </Badge>
-                                                  </div>
-                                                  <p className="text-xs text-muted-foreground font-medium leading-relaxed line-clamp-2 italic">
-                                                      "{post.content || 'Polling community consensus...'}"
-                                                  </p>
-                                              </div>
-                                          </div>
-                                      </Link>
-                                  </Card>
-                              </motion.div>
-                          ))
-                      ) : (
-                          <div className="py-12 text-center bg-muted/10 rounded-3xl border-2 border-dashed border-primary/5">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">No institutional transmissions recorded.</p>
-                          </div>
-                      )}
-                  </div>
               </section>
           </div>
 
