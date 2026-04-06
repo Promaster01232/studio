@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
@@ -45,6 +44,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -133,7 +134,11 @@ export default function UserPublicProfilePage(props: {
       }
       setLoading(false);
     }, (err) => {
-        console.error("[STATUTORY GUARD] Profile read denied:", err);
+        const permissionError = new FirestorePermissionError({
+            path: userRef.path,
+            operation: 'get',
+        } satisfies SecurityRuleContext, err);
+        errorEmitter.emit('permission-error', permissionError);
         setLoading(false);
     });
 

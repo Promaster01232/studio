@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -191,7 +190,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 setProfileLoading(false);
             },
             async (err) => {
-                console.error("[STATUTORY GUARD] Profile listener denied:", err);
+                const permissionError = new FirestorePermissionError({
+                    path: userDocRef.path,
+                    operation: 'get',
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
                 setProfileLoading(false);
             }
         );
