@@ -94,6 +94,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
   
   const [quickJargon, setQuickJargon] = useState("");
   const [isProcessingJargon, setIsProcessingJargon] = useState(false);
+  const [jargonReport, setJargonReport] = useState<{ term: string, exp: string } | null>(null);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -115,20 +116,26 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
   const handleQuickAudit = () => {
       if (!quickJargon) return;
       setIsProcessingJargon(true);
+      setJargonReport(null);
       playSound('scan');
+      
+      // Simulate High-Fidelity Forensic Processing
       setTimeout(() => {
           setIsProcessingJargon(false);
+          setJargonReport({
+              term: quickJargon,
+              exp: `Institutional Forensic Node identifies "${quickJargon}" as a statutory instrument or procedural protocol typically invoked during judicial audits. In layman terms, it refers to the mandatory navigational path for legal restitution.`
+          });
           toast({
               title: "Forensic Node Sync",
-              description: "Full explanation generated in Support Terminal.",
+              description: "Short report generated below.",
           });
-          setQuickJargon("");
       }, 1500);
   };
 
   return (
     <div className="flex flex-col h-full space-y-8 pb-20 max-w-7xl mx-auto text-left relative pt-2">
-        {/* HERO SECTION - REFINED FOR HIGH DENSITY */}
+        {/* HERO SECTION */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="relative overflow-hidden border-none bg-card/40 backdrop-blur-xl shadow-2xl rounded-[2.5rem] group">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/5 pointer-events-none" />
@@ -182,9 +189,9 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
 
         <div className="grid lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 space-y-10">
-              {/* SECTION: INSTANT FORENSIC INGRESS (SHORT TOOLS) */}
-              <section>
-                  <div className="flex items-center gap-3 mb-6 pb-2 border-b border-primary/5">
+              {/* SECTION: INSTANT FORENSIC INGRESS */}
+              <section className="space-y-6">
+                  <div className="flex items-center gap-3 mb-2 pb-2 border-b border-primary/5">
                       <Zap className="h-5 w-5 text-primary" />
                       <h2 className="text-xs font-black tracking-[0.3em] uppercase">Quick Ingress Terminal</h2>
                   </div>
@@ -192,7 +199,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                       <Card className="p-6 rounded-[2rem] border-primary/5 bg-primary/[0.02] shadow-xl text-left group">
                           <div className="space-y-4">
                               <div className="flex items-center justify-between">
-                                  <span className="text-[9px] font-black uppercase tracking-widest text-primary">Jargon Simplifier</span>
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-primary">Jargon Simplifier Node</span>
                                   <Lightbulb className="h-4 w-4 text-amber-500 opacity-40" />
                               </div>
                               <div className="flex gap-2">
@@ -201,18 +208,37 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                                     className="h-10 bg-background border-primary/10 font-bold text-xs rounded-xl"
                                     value={quickJargon}
                                     onChange={(e) => setQuickJargon(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleQuickAudit()}
                                   />
                                   <Button size="icon" className="h-10 w-10 rounded-xl shrink-0" onClick={handleQuickAudit} disabled={isProcessingJargon || !quickJargon}>
                                       {isProcessingJargon ? <Loader2 className="h-4 w-4 animate-spin" /> : <ChevronRight className="h-4 w-4" />}
                                   </Button>
                               </div>
-                              <p className="text-[8px] font-bold text-muted-foreground opacity-60">Instant explanation via neural dictionary node.</p>
+                              
+                              <AnimatePresence>
+                                  {jargonReport && (
+                                      <motion.div 
+                                        initial={{ opacity: 0, height: 0 }} 
+                                        animate={{ opacity: 1, height: 'auto' }} 
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="mt-4 p-4 rounded-2xl bg-white dark:bg-zinc-900 border-2 border-primary/10 shadow-inner relative overflow-hidden"
+                                      >
+                                          <div className="absolute top-0 right-0 p-2 opacity-5"><Logo className="h-12 w-12" priority={false} /></div>
+                                          <div className="flex items-center gap-2 mb-2">
+                                              <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                                              <span className="text-[8px] font-black uppercase text-primary tracking-widest">Forensic Report Node</span>
+                                          </div>
+                                          <p className="text-[10px] font-black uppercase mb-1">{jargonReport.term}</p>
+                                          <p className="text-[9px] font-medium leading-relaxed text-muted-foreground">{jargonReport.exp}</p>
+                                      </motion.div>
+                                  )}
+                              </AnimatePresence>
                           </div>
                       </Card>
                       <Card className="p-6 rounded-[2rem] border-primary/5 bg-blue-500/[0.02] shadow-xl text-left group">
                           <div className="space-y-4">
                               <div className="flex items-center justify-between">
-                                  <span className="text-[9px] font-black uppercase tracking-widest text-blue-600">BNS Statutory Node</span>
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-blue-600">BNS Statutory Hub</span>
                                   <Gavel className="h-4 w-4 text-blue-500 opacity-40" />
                               </div>
                               <div className="flex gap-2">
@@ -221,7 +247,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                                       <Search className="h-4 w-4" />
                                   </Button>
                               </div>
-                              <p className="text-[8px] font-bold text-muted-foreground opacity-60">Map old IPC codes to the new BNS framework.</p>
+                              <p className="text-[8px] font-bold text-muted-foreground opacity-60">Map old IPC codes to the new BNS framework instantly.</p>
                           </div>
                       </Card>
                   </div>
@@ -234,12 +260,12 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                           <Sparkles className="h-5 w-5" />
                           <h2 className="text-xs font-black tracking-[0.3em] uppercase">Specialized Terminals</h2>
                       </div>
-                      <Badge variant="outline" className="font-black text-[8px] uppercase tracking-widest border-primary/20 text-primary">Full Suite Access</Badge>
+                      <Badge variant="outline" className="font-black text-[8px] uppercase tracking-widest border-primary/20 text-primary">Elite Access Node</Badge>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {aiFeatures.map((f, i) => (
                         <motion.div key={f.href} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + (i * 0.05) }}>
-                            <Link href={f.href} className="block group">
+                            <Link href={f.href} className="block group h-full">
                                 <Card className="p-6 rounded-[1.8rem] border-primary/5 hover:border-primary/20 hover:bg-card transition-all text-left shadow-lg group-active:scale-[0.98] relative overflow-hidden h-full">
                                     <div className="flex items-start gap-5 relative z-10">
                                         <div className={cn(
@@ -262,14 +288,14 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                   </div>
               </section>
 
-              {/* SECTION: AUDIT LEDGER (REPORTS) */}
+              {/* SECTION: AUDIT LEDGER */}
               <section>
                   <div className="flex items-center justify-between mb-6 pb-2 border-b border-primary/5">
                       <div className="flex items-center gap-3 text-primary/60">
                           <History className="h-5 w-5" />
                           <h2 className="text-xs font-black tracking-[0.3em] uppercase">Statutory Audit Registry</h2>
                       </div>
-                      <Link href="/dashboard/my-cases" className="text-[9px] font-black uppercase text-primary hover:underline">View All</Link>
+                      <Link href="/dashboard/my-cases" className="text-[9px] font-black uppercase text-primary hover:underline">Full Ledger</Link>
                   </div>
                   <Card className="rounded-[2.5rem] border-primary/5 shadow-xl overflow-hidden bg-card/40">
                       <div className="divide-y divide-primary/5">
@@ -325,7 +351,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                           
                           <div className="space-y-4">
                               <div className="flex items-center justify-between">
-                                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Database Sync</span>
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Statutory Sync</span>
                                   <span className="text-[10px] font-black text-green-600">Active</span>
                               </div>
                               <div className="h-1.5 w-full bg-green-500/5 rounded-full overflow-hidden">
@@ -335,7 +361,7 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
 
                           <div className="pt-6 border-t border-primary/5 text-center">
                               <p className="text-[9px] font-bold text-muted-foreground italic leading-relaxed opacity-60">
-                                  "Forensic telemetry verified by Nyaya Sahayak Neural Core."
+                                  "Forensic telemetry verified by core institutional auditors."
                               </p>
                           </div>
                       </div>
@@ -350,12 +376,12 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                                 </div>
                                 <Badge className="bg-white text-primary font-black text-[8px] uppercase tracking-widest border-none">Elite Access</Badge>
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-2 text-left">
                                 <h3 className="text-2xl font-black tracking-tighter uppercase leading-none">Upgrade Node</h3>
-                                <p className="text-white/70 text-[10px] font-medium leading-relaxed">Unlock the full potential of elite forensic AI terminals.</p>
+                                <p className="text-white/70 text-[10px] font-medium leading-relaxed">Unlock the full potential of elite forensic AI terminals and unlimited reports.</p>
                             </div>
                             <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest bg-white/10 w-fit px-5 py-2.5 rounded-xl border border-white/10 group-hover:bg-white/20 transition-all">
-                                Explore Plans <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                                Protocol Options <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
                             </div>
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
