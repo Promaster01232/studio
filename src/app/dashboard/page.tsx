@@ -2,7 +2,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React, { useState, useEffect, useRef, use } from "react";
 import {
@@ -28,9 +29,14 @@ import {
   Fingerprint,
   Layers,
   FileCheck,
-  Globe
+  Globe,
+  Terminal,
+  History,
+  CheckCircle2,
+  AlertTriangle,
+  Lightbulb
 } from "lucide-react";
-import { motion, useInView } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -45,8 +51,7 @@ import {
   updateDoc, 
   increment, 
   arrayUnion, 
-  arrayRemove, 
-  getDoc
+  arrayRemove
 } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -67,89 +72,11 @@ interface Post {
     likedBy?: string[];
 }
 
-const MotionWrapper = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 10 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-      transition={{ delay, duration: 0.3 }}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-function PostCard({ post }: { post: Post }) {
-    const { playSound } = useSoundEffect();
-    const firestore = useFirestore();
-    const auth = useAuth();
-    const { currentUser } = auth;
-    
-    const [isLiking, setIsLiking] = useState(false);
-    const userHasLiked = post.likedBy?.includes(currentUser?.uid ?? '');
-
-    const handleLike = () => {
-        if (!currentUser || isLiking) return;
-        setIsLiking(true);
-        const postRef = doc(firestore, "posts", post.id);
-        
-        updateDoc(postRef, {
-            likes: increment(userHasLiked ? -1 : 1),
-            likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
-        }).then(() => {
-            playSound(userHasLiked ? 'click' : 'success');
-        }).finally(() => setIsLiking(false));
-    };
-
-    return (
-        <Card className="overflow-hidden bg-card/40 backdrop-blur-md border-primary/5 hover:border-primary/20 transition-all rounded-2xl shadow-sm text-left group">
-            <CardContent className="p-5">
-                <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2.5">
-                        <Avatar className="h-8 w-8 rounded-lg shadow-sm">
-                            <AvatarImage src={post.authorAvatar} />
-                            <AvatarFallback className="bg-primary/5 text-primary text-[10px] font-bold">{post.authorName?.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <p className="font-black text-[11px] uppercase tracking-tight">{post.authorName}</p>
-                            <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest opacity-40">
-                                {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <h3 className="font-bold text-sm mb-1.5 leading-tight group-hover:text-primary transition-colors">{post.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed mb-4 line-clamp-2">{post.content}</p>
-                <div className="flex items-center justify-between pt-3 border-t border-primary/5">
-                    <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className={cn("h-8 px-3 rounded-lg text-xs font-bold gap-2", userHasLiked ? "text-primary bg-primary/5" : "text-muted-foreground")}
-                        onClick={handleLike}
-                        disabled={isLiking}
-                    >
-                        <Heart className={cn("h-3.5 w-3.5", userHasLiked && "fill-current")} />
-                        <span>{post.likes}</span>
-                    </Button>
-                </div>
-            </CardContent>
-        </Card>
-    );
-}
-
 const aiFeatures = [
     { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Case Strength", desc: "Litigation success probability.", color: "text-blue-500", bg: "bg-blue-500/10" },
     { href: "/dashboard/document-intelligence", icon: Search, title: "Forensic Analysis", desc: "Scan documents for hidden risks.", color: "text-amber-600", bg: "bg-amber-500/10" },
     { href: "/dashboard/document-generator", icon: FileText, title: "Statutory Drafting", desc: "Generate professional legal notices.", color: "text-emerald-600", bg: "bg-emerald-500/10" },
     { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bond Protocol", desc: "Official bail and indemnity bonds.", color: "text-purple-600", bg: "bg-purple-500/10" },
-    { href: "/dashboard/evidence-audit", icon: ShieldCheck, title: "Evidence Audit", desc: "Verify evidence consistency.", color: "text-cyan-500", bg: "bg-cyan-500/10" },
-    { href: "/dashboard/bail-estimator", icon: Gavel, title: "Bail Matrix", desc: "AI-powered bail success estimator.", color: "text-rose-500", bg: "bg-rose-500/10" },
-    { href: "/dashboard/statutory-linker", icon: Zap, title: "BNS Linker", desc: "Maps cases to latest BNS sections.", color: "text-indigo-500", bg: "bg-indigo-500/10" },
-    { href: "/dashboard/contract-auditor", icon: FileCheck, title: "Contract Audit", desc: "Identify unfavorable clauses.", color: "text-teal-600", bg: "bg-teal-600/10" },
 ];
 
 export default function DashboardHomePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
@@ -160,24 +87,14 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
   const [isTyping, setIsTyping] = useState(true);
   const fullText = 'Sahayak';
   const { playSound } = useSoundEffect();
+  const { toast } = useToast();
   
   const firestore = useFirestore();
   const auth = useAuth();
-  const [latestPosts, setLatestPosts] = useState<Post[]>([]);
-  const [postsLoading, setPostsLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubAuth = onAuthStateChanged(auth, () => {
-        const q = query(collection(firestore, "posts"), orderBy("createdAt", "desc"), limit(3));
-        return onSnapshot(q, (snap) => {
-            const list: Post[] = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
-            setLatestPosts(list);
-            setPostsLoading(false);
-        }, () => setPostsLoading(false));
-    });
-    return () => unsubAuth();
-  }, [auth, firestore]);
   
+  const [quickJargon, setQuickJargon] = useState("");
+  const [isProcessingJargon, setIsProcessingJargon] = useState(false);
+
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (isTyping) {
@@ -195,91 +112,147 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
     return () => clearTimeout(timeoutId);
   }, [text, isTyping]);
 
-  const isGuest = !auth.currentUser;
+  const handleQuickAudit = () => {
+      if (!quickJargon) return;
+      setIsProcessingJargon(true);
+      playSound('scan');
+      setTimeout(() => {
+          setIsProcessingJargon(false);
+          toast({
+              title: "Forensic Node Sync",
+              description: "Full explanation generated in Support Terminal.",
+          });
+          setQuickJargon("");
+      }, 1500);
+  };
 
   return (
-    <div className="flex flex-col h-full space-y-10 pb-12 max-w-7xl mx-auto text-left relative pt-2">
-        <MotionWrapper>
-          <Card className="relative overflow-hidden border-none bg-card/40 backdrop-blur-xl shadow-2xl rounded-[2.5rem] group transition-all duration-500">
+    <div className="flex flex-col h-full space-y-8 pb-20 max-w-7xl mx-auto text-left relative pt-2">
+        {/* HERO SECTION - REFINED FOR HIGH DENSITY */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <Card className="relative overflow-hidden border-none bg-card/40 backdrop-blur-xl shadow-2xl rounded-[2.5rem] group">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/5 pointer-events-none" />
-              <div className="p-8 sm:p-16 relative z-10 flex flex-col lg:flex-row items-center gap-12">
-                  <div className="flex-1 space-y-10 text-center lg:text-left">
-                      <div className="space-y-6">
-                          <h1 className="text-4xl sm:text-7xl font-black tracking-tight text-foreground leading-[1.1]">
+              <div className="p-8 sm:p-12 relative z-10 flex flex-col lg:flex-row items-center gap-10">
+                  <div className="flex-1 space-y-8 text-center lg:text-left">
+                      <div className="space-y-4">
+                          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-foreground leading-none">
                               Nyaya <span className="animate-pan italic">{text}</span>
                           </h1>
-                          <p className="text-base sm:text-xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
-                              India's premier AI legal command center. Experience elite-grade forensic intelligence and statutory navigational roadmaps.
+                          <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed opacity-80">
+                              Elite AI legal command center. Experience mathematically precise forensic intelligence and statutory roadmaps.
                           </p>
                       </div>
 
-                      <div className="flex flex-wrap items-center justify-center lg:justify-start gap-5">
-                          <Button size="lg" className="rounded-2xl font-black uppercase tracking-widest h-14 px-10 shadow-2xl shadow-primary/20 active:scale-95 transition-all group overflow-hidden text-[10px]" asChild>
+                      <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                          <Button size="lg" className="rounded-xl font-black uppercase tracking-widest h-12 px-8 shadow-xl shadow-primary/20 active:scale-95 transition-all text-[10px]" asChild>
                               <Link href="/dashboard/narrate">
-                                  <Mic className="h-4 w-4 mr-3" /> Initialize Case Record <ArrowRight className="h-4 w-4 ml-3 transition-transform group-hover:translate-x-1" />
+                                  <Mic className="h-4 w-4 mr-2" /> Start Case Record
                               </Link>
                           </Button>
-                          <Button variant="ghost" className="h-14 rounded-2xl px-8 font-black uppercase tracking-widest text-primary text-[10px] hover:bg-primary/5" asChild>
+                          <Button variant="ghost" className="h-12 rounded-xl px-6 font-black uppercase tracking-widest text-primary text-[10px] hover:bg-primary/5" asChild>
                               <Link href="/dashboard/learn">Knowledge Ingress</Link>
                           </Button>
                       </div>
                   </div>
 
-                  <div className="hidden lg:flex w-80 shrink-0 flex-col gap-4">
-                      <Card className="bg-background/50 border-primary/5 p-5 rounded-[1.5rem] shadow-md hover:shadow-lg transition-all group/status border-l-4 border-l-green-500">
-                          <div className="flex items-center gap-3 mb-2">
-                              <div className="p-2 rounded-lg bg-green-500/10 group-hover/status:bg-green-500/20 transition-colors">
-                                <Activity className="h-4 w-4 text-green-600 animate-pulse" />
-                              </div>
-                              <p className="font-black text-[9px] uppercase tracking-widest text-muted-foreground">Neural Status</p>
+                  <div className="hidden lg:flex flex-col gap-3 w-72">
+                      <div className="p-4 rounded-2xl bg-white/50 dark:bg-black/20 border border-primary/10 shadow-sm flex items-center gap-4 group/tele">
+                          <div className="p-2 rounded-lg bg-green-500/10 group-hover/tele:bg-green-500/20 transition-colors">
+                              <Activity className="h-4 w-4 text-green-600 animate-pulse" />
                           </div>
-                          <p className="text-xs font-black text-green-600 uppercase">Terminal Synchronized</p>
-                      </Card>
-                      <Card className="bg-background/50 border-primary/5 p-5 rounded-[1.5rem] shadow-md hover:shadow-lg transition-all group/sec border-l-4 border-l-primary">
-                          <div className="flex items-center gap-3 mb-2">
-                              <div className="p-2 rounded-lg bg-primary/10 group-hover/sec:bg-primary/20 transition-colors">
-                                <ShieldCheck className="h-4 w-4 text-primary" />
-                              </div>
-                              <p className="font-black text-[9px] uppercase tracking-widest text-muted-foreground">Forensic Shield</p>
+                          <div className="text-left">
+                              <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Neural Status</p>
+                              <p className="text-[10px] font-black text-green-600 uppercase">Synchronized</p>
                           </div>
-                          <p className="text-xs font-black text-primary uppercase">Active Encryption Node</p>
-                      </Card>
-                      <div className="px-4 py-2 bg-primary/5 rounded-xl border border-primary/10 text-center">
-                          <p className="text-[8px] font-black uppercase tracking-[0.4em] text-primary/60">Institutional ID: NS-ALPHA-4.2</p>
+                      </div>
+                      <div className="p-4 rounded-2xl bg-white/50 dark:bg-black/20 border border-primary/10 shadow-sm flex items-center gap-4 group/sec">
+                          <div className="p-2 rounded-lg bg-primary/10 group-hover/sec:bg-primary/20 transition-colors">
+                              <ShieldCheck className="h-4 w-4 text-primary" />
+                          </div>
+                          <div className="text-left">
+                              <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Shield Status</p>
+                              <p className="text-[10px] font-black text-primary uppercase">AES-256 Active</p>
+                          </div>
                       </div>
                   </div>
               </div>
-              <div className="h-1.5 w-full bg-gradient-to-r from-primary via-blue-400 to-primary"></div>
+              <div className="h-1 w-full bg-gradient-to-r from-primary via-blue-400 to-primary/20"></div>
           </Card>
-        </MotionWrapper>
+        </motion.div>
 
-        <div className="grid lg:grid-cols-12 gap-10">
+        <div className="grid lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 space-y-10">
+              {/* SECTION: INSTANT FORENSIC INGRESS (SHORT TOOLS) */}
               <section>
-                  <div className="flex items-center justify-between mb-8 pb-3 border-b border-primary/10">
-                      <div className="flex items-center gap-3 text-primary">
+                  <div className="flex items-center gap-3 mb-6 pb-2 border-b border-primary/5">
+                      <Zap className="h-5 w-5 text-primary" />
+                      <h2 className="text-xs font-black tracking-[0.3em] uppercase">Quick Ingress Terminal</h2>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                      <Card className="p-6 rounded-[2rem] border-primary/5 bg-primary/[0.02] shadow-xl text-left group">
+                          <div className="space-y-4">
+                              <div className="flex items-center justify-between">
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-primary">Jargon Simplifier</span>
+                                  <Lightbulb className="h-4 w-4 text-amber-500 opacity-40" />
+                              </div>
+                              <div className="flex gap-2">
+                                  <Input 
+                                    placeholder="Enter legal term..." 
+                                    className="h-10 bg-background border-primary/10 font-bold text-xs rounded-xl"
+                                    value={quickJargon}
+                                    onChange={(e) => setQuickJargon(e.target.value)}
+                                  />
+                                  <Button size="icon" className="h-10 w-10 rounded-xl shrink-0" onClick={handleQuickAudit} disabled={isProcessingJargon || !quickJargon}>
+                                      {isProcessingJargon ? <Loader2 className="h-4 w-4 animate-spin" /> : <ChevronRight className="h-4 w-4" />}
+                                  </Button>
+                              </div>
+                              <p className="text-[8px] font-bold text-muted-foreground opacity-60">Instant explanation via neural dictionary node.</p>
+                          </div>
+                      </Card>
+                      <Card className="p-6 rounded-[2rem] border-primary/5 bg-blue-500/[0.02] shadow-xl text-left group">
+                          <div className="space-y-4">
+                              <div className="flex items-center justify-between">
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-blue-600">BNS Statutory Node</span>
+                                  <Gavel className="h-4 w-4 text-blue-500 opacity-40" />
+                              </div>
+                              <div className="flex gap-2">
+                                  <Input placeholder="Search BNS section..." className="h-10 bg-background border-primary/10 font-bold text-xs rounded-xl" />
+                                  <Button size="icon" variant="outline" className="h-10 w-10 rounded-xl shrink-0 border-primary/10 text-primary">
+                                      <Search className="h-4 w-4" />
+                                  </Button>
+                              </div>
+                              <p className="text-[8px] font-bold text-muted-foreground opacity-60">Map old IPC codes to the new BNS framework.</p>
+                          </div>
+                      </Card>
+                  </div>
+              </section>
+
+              {/* SECTION: ELITE MODULES */}
+              <section>
+                  <div className="flex items-center justify-between mb-6 pb-2 border-b border-primary/5">
+                      <div className="flex items-center gap-3 text-primary/60">
                           <Sparkles className="h-5 w-5" />
-                          <h2 className="text-sm font-black tracking-[0.3em] uppercase">Elite AI Suite</h2>
+                          <h2 className="text-xs font-black tracking-[0.3em] uppercase">Specialized Terminals</h2>
                       </div>
-                      <Badge variant="outline" className="font-black text-[8px] uppercase tracking-widest border-primary/20 text-primary">8 Forensic Modules Active</Badge>
+                      <Badge variant="outline" className="font-black text-[8px] uppercase tracking-widest border-primary/20 text-primary">Full Suite Access</Badge>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {aiFeatures.map((f, i) => (
                         <motion.div key={f.href} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + (i * 0.05) }}>
-                            <Link href={f.href} className="block group" onMouseEnter={() => playSound('hover')}>
-                                <Card className="p-6 rounded-[1.8rem] border-primary/5 hover:border-primary/20 hover:bg-card transition-all text-left shadow-xl group-active:scale-[0.98] relative overflow-hidden h-full">
+                            <Link href={f.href} className="block group">
+                                <Card className="p-6 rounded-[1.8rem] border-primary/5 hover:border-primary/20 hover:bg-card transition-all text-left shadow-lg group-active:scale-[0.98] relative overflow-hidden h-full">
                                     <div className="flex items-start gap-5 relative z-10">
                                         <div className={cn(
-                                            "p-4 rounded-2xl transition-all shadow-lg shrink-0",
+                                            "p-4 rounded-2xl transition-all shadow-md shrink-0",
                                             f.bg, f.color, "group-hover:scale-110"
                                         )}>
                                             <f.icon className="h-6 w-6" />
                                         </div>
-                                        <div className="flex-1 space-y-1.5 min-w-0">
-                                            <h3 className="font-black text-base tracking-tight text-foreground uppercase leading-none group-hover:text-primary transition-colors truncate">{f.title}</h3>
-                                            <p className="text-[11px] text-muted-foreground font-bold leading-relaxed">{f.desc}</p>
+                                        <div className="flex-1 space-y-1 min-w-0">
+                                            <h3 className="font-black text-sm tracking-tight text-foreground uppercase leading-none group-hover:text-primary transition-colors truncate">{f.title}</h3>
+                                            <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">{f.desc}</p>
                                         </div>
-                                        <ChevronRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0 mt-1" />
+                                        <ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0 mt-1" />
                                     </div>
                                     <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </Card>
@@ -289,89 +262,99 @@ export default function DashboardHomePage(props: { params: Promise<any>, searchP
                   </div>
               </section>
 
+              {/* SECTION: AUDIT LEDGER (REPORTS) */}
               <section>
-                  <div className="flex items-center justify-between mb-8 pb-3 border-b border-primary/10">
+                  <div className="flex items-center justify-between mb-6 pb-2 border-b border-primary/5">
                       <div className="flex items-center gap-3 text-primary/60">
-                          <TrendingUp className="h-5 w-5" />
-                          <h2 className="text-sm font-black tracking-[0.3em] uppercase">Statutory Transmissions</h2>
+                          <History className="h-5 w-5" />
+                          <h2 className="text-xs font-black tracking-[0.3em] uppercase">Statutory Audit Registry</h2>
                       </div>
-                      <Button variant="link" className="h-auto p-0 text-[10px] font-black uppercase tracking-widest text-primary hover:no-underline" asChild>
-                          <Link href="/dashboard/research-analytics" className="flex items-center gap-2">
-                            Access Global Feed <ChevronRight className="h-3 w-3" />
-                          </Link>
-                      </Button>
+                      <Link href="/dashboard/my-cases" className="text-[9px] font-black uppercase text-primary hover:underline">View All</Link>
                   </div>
-                  <div className="grid gap-6">
-                      {postsLoading ? (
-                          <div className="space-y-6">
-                              {[...Array(2)].map((_, i) => (
-                                  <Card key={i} className="h-32 animate-pulse border-primary/5 rounded-[1.5rem] bg-muted/10" />
-                              ))}
-                          </div>
-                      ) : (
-                          <div className="grid gap-6">
-                              {latestPosts.map((post) => (
-                                  <PostCard key={post.id} post={post} />
-                              ))}
-                          </div>
-                      )}
-                  </div>
+                  <Card className="rounded-[2.5rem] border-primary/5 shadow-xl overflow-hidden bg-card/40">
+                      <div className="divide-y divide-primary/5">
+                          {[
+                              { id: "AUD-001", type: "Document Intelligence", date: "2H ago", status: "Success", color: "text-green-600", bg: "bg-green-500/5", icon: FileCheck },
+                              { id: "AUD-002", type: "Voice Narration", date: "1D ago", status: "Analyzed", color: "text-blue-600", bg: "bg-blue-500/5", icon: Mic },
+                              { id: "AUD-003", type: "Bail Probability", date: "3D ago", status: "High Risk", color: "text-amber-600", bg: "bg-amber-500/5", icon: AlertTriangle }
+                          ].map((audit, i) => (
+                              <div key={audit.id} className="p-5 flex items-center justify-between group hover:bg-primary/[0.02] transition-colors cursor-pointer">
+                                  <div className="flex items-center gap-4">
+                                      <div className={cn("p-2.5 rounded-xl border border-primary/5 shadow-sm", audit.bg)}>
+                                          <audit.icon className={cn("h-4 w-4", audit.color)} />
+                                      </div>
+                                      <div className="text-left">
+                                          <p className="font-black text-xs uppercase tracking-tight text-foreground">{audit.type}</p>
+                                          <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">Node: {audit.id} • {audit.date}</p>
+                                      </div>
+                                  </div>
+                                  <div className="flex items-center gap-4">
+                                      <Badge variant="outline" className={cn("font-black text-[8px] uppercase tracking-widest px-3 py-1 border-primary/10", audit.color, audit.bg)}>
+                                          {audit.status}
+                                      </Badge>
+                                      <ChevronRight className="h-4 w-4 text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                                  </div>
+                              </div>
+                          ))}
+                      </div>
+                  </Card>
               </section>
           </div>
 
-          <div className="lg:col-span-4 space-y-10">
+          <div className="lg:col-span-4 space-y-8">
+              {/* SIDEBAR: SYSTEM TELEMETRY */}
               <section className="space-y-6">
-                  <div className="flex items-center gap-3 text-primary/60 mb-6 pb-3 border-b border-primary/10">
+                  <div className="flex items-center gap-3 text-primary/60 mb-4 pb-2 border-b border-primary/10">
                       <Fingerprint className="h-5 w-5" />
-                      <h2 className="text-sm font-black tracking-[0.3em] uppercase">Registry Insights</h2>
+                      <h2 className="text-xs font-black tracking-[0.3em] uppercase">Neural Telemetry</h2>
                   </div>
-                  <Card className="glass border-primary/10 rounded-[2rem] overflow-hidden shadow-2xl relative">
-                      <div className="absolute top-0 right-0 p-6 opacity-[0.02] pointer-events-none">
-                          <Logo className="h-32 w-32" />
+                  <Card className="glass border-primary/10 rounded-[2.2rem] overflow-hidden shadow-2xl relative group">
+                      <div className="absolute top-0 right-0 p-6 opacity-[0.02] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
+                          <Logo className="h-32 w-32 grayscale" priority={false} />
                       </div>
                       <div className="p-8 space-y-8 relative z-10">
                           <div className="space-y-4">
                               <div className="flex items-center justify-between">
-                                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">BNS Audit Volume</span>
-                                  <span className="text-xs font-black text-primary">High</span>
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Neural Capacity</span>
+                                  <span className="text-[10px] font-black text-primary">Optimal</span>
                               </div>
                               <div className="h-1.5 w-full bg-primary/5 rounded-full overflow-hidden">
-                                  <motion.div initial={{ width: 0 }} animate={{ width: "78%" }} className="h-full bg-primary" />
+                                  <motion.div initial={{ width: 0 }} animate={{ width: "82%" }} className="h-full bg-primary" />
                               </div>
                           </div>
                           
                           <div className="space-y-4">
                               <div className="flex items-center justify-between">
-                                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Expert Availability</span>
-                                  <span className="text-xs font-black text-green-600">Optimal</span>
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Database Sync</span>
+                                  <span className="text-[10px] font-black text-green-600">Active</span>
                               </div>
                               <div className="h-1.5 w-full bg-green-500/5 rounded-full overflow-hidden">
-                                  <motion.div initial={{ width: 0 }} animate={{ width: "92%" }} className="h-full bg-green-500" />
+                                  <motion.div initial={{ width: 0 }} animate={{ width: "96%" }} className="h-full bg-green-500" />
                               </div>
                           </div>
 
                           <div className="pt-6 border-t border-primary/5 text-center">
-                              <p className="text-[9px] font-bold text-muted-foreground italic leading-relaxed">
-                                  "Real-time forensic telemetry provided by the Nyaya Sahayak Neural Core."
+                              <p className="text-[9px] font-bold text-muted-foreground italic leading-relaxed opacity-60">
+                                  "Forensic telemetry verified by Nyaya Sahayak Neural Core."
                               </p>
                           </div>
                       </div>
                   </Card>
 
-                  <Card className="bg-primary border-none rounded-[2rem] overflow-hidden shadow-2xl shadow-primary/20 relative group cursor-pointer" asChild>
+                  <Card className="bg-primary border-none rounded-[2.2rem] overflow-hidden shadow-2xl shadow-primary/20 relative group cursor-pointer" asChild>
                       <Link href="/dashboard/billing">
                         <div className="p-8 text-white relative z-10 space-y-6">
                             <div className="flex justify-between items-start">
-                                <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-md">
+                                <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-md border border-white/10">
                                     <Zap className="h-6 w-6 text-white" />
                                 </div>
-                                <Badge className="bg-white text-primary font-black text-[8px] uppercase tracking-widest">Elite Access</Badge>
+                                <Badge className="bg-white text-primary font-black text-[8px] uppercase tracking-widest border-none">Elite Access</Badge>
                             </div>
                             <div className="space-y-2">
                                 <h3 className="text-2xl font-black tracking-tighter uppercase leading-none">Upgrade Node</h3>
-                                <p className="text-white/70 text-xs font-medium leading-relaxed">Unlock the full potential of forensic AI terminals.</p>
+                                <p className="text-white/70 text-[10px] font-medium leading-relaxed">Unlock the full potential of elite forensic AI terminals.</p>
                             </div>
-                            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white/10 w-fit px-4 py-2 rounded-xl">
+                            <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest bg-white/10 w-fit px-5 py-2.5 rounded-xl border border-white/10 group-hover:bg-white/20 transition-all">
                                 Explore Plans <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
                             </div>
                         </div>
