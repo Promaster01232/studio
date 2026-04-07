@@ -17,7 +17,11 @@ import {
   ListRestart,
   Scale,
   Globe,
-  BellRing
+  BellRing,
+  Clock,
+  ExternalLink,
+  ShieldAlert,
+  History
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
@@ -185,7 +189,14 @@ export default function PrivacyPage() {
                             <div className="space-y-4 text-sm text-muted-foreground leading-loose">
                                 <p className="font-bold text-foreground">Personal information you disclose to us</p>
                                 <p>We collect personal information that you voluntarily provide to us when you register on Nyaya Sahayak, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us.</p>
-                                <p>This includes: names, email addresses, usernames, passwords, and contact preferences.</p>
+                                <p>The personal information we collect may include: names, email addresses, usernames, passwords, contact preferences, and mobile numbers for registry verification.</p>
+                                
+                                <p className="font-black text-foreground uppercase tracking-widest text-[10px] pt-4">Data specific to AI Legal Assistance</p>
+                                <ul className="space-y-3">
+                                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0"></div><span><strong>Voice Recordings:</strong> Audio data transmitted during the "Narrate Problem" session for forensic transcription.</span></li>
+                                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0"></div><span><strong>Legal Documents:</strong> PDFs or images uploaded for AI document intelligence and risk scanning.</span></li>
+                                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0"></div><span><strong>Case Narratives:</strong> Textual descriptions of legal matters provided for case strength analysis.</span></li>
+                                </ul>
                             </div>
                         </section>
 
@@ -194,7 +205,17 @@ export default function PrivacyPage() {
                                 <div className="p-3 rounded-2xl bg-indigo-500/10 text-indigo-500"><ListRestart className="h-6 w-6" /></div>
                                 <h4 className="text-xl font-black tracking-tight text-primary uppercase">2. HOW DO WE PROCESS YOUR INFORMATION?</h4>
                             </div>
-                            <p className="text-sm text-muted-foreground leading-loose">We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. Key reasons include: account management, vital interests protection, and personalization.</p>
+                            <p className="text-sm text-muted-foreground leading-loose">We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. Specifically:</p>
+                            <ul className="grid gap-4 sm:grid-cols-2">
+                                <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
+                                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
+                                    <span>Generating AI summaries and legal roadmaps from your narrations.</span>
+                                </li>
+                                <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
+                                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
+                                    <span>Auditing legal documents for statutory risks and deadlines.</span>
+                                </li>
+                            </ul>
                         </section>
 
                         <section id="section-6" className="space-y-4 scroll-mt-10">
@@ -202,7 +223,13 @@ export default function PrivacyPage() {
                                 <div className="p-3 rounded-2xl bg-cyan-500/10 text-cyan-500"><Cpu className="h-6 w-6" /></div>
                                 <h4 className="text-xl font-black tracking-tight text-primary uppercase">6. ARTIFICIAL INTELLIGENCE PRODUCTS</h4>
                             </div>
-                            <p className="text-sm text-muted-foreground leading-loose">Nyaya Sahayak offers AI-based products through providers like Google Cloud AI. Your input data is processed strictly to enable bot functionality, governed by high security and encryption standards.</p>
+                            <div className="space-y-4 text-sm text-muted-foreground leading-loose">
+                                <p>Nyaya Sahayak utilizes the <strong>Nyaya Mitra</strong> neural engine powered by Google Gemini. This processing is ephemeral for many tools:</p>
+                                <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10">
+                                    <p className="font-bold text-foreground mb-3">Neural Security Protocol</p>
+                                    <p>Your uploaded documents and voice recordings are processed in a secure execution environment. We do NOT use your private case data to train our primary models. Data is deleted from neural processing buffers immediately after the statutory report is generated.</p>
+                                </div>
+                            </div>
                         </section>
 
                         <section id="section-12" className="space-y-6 scroll-mt-10">
@@ -218,13 +245,22 @@ export default function PrivacyPage() {
                                             <tr>
                                                 <th className="p-3 font-black uppercase text-[9px]">Category</th>
                                                 <th className="p-3 font-black uppercase text-[9px]">Collected</th>
+                                                <th className="p-3 font-black uppercase text-[9px]">Retention</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-primary/5">
-                                            {["Identifiers", "Personal Info", "Internet Activity", "Geolocation", "Audio/Sensory", "Inferences"].map((cat, i) => (
+                                            {[
+                                                { cat: "Identifiers", coll: "YES", ret: "Account Duration" },
+                                                { cat: "Customer Records", coll: "YES", ret: "Account Duration" },
+                                                { cat: "Internet Activity", coll: "YES", ret: "24 Months" },
+                                                { cat: "Geolocation", coll: "YES", ret: "Session Only" },
+                                                { cat: "Audio/Sensory", coll: "YES", ret: "Purged Post-Audit" },
+                                                { cat: "Inferences", coll: "YES", ret: "Account Duration" }
+                                            ].map((row, i) => (
                                                 <tr key={i}>
-                                                    <td className="p-3 text-[10px] font-bold text-foreground">{cat}</td>
+                                                    <td className="p-3 text-[10px] font-bold text-foreground">{row.cat}</td>
                                                     <td className="p-3 text-[10px] font-black text-primary">YES</td>
+                                                    <td className="p-3 text-[10px] opacity-60">{row.ret}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -239,7 +275,21 @@ export default function PrivacyPage() {
                                 <h4 className="text-xl font-black tracking-tight text-primary uppercase">13. INDIAN RESIDENTS RIGHTS (DPDP ACT)</h4>
                             </div>
                             <div className="space-y-4 text-sm text-muted-foreground leading-loose">
-                                <p>Under the DPDP Act 2023, Indian residents have rights to: data summary, correction, grievance redressal, and withdrawal of consent.</p>
+                                <p>Under the <strong>Digital Personal Data Protection Act, 2023 (DPDP Act)</strong>, Indian residents (Data Principals) have the following rights:</p>
+                                <ul className="grid gap-4 sm:grid-cols-2 list-none p-0">
+                                    {[
+                                        "Obtain a summary of data being processed.",
+                                        "Request correction and erasure of registry records.",
+                                        "Access grievance redressal via our Grievance Officer.",
+                                        "Nominate individuals to manage your node in incapacity.",
+                                        "Withdraw consent for non-essential neural processing."
+                                    ].map((right, i) => (
+                                        <li key={i} className="p-4 border rounded-xl bg-muted/10 font-bold text-[10px] uppercase tracking-tight flex items-center gap-3 shadow-sm">
+                                            <CheckCircle2 className="h-4 w-4 text-primary" />
+                                            {right}
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
                         </section>
 
@@ -275,7 +325,7 @@ export default function PrivacyPage() {
                                 <div className="p-3 rounded-2xl bg-red-500/10 text-red-500"><Trash2 className="h-6 w-6" /></div>
                                 <h4 className="text-xl font-black tracking-tight text-primary uppercase">16. REVIEW OR DELETE DATA</h4>
                             </div>
-                            <p className="text-sm text-muted-foreground leading-loose">Request access to, change, or delete your personal info by contacting our digital hub.</p>
+                            <p className="text-sm text-muted-foreground leading-loose">Users maintain sovereign authority over their registry nodes. You can initiate a "Total Registry Erasure" through your profile settings or by emailing our data fiduciary node at nyayasahayakhelp@gmail.com. All associated data will be purged within 30 statutory days.</p>
                         </section>
                     </div>
                 </div>

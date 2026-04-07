@@ -23,7 +23,9 @@ import {
   UserCheck,
   Eye,
   ShieldAlert,
-  History
+  History,
+  FileText,
+  User
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
@@ -193,8 +195,15 @@ export default function PrivacyPage() {
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
                 <p className="font-black text-foreground uppercase tracking-widest text-[10px]">Personal information you disclose to us</p>
                 <p>We collect personal information that you voluntarily provide to us when you register on Nyaya Sahayak, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us.</p>
-                <p>The personal information we collect may include: names, email addresses, usernames, passwords, and contact preferences.</p>
+                <p>The personal information we collect may include: names, email addresses, usernames, passwords, contact preferences, and mobile numbers for registry verification.</p>
                 
+                <p className="font-black text-foreground uppercase tracking-widest text-[10px] pt-4">Data specific to AI Legal Assistance</p>
+                <ul className="space-y-3">
+                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0"></div><span><strong>Voice Recordings:</strong> Audio data transmitted during the "Narrate Problem" session for forensic transcription.</span></li>
+                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0"></div><span><strong>Legal Documents:</strong> PDFs or images uploaded for AI document intelligence and risk scanning.</span></li>
+                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0"></div><span><strong>Case Narratives:</strong> Textual descriptions of legal matters provided for case strength analysis.</span></li>
+                </ul>
+
                 <p className="font-black text-foreground uppercase tracking-widest text-[10px] pt-4">Information automatically collected</p>
                 <p>We automatically collect certain information when you visit, use, or navigate nyayasahayak.in. This includes device and usage information, such as your IP address, browser and device characteristics, operating system, language preferences, and referral URLs. This data is primarily used for the security and operation of our Services.</p>
             </div>
@@ -206,23 +215,23 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
             </div>
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                <p>We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. Key reasons include:</p>
+                <p>We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. Specifically:</p>
                 <ul className="grid gap-4 sm:grid-cols-2">
                     <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
                         <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
-                        <span>Facilitate account creation and authentication.</span>
+                        <span>Generating AI summaries and legal roadmaps from your narrations.</span>
                     </li>
                     <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
                         <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
-                        <span>Save or protect vital interests (preventing harm).</span>
+                        <span>Auditing legal documents for statutory risks and deadlines.</span>
                     </li>
                     <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
                         <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
-                        <span>Personalize your experience and show relevant content.</span>
+                        <span>Facilitating connections with verified advocates in the directory.</span>
                     </li>
                     <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
                         <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
-                        <span>Prevent spam and abuse through active usage analysis.</span>
+                        <span>Managing the success-only statutory billing and clearance nodes.</span>
                     </li>
                 </ul>
             </div>
@@ -233,9 +242,14 @@ export default function PrivacyPage() {
                 <div className="p-3 rounded-2xl bg-orange-500/10 text-orange-500"><ShieldCheck className="h-6 w-6" /></div>
                 <h3 className="text-2xl font-black tracking-tight text-primary">3. WHAT LEGAL BASES DO WE RELY ON?</h3>
             </div>
-            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                We only process your personal information when we believe it is necessary and we have a valid legal reason to do so under applicable law, like with your consent, to comply with laws, to provide you with services, or to protect your rights.
-            </p>
+            <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose text-left">
+                <p>We rely on several legal foundations to process your data, depending on your jurisdiction:</p>
+                <ul className="space-y-3">
+                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-orange-500 mt-2 shrink-0"></div><span><strong>Consent:</strong> When you explicitly authorize us to analyze a recording or document.</span></li>
+                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-orange-500 mt-2 shrink-0"></div><span><strong>Contract:</strong> To fulfill the terms of your chosen subscription tier.</span></li>
+                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-orange-500 mt-2 shrink-0"></div><span><strong>Legal Obligation:</strong> To comply with statutory requirements under Indian law (e.g., the DPDP Act).</span></li>
+                </ul>
+            </div>
         </section>
 
         <section id="section-4" className="space-y-6 scroll-mt-24">
@@ -244,8 +258,13 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">4. WHEN AND WITH WHOM DO WE SHARE INFO?</h3>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                We may share information in specific situations described in this section and/or with third-party service providers who perform services for us or on our behalf and require access to such information to do that work.
+                We share data with third-party vendors who help us operate the platform:
             </p>
+            <ul className="space-y-3 text-sm text-muted-foreground font-medium">
+                <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-blue-500 mt-2 shrink-0"></div><span><strong>Cloud Infrastructure:</strong> Firebase and Google Cloud for secure data hosting.</span></li>
+                <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-blue-500 mt-2 shrink-0"></div><span><strong>AI Engines:</strong> Google Gemini nodes for neural case analysis.</span></li>
+                <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-blue-500 mt-2 shrink-0"></div><span><strong>Payment Gateways:</strong> Razorpay for statutory clearance transactions.</span></li>
+            </ul>
         </section>
 
         <section id="section-5" className="space-y-6 scroll-mt-24">
@@ -254,7 +273,7 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">5. STANCE ON THIRD-PARTY WEBSITES</h3>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                The Services may link to third-party websites, online services, or mobile applications. We cannot guarantee the safety and privacy of data you provide to any third parties. Any data collected by third parties is not covered by this Privacy Notice.
+                Nyaya Sahayak often provides links to official portals like eCourts Services. We are not responsible for the privacy practices of these external government or professional sites. Users should review the policies of those specific nodes before providing sensitive information.
             </p>
         </section>
 
@@ -264,21 +283,21 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">6. DO WE OFFER ARTIFICIAL INTELLIGENCE-BASED PRODUCTS?</h3>
             </div>
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                <p>Nyaya Sahayak offers products, features, or tools powered by artificial intelligence (collectively, "AI Products"). These tools are designed to enhance your experience and provide you with innovative solutions.</p>
+                <p>Nyaya Sahayak utilizes the <strong>Nyaya Mitra</strong> neural engine powered by Google Gemini. This processing is ephemeral for many tools:</p>
                 <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10">
-                    <p className="font-bold text-foreground mb-3">Use of AI Technologies</p>
-                    <p>We provide the AI Products through third-party service providers, including Google Cloud AI. Your input and output data will be shared with and processed by these providers strictly to enable bot functionality, governed by this Privacy Notice.</p>
+                    <p className="font-bold text-foreground mb-3">Neural Security Protocol</p>
+                    <p>Your uploaded documents and voice recordings are processed in a secure execution environment. We do NOT use your private case data to train our primary models. Data is deleted from neural processing buffers immediately after the statutory report is generated.</p>
                 </div>
             </div>
         </section>
 
         <section id="section-7" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-4">
-                <div className="p-3 rounded-2xl bg-indigo-500/10 text-indigo-500"><CheckCircle2 className="h-6 w-6" /></div>
+                <div className="p-3 rounded-2xl bg-indigo-500/10 text-indigo-500"><Globe className="h-6 w-6" /></div>
                 <h3 className="text-2xl font-black tracking-tight text-primary">7. HANDLING SOCIAL LOGINS</h3>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                Our Services offer you the ability to register and log in using your third-party social media account details. Where you choose to do this, we will receive certain profile information about you from your social media provider.
+                If you choose to authenticate via Google, we receive your name and email address from the identity provider. This allows for a frictionless onboarding into the Nyaya Sahayak terminal.
             </p>
         </section>
 
@@ -288,7 +307,7 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">8. DATA RETENTION PERIOD</h3>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                We will only keep your personal information for as long as it is necessary for the purposes set out in this Privacy Notice, unless a longer retention period is required or permitted by law.
+                We maintain your identity node for as long as your account is active. Community transmissions (posts) are subject to a <strong>56-hour automated purge cycle</strong> to ensure transience and security. You may request a complete "Registry Purge" at any time through your profile settings.
             </p>
         </section>
 
@@ -298,7 +317,7 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">9. COLLECTION FROM MINORS</h3>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                We do not knowingly collect data from or market to children under 18 years of age. By using the Services, you represent that you are at least 18.
+                Nyaya Sahayak is intended for citizens aged 18 and above. We do not knowingly collect data from minors. Access nodes for law students require verified educational credentials.
             </p>
         </section>
 
@@ -308,7 +327,7 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">10. YOUR PRIVACY RIGHTS</h3>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                You have rights that allow you greater access to and control over your personal information. You may review, change, or terminate your account at any time.
+                You have the right to access, download, or delete your registry record. You can also object to specific processing nodes. Contact our Grievance Officer at nyayasahayakhelp@gmail.com to exercise these statutory rights.
             </p>
         </section>
 
@@ -318,40 +337,40 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">11. DO-NOT-TRACK FEATURES</h3>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                Most web browsers and some mobile operating systems include a Do-Not-Track feature. At this stage, we do not currently respond to DNT browser signals.
+                Nyaya Sahayak does not currently track users across third-party websites. However, we do not respond to DNT signals as no universal industry standard exists for this protocol.
             </p>
         </section>
 
         <section id="section-12" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-4">
                 <div className="p-3 rounded-2xl bg-amber-500/10 text-amber-500"><Globe className="h-6 w-6" /></div>
-                <h3 className="text-2xl font-black tracking-tight text-primary">12. DO UNITED STATES RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h3>
+                <h3 className="text-2xl font-black tracking-tight text-primary">12. US STATE PRIVACY RIGHTS</h3>
             </div>
             <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                <p>If you are a resident of California, Colorado, Connecticut, Delaware, Florida, Indiana, Iowa, Kentucky, Maryland, Minnesota, Montana, Nebraska, New Hampshire, New Jersey, Oregon, Rhode Island, Tennessee, Texas, Utah, or Virginia, you may have specific rights regarding your personal information.</p>
+                <p>Residents of California, Colorado, and other states have specific rights under laws like the CCPA/CPRA. We do not sell your personal information. Our data collection is categorized as follows:</p>
                 
                 <div className="overflow-x-auto rounded-2xl border border-primary/10 bg-muted/20">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-primary/5">
                                 <th className="p-4 font-black uppercase text-[10px]">Category</th>
-                                <th className="p-4 font-black uppercase text-[10px]">Examples</th>
                                 <th className="p-4 font-black uppercase text-[10px]">Collected</th>
+                                <th className="p-4 font-black uppercase text-[10px]">Retention</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-primary/5">
                             {[
-                                { cat: "A. Identifiers", ex: "Real name, alias, postal address, phone, unique ID, IP, email, account name", coll: "YES" },
-                                { cat: "B. Personal Info (CA statute)", ex: "Name, contact info, education, employment, financial info", coll: "YES" },
-                                { cat: "F. Internet Activity", ex: "Browsing history, search history, online behavior, site interactions", coll: "YES" },
-                                { cat: "G. Geolocation Data", ex: "Device location", coll: "YES" },
-                                { cat: "H. Audio/Sensory", ex: "Images and audio, video or call recordings created for business", coll: "YES" },
-                                { cat: "K. Inferences", ex: "Inferences drawn to create a profile about preferences/characteristics", coll: "YES" }
+                                { cat: "Identifiers (Name, IP, Email)", coll: "YES", ret: "Account Duration" },
+                                { cat: "Customer Records (Mobile)", coll: "YES", ret: "Account Duration" },
+                                { cat: "Internet Activity (Log Data)", coll: "YES", ret: "24 Months" },
+                                { cat: "Geolocation (City/Country)", coll: "YES", ret: "Session Only" },
+                                { cat: "Audio/Sensory (Voice)", coll: "YES", ret: "Post-Processing Purge" },
+                                { cat: "Inferences (User Profiles)", coll: "YES", ret: "Account Duration" }
                             ].map((row, i) => (
                                 <tr key={i} className="hover:bg-primary/[0.02]">
                                     <td className="p-4 text-[11px] font-bold text-foreground">{row.cat}</td>
-                                    <td className="p-4 text-[11px]">{row.ex}</td>
                                     <td className="p-4 text-[11px] font-black text-primary">{row.coll}</td>
+                                    <td className="p-4 text-[11px] opacity-60">{row.ret}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -366,16 +385,16 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">13. DO INDIAN RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h3>
             </div>
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                <p>Yes, if you are a resident of India, you are granted specific rights under the <span className="text-foreground font-bold">Digital Personal Data Protection Act, 2023 (DPDP Act)</span>.</p>
+                <p>Yes, under the <strong>Digital Personal Data Protection Act, 2023 (DPDP Act)</strong>, you are a "Data Principal" and have the following rights:</p>
                 <ul className="grid gap-4 sm:grid-cols-2 list-none p-0">
                     {[
-                        "Obtain a summary of personal data being processed.",
-                        "Request correction, completion, and erasure of data.",
-                        "Have grievances redressed by our Grievance Officer.",
-                        "Nominate an individual to exercise your rights in case of death.",
-                        "Withdraw your consent at any time."
+                        "Obtain a summary of data being processed.",
+                        "Request correction and erasure of registry records.",
+                        "Access grievance redressal via our Grievance Officer.",
+                        "Nominate individuals to manage your node in incapacity.",
+                        "Withdraw consent for non-essential neural processing."
                     ].map((right, i) => (
-                        <li key={i} className="p-4 border rounded-xl bg-muted/10 font-bold text-xs uppercase tracking-tight flex items-center gap-3">
+                        <li key={i} className="p-4 border rounded-xl bg-muted/10 font-bold text-xs uppercase tracking-tight flex items-center gap-3 shadow-sm">
                             <CheckCircle2 className="h-4 w-4 text-primary" />
                             {right}
                         </li>
@@ -390,7 +409,7 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">14. UPDATES TO THIS NOTICE</h3>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                We may update this Privacy Notice from time to time. The updated version will be indicated by an updated "Revised" date at the top of this notice.
+                This policy is a living statutory instrument. We revise it as judicial protocols evolve. Significant changes will trigger a "Protocol Alert" on your dashboard terminal.
             </p>
         </section>
 
@@ -401,7 +420,7 @@ export default function PrivacyPage() {
                         <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500"><BellRing className="h-6 w-6" /></div>
                         <h3 className="text-2xl font-black tracking-tight">15. HOW CAN YOU CONTACT US?</h3>
                     </div>
-                    <p className="text-sm text-muted-foreground leading-loose">If you have questions or comments about this notice, you may email us at nyayasahayakhelp@gmail.com or contact us by post at our statutory terminal.</p>
+                    <p className="text-sm text-muted-foreground leading-loose">For data subject access requests or grievance reporting, utilize the following institutional channels:</p>
                 </div>
                 <div className="w-full md:w-96 space-y-4">
                     <Card className="p-8 bg-primary/5 border-primary/10 rounded-[2rem] shadow-inner text-left">
@@ -436,7 +455,7 @@ export default function PrivacyPage() {
                 <h3 className="text-2xl font-black tracking-tight text-primary">16. REVIEW OR DELETE DATA</h3>
             </div>
             <div className="space-y-4 text-sm text-muted-foreground font-medium leading-loose">
-                <p>Based on the applicable laws of your country, you may have the right to request access to the personal information we collect from you, change that information, or delete it in some circumstances. To request to review, update, or delete your personal information, please submit a data subject access request to our digital hub.</p>
+                <p>Users maintain sovereign authority over their registry nodes. You can initiate a "Total Registry Erasure" through your profile settings or by emailing our data fiduciary node at nyayasahayakhelp@gmail.com. All associated data will be purged within 30 statutory days.</p>
             </div>
         </section>
 
