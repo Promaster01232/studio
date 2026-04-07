@@ -39,7 +39,8 @@ import {
   MapPin,
   User,
   Smartphone,
-  Calendar
+  Calendar,
+  AlertTriangle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
