@@ -85,7 +85,7 @@ export default function DashboardHomePage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 text-left">
-      {/* WELCOME SECTION WITH ANIMATION */}
+      {/* WELCOME SECTION */}
       <motion.section 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -116,7 +116,7 @@ export default function DashboardHomePage() {
         </div>
       </motion.section>
 
-      {/* CORE TOOLS WITH NEURAL GLOW */}
+      {/* CORE TOOLS */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {tools.map((tool, i) => (
           <motion.div
@@ -160,7 +160,7 @@ export default function DashboardHomePage() {
       </section>
 
       <div className="grid lg:grid-cols-12 gap-10">
-        {/* MAIN FEED: POST VIEW */}
+        {/* MAIN FEED */}
         <div className="lg:col-span-8 space-y-10">
           <div className="flex items-center justify-between border-b border-primary/5 pb-4">
             <div className="flex items-center gap-3">
@@ -233,16 +233,16 @@ export default function DashboardHomePage() {
           </div>
         </div>
 
-        {/* SIDEBAR: CHATTING & SYSTEM STATUS */}
+        {/* SIDEBAR */}
         <div className="lg:col-span-4 space-y-10">
-          {/* AI CONVERSATION NODE (CHATTING) */}
+          {/* CHATGPT-STYLE AI CONVERSATION NODE */}
           <section className="space-y-4">
             <div className="flex items-center gap-3 px-1">
                 <Sparkles className="h-4 w-4 text-primary animate-pulse" />
                 <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Neural Conversation</h2>
             </div>
-            <Card className="border-primary/10 bg-[#0D1B2A] text-white rounded-[2.5rem] overflow-hidden shadow-2xl relative group">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent pointer-events-none" />
+            <Card className="border-primary/10 bg-[#0D1B2A] text-white rounded-[2.5rem] overflow-hidden shadow-2xl relative group min-h-[400px] flex flex-col">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
                 <CardHeader className="bg-white/5 border-b border-white/5 p-6 relative z-10">
                     <div className="flex items-center gap-3">
                         <div className="relative">
@@ -257,29 +257,49 @@ export default function DashboardHomePage() {
                         </div>
                     </div>
                 </CardHeader>
-                <CardContent className="p-6 space-y-6 relative z-10">
-                    <div className="space-y-4 h-48 overflow-y-auto custom-scrollbar text-left pr-2">
-                        <div className="bg-white/5 rounded-2xl p-4 border border-white/5 max-w-[90%]">
-                            <p className="text-xs font-medium leading-relaxed text-white/80">
-                                Namaste. I am analyzing the latest BNS amendments. How can I assist your forensic research today?
-                            </p>
+                
+                <CardContent className="p-0 flex-grow flex flex-col relative z-10">
+                    {/* Chat Messages Area */}
+                    <div className="flex-grow p-6 space-y-6 overflow-y-auto custom-scrollbar max-h-[300px]">
+                        {/* AI Message */}
+                        <div className="flex items-start gap-3 animate-in fade-in slide-in-from-left-2">
+                            <div className="bg-white/10 rounded-2xl rounded-tl-none p-4 border border-white/5 max-w-[85%] shadow-sm">
+                                <p className="text-xs font-medium leading-relaxed text-white/90">
+                                    Namaste. I am analyzing the latest statutory updates. How can I assist your forensic research today?
+                                </p>
+                            </div>
                         </div>
-                        <div className="bg-primary/20 rounded-2xl p-4 border border-primary/20 max-w-[90%] ml-auto text-right">
-                            <p className="text-xs font-medium text-primary-foreground/90">
-                                Explain Section 302 of BNS.
-                            </p>
+                        
+                        {/* User Message */}
+                        <div className="flex items-start justify-end gap-3 animate-in fade-in slide-in-from-right-2">
+                            <div className="bg-primary/20 rounded-2xl rounded-tr-none p-4 border border-primary/20 max-w-[85%] shadow-sm">
+                                <p className="text-xs font-medium leading-relaxed text-primary-foreground/90">
+                                    Explain Section 302 of Bharatiya Nyaya Sanhita.
+                                </p>
+                            </div>
                         </div>
                     </div>
-                    <div className="relative mt-auto">
-                        <Input 
-                            value={chatInput}
-                            onChange={(e) => setChatInput(e.target.value)}
-                            placeholder="Consult neural engine..." 
-                            className="h-12 bg-white/5 border-white/10 rounded-xl font-bold text-xs pr-12 text-white focus:border-primary transition-all"
-                        />
-                        <Button size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 rounded-lg bg-primary hover:bg-primary/90 shadow-xl">
-                            <Send className="h-4 w-4" />
-                        </Button>
+
+                    {/* Chat Input Terminal */}
+                    <div className="p-6 bg-white/5 border-t border-white/5 mt-auto">
+                        <div className="relative group">
+                            <Input 
+                                value={chatInput}
+                                onChange={(e) => setChatInput(e.target.value)}
+                                placeholder="Message Nyaya Mitra..." 
+                                className="h-12 bg-[#1B263B] border-white/10 rounded-2xl font-bold text-xs pr-12 text-white focus:border-primary focus:ring-primary/20 transition-all placeholder:text-white/20"
+                            />
+                            <Button 
+                                size="icon" 
+                                className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 rounded-xl bg-primary hover:bg-primary/90 shadow-xl transition-transform active:scale-90"
+                            >
+                                <Send className="h-4 w-4" />
+                            </Button>
+                        </div>
+                        <div className="flex items-center justify-center gap-2 mt-4 opacity-20">
+                            <ShieldCheck className="h-3 w-3" />
+                            <span className="text-[8px] font-black uppercase tracking-widest">End-to-End Encrypted</span>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
@@ -308,7 +328,7 @@ export default function DashboardHomePage() {
             </CardContent>
           </Card>
 
-          {/* SYSTEM STATUS CARD */}
+          {/* SYSTEM STATUS */}
           <Card className="border-primary/5 bg-muted/20 rounded-[2.5rem] shadow-sm overflow-hidden">
             <CardHeader className="p-8 pb-4 border-b border-primary/5 bg-primary/5 text-left">
               <div className="flex items-center gap-3">
@@ -334,7 +354,7 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
-      {/* INSTITUTIONAL FOOTER BAR */}
+      {/* INSTITUTIONAL FOOTER */}
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30 text-center sm:text-left">
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
