@@ -312,7 +312,7 @@ export default function BondGeneratorPage() {
                         <FormSectionTitle>Mortgagee Node (Lender)</FormSectionTitle>
                         <div className="grid md:grid-cols-2 gap-6">
                             <Input name="mortgageeName" placeholder="Name / Financial Institution" required className="h-12 glass font-bold rounded-xl" />
-                            <Textarea name="mortgageeAddress" placeholder="Official Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
+                            <Textarea name="mortgeeAddress" placeholder="Official Address..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
                         </div>
                         <FormSectionTitle>Asset Registry</FormSectionTitle>
                         <Textarea name="propertyDetails" placeholder="Full description of mortgaged property..." required className="glass rounded-xl font-medium text-sm p-4 min-h-[100px]" />
@@ -388,53 +388,53 @@ export default function BondGeneratorPage() {
             </div>
 
             <CardHeader className={cn(
-                "p-8 sm:p-12 relative z-10 transition-colors duration-500",
+                "p-10 sm:p-14 relative z-10 transition-colors duration-500 border-b border-primary/5",
                 state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-primary/5 text-foreground"
             )}>
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 text-left">
-                    <div className="space-y-4 text-left flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
+                    <div className="space-y-6 text-left flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-4">
                             <div className={cn(
-                                "flex items-center gap-2 px-3 py-1 rounded-full border",
+                                "flex items-center gap-3 px-4 py-1.5 rounded-full border",
                                 state.status === 'success' ? "bg-white/10 border-white/20" : "bg-primary/10 border-primary/20"
                             )}>
                                 <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
-                                <span className={cn("text-[10px] font-black uppercase tracking-widest", state.status === 'success' ? "text-white" : "text-primary")}>
+                                <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", state.status === 'success' ? "text-white" : "text-primary")}>
                                     Official AI Report Node Active
                                 </span>
                             </div>
                             <Badge variant="outline" className={cn(
-                                "text-[9px] font-black uppercase tracking-[0.2em]",
+                                "text-[9px] font-black uppercase tracking-[0.3em] px-4 py-1.5",
                                 state.status === 'success' ? "border-white/20 text-white/80" : "border-primary/20 text-primary/60"
                             )}>
                                 NS-BOND-ST-4.2
                             </Badge>
                             {state.isSimulated && (
-                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest">
+                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest px-4 py-1.5">
                                     <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
                                 </Badge>
                             )}
                         </div>
-                        <div className="space-y-1">
-                            <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">
+                        <div className="space-y-2">
+                            <CardTitle className="text-4xl sm:text-6xl font-black uppercase tracking-tighter leading-none">
                                 {state.status === 'success' ? <><span className="italic opacity-80">Draft Node</span> Ready.</> : "Awaiting Bond Ingress"}
                             </CardTitle>
                             <p className={cn(
-                                "text-[10px] font-bold uppercase tracking-[0.3em] flex items-center gap-2",
+                                "text-[10px] font-bold uppercase tracking-[0.4em] flex items-center gap-3",
                                 state.status === 'success' ? "text-white/60" : "text-muted-foreground"
                             )}>
-                                <Globe className="h-3 w-3" /> Registry: {bondType} // {selectedLanguage} Protocol
+                                <Globe className="h-4 w-4" /> Registry: {bondType} // {selectedLanguage} Protocol
                             </p>
                         </div>
                     </div>
                     
                     {state.status === 'success' && (
-                        <div className="flex flex-wrap items-center gap-3 shrink-0">
+                        <div className="flex flex-wrap items-center gap-4 shrink-0">
                             <Button 
                                 variant="secondary" 
                                 size="sm" 
                                 onClick={handleReset}
-                                className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                                className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl"
                             >
                                 <PlusCircle className="h-4 w-4" /> New Bond
                             </Button>
@@ -442,7 +442,7 @@ export default function BondGeneratorPage() {
                                 variant="secondary" 
                                 size="sm" 
                                 onClick={() => isEditing ? handleSave() : setIsEditing(true)} 
-                                className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                                className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl"
                             >
                                 {isEditing ? <><Save className="h-4 w-4" /> Save Registry</> : <><Edit3 className="h-4 w-4" /> Protocol Edit</>}
                             </Button>
@@ -450,7 +450,7 @@ export default function BondGeneratorPage() {
                                 variant="secondary" 
                                 size="sm" 
                                 onClick={() => handleDownloadPdf(editedContent, `Generated ${bondType}`)} 
-                                className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                                className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl"
                             >
                                 <Download className="h-4 w-4" /> Statutory PDF
                             </Button>
@@ -458,7 +458,7 @@ export default function BondGeneratorPage() {
                                 variant="secondary" 
                                 size="sm" 
                                 onClick={() => handlePrint(editedContent, `Generated ${bondType}`)} 
-                                className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                                className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl"
                             >
                                 <Printer className="h-4 w-4" /> Print
                             </Button>

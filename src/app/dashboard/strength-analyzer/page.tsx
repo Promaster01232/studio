@@ -153,7 +153,7 @@ export default function StrengthAnalyzerPage() {
                                     state.status === 'success' ? "bg-background/10 border-background/20" : "bg-foreground/5 border-foreground/10"
                                 )}>
                                     <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-background" : "text-foreground")} />
-                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", state.status === 'success' ? "text-background" : "text-foreground")}>
+                                    <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", state.status === 'success' ? "text-background" : "text-foreground")}>
                                         Official AI Report Node
                                     </span>
                                 </div>

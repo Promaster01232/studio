@@ -254,42 +254,42 @@ export default function NarrateProblemPage() {
                 </div>
 
                 <CardHeader className={cn(
-                    "p-8 sm:p-12 relative z-10 transition-colors duration-500",
+                    "p-10 sm:p-14 relative z-10 transition-colors duration-500 border-b border-primary/5",
                     state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-primary/5 text-foreground"
                 )}>
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 text-left">
-                        <div className="space-y-4 text-left flex-1 min-w-0">
-                            <div className="flex items-center gap-3">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
+                        <div className="space-y-6 text-left flex-1 min-w-0">
+                            <div className="flex items-center gap-4">
                                 <div className={cn(
-                                    "flex items-center gap-2 px-3 py-1 rounded-full border",
+                                    "flex items-center gap-3 px-4 py-1.5 rounded-full border",
                                     state.status === 'success' ? "bg-white/10 border-white/20" : "bg-primary/10 border-primary/20"
                                 )}>
                                     <Bot className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
-                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", state.status === 'success' ? "text-white" : "text-primary")}>
+                                    <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", state.status === 'success' ? "text-white" : "text-primary")}>
                                         Official AI Analysis
                                     </span>
                                 </div>
                             </div>
-                            <div className="space-y-1">
-                                <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">
+                            <div className="space-y-2">
+                                <CardTitle className="text-4xl sm:text-6xl font-black uppercase tracking-tighter leading-none">
                                     {state.status === 'success' ? <><span className="italic opacity-80">Your Report</span> is Ready.</> : "Awaiting Recording"}
                                 </CardTitle>
                                 <p className={cn(
-                                    "text-[10px] font-bold uppercase tracking-[0.3em] flex items-center gap-2",
+                                    "text-[10px] font-bold uppercase tracking-[0.3em] flex items-center gap-3",
                                     state.status === 'success' ? "text-white/60" : "text-muted-foreground"
                                 )}>
-                                    <Globe className="h-3 w-3" /> Secure AI Terminal
+                                    <Globe className="h-4 w-4" /> Secure AI Terminal
                                 </p>
                             </div>
                         </div>
                         
                         {state.status === 'success' && (
-                            <div className="flex flex-wrap items-center gap-3 shrink-0">
+                            <div className="flex flex-wrap items-center gap-4 shrink-0">
                                 <Button 
                                     variant="secondary" 
                                     size="sm" 
                                     onClick={handleReset}
-                                    className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                                    className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-lg"
                                 >
                                     <PlusCircle className="h-4 w-4" /> Start New
                                 </Button>
