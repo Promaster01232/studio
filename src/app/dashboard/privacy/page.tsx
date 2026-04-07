@@ -36,7 +36,7 @@ import {
   AlertTriangle,
   Smartphone
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -195,16 +195,13 @@ export default function PrivacyPage() {
                     <div className="space-y-32 text-left pb-20">
                         
                         {/* Section 1 */}
-                        <section id="section-1" className="space-y-8 scroll-mt-10">
+                        <section id="section-1" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500 shadow-sm"><Database className="h-7 w-7" /></div>
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">1. WHAT INFORMATION DO WE COLLECT?</h4>
                             </div>
                             <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                                <div className="space-y-4">
-                                    <p className="font-bold text-foreground uppercase tracking-widest text-[10px] border-l-4 border-primary pl-4">Personal information you disclose to us</p>
-                                    <p>At Nyaya Sahayak, we collect personal information that you voluntarily provide to us when you enroll in our terminal, express an interest in obtaining forensic legal audits, or otherwise communicate with our node. This data is the foundation of our ability to provide you with tailored legal roadmaps and precise AI forensic summaries.</p>
-                                </div>
+                                <p>Personal information you disclose to us at Nyaya Sahayak is collected with the highest standard of statutory integrity. We collect personal information that you voluntarily provide to us when you register on the Services, express an interest in obtaining information about us or our products, or when you participate in activities on the Services.</p>
                                 
                                 <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 space-y-6 shadow-inner text-left">
                                     <p className="font-black text-[10px] uppercase tracking-widest text-primary">Identity Registry Nodes:</p>
@@ -218,20 +215,20 @@ export default function PrivacyPage() {
 
                                 <div className="space-y-4 pt-4">
                                     <p className="font-bold text-foreground uppercase tracking-widest text-[10px] border-l-4 border-indigo-500 pl-4">Forensic AI Case Data</p>
-                                    <p>To provide high-fidelity legal intelligence, we process the following data nodes using advanced neural ingestion. This processing is designed to extract deep statutory meaning from your narratives:</p>
+                                    <p>To provide high-fidelity legal intelligence, we process the following data nodes using advanced neural ingestion:</p>
                                     <ul className="space-y-6">
                                         <li className="flex gap-5 p-6 bg-muted/30 rounded-[1.5rem] border border-primary/5">
                                             <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 shrink-0 h-fit shadow-sm"><Mic className="h-6 w-6" /></div>
                                             <div className="space-y-1">
                                                 <p className="font-black text-xs uppercase tracking-tight text-foreground">Voice Narration & Biometric Tone</p>
-                                                <p className="text-xs leading-relaxed">Audio frequency data transmitted for forensic transcription and case mapping. These recordings are converted to textual dossiers and subsequently purged from persistent memory nodes to ensure citizen privacy.</p>
+                                                <p className="text-xs leading-relaxed">Audio frequency data transmitted for forensic transcription and case mapping. These recordings are converted to textual dossiers and subsequently purged from persistent memory nodes.</p>
                                             </div>
                                         </li>
                                         <li className="flex gap-5 p-6 bg-muted/30 rounded-[1.5rem] border border-primary/5">
                                             <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 shrink-0 h-fit shadow-sm"><FileText className="h-6 w-6" /></div>
                                             <div className="space-y-1">
                                                 <p className="font-black text-xs uppercase tracking-tight text-foreground">Statutory Instruments (OCR)</p>
-                                                <p className="text-xs leading-relaxed">Legal documents processed through OCR nodes to identify latent risks, unfavourable clauses, and critical judicial deadlines. Our AI analyzes the semantic structure of your contracts and notices to provide a strength audit.</p>
+                                                <p className="text-xs leading-relaxed">Legal documents processed through OCR nodes to identify risks, unfavourable clauses, and critical judicial deadlines.</p>
                                             </div>
                                         </li>
                                     </ul>
@@ -239,8 +236,31 @@ export default function PrivacyPage() {
                             </div>
                         </section>
 
+                        {/* Section 2 */}
+                        <section id="section-2" className="space-y-8 scroll-mt-10 text-left">
+                            <div className="flex items-center gap-4">
+                                <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><RotateCcw className="h-7 w-7" /></div>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">2. HOW DO WE PROCESS YOUR INFORMATION?</h4>
+                            </div>
+                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed">
+                                <p>We process your data nodes to provide, improve, and administer our forensic AI services. Our primary processing flows are engineered for precision and statutory accuracy:</p>
+                                <div className="grid gap-6 sm:grid-cols-2 text-left">
+                                    <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
+                                        <CheckCircle2 className="h-6 w-6 text-primary" />
+                                        <p className="font-black text-sm uppercase tracking-widest text-foreground">Neural Case Summarization</p>
+                                        <p className="text-xs opacity-70 leading-relaxed">Converting voice narrations into structured legal reports with BNS section references and jurisdictional guidance.</p>
+                                    </div>
+                                    <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
+                                        <CheckCircle2 className="h-6 w-6 text-primary" />
+                                        <p className="font-black text-sm uppercase tracking-widest text-foreground">Statutory Risk Auditing</p>
+                                        <p className="text-xs opacity-70 leading-relaxed">Scanning legal documents for hidden unfavorable clauses, upcoming deadlines, and procedural inconsistencies.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
                         {/* Section 6 */}
-                        <section id="section-6" className="space-y-10 scroll-mt-10">
+                        <section id="section-6" className="space-y-10 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Cpu className="h-7 w-7" /></div>
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">6. DO WE OFFER ARTIFICIAL INTELLIGENCE-BASED PRODUCTS?</h4>
@@ -260,7 +280,7 @@ export default function PrivacyPage() {
                                             <div className="p-6 bg-background/80 backdrop-blur-md rounded-2xl border border-cyan-500/10 text-[11px] leading-relaxed shadow-inner">
                                                 <Zap className="h-4 w-4 text-cyan-500 mb-2" />
                                                 <strong className="block mb-1 text-foreground">Zero-Training Guarantee:</strong> 
-                                                Your uploaded case files and audio narrations are NOT used to train foundation AI models or third-party datasets. Your legal strategy remains yours.
+                                                Your uploaded case files and audio narrations are NOT used to train foundation AI models or third-party datasets.
                                             </div>
                                             <div className="p-6 bg-background/80 backdrop-blur-md rounded-2xl border border-cyan-500/10 text-[11px] leading-relaxed shadow-inner">
                                                 <Clock className="h-4 w-4 text-cyan-500 mb-2" />
@@ -274,7 +294,7 @@ export default function PrivacyPage() {
                         </section>
 
                         {/* Section 13 */}
-                        <section id="section-13" className="space-y-10 scroll-mt-10">
+                        <section id="section-13" className="space-y-10 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-orange-500/10 text-orange-500 shadow-sm"><Scale className="h-7 w-7" /></div>
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">13. DO INDIAN RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h4>
@@ -300,7 +320,7 @@ export default function PrivacyPage() {
                         </section>
 
                         {/* Section 16 */}
-                        <section id="section-16" className="space-y-8 scroll-mt-10">
+                        <section id="section-16" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-red-500/10 text-red-500 shadow-sm"><Trash2 className="h-7 w-7" /></div>
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">16. REVIEW OR DELETE DATA</h4>
@@ -311,7 +331,7 @@ export default function PrivacyPage() {
                                     <div className="absolute top-0 right-0 p-4 opacity-5"><ShieldAlert className="h-20 w-20 text-destructive" /></div>
                                     <ShieldAlert className="h-8 w-8 text-destructive shrink-0 mt-1" />
                                     <p className="text-[11px] font-bold text-destructive/80 uppercase leading-relaxed tracking-tight">
-                                        WARNING: EXECUTING "TOTAL REGISTRY ERASURE" IS IRREVERSIBLE AND WILL RESULT IN THE IMMEDIATE DECOMMISSIONING OF ALL SAVED FORENSIC AUDITS, CASE TRACKERS, AND STATUTORY REPORTS FROM OUR ACTIVE RECOVERY CYCLES.
+                                        WARNING: EXECUTING "TOTAL REGISTRY ERASURE" IS IRREVERSIBLE AND WILL RESULT IN THE IMMEDIATE DECOMMISSIONING OF ALL SAVED FORENSIC AUDITS, CASE TRACKERS, AND STATUTORY REPORTS.
                                     </p>
                                 </div>
                             </div>
