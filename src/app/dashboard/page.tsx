@@ -93,8 +93,6 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
-
 interface Post {
     id: string;
     authorUid: string;
@@ -114,10 +112,10 @@ interface Post {
 }
 
 const aiFeatures = [
-    { id: "strength", icon: BrainCircuit, title: "Case Strength", desc: "Litigation success probability.", href: "/dashboard/strength-analyzer", color: "text-blue-600", bg: "bg-blue-500/10" },
-    { id: "intel", icon: Search, title: "Forensic Analysis", desc: "Scan documents for hidden risks.", href: "/dashboard/document-intelligence", color: "text-indigo-600", bg: "bg-indigo-500/10" },
-    { id: "draft", icon: FileText, title: "Statutory Drafting", desc: "Generate professional legal notices.", href: "/dashboard/document-generator", color: "text-sky-600", bg: "bg-sky-500/10" },
-    { id: "bond", icon: FileSignature, title: "Bond Protocol", desc: "Official bail and indemnity bonds.", href: "/dashboard/bond-generator", color: "text-cyan-600", bg: "bg-cyan-500/10" },
+    { id: "strength", icon: BrainCircuit, title: "Check Success", desc: "See your case chance.", href: "/dashboard/strength-analyzer", color: "text-blue-600", bg: "bg-blue-500/10" },
+    { id: "intel", icon: Search, title: "Read Documents", desc: "Check files for risks.", href: "/dashboard/document-intelligence", color: "text-indigo-600", bg: "bg-indigo-500/10" },
+    { id: "draft", icon: FileText, title: "Write Documents", desc: "Create legal papers.", href: "/dashboard/document-generator", color: "text-sky-600", bg: "bg-sky-500/10" },
+    { id: "bond", icon: FileSignature, title: "Create Bonds", desc: "Make simple legal bonds.", href: "/dashboard/bond-generator", color: "text-cyan-600", bg: "bg-cyan-500/10" },
 ];
 
 const containerVariants = {
@@ -157,7 +155,7 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
 export default function DashboardHomePage() {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
-  const fullText = 'Sahayak';
+  const fullText = 'Helper';
   const { playSound } = useSoundEffect();
   const { toast } = useToast();
   const router = useRouter();
@@ -203,7 +201,7 @@ export default function DashboardHomePage() {
         setPosts(list);
         setPostsLoading(false);
     }, (err) => {
-        console.warn("[DASHBOARD] Community node sync restricted.");
+        console.warn("[DASHBOARD] Community post sync limited.");
         setPostsLoading(false);
     });
     
@@ -220,11 +218,11 @@ export default function DashboardHomePage() {
           setIsProcessingJargon(false);
           setJargonReport({
               term: quickJargon,
-              exp: `Institutional Forensic Node identifies "${quickJargon}" as a statutory instrument or procedural protocol typically invoked during judicial audits. In layman terms, it refers to the mandatory navigational path for legal restitution.`
+              exp: `Our smart tool found that "${quickJargon}" is a legal word. It usually means a rule or step you must follow in court. In simple words, it is a part of the process to get help.`
           });
           toast({
-              title: "Forensic Node Sync",
-              description: "Short report generated below.",
+              title: "Check Complete",
+              description: "Simple explanation ready below.",
           });
       }, 1500);
   };
@@ -246,28 +244,28 @@ export default function DashboardHomePage() {
       variants={containerVariants}
       className="flex flex-col h-full space-y-12 pb-24 max-w-6xl mx-auto text-left relative pt-4"
     >
-        {/* HERO SECTION - INSTITUTIONAL BLUE WITH MOTION */}
+        {/* HERO SECTION */}
         <motion.div variants={cardVariants}>
           <Card className="relative overflow-hidden border-primary/5 bg-card shadow-2xl rounded-[3rem] group">
               <div className="p-8 sm:p-16 relative z-10 flex flex-col lg:flex-row items-center gap-12">
                   <div className="flex-1 space-y-10 text-center lg:text-left">
                       <div className="space-y-6">
                           <h1 className="text-5xl sm:text-7xl font-black tracking-tighter text-foreground leading-none">
-                              NYAYA <span className="animate-pan italic">{text}</span>
+                              Legal <span className="animate-pan italic">{text}</span>
                           </h1>
                           <p className="text-sm sm:text-xl text-muted-foreground font-medium max-w-xl leading-relaxed opacity-80">
-                              Institutional AI Command Center. Mathematically precise forensic intelligence and statutory roadmaps for every citizen.
+                              Your smart assistant for legal help. Get very accurate analysis and easy guides for your case.
                           </p>
                       </div>
 
                       <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                           <Button size="xl" className="rounded-2xl font-black uppercase tracking-widest h-14 px-10 shadow-2xl shadow-primary/20 active:scale-95 transition-all text-[11px]" asChild>
                               <Link href="/dashboard/narrate">
-                                  <Mic className="h-5 w-5 mr-3" /> Start Case Record
+                                  <Mic className="h-5 w-5 mr-3" /> Tell Your Story
                               </Link>
                           </Button>
                           <Button variant="ghost" className="h-14 rounded-2xl px-8 font-black uppercase tracking-widest text-primary text-[11px] hover:bg-primary/5" asChild>
-                              <Link href="/dashboard/learn">Knowledge Hub</Link>
+                              <Link href="/dashboard/learn">Learn Law</Link>
                           </Button>
                       </div>
                   </div>
@@ -281,8 +279,8 @@ export default function DashboardHomePage() {
                               <ShieldCheck className="h-5 w-5 text-primary" />
                           </div>
                           <div className="text-left">
-                              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60">Encryption</p>
-                              <p className="text-xs font-black uppercase">AES-256 Active</p>
+                              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60">Protection</p>
+                              <p className="text-xs font-black uppercase">Safe & Secure</p>
                           </div>
                       </motion.div>
                       <motion.div 
@@ -293,8 +291,8 @@ export default function DashboardHomePage() {
                               <Activity className="h-5 w-5 text-primary animate-pulse" />
                           </div>
                           <div className="text-left">
-                              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60">Neural Node</p>
-                              <p className="text-xs font-black uppercase">Synchronized</p>
+                              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60">AI Assistant</p>
+                              <p className="text-xs font-black uppercase">Ready to Help</p>
                           </div>
                       </motion.div>
                   </div>
@@ -303,18 +301,18 @@ export default function DashboardHomePage() {
           </Card>
         </motion.div>
 
-        {/* NEURAL AGENDA COMMAND BAR - WITH PULSING WAVEFORM */}
+        {/* HELP HUB */}
         <motion.section 
             variants={cardVariants}
             className="w-full flex flex-col items-center py-12 space-y-10"
         >
             <div className="flex flex-col items-center gap-2">
                 <h2 className="text-3xl sm:text-4xl font-black tracking-tighter text-foreground uppercase">
-                    Neural <span className="text-primary font-medium italic lowercase">Agenda Hub</span>
+                    How can we <span className="text-primary font-medium italic lowercase">help today?</span>
                 </h2>
                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
                     <Lock className="h-2.5 w-2.5 text-primary opacity-40" />
-                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/60">End-to-End Encrypted Session</span>
+                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/60">Private Session Active</span>
                 </div>
             </div>
             
@@ -329,7 +327,7 @@ export default function DashboardHomePage() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-72 p-3 rounded-[2rem] shadow-3xl glass border-primary/10 mb-6">
-                            <DropdownMenuLabel className="px-4 pb-3 text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">Initialize Protocol</DropdownMenuLabel>
+                            <DropdownMenuLabel className="px-4 pb-3 text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">Choose a Tool</DropdownMenuLabel>
                             {aiFeatures.map((f) => (
                                 <DropdownMenuItem key={f.id} onClick={() => setSelectedTool(f.id)} className="rounded-xl h-14 px-4 cursor-pointer gap-4 focus:bg-primary/5 mb-1">
                                     <div className={cn("p-2.5 rounded-lg border border-primary/5", f.bg, f.color)}>
@@ -343,7 +341,7 @@ export default function DashboardHomePage() {
 
                     <div className="flex-1 px-6 text-left">
                         <Input 
-                            placeholder="Initialize forensic query..." 
+                            placeholder="Ask a legal question..." 
                             className="border-none bg-transparent shadow-none focus-visible:ring-0 text-lg sm:text-xl font-bold uppercase tracking-tight placeholder:text-primary/20 p-0 h-full"
                             value={quickJargon}
                             onChange={(e) => setQuickJargon(e.target.value)}
@@ -363,7 +361,7 @@ export default function DashboardHomePage() {
             </div>
         </motion.section>
 
-        {/* QUICK ACTION DIALOG - BLUE ACCENTS */}
+        {/* QUICK TOOL DIALOG */}
         <Dialog open={!!selectedTool} onOpenChange={(o) => { if(!o) setSelectedTool(null); }}>
             <DialogContent className="sm:max-w-xl rounded-[3rem] p-0 overflow-hidden border-none shadow-3xl bg-card text-left">
                 <DialogHeader className="p-10 pb-6 border-b border-primary/5 text-left">
@@ -384,7 +382,7 @@ export default function DashboardHomePage() {
                         </Button>
                     </div>
                     <DialogDescription className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40">
-                        Institutional Forensic Ingress Node NS-ALPHA-4.2
+                        Official Smart Analysis Tool
                     </DialogDescription>
                 </DialogHeader>
 
@@ -392,16 +390,16 @@ export default function DashboardHomePage() {
                     {selectedTool === 'strength' && (
                         <div className="space-y-8">
                             <div className="space-y-3">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Case Narrative Matrix</Label>
-                                <Textarea placeholder="State facts, dates, and statutory points..." rows={6} className="bg-primary/5 border-primary/10 rounded-[1.5rem] font-bold text-sm p-6 shadow-inner focus:border-primary transition-all" />
+                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Case Story</Label>
+                                <Textarea placeholder="Tell us what happened..." rows={6} className="bg-primary/5 border-primary/10 rounded-[1.5rem] font-bold text-sm p-6 shadow-inner focus:border-primary transition-all" />
                             </div>
                             <div className="space-y-3">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Dialect Registry</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Language</Label>
                                 <Select defaultValue="English">
                                     <SelectTrigger className="h-14 bg-primary/5 border-primary/10 font-black uppercase text-xs rounded-2xl"><SelectValue /></SelectTrigger>
                                     <SelectContent className="rounded-[1.5rem] glass">
-                                        <SelectItem value="English" className="font-black uppercase text-[10px]">English Protocol</SelectItem>
-                                        <SelectItem value="Hindi" className="font-black uppercase text-[10px]">Hindi Protocol</SelectItem>
+                                        <SelectItem value="English" className="font-black uppercase text-[10px]">English</SelectItem>
+                                        <SelectItem value="Hindi" className="font-black uppercase text-[10px]">Hindi</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -411,7 +409,7 @@ export default function DashboardHomePage() {
                     {selectedTool === 'intel' && (
                         <div className="space-y-8">
                             <div className="space-y-3">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Statutory Instrument</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Legal Paper</Label>
                                 <div className="relative group">
                                     <div className="absolute inset-0 bg-primary/5 rounded-[2rem] border-2 border-dashed border-primary/10 pointer-events-none"></div>
                                     <Input type="file" onChange={handleFileChange} className="h-40 opacity-0 cursor-pointer relative z-10" />
@@ -420,7 +418,7 @@ export default function DashboardHomePage() {
                                             <FileUp className="h-8 w-8 text-primary opacity-40" />
                                         </div>
                                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
-                                            {fileName || "Select Registry Node"}
+                                            {fileName || "Select File"}
                                         </p>
                                     </div>
                                 </div>
@@ -431,34 +429,34 @@ export default function DashboardHomePage() {
                     {selectedTool === 'draft' && (
                         <div className="grid sm:grid-cols-2 gap-8">
                             <div className="space-y-3">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Instrument Type</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Paper Type</Label>
                                 <Select defaultValue="Notice">
                                     <SelectTrigger className="h-14 bg-primary/5 border-primary/10 font-black uppercase text-[10px] rounded-2xl"><SelectValue /></SelectTrigger>
                                     <SelectContent className="rounded-[1.5rem] glass">
                                         <SelectItem value="Notice" className="font-black uppercase text-[10px]">Legal Notice</SelectItem>
-                                        <SelectItem value="Complaint" className="font-black uppercase text-[10px]">Police Complaint</SelectItem>
-                                        <SelectItem value="FIR" className="font-black uppercase text-[10px]">FIR Application</SelectItem>
+                                        <SelectItem value="Complaint" className="font-black uppercase text-[10px]">Police Report</SelectItem>
+                                        <SelectItem value="FIR" className="font-black uppercase text-[10px]">FIR Form</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                             <div className="space-y-3">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Author Identity</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Your Name</Label>
                                 <Input placeholder="Full Name" className="h-14 bg-primary/5 border-primary/10 font-black text-sm rounded-2xl px-6" />
                             </div>
                             <div className="sm:col-span-2 space-y-3">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Case Synopsis</Label>
-                                <Textarea placeholder="Core facts for statutory drafting..." rows={4} className="bg-primary/5 border-primary/10 rounded-[1.5rem] font-bold text-sm p-6" />
+                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Short Summary</Label>
+                                <Textarea placeholder="Core facts for writing the document..." rows={4} className="bg-primary/5 border-primary/10 rounded-[1.5rem] font-bold text-sm p-6" />
                             </div>
                         </div>
                     )}
 
                     <div className="pt-8 border-t border-primary/5 flex flex-col sm:flex-row gap-4">
                         <Button variant="outline" className="flex-1 h-16 font-black uppercase tracking-widest text-[11px] rounded-2xl border-primary/10 hover:bg-primary/5" onClick={() => setSelectedTool(null)}>
-                            Abort Protocol
+                            Cancel
                         </Button>
                         <Button className="flex-1 h-16 font-black uppercase tracking-[0.3em] text-[11px] rounded-2xl shadow-2xl shadow-primary/20 active:scale-95 group overflow-hidden relative" onClick={handleLaunchFullTool}>
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                            Initialize Audit
+                            Start Analysis
                         </Button>
                     </div>
                 </div>
@@ -467,21 +465,21 @@ export default function DashboardHomePage() {
 
         <div className="grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-8 space-y-16">
-              {/* SECTION: COMMUNITY TRANSMISSIONS - BLUE ACCENTS */}
+              {/* SECTION: COMMUNITY POSTS */}
               <section>
                   <div className="flex items-center justify-between mb-8 pb-4 border-b border-primary/5">
                       <div className="flex items-center gap-4">
                           <Newspaper className="h-6 w-6 text-primary" />
-                          <h2 className="text-sm font-black tracking-[0.4em] uppercase text-primary">Community Transmissions</h2>
+                          <h2 className="text-sm font-black tracking-[0.4em] uppercase text-primary">Community Posts</h2>
                       </div>
-                      <Link href="/dashboard/research-analytics" className="text-[10px] font-black uppercase text-muted-foreground hover:text-primary transition-colors tracking-widest">Full Stream</Link>
+                      <Link href="/dashboard/research-analytics" className="text-[10px] font-black uppercase text-muted-foreground hover:text-primary transition-colors tracking-widest">See All</Link>
                   </div>
                   
                   <div className="grid gap-6">
                       {postsLoading ? (
                           <div className="py-20 flex flex-col items-center justify-center gap-4 opacity-20">
                               <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Syncing Registry...</span>
+                              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Updating...</span>
                           </div>
                       ) : posts.length > 0 ? (
                           posts.map((post, idx) => (
@@ -504,11 +502,11 @@ export default function DashboardHomePage() {
                                                   <div className="flex items-center justify-between gap-4">
                                                       <h3 className="font-black text-base tracking-tight uppercase group-hover:text-primary transition-colors line-clamp-1">{post.title}</h3>
                                                       <Badge variant="outline" className="font-black text-[8px] uppercase tracking-widest px-3 py-1 border-primary/10 text-primary bg-primary/5">
-                                                          {post.postType || 'Node'}
+                                                          {post.postType || 'Post'}
                                                       </Badge>
                                                   </div>
                                                   <p className="text-sm text-muted-foreground font-medium leading-relaxed line-clamp-2 italic opacity-80">
-                                                      "{post.content || 'Polling community consensus...'}"
+                                                      "{post.content || 'Checking community ideas...'}"
                                                   </p>
                                               </div>
                                           </div>
@@ -518,28 +516,28 @@ export default function DashboardHomePage() {
                           ))
                       ) : (
                           <div className="py-24 text-center bg-primary/5 rounded-[3rem] border-2 border-dashed border-primary/10">
-                              <p className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/30">No transmissions recorded in this node.</p>
+                              <p className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/30">No posts here yet.</p>
                           </div>
                       )}
                   </div>
               </section>
 
-              {/* SECTION: INSTANT FORENSIC INGRESS - BLUE ACCENTS */}
+              {/* SECTION: QUICK TOOLS */}
               <section className="space-y-8">
                   <div className="flex items-center gap-4 mb-2 pb-4 border-b border-primary/5">
                       <Zap className="h-6 w-6 text-primary" />
-                      <h2 className="text-sm font-black tracking-[0.4em] uppercase text-primary">Quick Ingress Terminal</h2>
+                      <h2 className="text-sm font-black tracking-[0.4em] uppercase text-primary">Quick Tools</h2>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-6">
                       <Card className="p-8 rounded-[2.5rem] border-primary/5 bg-primary/5 shadow-xl text-left group">
                           <div className="space-y-6">
                               <div className="flex items-center justify-between">
-                                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">Jargon Simplifier</span>
+                                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">Simple Words</span>
                                   <Lightbulb className="h-5 w-5 text-primary opacity-20" />
                               </div>
                               <div className="flex gap-3">
                                   <Input 
-                                    placeholder="Enter legal term..." 
+                                    placeholder="Type legal word..." 
                                     className="h-12 bg-background border-primary/10 font-bold text-xs rounded-xl uppercase tracking-widest px-5 focus:border-primary"
                                     value={quickJargon}
                                     onChange={(e) => setQuickJargon(e.target.value)}
@@ -561,7 +559,7 @@ export default function DashboardHomePage() {
                                           <div className="absolute top-0 right-0 p-3 opacity-5"><Logo className="h-12 w-12" priority={false} /></div>
                                           <div className="flex items-center gap-3 mb-3">
                                               <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                                              <span className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Forensic Report Node</span>
+                                              <span className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Smart Report</span>
                                           </div>
                                           <p className="text-xs font-black uppercase mb-2 tracking-widest text-primary">{jargonReport.term}</p>
                                           <p className="text-[11px] font-medium leading-relaxed text-muted-foreground">{jargonReport.exp}</p>
@@ -573,36 +571,36 @@ export default function DashboardHomePage() {
                       <Card className="p-8 rounded-[2.5rem] border-primary/5 bg-primary/5 shadow-xl text-left group">
                           <div className="space-y-6">
                               <div className="flex items-center justify-between">
-                                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">BNS Statutory Hub</span>
+                                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">New Law Hub</span>
                                   <Gavel className="h-5 w-5 text-primary opacity-20" />
                               </div>
                               <div className="flex gap-3">
-                                  <Input placeholder="Search BNS Section..." className="h-12 bg-background border-primary/10 font-bold text-xs rounded-xl uppercase tracking-widest px-5 focus:border-primary" />
+                                  <Input placeholder="Search Law..." className="h-12 bg-background border-primary/10 font-bold text-xs rounded-xl uppercase tracking-widest px-5 focus:border-primary" />
                                   <Button size="icon" variant="outline" className="h-12 w-12 rounded-xl shrink-0 border-primary/10 hover:bg-primary/5">
                                       <Search className="h-5 w-5 text-primary" />
                                   </Button>
                               </div>
-                              <p className="text-[10px] font-bold text-muted-foreground opacity-60 uppercase tracking-widest leading-relaxed">Map old IPC codes to the new BNS framework instantly.</p>
+                              <p className="text-[10px] font-bold text-muted-foreground opacity-60 uppercase tracking-widest leading-relaxed">Map old laws to the new rules instantly.</p>
                           </div>
                       </Card>
                   </div>
               </section>
 
-              {/* SECTION: AUDIT LEDGER - BLUE ACCENTS */}
+              {/* SECTION: PAST ANALYSIS */}
               <section>
                   <div className="flex items-center justify-between mb-8 pb-4 border-b border-primary/5">
                       <div className="flex items-center gap-4">
                           <History className="h-6 w-6 text-primary" />
-                          <h2 className="text-sm font-black tracking-[0.4em] uppercase text-primary">Statutory Audit Registry</h2>
+                          <h2 className="text-sm font-black tracking-[0.4em] uppercase text-primary">Past Analysis</h2>
                       </div>
-                      <Link href="/dashboard/my-cases" className="text-[10px] font-black uppercase text-muted-foreground hover:text-primary transition-colors tracking-widest">Full Ledger</Link>
+                      <Link href="/dashboard/my-cases" className="text-[10px] font-black uppercase text-muted-foreground hover:text-primary transition-colors tracking-widest">See All</Link>
                   </div>
                   <Card className="rounded-[3rem] border-primary/5 shadow-2xl overflow-hidden bg-card">
                       <div className="divide-y divide-primary/5">
                           {[
-                              { id: "AUD-001", type: "Document Intelligence", date: "2H ago", status: "Success", icon: FileCheck, color: "text-green-600", bg: "bg-green-500/10" },
-                              { id: "AUD-002", type: "Voice Narration", date: "1D ago", status: "Analyzed", icon: Mic, color: "text-blue-600", bg: "bg-blue-500/10" },
-                              { id: "AUD-003", type: "Bail Probability", date: "3D ago", status: "High Risk", icon: AlertTriangle, color: "text-amber-600", bg: "bg-amber-500/10" }
+                              { id: "AUD-001", type: "Document Check", date: "2H ago", status: "Done", icon: FileCheck, color: "text-green-600", bg: "bg-green-500/10" },
+                              { id: "AUD-002", type: "Voice Summary", date: "1D ago", status: "Done", icon: Mic, color: "text-blue-600", bg: "bg-blue-500/10" },
+                              { id: "AUD-003", type: "Bail Chance", date: "3D ago", status: "High Risk", icon: AlertTriangle, color: "text-amber-600", bg: "bg-amber-500/10" }
                           ].map((audit, i) => (
                               <div key={audit.id} className="p-6 flex items-center justify-between group hover:bg-primary/[0.02] transition-colors cursor-pointer">
                                   <div className="flex items-center gap-6">
@@ -627,7 +625,7 @@ export default function DashboardHomePage() {
           </div>
 
           <div className="lg:col-span-4 space-y-12">
-              {/* SIDEBAR: ACTIONS - BLUE ACCENTS */}
+              {/* SIDEBAR: ACTIONS */}
               <section className="space-y-8">
                   <motion.div variants={cardVariants} whileHover={{ scale: 1.02 }}>
                       <Card className="border-none rounded-[3rem] overflow-hidden shadow-2xl shadow-primary/20 relative group cursor-pointer bg-gradient-to-br from-primary via-primary to-blue-700" asChild>
@@ -637,14 +635,14 @@ export default function DashboardHomePage() {
                                     <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
                                         <Zap className="h-8 w-8 text-white fill-current animate-pulse" />
                                     </div>
-                                    <Badge className="bg-white text-primary font-black text-[9px] uppercase tracking-[0.2em] border-none px-4 py-1.5 rounded-full shadow-lg">Elite Access</Badge>
+                                    <Badge className="bg-white text-primary font-black text-[9px] uppercase tracking-[0.2em] border-none px-4 py-1.5 rounded-full shadow-lg">Premium</Badge>
                                 </div>
                                 <div className="space-y-4 text-left">
-                                    <h3 className="text-4xl font-black tracking-[calc(-0.05em)] uppercase leading-[0.9]">Upgrade <br /> <span className="opacity-60 italic">Node</span></h3>
-                                    <p className="text-white/70 text-[11px] font-bold uppercase tracking-[0.1em] leading-relaxed max-w-[200px]">Unlock elite forensic AI terminals and unlimited reports.</p>
+                                    <h3 className="text-4xl font-black tracking-[calc(-0.05em)] uppercase leading-[0.9]">Go <br /> <span className="opacity-60 italic">Premium</span></h3>
+                                    <p className="text-white/70 text-[11px] font-bold uppercase tracking-[0.1em] leading-relaxed max-w-[200px]">Unlock all smart AI tools and get unlimited reports.</p>
                                 </div>
                                 <div className="flex items-center justify-between gap-3 text-[10px] font-black uppercase tracking-[0.3em] bg-white/10 backdrop-blur-xl w-full px-6 py-4 rounded-2xl border border-white/10 group-hover:bg-white/20 transition-all shadow-inner">
-                                    <span>Protocol Options</span>
+                                    <span>Plan Options</span>
                                     <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                                 </div>
                             </div>
@@ -656,7 +654,7 @@ export default function DashboardHomePage() {
                       </Card>
                   </motion.div>
 
-                  {/* SPECIALIZED TERMINALS GRID - BLUE ACCENTS */}
+                  {/* SPECIALIZED TOOLS */}
                   <div className="space-y-4">
                       {aiFeatures.map((f, i) => (
                         <motion.div key={f.href} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + (i * 0.05) }}>

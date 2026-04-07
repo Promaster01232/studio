@@ -32,10 +32,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Footer } from "@/components/footer";
 
 const featureNodes = [
-  { icon: Mic, title: "Voice Record", desc: "Speak your case and get an instant, high-level summary of your situation.", href: "/dashboard/narrate", badge: "AI" },
-  { icon: Search, title: "Analyze Document", desc: "Scan legal papers for risks, deadlines, and critical statutory clauses.", href: "/dashboard/document-intelligence", badge: "Secure" },
-  { icon: FileText, title: "Drafting", desc: "Generate professionally structured legal notices and applications in seconds.", href: "/dashboard/document-generator", badge: "Live" },
-  { icon: Globe, title: "Expert Connect", desc: "Seamlessly connect with verified legal professionals for personalized strategy.", href: "/dashboard/lawyer-connect", badge: "Verified" },
+  { icon: Mic, title: "Record Voice", desc: "Speak your case and get a smart summary instantly.", href: "/dashboard/narrate", badge: "Smart" },
+  { icon: Search, title: "Check Files", desc: "Scan legal papers for risks and important dates.", href: "/dashboard/document-intelligence", badge: "Safe" },
+  { icon: FileText, title: "Write Papers", desc: "Create professional legal notices in seconds.", href: "/dashboard/document-generator", badge: "Live" },
+  { icon: Globe, title: "Ask Experts", desc: "Connect with real lawyers for personalized help.", href: "/dashboard/lawyer-connect", badge: "Real" },
 ];
 
 const containerVariants = {
@@ -82,16 +82,16 @@ export default function WelcomePage() {
               </div>
               <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
-                <span className="text-[10px] font-black tracking-[0.3em] text-primary uppercase">Modern Legal Intelligence</span>
+                <span className="text-[10px] font-black tracking-[0.3em] text-primary uppercase">Smart Legal Assistant</span>
               </div>
             </motion.header>
 
             <motion.div variants={itemVariants} className="space-y-6 max-w-4xl mx-auto">
               <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tighter text-foreground leading-tight text-center">
-                Empowering every citizen with <br className="hidden md:block" /> <span className="text-primary italic">precision legal AI.</span>
+                Helping everyone with <br className="hidden md:block" /> <span className="text-primary italic">smart legal AI.</span>
               </h1>
               <p className="text-base sm:text-xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
-                Experience the next generation of legal help. Our platform provides forensic case audits, BNS statutory scanning, and direct access to experts.
+                Experience the new way to get legal help. Our app checks your case, scans laws, and helps you talk to experts.
               </p>
             </motion.div>
 
@@ -99,7 +99,7 @@ export default function WelcomePage() {
               {!loading ? (
                 <Button asChild size="lg" className="h-16 w-full sm:w-auto min-w-[260px] rounded-2xl shadow-2xl shadow-primary/20 active:scale-95 transition-all group relative overflow-hidden">
                   <Link href="/dashboard" className="flex items-center gap-3 relative z-10 font-black uppercase text-xs tracking-widest">
-                    Initialize Terminal <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    Enter Dashboard <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                   </Link>
                 </Button>
@@ -110,21 +110,21 @@ export default function WelcomePage() {
               )}
               <Button variant="outline" size="lg" asChild className="h-16 w-full sm:w-auto min-w-[200px] rounded-2xl border-primary/10 hover:bg-primary/5 transition-all font-black uppercase text-xs tracking-widest">
                 <Link href="/about" className="flex items-center gap-2">
-                  Institutional Mission <ChevronRight className="h-4 w-4 opacity-40" />
+                  Our Mission <ChevronRight className="h-4 w-4 opacity-40" />
                 </Link>
               </Button>
             </motion.nav>
           </motion.div>
         </section>
 
-        {/* SECURITY & TRUST TELEMETRY */}
+        {/* SECURITY & TRUST */}
         <section className="w-full max-w-7xl px-6 py-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {[
-                    { label: "Data Protection", value: "AES-256 REST", icon: Lock },
-                    { label: "Access Protocol", value: "ZERO-TRUST", icon: ShieldCheck },
-                    { label: "Neural Node", value: "Synchronized", icon: Activity },
-                    { label: "Statutory Sync", value: "BNS-V4.2", icon: Cpu },
+                    { label: "Safe Data", value: "Fully Protected", icon: Lock },
+                    { label: "Easy Access", value: "Private", icon: ShieldCheck },
+                    { label: "AI Status", value: "Online", icon: Activity },
+                    { label: "Law Status", value: "Updated", icon: Cpu },
                 ].map((stat, i) => (
                     <motion.div 
                         key={i}
@@ -167,7 +167,7 @@ export default function WelcomePage() {
                       <h3 className="text-xl font-black tracking-tight text-foreground mb-3 uppercase">{node.title}</h3>
                       <p className="text-sm text-muted-foreground font-medium leading-relaxed flex-grow opacity-80">{node.desc}</p>
                       <div className="mt-8 pt-8 border-t border-primary/5 flex items-center text-primary/40 group-hover:text-primary transition-all text-[10px] font-black uppercase tracking-[0.3em]">
-                        Initialize Node <ArrowRight className="h-3.5 w-3.5 ml-2 transition-transform group-hover:translate-x-1" />
+                        Use Tool <ArrowRight className="h-3.5 w-3.5 ml-2 transition-transform group-hover:translate-x-1" />
                       </div>
                     </CardContent>
                   </Card>
@@ -187,11 +187,11 @@ export default function WelcomePage() {
                     <Gavel className="h-10 w-10 text-primary opacity-40 animate-pulse" />
                 </div>
                 <p className="text-3xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight leading-tight italic uppercase">
-                    "Redefining access to justice with <span className="text-primary">Reliable AI Technology.</span>"
+                    "Making it easy for everyone to get <span className="text-primary">Legal Help with AI.</span>"
                 </p>
                 <div className="space-y-2">
-                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-primary">Nyaya Sahayak Identity Node</p>
-                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40">Established 2024 • Secured by IdeaSpark</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-primary">Nyaya Sahayak</p>
+                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40">Founded 2024 • Built by IdeaSpark</p>
                 </div>
             </div>
         </section>
