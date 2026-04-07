@@ -1,4 +1,3 @@
-
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -177,7 +176,7 @@ export default function PrivacyPage() {
             <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
                 <p>Personal information you disclose to us at Nyaya Sahayak is collected with the highest standard of statutory integrity. We collect personal information that you voluntarily provide to us when you register on the Services, express an interest in obtaining information about us or our products, or when you participate in activities on the Services.</p>
                 
-                <p className="font-bold text-foreground">The personal information we collect depends on the context of your interactions with us and the Services, the choices you make, and the products and features you use. This include:</p>
+                <p className="font-bold text-foreground text-left">The personal information we collect depends on the context of your interactions with us and the Services, the choices you make, and the products and features you use. This include:</p>
 
                 <div className="grid sm:grid-cols-2 gap-6 text-left">
                     <Card className="p-6 bg-primary/5 border-primary/10 rounded-2xl">
