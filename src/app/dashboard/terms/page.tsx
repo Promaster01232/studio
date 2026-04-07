@@ -34,7 +34,8 @@ import {
   RefreshCw,
   Layers,
   FileSignature,
-  Star
+  Star,
+  Database
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
