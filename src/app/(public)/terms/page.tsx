@@ -30,12 +30,15 @@ import {
   CreditCard,
   MessageSquare,
   Landmark,
-  UserPlus
+  UserPlus,
+  FileSignature,
+  Star,
+  Layers,
+  RefreshCw
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 
 const toc = [
   { id: "section-1", title: "1. Our Services" },
@@ -145,7 +148,6 @@ export default function TermsPage() {
 
       <div className="space-y-32 pt-16 border-t border-primary/5">
         
-        {/* Section 1 */}
         <section id="section-1" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500 shadow-sm"><Globe className="h-7 w-7" /></div>
@@ -157,7 +159,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 2 */}
         <section id="section-2" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><Cpu className="h-7 w-7" /></div>
@@ -172,7 +173,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 3 */}
         <section id="section-3" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-amber-500/10 text-amber-500 shadow-sm"><UserCheck className="h-7 w-7" /></div>
@@ -183,7 +183,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 4 */}
         <section id="section-4" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Lock className="h-7 w-7" /></div>
@@ -194,7 +193,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 5 */}
         <section id="section-5" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-rose-500/10 text-rose-500 shadow-sm"><Ban className="h-7 w-7" /></div>
@@ -205,7 +203,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 6 */}
         <section id="section-6" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><MessageSquare className="h-7 w-7" /></div>
@@ -216,7 +213,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 7 */}
         <section id="section-7" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-primary/10 text-primary shadow-sm"><FileSignature className="h-7 w-7" /></div>
@@ -227,7 +223,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 8 */}
         <section id="section-8" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-amber-500/10 text-amber-500 shadow-sm"><Star className="h-7 w-7" /></div>
@@ -238,7 +233,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 9 */}
         <section id="section-9" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500 shadow-sm"><Smartphone className="h-7 w-7" /></div>
@@ -249,7 +243,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 10 */}
         <section id="section-10" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-muted/30 text-foreground shadow-sm"><Zap className="h-7 w-7" /></div>
@@ -260,7 +253,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 11 */}
         <section id="section-11" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-primary/10 text-primary shadow-sm"><Settings className="h-7 w-7" /></div>
@@ -271,7 +263,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 12 */}
         <section id="section-12" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500 shadow-sm"><ShieldCheck className="h-7 w-7" /></div>
@@ -282,7 +273,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 13 */}
         <section id="section-13" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-sm"><ShieldAlert className="h-7 w-7" /></div>
@@ -293,7 +283,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 14 */}
         <section id="section-14" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-muted/30 text-foreground shadow-sm"><Activity className="h-7 w-7" /></div>
@@ -304,7 +293,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 15 */}
         <section id="section-15" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-amber-500/10 text-amber-500 shadow-sm"><RefreshCw className="h-7 w-7" /></div>
@@ -315,7 +303,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 16 */}
         <section id="section-16" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-primary/10 text-primary shadow-sm"><Landmark className="h-7 w-7" /></div>
@@ -326,7 +313,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 17 */}
         <section id="section-17" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><Gavel className="h-7 w-7" /></div>
@@ -337,7 +323,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 18 */}
         <section id="section-18" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-muted/30 text-foreground shadow-sm"><Info className="h-7 w-7" /></div>
@@ -349,7 +334,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 19 */}
         <section id="section-19" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-destructive/10 text-destructive shadow-sm"><ShieldAlert className="h-7 w-7" /></div>
@@ -361,7 +345,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 20 */}
         <section id="section-20" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500 shadow-sm"><Scale className="h-7 w-7" /></div>
@@ -372,18 +355,16 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 21 */}
         <section id="section-21" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-primary/10 text-primary shadow-sm"><ShieldCheck className="h-7 w-7" /></div>
                 <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">21. Indemnification</h3>
             </div>
             <div className="space-y-6 text-sm text-muted-foreground font-medium leading-relaxed">
-                <p>You agree to defend and hold us harmless from any loss, damage, or demand made by any third party due to your Contributions or your misuse of the terminal services.</p>
+                <p>You agree to defend and hold us harmless, including our subsidiaries, affiliates, and all of our respective officers, agents, partners, and employees, from and against any loss, damage, liability, claim, or demand, including reasonable attorneys’ fees and expenses, made by any third party due to or arising out of: (1) your Contributions; (2) use of the Services; (3) breach of these Legal Terms; (4) any breach of your representations and warranties set forth in these Legal Terms; (5) your violation of the rights of a third party, including but not limited to intellectual property rights; or (6) any overt harmful act toward any other user of the Services with whom you connected via the Services. </p>
             </div>
         </section>
 
-        {/* Section 22 */}
         <section id="section-22" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><Database className="h-7 w-7" /></div>
@@ -394,7 +375,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 23 */}
         <section id="section-23" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Mail className="h-7 w-7" /></div>
@@ -405,7 +385,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 24 */}
         <section id="section-24" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-muted/30 text-foreground shadow-sm"><MapPin className="h-7 w-7" /></div>
@@ -416,7 +395,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 25 */}
         <section id="section-25" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-primary/10 text-primary shadow-sm"><Layers className="h-7 w-7" /></div>
@@ -427,7 +405,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 26 */}
         <section id="section-26" className="space-y-10 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><Bot className="h-7 w-7" /></div>
@@ -441,7 +418,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 27 */}
         <section id="section-27" className="space-y-10 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-amber-500/10 text-amber-500 shadow-sm"><Cpu className="h-7 w-7" /></div>
@@ -452,7 +428,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 28 */}
         <section id="section-28" className="space-y-10 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-rose-500/10 text-rose-500 shadow-sm"><CheckCircle2 className="h-7 w-7" /></div>
@@ -463,7 +438,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 29 */}
         <section id="section-29" className="space-y-10 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500 shadow-sm"><UserPlus className="h-7 w-7" /></div>
@@ -474,7 +448,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-        {/* Section 30 */}
         <section id="section-30" className="space-y-12 pt-16 border-t border-primary/5 scroll-mt-24 text-left">
             <div className="flex flex-col md:flex-row gap-16 text-left">
                 <div className="flex-1 space-y-8">
