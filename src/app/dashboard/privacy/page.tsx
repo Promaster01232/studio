@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -42,21 +43,21 @@ import { cn } from "@/lib/utils";
 const summaryPoints = [
   {
     title: "Forensic Collection",
-    desc: "Exhaustive collection of voice data, legal instruments (PDF), and identity markers for neural audit.",
+    desc: "Exhaustive collection of voice frequency data, legal instruments (PDF/OCR), and identity markers for neural audit.",
     icon: Database,
     color: "text-blue-500",
     bg: "bg-blue-500/10"
   },
   {
     title: "Zero-Training AI",
-    desc: "Your private case data is processed in ephemeral buffers and NEVER used to train foundation models.",
+    desc: "Your private case data is processed in ephemeral buffers and is NEVER used to train foundation models.",
     icon: Lock,
     color: "text-purple-500",
     bg: "bg-purple-500/10"
   },
   {
     title: "Statutory Sovereignty",
-    desc: "Total control over your registry node, including the right to request summaries or execute total erasure.",
+    desc: "Total control over your registry node, including the right to request summaries or execute irreversible erasure.",
     icon: Cpu,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10"
@@ -195,13 +196,13 @@ export default function PrivacyPage() {
                                 </div>
 
                                 <div className="space-y-4 pt-4">
-                                    <p className="font-bold text-foreground uppercase tracking-widest text-[10px] border-l-4 border-indigo-500 pl-4">Forensic AI Case Data</p>
+                                    <p className="font-bold text-foreground uppercase tracking-widest text-[10px] border-l-4 border-indigo-500 pl-4">Forensic AI Case Data Ingress</p>
                                     <p>To provide high-fidelity legal intelligence, we process the following data nodes using advanced neural ingestion:</p>
                                     <ul className="space-y-6">
                                         <li className="flex gap-5 p-6 bg-muted/30 rounded-[1.5rem] border border-primary/5">
                                             <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 shrink-0 h-fit shadow-sm"><Mic className="h-6 w-6" /></div>
                                             <div className="space-y-1 text-left">
-                                                <p className="font-black text-xs uppercase tracking-tight text-foreground">Voice Narration & Biometric Tone</p>
+                                                <p className="font-black text-xs uppercase tracking-tight text-foreground">Voice Narration & Biometric Frequency</p>
                                                 <p className="text-xs leading-relaxed">Audio frequency data transmitted for forensic transcription and case mapping. These recordings are converted to textual dossiers and subsequently purged from neural processing buffers within 24 hours of report generation.</p>
                                             </div>
                                         </li>
@@ -228,7 +229,7 @@ export default function PrivacyPage() {
                                 <div className="grid gap-6 sm:grid-cols-2 text-left">
                                     <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
                                         <CheckCircle2 className="h-6 w-6 text-primary" />
-                                        <p className="font-black text-sm uppercase tracking-widest text-foreground">Where is data stored?</p>
+                                        <p className="font-black text-sm uppercase tracking-widest text-foreground">Secure Storage Nodes</p>
                                         <p className="text-xs opacity-70 leading-relaxed">Your profile and case metadata are stored in highly secure, encrypted Firebase Cloud nodes. These nodes are distributed across global Tier-4 data centers with 99.99% durability guarantees.</p>
                                     </div>
                                     <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
@@ -237,7 +238,7 @@ export default function PrivacyPage() {
                                         <p className="text-xs opacity-70 leading-relaxed">Converting voice narrations into structured legal reports with BNS section references and jurisdictional guidance based on Indian judicial standards.</p>
                                     </div>
                                 </div>
-                                <p>Additionally, we process metadata to prevent platform abuse, detect unauthorized bot activity, and ensure that institutional resources are reserved for authentic citizen nodes. Telemetry data is stripped of all PII (Personally Identifiable Information) before being ingested by our performance auditing systems.</p>
+                                <p>Telemetry data is stripped of all PII (Personally Identifiable Information) before being ingested by our performance auditing systems to ensure terminal stability.</p>
                             </div>
                         </section>
 
@@ -254,7 +255,7 @@ export default function PrivacyPage() {
                                         <div className="p-4 rounded-2xl bg-white dark:bg-black/20 shadow-md h-fit"><Bot className="h-8 w-8 text-cyan-600" /></div>
                                         <div className="space-y-2 text-left">
                                             <p className="font-black text-sm uppercase text-foreground">AI Neural Sub-processors (Google Cloud AI)</p>
-                                            <p className="text-xs leading-relaxed font-medium opacity-70">We transmit case narratives and document nodes to Google Cloud AI hubs for high-performance forensic analysis. This transmission occurs within a secure TLS 1.3 tunnel. Google does not utilize this data to train foundation models; it is processed in an isolated vault.</p>
+                                            <p className="text-xs leading-relaxed font-medium opacity-70">We transmit case narratives and document nodes to Google Cloud AI hubs for forensic analysis. This transmission occurs within a secure TLS 1.3 tunnel. Google does not utilize this data to train foundation models.</p>
                                         </div>
                                     </li>
                                     <li className="flex gap-6 p-8 bg-cyan-500/[0.03] border border-cyan-500/10 rounded-[2.5rem] shadow-xl">
@@ -284,17 +285,17 @@ export default function PrivacyPage() {
                                             <Sparkles className="h-5 w-5 animate-pulse" />
                                             <span className="font-black text-xs uppercase tracking-[0.3em]">Neural Security Protocol</span>
                                         </div>
-                                        <p className="text-base sm:text-lg leading-relaxed">Nyaya Sahayak utilizes the <strong>Nyaya Mitra</strong> neural engine powered by state-of-the-art AI. This processing is strictly ephemeral for forensic audit tools:</p>
+                                        <p className="text-base sm:text-lg leading-relaxed">Nyaya Sahayak utilizes the <strong>Nyaya Mitra</strong> neural engine. This processing is strictly ephemeral for forensic audit tools:</p>
                                         <div className="grid sm:grid-cols-2 gap-6 pt-4 text-left">
                                             <div className="p-6 bg-background/80 backdrop-blur-md rounded-2xl border border-cyan-500/10 text-[11px] leading-relaxed shadow-inner">
                                                 <Zap className="h-4 w-4 text-cyan-500 mb-2" />
                                                 <strong className="block mb-1 text-foreground">Zero-Training Guarantee:</strong> 
-                                                Your uploaded case files and audio narrations are NOT used to train foundation AI models or third-party datasets.
+                                                Your uploaded case files and audio narrations are NOT used to train foundation AI models.
                                             </div>
                                             <div className="p-6 bg-background/80 backdrop-blur-md rounded-2xl border border-cyan-500/10 text-[11px] leading-relaxed shadow-inner">
                                                 <Clock className="h-4 w-4 text-cyan-500 mb-2" />
                                                 <strong className="block mb-1 text-foreground">Automated Purge Cycle:</strong> 
-                                                Data nodes are erased from neural processing buffers immediately after the statutory report generation cycle is complete.
+                                                Data nodes are erased from neural buffers immediately after the statutory report generation cycle.
                                             </div>
                                         </div>
                                     </div>
@@ -340,7 +341,7 @@ export default function PrivacyPage() {
                                     <div className="absolute top-0 right-0 p-4 opacity-5"><ShieldAlert className="h-20 w-20 text-destructive" /></div>
                                     <ShieldAlert className="h-8 w-8 text-destructive shrink-0 mt-1" />
                                     <p className="text-[11px] font-bold text-destructive/80 uppercase leading-relaxed tracking-tight">
-                                        WARNING: EXECUTING "TOTAL REGISTRY ERASURE" IS IRREVERSIBLE AND WILL RESULT IN THE IMMEDIATE DECOMMISSIONING OF ALL SAVED FORENSIC AUDITS, CASE TRACKERS, AND STATUTORY REPORTS.
+                                        WARNING: EXECUTING "TOTAL REGISTRY ERASURE" IS IRREVERSIBLE AND WILL RESULT IN THE IMMEDIATE DECOMMISSIONING OF ALL SAVED FORENSIC AUDITS.
                                     </p>
                                 </div>
                             </div>

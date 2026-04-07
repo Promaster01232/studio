@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -42,21 +43,21 @@ import { cn } from "@/lib/utils";
 const summaryPoints = [
   {
     title: "Forensic Collection",
-    desc: "Exhaustive collection of voice data, legal instruments (PDF), and identity markers for neural audit.",
+    desc: "Exhaustive collection of voice frequency data, legal instruments (PDF/OCR), and identity markers for neural audit.",
     icon: Database,
     color: "text-blue-500",
     bg: "bg-blue-500/10"
   },
   {
     title: "Zero-Training AI",
-    desc: "Your private case data is processed in ephemeral buffers and NEVER used to train foundation models.",
+    desc: "Your private case data is processed in ephemeral buffers and is NEVER used to train public foundation models.",
     icon: Lock,
     color: "text-purple-500",
     bg: "bg-purple-500/10"
   },
   {
     title: "Statutory Sovereignty",
-    desc: "Total control over your registry node, including the right to request summaries or execute total erasure.",
+    desc: "Total control over your registry node, including the right to request summaries or execute irreversible erasure.",
     icon: Cpu,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10"
@@ -272,7 +273,7 @@ export default function PrivacyPage() {
                             <li className="flex items-center gap-3 p-4 rounded-xl bg-white/50 dark:bg-black/50 border border-indigo-500/10 text-[10px] font-bold uppercase tracking-tight">
                                 <CheckCircle2 className="h-4 w-4 text-green-600" /> AI Report Generation
                             </li>
-                            <li className="flex items-center gap-3 p-4 rounded-xl bg-white/50 dark:bg-black/50 border border-indigo-500/10 text-[10px] font-bold uppercase tracking-tight">
+                            <li className="flex items-center gap-3 p-4 rounded-xl bg-white/50 dark:bg-black/50 border border-indigo-500/10 text-[10px) font-bold uppercase tracking-tight">
                                 <CheckCircle2 className="h-4 w-4 text-green-600" /> Fraud Neutralization
                             </li>
                         </ul>
