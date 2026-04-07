@@ -659,33 +659,6 @@ export default function DashboardHomePage() {
                       </Card>
                   </motion.div>
 
-                  {/* SECURITY TELEMETRY NODE */}
-                  <motion.div variants={cardVariants}>
-                      <Card className="p-8 rounded-[2.5rem] border-primary/5 bg-muted/20 shadow-inner text-left space-y-6">
-                          <div className="flex items-center justify-between">
-                              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">System Security</h3>
-                              <RefreshCw className="h-3 w-3 text-primary/20 animate-spin" />
-                          </div>
-                          <div className="space-y-4">
-                              <div className="flex justify-between items-center text-[10px] font-bold">
-                                  <span className="text-muted-foreground uppercase tracking-widest">Auth Protocol</span>
-                                  <span className="text-primary uppercase">Zero-Trust Node</span>
-                              </div>
-                              <div className="flex justify-between items-center text-[10px] font-bold">
-                                  <span className="text-muted-foreground uppercase tracking-widest">TLS 1.3 Health</span>
-                                  <span className="text-green-600 uppercase">Definitive</span>
-                              </div>
-                              <div className="flex justify-between items-center text-[10px] font-bold">
-                                  <span className="text-muted-foreground uppercase tracking-widest">Neural Latency</span>
-                                  <span className="text-primary uppercase">42ms</span>
-                              </div>
-                          </div>
-                          <div className="pt-4 border-t border-primary/5">
-                              <p className="text-[9px] font-medium text-muted-foreground leading-relaxed italic opacity-60">"All forensic operations are cryptographically isolated from persistence nodes."</p>
-                          </div>
-                      </Card>
-                  </motion.div>
-
                   {/* SPECIALIZED TERMINALS GRID - BLUE ACCENTS */}
                   <div className="space-y-4">
                       {aiFeatures.map((f, i) => (
