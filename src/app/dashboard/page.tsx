@@ -112,8 +112,8 @@ interface Post {
 }
 
 const aiFeatures = [
-    { id: "strength", icon: BrainCircuit, title: "Check Success", desc: "See your case chance.", href: "/dashboard/strength-analyzer", color: "text-blue-600", bg: "bg-blue-500/10" },
-    { id: "intel", icon: Search, title: "Read Documents", desc: "Check files for risks.", href: "/dashboard/document-intelligence", color: "text-indigo-600", bg: "bg-indigo-500/10" },
+    { id: "strength", icon: BrainCircuit, title: "Check Success Chance", desc: "See your case chance.", href: "/dashboard/strength-analyzer", color: "text-blue-600", bg: "bg-blue-500/10" },
+    { id: "intel", icon: Search, title: "Scan Documents", desc: "Check files for risks.", href: "/dashboard/document-intelligence", color: "text-indigo-600", bg: "bg-indigo-500/10" },
     { id: "draft", icon: FileText, title: "Write Documents", desc: "Create legal papers.", href: "/dashboard/document-generator", color: "text-sky-600", bg: "bg-sky-500/10" },
     { id: "bond", icon: FileSignature, title: "Create Bonds", desc: "Make simple legal bonds.", href: "/dashboard/bond-generator", color: "text-cyan-600", bg: "bg-cyan-500/10" },
 ];
@@ -153,9 +153,6 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
 }
 
 export default function DashboardHomePage() {
-  const [text, setText] = useState('');
-  const [isTyping, setIsTyping] = useState(true);
-  const fullText = 'Helper';
   const { playSound } = useSoundEffect();
   const { toast } = useToast();
   const router = useRouter();
@@ -174,23 +171,6 @@ export default function DashboardHomePage() {
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [fileName, setFileName] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    if (isTyping) {
-      if (text.length < fullText.length) {
-        timeoutId = setTimeout(() => setText(fullText.slice(0, text.length + 1)), 150); 
-      } else {
-        timeoutId = setTimeout(() => setIsTyping(false), 2000);
-      }
-    } else {
-      timeoutId = setTimeout(() => {
-        setText('');
-        setIsTyping(true);
-      }, 1000);
-    }
-    return () => clearTimeout(timeoutId);
-  }, [text, isTyping]);
 
   useEffect(() => {
     const postsCol = collection(firestore, "posts");
@@ -250,8 +230,8 @@ export default function DashboardHomePage() {
               <div className="p-8 sm:p-16 relative z-10 flex flex-col lg:flex-row items-center gap-12">
                   <div className="flex-1 space-y-10 text-center lg:text-left">
                       <div className="space-y-6">
-                          <h1 className="text-5xl sm:text-7xl font-black tracking-tighter text-foreground leading-none">
-                              Legal <span className="animate-pan italic">{text}</span>
+                          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground leading-tight">
+                              Nyaya <span className="text-primary italic">Sahayak</span>
                           </h1>
                           <p className="text-sm sm:text-xl text-muted-foreground font-medium max-w-xl leading-relaxed opacity-80">
                               Your smart assistant for legal help. Get very accurate analysis and easy guides for your case.
