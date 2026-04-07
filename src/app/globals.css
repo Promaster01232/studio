@@ -113,4 +113,21 @@
   @keyframes pan {
     to { background-position: 200% center; }
   }
+
+  /* Stat Scanning Pulse */
+  .security-scan {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      hsl(var(--primary) / 0.1) 50%,
+      transparent 100%
+    );
+    background-size: 100% 200%;
+    animation: scan 3s linear infinite;
+  }
+
+  @keyframes scan {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 0% 200%; }
+  }
 }

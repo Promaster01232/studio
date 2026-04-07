@@ -20,13 +20,15 @@ import {
   Activity,
   Gavel,
   MessageCircle,
-  ChevronRight
+  ChevronRight,
+  Lock,
+  Cpu
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, type User as FirebaseUser } from "firebase/auth";
 import { PublicHeader } from "@/components/public-header";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Footer } from "@/components/footer";
 
 const featureNodes = [
@@ -35,6 +37,19 @@ const featureNodes = [
   { icon: FileText, title: "Drafting", desc: "Generate professionally structured legal notices and applications in seconds.", href: "/dashboard/document-generator", badge: "Live" },
   { icon: Globe, title: "Expert Connect", desc: "Seamlessly connect with verified legal professionals for personalized strategy.", href: "/dashboard/lawyer-connect", badge: "Verified" },
 ];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.6, ease: "easeOut" } }
+};
 
 export default function WelcomePage() {
   const auth = useAuth();
@@ -55,73 +70,104 @@ export default function WelcomePage() {
         {/* HERO SECTION */}
         <section className="w-full max-w-7xl pt-16 pb-20 sm:pt-24 sm:pb-32 px-6 text-center space-y-12">
           <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, ease: "easeOut" }} 
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
             className="space-y-10"
           >
-            <header className="flex flex-col items-center gap-6">
-              <div className="relative">
-                <div className="absolute -inset-6 bg-primary/5 rounded-full blur-3xl"></div>
-                <Logo className="h-24 w-24 sm:h-32 sm:w-32 shadow-xl relative z-10" priority={true} />
+            <motion.header variants={itemVariants} className="flex flex-col items-center gap-6">
+              <div className="relative group">
+                <div className="absolute -inset-8 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-1000"></div>
+                <Logo className="h-24 w-24 sm:h-32 sm:w-32 shadow-2xl relative z-10 animate-pulse" priority={true} />
               </div>
               <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10">
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
-                <span className="text-[10px] font-bold tracking-widest text-primary uppercase">Modern Legal Intelligence</span>
+                <span className="text-[10px] font-black tracking-[0.3em] text-primary uppercase">Modern Legal Intelligence</span>
               </div>
-            </header>
+            </motion.header>
 
-            <div className="space-y-6 max-w-4xl mx-auto">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tighter text-foreground leading-tight text-center">
+            <motion.div variants={itemVariants} className="space-y-6 max-w-4xl mx-auto">
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tighter text-foreground leading-tight text-center">
                 Empowering every citizen with <br className="hidden md:block" /> <span className="text-primary italic">precision legal AI.</span>
               </h1>
               <p className="text-base sm:text-xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
                 Experience the next generation of legal help. Our platform provides forensic case audits, BNS statutory scanning, and direct access to experts.
               </p>
-            </div>
+            </motion.div>
 
-            <nav className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
+            <motion.nav variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               {!loading ? (
-                <Button asChild size="lg" className="h-14 w-full sm:w-auto min-w-[240px] rounded-xl shadow-xl shadow-primary/20 active:scale-95 transition-all group relative overflow-hidden">
-                  <Link href="/dashboard" className="flex items-center gap-2 relative z-10">
-                    Get Started <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <Button asChild size="lg" className="h-16 w-full sm:w-auto min-w-[260px] rounded-2xl shadow-2xl shadow-primary/20 active:scale-95 transition-all group relative overflow-hidden">
+                  <Link href="/dashboard" className="flex items-center gap-3 relative z-10 font-black uppercase text-xs tracking-widest">
+                    Initialize Terminal <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                   </Link>
                 </Button>
               ) : (
-                <div className="h-14 w-[240px] flex items-center justify-center bg-muted/10 rounded-xl border border-primary/10">
+                <div className="h-16 w-[260px] flex items-center justify-center bg-muted/10 rounded-2xl border border-primary/10">
                   <Loader2 className="h-5 w-5 animate-spin text-primary opacity-40" />
                 </div>
               )}
-              <Button variant="outline" size="lg" asChild className="h-14 w-full sm:w-auto min-w-[200px] rounded-xl border-primary/10 hover:bg-primary/5 transition-all">
+              <Button variant="outline" size="lg" asChild className="h-16 w-full sm:w-auto min-w-[200px] rounded-2xl border-primary/10 hover:bg-primary/5 transition-all font-black uppercase text-xs tracking-widest">
                 <Link href="/about" className="flex items-center gap-2">
-                  Learn More <ChevronRight className="h-4 w-4 opacity-40" />
+                  Institutional Mission <ChevronRight className="h-4 w-4 opacity-40" />
                 </Link>
               </Button>
-            </nav>
+            </motion.nav>
           </motion.div>
         </section>
 
+        {/* SECURITY & TRUST TELEMETRY */}
+        <section className="w-full max-w-7xl px-6 py-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {[
+                    { label: "Data Protection", value: "AES-256 REST", icon: Lock },
+                    { label: "Access Protocol", value: "ZERO-TRUST", icon: ShieldCheck },
+                    { label: "Neural Node", value: "Synchronized", icon: Activity },
+                    { label: "Statutory Sync", value: "BNS-V4.2", icon: Cpu },
+                ].map((stat, i) => (
+                    <motion.div 
+                        key={i}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1 }}
+                        className="p-6 rounded-[2rem] bg-card border border-primary/5 shadow-sm text-center space-y-2 group hover:border-primary/20 transition-all"
+                    >
+                        <stat.icon className="h-5 w-5 text-primary/40 mx-auto group-hover:scale-110 transition-transform" />
+                        <p className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-60">{stat.label}</p>
+                        <p className="text-[10px] font-black uppercase text-foreground">{stat.value}</p>
+                    </motion.div>
+                ))}
+            </div>
+        </section>
+
         {/* FEATURES GRID */}
-        <section className="w-full max-w-7xl py-20 px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <section className="w-full max-w-7xl py-24 px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {featureNodes.map((node, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 20 }} 
+                whileInView={{ opacity: 1, y: 0 }} 
+                viewport={{ once: true }} 
+                transition={{ delay: i * 0.1 }}
+              >
                 <Link href={node.href} className="block group h-full">
-                  <Card className="h-full flex flex-col bg-card border-primary/5 hover:border-primary/20 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 rounded-3xl overflow-hidden">
-                    <CardContent className="p-8 flex flex-col h-full text-left">
-                      <div className="flex items-center justify-between mb-8">
-                        <div className="p-3 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
-                          <node.icon className="h-6 w-6" />
+                  <Card className="h-full flex flex-col bg-card border-primary/5 hover:border-primary/20 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 rounded-[2.5rem] overflow-hidden">
+                    <CardContent className="p-10 flex flex-col h-full text-left">
+                      <div className="flex items-center justify-between mb-10">
+                        <div className="p-4 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                          <node.icon className="h-7 w-7" />
                         </div>
-                        <Badge variant="secondary" className="bg-primary/10 text-primary text-[9px] font-bold uppercase">
+                        <Badge variant="outline" className="bg-primary/5 text-primary text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1 border-primary/10">
                           {node.badge}
                         </Badge>
                       </div>
-                      <h3 className="text-lg font-bold text-foreground mb-2">{node.title}</h3>
-                      <p className="text-sm text-muted-foreground font-medium leading-relaxed flex-grow">{node.desc}</p>
-                      <div className="mt-6 pt-6 border-t border-primary/5 flex items-center text-primary/40 group-hover:text-primary transition-colors text-[10px] font-bold uppercase tracking-widest">
-                        Launch <ArrowRight className="h-3 w-3 ml-2" />
+                      <h3 className="text-xl font-black tracking-tight text-foreground mb-3 uppercase">{node.title}</h3>
+                      <p className="text-sm text-muted-foreground font-medium leading-relaxed flex-grow opacity-80">{node.desc}</p>
+                      <div className="mt-8 pt-8 border-t border-primary/5 flex items-center text-primary/40 group-hover:text-primary transition-all text-[10px] font-black uppercase tracking-[0.3em]">
+                        Initialize Node <ArrowRight className="h-3.5 w-3.5 ml-2 transition-transform group-hover:translate-x-1" />
                       </div>
                     </CardContent>
                   </Card>
@@ -132,13 +178,21 @@ export default function WelcomePage() {
         </section>
 
         {/* TRUST BANNER */}
-        <section className="w-full py-24 px-6 border-t border-primary/5 bg-muted/20">
-            <div className="max-w-4xl auto text-center space-y-8">
-                <Gavel className="h-10 w-10 text-primary/20 mx-auto" />
-                <p className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight leading-snug italic">
+        <section className="w-full py-32 px-6 border-t border-primary/5 bg-muted/20 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
+                <Logo className="h-[600px] w-[600px]" priority={false} />
+            </div>
+            <div className="max-w-4xl mx-auto text-center space-y-10 relative z-10">
+                <div className="p-4 rounded-3xl bg-primary/5 w-fit mx-auto border border-primary/10">
+                    <Gavel className="h-10 w-10 text-primary opacity-40 animate-pulse" />
+                </div>
+                <p className="text-3xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight leading-tight italic uppercase">
                     "Redefining access to justice with <span className="text-primary">Reliable AI Technology.</span>"
                 </p>
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">Nyaya Sahayak Identity Node</p>
+                <div className="space-y-2">
+                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-primary">Nyaya Sahayak Identity Node</p>
+                    <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40">Established 2024 • Secured by IdeaSpark</p>
+                </div>
             </div>
         </section>
       </main>

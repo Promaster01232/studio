@@ -40,7 +40,9 @@ import {
   Smartphone,
   Calendar,
   AlertTriangle,
-  ChevronDown
+  ChevronDown,
+  Lock,
+  RefreshCw
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -103,7 +105,11 @@ interface Post {
     content: string;
     likes: number;
     likedBy?: string[];
-    postType?: string;
+    postType?: 'Idea' | 'Question' | 'Suggestion' | 'Poll' | 'News';
+    poll?: {
+        options: { text: string; votes: number }[];
+        voters?: string[];
+    };
     isAnonymous?: boolean;
 }
 
@@ -114,6 +120,19 @@ const aiFeatures = [
     { id: "bond", icon: FileSignature, title: "Bond Protocol", desc: "Official bail and indemnity bonds.", href: "/dashboard/bond-generator", color: "text-cyan-600", bg: "bg-cyan-500/10" },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const cardVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100, damping: 15 } }
+};
+
 function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
     const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
     const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
@@ -121,16 +140,16 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
 
     return (
         <Link href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} className={cn("flex items-center gap-3", post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer")}>
-            <Avatar className="h-10 w-10 border border-primary/10 shadow-sm rounded-lg">
+            <Avatar className="h-10 w-10 border border-primary/10 shadow-lg rounded-xl">
                 {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
                 <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
             </Avatar>
             <div className="flex-1 text-left">
                 <div className="flex items-center gap-1.5">
-                    <p className="font-black text-xs tracking-tight uppercase">{authorName}</p>
+                    <p className="font-black text-xs tracking-tight">{authorName}</p>
                     {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
                 </div>
-                <p className="text-[8px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
+                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-40">
                     {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
                 </p>
             </div>
@@ -224,9 +243,14 @@ export default function DashboardHomePage() {
   };
 
   return (
-    <div className="flex flex-col h-full space-y-12 pb-24 max-w-6xl mx-auto text-left relative pt-4">
-        {/* HERO SECTION - INSTITUTIONAL BLUE */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="flex flex-col h-full space-y-12 pb-24 max-w-6xl mx-auto text-left relative pt-4"
+    >
+        {/* HERO SECTION - INSTITUTIONAL BLUE WITH MOTION */}
+        <motion.div variants={cardVariants}>
           <Card className="relative overflow-hidden border-primary/5 bg-card shadow-2xl rounded-[3rem] group">
               <div className="p-8 sm:p-16 relative z-10 flex flex-col lg:flex-row items-center gap-12">
                   <div className="flex-1 space-y-10 text-center lg:text-left">
@@ -252,7 +276,10 @@ export default function DashboardHomePage() {
                   </div>
 
                   <div className="hidden lg:flex flex-col gap-4 w-80">
-                      <div className="p-6 rounded-[2rem] bg-primary/5 border border-primary/10 shadow-sm flex items-center gap-5 group/sec">
+                      <motion.div 
+                        whileHover={{ scale: 1.05 }}
+                        className="p-6 rounded-[2rem] bg-primary/5 border border-primary/10 shadow-sm flex items-center gap-5 group/sec"
+                      >
                           <div className="p-3 rounded-xl bg-white dark:bg-black/20 border border-primary/10 group-hover/sec:scale-110 transition-transform">
                               <ShieldCheck className="h-5 w-5 text-primary" />
                           </div>
@@ -260,8 +287,11 @@ export default function DashboardHomePage() {
                               <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60">Encryption</p>
                               <p className="text-xs font-black uppercase">AES-256 Active</p>
                           </div>
-                      </div>
-                      <div className="p-6 rounded-[2rem] bg-primary/5 border border-primary/10 shadow-sm flex items-center gap-5 group/sec">
+                      </motion.div>
+                      <motion.div 
+                        whileHover={{ scale: 1.05 }}
+                        className="p-6 rounded-[2rem] bg-primary/5 border border-primary/10 shadow-sm flex items-center gap-5 group/sec"
+                      >
                           <div className="p-3 rounded-xl bg-white dark:bg-black/20 border border-primary/10 group-hover/sec:scale-110 transition-transform">
                               <Activity className="h-5 w-5 text-primary animate-pulse" />
                           </div>
@@ -269,23 +299,27 @@ export default function DashboardHomePage() {
                               <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60">Neural Node</p>
                               <p className="text-xs font-black uppercase">Synchronized</p>
                           </div>
-                      </div>
+                      </motion.div>
                   </div>
               </div>
-              <div className="h-1.5 w-full bg-primary/10"></div>
+              <div className="h-1.5 w-full bg-gradient-to-r from-primary via-blue-400 to-primary opacity-20"></div>
           </Card>
         </motion.div>
 
-        {/* NEURAL AGENDA COMMAND BAR - BLUE ACCENTS */}
+        {/* NEURAL AGENDA COMMAND BAR - WITH PULSING WAVEFORM */}
         <motion.section 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ delay: 0.2 }}
+            variants={cardVariants}
             className="w-full flex flex-col items-center py-12 space-y-10"
         >
-            <h2 className="text-3xl sm:text-4xl font-black tracking-tighter text-foreground uppercase">
-                Neural <span className="text-primary font-medium italic lowercase">Agenda Hub</span>
-            </h2>
+            <div className="flex flex-col items-center gap-2">
+                <h2 className="text-3xl sm:text-4xl font-black tracking-tighter text-foreground uppercase">
+                    Neural <span className="text-primary font-medium italic lowercase">Agenda Hub</span>
+                </h2>
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
+                    <Lock className="h-2.5 w-2.5 text-primary opacity-40" />
+                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/60">End-to-End Encrypted Session</span>
+                </div>
+            </div>
             
             <div className="w-full max-w-3xl relative group">
                 <div className="absolute -inset-1 bg-primary/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
@@ -602,26 +636,55 @@ export default function DashboardHomePage() {
           <div className="lg:col-span-4 space-y-12">
               {/* SIDEBAR: ACTIONS - BLUE ACCENTS */}
               <section className="space-y-8">
-                  <Card className="bg-primary border-none rounded-[3rem] overflow-hidden shadow-2xl shadow-primary/20 relative group cursor-pointer" asChild>
-                      <Link href="/dashboard/billing">
-                        <div className="p-10 text-white relative z-10 space-y-10">
-                            <div className="flex justify-between items-start">
-                                <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
-                                    <Zap className="h-8 w-8 text-white" />
+                  <motion.div variants={cardVariants} whileHover={{ scale: 1.02 }}>
+                      <Card className="bg-primary border-none rounded-[3rem] overflow-hidden shadow-2xl shadow-primary/20 relative group cursor-pointer" asChild>
+                          <Link href="/dashboard/billing">
+                            <div className="p-10 text-white relative z-10 space-y-10">
+                                <div className="flex justify-between items-start">
+                                    <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
+                                        <Zap className="h-8 w-8 text-white" />
+                                    </div>
+                                    <Badge className="bg-white text-primary font-black text-[9px] uppercase tracking-widest border-none">Elite Access</Badge>
                                 </div>
-                                <Badge className="bg-white text-primary font-black text-[9px] uppercase tracking-widest border-none">Elite Access</Badge>
+                                <div className="space-y-3 text-left">
+                                    <h3 className="text-3xl font-black tracking-tighter uppercase leading-tight">Upgrade <br /> Node</h3>
+                                    <p className="text-white/60 text-[11px] font-bold uppercase tracking-widest leading-relaxed">Unlock elite forensic AI terminals and unlimited reports.</p>
+                                </div>
+                                <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest bg-white/10 w-fit px-6 py-3 rounded-xl border border-white/10 group-hover:bg-white/20 transition-all">
+                                    Protocol Options <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                </div>
                             </div>
-                            <div className="space-y-3 text-left">
-                                <h3 className="text-3xl font-black tracking-tighter uppercase leading-tight">Upgrade <br /> Node</h3>
-                                <p className="text-white/60 text-[11px] font-bold uppercase tracking-widest leading-relaxed">Unlock elite forensic AI terminals and unlimited reports.</p>
-                            </div>
-                            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest bg-white/10 w-fit px-6 py-3 rounded-xl border border-white/10 group-hover:bg-white/20 transition-all">
-                                Protocol Options <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                            </div>
-                        </div>
-                        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </Link>
-                  </Card>
+                            <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </Link>
+                      </Card>
+                  </motion.div>
+
+                  {/* SECURITY TELEMETRY NODE */}
+                  <motion.div variants={cardVariants}>
+                      <Card className="p-8 rounded-[2.5rem] border-primary/5 bg-muted/20 shadow-inner text-left space-y-6">
+                          <div className="flex items-center justify-between">
+                              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">System Security</h3>
+                              <RefreshCw className="h-3 w-3 text-primary/20 animate-spin" />
+                          </div>
+                          <div className="space-y-4">
+                              <div className="flex justify-between items-center text-[10px] font-bold">
+                                  <span className="text-muted-foreground uppercase tracking-widest">Auth Protocol</span>
+                                  <span className="text-primary uppercase">Zero-Trust Node</span>
+                              </div>
+                              <div className="flex justify-between items-center text-[10px] font-bold">
+                                  <span className="text-muted-foreground uppercase tracking-widest">TLS 1.3 Health</span>
+                                  <span className="text-green-600 uppercase">Definitive</span>
+                              </div>
+                              <div className="flex justify-between items-center text-[10px] font-bold">
+                                  <span className="text-muted-foreground uppercase tracking-widest">Neural Latency</span>
+                                  <span className="text-primary uppercase">42ms</span>
+                              </div>
+                          </div>
+                          <div className="pt-4 border-t border-primary/5">
+                              <p className="text-[9px] font-medium text-muted-foreground leading-relaxed italic opacity-60">"All forensic operations are cryptographically isolated from persistence nodes."</p>
+                          </div>
+                      </Card>
+                  </motion.div>
 
                   {/* SPECIALIZED TERMINALS GRID - BLUE ACCENTS */}
                   <div className="space-y-4">
@@ -647,6 +710,6 @@ export default function DashboardHomePage() {
               </section>
           </div>
         </div>
-    </div>
+    </motion.div>
   );
 }
