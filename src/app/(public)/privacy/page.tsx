@@ -25,7 +25,9 @@ import {
   ShieldAlert,
   History,
   FileText,
-  User
+  User,
+  Bot,
+  Sparkles
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
