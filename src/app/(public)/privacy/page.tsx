@@ -18,7 +18,12 @@ import {
   Clock,
   ExternalLink,
   Scale,
-  BellRing
+  BellRing,
+  Globe,
+  UserCheck,
+  Eye,
+  ShieldAlert,
+  History
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
@@ -223,6 +228,36 @@ export default function PrivacyPage() {
             </div>
         </section>
 
+        <section id="section-3" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-orange-500/10 text-orange-500"><ShieldCheck className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">3. WHAT LEGAL BASES DO WE RELY ON?</h3>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                We only process your personal information when we believe it is necessary and we have a valid legal reason to do so under applicable law, like with your consent, to comply with laws, to provide you with services, or to protect your rights.
+            </p>
+        </section>
+
+        <section id="section-4" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500"><UserCheck className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">4. WHEN AND WITH WHOM DO WE SHARE INFO?</h3>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                We may share information in specific situations described in this section and/or with third-party service providers who perform services for us or on our behalf and require access to such information to do that work.
+            </p>
+        </section>
+
+        <section id="section-5" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-slate-500/10 text-slate-500"><ExternalLink className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">5. STANCE ON THIRD-PARTY WEBSITES</h3>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                The Services may link to third-party websites, online services, or mobile applications. We cannot guarantee the safety and privacy of data you provide to any third parties. Any data collected by third parties is not covered by this Privacy Notice.
+            </p>
+        </section>
+
         <section id="section-6" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-4">
                 <div className="p-3 rounded-2xl bg-cyan-500/10 text-cyan-500"><Cpu className="h-6 w-6" /></div>
@@ -235,6 +270,56 @@ export default function PrivacyPage() {
                     <p>We provide the AI Products through third-party service providers, including Google Cloud AI. Your input and output data will be shared with and processed by these providers strictly to enable bot functionality, governed by this Privacy Notice.</p>
                 </div>
             </div>
+        </section>
+
+        <section id="section-7" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-indigo-500/10 text-indigo-500"><CheckCircle2 className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">7. HANDLING SOCIAL LOGINS</h3>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                Our Services offer you the ability to register and log in using your third-party social media account details. Where you choose to do this, we will receive certain profile information about you from your social media provider.
+            </p>
+        </section>
+
+        <section id="section-8" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-500"><Clock className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">8. DATA RETENTION PERIOD</h3>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                We will only keep your personal information for as long as it is necessary for the purposes set out in this Privacy Notice, unless a longer retention period is required or permitted by law.
+            </p>
+        </section>
+
+        <section id="section-9" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-rose-500/10 text-rose-500"><ShieldAlert className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">9. COLLECTION FROM MINORS</h3>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                We do not knowingly collect data from or market to children under 18 years of age. By using the Services, you represent that you are at least 18.
+            </p>
+        </section>
+
+        <section id="section-10" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-purple-500/10 text-purple-500"><Eye className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">10. YOUR PRIVACY RIGHTS</h3>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                You have rights that allow you greater access to and control over your personal information. You may review, change, or terminate your account at any time.
+            </p>
+        </section>
+
+        <section id="section-11" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-slate-500/10 text-slate-500"><Fingerprint className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">11. DO-NOT-TRACK FEATURES</h3>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                Most web browsers and some mobile operating systems include a Do-Not-Track feature. At this stage, we do not currently respond to DNT browser signals.
+            </p>
         </section>
 
         <section id="section-12" className="space-y-6 scroll-mt-24">
@@ -297,6 +382,16 @@ export default function PrivacyPage() {
                     ))}
                 </ul>
             </div>
+        </section>
+
+        <section id="section-14" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-slate-500/10 text-slate-500"><History className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">14. UPDATES TO THIS NOTICE</h3>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                We may update this Privacy Notice from time to time. The updated version will be indicated by an updated "Revised" date at the top of this notice.
+            </p>
         </section>
 
         <section id="section-15" className="space-y-8 pt-10 border-t border-primary/5 scroll-mt-24">
