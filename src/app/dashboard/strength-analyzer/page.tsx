@@ -26,7 +26,8 @@ import {
   PlusCircle,
   ChevronDown,
   FileSearch,
-  FileCheck
+  FileCheck,
+  Fingerprint
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AudioAssistant } from "@/components/audio-assistant";
@@ -68,13 +69,13 @@ export default function StrengthAnalyzerPage() {
   };
 
   return (
-    <div className="space-y-10 max-w-6xl mx-auto pb-32 px-4 sm:px-0 text-left">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
+    <div className="space-y-12 max-w-6xl mx-auto pb-32 px-4 sm:px-0 text-left">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
             <PageHeader
             title="Strength Matrix"
             description="Institutional probability modeling for statutory litigation success."
             />
-            <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
+            <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-foreground text-[10px] uppercase tracking-widest" asChild>
             <Link href="/dashboard">
                 <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Terminal
             </Link>
@@ -86,36 +87,38 @@ export default function StrengthAnalyzerPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="max-w-3xl mx-auto"
         >
-            <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/5">
-                <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
-                <div className="flex items-center gap-3 mb-2 text-primary">
-                    <BrainCircuit className="h-5 w-5" />
-                    <CardTitle className="text-xl font-black uppercase tracking-tight">Narrative Ingress</CardTitle>
+            <Card className="glass shadow-3xl rounded-[3rem] overflow-hidden border-primary/5 bg-card">
+                <CardHeader className="bg-muted/30 border-b border-primary/10 p-10 text-left">
+                <div className="flex items-center gap-4 mb-3">
+                    <div className="p-3 rounded-2xl bg-background border border-primary/10">
+                        <BrainCircuit className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="text-3xl font-black uppercase tracking-tighter">Narrative Ingress</CardTitle>
                 </div>
-                <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Provide detailed chronological facts for audit.</CardDescription>
+                <CardDescription className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40">Initialize chronological facts for forensic audit.</CardDescription>
                 </CardHeader>
-                <CardContent className="p-8">
-                <form action={formAction} className="space-y-8 text-left">
-                    <div className="space-y-3">
-                    <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory Narrative</Label>
-                    <Textarea id="caseDescription" name="caseDescription" placeholder="Enter sequence of events, evidence IDs, and party names..." rows={6} required className="glass rounded-[1.5rem] font-medium text-base p-6 shadow-inner min-h-[150px]" />
+                <CardContent className="p-10">
+                <form action={formAction} className="space-y-10 text-left">
+                    <div className="space-y-4">
+                    <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Statutory Narrative Matrix</Label>
+                    <Textarea id="caseDescription" name="caseDescription" placeholder="Enter sequence of events, evidence IDs, and statutory nodes..." rows={8} required className="bg-muted/20 border-primary/10 rounded-[2rem] font-bold text-sm p-8 shadow-inner focus:border-foreground transition-all min-h-[200px]" />
                     </div>
                     
-                    <div className="space-y-3">
-                        <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Forensic Dialect</Label>
+                    <div className="space-y-4">
+                        <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Audit Protocol Language</Label>
                         <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
-                        <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl active:scale-95 transition-all">
+                        <SelectTrigger id="language" className="h-14 bg-muted/20 border-primary/10 font-black uppercase text-[10px] rounded-2xl active:scale-95 transition-all">
                             <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
-                            <SelectItem value="English" className="font-bold">English Protocol</SelectItem>
-                            <SelectItem value="Hindi" className="font-bold">Hindi Protocol</SelectItem>
+                        <SelectContent className="rounded-[1.5rem] glass">
+                            <SelectItem value="English" className="font-black uppercase text-[10px]">English Protocol</SelectItem>
+                            <SelectItem value="Hindi" className="font-black uppercase text-[10px]">Hindi Protocol</SelectItem>
                         </SelectContent>
                         </Select>
                     </div>
 
-                    <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem] group overflow-hidden relative">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-[11px] font-black uppercase tracking-[0.4em] shadow-2xl shadow-primary/10 transition-all active:scale-95 rounded-[2rem] group overflow-hidden relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                         {state.status === 'loading' ? (
                             <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Deconstructing Matrix...</>
                         ) : (
@@ -127,62 +130,62 @@ export default function StrengthAnalyzerPage() {
             </Card>
         </motion.div>
 
-        <div ref={reportRef} className="space-y-8 scroll-mt-20">
-            <div className="flex flex-col items-center gap-4 mb-4">
-                <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
-                <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Statutory Audit Node</Badge>
+        <div ref={reportRef} className="space-y-10 scroll-mt-20">
+            <div className="flex flex-col items-center gap-4 mb-6">
+                <ChevronDown className="h-8 w-8 text-foreground animate-bounce opacity-20" />
+                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-[0.4em] bg-muted px-6 py-2 rounded-full border-primary/10">Statutory Audit Node</Badge>
             </div>
 
-            <Card className="glass border-primary/20 shadow-3xl overflow-hidden rounded-[3rem] relative min-h-[600px] flex flex-col">
+            <Card className="border-primary/10 shadow-3xl rounded-[4rem] overflow-hidden relative min-h-[700px] flex flex-col bg-card">
                 <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
                     <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
                 </div>
 
                 <CardHeader className={cn(
-                    "p-8 sm:p-12 relative z-10 transition-colors duration-500",
-                    state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-primary/5 text-foreground"
+                    "p-10 sm:p-16 relative z-10 transition-colors duration-700 border-b border-primary/5",
+                    state.status === 'success' ? "bg-foreground text-background" : "bg-muted/30 text-foreground"
                 )}>
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 text-left">
-                        <div className="space-y-4 text-left flex-1 min-w-0">
-                            <div className="flex items-center gap-3">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
+                        <div className="space-y-6 text-left flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-4">
                                 <div className={cn(
-                                    "flex items-center gap-2 px-3 py-1 rounded-full border",
-                                    state.status === 'success' ? "bg-white/10 border-white/20" : "bg-primary/10 border-primary/20"
+                                    "flex items-center gap-3 px-4 py-1.5 rounded-full border",
+                                    state.status === 'success' ? "bg-background/10 border-background/20" : "bg-foreground/5 border-foreground/10"
                                 )}>
-                                    <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
-                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", state.status === 'success' ? "text-white" : "text-primary")}>
+                                    <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-background" : "text-foreground")} />
+                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", state.status === 'success' ? "text-background" : "text-foreground")}>
                                         Official AI Report Node
                                     </span>
                                 </div>
                                 <Badge variant="outline" className={cn(
-                                    "text-[9px] font-black uppercase tracking-[0.2em]",
-                                    state.status === 'success' ? "border-white/20 text-white/80" : "border-primary/20 text-primary/60"
+                                    "text-[9px] font-black uppercase tracking-[0.3em] px-4 py-1.5",
+                                    state.status === 'success' ? "border-background/20 text-background/80" : "border-foreground/10 text-foreground/60"
                                 )}>
                                     NS-MATX-ST-4.2
                                 </Badge>
                             </div>
-                            <div className="space-y-1">
-                                <CardTitle className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">
-                                    {state.status === 'success' ? <><span className="italic opacity-80">Audit Dossier</span> Ready.</> : "Awaiting Ingress"}
+                            <div className="space-y-2">
+                                <CardTitle className="text-4xl sm:text-6xl font-black uppercase tracking-tighter leading-none">
+                                    {state.status === 'success' ? <><span className="italic opacity-60">Audit Dossier</span> Ready.</> : "Awaiting Ingress"}
                                 </CardTitle>
                                 <p className={cn(
-                                    "text-[10px] font-bold uppercase tracking-[0.3em] flex items-center gap-2",
-                                    state.status === 'success' ? "text-white/60" : "text-muted-foreground"
+                                    "text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-3",
+                                    state.status === 'success' ? "text-background/40" : "text-muted-foreground"
                                 )}>
-                                    <Globe className="h-3 w-3" /> Secure Session: Encrypted // Transience Active
+                                    <Globe className="h-4 w-4" /> Secure Session: Encrypted // Transience Active
                                 </p>
                             </div>
                         </div>
                         
                         {state.status === 'success' && (
-                            <div className="flex flex-wrap items-center gap-3 shrink-0">
+                            <div className="flex flex-wrap items-center gap-4 shrink-0">
                                 <Button 
                                     variant="secondary" 
                                     size="sm" 
                                     onClick={handleReset}
-                                    className="h-11 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 shadow-lg"
+                                    className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl"
                                 >
-                                    <PlusCircle className="h-4 w-4" /> Start New Audit
+                                    <PlusCircle className="h-4 w-4" /> New Audit
                                 </Button>
                                 <AudioAssistant 
                                     text={`${state.data?.summary}. Strength Score is ${state.data?.strengthScore} percent.`} 
@@ -193,7 +196,7 @@ export default function StrengthAnalyzerPage() {
                     </div>
                 </CardHeader>
                 
-                <CardContent className="p-8 sm:p-12 flex-1 relative z-10">
+                <CardContent className="p-10 sm:p-16 flex-1 relative z-10">
                     <AnimatePresence mode="wait">
                         {state.status === 'loading' ? (
                             <motion.div 
@@ -201,17 +204,17 @@ export default function StrengthAnalyzerPage() {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="flex flex-col items-center justify-center h-full py-20 text-center gap-10"
+                                className="flex flex-col items-center justify-center h-full py-24 text-center gap-12"
                             >
                                 <div className="relative w-fit mx-auto">
-                                    <Loader2 className="h-20 w-20 animate-spin text-primary opacity-20" />
+                                    <Loader2 className="h-24 w-24 animate-spin text-foreground opacity-10" />
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <Activity className="h-8 w-8 text-primary animate-pulse" />
+                                        <Activity className="h-10 w-10 text-foreground animate-pulse" />
                                     </div>
                                 </div>
-                                <div className="space-y-3">
-                                    <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Running Forensic Audit...</p>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Calculating success probability nodes...</p>
+                                <div className="space-y-4">
+                                    <p className="font-black text-3xl tracking-tighter uppercase text-foreground">Running Forensic Audit...</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground animate-pulse">Calculating success probability nodes...</p>
                                 </div>
                             </motion.div>
                         ) : state.status === "success" && state.data ? (
@@ -219,58 +222,58 @@ export default function StrengthAnalyzerPage() {
                                 key="report-content" 
                                 initial={{ opacity: 0, y: 20 }} 
                                 animate={{ opacity: 1, y: 0 }} 
-                                className="space-y-12 pb-10 text-left"
+                                className="space-y-16 pb-12 text-left"
                             >
-                                <div className="flex flex-col lg:flex-row items-center gap-12">
-                                    <div className="relative h-56 w-56 flex items-center justify-center shrink-0">
+                                <div className="flex flex-col lg:flex-row items-center gap-16">
+                                    <div className="relative h-64 w-64 flex items-center justify-center shrink-0">
                                         <svg className="h-full w-full transform -rotate-90">
-                                            <circle cx="50%" cy="50%" r="45%" className="stroke-muted/10 fill-none" strokeWidth="12" />
+                                            <circle cx="50%" cy="50%" r="45%" className="stroke-muted/10 fill-none" strokeWidth="16" />
                                             <motion.circle 
                                                 initial={{ strokeDasharray: "0 314" }}
                                                 animate={{ strokeDasharray: `${state.data.strengthScore * 3.14} 314` }}
                                                 transition={{ duration: 2, ease: "easeOut" }}
                                                 cx="50%" cy="50%" r="45%" 
-                                                className={cn("fill-none drop-shadow-2xl", state.data.strengthScore <= 30 ? "stroke-red-500" : state.data.strengthScore <= 65 ? "stroke-amber-500" : "stroke-green-500")} 
-                                                strokeWidth="12" 
+                                                className="fill-none stroke-foreground drop-shadow-2xl" 
+                                                strokeWidth="16" 
                                                 strokeLinecap="round" 
                                             />
                                         </svg>
                                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                                            <span className="text-6xl font-black tracking-tighter">{state.data.strengthScore}%</span>
-                                            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Success Probability</span>
+                                            <span className="text-7xl font-black tracking-tighter">{state.data.strengthScore}%</span>
+                                            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.3em] mt-2">Litigation Probability</span>
                                         </div>
                                     </div>
-                                    <div className="flex-1 space-y-6 text-left">
-                                        <div className="flex items-center gap-3 text-primary opacity-40">
-                                            <Fingerprint className="h-5 w-5" />
-                                            <span className="text-[11px] font-black uppercase tracking-widest">Executive Audit Summary</span>
+                                    <div className="flex-1 space-y-8 text-left">
+                                        <div className="flex items-center gap-4 text-muted-foreground opacity-40">
+                                            <Fingerprint className="h-6 w-6" />
+                                            <span className="text-[11px] font-black uppercase tracking-[0.4em]">Executive Audit Summary</span>
                                         </div>
-                                        <p className="text-lg sm:text-2xl font-black leading-tight tracking-tight text-foreground">{state.data.summary}</p>
+                                        <p className="text-2xl sm:text-4xl font-black leading-tight tracking-tight text-foreground uppercase">{state.data.summary}</p>
                                     </div>
                                 </div>
 
-                                <div className="grid md:grid-cols-2 gap-8">
-                                    <Card className="p-8 glass rounded-[2.5rem] border-red-500/10 text-left bg-red-500/[0.02] shadow-sm hover:shadow-xl transition-all group">
-                                        <h3 className="text-[11px] font-black text-red-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <ShieldAlert className="h-4 w-4" /> Forensic Risk Nodes
+                                <div className="grid md:grid-cols-2 gap-10">
+                                    <Card className="p-10 rounded-[3rem] border-primary/5 text-left bg-muted/20 shadow-sm hover:shadow-2xl transition-all group">
+                                        <h3 className="text-[11px] font-black text-foreground uppercase tracking-[0.4em] mb-8 flex items-center gap-4">
+                                            <ShieldAlert className="h-5 w-5" /> Forensic Risk Nodes
                                         </h3>
-                                        <ul className="space-y-4">
+                                        <ul className="space-y-6">
                                             {state.data.riskIndicators.map((r, i) => (
-                                                <li key={i} className="text-sm font-bold flex gap-3 text-muted-foreground">
-                                                    <div className="h-1.5 w-1.5 rounded-full bg-red-500 mt-2 shrink-0 group-hover:animate-ping" />
+                                                <li key={i} className="text-sm font-bold flex gap-4 text-muted-foreground">
+                                                    <div className="h-2 w-2 rounded-full bg-foreground mt-1.5 shrink-0 group-hover:scale-125 transition-transform" />
                                                     {r}
                                                 </li>
                                             ))}
                                         </ul>
                                     </Card>
-                                    <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left bg-primary/[0.02] shadow-sm hover:shadow-xl transition-all group">
-                                        <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <Lightbulb className="h-4 w-4" /> Statutory Hardening
+                                    <Card className="p-10 rounded-[3rem] border-primary/5 text-left bg-muted/20 shadow-sm hover:shadow-2xl transition-all group">
+                                        <h3 className="text-[11px] font-black text-foreground uppercase tracking-[0.4em] mb-8 flex items-center gap-4">
+                                            <Lightbulb className="h-5 w-5" /> Statutory Hardening
                                         </h3>
-                                        <ul className="space-y-4">
+                                        <ul className="space-y-6">
                                             {state.data.recommendedActions.map((a, i) => (
-                                                <li key={i} className="text-sm font-bold flex gap-3 text-muted-foreground">
-                                                    <div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0 group-hover:animate-ping" />
+                                                <li key={i} className="text-sm font-bold flex gap-4 text-muted-foreground">
+                                                    <div className="h-2 w-2 rounded-full bg-foreground mt-1.5 shrink-0 group-hover:scale-125 transition-transform" />
                                                     {a}
                                                 </li>
                                             ))}
@@ -278,31 +281,33 @@ export default function StrengthAnalyzerPage() {
                                     </Card>
                                 </div>
 
-                                <div className="space-y-6 text-left">
-                                    <div className="flex items-center justify-between border-b border-primary/10 pb-4">
-                                        <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
-                                            <FileSearch className="h-5 w-5" /> Deconstructed Research
+                                <div className="space-y-8 text-left">
+                                    <div className="flex items-center justify-between border-b border-primary/10 pb-6">
+                                        <h3 className="text-[11px] font-black text-foreground uppercase tracking-[0.4em] flex items-center gap-4">
+                                            <FileSearch className="h-6 w-6" /> Deconstructed Research
                                         </h3>
                                     </div>
-                                    <div className="p-8 sm:p-12 glass rounded-[3rem] border-primary/10 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-lg bg-muted/10 relative overflow-hidden group">
-                                        <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
-                                            <Logo className="h-64 w-64 grayscale" priority={false} />
+                                    <div className="p-10 sm:p-16 rounded-[4rem] border border-primary/10 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-inner bg-muted/10 relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 p-16 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
+                                            <Logo className="h-80 w-80 grayscale" priority={false} />
                                         </div>
-                                        {state.data.forensicResearch}
+                                        <div className="relative z-10 prose dark:prose-invert max-w-none">
+                                            {state.data.forensicResearch}
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div className="pt-10 mt-10 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
-                                    <div className="flex items-center gap-4">
-                                        <div className="p-3 rounded-2xl bg-primary/5 text-primary">
-                                            <ShieldCheck className="h-6 w-6" />
+                                <div className="pt-12 mt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-10 opacity-30">
+                                    <div className="flex items-center gap-5">
+                                        <div className="p-4 rounded-2xl bg-muted text-foreground">
+                                            <ShieldCheck className="h-7 w-7" />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-[10px] font-black uppercase tracking-widest">Statutory Security</p>
-                                            <p className="text-[9px] font-bold">This node is protected under attorney-client transience protocols.</p>
+                                            <p className="text-[11px] font-black uppercase tracking-widest">Statutory Security</p>
+                                            <p className="text-[10px] font-bold">This node is protected under attorney-client transience protocols.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // TERMINAL ST-MATRIX</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.6em]">NYAYASAHAYAK.IN // TERMINAL ST-MATRIX</p>
                                 </div>
                             </motion.div>
                         ) : (
@@ -310,17 +315,17 @@ export default function StrengthAnalyzerPage() {
                                 key="idle" 
                                 initial={{ opacity: 0, scale: 0.95 }} 
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="flex flex-col items-center justify-center py-32 text-center gap-10"
+                                className="flex flex-col items-center justify-center py-40 text-center gap-12"
                             >
                                 <div className="relative">
-                                    <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl animate-pulse"></div>
-                                    <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
-                                        <Cpu className="h-20 w-20 text-primary opacity-40 group-hover:opacity-100 transition-opacity" />
+                                    <div className="absolute -inset-8 bg-foreground/5 rounded-full blur-3xl animate-pulse"></div>
+                                    <div className="p-12 rounded-[3rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
+                                        <Cpu className="h-24 w-24 text-foreground opacity-10 group-hover:opacity-30 transition-opacity" />
                                     </div>
                                 </div>
-                                <div className="space-y-4 max-w-sm px-6 text-center">
-                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready for Audit</h3>
-                                    <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
+                                <div className="space-y-6 max-w-md px-8 text-center">
+                                    <h3 className="font-black text-4xl tracking-tighter uppercase text-foreground leading-none">Ready for Audit</h3>
+                                    <p className="text-[11px] text-muted-foreground font-black uppercase tracking-[0.3em] leading-relaxed italic opacity-40">
                                         Initialize the forensic node by providing the statutory narrative for neural matrix analysis.
                                     </p>
                                 </div>
@@ -328,7 +333,7 @@ export default function StrengthAnalyzerPage() {
                         )}
                     </AnimatePresence>
                 </CardContent>
-                <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+                <div className="h-3 w-full bg-foreground/10"></div>
             </Card>
         </div>
     </div>
