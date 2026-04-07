@@ -103,7 +103,7 @@ export default function PrivacyPage() {
           </div>
           <CardContent className="p-8 sm:p-12 relative z-10 text-left space-y-6">
             <div className="flex items-center gap-3 text-primary mb-2">
-              <div className="bg-primary/10 p-2.5 rounded-xl">
+              <div className="bg-primary/10 p-2.5 rounded-xl shadow-inner">
                 <Fingerprint className="h-6 w-6" />
               </div>
               <span className="text-[10px] font-black uppercase tracking-[0.4em]">Our Commitment</span>
@@ -172,41 +172,6 @@ export default function PrivacyPage() {
                 
                 <p className="font-black text-foreground uppercase tracking-widest text-[10px] pt-4">Information automatically collected</p>
                 <p>We automatically collect certain information when you visit, use, or navigate nyayasahayak.in. This includes device and usage information, such as your IP address, browser and device characteristics, operating system, language preferences, and referral URLs. This data is primarily used for the security and operation of our Services.</p>
-                <div className="grid gap-4 sm:grid-cols-2 mt-4">
-                    <div className="p-4 rounded-xl bg-muted/30 border border-primary/5">
-                        <p className="text-[10px] font-black uppercase text-primary mb-1">Google & Firebase Analytics</p>
-                        <p className="text-[11px]">We collect anonymized analytics data to improve site performance.</p>
-                    </div>
-                    <div className="p-4 rounded-xl bg-muted/30 border border-primary/5">
-                        <p className="text-[10px] font-black uppercase text-primary mb-1">Vercel Analytics</p>
-                        <p className="text-[11px]">Collects anonymous traffic data including page visits and metrics.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section className="space-y-6">
-            <h3 className="text-2xl font-black tracking-tight text-primary">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
-            <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                <p>We process your information to provide, improve, and administer Nyaya Sahayak, communicate with you, for security and fraud prevention, and to comply with law. Key reasons include:</p>
-                <ul className="list-none space-y-3">
-                    {[
-                        "To facilitate account creation and authentication.",
-                        "To save or protect an individual's vital interest (preventing harm).",
-                        "To personalize your experience and show relevant content.",
-                        "To prevent spam and abuse through active usage analysis.",
-                        "To show relevant ads using cookies and device information."
-                    ].map((li, i) => (
-                        <li key={i} className="flex gap-3 items-start">
-                            <CheckCircle2 className="h-4 w-4 text-green-500 mt-1 shrink-0" />
-                            <span>{li}</span>
-                        </li>
-                    ))}
-                </ul>
-                <div className="p-6 bg-amber-500/5 border border-amber-500/10 rounded-2xl mt-4">
-                    <p className="text-[10px] font-black uppercase text-amber-600 mb-2">Anonymous Posts Protocol</p>
-                    <p className="text-xs italic">If you use the "Post Anonymously" feature, your user ID is still associated with the post internally. Even anonymous posts are traceable internally for security and legal compliance.</p>
-                </div>
             </div>
         </section>
 
@@ -218,6 +183,64 @@ export default function PrivacyPage() {
                     <p className="font-bold text-foreground mb-3">Use of AI Technologies</p>
                     <p>We provide the AI Products through third-party service providers, including Google Cloud AI. Your input and output data will be shared with and processed by these providers strictly to enable bot functionality, governed by this Privacy Notice.</p>
                 </div>
+            </div>
+        </section>
+
+        <section className="space-y-6">
+            <h3 className="text-2xl font-black tracking-tight text-primary">12. DO UNITED STATES RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h3>
+            <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                <p>If you are a resident of California, Colorado, Connecticut, Delaware, Florida, Indiana, Iowa, Kentucky, Maryland, Minnesota, Montana, Nebraska, New Hampshire, New Jersey, Oregon, Rhode Island, Tennessee, Texas, Utah, or Virginia, you may have specific rights regarding your personal information.</p>
+                
+                <div className="overflow-x-auto rounded-2xl border border-primary/10 bg-muted/20">
+                    <table className="w-full text-left border-collapse">
+                        <thead>
+                            <tr className="bg-primary/5">
+                                <th className="p-4 font-black uppercase text-[10px]">Category</th>
+                                <th className="p-4 font-black uppercase text-[10px]">Examples</th>
+                                <th className="p-4 font-black uppercase text-[10px]">Collected</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-primary/5">
+                            {[
+                                { cat: "A. Identifiers", ex: "Real name, alias, postal address, phone, unique ID, IP, email, account name", coll: "YES" },
+                                { cat: "B. Personal Info (CA statute)", ex: "Name, contact info, education, employment, financial info", coll: "YES" },
+                                { cat: "F. Internet Activity", ex: "Browsing history, search history, online behavior, site interactions", coll: "YES" },
+                                { cat: "G. Geolocation Data", ex: "Device location", coll: "YES" },
+                                { cat: "H. Audio/Sensory", ex: "Images and audio, video or call recordings created for business", coll: "YES" },
+                                { cat: "K. Inferences", ex: "Inferences drawn to create a profile about preferences/characteristics", coll: "YES" }
+                            ].map((row, i) => (
+                                <tr key={i} className="hover:bg-primary/[0.02]">
+                                    <td className="p-4 text-[11px] font-bold text-foreground">{row.cat}</td>
+                                    <td className="p-4 text-[11px]">{row.ex}</td>
+                                    <td className="p-4 text-[11px] font-black text-primary">{row.coll}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="space-y-4">
+                    <p className="font-black text-foreground uppercase tracking-widest text-[10px] pt-4">Your Rights Under US State Law</p>
+                    <ul className="grid gap-4 sm:grid-cols-2 list-none p-0">
+                        {[
+                            "Right to know if we process your data",
+                            "Right to access your personal data",
+                            "Right to correct inaccuracies",
+                            "Right to request deletion",
+                            "Right to obtain a copy of shared data",
+                            "Right to opt out of targeted advertising"
+                        ].map((right, i) => (
+                            <li key={i} className="p-4 border rounded-xl bg-background font-bold text-[11px] uppercase tracking-tight flex items-center gap-3">
+                                <CheckCircle2 className="h-4 w-4 text-primary" />
+                                {right}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                
+                <p className="text-xs italic bg-amber-500/5 p-4 rounded-xl border border-amber-500/10">
+                    California "Shine The Light" Law: California residents may request once a year, free of charge, information about categories of personal information we disclosed to third parties for direct marketing.
+                </p>
             </div>
         </section>
 

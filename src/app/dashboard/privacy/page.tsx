@@ -166,18 +166,83 @@ export default function PrivacyPage() {
                         </section>
 
                         <section className="space-y-4">
-                            <h4 className="text-xl font-black tracking-tight text-primary">2. HOW DO WE PROCESS YOUR INFORMATION?</h4>
-                            <p className="text-sm text-muted-foreground leading-loose">We process your information to provide, improve, and administer Nyaya Sahayak, communicate with you, for security and fraud prevention, and to comply with law. Key purposes include facilitating account creation, protecting vital interests, personalizing content, and preventing spam/abuse.</p>
-                        </section>
-
-                        <section className="space-y-4">
                             <h4 className="text-xl font-black tracking-tight text-primary">6. ARTIFICIAL INTELLIGENCE PRODUCTS</h4>
                             <p className="text-sm text-muted-foreground leading-loose">As part of our Services, Nyaya Sahayak offers features powered by artificial intelligence (AI). We provide these through providers like Google Cloud AI. Your input and output data will be shared with these providers strictly to enable bot functionality, governed by this Privacy Notice.</p>
                         </section>
 
+                        <section className="space-y-6">
+                            <h4 className="text-xl font-black tracking-tight text-primary">12. DO UNITED STATES RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h4>
+                            <div className="space-y-6 text-sm text-muted-foreground leading-loose">
+                                <p>If you are a resident of California, Colorado, Connecticut, Delaware, Florida, Indiana, Iowa, Kentucky, Maryland, Minnesota, Montana, Nebraska, New Hampshire, New Jersey, Oregon, Rhode Island, Tennessee, Texas, Utah, or Virginia, you may have specific rights regarding your personal data.</p>
+                                
+                                <div className="overflow-x-auto rounded-xl border border-primary/10 bg-background/50">
+                                    <table className="w-full text-left border-collapse">
+                                        <thead className="bg-primary/5">
+                                            <tr>
+                                                <th className="p-3 font-black uppercase text-[9px]">Category</th>
+                                                <th className="p-3 font-black uppercase text-[9px]">Examples</th>
+                                                <th className="p-3 font-black uppercase text-[9px]">Collected</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-primary/5">
+                                            {[
+                                                { cat: "A. Identifiers", ex: "Real name, alias, postal address, phone, unique ID, IP, email", coll: "YES" },
+                                                { cat: "B. Personal Info", ex: "Name, contact info, education, employment, financial info", coll: "YES" },
+                                                { cat: "F. Internet Activity", ex: "Browsing history, search history, online behavior", coll: "YES" },
+                                                { cat: "G. Geolocation", ex: "Device location", coll: "YES" },
+                                                { cat: "H. Audio/Sensory", ex: "Images and audio, video recordings", coll: "YES" },
+                                                { cat: "K. Inferences", ex: "Inferences drawn to create profile preferences", coll: "YES" }
+                                            ].map((row, i) => (
+                                                <tr key={i}>
+                                                    <td className="p-3 text-[10px] font-bold text-foreground">{row.cat}</td>
+                                                    <td className="p-3 text-[10px]">{row.ex}</td>
+                                                    <td className="p-3 text-[10px] font-black text-primary">{row.coll}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div className="space-y-3">
+                                    <p className="font-black text-foreground uppercase tracking-widest text-[9px]">Your Rights</p>
+                                    <ul className="grid gap-2 list-none p-0">
+                                        {[
+                                            "Right to know whether or not we are processing your personal data",
+                                            "Right to access your personal data",
+                                            "Right to correct inaccuracies in your personal data",
+                                            "Right to request the deletion of your personal data",
+                                            "Right to non-discrimination for exercising your rights",
+                                            "Right to opt out of the sale of personal data or profiling"
+                                        ].map((r, i) => (
+                                            <li key={i} className="flex items-start gap-2">
+                                                <CheckCircle2 className="h-3.5 w-3.5 text-primary mt-0.5" />
+                                                <span className="text-[11px] font-medium">{r}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+
                         <section className="space-y-4">
-                            <h4 className="text-xl font-black tracking-tight text-primary">13. INDIAN RESIDENT RIGHTS (DPDP ACT)</h4>
-                            <p className="text-sm text-muted-foreground leading-loose">If you are a resident of India, you are granted specific rights regarding access to your personal information under the Digital Personal Data Protection Act, 2023 (DPDP Act). You have the right to request summaries, corrections, and erasure of your data.</p>
+                            <h4 className="text-xl font-black tracking-tight text-primary">13. INDIAN RESIDENTS RIGHTS (DPDP ACT)</h4>
+                            <div className="space-y-4 text-sm text-muted-foreground leading-loose">
+                                <p>Under the DPDP Act 2023, Indian residents have the right to:</p>
+                                <ul className="space-y-3">
+                                    {[
+                                        "Obtain a summary of personal data being processed.",
+                                        "Request correction, completion, and erasure of data.",
+                                        "Have grievances redressed by our Grievance Officer.",
+                                        "Nominate another individual to exercise your rights in event of death.",
+                                        "Withdraw your consent at any time."
+                                    ].map((li, i) => (
+                                        <li key={i} className="flex gap-3 items-start">
+                                            <CheckCircle2 className="h-4 w-4 text-primary mt-1 shrink-0" />
+                                            <span className="text-xs font-bold uppercase tracking-tight">{li}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </section>
 
                         <section className="space-y-6 pt-10 border-t border-primary/5">
