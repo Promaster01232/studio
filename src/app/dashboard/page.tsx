@@ -630,24 +630,28 @@ export default function DashboardHomePage() {
               {/* SIDEBAR: ACTIONS - BLUE ACCENTS */}
               <section className="space-y-8">
                   <motion.div variants={cardVariants} whileHover={{ scale: 1.02 }}>
-                      <Card className="bg-primary border-none rounded-[3rem] overflow-hidden shadow-2xl shadow-primary/20 relative group cursor-pointer" asChild>
+                      <Card className="border-none rounded-[3rem] overflow-hidden shadow-2xl shadow-primary/20 relative group cursor-pointer bg-gradient-to-br from-primary via-primary to-blue-700" asChild>
                           <Link href="/dashboard/billing">
                             <div className="p-10 text-white relative z-10 space-y-10">
                                 <div className="flex justify-between items-start">
-                                    <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
-                                        <Zap className="h-8 w-8 text-white" />
+                                    <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                                        <Zap className="h-8 w-8 text-white fill-current animate-pulse" />
                                     </div>
-                                    <Badge className="bg-white text-primary font-black text-[9px] uppercase tracking-widest border-none">Elite Access</Badge>
+                                    <Badge className="bg-white text-primary font-black text-[9px] uppercase tracking-[0.2em] border-none px-4 py-1.5 rounded-full shadow-lg">Elite Access</Badge>
                                 </div>
-                                <div className="space-y-3 text-left">
-                                    <h3 className="text-3xl font-black tracking-tighter uppercase leading-tight">Upgrade <br /> Node</h3>
-                                    <p className="text-white/60 text-[11px] font-bold uppercase tracking-widest leading-relaxed">Unlock elite forensic AI terminals and unlimited reports.</p>
+                                <div className="space-y-4 text-left">
+                                    <h3 className="text-4xl font-black tracking-[calc(-0.05em)] uppercase leading-[0.9]">Upgrade <br /> <span className="opacity-60 italic">Node</span></h3>
+                                    <p className="text-white/70 text-[11px] font-bold uppercase tracking-[0.1em] leading-relaxed max-w-[200px]">Unlock elite forensic AI terminals and unlimited reports.</p>
                                 </div>
-                                <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest bg-white/10 w-fit px-6 py-3 rounded-xl border border-white/10 group-hover:bg-white/20 transition-all">
-                                    Protocol Options <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                <div className="flex items-center justify-between gap-3 text-[10px] font-black uppercase tracking-[0.3em] bg-white/10 backdrop-blur-xl w-full px-6 py-4 rounded-2xl border border-white/10 group-hover:bg-white/20 transition-all shadow-inner">
+                                    <span>Protocol Options</span>
+                                    <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                                 </div>
                             </div>
-                            <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none group-hover:scale-150 transition-transform duration-1000">
+                                <Logo className="h-48 w-48 grayscale brightness-0 invert" priority={false} />
+                            </div>
+                            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </Link>
                       </Card>
                   </motion.div>
