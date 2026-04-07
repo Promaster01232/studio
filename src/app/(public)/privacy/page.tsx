@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -16,15 +17,9 @@ import {
   History,
   Trash2,
   Clock,
-  ExternalLink,
   Scale,
   BellRing,
   Globe,
-  UserCheck,
-  Eye,
-  ShieldAlert,
-  FileText,
-  User,
   Bot,
   Sparkles,
   Zap,
@@ -32,7 +27,7 @@ import {
   Mic,
   RotateCcw,
   Search,
-  CheckSquare,
+  FileText,
   AlertTriangle,
   Smartphone
 } from "lucide-react";
@@ -84,23 +79,6 @@ const toc = [
   { id: "section-16", title: "16. Review or delete your data" }
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 },
-  },
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { type: "spring", stiffness: 100, damping: 15 },
-  },
-};
-
 export default function PrivacyPage() {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -111,46 +89,41 @@ export default function PrivacyPage() {
 
   return (
     <motion.div 
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="max-w-5xl mx-auto space-y-12 pb-32 px-4 sm:px-6 text-left"
     >
-      <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8">
+      <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <PageHeader
           title="Privacy Protocol"
           description="Institutional Transparency Node: Detailed guidelines on forensic data handling and statutory compliance for Nyaya Sahayak."
         />
         <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Protocol NS-PRIV-2025</Badge>
-      </motion.div>
+      </div>
 
-      {/* Intro Card */}
-      <motion.div variants={itemVariants}>
-        <Card className="border-none ring-1 ring-primary/10 shadow-3xl rounded-[2.5rem] overflow-hidden bg-card/40 backdrop-blur-xl relative">
-          <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none grayscale">
-            <Logo className="h-64 w-64" />
+      <Card className="border-none ring-1 ring-primary/10 shadow-3xl rounded-[2.5rem] overflow-hidden bg-card/40 backdrop-blur-xl relative">
+        <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none grayscale">
+          <Logo className="h-64 w-64" />
+        </div>
+        <CardContent className="p-8 sm:p-12 relative z-10 text-left space-y-6">
+          <div className="flex items-center gap-3 text-primary mb-2">
+            <div className="bg-primary/10 p-2.5 rounded-xl shadow-inner">
+              <Fingerprint className="h-6 w-6" />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Data Commitment</span>
           </div>
-          <CardContent className="p-8 sm:p-12 relative z-10 text-left space-y-6">
-            <div className="flex items-center gap-3 text-primary mb-2">
-              <div className="bg-primary/10 p-2.5 rounded-xl shadow-inner">
-                <Fingerprint className="h-6 w-6" />
-              </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Data Commitment</span>
-            </div>
-            <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-3xl">
-              This Privacy Notice for <span className="text-foreground font-bold">Nyaya Sahayak</span> ("we," "us," or "our"), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you utilize our forensic AI services at <span className="text-primary font-bold">nyayasahayak.in</span>.
-            </p>
-            <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 flex items-start gap-4 shadow-inner">
-                <Info className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-                <p className="text-xs font-medium text-muted-foreground italic leading-relaxed text-left">
-                    "If you do not agree with our institutional policies and neural processing practices, please disconnect from the Services immediately. Questions? Contact our Grievance Desk at nyayasahayakhelp@gmail.com."
-                </p>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+          <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-3xl">
+            This Privacy Notice for <span className="text-foreground font-bold">Nyaya Sahayak</span> ("we," "us," or "our"), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you utilize our forensic AI services at <span className="text-primary font-bold">nyayasahayak.in</span>.
+          </p>
+          <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 flex items-start gap-4 shadow-inner">
+              <Info className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+              <p className="text-xs font-medium text-muted-foreground italic leading-relaxed text-left">
+                  "If you do not agree with our institutional policies and neural processing practices, please disconnect from the Services immediately. Questions? Contact our Grievance Desk at nyayasahayakhelp@gmail.com."
+              </p>
+          </div>
+        </CardContent>
+      </Card>
 
-      {/* Summary Section */}
       <section className="space-y-8">
         <div className="flex items-center gap-3">
             <div className="h-1 w-8 bg-primary rounded-full" />
@@ -171,8 +144,7 @@ export default function PrivacyPage() {
         </div>
       </section>
 
-      {/* Table of Contents */}
-      <motion.div variants={itemVariants} className="space-y-6">
+      <div className="space-y-6">
         <div className="flex items-center gap-3">
             <div className="h-1 w-8 bg-primary rounded-full" />
             <h2 className="text-xl font-black uppercase tracking-tighter">Table of Contents</h2>
@@ -191,9 +163,8 @@ export default function PrivacyPage() {
                 ))}
             </div>
         </Card>
-      </motion.div>
+      </div>
 
-      {/* Full Document Sections */}
       <div className="space-y-32 pt-16 border-t border-primary/5">
         
         {/* Section 1 */}
@@ -205,6 +176,8 @@ export default function PrivacyPage() {
             <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
                 <p>Personal information you disclose to us at Nyaya Sahayak is collected with the highest standard of statutory integrity. We collect personal information that you voluntarily provide to us when you register on the Services, express an interest in obtaining information about us or our products, or when you participate in activities on the Services.</p>
                 
+                <p className="font-bold text-foreground">The personal information we collect depends on the context of your interactions with us and the Services, the choices you make, and the products and features you use. This include:</p>
+
                 <div className="grid sm:grid-cols-2 gap-6 text-left">
                     <Card className="p-6 bg-primary/5 border-primary/10 rounded-2xl">
                         <p className="font-black text-[10px] uppercase tracking-widest text-primary mb-4">Identity Node Registry</p>
@@ -218,7 +191,7 @@ export default function PrivacyPage() {
                     </Card>
                     <Card className="p-6 bg-blue-500/5 border-blue-500/10 rounded-2xl">
                         <p className="font-black text-[10px] uppercase tracking-widest text-blue-600 mb-4">Automatically Collected metadata</p>
-                        <p className="text-[11px]">We automatically collect IP addresses, browser characteristics, and OS identifiers to maintain terminal security and detect unauthorized ingress attempts.</p>
+                        <p className="text-[11px]">We automatically collect IP addresses, browser characteristics, and OS identifiers to maintain terminal security and detect unauthorized ingress attempts. This includes geolocation data at the city level to ensure regional statutory compliance.</p>
                     </Card>
                 </div>
 
@@ -230,14 +203,14 @@ export default function PrivacyPage() {
                             <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 shrink-0 h-fit"><Mic className="h-5 w-5" /></div>
                             <div className="space-y-1">
                                 <p className="font-black text-xs uppercase tracking-tight text-foreground">Voice Recordings & Biometric Frequency</p>
-                                <p className="text-xs">We collect audio data transmitted during "Tell Your Story" sessions. This data is converted to text for forensic audit and then purged from neural buffers after the report is generated.</p>
+                                <p className="text-xs">We collect audio data transmitted during "Tell Your Story" sessions. This data is converted to text for forensic audit and then purged from neural buffers after the report is generated. We do not store original audio nodes long-term.</p>
                             </div>
                         </li>
                         <li className="flex gap-4 p-6 rounded-2xl bg-muted/30 border border-primary/5">
                             <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 shrink-0 h-fit"><FileText className="h-5 w-5" /></div>
                             <div className="space-y-1">
                                 <p className="font-black text-xs uppercase tracking-tight text-foreground">Statutory Instruments (PDF/OCR)</p>
-                                <p className="text-xs">Uploaded legal documents are scanned via OCR neural nodes to identify risks and deadlines. These nodes operate in an isolated vault environment.</p>
+                                <p className="text-xs">Uploaded legal documents are scanned via OCR neural nodes to identify risks and deadlines. These nodes operate in an isolated vault environment and are subject to immediate transience protocols.</p>
                             </div>
                         </li>
                     </ul>
@@ -257,15 +230,15 @@ export default function PrivacyPage() {
                     <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
                         <CheckCircle2 className="h-6 w-6 text-primary" />
                         <p className="font-black text-sm uppercase tracking-widest text-foreground">Neural Case Summarization</p>
-                        <p className="text-xs opacity-70 leading-relaxed">Converting voice narrations into structured legal reports with BNS section references and jurisdictional guidance.</p>
+                        <p className="text-xs opacity-70 leading-relaxed">Converting voice narrations into structured legal reports with BNS section references and jurisdictional guidance based on Indian judicial standards.</p>
                     </div>
                     <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
                         <CheckCircle2 className="h-6 w-6 text-primary" />
                         <p className="font-black text-sm uppercase tracking-widest text-foreground">Statutory Risk Auditing</p>
-                        <p className="text-xs opacity-70 leading-relaxed">Scanning legal documents for hidden unfavorable clauses, upcoming deadlines, and procedural inconsistencies.</p>
+                        <p className="text-xs opacity-70 leading-relaxed">Scanning legal documents for hidden unfavorable clauses, upcoming deadlines, and procedural inconsistencies using high-fidelity neural patterns.</p>
                     </div>
                 </div>
-                <p>We also process data to facilitate account security, prevent unauthorized access (TLS 1.3 monitoring), and provide customer support via our institutional help desk.</p>
+                <p>We also process data to facilitate account security, prevent unauthorized access (TLS 1.3 monitoring), and provide customer support via our institutional help desk. We may process anonymized telemetry to improve AI model accuracy without identifying the individual citizen node.</p>
             </div>
         </section>
 
@@ -278,10 +251,10 @@ export default function PrivacyPage() {
             <div className="space-y-6 text-sm text-muted-foreground font-medium leading-relaxed">
                 <p>We only process your personal information when we have a valid statutory reason to do so under applicable law. These bases include:</p>
                 <ul className="space-y-4 pl-4 list-disc">
-                    <li><strong>Consent:</strong> Explicit authorization provided by you for specific forensic audits or directory listings.</li>
-                    <li><strong>Contract:</strong> Fulfillment of our Terms of Service to provide AI tools and legal guidance.</li>
-                    <li><strong>Legal Obligation:</strong> Compliance with the laws of India, including the IT Act and DPDP Act 2023.</li>
-                    <li><strong>Vital Interests:</strong> Emergency situations where data processing is critical for personal safety or public welfare.</li>
+                    <li><strong>Consent:</strong> Explicit authorization provided by you for specific forensic audits or directory listings. You may withdraw this consent at any time.</li>
+                    <li><strong>Contract:</strong> Fulfillment of our Terms of Service to provide AI tools, legal guidance, and case management features.</li>
+                    <li><strong>Legal Obligation:</strong> Compliance with the laws of India, including the IT Act and the Digital Personal Data Protection (DPDP) Act 2023.</li>
+                    <li><strong>Vital Interests:</strong> Emergency situations where data processing is critical for personal safety or public welfare (e.g., SOS signal activation).</li>
                 </ul>
             </div>
         </section>
@@ -289,7 +262,7 @@ export default function PrivacyPage() {
         {/* Section 6 */}
         <section id="section-6" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Cpu className="h-7 w-7" /></div>
+                <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Bot className="h-7 w-7" /></div>
                 <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">6. DO WE OFFER ARTIFICIAL INTELLIGENCE-BASED PRODUCTS?</h3>
             </div>
             <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed">
@@ -311,7 +284,7 @@ export default function PrivacyPage() {
                                     <ShieldCheck className="h-6 w-6 text-cyan-500 shrink-0" />
                                     <div className="space-y-1">
                                         <p className="font-black uppercase tracking-tight">Non-Training Clause</p>
-                                        <p className="opacity-70 leading-relaxed">We do NOT use your private case audio, document uploads, or personal narratives to train foundation AI models or third-party datasets.</p>
+                                        <p className="opacity-70 leading-relaxed">We do NOT use your private case audio, document uploads, or personal narratives to train foundation AI models or third-party datasets. Your data is your sovereign asset.</p>
                                     </div>
                                 </div>
                                 <div className="p-6 bg-white dark:bg-black/20 rounded-2xl border border-cyan-500/10 text-xs flex gap-4 shadow-sm text-left">

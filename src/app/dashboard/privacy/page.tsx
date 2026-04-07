@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -16,15 +17,9 @@ import {
   History,
   Trash2,
   Clock,
-  ExternalLink,
   Scale,
   BellRing,
   Globe,
-  UserCheck,
-  Eye,
-  ShieldAlert,
-  FileText,
-  User,
   Bot,
   Sparkles,
   Zap,
@@ -32,7 +27,7 @@ import {
   Mic,
   RotateCcw,
   Search,
-  CheckSquare,
+  FileText,
   AlertTriangle,
   Smartphone
 } from "lucide-react";
@@ -84,23 +79,6 @@ const toc = [
   { id: "section-16", title: "16. Review or delete your data" }
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 },
-  },
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { type: "spring", stiffness: 100, damping: 15 },
-  },
-};
-
 export default function PrivacyPage() {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -110,13 +88,13 @@ export default function PrivacyPage() {
   };
 
   return (
-    <motion.div 
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      className="max-w-6xl mx-auto space-y-10 pb-20 px-2 sm:px-6 text-left"
-    >
-      <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8">
+    <div className="max-w-6xl mx-auto space-y-10 pb-20 px-2 sm:px-6 text-left">
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }} 
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8"
+      >
         <PageHeader
           title="Privacy Protocol"
           description="Institutional Transparency Node: Detailed guidelines on forensic data handling and statutory compliance for Nyaya Sahayak."
@@ -125,7 +103,7 @@ export default function PrivacyPage() {
       </motion.div>
 
       {/* Hero Security Card */}
-      <motion.div variants={itemVariants}>
+      <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}>
         <Card className="border-none ring-1 ring-primary/10 shadow-3xl rounded-[3rem] overflow-hidden bg-card/40 backdrop-blur-xl relative text-left">
           <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none grayscale">
             <Logo className="h-64 w-64" />
@@ -154,7 +132,7 @@ export default function PrivacyPage() {
       {/* Summary Cards */}
       <div className="grid gap-6 sm:grid-cols-3">
         {summaryPoints.map((point, idx) => (
-          <motion.div key={idx} variants={itemVariants}>
+          <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}>
             <Card className="h-full border-primary/5 bg-card/30 hover:bg-card/50 transition-all duration-500 rounded-[2rem] shadow-lg group">
               <CardContent className="p-8 space-y-4 text-left">
                 <div className={cn(point.bg, "p-3 rounded-xl w-fit shadow-xl transition-transform group-hover:scale-110", point.color)}>
@@ -171,7 +149,7 @@ export default function PrivacyPage() {
       </div>
 
       {/* Full Document Area */}
-      <motion.div variants={itemVariants} className="pt-10">
+      <div className="pt-10">
         <Card className="border-primary/5 bg-muted/10 rounded-[3rem] overflow-hidden">
             <div className="grid lg:grid-cols-12">
                 <aside className="lg:col-span-4 bg-primary/5 p-8 border-r border-primary/5 hidden lg:block sticky top-0 h-fit text-left">
@@ -203,6 +181,8 @@ export default function PrivacyPage() {
                             <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
                                 <p>Personal information you disclose to us at Nyaya Sahayak is collected with the highest standard of statutory integrity. We collect personal information that you voluntarily provide to us when you register on the Services, express an interest in obtaining information about us or our products, or when you participate in activities on the Services.</p>
                                 
+                                <p className="font-bold text-foreground">Detailed Ingress Breakdown:</p>
+
                                 <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 space-y-6 shadow-inner text-left">
                                     <p className="font-black text-[10px] uppercase tracking-widest text-primary">Identity Registry Nodes:</p>
                                     <ul className="text-xs space-y-3 list-disc pl-6 opacity-80 font-bold uppercase tracking-tight">
@@ -228,7 +208,7 @@ export default function PrivacyPage() {
                                             <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 shrink-0 h-fit shadow-sm"><FileText className="h-6 w-6" /></div>
                                             <div className="space-y-1">
                                                 <p className="font-black text-xs uppercase tracking-tight text-foreground">Statutory Instruments (OCR)</p>
-                                                <p className="text-xs leading-relaxed">Legal documents processed through OCR nodes to identify risks, unfavourable clauses, and critical judicial deadlines.</p>
+                                                <p className="text-xs leading-relaxed">Legal documents processed through OCR nodes to identify risks, unfavourable clauses, and critical judicial deadlines. Data is tokenized for neural analysis and never stored in raw form.</p>
                                             </div>
                                         </li>
                                     </ul>
@@ -248,21 +228,22 @@ export default function PrivacyPage() {
                                     <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
                                         <CheckCircle2 className="h-6 w-6 text-primary" />
                                         <p className="font-black text-sm uppercase tracking-widest text-foreground">Neural Case Summarization</p>
-                                        <p className="text-xs opacity-70 leading-relaxed">Converting voice narrations into structured legal reports with BNS section references and jurisdictional guidance.</p>
+                                        <p className="text-xs opacity-70 leading-relaxed">Converting voice narrations into structured legal reports with BNS section references and jurisdictional guidance based on Indian judicial standards.</p>
                                     </div>
                                     <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
                                         <CheckCircle2 className="h-6 w-6 text-primary" />
                                         <p className="font-black text-sm uppercase tracking-widest text-foreground">Statutory Risk Auditing</p>
-                                        <p className="text-xs opacity-70 leading-relaxed">Scanning legal documents for hidden unfavorable clauses, upcoming deadlines, and procedural inconsistencies.</p>
+                                        <p className="text-xs opacity-70 leading-relaxed">Scanning legal documents for hidden unfavorable clauses, upcoming deadlines, and procedural inconsistencies using high-fidelity neural patterns.</p>
                                     </div>
                                 </div>
+                                <p>Additionally, we process metadata to prevent platform abuse, detect unauthorized bot activity, and ensure that institutional resources are reserved for authentic citizen nodes. Telemetry data is stripped of all PII (Personally Identifiable Information) before being ingested by our performance auditing systems.</p>
                             </div>
                         </section>
 
                         {/* Section 6 */}
                         <section id="section-6" className="space-y-10 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
-                                <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Cpu className="h-7 w-7" /></div>
+                                <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Bot className="h-7 w-7" /></div>
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">6. DO WE OFFER ARTIFICIAL INTELLIGENCE-BASED PRODUCTS?</h4>
                             </div>
                             <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed">
@@ -340,11 +321,11 @@ export default function PrivacyPage() {
                 </div>
             </div>
         </Card>
-      </motion.div>
+      </div>
 
       <div className="text-center pt-8 opacity-30">
           <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // MEMORY PROTOCOL // 2025</p>
       </div>
-    </motion.div>
+    </div>
   );
 }
