@@ -149,9 +149,6 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
                     <p className="font-black text-xs tracking-tight">{authorName}</p>
                     {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
                 </div>
-                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-40">
-                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
-                </p>
             </div>
         </Link>
     );
@@ -501,9 +498,6 @@ export default function DashboardHomePage() {
                                                   </Avatar>
                                                   <div className="text-left space-y-1">
                                                       <p className="font-black text-xs tracking-tight uppercase">{post.isAnonymous ? 'Anonymous' : post.authorName}</p>
-                                                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-40">
-                                                          {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
-                                                      </p>
                                                   </div>
                                               </div>
                                               <div className="flex-1 space-y-4 text-left">
@@ -588,7 +582,7 @@ export default function DashboardHomePage() {
                                       <Search className="h-5 w-5 text-primary" />
                                   </Button>
                               </div>
-                              <p className="text-[10px] font-bold text-muted-foreground opacity-60 uppercase tracking-widest leading-relaxed">Map IPC codes to the new BNS framework instantly.</p>
+                              <p className="text-[10px] font-bold text-muted-foreground opacity-60 uppercase tracking-widest leading-relaxed">Map old IPC codes to the new BNS framework instantly.</p>
                           </div>
                       </Card>
                   </div>
@@ -617,7 +611,6 @@ export default function DashboardHomePage() {
                                       </div>
                                       <div className="text-left space-y-1">
                                           <p className="font-black text-sm uppercase tracking-tight text-foreground">{audit.type}</p>
-                                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-40">Node: {audit.id} • {audit.date}</p>
                                       </div>
                                   </div>
                                   <div className="flex items-center gap-6">
