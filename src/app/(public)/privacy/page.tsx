@@ -29,7 +29,8 @@ import {
   Search,
   FileText,
   AlertTriangle,
-  Smartphone
+  Smartphone,
+  ShieldAlert
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
@@ -93,7 +94,7 @@ export default function PrivacyPage() {
       animate={{ opacity: 1 }}
       className="max-w-5xl mx-auto space-y-12 pb-32 px-4 sm:px-6 text-left"
     >
-      <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8">
+      <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8 text-left">
         <PageHeader
           title="Privacy Protocol"
           description="Institutional Transparency Node: Detailed guidelines on forensic data handling and statutory compliance for Nyaya Sahayak."
@@ -112,19 +113,19 @@ export default function PrivacyPage() {
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Data Commitment</span>
           </div>
-          <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-3xl">
+          <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-3xl text-left">
             This Privacy Notice for <span className="text-foreground font-bold">Nyaya Sahayak</span> ("we," "us," or "our"), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you utilize our forensic AI services at <span className="text-primary font-bold">nyayasahayak.in</span>.
           </p>
-          <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 flex items-start gap-4 shadow-inner">
+          <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 flex items-start gap-4 shadow-inner text-left">
               <Info className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-              <p className="text-xs font-medium text-muted-foreground italic leading-relaxed text-left">
+              <p className="text-xs font-medium text-muted-foreground italic leading-relaxed">
                   "If you do not agree with our institutional policies and neural processing practices, please disconnect from the Services immediately. Questions? Contact our Grievance Desk at nyayasahayakhelp@gmail.com."
               </p>
           </div>
         </CardContent>
       </Card>
 
-      <section className="space-y-8">
+      <section className="space-y-8 text-left">
         <div className="flex items-center gap-3">
             <div className="h-1 w-8 bg-primary rounded-full" />
             <h2 className="text-xl font-black uppercase tracking-tighter">Forensic Summary Nodes</h2>
@@ -136,15 +137,15 @@ export default function PrivacyPage() {
                         <div className={cn("p-3 rounded-xl w-fit shadow-sm transition-transform group-hover:scale-110", point.bg, point.color)}>
                             <point.icon className="h-5 w-5" />
                         </div>
-                        <h3 className="font-black text-xs uppercase tracking-widest">{point.title}</h3>
-                        <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">{point.desc}</p>
+                        <h3 className="font-black text-xs uppercase tracking-widest text-left">{point.title}</h3>
+                        <p className="text-[11px] font-medium text-muted-foreground leading-relaxed text-left">{point.desc}</p>
                     </CardContent>
                 </Card>
             ))}
         </div>
       </section>
 
-      <div className="space-y-6">
+      <div className="space-y-6 text-left">
         <div className="flex items-center gap-3">
             <div className="h-1 w-8 bg-primary rounded-full" />
             <h2 className="text-xl font-black uppercase tracking-tighter">Table of Contents</h2>
@@ -408,7 +409,7 @@ export default function PrivacyPage() {
             </div>
             <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-loose text-left">
                 <p>Users maintain sovereign authority over their registry nodes. You can initiate a <strong>"Total Registry Erasure"</strong> through your profile terminal settings or by transmitting a formal email to our data fiduciary node at nyayasahayakhelp@gmail.com.</p>
-                <div className="p-8 bg-destructive/5 border border-destructive/10 rounded-[2rem] shadow-inner relative overflow-hidden text-left">
+                <div className="p-8 bg-destructive/5 border border-destructive/20 rounded-[2rem] shadow-inner relative overflow-hidden text-left">
                     <div className="absolute top-0 right-0 p-4 opacity-[0.05]"><ShieldAlert className="h-20 w-20 text-destructive" /></div>
                     <p className="text-xs font-black text-destructive flex items-center gap-3 mb-4 uppercase tracking-tighter">
                         <ShieldAlert className="h-5 w-5" /> Irreversible Purge Protocol

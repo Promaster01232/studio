@@ -29,7 +29,8 @@ import {
   Search,
   FileText,
   AlertTriangle,
-  Smartphone
+  Smartphone,
+  ShieldAlert
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
@@ -93,7 +94,7 @@ export default function PrivacyPage() {
         initial={{ opacity: 0, y: -10 }} 
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8"
+        className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8 text-left"
       >
         <PageHeader
           title="Privacy Protocol"
@@ -120,7 +121,7 @@ export default function PrivacyPage() {
                 Your Data is Your <br />
                 <span className="text-primary italic">Sovereign Asset.</span>
               </h2>
-              <p className="text-sm sm:text-xl text-muted-foreground font-medium leading-relaxed">
+              <p className="text-sm sm:text-xl text-muted-foreground font-medium leading-relaxed text-left">
                 Nyaya Sahayak operates on a <span className="text-foreground font-bold">Zero-Sale Commitment.</span> We do not monetize citizen data nodes. This protocol is engineered to ensure 100% statutory transparency and global compliance.
               </p>
             </div>
@@ -130,7 +131,7 @@ export default function PrivacyPage() {
       </motion.div>
 
       {/* Summary Cards */}
-      <div className="grid gap-6 sm:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-3 text-left">
         {summaryPoints.map((point, idx) => (
           <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}>
             <Card className="h-full border-primary/5 bg-card/30 hover:bg-card/50 transition-all duration-500 rounded-[2rem] shadow-lg group">
@@ -138,8 +139,8 @@ export default function PrivacyPage() {
                 <div className={cn(point.bg, "p-3 rounded-xl w-fit shadow-xl transition-transform group-hover:scale-110", point.color)}>
                   <point.icon className="h-5 w-5" />
                 </div>
-                <h3 className="text-xs font-black tracking-tight uppercase leading-tight">{point.title}</h3>
-                <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
+                <h3 className="text-xs font-black tracking-tight uppercase leading-tight text-left">{point.title}</h3>
+                <p className="text-[11px] text-muted-foreground leading-relaxed font-medium text-left">
                   {point.desc}
                 </p>
               </CardContent>
@@ -149,7 +150,7 @@ export default function PrivacyPage() {
       </div>
 
       {/* Full Document Area */}
-      <div className="pt-10">
+      <div className="pt-10 text-left">
         <Card className="border-primary/5 bg-muted/10 rounded-[3rem] overflow-hidden">
             <div className="grid lg:grid-cols-12">
                 <aside className="lg:col-span-4 bg-primary/5 p-8 border-r border-primary/5 hidden lg:block sticky top-0 h-fit text-left">
@@ -199,14 +200,14 @@ export default function PrivacyPage() {
                                     <ul className="space-y-6">
                                         <li className="flex gap-5 p-6 bg-muted/30 rounded-[1.5rem] border border-primary/5">
                                             <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 shrink-0 h-fit shadow-sm"><Mic className="h-6 w-6" /></div>
-                                            <div className="space-y-1">
+                                            <div className="space-y-1 text-left">
                                                 <p className="font-black text-xs uppercase tracking-tight text-foreground">Voice Narration & Biometric Tone</p>
                                                 <p className="text-xs leading-relaxed">Audio frequency data transmitted for forensic transcription and case mapping. These recordings are converted to textual dossiers and subsequently purged from persistent memory nodes.</p>
                                             </div>
                                         </li>
                                         <li className="flex gap-5 p-6 bg-muted/30 rounded-[1.5rem] border border-primary/5">
                                             <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 shrink-0 h-fit shadow-sm"><FileText className="h-6 w-6" /></div>
-                                            <div className="space-y-1">
+                                            <div className="space-y-1 text-left">
                                                 <p className="font-black text-xs uppercase tracking-tight text-foreground">Statutory Instruments (OCR)</p>
                                                 <p className="text-xs leading-relaxed">Legal documents processed through OCR nodes to identify risks, unfavourable clauses, and critical judicial deadlines. Data is tokenized for neural analysis and never stored in raw form.</p>
                                             </div>
