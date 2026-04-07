@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import {
@@ -21,6 +22,7 @@ import {
   Newspaper,
   Plus,
   MessageSquare,
+  MessageCircle,
   Sparkles,
   Zap,
   Send,
