@@ -2,7 +2,7 @@
 "use client";
 
 import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { 
   ShieldCheck, 
   Lock, 
@@ -104,64 +104,47 @@ export default function PrivacyPage() {
       >
         <PageHeader
           title="Privacy Rules"
-          description="A simple guide on how we protect your data at Nyaya Sahayak."
+          description="Institutional Transparency Protocol for Nyaya Sahayak Dashboard"
         />
         <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Secure Registry Node</Badge>
       </motion.div>
 
-      {/* Hero Security Card */}
+      {/* Hero Transparency Card */}
       <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}>
         <Card className="border-none ring-1 ring-primary/10 shadow-3xl rounded-[3rem] overflow-hidden bg-card/40 backdrop-blur-xl relative text-left">
           <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none grayscale">
             <Logo className="h-64 w-64" />
           </div>
-          <CardContent className="p-8 sm:p-16 relative z-10 text-left space-y-6">
+          <CardContent className="p-8 sm:p-16 relative z-10 text-left space-y-8">
             <div className="flex items-center gap-3 text-primary mb-2">
               <div className="bg-primary/10 p-2.5 rounded-xl shadow-inner">
                 <Fingerprint className="h-6 w-6" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Your Data, Your Rules</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Official Disclosure Protocol</span>
             </div>
-            <div className="space-y-6 max-w-4xl">
-              <h2 className="text-3xl sm:text-6xl font-black tracking-tighter leading-[0.9] uppercase text-foreground">
-                Your Data is Your <br />
-                <span className="text-primary italic">Sovereign Asset.</span>
-              </h2>
-              <p className="text-sm sm:text-xl text-muted-foreground font-medium leading-relaxed text-left">
-                Nyaya Sahayak follows the **Digital Personal Data Protection Act, 2023.** We never sell your data. We only use it to help you with legal reports.
+            <div className="space-y-6">
+              <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-4xl text-left">
+                This Privacy Notice for <span className="text-foreground font-bold">Nyaya Sahayak</span> ("we," "us," or "our"), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services ("Services").
               </p>
+              <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 space-y-4 shadow-inner">
+                <p className="text-sm font-bold text-foreground">Official Notice for Dashboard Users</p>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  If you do not agree with our policies and practices, please terminate your registry session. For any inquiries, please contact our fiduciary desk at <span className="text-primary font-black">nyayasahayakhelp@gmail.com</span>.
+                </p>
+              </div>
             </div>
           </CardContent>
           <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
         </Card>
       </motion.div>
 
-      {/* Summary Cards */}
-      <div className="grid gap-6 sm:grid-cols-3 text-left">
-        {summaryPoints.map((point, idx) => (
-          <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}>
-            <Card className="h-full border-primary/5 bg-card/30 hover:bg-card/50 transition-all duration-500 rounded-[2rem] shadow-lg group">
-              <CardContent className="p-8 space-y-4 text-left">
-                <div className={cn(point.bg, "p-3 rounded-xl w-fit shadow-xl transition-transform group-hover:scale-110", point.color)}>
-                  <point.icon className="h-5 w-5" />
-                </div>
-                <h3 className="text-xs font-black tracking-tight uppercase leading-tight text-left">{point.title}</h3>
-                <p className="text-[11px] text-muted-foreground leading-relaxed font-medium text-left">
-                  {point.desc}
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Full Document Area */}
+      {/* Full Document Area with Index */}
       <div className="pt-10 text-left">
         <Card className="border-primary/5 bg-muted/10 rounded-[3rem] overflow-hidden">
             <div className="grid lg:grid-cols-12">
                 <aside className="lg:col-span-4 bg-primary/5 p-8 border-r border-primary/5 hidden lg:block sticky top-0 h-fit text-left">
                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-6 flex items-center gap-2">
-                        <Info className="h-4 w-4" /> Quick Index
+                        <Info className="h-4 w-4" /> Statutory Index
                     </h3>
                     <div className="space-y-2">
                         {toc.map((item, i) => (
@@ -186,34 +169,33 @@ export default function PrivacyPage() {
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">1. What information do we collect?</h4>
                             </div>
                             <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                                <p>We collect your basic info like name and phone when you join. When you use our legal tools, we listen to your voice and read your legal documents to help you.</p>
+                                <p>We collect personal information that you voluntarily provide to us when you register on the Nyaya Sahayak terminal or express an interest in obtaining forensic intelligence.</p>
                                 
                                 <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 space-y-6 shadow-inner text-left">
-                                    <p className="font-black text-[10px] uppercase tracking-widest text-primary">Info we take:</p>
+                                    <p className="font-black text-[10px] uppercase tracking-widest text-primary">Identity Ingress Nodes:</p>
                                     <ul className="text-xs space-y-3 list-disc pl-6 opacity-80 font-bold uppercase tracking-tight">
-                                        <li>Your Name and Email</li>
-                                        <li>Mobile number for safety</li>
-                                        <li>Lawyer ID (for experts only)</li>
-                                        <li>Photos of legal papers</li>
+                                        <li>Full Legal Names</li>
+                                        <li>Verified Email Nodes</li>
+                                        <li>Mobile Communication IDs</li>
+                                        <li>Hashed Security Keys</li>
                                     </ul>
                                 </div>
 
                                 <div className="space-y-4 pt-4">
-                                    <p className="font-bold text-foreground uppercase tracking-widest text-[10px] border-l-4 border-indigo-500 pl-4">Smart Data Hub</p>
-                                    <p>We use smart tools to understand your problem better:</p>
+                                    <p className="font-bold text-foreground uppercase tracking-widest text-[10px] border-l-4 border-indigo-500 pl-4">Neural Data Ingress</p>
                                     <ul className="space-y-6">
                                         <li className="flex gap-5 p-6 bg-muted/30 rounded-[1.5rem] border border-primary/5">
                                             <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 shrink-0 h-fit shadow-sm"><Mic className="h-6 w-6" /></div>
                                             <div className="space-y-1 text-left">
-                                                <p className="font-black text-xs uppercase tracking-tight text-foreground">Voice Stories</p>
-                                                <p className="text-xs leading-relaxed">We record your voice story to write a report. We delete the sound file within 24 hours after making the report.</p>
+                                                <p className="font-black text-xs uppercase tracking-tight text-foreground">Voice Narration Data</p>
+                                                <p className="text-xs leading-relaxed">Audio data from the "Tell Your Story" module is converted to text and purged from neural buffers within 24 hours.</p>
                                             </div>
                                         </li>
                                         <li className="flex gap-5 p-6 bg-muted/30 rounded-[1.5rem] border border-primary/5">
                                             <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 shrink-0 h-fit shadow-sm"><FileText className="h-6 w-6" /></div>
                                             <div className="space-y-1 text-left">
-                                                <p className="font-black text-xs uppercase tracking-tight text-foreground">Legal Papers</p>
-                                                <p className="text-xs leading-relaxed">Our AI reads your uploaded papers to check for risks. We don't store these papers forever.</p>
+                                                <p className="font-black text-xs uppercase tracking-tight text-foreground">Statutory OCR Data</p>
+                                                <p className="text-xs leading-relaxed">Legal documents are tokenized for clause analysis and risk identification. No persistent storage of raw instruments is maintained.</p>
                                             </div>
                                         </li>
                                     </ul>
@@ -228,19 +210,7 @@ export default function PrivacyPage() {
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">2. How do we process your information?</h4>
                             </div>
                             <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed">
-                                <p>We process your data to help you understand your legal rights. Here is how:</p>
-                                <div className="grid gap-6 sm:grid-cols-2 text-left">
-                                    <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
-                                        <CheckCircle2 className="h-6 w-6 text-primary" />
-                                        <p className="font-black text-sm uppercase tracking-widest text-foreground">Safe Cloud Storage</p>
-                                        <p className="text-xs opacity-70 leading-relaxed">Your data is kept in highly secure cloud nodes (Firebase) with strong encryption to keep hackers away.</p>
-                                    </div>
-                                    <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
-                                        <Cpu className="h-6 w-6 text-primary" />
-                                        <p className="font-black text-sm uppercase tracking-widest text-foreground">AI Thinking</p>
-                                        <p className="text-xs opacity-70 leading-relaxed">Our AI brain analyzes your story to find the right Indian laws (BNS) and suggests the best next steps.</p>
-                                    </div>
-                                </div>
+                                <p>We process your data to initialize account nodes, verify registry identities, and generate probabilistic legal reports.</p>
                             </div>
                         </section>
 
@@ -251,17 +221,7 @@ export default function PrivacyPage() {
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">3. What legal bases do we rely on?</h4>
                             </div>
                             <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed text-left">
-                                <p>We follow the **Indian DPDP Act.** We use your data because:</p>
-                                <ul className="space-y-4">
-                                    <li className="flex gap-4 p-6 bg-amber-500/[0.03] border border-amber-500/10 rounded-2xl">
-                                        <div className="p-2 rounded-lg bg-white dark:bg-black/20 h-fit shadow-sm"><CheckCircle2 className="h-4 w-4 text-amber-600" /></div>
-                                        <p className="text-xs"><strong>Your Consent:</strong> You clicked 'Agree' and asked us to help you with AI.</p>
-                                    </li>
-                                    <li className="flex gap-4 p-6 bg-amber-500/[0.03] border border-amber-500/10 rounded-2xl">
-                                        <div className="p-2 rounded-lg bg-white dark:bg-black/20 h-fit shadow-sm"><Gavel className="h-4 w-4 text-amber-600" /></div>
-                                        <p className="text-xs"><strong>Law Safety:</strong> We might share data if requested by the Indian police or courts for your safety.</p>
-                                    </li>
-                                </ul>
+                                <p>We process data based on your **Explicit Affirmative Consent** and for the fulfillment of our institutional contract to provide forensic AI tools.</p>
                             </div>
                         </section>
 
@@ -269,19 +229,10 @@ export default function PrivacyPage() {
                         <section id="section-4" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Share2 className="h-7 w-7" /></div>
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">4. When and with whom do we share info?</h3>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">4. When and with whom do we share info?</h4>
                             </div>
-                            <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                                <p>We never sell your data. We only send it to our AI brain partner:</p>
-                                <ul className="space-y-6">
-                                    <li className="flex gap-6 p-8 bg-cyan-500/[0.03] border border-cyan-500/10 rounded-[2.5rem] shadow-xl">
-                                        <div className="p-4 rounded-2xl bg-white dark:bg-black/20 shadow-md h-fit"><Bot className="h-8 w-8 text-cyan-600" /></div>
-                                        <div className="space-y-2 text-left">
-                                            <p className="font-black text-sm uppercase text-foreground">Google Cloud AI</p>
-                                            <p className="text-xs leading-relaxed font-medium opacity-70">We send your story to Google Cloud AI so it can generate your report. Google is not allowed to use your data to train its own AI models.</p>
-                                        </div>
-                                    </li>
-                                </ul>
+                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed">
+                                <p>Sharing occurs only with authorized sub-processors like **Google Cloud AI** for neural computation. We never sell your personal data nodes.</p>
                             </div>
                         </section>
 
@@ -289,10 +240,10 @@ export default function PrivacyPage() {
                         <section id="section-5" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><Globe className="h-7 w-7" /></div>
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">5. Stance on third-party websites</h3>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">5. Stance on third-party websites</h4>
                             </div>
-                            <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                                <p>We have links to sites like eCourts. We are not responsible for what happens there. Always check the privacy rules of other sites.</p>
+                            <div className="space-y-10 text-sm text-muted-foreground font-medium leading-relaxed">
+                                <p>External links to High Court registries and advocate sites are outside our jurisdictional control. Always check their specific statutory notices.</p>
                             </div>
                         </section>
 
@@ -302,30 +253,13 @@ export default function PrivacyPage() {
                                 <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Bot className="h-7 w-7" /></div>
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">6. Artificial Intelligence products</h4>
                             </div>
-                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed">
-                                <div className="p-10 bg-cyan-500/[0.03] rounded-[3rem] border border-cyan-500/10 space-y-8 relative overflow-hidden group shadow-2xl text-left">
-                                    <div className="absolute top-0 right-0 p-12 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity duration-1000">
-                                        <Bot className="h-64 w-64" />
+                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed text-left">
+                                <div className="p-8 bg-cyan-500/[0.03] rounded-[2.5rem] border border-cyan-500/10 space-y-6">
+                                    <div className="flex items-center gap-3 text-cyan-600">
+                                        <Sparkles className="h-5 w-5 animate-pulse" />
+                                        <span className="font-black text-xs uppercase tracking-widest">Nyaya Mitra AI Engine</span>
                                     </div>
-                                    <div className="relative z-10 space-y-8">
-                                        <div className="flex items-center gap-3 text-cyan-600">
-                                            <Sparkles className="h-5 w-5 animate-pulse" />
-                                            <span className="font-black text-xs uppercase tracking-[0.3em]">Nyaya Mitra AI</span>
-                                        </div>
-                                        <p className="text-base sm:text-lg leading-relaxed">Our AI is very smart but keeps your data private:</p>
-                                        <div className="grid sm:grid-cols-2 gap-6 pt-4 text-left">
-                                            <div className="p-6 bg-background/80 backdrop-blur-md rounded-2xl border border-cyan-500/10 text-[11px] leading-relaxed shadow-inner">
-                                                <Zap className="h-4 w-4 text-cyan-500 mb-2" />
-                                                <strong className="block mb-1 text-foreground">No Learning:</strong> 
-                                                The AI does not learn from your personal stories or legal secrets.
-                                            </div>
-                                            <div className="p-6 bg-background/80 backdrop-blur-md rounded-2xl border border-cyan-500/10 text-[11px] leading-relaxed shadow-inner">
-                                                <Clock className="h-4 w-4 text-cyan-500 mb-2" />
-                                                <strong className="block mb-1 text-foreground">Auto-Erase:</strong> 
-                                                AI forgets your inputs right after the legal report is done.
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <p className="text-xs leading-relaxed">Input data is purged from neural memory immediately after use. We do not maintain case-specific memory within the engine.</p>
                                 </div>
                             </div>
                         </section>
@@ -334,10 +268,10 @@ export default function PrivacyPage() {
                         <section id="section-7" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-primary/10 text-primary shadow-sm"><UserCheck className="h-7 w-7" /></div>
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">7. Handling social logins</h3>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">7. Handling social logins</h4>
                             </div>
-                            <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed text-left">
-                                <p>If you use Google to log in, we only get your basic info like name, email, and photo to create your account.</p>
+                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed text-left">
+                                <p>Google login retrievals are limited to public identifiers needed for identity synchronization.</p>
                             </div>
                         </section>
 
@@ -345,10 +279,10 @@ export default function PrivacyPage() {
                         <section id="section-8" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-amber-500/10 text-amber-500 shadow-sm"><Clock className="h-7 w-7" /></div>
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">8. Data retention period</h3>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">8. Data retention period</h4>
                             </div>
-                            <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                                <p>We keep your info only while you use the app. If you delete your account, we delete all your data within 30 days.</p>
+                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed text-left">
+                                <p>Registry records are retained only for the life of your account. Terminated nodes are erased within 30 days.</p>
                             </div>
                         </section>
 
@@ -356,10 +290,10 @@ export default function PrivacyPage() {
                         <section id="section-9" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-rose-500/10 text-rose-500 shadow-sm"><ShieldAlert className="h-7 w-7" /></div>
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">9. Collection from minors</h3>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">9. Collection from minors</h4>
                             </div>
-                            <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                                <p>This app is for adults over 18. If a child uses it, we will delete their data as soon as we find out.</p>
+                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed text-left">
+                                <p>Platform access is restricted to nodes aged 18 and above. Educational student access requires university-verified credentials.</p>
                             </div>
                         </section>
 
@@ -367,23 +301,10 @@ export default function PrivacyPage() {
                         <section id="section-10" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500 shadow-sm"><UserCheck className="h-7 w-7" /></div>
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">10. Your privacy rights</h3>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">10. Your privacy rights</h4>
                             </div>
-                            <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                                <p>You are the boss of your data. You can:</p>
-                                <ul className="grid gap-6 sm:grid-cols-2 list-none p-0 text-left">
-                                    {[
-                                        "Ask for a copy of all your data.",
-                                        "Tell us to fix any mistakes in your info.",
-                                        "Choose to delete everything anytime.",
-                                        "Ask us to stop using AI for your case."
-                                    ].map((right, i) => (
-                                        <li key={i} className="p-5 border rounded-2xl bg-muted/10 font-bold text-[10px] uppercase tracking-tight flex items-center gap-4 shadow-sm">
-                                            <CheckCircle2 className="h-5 w-5 text-primary" />
-                                            {right}
-                                        </li>
-                                    ))}
-                                </ul>
+                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed text-left">
+                                <p>You maintain sovereignty over your registry node. You may request copies, correct mistakes, or purge your data at any time.</p>
                             </div>
                         </section>
 
@@ -391,10 +312,10 @@ export default function PrivacyPage() {
                         <section id="section-11" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-muted/30 shadow-sm"><Search className="h-7 w-7" /></div>
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">11. Do-Not-Track features</h3>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">11. Do-Not-Track features</h4>
                             </div>
-                            <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                                <p>We don't follow you on other websites. We only care about helping you inside this app.</p>
+                            <div className="space-y-10 text-sm text-muted-foreground font-medium leading-relaxed text-left">
+                                <p>We do not utilize behavioral tracking for marketing, rendering DNT signals irrelevant to our core mission.</p>
                             </div>
                         </section>
 
@@ -402,10 +323,10 @@ export default function PrivacyPage() {
                         <section id="section-12" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-amber-500/10 text-amber-500 shadow-sm"><Globe className="h-7 w-7" /></div>
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">12. US State privacy rights</h3>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">12. US State privacy rights</h4>
                             </div>
-                            <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                                <p>We follow US laws (like in California) for users from those states too.</p>
+                            <div className="space-y-10 text-sm text-muted-foreground font-medium leading-relaxed text-left">
+                                <p>Rights for US residents are maintained in alignment with CCPA and state-specific statutory frameworks.</p>
                             </div>
                         </section>
 
@@ -415,23 +336,8 @@ export default function PrivacyPage() {
                                 <div className="p-4 rounded-2xl bg-orange-500/10 text-orange-500 shadow-sm"><Scale className="h-7 w-7" /></div>
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">13. Indian resident rights (DPDP Act)</h4>
                             </div>
-                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed">
-                                <p>As an Indian citizen, you have strong rights under the **DPDP Act, 2023**:</p>
-                                <ul className="grid gap-6 sm:grid-cols-2 list-none p-0 text-left">
-                                    {[
-                                        "Ask for a full report of what data we have.",
-                                        "Fix any wrong info in your registry profile.",
-                                        "Email nyayasahayakhelp@gmail.com for any complaints.",
-                                        "Name a family member to manage your data if you can't.",
-                                        "Delete all your history and voice transcripts forever.",
-                                        "Request a machine-readable copy of your data."
-                                    ].map((right, i) => (
-                                        <li key={i} className="p-5 border rounded-2xl bg-muted/10 font-black text-[10px] uppercase tracking-tight flex items-center gap-4 shadow-sm hover:bg-orange-500/[0.03] transition-all group">
-                                            <CheckCircle2 className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
-                                            {right}
-                                        </li>
-                                    ))}
-                                </ul>
+                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed text-left">
+                                <p>As a resident of India, you have statutory rights to summary, correction, grievance redressal, and nomination under the **DPDP Act 2023.**</p>
                             </div>
                         </section>
 
@@ -439,10 +345,10 @@ export default function PrivacyPage() {
                         <section id="section-14" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-muted shadow-sm"><RefreshCw className="h-7 w-7" /></div>
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">14. Updates to this notice</h3>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">14. Updates to this notice</h4>
                             </div>
-                            <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                                <p>If we change these rules, we will tell you on your dashboard. Please read them from time to time.</p>
+                            <div className="space-y-10 text-sm text-muted-foreground font-medium leading-relaxed text-left">
+                                <p>We update this protocol to remain compliant with judicial amendments. Material changes are broadcasted via dashboard alerts.</p>
                             </div>
                         </section>
 
@@ -450,12 +356,12 @@ export default function PrivacyPage() {
                         <section id="section-15" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
                                 <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500 shadow-sm"><BellRing className="h-7 w-7" /></div>
-                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">15. Contact us</h3>
+                                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">15. Contact us</h4>
                             </div>
                             <div className="space-y-6 text-left">
-                                <p className="text-sm text-muted-foreground leading-relaxed font-medium">If you have any questions, email us at:</p>
+                                <p className="text-sm text-muted-foreground font-medium">For any statutory inquiries, email our fiduciary desk:</p>
                                 <Card className="p-6 bg-primary/5 border border-primary/10 rounded-2xl w-fit">
-                                    <p className="text-[10px] font-black uppercase text-primary mb-1">Help Desk Email</p>
+                                    <p className="text-[10px] font-black uppercase text-primary mb-1">Institutional Email</p>
                                     <p className="text-sm font-black lowercase">nyayasahayakhelp@gmail.com</p>
                                 </Card>
                             </div>
@@ -467,7 +373,7 @@ export default function PrivacyPage() {
                                 <div className="p-4 rounded-2xl bg-red-500/10 text-red-500 shadow-sm"><Trash2 className="h-7 w-7" /></div>
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">16. Review or delete data</h4>
                             </div>
-                            <div className="space-y-6 text-left">
+                            <div className="space-y-10 text-left">
                                 <p className="text-sm text-muted-foreground leading-relaxed font-medium">You can delete everything anytime. Associated data will be purged from all nodes within 30 days.</p>
                                 <div className="bg-destructive/5 border border-destructive/20 p-8 rounded-[2rem] flex gap-6 items-start shadow-inner relative overflow-hidden">
                                     <div className="absolute top-0 right-0 p-4 opacity-5"><ShieldAlert className="h-20 w-20 text-destructive" /></div>
@@ -485,8 +391,10 @@ export default function PrivacyPage() {
       </div>
 
       <div className="text-center pt-8 opacity-30">
-          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // JUSTICE FOR BHARAT // <History className="inline h-3 w-3" /> 2025</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // MEMORY PROTOCOL // <History className="inline h-3 w-3" /> 2025</p>
       </div>
     </div>
   );
 }
+
+    
