@@ -21,7 +21,10 @@ import {
   Clock,
   ExternalLink,
   ShieldAlert,
-  History
+  History,
+  Bot,
+  Zap,
+  Activity
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
@@ -30,22 +33,22 @@ import { cn } from "@/lib/utils";
 
 const summaryPoints = [
   {
-    title: "Data Collection",
-    desc: "We collect info you give us like name and email, and technical data like IP address when you visit.",
+    title: "Forensic Collection",
+    desc: "We collect legal data nodes like voice narration, PDFs, and identity markers for AI auditing.",
     icon: Database,
     color: "text-blue-500",
     bg: "bg-blue-500/10"
   },
   {
-    title: "No Sensitive Data",
-    desc: "We do NOT process sensitive info like religious beliefs or sexual orientation.",
+    title: "Zero Sale Protocol",
+    desc: "We strictly avoid selling citizen data nodes. We are not an advertising platform; we are a legal terminal.",
     icon: Lock,
     color: "text-purple-500",
     bg: "bg-purple-500/10"
   },
   {
-    title: "AI Security",
-    desc: "Your data is used by AI nodes to help you, protected by high-grade encryption.",
+    title: "Neural Safety",
+    desc: "Your data is processed in isolated AI execution environments and purged from buffers post-audit.",
     icon: Cpu,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10"
@@ -130,7 +133,7 @@ export default function PrivacyPage() {
                 <span className="text-primary italic">Sovereign Asset.</span>
               </h2>
               <p className="text-sm sm:text-xl text-muted-foreground font-medium leading-relaxed">
-                Nyaya Sahayak operates on a <span className="text-foreground font-bold">Zero-Sale Commitment.</span> We do not monetize user data. This protocol is designed to ensure 100% statutory transparency and compliance.
+                Nyaya Sahayak operates on a <span className="text-foreground font-bold">Zero-Sale Commitment.</span> We do not monetize citizen data nodes. This protocol is engineered to ensure 100% statutory transparency and global compliance.
               </p>
             </div>
           </CardContent>
@@ -142,10 +145,10 @@ export default function PrivacyPage() {
       <div className="grid gap-6 sm:grid-cols-3">
         {summaryPoints.map((point, idx) => (
           <motion.div key={idx} variants={itemVariants}>
-            <Card className="h-full border-primary/5 bg-card/30 hover:bg-card/50 transition-all duration-500 rounded-[2rem] shadow-lg">
+            <Card className="h-full border-primary/5 bg-card/30 hover:bg-card/50 transition-all duration-500 rounded-[2rem] shadow-lg group">
               <CardContent className="p-8 space-y-4 text-left">
-                <div className={cn(point.bg, "p-3 rounded-xl w-fit shadow-xl")}>
-                  <point.icon className={cn(point.color, "h-5 w-5")} />
+                <div className={cn(point.bg, "p-3 rounded-xl w-fit shadow-xl transition-transform group-hover:scale-110", point.color)}>
+                  <point.icon className="h-5 w-5" />
                 </div>
                 <h3 className="text-xs font-black tracking-tight uppercase leading-tight">{point.title}</h3>
                 <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
@@ -181,111 +184,91 @@ export default function PrivacyPage() {
                 <div className="lg:col-span-8 p-8 sm:p-12 h-[700px] overflow-y-auto custom-scrollbar bg-background/50">
                     <div className="space-y-24 text-left pb-20">
                         
-                        <section id="section-1" className="space-y-4 scroll-mt-10">
+                        {/* Section 1 */}
+                        <section id="section-1" className="space-y-6 scroll-mt-10">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500"><Database className="h-6 w-6" /></div>
+                                <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500 shadow-sm"><Database className="h-6 w-6" /></div>
                                 <h4 className="text-xl font-black tracking-tight text-primary uppercase">1. WHAT INFORMATION DO WE COLLECT?</h4>
                             </div>
-                            <div className="space-y-4 text-sm text-muted-foreground leading-loose">
-                                <p className="font-bold text-foreground">Personal information you disclose to us</p>
-                                <p>We collect personal information that you voluntarily provide to us when you register on Nyaya Sahayak, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us.</p>
-                                <p>The personal information we collect may include: names, email addresses, usernames, passwords, contact preferences, and mobile numbers for registry verification.</p>
+                            <div className="space-y-6 text-sm text-muted-foreground font-medium leading-relaxed">
+                                <div className="space-y-3">
+                                    <p className="font-bold text-foreground uppercase tracking-widest text-[10px] border-l-2 border-primary pl-3">Personal information you disclose to us</p>
+                                    <p>We collect personal information that you voluntarily provide to us when you enroll in the Nyaya Sahayak terminal, express an interest in obtaining forensic legal audits, or otherwise communicate with our node.</p>
+                                </div>
                                 
-                                <p className="font-black text-foreground uppercase tracking-widest text-[10px] pt-4">Data specific to AI Legal Assistance</p>
-                                <ul className="space-y-3">
-                                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0"></div><span><strong>Voice Recordings:</strong> Audio data transmitted during the "Narrate Problem" session for forensic transcription.</span></li>
-                                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0"></div><span><strong>Legal Documents:</strong> PDFs or images uploaded for AI document intelligence and risk scanning.</span></li>
-                                    <li className="flex gap-3"><div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0"></div><span><strong>Case Narratives:</strong> Textual descriptions of legal matters provided for case strength analysis.</span></li>
-                                </ul>
+                                <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-4">
+                                    <p className="font-black text-[10px] uppercase tracking-widest text-primary">Identity Registry Nodes:</p>
+                                    <ul className="text-xs space-y-2 list-disc pl-4 opacity-80">
+                                        <li>Legal Names and Institutional Identifiers</li>
+                                        <li>Verified Email Nodes and Mobile Contact Links</li>
+                                        <li>Professional Credentials (for Advocate Directory Ingress)</li>
+                                        <li>Authentication Hashes (Passwords)</li>
+                                    </ul>
+                                </div>
+
+                                <div className="space-y-3 pt-4">
+                                    <p className="font-bold text-foreground uppercase tracking-widest text-[10px] border-l-2 border-indigo-500 pl-3">Forensic AI Case Data</p>
+                                    <p>To provide high-fidelity legal intelligence, we process the following data nodes:</p>
+                                    <ul className="space-y-3">
+                                        <li className="flex gap-3 p-3 bg-muted/20 rounded-xl">
+                                            <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0"></div>
+                                            <span><strong>Voice Narration:</strong> Audio frequency data transmitted for forensic transcription and case mapping.</span>
+                                        </li>
+                                        <li className="flex gap-3 p-3 bg-muted/20 rounded-xl">
+                                            <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0"></div>
+                                            <span><strong>Statutory Instruments:</strong> PDFs and images processed through OCR nodes to identify clauses and risks.</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </section>
 
-                        <section id="section-2" className="space-y-4 scroll-mt-10">
+                        {/* Section 6 */}
+                        <section id="section-6" className="space-y-6 scroll-mt-10">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 rounded-2xl bg-indigo-500/10 text-indigo-500"><ListRestart className="h-6 w-6" /></div>
-                                <h4 className="text-xl font-black tracking-tight text-primary uppercase">2. HOW DO WE PROCESS YOUR INFORMATION?</h4>
-                            </div>
-                            <p className="text-sm text-muted-foreground leading-loose">We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. Specifically:</p>
-                            <ul className="grid gap-4 sm:grid-cols-2">
-                                <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
-                                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
-                                    <span>Generating AI summaries and legal roadmaps from your narrations.</span>
-                                </li>
-                                <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
-                                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
-                                    <span>Auditing legal documents for statutory risks and deadlines.</span>
-                                </li>
-                            </ul>
-                        </section>
-
-                        <section id="section-6" className="space-y-4 scroll-mt-10">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 rounded-2xl bg-cyan-500/10 text-cyan-500"><Cpu className="h-6 w-6" /></div>
+                                <div className="p-3 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Cpu className="h-6 w-6" /></div>
                                 <h4 className="text-xl font-black tracking-tight text-primary uppercase">6. ARTIFICIAL INTELLIGENCE PRODUCTS</h4>
                             </div>
-                            <div className="space-y-4 text-sm text-muted-foreground leading-loose">
-                                <p>Nyaya Sahayak utilizes the <strong>Nyaya Mitra</strong> neural engine powered by Google Gemini. This processing is ephemeral for many tools:</p>
-                                <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10">
-                                    <p className="font-bold text-foreground mb-3">Neural Security Protocol</p>
-                                    <p>Your uploaded documents and voice recordings are processed in a secure execution environment. We do NOT use your private case data to train our primary models. Data is deleted from neural processing buffers immediately after the statutory report is generated.</p>
+                            <div className="space-y-6 text-sm text-muted-foreground font-medium leading-relaxed">
+                                <div className="p-8 bg-cyan-500/[0.03] rounded-[2.5rem] border border-cyan-500/10 space-y-6 relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity duration-700">
+                                        <Bot className="h-40 w-40" />
+                                    </div>
+                                    <div className="flex items-center gap-3 text-cyan-600">
+                                        <Sparkles className="h-4 w-4 animate-pulse" />
+                                        <span className="font-black text-[9px] uppercase tracking-[0.3em]">Neural Security Protocol</span>
+                                    </div>
+                                    <p>Nyaya Sahayak utilize the <strong>Nyaya Mitra</strong> neural engine powered by Google Gemini. This processing is strictly ephemeral for forensic audit tools:</p>
+                                    <div className="grid sm:grid-cols-2 gap-4">
+                                        <div className="p-4 bg-background/50 rounded-xl border border-cyan-500/10 text-[11px] leading-relaxed">
+                                            <strong>Zero-Training:</strong> Your uploaded case files and audio narrations are NOT used to train foundation AI models.
+                                        </div>
+                                        <div className="p-4 bg-background/50 rounded-xl border border-cyan-500/10 text-[11px] leading-relaxed">
+                                            <strong>Automated Purge:</strong> Data nodes are erased from neural processing buffers immediately after the report generation cycle.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
 
-                        <section id="section-12" className="space-y-6 scroll-mt-10">
+                        {/* Section 13 */}
+                        <section id="section-13" className="space-y-6 scroll-mt-10">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 rounded-2xl bg-amber-500/10 text-amber-500"><Globe className="h-6 w-6" /></div>
-                                <h4 className="text-xl font-black tracking-tight text-primary uppercase">12. US STATE PRIVACY RIGHTS</h4>
-                            </div>
-                            <div className="space-y-6 text-sm text-muted-foreground leading-loose">
-                                <p>Residents of several US states (CA, CO, CT, etc.) have specific rights regarding personal data access and deletion.</p>
-                                <div className="overflow-x-auto rounded-xl border border-primary/10 bg-background/50">
-                                    <table className="w-full text-left border-collapse">
-                                        <thead className="bg-primary/5">
-                                            <tr>
-                                                <th className="p-3 font-black uppercase text-[9px]">Category</th>
-                                                <th className="p-3 font-black uppercase text-[9px]">Collected</th>
-                                                <th className="p-3 font-black uppercase text-[9px]">Retention</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-primary/5">
-                                            {[
-                                                { cat: "Identifiers", coll: "YES", ret: "Account Duration" },
-                                                { cat: "Customer Records", coll: "YES", ret: "Account Duration" },
-                                                { cat: "Internet Activity", coll: "YES", ret: "24 Months" },
-                                                { cat: "Geolocation", coll: "YES", ret: "Session Only" },
-                                                { cat: "Audio/Sensory", coll: "YES", ret: "Purged Post-Audit" },
-                                                { cat: "Inferences", coll: "YES", ret: "Account Duration" }
-                                            ].map((row, i) => (
-                                                <tr key={i}>
-                                                    <td className="p-3 text-[10px] font-bold text-foreground">{row.cat}</td>
-                                                    <td className="p-3 text-[10px] font-black text-primary">YES</td>
-                                                    <td className="p-3 text-[10px] opacity-60">{row.ret}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section id="section-13" className="space-y-4 scroll-mt-10">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 rounded-2xl bg-orange-500/10 text-orange-500"><Scale className="h-6 w-6" /></div>
+                                <div className="p-3 rounded-2xl bg-orange-500/10 text-orange-500 shadow-sm"><Scale className="h-6 w-6" /></div>
                                 <h4 className="text-xl font-black tracking-tight text-primary uppercase">13. INDIAN RESIDENTS RIGHTS (DPDP ACT)</h4>
                             </div>
-                            <div className="space-y-4 text-sm text-muted-foreground leading-loose">
-                                <p>Under the <strong>Digital Personal Data Protection Act, 2023 (DPDP Act)</strong>, Indian residents (Data Principals) have the following rights:</p>
+                            <div className="space-y-6 text-sm text-muted-foreground font-medium leading-relaxed">
+                                <p>Under the <strong>Digital Personal Data Protection Act, 2023 (DPDP Act)</strong>, Indian residents (Data Principals) have the following rights at the Nyaya Sahayak terminal:</p>
                                 <ul className="grid gap-4 sm:grid-cols-2 list-none p-0">
                                     {[
                                         "Obtain a summary of data being processed.",
                                         "Request correction and erasure of registry records.",
                                         "Access grievance redressal via our Grievance Officer.",
                                         "Nominate individuals to manage your node in incapacity.",
-                                        "Withdraw consent for non-essential neural processing."
+                                        "Withdraw consent for neural processing nodes."
                                     ].map((right, i) => (
-                                        <li key={i} className="p-4 border rounded-xl bg-muted/10 font-bold text-[10px] uppercase tracking-tight flex items-center gap-3 shadow-sm">
-                                            <CheckCircle2 className="h-4 w-4 text-primary" />
+                                        <li key={i} className="p-4 border rounded-xl bg-muted/10 font-black text-[9px] uppercase tracking-tight flex items-center gap-3 shadow-sm hover:bg-orange-500/[0.02] transition-colors group">
+                                            <CheckCircle2 className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
                                             {right}
                                         </li>
                                     ))}
@@ -293,25 +276,26 @@ export default function PrivacyPage() {
                             </div>
                         </section>
 
-                        <section id="section-15" className="space-y-6 pt-10 border-t border-primary/5 scroll-mt-10">
+                        {/* Section 15 */}
+                        <section id="section-15" className="space-y-8 pt-10 border-t border-primary/5 scroll-mt-10">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500"><BellRing className="h-6 w-6" /></div>
+                                <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500 shadow-sm"><BellRing className="h-6 w-6" /></div>
                                 <h4 className="text-xl font-black tracking-tight uppercase">15. HOW CAN YOU CONTACT US?</h4>
                             </div>
-                            <div className="grid gap-6 sm:grid-cols-2">
-                                <div className="space-y-2">
+                            <div className="grid gap-8 sm:grid-cols-2">
+                                <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-4">
                                     <div className="flex items-center gap-2 text-primary">
                                         <Mail className="h-4 w-4" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Support Email</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Audit Registry Node</span>
                                     </div>
-                                    <p className="text-xs font-bold">nyayasahayakhelp@gmail.com</p>
+                                    <p className="text-xs font-black select-all">nyayasahayakhelp@gmail.com</p>
                                 </div>
-                                <div className="space-y-2">
+                                <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-4">
                                     <div className="flex items-center gap-2 text-primary">
                                         <MapPin className="h-4 w-4" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Mailing Address</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Statutory Node Address</span>
                                     </div>
-                                    <p className="text-xs font-bold leading-relaxed">
+                                    <p className="text-[11px] font-bold leading-relaxed">
                                         Nyaya Sahayak Terminal<br />
                                         Bariya Chowk, Daltonganj<br />
                                         Jharkhand 822101, India
@@ -320,12 +304,21 @@ export default function PrivacyPage() {
                             </div>
                         </section>
 
-                        <section id="section-16" className="space-y-4 scroll-mt-10">
+                        {/* Section 16 */}
+                        <section id="section-16" className="space-y-6 scroll-mt-10">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 rounded-2xl bg-red-500/10 text-red-500"><Trash2 className="h-6 w-6" /></div>
+                                <div className="p-3 rounded-2xl bg-red-500/10 text-red-500 shadow-sm"><Trash2 className="h-6 w-6" /></div>
                                 <h4 className="text-xl font-black tracking-tight text-primary uppercase">16. REVIEW OR DELETE DATA</h4>
                             </div>
-                            <p className="text-sm text-muted-foreground leading-loose">Users maintain sovereign authority over their registry nodes. You can initiate a "Total Registry Erasure" through your profile settings or by emailing our data fiduciary node at nyayasahayakhelp@gmail.com. All associated data will be purged within 30 statutory days.</p>
+                            <div className="space-y-4">
+                                <p className="text-sm text-muted-foreground leading-relaxed">Users maintain sovereign authority over their registry nodes. You can initiate a <strong>"Total Registry Erasure"</strong> through your profile terminal settings. Associated data will be purged from production nodes within 30 statutory days.</p>
+                                <div className="bg-destructive/5 border border-destructive/10 p-4 rounded-xl flex gap-4 items-start shadow-inner">
+                                    <ShieldAlert className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                                    <p className="text-[10px] font-bold text-destructive/80 uppercase leading-relaxed tracking-tight">
+                                        WARNING: Executing "Total Registry Erasure" is irreversible and will result in the immediate decommissioning of all saved forensic audits and case trackers.
+                                    </p>
+                                </div>
+                            </div>
                         </section>
                     </div>
                 </div>
