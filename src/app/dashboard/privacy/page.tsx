@@ -2,7 +2,7 @@
 "use client";
 
 import { PageHeader } from "@/components/page-header";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   ShieldCheck, 
   Lock, 
@@ -35,6 +35,7 @@ import {
   FileSearch,
   ExternalLink,
   UserCheck,
+  Gavel,
   RefreshCw
 } from "lucide-react";
 import { motion } from "framer-motion";

@@ -34,7 +34,9 @@ import {
   Search,
   FileSearch,
   ExternalLink,
-  UserCheck
+  UserCheck,
+  Gavel,
+  RefreshCw
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
