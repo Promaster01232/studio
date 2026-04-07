@@ -35,6 +35,7 @@ import { collection, query, orderBy, limit, onSnapshot, Timestamp } from "fireba
 import { formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Logo } from "@/components/logo";
 
 interface Post {
     id: string;
