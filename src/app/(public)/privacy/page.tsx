@@ -13,6 +13,12 @@ import {
   Mail,
   MapPin,
   CheckCircle2,
+  ListRestart,
+  Trash2,
+  Clock,
+  ExternalLink,
+  Scale,
+  BellRing
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
@@ -44,22 +50,22 @@ const summaryPoints = [
 ];
 
 const toc = [
-  "1. What information do we collect?",
-  "2. How do we process your information?",
-  "3. What legal bases do we rely on?",
-  "4. When and with whom do we share info?",
-  "5. Stance on third-party websites",
-  "6. Artificial Intelligence products",
-  "7. Handling social logins",
-  "8. Data retention period",
-  "9. Collection from minors",
-  "10. Your privacy rights",
-  "11. Do-Not-Track features",
-  "12. US State privacy rights",
-  "13. Indian resident rights (DPDP Act)",
-  "14. Updates to this notice",
-  "15. Contact us",
-  "16. Review or delete your data"
+  { id: "section-1", title: "1. What information do we collect?" },
+  { id: "section-2", title: "2. How do we process your information?" },
+  { id: "section-3", title: "3. What legal bases do we rely on?" },
+  { id: "section-4", title: "4. When and with whom do we share info?" },
+  { id: "section-5", title: "5. Stance on third-party websites" },
+  { id: "section-6", title: "6. Artificial Intelligence products" },
+  { id: "section-7", title: "7. Handling social logins" },
+  { id: "section-8", title: "8. Data retention period" },
+  { id: "section-9", title: "9. Collection from minors" },
+  { id: "section-10", title: "10. Your privacy rights" },
+  { id: "section-11", title: "11. Do-Not-Track features" },
+  { id: "section-12", title: "12. US State privacy rights" },
+  { id: "section-13", title: "13. Indian resident rights (DPDP Act)" },
+  { id: "section-14", title: "14. Updates to this notice" },
+  { id: "section-15", title: "15. Contact us" },
+  { id: "section-16", title: "16. Review or delete your data" }
 ];
 
 const containerVariants = {
@@ -80,6 +86,13 @@ const itemVariants = {
 };
 
 export default function PrivacyPage() {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <motion.div 
       initial="hidden"
@@ -151,20 +164,27 @@ export default function PrivacyPage() {
         <Card className="border-primary/5 bg-background shadow-inner rounded-[2rem] p-8">
             <div className="grid sm:grid-cols-2 gap-x-12 gap-y-3">
                 {toc.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 group cursor-pointer hover:text-primary transition-colors">
+                    <button 
+                        key={idx} 
+                        onClick={() => scrollToSection(item.id)}
+                        className="flex items-center gap-3 group text-left transition-colors hover:text-primary"
+                    >
                         <ChevronRight className="h-3 w-3 text-primary/40 group-hover:translate-x-1 transition-transform" />
-                        <span className="text-[11px] font-bold uppercase tracking-tight opacity-70">{item}</span>
-                    </div>
+                        <span className="text-[11px] font-bold uppercase tracking-tight opacity-70 group-hover:opacity-100">{item.title}</span>
+                    </button>
                 ))}
             </div>
         </Card>
       </motion.div>
 
       {/* Full Document Sections */}
-      <div className="space-y-16 pt-10 border-t border-primary/5">
+      <div className="space-y-24 pt-10 border-t border-primary/5">
         
-        <section className="space-y-6">
-            <h3 className="text-2xl font-black tracking-tight text-primary">1. WHAT INFORMATION DO WE COLLECT?</h3>
+        <section id="section-1" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500"><Database className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">1. WHAT INFORMATION DO WE COLLECT?</h3>
+            </div>
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
                 <p className="font-black text-foreground uppercase tracking-widest text-[10px]">Personal information you disclose to us</p>
                 <p>We collect personal information that you voluntarily provide to us when you register on Nyaya Sahayak, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us.</p>
@@ -175,8 +195,39 @@ export default function PrivacyPage() {
             </div>
         </section>
 
-        <section className="space-y-6">
-            <h3 className="text-2xl font-black tracking-tight text-primary">6. DO WE OFFER ARTIFICIAL INTELLIGENCE-BASED PRODUCTS?</h3>
+        <section id="section-2" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-indigo-500/10 text-indigo-500"><ListRestart className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
+            </div>
+            <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
+                <p>We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. Key reasons include:</p>
+                <ul className="grid gap-4 sm:grid-cols-2">
+                    <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
+                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
+                        <span>Facilitate account creation and authentication.</span>
+                    </li>
+                    <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
+                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
+                        <span>Save or protect vital interests (preventing harm).</span>
+                    </li>
+                    <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
+                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
+                        <span>Personalize your experience and show relevant content.</span>
+                    </li>
+                    <li className="p-4 rounded-xl border border-primary/5 bg-primary/[0.02] flex gap-3">
+                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-1" />
+                        <span>Prevent spam and abuse through active usage analysis.</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="section-6" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-cyan-500/10 text-cyan-500"><Cpu className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">6. DO WE OFFER ARTIFICIAL INTELLIGENCE-BASED PRODUCTS?</h3>
+            </div>
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
                 <p>Nyaya Sahayak offers products, features, or tools powered by artificial intelligence (collectively, "AI Products"). These tools are designed to enhance your experience and provide you with innovative solutions.</p>
                 <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10">
@@ -186,8 +237,11 @@ export default function PrivacyPage() {
             </div>
         </section>
 
-        <section className="space-y-6">
-            <h3 className="text-2xl font-black tracking-tight text-primary">12. DO UNITED STATES RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h3>
+        <section id="section-12" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-amber-500/10 text-amber-500"><Globe className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">12. DO UNITED STATES RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h3>
+            </div>
             <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
                 <p>If you are a resident of California, Colorado, Connecticut, Delaware, Florida, Indiana, Iowa, Kentucky, Maryland, Minnesota, Montana, Nebraska, New Hampshire, New Jersey, Oregon, Rhode Island, Tennessee, Texas, Utah, or Virginia, you may have specific rights regarding your personal information.</p>
                 
@@ -218,34 +272,14 @@ export default function PrivacyPage() {
                         </tbody>
                     </table>
                 </div>
-
-                <div className="space-y-4">
-                    <p className="font-black text-foreground uppercase tracking-widest text-[10px] pt-4">Your Rights Under US State Law</p>
-                    <ul className="grid gap-4 sm:grid-cols-2 list-none p-0">
-                        {[
-                            "Right to know if we process your data",
-                            "Right to access your personal data",
-                            "Right to correct inaccuracies",
-                            "Right to request deletion",
-                            "Right to obtain a copy of shared data",
-                            "Right to opt out of targeted advertising"
-                        ].map((right, i) => (
-                            <li key={i} className="p-4 border rounded-xl bg-background font-bold text-[11px] uppercase tracking-tight flex items-center gap-3">
-                                <CheckCircle2 className="h-4 w-4 text-primary" />
-                                {right}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                
-                <p className="text-xs italic bg-amber-500/5 p-4 rounded-xl border border-amber-500/10">
-                    California "Shine The Light" Law: California residents may request once a year, free of charge, information about categories of personal information we disclosed to third parties for direct marketing.
-                </p>
             </div>
         </section>
 
-        <section className="space-y-6">
-            <h3 className="text-2xl font-black tracking-tight text-primary">13. DO INDIAN RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h3>
+        <section id="section-13" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-orange-500/10 text-orange-500"><Scale className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">13. DO INDIAN RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h3>
+            </div>
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
                 <p>Yes, if you are a resident of India, you are granted specific rights under the <span className="text-foreground font-bold">Digital Personal Data Protection Act, 2023 (DPDP Act)</span>.</p>
                 <ul className="grid gap-4 sm:grid-cols-2 list-none p-0">
@@ -256,17 +290,23 @@ export default function PrivacyPage() {
                         "Nominate an individual to exercise your rights in case of death.",
                         "Withdraw your consent at any time."
                     ].map((right, i) => (
-                        <li key={i} className="p-4 border rounded-xl bg-muted/10 font-bold text-xs uppercase tracking-tight">{right}</li>
+                        <li key={i} className="p-4 border rounded-xl bg-muted/10 font-bold text-xs uppercase tracking-tight flex items-center gap-3">
+                            <CheckCircle2 className="h-4 w-4 text-primary" />
+                            {right}
+                        </li>
                     ))}
                 </ul>
             </div>
         </section>
 
-        <section className="space-y-8 pt-10 border-t border-primary/5">
+        <section id="section-15" className="space-y-8 pt-10 border-t border-primary/5 scroll-mt-24">
             <div className="flex flex-col md:flex-row gap-10">
                 <div className="flex-1 space-y-4">
-                    <h3 className="text-2xl font-black tracking-tight">15. HOW CAN YOU CONTACT US?</h3>
-                    <p className="text-sm text-muted-foreground leading-loose">If you have questions or comments about this notice, you may email us at nyayasahayakhelp@gmail.com or contact us by post.</p>
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-500"><BellRing className="h-6 w-6" /></div>
+                        <h3 className="text-2xl font-black tracking-tight">15. HOW CAN YOU CONTACT US?</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-loose">If you have questions or comments about this notice, you may email us at nyayasahayakhelp@gmail.com or contact us by post at our statutory terminal.</p>
                 </div>
                 <div className="w-full md:w-96 space-y-4">
                     <Card className="p-8 bg-primary/5 border-primary/10 rounded-[2rem] shadow-inner text-left">
@@ -292,6 +332,16 @@ export default function PrivacyPage() {
                         </div>
                     </Card>
                 </div>
+            </div>
+        </section>
+
+        <section id="section-16" className="space-y-6 scroll-mt-24">
+            <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-red-500/10 text-red-500"><Trash2 className="h-6 w-6" /></div>
+                <h3 className="text-2xl font-black tracking-tight text-primary">16. REVIEW OR DELETE DATA</h3>
+            </div>
+            <div className="space-y-4 text-sm text-muted-foreground font-medium leading-loose">
+                <p>Based on the applicable laws of your country, you may have the right to request access to the personal information we collect from you, change that information, or delete it in some circumstances. To request to review, update, or delete your personal information, please submit a data subject access request to our digital hub.</p>
             </div>
         </section>
 
