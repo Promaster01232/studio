@@ -14,12 +14,14 @@ import {
   Mail,
   MapPin,
   Clock,
-  ExternalLink
+  ExternalLink,
+  CheckCircle2
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const summaryPoints = [
   {
@@ -282,7 +284,7 @@ export default function PrivacyPage() {
       </div>
 
       <div className="text-center pt-12 opacity-30">
-          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // TRANSience REGISTRY // 2025</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // TRANSIENCE REGISTRY // 2025</p>
       </div>
     </motion.div>
   );

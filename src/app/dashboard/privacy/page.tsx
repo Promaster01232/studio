@@ -19,6 +19,7 @@ import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 const summaryPoints = [
   {
@@ -129,8 +130,8 @@ export default function PrivacyPage() {
           <motion.div key={idx} variants={itemVariants}>
             <Card className="h-full border-primary/5 bg-card/30 hover:bg-card/50 transition-all duration-500 rounded-[2rem] shadow-lg">
               <CardContent className="p-8 space-y-4 text-left">
-                <div className={`${point.bg} p-3 rounded-xl w-fit shadow-xl`}>
-                  <point.icon className={`h-5 w-5 ${point.color}`} />
+                <div className={cn(point.bg, "p-3 rounded-xl w-fit shadow-xl")}>
+                  <point.icon className={cn(point.color, "h-5 w-5")} />
                 </div>
                 <h3 className="text-xs font-black tracking-tight uppercase leading-tight">{point.title}</h3>
                 <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
