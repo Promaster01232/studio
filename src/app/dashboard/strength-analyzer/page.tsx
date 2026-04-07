@@ -142,7 +142,7 @@ export default function StrengthAnalyzerPage() {
                 </div>
 
                 <CardHeader className={cn(
-                    "p-10 sm:p-16 relative z-10 transition-colors duration-700 border-b border-primary/5",
+                    "p-8 sm:p-12 relative z-10 transition-colors duration-700 border-b border-primary/5",
                     state.status === 'success' ? "bg-foreground text-background" : "bg-muted/30 text-foreground"
                 )}>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
@@ -165,7 +165,7 @@ export default function StrengthAnalyzerPage() {
                                 </Badge>
                             </div>
                             <div className="space-y-2">
-                                <CardTitle className="text-4xl sm:text-6xl font-black uppercase tracking-tighter leading-none">
+                                <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
                                     {state.status === 'success' ? <><span className="italic opacity-60">Audit Dossier</span> Ready.</> : "Awaiting Ingress"}
                                 </CardTitle>
                                 <p className={cn(

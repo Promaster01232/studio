@@ -32,10 +32,11 @@ import {
   FileSearch,
   ChevronDown,
   Smartphone,
-  Cpu
+  Cpu,
+  X
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { jsPDF } from "jspdf";
+import { jsPDF } from "jsPDF";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -318,7 +319,7 @@ export default function DocumentGeneratorPage() {
             </div>
 
             <CardHeader className={cn(
-                "p-10 sm:p-14 relative z-10 transition-colors duration-500 border-b border-primary/5",
+                "p-8 sm:p-12 relative z-10 transition-colors duration-500 border-b border-primary/5",
                 state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-primary/5 text-foreground"
             )}>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
@@ -346,7 +347,7 @@ export default function DocumentGeneratorPage() {
                             )}
                         </div>
                         <div className="space-y-2">
-                            <CardTitle className="text-4xl sm:text-6xl font-black uppercase tracking-tighter leading-none">
+                            <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
                                 {state.status === 'success' ? <><span className="italic opacity-80">Draft Node</span> Ready.</> : "Awaiting Ingress"}
                             </CardTitle>
                             <p className={cn(
@@ -495,7 +496,7 @@ export default function DocumentGeneratorPage() {
                                 </p>
                             </div>
                             <Button onClick={handleReset} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
-                                Clear Protocol
+                                <X className="mr-2 h-4 w-4" /> Clear Protocol
                             </Button>
                         </motion.div>
                     ) : (
