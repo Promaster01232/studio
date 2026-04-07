@@ -29,7 +29,10 @@ import {
   FileText,
   AlertTriangle,
   Smartphone,
-  ShieldAlert
+  ShieldAlert,
+  Server,
+  Share2,
+  FileSearch
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
@@ -219,7 +222,7 @@ export default function PrivacyPage() {
                         {/* Section 2 */}
                         <section id="section-2" className="space-y-8 scroll-mt-10 text-left">
                             <div className="flex items-center gap-4">
-                                <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><RotateCcw className="h-7 w-7" /></div>
+                                <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><Server className="h-7 w-7" /></div>
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">2. HOW DO WE PROCESS YOUR INFORMATION?</h4>
                             </div>
                             <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed">
@@ -227,16 +230,48 @@ export default function PrivacyPage() {
                                 <div className="grid gap-6 sm:grid-cols-2 text-left">
                                     <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
                                         <CheckCircle2 className="h-6 w-6 text-primary" />
+                                        <p className="font-black text-sm uppercase tracking-widest text-foreground">Where is data stored?</p>
+                                        <p className="text-xs opacity-70 leading-relaxed">Your profile and case metadata are stored in highly secure, encrypted Firebase Cloud nodes. These nodes are distributed across global Tier-4 data centers with 99.99% durability guarantees.</p>
+                                    </div>
+                                    <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
+                                        <Cpu className="h-6 w-6 text-primary" />
                                         <p className="font-black text-sm uppercase tracking-widest text-foreground">Neural Case Summarization</p>
                                         <p className="text-xs opacity-70 leading-relaxed">Converting voice narrations into structured legal reports with BNS section references and jurisdictional guidance based on Indian judicial standards.</p>
                                     </div>
-                                    <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
-                                        <CheckCircle2 className="h-6 w-6 text-primary" />
-                                        <p className="font-black text-sm uppercase tracking-widest text-foreground">Statutory Risk Auditing</p>
-                                        <p className="text-xs opacity-70 leading-relaxed">Scanning legal documents for hidden unfavorable clauses, upcoming deadlines, and procedural inconsistencies using high-fidelity neural patterns.</p>
-                                    </div>
                                 </div>
                                 <p>Additionally, we process metadata to prevent platform abuse, detect unauthorized bot activity, and ensure that institutional resources are reserved for authentic citizen nodes. Telemetry data is stripped of all PII (Personally Identifiable Information) before being ingested by our performance auditing systems.</p>
+                            </div>
+                        </section>
+
+                        {/* Section 4 */}
+                        <section id="section-4" className="space-y-8 scroll-mt-10 text-left">
+                            <div className="flex items-center gap-4">
+                                <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Share2 className="h-7 w-7" /></div>
+                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">4. WHEN AND WITH WHOM DO WE SHARE INFO?</h3>
+                            </div>
+                            <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
+                                <p>We only share data with specific service providers who help us run the forensic engine. We do <span className="font-bold text-foreground">NOT</span> sell your data to advertisers.</p>
+                                
+                                <div className="space-y-6">
+                                    <div className="flex gap-5 p-6 bg-primary/5 rounded-2xl border border-primary/10">
+                                        <div className="p-3 rounded-xl bg-white dark:bg-black/20 shadow-sm shrink-0 h-fit">
+                                            <Bot className="h-6 w-6 text-primary" />
+                                        </div>
+                                        <div className="space-y-1 text-left">
+                                            <p className="font-black text-xs uppercase text-foreground">AI Service Providers (Google Cloud AI)</p>
+                                            <p className="text-xs">We share case narratives and documents with Google Cloud AI nodes to generate summaries and legal analysis. This data is processed in a zero-trust environment and is not used to train foundation models.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-5 p-6 bg-primary/5 rounded-2xl border border-primary/10">
+                                        <div className="p-3 rounded-xl bg-white dark:bg-black/20 shadow-sm shrink-0 h-fit">
+                                            <ShieldCheck className="h-6 w-6 text-green-600" />
+                                        </div>
+                                        <div className="space-y-1 text-left">
+                                            <p className="font-black text-xs uppercase text-foreground">Cloud Infrastructure (Firebase/Google Cloud)</p>
+                                            <p className="text-xs">Persistent data is stored within Google's secure cloud ecosystem, ensuring that your registry remains active and protected by state-of-the-art encryption at rest and in transit.</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </section>
 
@@ -269,6 +304,34 @@ export default function PrivacyPage() {
                                                 Data nodes are erased from neural processing buffers immediately after the statutory report generation cycle is complete.
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Section 10 */}
+                        <section id="section-10" className="space-y-8 scroll-mt-10 text-left">
+                            <div className="flex items-center gap-4">
+                                <div className="p-4 rounded-2xl bg-amber-500/10 text-amber-500 shadow-sm"><Fingerprint className="h-7 w-7" /></div>
+                                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">10. YOUR PRIVACY RIGHTS</h3>
+                            </div>
+                            <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
+                                <p>Citizens maintain sovereign authority over their registry nodes. You have the right to manage your data nodes at any time:</p>
+                                
+                                <div className="grid gap-6 sm:grid-cols-2">
+                                    <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
+                                        <div className="flex items-center gap-2 text-primary">
+                                            <FileSearch className="h-4 w-4" />
+                                            <p className="font-black text-xs uppercase">Right to Request Summary</p>
+                                        </div>
+                                        <p className="text-[11px] leading-relaxed">You can request a comprehensive summary of all personal data nodes we currently maintain in our active registry. We will provide this in a machine-readable format.</p>
+                                    </div>
+                                    <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
+                                        <div className="flex items-center gap-2 text-primary">
+                                            <RotateCcw className="h-4 w-4" />
+                                            <p className="font-black text-xs uppercase">Right to Rectify</p>
+                                        </div>
+                                        <p className="text-[11px] leading-relaxed">If any of your identity markers or case metadata are inaccurate, you have the right to request immediate correction via your profile terminal.</p>
                                     </div>
                                 </div>
                             </div>

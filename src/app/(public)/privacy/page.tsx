@@ -29,7 +29,10 @@ import {
   FileText,
   AlertTriangle,
   Smartphone,
-  ShieldAlert
+  ShieldAlert,
+  Server,
+  Share2,
+  FileSearch
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
@@ -221,41 +224,70 @@ export default function PrivacyPage() {
         {/* Section 2 */}
         <section id="section-2" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><RotateCcw className="h-7 w-7" /></div>
+                <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 shadow-sm"><Server className="h-7 w-7" /></div>
                 <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
             </div>
             <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
                 <p>We process your data nodes to provide, improve, and administer our forensic AI services. Our primary processing flows are engineered for precision and statutory accuracy:</p>
+                
                 <div className="grid gap-6 sm:grid-cols-2 text-left">
                     <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
                         <CheckCircle2 className="h-6 w-6 text-primary" />
+                        <p className="font-black text-sm uppercase tracking-widest text-foreground">Where is data stored?</p>
+                        <p className="text-xs opacity-70 leading-relaxed">Your profile and case metadata are stored in highly secure, encrypted Firebase Cloud nodes. These nodes are distributed across global Tier-4 data centers with 99.99% durability guarantees.</p>
+                    </div>
+                    <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
+                        <Cpu className="h-6 w-6 text-primary" />
                         <p className="font-black text-sm uppercase tracking-widest text-foreground">Neural Case Summarization</p>
                         <p className="text-xs opacity-70 leading-relaxed">Converting voice narrations into structured legal reports with BNS section references and jurisdictional guidance based on Indian judicial standards.</p>
                     </div>
-                    <div className="p-8 rounded-[2.5rem] border border-primary/5 bg-primary/[0.02] space-y-4 shadow-sm">
-                        <CheckCircle2 className="h-6 w-6 text-primary" />
-                        <p className="font-black text-sm uppercase tracking-widest text-foreground">Statutory Risk Auditing</p>
-                        <p className="text-xs opacity-70 leading-relaxed">Scanning legal documents for hidden unfavorable clauses, upcoming deadlines, and procedural inconsistencies using high-fidelity neural patterns.</p>
-                    </div>
                 </div>
-                <p>We also process data to facilitate account security, prevent unauthorized access (TLS 1.3 monitoring), and provide customer support via our institutional help desk. We may process anonymized telemetry to improve AI model accuracy without identifying the individual citizen node.</p>
+
+                <div className="p-8 bg-muted/20 rounded-3xl border border-primary/5 space-y-4">
+                    <p className="font-black text-xs uppercase tracking-widest text-foreground flex items-center gap-2">
+                        <Activity className="h-4 w-4 text-primary" /> Forensic Processing Logic
+                    </p>
+                    <p className="text-sm">We process your information to:</p>
+                    <ul className="list-disc pl-6 space-y-2 text-xs">
+                        <li>Facilitate account creation and authentication.</li>
+                        <li>Deliver AI-driven legal forensics and document drafting.</li>
+                        <li>Respond to your statutory inquiries and support requests.</li>
+                        <li>Verify identity nodes for high-security advocate registry ingress.</li>
+                        <li>Anonymize usage telemetry to improve neural model accuracy.</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
-        {/* Section 3 */}
-        <section id="section-3" className="space-y-8 scroll-mt-24 text-left">
+        {/* Section 4 */}
+        <section id="section-4" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500 shadow-sm"><Scale className="h-7 w-7" /></div>
-                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">3. WHAT LEGAL BASES DO WE RELY ON?</h3>
+                <div className="p-4 rounded-2xl bg-cyan-500/10 text-cyan-500 shadow-sm"><Share2 className="h-7 w-7" /></div>
+                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">4. WHEN AND WITH WHOM DO WE SHARE INFO?</h3>
             </div>
-            <div className="space-y-6 text-sm text-muted-foreground font-medium leading-relaxed">
-                <p>We only process your personal information when we have a valid statutory reason to do so under applicable law. These bases include:</p>
-                <ul className="space-y-4 pl-4 list-disc">
-                    <li><strong>Consent:</strong> Explicit authorization provided by you for specific forensic audits or directory listings. You may withdraw this consent at any time.</li>
-                    <li><strong>Contract:</strong> Fulfillment of our Terms of Service to provide AI tools, legal guidance, and case management features.</li>
-                    <li><strong>Legal Obligation:</strong> Compliance with the laws of India, including the IT Act and the Digital Personal Data Protection (DPDP) Act 2023.</li>
-                    <li><strong>Vital Interests:</strong> Emergency situations where data processing is critical for personal safety or public welfare (e.g., SOS signal activation).</li>
-                </ul>
+            <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
+                <p>We only share data with specific service providers who help us run the forensic engine. We do <span className="font-bold text-foreground">NOT</span> sell your data to advertisers.</p>
+                
+                <div className="space-y-6">
+                    <div className="flex gap-5 p-6 bg-primary/5 rounded-2xl border border-primary/10">
+                        <div className="p-3 rounded-xl bg-white dark:bg-black/20 shadow-sm shrink-0 h-fit">
+                            <Bot className="h-6 w-6 text-primary" />
+                        </div>
+                        <div className="space-y-1">
+                            <p className="font-black text-xs uppercase text-foreground">AI Service Providers (Google Cloud AI)</p>
+                            <p className="text-xs">We share case narratives and documents with Google Cloud AI nodes to generate summaries and legal analysis. This data is processed in a zero-trust environment and is not used to train foundation models.</p>
+                        </div>
+                    </div>
+                    <div className="flex gap-5 p-6 bg-primary/5 rounded-2xl border border-primary/10">
+                        <div className="p-3 rounded-xl bg-white dark:bg-black/20 shadow-sm shrink-0 h-fit">
+                            <ShieldCheck className="h-6 w-6 text-green-600" />
+                        </div>
+                        <div className="space-y-1">
+                            <p className="font-black text-xs uppercase text-foreground">Cloud Infrastructure (Firebase/Google Cloud)</p>
+                            <p className="text-xs">Persistent data is stored within Google's secure cloud ecosystem, ensuring that your registry remains active and protected by state-of-the-art encryption at rest and in transit.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -301,31 +333,29 @@ export default function PrivacyPage() {
             </div>
         </section>
 
-        {/* Section 12 */}
-        <section id="section-12" className="space-y-8 scroll-mt-24 text-left">
+        {/* Section 10 */}
+        <section id="section-10" className="space-y-8 scroll-mt-24 text-left">
             <div className="flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-amber-500/10 text-amber-500 shadow-sm"><Globe className="h-7 w-7" /></div>
-                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">12. DO UNITED STATES RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h3>
+                <div className="p-4 rounded-2xl bg-amber-500/10 text-amber-500 shadow-sm"><Fingerprint className="h-7 w-7" /></div>
+                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase">10. YOUR PRIVACY RIGHTS</h3>
             </div>
             <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                <p>Residents of California, Colorado, Connecticut, and other US states possess sovereign rights regarding their data nodes. We comply with the CCPA/CPRA frameworks:</p>
-                <div className="p-8 rounded-[2rem] bg-amber-500/5 border border-amber-500/10 shadow-inner">
-                    <p className="font-black text-[10px] uppercase tracking-widest text-amber-600 mb-4">Statutory Rights Node:</p>
-                    <div className="grid gap-4 sm:grid-cols-2 text-left">
-                        {[
-                            { t: "Right to Know", d: "Request disclosure of the specific categories of data processed by our AI nodes." },
-                            { t: "Right to Delete", d: "Trigger an immediate erasure request for all personal identity markers in our registry." },
-                            { t: "Right to Opt-Out", d: "Deactivate the processing of your data for targeted forensic analytics or automated profiling." },
-                            { t: "Right to Non-Discrimination", d: "Exercising your rights will not result in degraded terminal performance." }
-                        ].map((right, i) => (
-                            <div key={i} className="flex gap-3">
-                                <div className="h-1.5 w-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
-                                <div className="space-y-1">
-                                    <p className="font-black text-xs uppercase tracking-tight text-foreground">{right.t}</p>
-                                    <p className="text-[11px] opacity-70 leading-relaxed">{right.d}</p>
-                                </div>
-                            </div>
-                        ))}
+                <p>Citizens maintain sovereign authority over their registry nodes. You have the right to manage your data nodes at any time:</p>
+                
+                <div className="grid gap-6 sm:grid-cols-2">
+                    <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
+                        <div className="flex items-center gap-2 text-primary">
+                            <FileSearch className="h-4 w-4" />
+                            <p className="font-black text-xs uppercase">Right to Request Data</p>
+                        </div>
+                        <p className="text-[11px] leading-relaxed">You can request a comprehensive summary of all personal data nodes we currently maintain in our active registry. We will provide this in a machine-readable format.</p>
+                    </div>
+                    <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
+                        <div className="flex items-center gap-2 text-primary">
+                            <RotateCcw className="h-4 w-4" />
+                            <p className="font-black text-xs uppercase">Right to Rectify</p>
+                        </div>
+                        <p className="text-[11px] leading-relaxed">If any of your identity markers or case metadata are inaccurate, you have the right to request immediate correction via your profile terminal.</p>
                     </div>
                 </div>
             </div>
