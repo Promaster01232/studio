@@ -1,11 +1,10 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Mic,
   Search,
@@ -20,9 +19,7 @@ import {
   ShieldCheck,
   Loader2,
   Clock,
-  TrendingUp,
   ChevronRight,
-  Lock,
   Gavel,
   ShieldAlert,
   Cpu,
@@ -30,16 +27,19 @@ import {
   Layers,
   FileCheck,
   Globe,
-  Terminal,
   History,
-  CheckCircle2,
-  AlertTriangle,
   Lightbulb,
   Newspaper,
   MessageCircle,
   BadgeCheck,
   Plus,
-  ChevronDown
+  ChevronDown,
+  X,
+  FileUp,
+  MapPin,
+  User,
+  Smartphone,
+  Calendar
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -73,6 +73,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -97,10 +108,10 @@ interface Post {
 }
 
 const aiFeatures = [
-    { href: "/dashboard/strength-analyzer", icon: BrainCircuit, title: "Case Strength", desc: "Litigation success probability.", color: "text-blue-500", bg: "bg-blue-500/10" },
-    { href: "/dashboard/document-intelligence", icon: Search, title: "Forensic Analysis", desc: "Scan documents for hidden risks.", color: "text-amber-600", bg: "bg-amber-500/10" },
-    { href: "/dashboard/document-generator", icon: FileText, title: "Statutory Drafting", desc: "Generate professional legal notices.", color: "text-emerald-600", bg: "bg-emerald-500/10" },
-    { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bond Protocol", desc: "Official bail and indemnity bonds.", color: "text-purple-600", bg: "bg-purple-500/10" },
+    { id: "strength", icon: BrainCircuit, title: "Case Strength", desc: "Litigation success probability.", color: "text-blue-500", bg: "bg-blue-500/10", href: "/dashboard/strength-analyzer" },
+    { id: "intel", icon: Search, title: "Forensic Analysis", desc: "Scan documents for hidden risks.", color: "text-amber-600", bg: "bg-amber-500/10", href: "/dashboard/document-intelligence" },
+    { id: "draft", icon: FileText, title: "Statutory Drafting", desc: "Generate professional legal notices.", color: "text-emerald-600", bg: "bg-emerald-500/10", href: "/dashboard/document-generator" },
+    { id: "bond", icon: FileSignature, title: "Bond Protocol", desc: "Official bail and indemnity bonds.", color: "text-purple-600", bg: "bg-purple-500/10", href: "/dashboard/bond-generator" },
 ];
 
 function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
@@ -133,6 +144,7 @@ export default function DashboardHomePage() {
   const fullText = 'Sahayak';
   const { playSound } = useSoundEffect();
   const { toast } = useToast();
+  const router = useRouter();
   
   const firestore = useFirestore();
   const auth = useAuth();
@@ -143,6 +155,11 @@ export default function DashboardHomePage() {
   
   const [posts, setPosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
+
+  // Quick Action Dialog State
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [fileName, setFileName] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -196,6 +213,16 @@ export default function DashboardHomePage() {
       }, 1500);
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) setFileName(file.name);
+  };
+
+  const handleLaunchFullTool = () => {
+      const tool = aiFeatures.find(f => f.id === selectedTool);
+      if (tool) router.push(tool.href);
+  };
+
   return (
     <div className="flex flex-col h-full space-y-8 pb-20 max-w-7xl mx-auto text-left relative pt-2">
         {/* HERO SECTION */}
@@ -226,15 +253,6 @@ export default function DashboardHomePage() {
                   </div>
 
                   <div className="hidden lg:flex flex-col gap-3 w-72">
-                      <div className="p-4 rounded-2xl bg-white/50 dark:bg-black/20 border border-primary/10 shadow-sm flex items-center gap-4 group/tele">
-                          <div className="p-2 rounded-lg bg-green-500/10 group-hover/tele:bg-green-500/20 transition-colors">
-                              <Activity className="h-4 w-4 text-green-600 animate-pulse" />
-                          </div>
-                          <div className="text-left">
-                              <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Neural Status</p>
-                              <p className="text-[10px] font-black text-green-600 uppercase">Synchronized</p>
-                          </div>
-                      </div>
                       <div className="p-4 rounded-2xl bg-white/50 dark:bg-black/20 border border-primary/10 shadow-sm flex items-center gap-4 group/sec">
                           <div className="p-2 rounded-lg bg-primary/10 group-hover/sec:bg-primary/20 transition-colors">
                               <ShieldCheck className="h-4 w-4 text-primary" />
@@ -250,7 +268,7 @@ export default function DashboardHomePage() {
           </Card>
         </motion.div>
 
-        {/* NEURAL AGENDA COMMAND BAR (THE DESIGN FROM IMAGE) */}
+        {/* NEURAL AGENDA COMMAND BAR */}
         <motion.section 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
@@ -274,13 +292,11 @@ export default function DashboardHomePage() {
                         <DropdownMenuContent align="start" className="w-64 p-2 rounded-[1.5rem] shadow-3xl glass border-primary/10 mb-4">
                             <DropdownMenuLabel className="px-3 pb-2 text-[9px] font-black uppercase tracking-widest text-primary">Initialize AI Protocol</DropdownMenuLabel>
                             {aiFeatures.map((f) => (
-                                <DropdownMenuItem key={f.href} asChild className="rounded-xl h-12 px-3 cursor-pointer gap-3 focus:bg-primary/10">
-                                    <Link href={f.href}>
-                                        <div className={cn("p-2 rounded-lg", f.bg, f.color)}>
-                                            <f.icon className="h-4 w-4" />
-                                        </div>
-                                        <span className="font-bold text-xs uppercase tracking-tight">{f.title}</span>
-                                    </Link>
+                                <DropdownMenuItem key={f.id} onClick={() => setSelectedTool(f.id)} className="rounded-xl h-12 px-3 cursor-pointer gap-3 focus:bg-primary/10">
+                                    <div className={cn("p-2 rounded-lg", f.bg, f.color)}>
+                                        <f.icon className="h-4 w-4" />
+                                    </div>
+                                    <span className="font-bold text-xs uppercase tracking-tight">{f.title}</span>
                                 </DropdownMenuItem>
                             ))}
                         </DropdownMenuContent>
@@ -316,6 +332,126 @@ export default function DashboardHomePage() {
                 </div>
             </div>
         </motion.section>
+
+        {/* QUICK ACTION DIALOG */}
+        <Dialog open={!!selectedTool} onOpenChange={(o) => { if(!o) setSelectedTool(null); }}>
+            <DialogContent className="sm:max-w-xl rounded-[2.5rem] p-0 overflow-hidden border-none shadow-3xl bg-card text-left">
+                <DialogHeader className="p-8 pb-4 bg-primary/5 border-b border-primary/5 text-left">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-3 text-primary">
+                            {selectedTool === 'strength' && <BrainCircuit className="h-6 w-6" />}
+                            {selectedTool === 'intel' && <Search className="h-6 w-6" />}
+                            {selectedTool === 'draft' && <FileText className="h-6 w-6" />}
+                            {selectedTool === 'bond' && <FileSignature className="h-6 w-6" />}
+                            <DialogTitle className="text-2xl font-black tracking-tighter uppercase leading-none">
+                                {aiFeatures.find(f => f.id === selectedTool)?.title} Ingress
+                            </DialogTitle>
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={() => setSelectedTool(null)} className="h-8 w-8 rounded-full">
+                            <X className="h-4 w-4" />
+                        </Button>
+                    </div>
+                    <DialogDescription className="text-xs font-medium uppercase tracking-widest opacity-60">
+                        Initialize forensic node for immediate statutory reporting.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <div className="p-8 sm:p-10 space-y-8 text-left">
+                    {selectedTool === 'strength' && (
+                        <div className="space-y-6">
+                            <div className="space-y-3">
+                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Case Narrative</Label>
+                                <Textarea placeholder="Describe your legal situation in detail..." rows={5} className="glass rounded-2xl font-medium text-sm p-4 shadow-inner" />
+                            </div>
+                            <div className="space-y-3">
+                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Language Node</Label>
+                                <Select defaultValue="English">
+                                    <SelectTrigger className="h-12 glass font-bold rounded-xl"><SelectValue /></SelectTrigger>
+                                    <SelectContent className="rounded-xl glass">
+                                        <SelectItem value="English" className="font-bold">English Protocol</SelectItem>
+                                        <SelectItem value="Hindi" className="font-bold">Hindi Protocol</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                    )}
+
+                    {selectedTool === 'intel' && (
+                        <div className="space-y-6">
+                            <div className="space-y-3">
+                                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Instrument Node</Label>
+                                <div className="relative group">
+                                    <div className="absolute inset-0 bg-primary/5 rounded-2xl border-2 border-dashed border-primary/10 pointer-events-none"></div>
+                                    <Input type="file" onChange={handleFileChange} className="h-32 opacity-0 cursor-pointer relative z-10" />
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 pointer-events-none">
+                                        <FileUp className="h-8 w-8 text-primary opacity-40 group-hover:scale-110 transition-transform" />
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                                            {fileName || "Select Statutory File"}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {selectedTool === 'draft' && (
+                        <div className="grid sm:grid-cols-2 gap-6">
+                            <div className="space-y-3">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Draft Type</Label>
+                                <Select defaultValue="Notice">
+                                    <SelectTrigger className="h-12 glass font-bold rounded-xl"><SelectValue /></SelectTrigger>
+                                    <SelectContent className="rounded-xl glass">
+                                        <SelectItem value="Notice" className="font-bold">Legal Notice</SelectItem>
+                                        <SelectItem value="Complaint" className="font-bold">Police Complaint</SelectItem>
+                                        <SelectItem value="FIR" className="font-bold">FIR Application</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-3">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Author Name</Label>
+                                <Input placeholder="Rajesh Kumar" className="h-12 glass font-bold rounded-xl" />
+                            </div>
+                            <div className="sm:col-span-2 space-y-3">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Case Summary</Label>
+                                <Textarea placeholder="Core facts for the document..." className="glass rounded-2xl font-medium text-sm p-4" />
+                            </div>
+                        </div>
+                    )}
+
+                    {selectedTool === 'bond' && (
+                        <div className="space-y-6">
+                            <div className="grid sm:grid-cols-2 gap-6">
+                                <div className="space-y-3">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Bond Category</Label>
+                                    <Select defaultValue="Bail">
+                                        <SelectTrigger className="h-12 glass font-bold rounded-xl"><SelectValue /></SelectTrigger>
+                                        <SelectContent className="rounded-xl glass">
+                                            <SelectItem value="Bail" className="font-bold">Bail Bond</SelectItem>
+                                            <SelectItem value="Personal" className="font-bold">Personal Bond</SelectItem>
+                                            <SelectItem value="Surety" className="font-bold">Surety Bond</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-3">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Case No.</Label>
+                                    <Input placeholder="OS 123/2024" className="h-12 glass font-bold rounded-xl" />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="pt-6 border-t border-primary/10 flex flex-col sm:flex-row gap-4">
+                        <Button variant="outline" className="flex-1 h-14 font-black uppercase tracking-widest text-[10px] rounded-xl border-primary/10" onClick={() => setSelectedTool(null)}>
+                            Abort Protocol
+                        </Button>
+                        <Button className="flex-1 h-14 font-black uppercase tracking-[0.2em] text-[10px] rounded-xl shadow-xl shadow-primary/20 active:scale-95 group overflow-hidden relative" onClick={handleLaunchFullTool}>
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                            Initialize Audit
+                        </Button>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
 
         <div className="grid lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 space-y-10">
