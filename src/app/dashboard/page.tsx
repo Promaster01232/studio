@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,9 @@ import {
   Lightbulb,
   Newspaper,
   MessageCircle,
-  BadgeCheck
+  BadgeCheck,
+  Plus,
+  ChevronDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -53,7 +56,8 @@ import {
   updateDoc, 
   increment, 
   arrayUnion, 
-  arrayRemove
+  arrayRemove,
+  deleteDoc
 } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -61,6 +65,22 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/logo";
 import { useSoundEffect } from "@/hooks/use-sound-effect";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const ADMIN_EMAILS = [
+  'enterspaceindia@gmail.com', 
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
+];
+
+const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
 
 interface Post {
     id: string;
@@ -82,6 +102,30 @@ const aiFeatures = [
     { href: "/dashboard/document-generator", icon: FileText, title: "Statutory Drafting", desc: "Generate professional legal notices.", color: "text-emerald-600", bg: "bg-emerald-500/10" },
     { href: "/dashboard/bond-generator", icon: FileSignature, title: "Bond Protocol", desc: "Official bail and indemnity bonds.", color: "text-purple-600", bg: "bg-purple-500/10" },
 ];
+
+function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
+    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
+    const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
+    const fallback = post.isAnonymous ? 'A' : (authorName?.charAt(0) || '');
+
+    return (
+        <Link href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} className={cn("flex items-center gap-3", post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer")}>
+            <Avatar className="h-10 w-10 border border-primary/10 shadow-lg rounded-xl">
+                {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
+                <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 text-left">
+                <div className="flex items-center gap-1.5">
+                    <p className="font-black text-xs tracking-tight">{authorName}</p>
+                    {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
+                </div>
+                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-40">
+                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
+                </p>
+            </div>
+        </Link>
+    );
+}
 
 export default function DashboardHomePage() {
   const [text, setText] = useState('');
@@ -139,7 +183,6 @@ export default function DashboardHomePage() {
       setJargonReport(null);
       playSound('scan');
       
-      // Simulate High-Fidelity Forensic Processing
       setTimeout(() => {
           setIsProcessingJargon(false);
           setJargonReport({
@@ -207,9 +250,76 @@ export default function DashboardHomePage() {
           </Card>
         </motion.div>
 
+        {/* NEURAL AGENDA COMMAND BAR (THE DESIGN FROM IMAGE) */}
+        <motion.section 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.2 }}
+            className="w-full flex flex-col items-center py-10 space-y-8"
+        >
+            <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground/80">
+                What's on the agenda today?
+            </h2>
+            
+            <div className="w-full max-w-3xl relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/5 to-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                
+                <div className="relative flex items-center bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10 rounded-full h-16 sm:h-20 px-4 sm:px-6 shadow-2xl shadow-black/5">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-10 w-10 sm:h-12 sm:w-12 rounded-full hover:bg-muted/50 text-muted-foreground hover:text-primary transition-all active:scale-90">
+                                <Plus className="h-5 w-5 sm:h-6 sm:w-6" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="w-64 p-2 rounded-[1.5rem] shadow-3xl glass border-primary/10 mb-4">
+                            <DropdownMenuLabel className="px-3 pb-2 text-[9px] font-black uppercase tracking-widest text-primary">Initialize AI Protocol</DropdownMenuLabel>
+                            {aiFeatures.map((f) => (
+                                <DropdownMenuItem key={f.href} asChild className="rounded-xl h-12 px-3 cursor-pointer gap-3 focus:bg-primary/10">
+                                    <Link href={f.href}>
+                                        <div className={cn("p-2 rounded-lg", f.bg, f.color)}>
+                                            <f.icon className="h-4 w-4" />
+                                        </div>
+                                        <span className="font-bold text-xs uppercase tracking-tight">{f.title}</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <div className="flex-1 px-4 text-left">
+                        <Input 
+                            placeholder="Ask anything..." 
+                            className="border-none bg-transparent shadow-none focus-visible:ring-0 text-base sm:text-lg font-medium placeholder:text-muted-foreground/40 p-0 h-full"
+                            value={quickJargon}
+                            onChange={(e) => setQuickJargon(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleQuickAudit()}
+                        />
+                    </div>
+
+                    <div className="flex items-center gap-2 sm:gap-4">
+                        <Button variant="ghost" size="icon" className="h-10 w-10 sm:h-12 sm:w-12 rounded-full text-muted-foreground hover:text-primary active:scale-90 transition-all">
+                            <Mic className="h-5 w-5 sm:h-6 sm:w-6" />
+                        </Button>
+                        <Button className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-black text-white dark:bg-white dark:text-black flex items-center justify-center shadow-lg active:scale-95 transition-all group/wave" onClick={handleQuickAudit}>
+                            <div className="flex gap-0.5">
+                                {[1, 2, 3].map((i) => (
+                                    <motion.div 
+                                        key={i}
+                                        animate={{ height: [4, 12, 4] }}
+                                        transition={{ repeat: Infinity, duration: 0.6, delay: i * 0.1 }}
+                                        className="w-0.5 bg-current rounded-full"
+                                    />
+                                ))}
+                            </div>
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </motion.section>
+
         <div className="grid lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 space-y-10">
-              {/* SECTION: COMMUNITY TRANSMISSIONS (UPPER SIDE) */}
+              {/* SECTION: COMMUNITY TRANSMISSIONS */}
               <section>
                   <div className="flex items-center justify-between mb-6 pb-2 border-b border-primary/5">
                       <div className="flex items-center gap-3 text-primary/60">
