@@ -1,4 +1,3 @@
-
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -13,14 +12,11 @@ import {
   ChevronRight,
   Mail,
   MapPin,
-  Clock,
-  ExternalLink,
-  CheckCircle2
+  CheckCircle2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const summaryPoints = [
@@ -113,12 +109,12 @@ export default function PrivacyPage() {
               <span className="text-[10px] font-black uppercase tracking-[0.4em]">Our Commitment</span>
             </div>
             <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-3xl">
-              This Privacy Notice for <span className="text-foreground font-bold">Hardy Pie</span> ("we," "us," or "our"), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services.
+              This Privacy Notice for <span className="text-foreground font-bold">Nyaya Sahayak</span> ("we," "us," or "our"), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services at <span className="text-primary font-bold">nyayasahayak.in</span>.
             </p>
             <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 flex items-start gap-4">
                 <Info className="h-5 w-5 text-primary mt-0.5 shrink-0" />
                 <p className="text-xs font-medium text-muted-foreground italic">
-                    "If you do not agree with our policies and practices, please do not use our Services. Questions? Contact us at support@ideaspark.com."
+                    "If you do not agree with our policies and practices, please do not use our Services. Questions? Contact us at nyayasahayakhelp@gmail.com."
                 </p>
             </div>
           </CardContent>
@@ -167,16 +163,15 @@ export default function PrivacyPage() {
       {/* Full Document Sections */}
       <div className="space-y-16 pt-10 border-t border-primary/5">
         
-        {/* Section 1 */}
         <section className="space-y-6">
             <h3 className="text-2xl font-black tracking-tight text-primary">1. WHAT INFORMATION DO WE COLLECT?</h3>
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
                 <p className="font-black text-foreground uppercase tracking-widest text-[10px]">Personal information you disclose to us</p>
-                <p>We collect personal information that you voluntarily provide to us when you register on the Services, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us.</p>
+                <p>We collect personal information that you voluntarily provide to us when you register on Nyaya Sahayak, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us.</p>
                 <p>The personal information we collect may include: names, email addresses, usernames, passwords, and contact preferences.</p>
                 
                 <p className="font-black text-foreground uppercase tracking-widest text-[10px] pt-4">Information automatically collected</p>
-                <p>We automatically collect certain information when you visit, use, or navigate the Services. This includes device and usage information, such as your IP address, browser and device characteristics, operating system, language preferences, and referral URLs. This data is primarily used for the security and operation of our Services.</p>
+                <p>We automatically collect certain information when you visit, use, or navigate nyayasahayak.in. This includes device and usage information, such as your IP address, browser and device characteristics, operating system, language preferences, and referral URLs. This data is primarily used for the security and operation of our Services.</p>
                 <div className="grid gap-4 sm:grid-cols-2 mt-4">
                     <div className="p-4 rounded-xl bg-muted/30 border border-primary/5">
                         <p className="text-[10px] font-black uppercase text-primary mb-1">Google & Firebase Analytics</p>
@@ -190,11 +185,10 @@ export default function PrivacyPage() {
             </div>
         </section>
 
-        {/* Section 2 */}
         <section className="space-y-6">
             <h3 className="text-2xl font-black tracking-tight text-primary">2. HOW DO WE PROCESS YOUR INFORMATION?</h3>
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                <p>We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. Key reasons include:</p>
+                <p>We process your information to provide, improve, and administer Nyaya Sahayak, communicate with you, for security and fraud prevention, and to comply with law. Key reasons include:</p>
                 <ul className="list-none space-y-3">
                     {[
                         "To facilitate account creation and authentication.",
@@ -216,19 +210,17 @@ export default function PrivacyPage() {
             </div>
         </section>
 
-        {/* Section 6 */}
         <section className="space-y-6">
             <h3 className="text-2xl font-black tracking-tight text-primary">6. DO WE OFFER ARTIFICIAL INTELLIGENCE-BASED PRODUCTS?</h3>
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
-                <p>We offer products, features, or tools powered by artificial intelligence, machine learning, or similar technologies (collectively, "AI Products"). These tools are designed to enhance your experience and provide you with innovative solutions.</p>
+                <p>Nyaya Sahayak offers products, features, or tools powered by artificial intelligence (collectively, "AI Products"). These tools are designed to enhance your experience and provide you with innovative solutions.</p>
                 <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10">
                     <p className="font-bold text-foreground mb-3">Use of AI Technologies</p>
-                    <p>We provide the AI Products through third-party service providers, including Google Cloud AI. As outlined in this notice, your input, output, and personal information will be shared with and processed by these providers to enable the functionality of our AI bots.</p>
+                    <p>We provide the AI Products through third-party service providers, including Google Cloud AI. Your input and output data will be shared with and processed by these providers strictly to enable bot functionality, governed by this Privacy Notice.</p>
                 </div>
             </div>
         </section>
 
-        {/* Section 13 */}
         <section className="space-y-6">
             <h3 className="text-2xl font-black tracking-tight text-primary">13. DO INDIAN RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</h3>
             <div className="space-y-4 text-sm sm:text-base text-muted-foreground font-medium leading-loose">
@@ -247,12 +239,11 @@ export default function PrivacyPage() {
             </div>
         </section>
 
-        {/* Contact Info */}
         <section className="space-y-8 pt-10 border-t border-primary/5">
             <div className="flex flex-col md:flex-row gap-10">
                 <div className="flex-1 space-y-4">
                     <h3 className="text-2xl font-black tracking-tight">15. HOW CAN YOU CONTACT US?</h3>
-                    <p className="text-sm text-muted-foreground leading-loose">If you have questions or comments about this notice, you may email us at support@ideaspark.com or contact us by post.</p>
+                    <p className="text-sm text-muted-foreground leading-loose">If you have questions or comments about this notice, you may email us at nyayasahayakhelp@gmail.com or contact us by post.</p>
                 </div>
                 <div className="w-full md:w-96 space-y-4">
                     <Card className="p-8 bg-primary/5 border-primary/10 rounded-[2rem] shadow-inner text-left">
@@ -262,7 +253,7 @@ export default function PrivacyPage() {
                                 <div className="space-y-1">
                                     <p className="text-[10px] font-black uppercase text-primary tracking-widest">Statutory Address</p>
                                     <p className="text-xs font-bold leading-relaxed">
-                                        Hardy Pie<br />
+                                        Nyaya Sahayak Terminal<br />
                                         Bariya Chowk, Daltonganj<br />
                                         Jharkhand 822101, India
                                     </p>
@@ -272,7 +263,7 @@ export default function PrivacyPage() {
                                 <Mail className="h-5 w-5 text-primary mt-1 shrink-0" />
                                 <div className="space-y-1">
                                     <p className="text-[10px] font-black uppercase text-primary tracking-widest">Digital Hub</p>
-                                    <p className="text-xs font-bold">support@ideaspark.com</p>
+                                    <p className="text-xs font-bold">nyayasahayakhelp@gmail.com</p>
                                 </div>
                             </div>
                         </div>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -18,7 +17,6 @@ import {
 import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 const summaryPoints = [
@@ -92,7 +90,7 @@ export default function PrivacyPage() {
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8">
         <PageHeader
           title="Privacy Protocol"
-          description="Detailed statutory guidelines on how we process and safeguard your information within the terminal."
+          description="Detailed statutory guidelines on how we process and safeguard your information within the nyayasahayak.in terminal."
         />
         <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Secure Registry Node</Badge>
       </motion.div>
@@ -164,17 +162,17 @@ export default function PrivacyPage() {
                     <div className="space-y-12 text-left">
                         <section className="space-y-4">
                             <h4 className="text-xl font-black tracking-tight text-primary">1. WHAT INFORMATION DO WE COLLECT?</h4>
-                            <p className="text-sm text-muted-foreground leading-loose">We collect personal information that you voluntarily provide to us when you register on the Services, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us. This includes: names, email addresses, usernames, passwords, and contact preferences.</p>
+                            <p className="text-sm text-muted-foreground leading-loose">We collect personal information that you voluntarily provide to us when you register on Nyaya Sahayak, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us. This includes: names, email addresses, usernames, passwords, and contact preferences.</p>
                         </section>
 
                         <section className="space-y-4">
                             <h4 className="text-xl font-black tracking-tight text-primary">2. HOW DO WE PROCESS YOUR INFORMATION?</h4>
-                            <p className="text-sm text-muted-foreground leading-loose">We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. Key purposes include facilitating account creation, protecting vital interests, personalizing content, and preventing spam/abuse.</p>
+                            <p className="text-sm text-muted-foreground leading-loose">We process your information to provide, improve, and administer Nyaya Sahayak, communicate with you, for security and fraud prevention, and to comply with law. Key purposes include facilitating account creation, protecting vital interests, personalizing content, and preventing spam/abuse.</p>
                         </section>
 
                         <section className="space-y-4">
                             <h4 className="text-xl font-black tracking-tight text-primary">6. ARTIFICIAL INTELLIGENCE PRODUCTS</h4>
-                            <p className="text-sm text-muted-foreground leading-loose">As part of our Services, we offer features powered by artificial intelligence (AI). We provide these through providers like Google Cloud AI. Your input and output data will be shared with these providers strictly to enable bot functionality, governed by this Privacy Notice.</p>
+                            <p className="text-sm text-muted-foreground leading-loose">As part of our Services, Nyaya Sahayak offers features powered by artificial intelligence (AI). We provide these through providers like Google Cloud AI. Your input and output data will be shared with these providers strictly to enable bot functionality, governed by this Privacy Notice.</p>
                         </section>
 
                         <section className="space-y-4">
@@ -190,7 +188,7 @@ export default function PrivacyPage() {
                                         <Mail className="h-4 w-4" />
                                         <span className="text-[10px] font-black uppercase tracking-widest">Support Email</span>
                                     </div>
-                                    <p className="text-xs font-bold">support@ideaspark.com</p>
+                                    <p className="text-xs font-bold">nyayasahayakhelp@gmail.com</p>
                                 </div>
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2 text-primary">
@@ -198,8 +196,9 @@ export default function PrivacyPage() {
                                         <span className="text-[10px] font-black uppercase tracking-widest">Mailing Address</span>
                                     </div>
                                     <p className="text-xs font-bold leading-relaxed">
-                                        Hardy Pie, Bariya Chowk,<br />
-                                        Daltonganj, Jharkhand 822101
+                                        Nyaya Sahayak Terminal<br />
+                                        Bariya Chowk, Daltonganj<br />
+                                        Jharkhand 822101, India
                                     </p>
                                 </div>
                             </div>
