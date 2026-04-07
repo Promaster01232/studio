@@ -56,7 +56,7 @@ const itemVariants = {
 
 export default function RefundPolicyPage() {
   return (
-    <div className="max-w-6xl mx-auto space-y-10 pb-20 px-4 text-left">
+    <div className="max-w-6xl mx-auto space-y-10 pb-20 px-2 sm:px-0 text-left">
       <motion.div 
         initial={{ opacity: 0, y: -10 }} 
         animate={{ opacity: 1, y: 0 }}

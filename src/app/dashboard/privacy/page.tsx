@@ -137,7 +137,7 @@ export default function PrivacyPage() {
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/5 border border-purple-500/10">
                   <UserCheck className="h-4 w-4 text-purple-600" />
-                  <span className="text-[10px] font-black uppercase text-purple-600 tracking-widest">Identity Galled</span>
+                  <span className="text-[10px] font-black uppercase text-purple-600 tracking-widest">Identity Protected</span>
                 </div>
               </div>
             </div>
