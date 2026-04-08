@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -34,7 +34,8 @@ import {
   Edit3,
   SquarePen,
   ChevronDown,
-  User
+  User,
+  BadgeCheck
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -72,13 +73,6 @@ const actionChips = [
     { label: "Scan FIR/PDF", icon: Search, href: "/dashboard/document-intelligence" },
     { label: "Bail Helper", icon: ShieldCheck, href: "/dashboard/bail-estimator" },
 ];
-
-const NeuralPulse = () => (
-  <div className="relative flex items-center justify-center h-4 w-4">
-    <div className="absolute h-full w-full rounded-full bg-primary/40 animate-ping" />
-    <div className="relative h-2 w-2 rounded-full bg-primary" />
-  </div>
-);
 
 export default function DashboardHomePage() {
   const auth = useAuth();
@@ -412,7 +406,6 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
-      {/* 5. INSTITUTIONAL FOOTER */}
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30 text-center sm:text-left">
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
