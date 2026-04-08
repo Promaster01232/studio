@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -35,7 +35,8 @@ import {
   SquarePen,
   ChevronDown,
   User,
-  BadgeCheck
+  BadgeCheck,
+  PlusCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -71,7 +72,6 @@ const actionChips = [
     { label: "Explain BNS", icon: Gavel, href: "/dashboard/learn" },
     { label: "Check Success", icon: Scale, href: "/dashboard/strength-analyzer" },
     { label: "Scan FIR/PDF", icon: Search, href: "/dashboard/document-intelligence" },
-    { label: "Bail Helper", icon: ShieldCheck, href: "/dashboard/bail-estimator" },
 ];
 
 export default function DashboardHomePage() {
@@ -95,7 +95,7 @@ export default function DashboardHomePage() {
     }
 
     const postsCol = collection(firestore, "posts");
-    const q = query(postsCol, orderBy("createdAt", "desc"), limit(4));
+    const q = query(postsCol, orderBy("createdAt", "desc"), limit(3));
     
     const unsub = onSnapshot(q, (snap) => {
         const list = snap.docs.map(d => ({ id: d.id, ...d.data() } as Post));
@@ -117,43 +117,48 @@ export default function DashboardHomePage() {
     setTimeout(() => {
         setMessages(prev => [...prev, { 
             role: 'ai', 
-            text: "I am analyzing your query against the latest BNS statutory registry. For a definitive forensic audit of this problem, I recommend utilizing the specialized 'Strength Matrix' or 'Voice Summary' terminals below." 
+            text: "I am analyzing your query against the latest BNS statutory registry. For a definitive forensic audit, I recommend using the specialized terminals below." 
         }]);
         setIsProcessing(false);
     }, 1500);
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 text-left font-body">
+    <div className="max-w-7xl mx-auto space-y-16 py-8 px-4 sm:px-6 text-left font-body">
       
-      {/* 1. GEMINI STYLE HERO SECTION */}
+      {/* 1. HERO SECTION: REDESIGNED AI HUB */}
       <motion.section 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-4xl mx-auto w-full flex flex-col items-center text-center space-y-10 py-12"
+        className="max-w-4xl mx-auto w-full flex flex-col items-center text-center space-y-8 py-12"
       >
-        <div className="flex flex-col items-center gap-4">
-            <div className="flex items-center gap-3 mb-2">
-                <Sparkles className="h-8 w-8 text-primary fill-primary/20 animate-pulse" />
-                <h2 className="text-3xl font-medium text-foreground/60 tracking-tight">Hi {userName}</h2>
+        <div className="space-y-4">
+            <div className="flex items-center justify-center gap-3 mb-2">
+                <div className="p-2 rounded-full bg-primary/10 animate-pulse">
+                    <Sparkles className="h-6 w-6 text-primary fill-primary/20" />
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-medium text-foreground/60 tracking-tight">Hi {userName}</h2>
             </div>
-            <h1 className="text-5xl sm:text-6xl font-medium tracking-tighter text-foreground leading-none">
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tighter text-foreground leading-none uppercase">
                 Where should we start?
             </h1>
         </div>
 
-        <div className="w-full max-w-2xl bg-muted/20 backdrop-blur-xl rounded-[2.5rem] border border-primary/10 shadow-[0_30px_60px_rgba(0,0,0,0.05)] overflow-hidden transition-all hover:border-primary/20 hover:shadow-[0_30px_80px_rgba(0,0,0,0.08)]">
-            <div className="p-6 pb-2 text-left">
-                <span className="text-muted-foreground/40 font-medium text-sm ml-2">Ask Nyaya Sahayak</span>
+        <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-primary/10 shadow-[0_40px_100px_rgba(0,0,0,0.08)] overflow-hidden transition-all hover:border-primary/20 hover:shadow-[0_40px_120px_rgba(0,0,0,0.12)] relative">
+            {/* Design Polish: Subtle Mesh Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+            
+            <div className="p-6 pb-2 text-left relative z-10">
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 ml-3">Nyaya Sahayak AI Hub</span>
             </div>
-            <div className="px-4 pb-4 space-y-4">
+            <div className="px-4 pb-4 space-y-4 relative z-10">
                 <div className="relative">
                     <Input 
                         value={chatInput}
                         onChange={(e) => setChatInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                         placeholder="Consult your legal co-pilot..." 
-                        className="h-14 bg-transparent border-none text-lg font-medium px-4 focus-visible:ring-0 shadow-none placeholder:text-muted-foreground/20"
+                        className="h-16 bg-transparent border-none text-lg font-bold px-6 focus-visible:ring-0 shadow-none placeholder:text-muted-foreground/20"
                     />
                 </div>
                 <div className="flex items-center gap-2">
@@ -161,23 +166,20 @@ export default function DashboardHomePage() {
                         <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-primary/5 text-muted-foreground">
                             <Plus className="h-5 w-5" />
                         </Button>
-                        <Button variant="ghost" className="h-10 px-4 rounded-full gap-2 hover:bg-primary/5 text-muted-foreground font-bold text-[10px] uppercase tracking-widest">
+                        <Button variant="ghost" className="h-10 px-4 rounded-full gap-2 hover:bg-primary/5 text-muted-foreground font-black text-[10px] uppercase tracking-widest">
                             <Layers className="h-4 w-4" /> Tools
                         </Button>
                     </div>
                     <div className="ml-auto flex items-center gap-2">
-                        <Button variant="ghost" size="sm" className="h-10 px-4 rounded-full gap-2 hover:bg-primary/5 text-muted-foreground font-black text-[10px] uppercase tracking-widest hidden sm:flex">
-                            Fast <ChevronDown className="h-3 w-3" />
-                        </Button>
                         <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-primary/5 text-muted-foreground">
                             <Mic className="h-5 w-5" />
                         </Button>
                         <Button 
                             onClick={handleSendMessage}
                             disabled={!chatInput.trim() || isProcessing}
-                            className="h-10 w-10 rounded-full bg-primary text-white shadow-lg active:scale-90 transition-transform"
+                            className="h-12 w-12 rounded-2xl bg-primary text-white shadow-xl active:scale-90 transition-transform group"
                         >
-                            <ArrowRight className="h-5 w-5" />
+                            <ArrowRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
                         </Button>
                     </div>
                 </div>
@@ -192,7 +194,7 @@ export default function DashboardHomePage() {
                     whileTap={{ scale: 0.95 }}
                 >
                     <Link href={chip.href}>
-                        <Badge variant="outline" className="h-11 px-5 rounded-full bg-background/50 hover:bg-primary/5 hover:border-primary/30 cursor-pointer border-primary/5 font-bold text-[11px] text-muted-foreground hover:text-primary transition-all flex items-center gap-2.5 shadow-sm">
+                        <Badge variant="outline" className="h-11 px-6 rounded-full bg-background/50 hover:bg-primary hover:text-white hover:border-primary cursor-pointer border-primary/10 font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-2.5 shadow-sm">
                             <chip.icon className="h-3.5 w-3.5" />
                             {chip.label}
                         </Badge>
@@ -213,13 +215,13 @@ export default function DashboardHomePage() {
                 {messages.map((m, i) => (
                     <div key={i} className={cn("flex gap-4 items-start", m.role === 'user' ? "flex-row-reverse" : "")}>
                         <div className={cn(
-                            "h-8 w-8 rounded-full flex items-center justify-center shrink-0",
-                            m.role === 'ai' ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                            "h-10 w-10 rounded-xl flex items-center justify-center shrink-0 border border-primary/10",
+                            m.role === 'ai' ? "bg-primary/5 text-primary" : "bg-muted text-muted-foreground"
                         )}>
-                            {m.role === 'ai' ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                            {m.role === 'ai' ? <Logo className="h-6 w-6 border-none p-0 shadow-none" priority={false} /> : <User className="h-5 w-5" />}
                         </div>
                         <div className={cn(
-                            "px-6 py-4 rounded-[1.5rem] text-sm font-medium leading-relaxed max-w-[80%]",
+                            "px-6 py-4 rounded-[1.5rem] text-sm font-bold leading-relaxed max-w-[80%] shadow-sm",
                             m.role === 'ai' ? "bg-muted/30 text-foreground" : "bg-primary text-white"
                         )}>
                             {m.text}
@@ -227,7 +229,7 @@ export default function DashboardHomePage() {
                     </div>
                 ))}
                 {isProcessing && (
-                    <div className="flex gap-4 items-center pl-12 text-primary/40">
+                    <div className="flex gap-4 items-center pl-14 text-primary/40">
                         <Loader2 className="h-4 w-4 animate-spin" />
                         <span className="text-[10px] font-black uppercase tracking-[0.4em] animate-pulse">Neural Ingress...</span>
                     </div>
@@ -236,11 +238,88 @@ export default function DashboardHomePage() {
         )}
       </AnimatePresence>
 
-      {/* 3. CORE TOOLS GRID */}
-      <section className="space-y-6 pt-10">
+      {/* 3. COMMUNITY TRANSMISSIONS: NOW SECOND SECTION */}
+      <section className="space-y-8">
+        <div className="flex items-center justify-between border-b border-primary/5 pb-4">
+            <div className="flex items-center gap-3">
+                <div className="p-3 rounded-2xl bg-primary/10 text-primary">
+                    <Newspaper className="h-6 w-6" />
+                </div>
+                <div className="text-left">
+                    <h2 className="text-2xl font-black font-headline tracking-tighter uppercase leading-none">Community Transmissions</h2>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Live statutory ideas from verified citizen nodes.</p>
+                </div>
+            </div>
+            <Button variant="ghost" size="sm" asChild className="h-10 px-6 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/5 border border-primary/5">
+              <Link href="/dashboard/research-analytics">
+                View All Records <ChevronRight className="ml-1 h-4 w-4" />
+              </Link>
+            </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AnimatePresence mode="popLayout">
+                {loading ? (
+                    <div className="col-span-full py-20 flex flex-col items-center justify-center gap-4">
+                        <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">Syncing Registry Nodes...</p>
+                    </div>
+                ) : posts.map((post, idx) => (
+                    <motion.div
+                        key={post.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.1 }}
+                    >
+                        <Link href={`/dashboard/research-analytics`} className="block group h-full">
+                            <Card className="h-full border-primary/10 hover:border-primary/30 transition-all duration-500 rounded-[2.5rem] bg-card/40 backdrop-blur-sm shadow-lg hover:shadow-2xl overflow-hidden relative flex flex-col">
+                                <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary/20 group-hover:bg-primary transition-all" />
+                                <CardHeader className="p-8 pb-4 text-left">
+                                    <div className="flex items-start justify-between mb-6">
+                                        <div className="flex items-center gap-3">
+                                            <Avatar className="h-9 w-9 rounded-xl border border-primary/10 shadow-sm">
+                                                {post.authorAvatar && <AvatarImage src={post.authorAvatar} />}
+                                                <AvatarFallback className="text-[10px] font-black bg-primary/5 text-primary uppercase">{post.isAnonymous ? 'A' : post.authorName.charAt(0)}</AvatarFallback>
+                                            </Avatar>
+                                            <div className="text-left">
+                                                <p className="text-xs font-black tracking-tight">{post.isAnonymous ? 'Identity Masked' : post.authorName}</p>
+                                                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">{post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}</p>
+                                            </div>
+                                        </div>
+                                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
+                                            {post.postType || 'Node'}
+                                        </Badge>
+                                    </div>
+                                    <h3 className="text-lg font-black tracking-tight group-hover:text-primary transition-colors uppercase leading-tight line-clamp-2">{post.title}</h3>
+                                </CardHeader>
+                                <CardContent className="p-8 pt-0 flex-1 text-left">
+                                    <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed font-medium">
+                                        {post.content}
+                                    </p>
+                                </CardContent>
+                                <CardFooter className="p-8 pt-0 flex items-center gap-6">
+                                    <div className="flex items-center gap-2 text-red-500/60 font-black text-[10px]">
+                                        <Heart className="h-4 w-4 fill-current" /> {post.likes}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-primary/60 font-black text-[10px]">
+                                        <MessageCircle className="h-4 w-4" /> Discussion
+                                    </div>
+                                </CardFooter>
+                            </Card>
+                        </Link>
+                    </motion.div>
+                ))}
+            </AnimatePresence>
+        </div>
+      </section>
+
+      {/* 4. FORENSIC TERMINALS: NOW THIRD SECTION */}
+      <section className="space-y-8">
         <div className="flex items-center gap-3 px-1 text-left">
-            <Zap className="h-4 w-4 text-primary" />
-            <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Forensic Terminals</h2>
+            <div className="p-2 rounded-lg bg-blue-500/10">
+                <Zap className="h-5 w-5 text-blue-500" />
+            </div>
+            <h2 className="text-xl font-black uppercase tracking-widest text-foreground font-headline">Forensic Terminals</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {tools.map((tool, i) => (
@@ -254,7 +333,7 @@ export default function DashboardHomePage() {
             >
                 <Link href={tool.href} className="block h-full">
                 <Card className={cn(
-                    "h-full border-primary/5 bg-card/40 backdrop-blur-sm transition-all duration-500 rounded-[2rem] overflow-hidden group-hover:border-primary/20",
+                    "h-full border-primary/5 bg-card/40 backdrop-blur-sm transition-all duration-500 rounded-[2.5rem] overflow-hidden group-hover:border-primary/20",
                     "relative shadow-xl hover:shadow-2xl",
                     tool.glow
                 )}>
@@ -268,12 +347,12 @@ export default function DashboardHomePage() {
                             {tool.desc}
                         </p>
                     </div>
-                    <div className="mt-8 flex items-center justify-between">
+                    <div className="mt-10 flex items-center justify-between">
                         <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-primary/60 group-hover:text-primary transition-colors">
                         Initialize Node
                         </div>
-                        <div className="h-8 w-8 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
-                            <ArrowRight className="h-4 w-4" />
+                        <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                            <ArrowRight className="h-5 w-5" />
                         </div>
                     </div>
                     </CardContent>
@@ -284,140 +363,75 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
-      {/* 4. COMMUNITY FEED & SPARK BANNER */}
-      <div className="grid lg:grid-cols-12 gap-10">
-        <div className="lg:col-span-8 space-y-8">
-          <div className="flex items-center justify-between border-b border-primary/5 pb-4">
-            <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10 text-primary">
-                    <Newspaper className="h-5 w-5" />
+      {/* 5. STATUTORY EXPANSION & SYSTEM STATUS */}
+      <div className="grid lg:grid-cols-12 gap-8 pt-10">
+        <div className="lg:col-span-8">
+            <Card className="bg-primary text-primary-foreground rounded-[3rem] overflow-hidden border-none shadow-3xl shadow-primary/20 group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
+                    <Logo className="h-64 w-64 border-none shadow-none grayscale" />
                 </div>
-                <h2 className="text-xl font-black font-headline tracking-tighter uppercase">Community Transmissions</h2>
-            </div>
-            <Button variant="ghost" size="sm" asChild className="text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/5">
-              <Link href="/dashboard/research-analytics">
-                View All <ChevronRight className="ml-1 h-3.5 w-3.5" />
-              </Link>
-            </Button>
-          </div>
-
-          <div className="grid gap-6">
-            <AnimatePresence mode="popLayout">
-                {loading ? (
-                <div className="py-20 flex flex-col items-center justify-center gap-4">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">Syncing Registry Nodes...</p>
-                </div>
-                ) : posts.map((post, idx) => (
-                <motion.div
-                    key={post.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                >
-                    <Link href={`/dashboard/research-analytics`} className="block group">
-                        <Card className="border-primary/5 hover:border-primary/20 transition-all duration-500 rounded-[2.5rem] bg-card/40 backdrop-blur-sm shadow-lg hover:shadow-2xl overflow-hidden relative">
-                            <div className="absolute top-0 left-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-all" />
-                            <CardContent className="p-8 text-left">
-                                <div className="flex items-start justify-between mb-6">
-                                    <div className="flex items-center gap-4">
-                                        <Avatar className="h-10 w-10 rounded-xl border border-primary/10 shadow-sm">
-                                            {post.authorAvatar && <AvatarImage src={post.authorAvatar} />}
-                                            <AvatarFallback className="text-[10px] font-black bg-primary/5 text-primary uppercase">{post.isAnonymous ? 'A' : post.authorName.charAt(0)}</AvatarFallback>
-                                        </Avatar>
-                                        <div className="text-left space-y-0.5">
-                                            <p className="text-xs font-black tracking-tight">{post.isAnonymous ? 'Identity Masked' : post.authorName}</p>
-                                            <div className="flex items-center gap-2">
-                                                <Clock className="h-2.5 w-2.5 text-muted-foreground opacity-40" />
-                                                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">{post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
-                                        {post.postType || 'Statutory Node'}
-                                    </Badge>
-                                </div>
-                                <h3 className="text-xl font-black tracking-tight mb-3 group-hover:text-primary transition-colors uppercase leading-none">{post.title}</h3>
-                                <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed font-medium mb-6">
-                                    {post.content}
-                                </p>
-                                <div className="flex items-center gap-6 pt-6 border-t border-primary/5">
-                                    <div className="flex items-center gap-2 text-red-500/60 font-black text-[10px]">
-                                        <Heart className="h-4 w-4 fill-current" /> {post.likes}
-                                    </div>
-                                    <div className="flex items-center gap-2 text-primary/60 font-black text-[10px]">
-                                        <MessageCircle className="h-4 w-4" /> Discussion Active
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </Link>
-                </motion.div>
-                ))}
-            </AnimatePresence>
-          </div>
+                <CardContent className="p-10 sm:p-16 flex flex-col md:flex-row items-center gap-12 relative z-10 text-center md:text-left">
+                    <div className="space-y-6 flex-1">
+                        <div className="space-y-3">
+                            <div className="flex items-center justify-center md:justify-start gap-2">
+                                <Zap className="h-5 w-5 text-amber-400 fill-amber-400" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60">Statutory Expansion</span>
+                            </div>
+                            <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter uppercase leading-[0.9]">Elevate Your <br /> <span className="italic opacity-80">Authority.</span></h3>
+                            <p className="text-sm sm:text-lg opacity-80 font-medium leading-relaxed max-w-lg">
+                                Unlock unlimited AI forensic scans, professional document drafting, and root access to the legal registry.
+                            </p>
+                        </div>
+                        <Button variant="secondary" className="w-full md:w-auto font-black uppercase tracking-widest text-[10px] rounded-2xl h-14 px-12 shadow-2xl active:scale-95 transition-all" asChild>
+                            <Link href="/dashboard/billing">Upgrade Registry Node</Link>
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
 
-        <div className="lg:col-span-4 space-y-10">
-          <Card className="bg-primary text-primary-foreground rounded-[2.5rem] overflow-hidden border-none shadow-2xl shadow-primary/20 group relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-            <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
-                <Logo className="h-40 w-40 border-none shadow-none grayscale" />
-            </div>
-            <CardContent className="p-10 space-y-8 relative z-10 text-left">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                    <Zap className="h-5 w-5 text-amber-400 fill-amber-400" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60">Statutory Expansion</span>
+        <div className="lg:col-span-4">
+            <Card className="border-primary/5 bg-muted/20 rounded-[3rem] shadow-sm overflow-hidden h-full flex flex-col">
+                <CardHeader className="p-8 pb-4 border-b border-primary/5 bg-primary/5 text-left">
+                    <div className="flex items-center gap-3">
+                        <ShieldCheck className="h-5 w-5 text-primary" />
+                        <CardTitle className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">Neural Matrix Status</CardTitle>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-8 space-y-8 text-left flex-1 flex flex-col justify-center">
+                    <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                        <span className="flex items-center gap-3 text-muted-foreground"><Activity className="h-4 w-4 text-green-500" /> AI Core Node</span>
+                        <span className="text-green-500">Synchronized</span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                        <span className="flex items-center gap-3 text-muted-foreground"><Clock className="h-4 w-4 text-blue-500" /> Global Latency</span>
+                        <span className="text-foreground">42ms Optimal</span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                        <span className="flex items-center gap-3 text-muted-foreground"><ShieldCheck className="h-4 w-4 text-indigo-500" /> Statutory Guard</span>
+                        <span className="text-foreground">AES-256 Active</span>
+                    </div>
+                </CardContent>
+                <div className="p-6 bg-primary/5 border-t border-primary/5 text-center">
+                    <p className="text-[8px] font-black uppercase tracking-[0.5em] text-primary/40">Registry Validated // Network Optimized</p>
                 </div>
-                <h3 className="text-3xl font-black font-headline tracking-tighter uppercase leading-tight">Elevate Your <br /> <span className="italic">Authority.</span></h3>
-                <p className="text-sm opacity-80 font-medium leading-relaxed">
-                    Unlock unlimited AI forensic scans, professional document drafting, and root access.
-                </p>
-              </div>
-              <Button variant="secondary" className="w-full font-black uppercase tracking-widest text-[10px] rounded-2xl h-14 shadow-2xl active:scale-95 transition-all" asChild>
-                <Link href="/dashboard/billing">Upgrade Node</Link>
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-primary/5 bg-muted/20 rounded-[2.5rem] shadow-sm overflow-hidden">
-            <CardHeader className="p-8 pb-4 border-b border-primary/5 bg-primary/5 text-left">
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="h-5 w-5 text-primary" />
-                <CardTitle className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">Neural Matrix Status</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="p-8 space-y-6 text-left">
-              <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                <span className="flex items-center gap-3 text-muted-foreground"><Activity className="h-4 w-4 text-green-500" /> AI Core Node</span>
-                <span className="text-green-500">Synchronized</span>
-              </div>
-              <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                <span className="flex items-center gap-3 text-muted-foreground"><Clock className="h-4 w-4 text-blue-500" /> Network Latency</span>
-                <span className="text-foreground">42ms Optimal</span>
-              </div>
-              <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                <span className="flex items-center gap-3 text-muted-foreground"><ShieldCheck className="h-4 w-4 text-indigo-500" /> Statutory Guard</span>
-                <span className="text-foreground">AES-256 Active</span>
-              </div>
-            </CardContent>
-          </Card>
+            </Card>
         </div>
       </div>
 
-      <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30 text-center sm:text-left">
+      <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
+        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // TERMINAL HUB // 2025</p>
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4" />
-                <span className="text-[9px] font-black uppercase tracking-widest">Registry Validated</span>
+                <span className="text-[9px] font-black uppercase tracking-widest">Secured</span>
             </div>
             <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4" />
-                <span className="text-[9px] font-black uppercase tracking-widest">Network Optimized</span>
+                <span className="text-[9px] font-black uppercase tracking-widest">Live Node</span>
             </div>
         </div>
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // TERMINAL HUB</p>
       </div>
     </div>
   );
