@@ -70,7 +70,7 @@ export default function DocumentGeneratorPage() {
     if (state.status === 'success' && state.data) {
       setEditedContent(state.data.document);
       setIsEditing(false);
-      // Kinetic Scroll to the report node
+      // Kinetic scroll to the report area
       setTimeout(() => {
         reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 300);
@@ -123,15 +123,15 @@ export default function DocumentGeneratorPage() {
       doc.text(lines, 20, 40);
       
       doc.save(`${title.replace(/[\s/]/g, '-')}.pdf`);
-      toast({ title: "Statutory PDF Ready", description: "Document saved to local storage." });
+      toast({ title: "Statutory PDF ready", description: "Document saved to local storage." });
     } catch (e) { 
-        toast({ variant: "destructive", title: "Export Failed", description: "PDF generation engine encountered an error." }); 
+        toast({ variant: "destructive", title: "Export failed", description: "PDF generation engine encountered an error." }); 
     }
   };
 
   const handleSave = () => {
       setIsEditing(false);
-      toast({ title: "Draft Synchronized", description: "Changes saved to active registry session." });
+      toast({ title: "Draft synchronized", description: "Changes saved to active registry session." });
   };
 
   const handleReset = () => {
@@ -142,17 +142,17 @@ export default function DocumentGeneratorPage() {
     <div className="space-y-8 max-w-7xl mx-auto pb-32 px-4 sm:px-0 text-left">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6 text-left">
         <PageHeader
-          title="Drafting Terminal"
+          title="Drafting terminal"
           description="Initialize professional legal instruments with high-fidelity AI assistance."
         />
         <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
           <Link href="/dashboard">
-            <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Dashboard
+            <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to dashboard
           </Link>
         </Button>
       </motion.div>
       
-      {/* SECTION 1: INGRESS FORM */}
+      {/* Section 1: Ingress Form */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -162,7 +162,7 @@ export default function DocumentGeneratorPage() {
           <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
             <div className="flex items-center gap-3 mb-2 text-primary">
                 <Zap className="h-5 w-5" />
-                <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument Setup</CardTitle>
+                <CardTitle className="text-xl font-black tracking-tight uppercase">Instrument setup</CardTitle>
             </div>
             <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize statutory conditions for your legal draft.</CardDescription>
           </CardHeader>
@@ -170,7 +170,7 @@ export default function DocumentGeneratorPage() {
             <form action={formAction} className="space-y-10 text-left">
               <div className="grid sm:grid-cols-2 gap-8">
                 <div className="space-y-3 text-left">
-                  <Label htmlFor="documentType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory Type</Label>
+                  <Label htmlFor="documentType" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Statutory type</Label>
                   <Select name="documentType" required value={documentType} onValueChange={setDocumentType}>
                     <SelectTrigger id="documentType" className="h-12 glass border-primary/5 font-bold rounded-xl">
                       <SelectValue placeholder="Select type" />
@@ -185,7 +185,7 @@ export default function DocumentGeneratorPage() {
                   </Select>
                 </div>
                 <div className="space-y-3 text-left">
-                  <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect Registry</Label>
+                  <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3 w-3" /> Dialect registry</Label>
                   <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
                     <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl">
                       <SelectValue />
@@ -201,17 +201,17 @@ export default function DocumentGeneratorPage() {
 
               <div className="space-y-8">
                   <div className="space-y-6">
-                      <FormSectionTitle>Author/Sender Node</FormSectionTitle>
+                      <FormSectionTitle>Author / sender entry</FormSectionTitle>
                       <div className="grid sm:grid-cols-2 gap-6">
                           <div className="space-y-2 text-left">
-                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Full Name</Label>
+                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Full name</Label>
                               <div className="relative">
                                   <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
                                   <Input name="senderName" placeholder="e.g., Rajesh Kumar" required className="h-12 glass font-bold pl-12 rounded-xl" />
                               </div>
                           </div>
                           <div className="space-y-2 text-left">
-                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Full Address</Label>
+                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Full address</Label>
                               <div className="relative">
                                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
                                   <Input name="senderAddress" placeholder="Permanent or current address..." required className="h-12 glass font-bold pl-12 rounded-xl" />
@@ -220,7 +220,7 @@ export default function DocumentGeneratorPage() {
                       </div>
                       {documentType === 'Legal Notice' && (
                           <div className="space-y-2 text-left">
-                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Contact Node (Mobile)</Label>
+                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Contact access (Mobile)</Label>
                               <div className="relative">
                                   <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
                                   <Input name="senderMobile" placeholder="e.g., +91 98765 43210" className="h-12 glass font-bold pl-12 rounded-xl" />
@@ -230,14 +230,14 @@ export default function DocumentGeneratorPage() {
                   </div>
 
                   <div className="space-y-6">
-                      <FormSectionTitle>Opposing Node / Authority</FormSectionTitle>
+                      <FormSectionTitle>Opposing entry / Authority</FormSectionTitle>
                       <div className="grid sm:grid-cols-2 gap-6">
                           <div className="space-y-2 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Recipient/Dept. Name</Label>
                               <Input name="recipientName" placeholder="Person, Company, or Govt Dept." required={documentType !== 'Police Complaint' && documentType !== 'FIR Application'} className="h-12 glass font-bold rounded-xl" />
                           </div>
                           <div className="space-y-2 text-left">
-                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Recipient/Office Address</Label>
+                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Recipient/Office address</Label>
                               <Input name="recipientAddress" placeholder="Official or residence address..." required className="h-12 glass font-bold rounded-xl" />
                           </div>
                       </div>
@@ -245,7 +245,7 @@ export default function DocumentGeneratorPage() {
 
                   { (documentType === 'Police Complaint' || documentType === 'FIR Application') && (
                       <div className="space-y-6">
-                          <FormSectionTitle>Incident Context</FormSectionTitle>
+                          <FormSectionTitle>Incident context</FormSectionTitle>
                           <div className="grid sm:grid-cols-2 gap-6">
                               <div className="space-y-2 text-left">
                                   <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Date & Time</Label>
@@ -255,12 +255,12 @@ export default function DocumentGeneratorPage() {
                                   </div>
                               </div>
                               <div className="space-y-2 text-left">
-                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Place of Incident</Label>
+                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Place of incident</Label>
                                   <Input name="incidentPlace" placeholder="Specific location..." required className="h-12 glass font-bold rounded-xl" />
                               </div>
                           </div>
                           <div className="space-y-2 text-left">
-                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Accused Details (If known)</Label>
+                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Accused details (If known)</Label>
                               <Input name="accusedDetails" placeholder="Name, description, or vehicle number..." className="h-12 glass font-bold rounded-xl" />
                           </div>
                       </div>
@@ -268,21 +268,21 @@ export default function DocumentGeneratorPage() {
 
                   { documentType === 'Consumer Complaint' && (
                       <div className="space-y-6">
-                          <FormSectionTitle>Transaction Ledger</FormSectionTitle>
+                          <FormSectionTitle>Transaction ledger</FormSectionTitle>
                           <Input name="productDetails" placeholder="Product Name, Invoice No., Price Paid" required className="h-12 glass font-bold rounded-xl" />
                       </div>
                   )}
 
                   <div className="space-y-6">
-                      <FormSectionTitle>Forensic Narrative & Redress</FormSectionTitle>
+                      <FormSectionTitle>Forensic narrative & redress</FormSectionTitle>
                       <div className="space-y-4">
                           <div className="space-y-2 text-left">
-                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Chronological Facts</Label>
+                              <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Chronological facts</Label>
                               <Textarea name="caseDetails" placeholder="State the sequence of events clearly..." rows={6} required className="glass rounded-[1.5rem] font-medium text-base p-6 shadow-inner min-h-[150px]" />
                           </div>
                           { documentType !== 'RTI Application' && (
                               <div className="space-y-2 text-left">
-                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Relief/Remedy Requested</Label>
+                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Relief/Remedy requested</Label>
                                   <div className="relative">
                                       <AlertTriangle className="absolute left-4 top-6 h-4 w-4 text-primary opacity-40" />
                                       <Textarea name="remedySought" placeholder="What specific action do you want the recipient to take? (e.g., Refund ₹5000, Issue apology, Register FIR)" required className="glass rounded-[1.5rem] font-medium text-base p-6 pl-12 shadow-inner min-h-[100px]" />
@@ -296,9 +296,9 @@ export default function DocumentGeneratorPage() {
               <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[1.5rem] mt-8 group overflow-hidden relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 {state.status === 'loading' ? (
-                    <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Deconstructing Facts...</>
+                    <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Deconstructing facts...</>
                 ) : (
-                    <><FileText className="mr-3 h-5 w-5" /> Initialize Statutory Draft</>
+                    <><FileText className="mr-3 h-5 w-5" /> Initialize statutory draft</>
                 )}
               </Button>
             </form>
@@ -306,11 +306,11 @@ export default function DocumentGeneratorPage() {
         </Card>
       </motion.div>
 
-      {/* SECTION 2: ALWAYS VISIBLE REPORT CARD */}
+      {/* Section 2: Always Visible Report Card */}
       <div ref={reportRef} className="space-y-8 scroll-mt-20">
         <div className="flex flex-col items-center gap-4 mb-4">
             <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
-            <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Statutory Report Node</Badge>
+            <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Statutory report</Badge>
         </div>
 
         <Card className="glass border-primary/20 shadow-3xl overflow-hidden rounded-[3rem] relative min-h-[600px] flex flex-col">
@@ -331,7 +331,7 @@ export default function DocumentGeneratorPage() {
                             )}>
                                 <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
                                 <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", state.status === 'success' ? "text-white" : "text-primary")}>
-                                    Official AI Report Node
+                                    Official AI report
                                 </span>
                             </div>
                             <Badge variant="outline" className={cn(
@@ -342,19 +342,19 @@ export default function DocumentGeneratorPage() {
                             </Badge>
                             {state.isSimulated && (
                                 <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest px-4 py-1.5">
-                                    <Cpu className="h-3 w-3 mr-1.5" /> Local Node Fallback
+                                    <Cpu className="h-3 w-3 mr-1.5" /> Local system fallback
                                 </Badge>
                             )}
                         </div>
                         <div className="space-y-2">
                             <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
-                                {state.status === 'success' ? <><span className="italic opacity-80">Draft Node</span> Ready.</> : "Awaiting Ingress"}
+                                {state.status === 'success' ? <><span className="italic opacity-80">Draft entry</span> ready.</> : "Awaiting ingress"}
                             </CardTitle>
                             <p className={cn(
                                 "text-[10px] font-bold uppercase tracking-[0.4em] flex items-center gap-3",
                                 state.status === 'success' ? "text-white/60" : "text-muted-foreground"
                             )}>
-                                <Globe className="h-4 w-4" /> Registry: {documentType} // Forensic Dialect Node
+                                <Globe className="h-4 w-4" /> Registry: {documentType} // Forensic dialect node
                             </p>
                         </div>
                     </div>
@@ -367,7 +367,7 @@ export default function DocumentGeneratorPage() {
                                 onClick={handleReset}
                                 className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl"
                             >
-                                <PlusCircle className="h-4 w-4" /> New Draft
+                                <PlusCircle className="h-4 w-4" /> New draft
                             </Button>
                             <Button 
                                 variant="secondary" 
@@ -375,7 +375,7 @@ export default function DocumentGeneratorPage() {
                                 onClick={() => isEditing ? handleSave() : setIsEditing(true)} 
                                 className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl"
                             >
-                                {isEditing ? <><Save className="h-4 w-4" /> Save Registry</> : <><Edit3 className="h-4 w-4" /> Protocol Edit</>}
+                                {isEditing ? <><Save className="h-4 w-4" /> Save registry</> : <><Edit3 className="h-4 w-4" /> Protocol edit</>}
                             </Button>
                             <Button 
                                 variant="secondary" 
@@ -415,7 +415,7 @@ export default function DocumentGeneratorPage() {
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Deconstructing Facts...</p>
+                                <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Deconstructing facts...</p>
                                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Initializing forensic document engine // BNS-V4.2 Ingress</p>
                             </div>
                         </motion.div>
@@ -436,11 +436,11 @@ export default function DocumentGeneratorPage() {
                                     <div className="max-w-4xl mx-auto space-y-10 relative z-10">
                                         <div className="flex justify-between items-start border-b-2 border-primary/10 pb-8 mb-8">
                                             <div className="space-y-1 text-left">
-                                                <p className="text-[9px] font-black uppercase text-primary/40 tracking-widest leading-none">Draft Node Ingress</p>
+                                                <p className="text-[9px] font-black uppercase text-primary/40 tracking-widest leading-none">Draft entry ingress</p>
                                                 <p className="text-xs font-mono font-bold text-primary">NS-DRAFT-{Math.random().toString(36).substring(7).toUpperCase()}</p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest leading-none">Audit Timestamp</p>
+                                                <p className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest leading-none">Audit timestamp</p>
                                                 <p className="text-xs font-bold flex items-center justify-end gap-2 mt-1">
                                                     <Clock className="h-3 w-3 text-primary" /> {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                                                 </p>
@@ -451,7 +451,7 @@ export default function DocumentGeneratorPage() {
                                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 text-left">
                                                 <div className="flex items-center gap-2 text-primary mb-4">
                                                     <Edit3 className="h-4 w-4" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">Workspace Protocol Active</span>
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">Workspace protocol active</span>
                                                 </div>
                                                 <Textarea 
                                                     value={editedContent}
@@ -474,8 +474,8 @@ export default function DocumentGeneratorPage() {
                                                     <ShieldCheck className="h-6 w-6" />
                                                 </div>
                                                 <div className="text-left">
-                                                    <p className="text-[10px] font-black uppercase tracking-widest">Statutory Security</p>
-                                                    <p className="text-[9px] font-bold">This node is protected under attorney-client transience protocols.</p>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest">Statutory security</p>
+                                                    <p className="text-[9px] font-bold">This entry is protected under attorney-client transience protocols.</p>
                                                 </div>
                                             </div>
                                             <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // TERMINAL NS-DRAFT</p>
@@ -490,13 +490,13 @@ export default function DocumentGeneratorPage() {
                                 <AlertTriangle className="h-10 w-10" />
                             </div>
                             <div className="space-y-2 text-center">
-                                <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Draft Node Error</h3>
+                                <h3 className="text-2xl font-black uppercase tracking-tight text-destructive">Draft entry error</h3>
                                 <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md mx-auto px-4">
                                     {state.error}
                                 </p>
                             </div>
                             <Button onClick={handleReset} variant="outline" className="rounded-xl font-bold h-12 px-10 border-destructive/20 text-destructive hover:bg-destructive/5 active:scale-95 transition-all">
-                                <X className="mr-2 h-4 w-4" /> Clear Protocol
+                                <X className="mr-2 h-4 w-4" /> Clear protocol
                             </Button>
                         </motion.div>
                     ) : (
@@ -513,9 +513,9 @@ export default function DocumentGeneratorPage() {
                                 </div>
                             </div>
                             <div className="space-y-4 max-w-sm px-6 text-center">
-                                <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting Ingress</h3>
+                                <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting ingress</h3>
                                 <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
-                                    Initialize the forensic node by providing the statutory details for neural draft generation.
+                                    Initialize the forensic entry by providing the statutory details for neural draft generation.
                                 </p>
                             </div>
                         </motion.div>
