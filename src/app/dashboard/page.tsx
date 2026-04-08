@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -32,12 +32,14 @@ import {
   FileSearch,
   Scale,
   Edit3,
-  SquarePen
+  SquarePen,
+  ChevronDown,
+  User
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
-import { collection, query, orderBy, limit, onSnapshot, Timestamp } from "firebase/firestore";
+import { collection, query, orderBy, limit, onSnapshot, Timestamp, doc, getDoc } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -63,11 +65,12 @@ const tools = [
     { icon: BrainCircuit, title: "Strength Matrix", desc: "Calculate the probability of case success.", href: "/dashboard/strength-analyzer", color: "text-cyan-500", bg: "bg-cyan-500/5", glow: "shadow-cyan-500/20" },
 ];
 
-const quickActions = [
+const actionChips = [
     { label: "Draft a Notice", icon: FileSignature, href: "/dashboard/document-generator" },
     { label: "Explain BNS", icon: Gavel, href: "/dashboard/learn" },
     { label: "Check Success", icon: Scale, href: "/dashboard/strength-analyzer" },
-    { label: "Scan FIR", icon: Search, href: "/dashboard/document-intelligence" },
+    { label: "Scan FIR/PDF", icon: Search, href: "/dashboard/document-intelligence" },
+    { label: "Bail Helper", icon: ShieldCheck, href: "/dashboard/bail-estimator" },
 ];
 
 const NeuralPulse = () => (
@@ -78,16 +81,25 @@ const NeuralPulse = () => (
 );
 
 export default function DashboardHomePage() {
+  const auth = useAuth();
   const firestore = useFirestore();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [chatInput, setChatInput] = useState("");
-  const [messages, setMessages] = useState([
-    { role: 'ai', text: "Namaste. I am Nyaya Sahayak, your AI legal co-pilot. How can I assist your forensic research today?" }
-  ]);
+  const [userName, setUserName] = useState("Citizen");
+  const [messages, setMessages] = useState<{role: 'user' | 'ai', text: string}[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
+    if (auth.currentUser) {
+        const userRef = doc(firestore, "users", auth.currentUser.uid);
+        getDoc(userRef).then(doc => {
+            if (doc.exists()) {
+                setUserName(doc.data().firstName || "Citizen");
+            }
+        });
+    }
+
     const postsCol = collection(firestore, "posts");
     const q = query(postsCol, orderBy("createdAt", "desc"), limit(4));
     
@@ -98,7 +110,7 @@ export default function DashboardHomePage() {
     }, () => setLoading(false));
     
     return () => unsub();
-  }, [firestore]);
+  }, [firestore, auth.currentUser]);
 
   const handleSendMessage = () => {
     if (!chatInput.trim() || isProcessing) return;
@@ -108,187 +120,130 @@ export default function DashboardHomePage() {
     setChatInput("");
     setIsProcessing(true);
 
-    // Simulate AI Response Node
     setTimeout(() => {
         setMessages(prev => [...prev, { 
             role: 'ai', 
-            text: "Processing query against the latest BNS statutory registry... For a definitive forensic audit of this problem, I recommend using the specialized 'Strength Matrix' or 'Voice Summary' terminals below." 
+            text: "I am analyzing your query against the latest BNS statutory registry. For a definitive forensic audit of this problem, I recommend utilizing the specialized 'Strength Matrix' or 'Voice Summary' terminals below." 
         }]);
         setIsProcessing(false);
     }, 1500);
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-10 py-8 px-4 sm:px-6 text-left font-body">
-      {/* 1. TOP SPARK BANNER - SIMPLE & MODERN ANIMATED DESIGN */}
-      <motion.section
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      >
-        <Card className="border-primary/5 bg-card/40 backdrop-blur-sm shadow-xl rounded-[2rem] overflow-hidden group transition-all hover:shadow-2xl">
-          <CardContent className="p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8 text-left">
-            <div className="flex-1 space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-primary/5 text-primary group-hover:scale-110 transition-transform duration-500 shadow-sm border border-primary/10">
-                  <SquarePen className="h-7 w-7" />
-                </div>
-                <h2 className="text-3xl sm:text-4xl font-black tracking-tighter text-foreground font-headline uppercase leading-none">
-                  Share Your <span className="text-primary italic">Spark.</span>
-                </h2>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm sm:text-base font-bold text-muted-foreground/80 leading-relaxed">
-                  What brilliant idea is on your mind today? Let the community know!
-                </p>
-                <p className="text-[11px] sm:text-xs font-medium text-muted-foreground/60 uppercase tracking-widest leading-relaxed">
-                  Have an idea? Ready to ask a question or start a poll? Let&apos;s get started.
-                </p>
-              </div>
-              <div className="pt-2">
-                <Button asChild className="h-12 px-8 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all group/btn">
-                  <Link href="/dashboard/research-analytics/new">
-                    Share Your Spark <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-            <div className="hidden lg:block relative shrink-0">
-                <div className="absolute -inset-10 bg-primary/5 rounded-full blur-3xl animate-pulse" />
-                <div className="bg-white dark:bg-zinc-900/50 p-10 rounded-[2.5rem] border border-primary/10 shadow-2xl relative z-10 transition-transform group-hover:rotate-3 duration-1000">
-                    <Logo className="h-24 w-24 grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" priority={false} />
-                </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.section>
-
-      {/* 2. WELCOME & STATUS */}
-      <motion.section 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row md:items-end justify-between gap-6"
-      >
-        <div className="space-y-2 text-left">
-          <div className="flex items-center gap-3 mb-1">
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/10 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
-              Terminal Active
-            </Badge>
-            <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-              <NeuralPulse /> Neural Sync: 100%
-            </div>
-          </div>
-          <h1 className="text-3xl font-black font-headline tracking-tighter uppercase leading-none text-foreground opacity-40">
-            Dashboard Hub.
-          </h1>
-        </div>
-        <div className="flex items-center gap-4">
-            <div className="px-4 py-3 rounded-xl bg-muted/30 border border-primary/5 hidden lg:flex items-center gap-4">
-                <Activity className="h-4 w-4 text-primary animate-pulse" />
-                <div className="text-left leading-none">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60">System Latency</p>
-                    <p className="text-[10px] font-black mt-1">42ms Optimal</p>
-                </div>
-            </div>
-        </div>
-      </motion.section>
-
-      {/* 3. HERO AI HUB */}
+    <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 text-left font-body">
+      
+      {/* 1. GEMINI STYLE HERO SECTION */}
       <motion.section 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="max-w-4xl mx-auto w-full"
+        className="max-w-4xl mx-auto w-full flex flex-col items-center text-center space-y-10 py-12"
       >
-        <Card className="border-primary/10 bg-[#0D1B2A] text-white rounded-[2.5rem] overflow-hidden shadow-3xl relative flex flex-col min-h-[500px]">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
-            
-            <CardHeader className="bg-white/5 border-b border-white/5 p-8 relative z-10">
-                <div className="flex items-center gap-4">
-                    <div className="relative">
-                        <div className="p-3 rounded-2xl bg-primary text-white shadow-2xl">
-                            <Bot className="h-6 w-6" />
-                        </div>
-                        <div className="absolute -bottom-1 -right-1 h-3.5 w-3.5 bg-green-500 rounded-full border-2 border-[#0D1B2A] shadow-sm animate-pulse" />
-                    </div>
-                    <div className="text-left">
-                        <CardTitle className="text-2xl font-black tracking-tighter uppercase leading-none">Nyaya Sahayak AI</CardTitle>
-                        <p className="text-[9px] font-bold text-primary/60 uppercase tracking-[0.3em] mt-1.5">Forensic Ingress Active</p>
-                    </div>
-                </div>
-            </CardHeader>
+        <div className="flex flex-col items-center gap-4">
+            <div className="flex items-center gap-3 mb-2">
+                <Sparkles className="h-8 w-8 text-primary fill-primary/20 animate-pulse" />
+                <h2 className="text-3xl font-medium text-foreground/60 tracking-tight">Hi {userName}</h2>
+            </div>
+            <h1 className="text-5xl sm:text-6xl font-medium tracking-tighter text-foreground leading-none">
+                Where should we start?
+            </h1>
+        </div>
 
-            <CardContent className="p-0 flex-grow flex flex-col relative z-10">
-                <div className="flex-grow p-8 space-y-8 overflow-y-auto custom-scrollbar max-h-[350px]">
-                    {messages.map((m, i) => (
-                        <motion.div 
-                            key={i}
-                            initial={{ opacity: 0, x: m.role === 'ai' ? -10 : 10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className={cn(
-                                "flex flex-col max-w-[85%] space-y-2",
-                                m.role === 'user' ? "ml-auto items-end" : "items-start"
-                            )}
+        <div className="w-full max-w-2xl bg-muted/20 backdrop-blur-xl rounded-[2.5rem] border border-primary/10 shadow-[0_30px_60px_rgba(0,0,0,0.05)] overflow-hidden transition-all hover:border-primary/20 hover:shadow-[0_30px_80px_rgba(0,0,0,0.08)]">
+            <div className="p-6 pb-2 text-left">
+                <span className="text-muted-foreground/40 font-medium text-sm ml-2">Ask Nyaya Sahayak</span>
+            </div>
+            <div className="px-4 pb-4 space-y-4">
+                <div className="relative">
+                    <Input 
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                        placeholder="Consult your legal co-pilot..." 
+                        className="h-14 bg-transparent border-none text-lg font-medium px-4 focus-visible:ring-0 shadow-none placeholder:text-muted-foreground/20"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-primary/5 text-muted-foreground">
+                            <Plus className="h-5 w-5" />
+                        </Button>
+                        <Button variant="ghost" className="h-10 px-4 rounded-full gap-2 hover:bg-primary/5 text-muted-foreground font-bold text-[10px] uppercase tracking-widest">
+                            <Layers className="h-4 w-4" /> Tools
+                        </Button>
+                    </div>
+                    <div className="ml-auto flex items-center gap-2">
+                        <Button variant="ghost" size="sm" className="h-10 px-4 rounded-full gap-2 hover:bg-primary/5 text-muted-foreground font-black text-[10px] uppercase tracking-widest hidden sm:flex">
+                            Fast <ChevronDown className="h-3 w-3" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-primary/5 text-muted-foreground">
+                            <Mic className="h-5 w-5" />
+                        </Button>
+                        <Button 
+                            onClick={handleSendMessage}
+                            disabled={!chatInput.trim() || isProcessing}
+                            className="h-10 w-10 rounded-full bg-primary text-white shadow-lg active:scale-90 transition-transform"
                         >
-                            <div className={cn(
-                                "px-6 py-4 rounded-[1.5rem] text-sm font-medium leading-relaxed shadow-lg transition-all",
-                                m.role === 'user' 
-                                    ? "bg-primary text-white rounded-tr-none border border-white/10" 
-                                    : "bg-white/10 backdrop-blur-xl border border-white/5 text-white rounded-tl-none"
-                            )}>
-                                {m.text}
-                            </div>
-                            <span className="text-[8px] font-black uppercase tracking-widest text-white/30 px-2">
-                                {m.role === 'ai' ? 'Institutional AI' : 'Identity Node'}
-                            </span>
-                        </motion.div>
-                    ))}
-                    {isProcessing && (
-                        <div className="flex gap-3 items-center text-primary/60 p-2">
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            <span className="text-[9px] font-black uppercase tracking-[0.4em] animate-pulse">Neural Sync Active...</span>
-                        </div>
-                    )}
-                </div>
-
-                <div className="p-8 bg-white/5 border-t border-white/5">
-                    <div className="max-w-3xl mx-auto space-y-6">
-                        <div className="relative group">
-                            <Input 
-                                value={chatInput}
-                                onChange={(e) => setChatInput(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                                placeholder="How can I help you navigate the law today?" 
-                                className="h-16 bg-[#1B263B] border-white/10 rounded-2xl font-bold text-base pr-16 text-white focus:border-primary transition-all placeholder:text-white/20 px-6 shadow-2xl"
-                            />
-                            <Button 
-                                onClick={handleSendMessage}
-                                disabled={!chatInput.trim() || isProcessing}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 h-12 w-12 rounded-xl bg-primary hover:bg-primary/90 shadow-2xl transition-transform active:scale-90"
-                            >
-                                <Send className="h-5 w-5" />
-                            </Button>
-                        </div>
-
-                        <div className="flex flex-wrap items-center justify-center gap-3">
-                            <span className="text-[9px] font-black uppercase tracking-widest text-white/20 mr-2">Protocols:</span>
-                            {quickActions.map((action, idx) => (
-                                <Link key={idx} href={action.href}>
-                                    <Badge variant="secondary" className="bg-white/5 hover:bg-white/10 text-white/70 border-white/5 cursor-pointer py-2 px-4 rounded-xl font-bold text-[10px] uppercase tracking-tighter transition-all active:scale-95 flex items-center gap-2">
-                                        <action.icon className="h-3 w-3 text-primary" />
-                                        {action.label}
-                                    </Badge>
-                                </Link>
-                            ))}
-                        </div>
+                            <ArrowRight className="h-5 w-5" />
+                        </Button>
                     </div>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-3 max-w-2xl">
+            {actionChips.map((chip, i) => (
+                <motion.div
+                    key={i}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    <Link href={chip.href}>
+                        <Badge variant="outline" className="h-11 px-5 rounded-full bg-background/50 hover:bg-primary/5 hover:border-primary/30 cursor-pointer border-primary/5 font-bold text-[11px] text-muted-foreground hover:text-primary transition-all flex items-center gap-2.5 shadow-sm">
+                            <chip.icon className="h-3.5 w-3.5" />
+                            {chip.label}
+                        </Badge>
+                    </Link>
+                </motion.div>
+            ))}
+        </div>
       </motion.section>
 
-      {/* 4. CORE TOOLS */}
-      <section className="space-y-6">
+      {/* 2. CHAT MESSAGES DISPLAY */}
+      <AnimatePresence>
+        {messages.length > 0 && (
+            <motion.section 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="max-w-3xl mx-auto w-full space-y-6 pt-10 border-t border-primary/5"
+            >
+                {messages.map((m, i) => (
+                    <div key={i} className={cn("flex gap-4 items-start", m.role === 'user' ? "flex-row-reverse" : "")}>
+                        <div className={cn(
+                            "h-8 w-8 rounded-full flex items-center justify-center shrink-0",
+                            m.role === 'ai' ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                        )}>
+                            {m.role === 'ai' ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                        </div>
+                        <div className={cn(
+                            "px-6 py-4 rounded-[1.5rem] text-sm font-medium leading-relaxed max-w-[80%]",
+                            m.role === 'ai' ? "bg-muted/30 text-foreground" : "bg-primary text-white"
+                        )}>
+                            {m.text}
+                        </div>
+                    </div>
+                ))}
+                {isProcessing && (
+                    <div className="flex gap-4 items-center pl-12 text-primary/40">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.4em] animate-pulse">Neural Ingress...</span>
+                    </div>
+                )}
+            </motion.section>
+        )}
+      </AnimatePresence>
+
+      {/* 3. CORE TOOLS GRID */}
+      <section className="space-y-6 pt-10">
         <div className="flex items-center gap-3 px-1 text-left">
             <Zap className="h-4 w-4 text-primary" />
             <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Forensic Terminals</h2>
@@ -335,7 +290,7 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
-      {/* 5. COMMUNITY FEED */}
+      {/* 4. COMMUNITY FEED & SPARK BANNER */}
       <div className="grid lg:grid-cols-12 gap-10">
         <div className="lg:col-span-8 space-y-8">
           <div className="flex items-center justify-between border-b border-primary/5 pb-4">
@@ -409,7 +364,6 @@ export default function DashboardHomePage() {
           </div>
         </div>
 
-        {/* 6. SYSTEM STATUS */}
         <div className="lg:col-span-4 space-y-10">
           <Card className="bg-primary text-primary-foreground rounded-[2.5rem] overflow-hidden border-none shadow-2xl shadow-primary/20 group relative">
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -458,7 +412,7 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
-      {/* 7. INSTITUTIONAL FOOTER */}
+      {/* 5. INSTITUTIONAL FOOTER */}
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30 text-center sm:text-left">
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
