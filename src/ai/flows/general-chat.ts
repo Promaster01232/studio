@@ -9,7 +9,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'kit';
+import { z } from 'genkit';
 
 const GeneralChatInputSchema = z.object({
   query: z.string().describe('The user\'s legal question or statement.'),
