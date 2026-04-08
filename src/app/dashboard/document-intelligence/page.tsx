@@ -85,7 +85,7 @@ export default function DocumentIntelligencePage() {
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
             <PageHeader
             title="Forensic audit"
-            description="Institutional-grade AI deconstruction for statutory instrument risk assessment."
+            description="Institutional AI analysis for legal document risk assessment."
             />
             <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
             <Link href="/dashboard">
@@ -103,14 +103,14 @@ export default function DocumentIntelligencePage() {
                 <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
                     <div className="flex items-center gap-3 mb-2 text-primary">
                         <FileUp className="h-5 w-5" />
-                        <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Ingestion hub</CardTitle>
+                        <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Upload hub</CardTitle>
                     </div>
-                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Secured forensic instrument transmission.</CardDescription>
+                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Send your file for secure analysis.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-8 sm:p-10">
                     <form action={formAction} className="space-y-8 text-left">
                         <div className="space-y-3">
-                            <Label htmlFor="document" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Statutory registry</Label>
+                            <Label htmlFor="document" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Legal document</Label>
                             <div className="relative group">
                                 <div className="absolute inset-0 bg-primary/5 rounded-2xl transition-all group-hover:bg-primary/10 border-2 border-dashed border-primary/10 pointer-events-none"></div>
                                 <Input 
@@ -128,7 +128,7 @@ export default function DocumentIntelligencePage() {
                                         <FileSearch className="h-6 w-6 text-primary opacity-40" />
                                     </div>
                                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-center px-4">
-                                        {fileName ? fileName : "Upload instrument"}
+                                        {fileName ? fileName : "Select your file"}
                                     </p>
                                 </div>
                             </div>
@@ -145,15 +145,15 @@ export default function DocumentIntelligencePage() {
 
                         <div className="space-y-3">
                             <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1 flex items-center gap-2">
-                                <Languages className="h-3 w-3" /> Audit language protocol
+                                <Languages className="h-3 w-3" /> Report language
                             </Label>
                             <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
                                 <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl active:scale-95 transition-all">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="glass border-primary/5 rounded-xl">
-                                    <SelectItem value="English" className="font-bold">English protocol</SelectItem>
-                                    <SelectItem value="Hindi" className="font-bold">Hindi protocol</SelectItem>
+                                    <SelectItem value="English" className="font-bold">English</SelectItem>
+                                    <SelectItem value="Hindi" className="font-bold">Hindi</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -161,9 +161,9 @@ export default function DocumentIntelligencePage() {
                         <Button type="submit" disabled={state.status === "loading"} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 rounded-[1.5rem] group relative overflow-hidden active:scale-95 transition-all">
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                             {state.status === "loading" ? (
-                                <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Deconstructing clauses...</>
+                                <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Analyzing your document...</>
                             ) : (
-                                <><ShieldCheck className="mr-3 h-5 w-5" /> Initialize forensic scan</>
+                                <><ShieldCheck className="mr-3 h-5 w-5" /> Start analysis</>
                             )}
                         </Button>
                     </form>
@@ -174,7 +174,7 @@ export default function DocumentIntelligencePage() {
         <div ref={reportRef} className="space-y-8 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-4">
                 <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
-                <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Statutory intelligence</Badge>
+                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Report entry</Badge>
             </div>
 
             <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col">
@@ -183,31 +183,31 @@ export default function DocumentIntelligencePage() {
                 </div>
 
                 <CardHeader className={cn(
-                    "p-8 sm:p-12 relative z-10 transition-colors duration-500 border-b border-primary/5",
-                    state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-primary/5 text-foreground"
+                    "p-8 sm:p-12 relative z-10 transition-colors duration-500 border-b border-primary/10",
+                    state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-muted/30 text-foreground"
                 )}>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
                         <div className="space-y-6 text-left flex-1 min-w-0">
                             <div className="flex items-center gap-4">
                                 <div className={cn(
-                                    "flex items-center gap-3 px-4 py-1.5 rounded-full border",
-                                    state.status === 'success' ? "bg-white/10 border-white/20" : "bg-primary/10 border-primary/20"
+                                    "flex items-center gap-3 px-4 py-1.5 rounded-full border shadow-sm",
+                                    state.status === 'success' ? "bg-white/10 border-white/20" : "bg-background border-primary/5"
                                 )}>
                                     <Bot className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
-                                    <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", state.status === 'success' ? "text-white" : "text-primary")}>
-                                        Forensic AI audit active
+                                    <span className={cn("text-[10px] font-bold", state.status === 'success' ? "text-white" : "text-primary")}>
+                                        {state.status === 'success' ? "Analysis complete" : "AI analysis"}
                                     </span>
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
-                                    {state.status === 'success' ? <><span className="italic opacity-80">Audit dossier</span> ready.</> : "Awaiting ingress"}
+                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none">
+                                    {state.status === 'success' ? "Your report is ready" : "Waiting for your file"}
                                 </CardTitle>
                                 <div className={cn(
-                                    "text-[10px] font-bold flex items-center gap-3",
-                                    state.status === 'success' ? "text-white/60" : "text-muted-foreground"
+                                    "text-[11px] font-medium flex items-center gap-3",
+                                    state.status === 'success' ? "text-white/70" : "text-muted-foreground"
                                 )}>
-                                    <Globe className="h-4 w-4" /> Secure and encrypted session
+                                    <ShieldCheck className="h-4 w-4" /> Your data is protected
                                 </div>
                             </div>
                         </div>
@@ -220,10 +220,10 @@ export default function DocumentIntelligencePage() {
                                     onClick={handleReset}
                                     className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl"
                                 >
-                                    <PlusCircle className="h-4 w-4" /> New audit
+                                    <PlusCircle className="h-4 w-4" /> New report
                                 </Button>
                                 <AudioAssistant 
-                                    text={`${state.data?.summary}. Forensic risks identified: ${state.data?.legalRisks}.`} 
+                                    text={`${state.data?.summary}. Risks identified: ${state.data?.legalRisks}.`} 
                                     language={selectedLanguage} 
                                 />
                             </div>
@@ -248,8 +248,8 @@ export default function DocumentIntelligencePage() {
                                     </div>
                                 </div>
                                 <div className="space-y-3">
-                                    <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Deconstructing clauses...</p>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Running neural risk audit...</p>
+                                    <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Analyzing your document...</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Running AI risk scan...</p>
                                 </div>
                             </motion.div>
                         ) : state.status === "success" && state.data ? (
@@ -262,7 +262,7 @@ export default function DocumentIntelligencePage() {
                                 <div className="p-8 glass rounded-[2.5rem] border border-primary/10 shadow-inner bg-primary/[0.02]">
                                     <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
                                         <Fingerprint className="h-5 w-5" />
-                                        <span className="text-[11px] font-black uppercase tracking-widest">Executive audit summary</span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest">Report summary</span>
                                     </div>
                                     <p className="text-sm sm:text-lg text-foreground font-black leading-relaxed tracking-tight">{state.data.summary}</p>
                                 </div>
@@ -270,13 +270,13 @@ export default function DocumentIntelligencePage() {
                                 <div className="grid sm:grid-cols-2 gap-8 text-left">
                                     <Card className="bg-red-500/[0.03] rounded-[2.5rem] border-red-500/10 p-8 shadow-sm hover:shadow-xl transition-all group">
                                         <h3 className="text-[11px] font-black text-red-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <AlertTriangle className="h-4 w-4" /> Forensic risk points
+                                            <AlertTriangle className="h-4 w-4" /> Risk factors
                                         </h3>
                                         <p className="text-sm font-bold text-muted-foreground leading-relaxed">{state.data.legalRisks}</p>
                                     </Card>
                                     <Card className="bg-amber-500/[0.03] rounded-[2.5rem] border-amber-500/10 p-8 shadow-sm hover:shadow-xl transition-all group">
                                         <h3 className="text-[11px] font-black text-amber-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <CalendarClock className="h-4 w-4" /> Critical statutory deadlines
+                                            <CalendarClock className="h-4 w-4" /> Important dates
                                         </h3>
                                         <p className="text-sm font-bold text-muted-foreground leading-relaxed">{state.data.deadlines}</p>
                                     </Card>
@@ -287,7 +287,7 @@ export default function DocumentIntelligencePage() {
                                         <Search className="h-32 w-32" />
                                     </div>
                                     <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] mb-6 flex items-center gap-3 relative z-10">
-                                        <ListChecks className="h-4 w-4" /> Required statutory actions
+                                        <ListChecks className="h-4 w-4" /> Action plan
                                     </h3>
                                     <p className="text-sm sm:text-base font-bold text-muted-foreground leading-loose whitespace-pre-line relative z-10">{state.data.requiredActions}</p>
                                 </div>
@@ -298,11 +298,11 @@ export default function DocumentIntelligencePage() {
                                             <ShieldCheck className="h-6 w-6" />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-[10px] font-black uppercase tracking-widest">Statutory security</p>
-                                            <p className="text-[9px] font-bold">This audit is protected under institutional-grade encryption.</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest">Secure system</p>
+                                            <p className="text-[9px] font-bold">This report is protected by high-level encryption.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // TERMINAL ST-INTEL</p>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN</p>
                                 </div>
                             </motion.div>
                         ) : (
@@ -319,9 +319,9 @@ export default function DocumentIntelligencePage() {
                                     </div>
                                 </div>
                                 <div className="space-y-4 max-w-sm px-6 text-center">
-                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Awaiting ingress</h3>
+                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready to start</h3>
                                     <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
-                                        Upload a statutory instrument to initialize the forensic AI risk scan.
+                                        Upload a document to start your AI analysis.
                                     </p>
                                 </div>
                             </motion.div>

@@ -68,7 +68,7 @@ export default function StrengthAnalyzerPage() {
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-8">
             <PageHeader
             title="Strength matrix"
-            description="Institutional probability modeling for statutory litigation success."
+            description="Institutional probability modeling for legal case success."
             />
             <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-foreground text-[10px] uppercase tracking-widest" asChild>
             <Link href="/dashboard">
@@ -88,26 +88,26 @@ export default function StrengthAnalyzerPage() {
                     <div className="p-3 rounded-2xl bg-background border border-primary/10">
                         <BrainCircuit className="h-6 w-6" />
                     </div>
-                    <CardTitle className="text-3xl font-black uppercase tracking-tighter">Narrative ingress</CardTitle>
+                    <CardTitle className="text-3xl font-black uppercase tracking-tighter">Case entry</CardTitle>
                 </div>
-                <CardDescription className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40">Initialize chronological facts for forensic audit.</CardDescription>
+                <CardDescription className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40">Provide the facts for analysis.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-10">
                 <form action={formAction} className="space-y-10 text-left">
                     <div className="space-y-4">
-                    <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Statutory narrative matrix</Label>
-                    <Textarea id="caseDescription" name="caseDescription" placeholder="Enter sequence of events, evidence IDs, and statutory entries..." rows={8} required className="bg-muted/20 border-primary/10 rounded-[2rem] font-bold text-sm p-8 shadow-inner focus:border-foreground transition-all min-h-[200px]" />
+                    <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Case narrative</Label>
+                    <Textarea id="caseDescription" name="caseDescription" placeholder="Enter sequence of events, evidence details..." rows={8} required className="bg-muted/20 border-primary/10 rounded-[2rem] font-bold text-sm p-8 shadow-inner focus:border-foreground transition-all min-h-[200px]" />
                     </div>
                     
                     <div className="space-y-4">
-                        <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Audit protocol language</Label>
+                        <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Analysis language</Label>
                         <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
                         <SelectTrigger id="language" className="h-14 bg-muted/20 border-primary/10 font-black uppercase text-[10px] rounded-2xl active:scale-95 transition-all">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="rounded-[1.5rem] glass">
-                            <SelectItem value="English" className="font-black uppercase text-[10px]">English protocol</SelectItem>
-                            <SelectItem value="Hindi" className="font-black uppercase text-[10px]">Hindi protocol</SelectItem>
+                            <SelectItem value="English" className="font-black uppercase text-[10px]">English</SelectItem>
+                            <SelectItem value="Hindi" className="font-black uppercase text-[10px]">Hindi</SelectItem>
                         </SelectContent>
                         </Select>
                     </div>
@@ -115,9 +115,9 @@ export default function StrengthAnalyzerPage() {
                     <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-[11px] font-black uppercase tracking-[0.4em] shadow-2xl shadow-primary/10 transition-all active:scale-95 rounded-[2rem] group overflow-hidden relative">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                         {state.status === 'loading' ? (
-                            <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Deconstructing matrix...</>
+                            <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Analyzing your case...</>
                         ) : (
-                            <><Sparkles className="mr-3 h-5 w-5" /> Initialize forensic audit</>
+                            <><Sparkles className="mr-3 h-5 w-5" /> Start analysis</>
                         )}
                     </Button>
                 </form>
@@ -128,7 +128,7 @@ export default function StrengthAnalyzerPage() {
         <div ref={reportRef} className="space-y-10 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-6">
                 <ChevronDown className="h-8 w-8 text-foreground animate-bounce opacity-20" />
-                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-[0.4em] bg-muted px-6 py-2 rounded-full border-primary/10">Statutory audit terminal</Badge>
+                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-[0.4em] bg-muted px-6 py-2 rounded-full border-primary/10">Report entry</Badge>
             </div>
 
             <Card className="border-primary/10 shadow-3xl rounded-[4rem] overflow-hidden relative min-h-[700px] flex flex-col bg-card">
@@ -137,31 +137,31 @@ export default function StrengthAnalyzerPage() {
                 </div>
 
                 <CardHeader className={cn(
-                    "p-8 sm:p-12 relative z-10 transition-colors duration-700 border-b border-primary/5",
-                    state.status === 'success' ? "bg-foreground text-background" : "bg-muted/30 text-foreground"
+                    "p-8 sm:p-12 relative z-10 transition-colors duration-700 border-b border-primary/10",
+                    state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-muted/30 text-foreground"
                 )}>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
                         <div className="space-y-6 text-left flex-1 min-w-0">
                             <div className="flex flex-wrap items-center gap-4">
                                 <div className={cn(
-                                    "flex items-center gap-3 px-4 py-1.5 rounded-full border",
-                                    state.status === 'success' ? "bg-background/10 border-background/20" : "bg-foreground/5 border-foreground/10"
+                                    "flex items-center gap-3 px-4 py-1.5 rounded-full border shadow-sm",
+                                    state.status === 'success' ? "bg-white/10 border-white/20" : "bg-background border-primary/5"
                                 )}>
-                                    <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-background" : "text-foreground")} />
-                                    <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", state.status === 'success' ? "text-background" : "text-foreground")}>
-                                        Official AI report hub
+                                    <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
+                                    <span className={cn("text-[10px] font-bold", state.status === 'success' ? "text-white" : "text-primary")}>
+                                        {state.status === 'success' ? "Analysis complete" : "AI report"}
                                     </span>
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
-                                    {state.status === 'success' ? <><span className="italic opacity-60">Audit dossier</span> ready.</> : "Awaiting ingress"}
+                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none">
+                                    {state.status === 'success' ? "Your report is ready" : "Waiting for case details"}
                                 </CardTitle>
                                 <div className={cn(
-                                    "text-[10px] font-bold flex items-center gap-3",
-                                    state.status === 'success' ? "text-background/40" : "text-muted-foreground"
+                                    "text-[11px] font-medium flex items-center gap-3",
+                                    state.status === 'success' ? "text-white/70" : "text-muted-foreground"
                                 )}>
-                                    <Globe className="h-4 w-4" /> Secure and encrypted session
+                                    <ShieldCheck className="h-4 w-4" /> Your data is protected
                                 </div>
                             </div>
                         </div>
@@ -174,10 +174,10 @@ export default function StrengthAnalyzerPage() {
                                     onClick={handleReset}
                                     className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl"
                                 >
-                                    <PlusCircle className="h-4 w-4" /> New audit
+                                    <PlusCircle className="h-4 w-4" /> New report
                                 </Button>
                                 <AudioAssistant 
-                                    text={`${state.data?.summary}. Strength Score is ${state.data?.strengthScore} percent.`} 
+                                    text={`${state.data?.summary}. Strength score is ${state.data?.strengthScore} percent.`} 
                                     language={selectedLanguage} 
                                 />
                             </div>
@@ -202,7 +202,7 @@ export default function StrengthAnalyzerPage() {
                                     </div>
                                 </div>
                                 <div className="space-y-4">
-                                    <p className="font-black text-3xl tracking-tighter uppercase text-foreground">Running forensic audit...</p>
+                                    <p className="font-black text-3xl tracking-tighter uppercase text-foreground">Running analysis...</p>
                                     <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground animate-pulse">Calculating success probability...</p>
                                 </div>
                             </motion.div>
@@ -229,13 +229,13 @@ export default function StrengthAnalyzerPage() {
                                         </svg>
                                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                                             <span className="text-7xl font-black tracking-tighter">{state.data.strengthScore}%</span>
-                                            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.3em] mt-2">Litigation probability</span>
+                                            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.3em] mt-2">Success rate</span>
                                         </div>
                                     </div>
                                     <div className="flex-1 space-y-8 text-left">
                                         <div className="flex items-center gap-4 text-muted-foreground opacity-40">
                                             <Fingerprint className="h-6 w-6" />
-                                            <span className="text-[11px] font-black uppercase tracking-[0.4em]">Executive audit summary</span>
+                                            <span className="text-[11px] font-black uppercase tracking-[0.4em]">Report summary</span>
                                         </div>
                                         <p className="text-2xl sm:text-4xl font-black leading-tight tracking-tight text-foreground uppercase">{state.data.summary}</p>
                                     </div>
@@ -244,7 +244,7 @@ export default function StrengthAnalyzerPage() {
                                 <div className="grid md:grid-cols-2 gap-10">
                                     <Card className="p-10 rounded-[3rem] border-primary/5 text-left bg-muted/20 shadow-sm hover:shadow-2xl transition-all group">
                                         <h3 className="text-[11px] font-black text-foreground uppercase tracking-[0.4em] mb-8 flex items-center gap-4">
-                                            <ShieldAlert className="h-5 w-5" /> Forensic risk points
+                                            <ShieldAlert className="h-5 w-5" /> Risk factors
                                         </h3>
                                         <ul className="space-y-6">
                                             {state.data.riskIndicators.map((r, i) => (
@@ -257,7 +257,7 @@ export default function StrengthAnalyzerPage() {
                                     </Card>
                                     <Card className="p-10 rounded-[3rem] border-primary/5 text-left bg-muted/20 shadow-sm hover:shadow-2xl transition-all group">
                                         <h3 className="text-[11px] font-black text-foreground uppercase tracking-[0.4em] mb-8 flex items-center gap-4">
-                                            <Lightbulb className="h-5 w-5" /> Statutory hardening
+                                            <Activity className="h-5 w-5" /> Recommendations
                                         </h3>
                                         <ul className="space-y-6">
                                             {state.data.recommendedActions.map((a, i) => (
@@ -273,7 +273,7 @@ export default function StrengthAnalyzerPage() {
                                 <div className="space-y-8 text-left">
                                     <div className="flex items-center justify-between border-b border-primary/10 pb-6">
                                         <h3 className="text-[11px] font-black text-foreground uppercase tracking-[0.4em] flex items-center gap-4">
-                                            <FileSearch className="h-6 w-6" /> Deconstructed research
+                                            <FileSearch className="h-6 w-6" /> Detailed analysis
                                         </h3>
                                     </div>
                                     <div className="p-10 sm:p-16 rounded-[4rem] border border-primary/10 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-inner bg-muted/10 relative overflow-hidden group">
@@ -292,11 +292,11 @@ export default function StrengthAnalyzerPage() {
                                             <ShieldCheck className="h-7 w-7" />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-[11px] font-black uppercase tracking-widest">Statutory security</p>
-                                            <p className="text-[10px] font-bold">This terminal is protected under attorney-client transience protocols.</p>
+                                            <p className="text-[11px] font-black uppercase tracking-widest">Secure system</p>
+                                            <p className="text-[10px] font-bold">This terminal is protected and private.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.6em]">NYAYASAHAYAK.IN // TERMINAL ST-MATRIX</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.6em]">NYAYASAHAYAK.IN</p>
                                 </div>
                             </motion.div>
                         ) : (
@@ -313,9 +313,9 @@ export default function StrengthAnalyzerPage() {
                                     </div>
                                 </div>
                                 <div className="space-y-6 max-w-md px-8 text-center">
-                                    <h3 className="font-black text-4xl tracking-tighter uppercase text-foreground leading-none">Ready for audit</h3>
+                                    <h3 className="font-black text-4xl tracking-tighter uppercase text-foreground leading-none">Ready to start</h3>
                                     <p className="text-[11px] text-muted-foreground font-black uppercase tracking-[0.3em] leading-relaxed italic opacity-40">
-                                        Initialize the forensic terminal by providing the statutory narrative for neural matrix analysis.
+                                        Provide case details to start your AI analysis.
                                     </p>
                                 </div>
                             </motion.div>

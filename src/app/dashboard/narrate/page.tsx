@@ -21,7 +21,8 @@ import {
   ArrowLeft,
   FileSearch,
   ChevronDown,
-  X
+  X,
+  FileCheck
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
@@ -154,7 +155,7 @@ export default function NarrateProblemPage() {
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6 text-left">
             <PageHeader
                 title="Voice Assistant"
-                description="Describe your case using your voice for an instant AI summary and legal roadmap."
+                description="Describe your case using your voice for an instant AI summary."
             />
             <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
                 <Link href="/dashboard">
@@ -172,9 +173,9 @@ export default function NarrateProblemPage() {
                 <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
                     <div className="flex items-center gap-3 mb-2 text-primary">
                         <Mic className="h-5 w-5" />
-                        <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Voice Recording</CardTitle>
+                        <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Recording</CardTitle>
                     </div>
-                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Record your case for a detailed summary.</CardDescription>
+                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Speak naturally to describe your situation.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center space-y-10 pt-10 pb-10">
                     <div className="w-full max-w-sm space-y-4 px-2 text-left">
@@ -235,7 +236,7 @@ export default function NarrateProblemPage() {
                     <div className="w-full pt-8 border-t border-primary/5 text-center">
                         <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="audio/*" className="hidden" />
                         <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || isLoading} className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary gap-3 rounded-xl hover:bg-primary/5 px-6">
-                            <Upload className="h-4 w-4" /> Upload Recording
+                            <Upload className="h-4 w-4" /> Upload file
                         </Button>
                     </div>
                 </CardContent>
@@ -245,7 +246,7 @@ export default function NarrateProblemPage() {
         <div ref={reportRef} className="space-y-8 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-4">
                 <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
-                <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">AI Analysis Report</Badge>
+                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Report entry</Badge>
             </div>
 
             <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col">
@@ -254,31 +255,31 @@ export default function NarrateProblemPage() {
                 </div>
 
                 <CardHeader className={cn(
-                    "p-8 sm:p-12 relative z-10 transition-colors duration-500 border-b border-primary/5",
-                    state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-primary/5 text-foreground"
+                    "p-8 sm:p-12 relative z-10 transition-colors duration-500 border-b border-primary/10",
+                    state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-muted/30 text-foreground"
                 )}>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
                         <div className="space-y-6 text-left flex-1 min-w-0">
                             <div className="flex items-center gap-4">
                                 <div className={cn(
-                                    "flex items-center gap-3 px-4 py-1.5 rounded-full border",
-                                    state.status === 'success' ? "bg-white/10 border-white/20" : "bg-primary/10 border-primary/20"
+                                    "flex items-center gap-3 px-4 py-1.5 rounded-full border shadow-sm",
+                                    state.status === 'success' ? "bg-white/10 border-white/20" : "bg-background border-primary/5"
                                 )}>
                                     <Bot className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
-                                    <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", state.status === 'success' ? "text-white" : "text-primary")}>
-                                        Official AI Analysis
+                                    <span className={cn("text-[10px] font-bold", state.status === 'success' ? "text-white" : "text-primary")}>
+                                        {state.status === 'success' ? "Analysis complete" : "AI analysis"}
                                     </span>
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
-                                    {state.status === 'success' ? <><span className="italic opacity-80">Your Report</span> is Ready.</> : "Awaiting Recording"}
+                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none">
+                                    {state.status === 'success' ? "Your report is ready" : "Waiting for your recording"}
                                 </CardTitle>
                                 <div className={cn(
-                                    "text-[10px] font-bold flex items-center gap-3",
-                                    state.status === 'success' ? "text-white/60" : "text-muted-foreground"
+                                    "text-[11px] font-medium flex items-center gap-3",
+                                    state.status === 'success' ? "text-white/70" : "text-muted-foreground"
                                 )}>
-                                    <Globe className="h-4 w-4" /> Secure and encrypted session
+                                    <ShieldCheck className="h-4 w-4" /> Your data is protected
                                 </div>
                             </div>
                         </div>
@@ -291,10 +292,10 @@ export default function NarrateProblemPage() {
                                     onClick={handleReset}
                                     className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-lg"
                                 >
-                                    <PlusCircle className="h-4 w-4" /> Start New
+                                    <PlusCircle className="h-4 w-4" /> New report
                                 </Button>
                                 <AudioAssistant 
-                                    text={`Summary: ${state.data?.caseSummary}. Next Steps: ${state.data?.nextActions}.`} 
+                                    text={`Summary: ${state.data?.caseSummary}. Next steps: ${state.data?.nextActions}.`} 
                                     language={language} 
                                 />
                             </div>
@@ -319,8 +320,8 @@ export default function NarrateProblemPage() {
                                     </div>
                                 </div>
                                 <div className="space-y-3">
-                                    <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Analyzing Your Voice...</p>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Checking laws and providing solutions...</p>
+                                    <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Analyzing your voice...</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Running AI analysis...</p>
                                 </div>
                             </motion.div>
                         ) : state.status === "success" && state.data ? (
@@ -333,7 +334,7 @@ export default function NarrateProblemPage() {
                                 <div className="p-8 glass rounded-[2rem] border-primary/5 italic text-sm sm:text-base font-medium text-muted-foreground leading-relaxed shadow-inner bg-muted/5">
                                     <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
                                         <Fingerprint className="h-4 w-4" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Voice Transcription</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Transcription</span>
                                     </div>
                                     "{state.data.transcription}"
                                 </div>
@@ -341,13 +342,13 @@ export default function NarrateProblemPage() {
                                 <div className="grid md:grid-cols-2 gap-8">
                                     <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left bg-primary/[0.02] shadow-sm hover:shadow-xl transition-all group">
                                         <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <StepForward className="h-4 w-4" /> Case Summary
+                                            <StepForward className="h-4 w-4" /> Summary
                                         </h3>
                                         <p className="text-sm sm:text-base font-black leading-relaxed tracking-tight text-foreground">{state.data.caseSummary}</p>
                                     </Card>
                                     <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left bg-blue-500/[0.02] shadow-sm hover:shadow-xl transition-all group">
                                         <h3 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <Globe className="h-4 w-4" /> Next Steps
+                                            <Globe className="h-4 w-4" /> Next steps
                                         </h3>
                                         <p className="text-sm font-bold leading-relaxed text-foreground/80">{state.data.nextActions}</p>
                                     </Card>
@@ -356,7 +357,7 @@ export default function NarrateProblemPage() {
                                 <div className="space-y-6">
                                     <div className="flex items-center justify-between border-b border-primary/10 pb-4">
                                         <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
-                                            <FileSearch className="h-5 w-5" /> Detailed Analysis
+                                            <FileSearch className="h-5 w-5" /> Analysis report
                                         </h3>
                                     </div>
                                     <div className="p-8 sm:p-12 glass rounded-[3rem] border-primary/10 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-lg bg-muted/10 relative overflow-hidden group">
@@ -373,8 +374,8 @@ export default function NarrateProblemPage() {
                                             <ShieldCheck className="h-6 w-6" />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-[10px] font-black uppercase tracking-widest">Statutory security</p>
-                                            <p className="text-[9px] font-bold">Your case data is encrypted and kept private.</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest">Secure system</p>
+                                            <p className="text-[9px] font-bold">Your data is encrypted and kept private.</p>
                                         </div>
                                     </div>
                                     <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN</p>
@@ -394,9 +395,9 @@ export default function NarrateProblemPage() {
                                     </div>
                                 </div>
                                 <div className="space-y-4 max-sm px-6 text-center">
-                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready to Help</h3>
+                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready to start</h3>
                                     <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
-                                        Please record or upload your case description to start the AI analysis.
+                                        Please record or upload a file to start the analysis.
                                     </p>
                                 </div>
                             </motion.div>
