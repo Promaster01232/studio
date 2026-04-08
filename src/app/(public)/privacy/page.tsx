@@ -103,7 +103,7 @@ export default function PrivacyPage() {
       <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8 text-left">
         <PageHeader
           title="Privacy Rules"
-          description="Last updated: June 23, 2025 // Official Statutory Notice"
+          description="Last updated: February 24, 2025 // Official Statutory Notice"
         />
         <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Protocol 2025</Badge>
       </div>
@@ -597,5 +597,3 @@ export default function PrivacyPage() {
     </motion.div>
   );
 }
-
-    
