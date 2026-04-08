@@ -36,7 +36,7 @@ import {
   X
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { jsPDF } from "jsPDF";
+import { jsPDF } from "jspdf";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
