@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,9 @@ import {
   Bot,
   Layers,
   FileSearch,
-  Scale
+  Scale,
+  Edit3,
+  SquarePen
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -116,14 +119,57 @@ export default function DashboardHomePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 text-left">
-      {/* WELCOME & STATUS */}
+    <div className="max-w-7xl mx-auto space-y-10 py-8 px-4 sm:px-6 text-left font-body">
+      {/* 1. TOP SPARK BANNER - SIMPLE & MODERN ANIMATED DESIGN */}
+      <motion.section
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      >
+        <Card className="border-primary/5 bg-card/40 backdrop-blur-sm shadow-xl rounded-[2rem] overflow-hidden group transition-all hover:shadow-2xl">
+          <CardContent className="p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8 text-left">
+            <div className="flex-1 space-y-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-primary/5 text-primary group-hover:scale-110 transition-transform duration-500 shadow-sm border border-primary/10">
+                  <SquarePen className="h-7 w-7" />
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-black tracking-tighter text-foreground font-headline uppercase leading-none">
+                  Share Your <span className="text-primary italic">Spark.</span>
+                </h2>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm sm:text-base font-bold text-muted-foreground/80 leading-relaxed">
+                  What brilliant idea is on your mind today? Let the community know!
+                </p>
+                <p className="text-[11px] sm:text-xs font-medium text-muted-foreground/60 uppercase tracking-widest leading-relaxed">
+                  Have an idea? Ready to ask a question or start a poll? Let&apos;s get started.
+                </p>
+              </div>
+              <div className="pt-2">
+                <Button asChild className="h-12 px-8 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all group/btn">
+                  <Link href="/dashboard/research-analytics/new">
+                    Share Your Spark <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            <div className="hidden lg:block relative shrink-0">
+                <div className="absolute -inset-10 bg-primary/5 rounded-full blur-3xl animate-pulse" />
+                <div className="bg-white dark:bg-zinc-900/50 p-10 rounded-[2.5rem] border border-primary/10 shadow-2xl relative z-10 transition-transform group-hover:rotate-3 duration-1000">
+                    <Logo className="h-24 w-24 grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" priority={false} />
+                </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.section>
+
+      {/* 2. WELCOME & STATUS */}
       <motion.section 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col md:flex-row md:items-end justify-between gap-6"
       >
-        <div className="space-y-2">
+        <div className="space-y-2 text-left">
           <div className="flex items-center gap-3 mb-1">
             <Badge variant="outline" className="bg-primary/5 text-primary border-primary/10 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
               Terminal Active
@@ -132,22 +178,22 @@ export default function DashboardHomePage() {
               <NeuralPulse /> Neural Sync: 100%
             </div>
           </div>
-          <h1 className="text-4xl font-black font-headline tracking-tighter uppercase leading-none text-foreground">
-            Dashboard <span className="text-primary italic">Central.</span>
+          <h1 className="text-3xl font-black font-headline tracking-tighter uppercase leading-none text-foreground opacity-40">
+            Dashboard Hub.
           </h1>
         </div>
         <div className="flex items-center gap-4">
-            <div className="p-4 rounded-2xl bg-muted/30 border border-primary/5 hidden lg:flex items-center gap-4">
-                <Activity className="h-5 w-5 text-primary animate-pulse" />
+            <div className="px-4 py-3 rounded-xl bg-muted/30 border border-primary/5 hidden lg:flex items-center gap-4">
+                <Activity className="h-4 w-4 text-primary animate-pulse" />
                 <div className="text-left leading-none">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">AI Latency</p>
-                    <p className="text-xs font-black mt-1">42ms Optimal</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60">System Latency</p>
+                    <p className="text-[10px] font-black mt-1">42ms Optimal</p>
                 </div>
             </div>
         </div>
       </motion.section>
 
-      {/* HERO AI HUB - CHATGPT DESIGN */}
+      {/* 3. HERO AI HUB */}
       <motion.section 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -156,27 +202,23 @@ export default function DashboardHomePage() {
       >
         <Card className="border-primary/10 bg-[#0D1B2A] text-white rounded-[2.5rem] overflow-hidden shadow-3xl relative flex flex-col min-h-[500px]">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
-            <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none grayscale">
-                <Logo className="h-64 w-64 border-none p-0 bg-transparent shadow-none" />
-            </div>
-
+            
             <CardHeader className="bg-white/5 border-b border-white/5 p-8 relative z-10">
                 <div className="flex items-center gap-4">
                     <div className="relative">
                         <div className="p-3 rounded-2xl bg-primary text-white shadow-2xl">
                             <Bot className="h-6 w-6" />
                         </div>
-                        <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-green-500 rounded-full border-2 border-[#0D1B2A] shadow-sm animate-pulse" />
+                        <div className="absolute -bottom-1 -right-1 h-3.5 w-3.5 bg-green-500 rounded-full border-2 border-[#0D1B2A] shadow-sm animate-pulse" />
                     </div>
                     <div className="text-left">
                         <CardTitle className="text-2xl font-black tracking-tighter uppercase leading-none">Nyaya Sahayak AI</CardTitle>
-                        <p className="text-[10px] font-bold text-primary/60 uppercase tracking-[0.3em] mt-1.5">Official Problem Solver Node</p>
+                        <p className="text-[9px] font-bold text-primary/60 uppercase tracking-[0.3em] mt-1.5">Forensic Ingress Active</p>
                     </div>
                 </div>
             </CardHeader>
 
             <CardContent className="p-0 flex-grow flex flex-col relative z-10">
-                {/* Messages Area */}
                 <div className="flex-grow p-8 space-y-8 overflow-y-auto custom-scrollbar max-h-[350px]">
                     {messages.map((m, i) => (
                         <motion.div 
@@ -189,27 +231,26 @@ export default function DashboardHomePage() {
                             )}
                         >
                             <div className={cn(
-                                "px-6 py-4 rounded-[1.5rem] text-sm font-medium leading-relaxed shadow-lg",
+                                "px-6 py-4 rounded-[1.5rem] text-sm font-medium leading-relaxed shadow-lg transition-all",
                                 m.role === 'user' 
                                     ? "bg-primary text-white rounded-tr-none border border-white/10" 
                                     : "bg-white/10 backdrop-blur-xl border border-white/5 text-white rounded-tl-none"
                             )}>
                                 {m.text}
                             </div>
-                            <span className="text-[9px] font-black uppercase tracking-widest text-white/30 px-2">
-                                {m.role === 'ai' ? 'Institutional AI' : 'Registry Node'}
+                            <span className="text-[8px] font-black uppercase tracking-widest text-white/30 px-2">
+                                {m.role === 'ai' ? 'Institutional AI' : 'Identity Node'}
                             </span>
                         </motion.div>
                     ))}
                     {isProcessing && (
                         <div className="flex gap-3 items-center text-primary/60 p-2">
                             <Loader2 className="h-4 w-4 animate-spin" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.4em] animate-pulse">Neural Ingress Active...</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.4em] animate-pulse">Neural Sync Active...</span>
                         </div>
                     )}
                 </div>
 
-                {/* Input Hub */}
                 <div className="p-8 bg-white/5 border-t border-white/5">
                     <div className="max-w-3xl mx-auto space-y-6">
                         <div className="relative group">
@@ -217,8 +258,8 @@ export default function DashboardHomePage() {
                                 value={chatInput}
                                 onChange={(e) => setChatInput(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                                placeholder="How can I help you solve a legal problem today?" 
-                                className="h-16 bg-[#1B263B] border-white/10 rounded-[1.2rem] font-bold text-base pr-16 text-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-white/20 px-6 shadow-2xl"
+                                placeholder="How can I help you navigate the law today?" 
+                                className="h-16 bg-[#1B263B] border-white/10 rounded-2xl font-bold text-base pr-16 text-white focus:border-primary transition-all placeholder:text-white/20 px-6 shadow-2xl"
                             />
                             <Button 
                                 onClick={handleSendMessage}
@@ -229,9 +270,8 @@ export default function DashboardHomePage() {
                             </Button>
                         </div>
 
-                        {/* Quick Action Chips */}
                         <div className="flex flex-wrap items-center justify-center gap-3">
-                            <span className="text-[9px] font-black uppercase tracking-widest text-white/20 mr-2">Quick Access:</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-white/20 mr-2">Protocols:</span>
                             {quickActions.map((action, idx) => (
                                 <Link key={idx} href={action.href}>
                                     <Badge variant="secondary" className="bg-white/5 hover:bg-white/10 text-white/70 border-white/5 cursor-pointer py-2 px-4 rounded-xl font-bold text-[10px] uppercase tracking-tighter transition-all active:scale-95 flex items-center gap-2">
@@ -242,20 +282,16 @@ export default function DashboardHomePage() {
                             ))}
                         </div>
                     </div>
-                    <div className="flex items-center justify-center gap-2 mt-8 opacity-20">
-                        <ShieldCheck className="h-3.5 w-3.5" />
-                        <span className="text-[9px] font-black uppercase tracking-[0.4em]">End-to-End Encrypted Forensic Session</span>
-                    </div>
                 </div>
             </CardContent>
         </Card>
       </motion.section>
 
-      {/* CORE TOOLS GRID */}
+      {/* 4. CORE TOOLS */}
       <section className="space-y-6">
-        <div className="flex items-center gap-3 px-1">
+        <div className="flex items-center gap-3 px-1 text-left">
             <Zap className="h-4 w-4 text-primary" />
-            <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Specialized Terminals</h2>
+            <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Forensic Terminals</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {tools.map((tool, i) => (
@@ -299,9 +335,9 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
+      {/* 5. COMMUNITY FEED */}
       <div className="grid lg:grid-cols-12 gap-10">
-        {/* FEED SECTION */}
-        <div className="lg:col-span-8 space-y-10">
+        <div className="lg:col-span-8 space-y-8">
           <div className="flex items-center justify-between border-b border-primary/5 pb-4">
             <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-primary/10 text-primary">
@@ -311,7 +347,7 @@ export default function DashboardHomePage() {
             </div>
             <Button variant="ghost" size="sm" asChild className="text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/5">
               <Link href="/dashboard/research-analytics">
-                View Registry <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                View All <ChevronRight className="ml-1 h-3.5 w-3.5" />
               </Link>
             </Button>
           </div>
@@ -373,7 +409,7 @@ export default function DashboardHomePage() {
           </div>
         </div>
 
-        {/* SYSTEM STATUS & PREMIUM */}
+        {/* 6. SYSTEM STATUS */}
         <div className="lg:col-span-4 space-y-10">
           <Card className="bg-primary text-primary-foreground rounded-[2.5rem] overflow-hidden border-none shadow-2xl shadow-primary/20 group relative">
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -388,11 +424,11 @@ export default function DashboardHomePage() {
                 </div>
                 <h3 className="text-3xl font-black font-headline tracking-tighter uppercase leading-tight">Elevate Your <br /> <span className="italic">Authority.</span></h3>
                 <p className="text-sm opacity-80 font-medium leading-relaxed">
-                    Unlock unlimited AI forensic scans, professional document drafting, and root access to the legal registry.
+                    Unlock unlimited AI forensic scans, professional document drafting, and root access.
                 </p>
               </div>
               <Button variant="secondary" className="w-full font-black uppercase tracking-widest text-[10px] rounded-2xl h-14 shadow-2xl active:scale-95 transition-all" asChild>
-                <Link href="/dashboard/billing">Recalibrate Clearance</Link>
+                <Link href="/dashboard/billing">Upgrade Node</Link>
               </Button>
             </CardContent>
           </Card>
@@ -410,7 +446,7 @@ export default function DashboardHomePage() {
                 <span className="text-green-500">Synchronized</span>
               </div>
               <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                <span className="flex items-center gap-3 text-muted-foreground"><Clock className="h-4 w-4 text-blue-500" /> Global Latency</span>
+                <span className="flex items-center gap-3 text-muted-foreground"><Clock className="h-4 w-4 text-blue-500" /> Network Latency</span>
                 <span className="text-foreground">42ms Optimal</span>
               </div>
               <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
@@ -422,7 +458,7 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
-      {/* INSTITUTIONAL FOOTER */}
+      {/* 7. INSTITUTIONAL FOOTER */}
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30 text-center sm:text-left">
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
