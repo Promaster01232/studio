@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -47,75 +48,75 @@ import {
 
 const navigationItems = [
   {
-    title: "Home",
+    title: "home",
     icon: Home,
     href: "/dashboard",
     items: [],
   },
   {
-    title: "AI Tools",
+    title: "ai tools",
     icon: BrainCircuit,
     isFeature: true,
     items: [
-      { href: "/dashboard/narrate", icon: Mic, label: "Record Voice" },
-      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Scan Documents" },
-      { href: "/dashboard/document-generator", icon: FileText, label: "Write Documents" },
-      { href: "/dashboard/bond-generator", icon: FileSignature, label: "Create Bonds" },
-      { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "Check Chance" },
-      { href: "/dashboard/court-assistant", icon: Gavel, label: "Court Helper" },
-      { href: "/dashboard/evidence-audit", icon: ShieldCheck, label: "Check Evidence" },
-      { href: "/dashboard/bail-estimator", icon: Scale, label: "Bail Helper" },
-      { href: "/dashboard/statutory-linker", icon: Zap, label: "Law Linker" },
-      { href: "/dashboard/contract-auditor", icon: FileCheck, label: "Check Contract" },
+      { href: "/dashboard/narrate", icon: Mic, label: "record voice" },
+      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "scan documents" },
+      { href: "/dashboard/document-generator", icon: FileText, label: "write documents" },
+      { href: "/dashboard/bond-generator", icon: FileSignature, label: "create bonds" },
+      { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "check chance" },
+      { href: "/dashboard/court-assistant", icon: Gavel, label: "court helper" },
+      { href: "/dashboard/evidence-audit", icon: ShieldCheck, label: "check evidence" },
+      { href: "/dashboard/bail-estimator", icon: Scale, label: "bail helper" },
+      { href: "/dashboard/statutory-linker", icon: Zap, label: "law linker" },
+      { href: "/dashboard/contract-auditor", icon: FileCheck, label: "check contract" },
     ],
   },
   {
-    title: "Case Hub",
+    title: "case hub",
     icon: Library,
     items: [
-      { href: "/dashboard/my-cases", icon: FolderKanban, label: "My Cases", isFeature: true },
-      { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "Free Help" },
-      { href: "/dashboard/learn", icon: Library, label: "Learn Law" },
-      { href: "/dashboard/police-guide", icon: Shield, label: "Help Guides" },
-      { href: "/dashboard/research-analytics", icon: Newspaper, label: "Community" },
+      { href: "/dashboard/my-cases", icon: FolderKanban, label: "my cases", isFeature: true },
+      { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "free help" },
+      { href: "/dashboard/learn", icon: Library, label: "learn law" },
+      { href: "/dashboard/police-guide", icon: Shield, label: "help guides" },
+      { href: "/dashboard/research-analytics", icon: Newspaper, label: "community" },
     ],
   },
   {
-    title: "For Business",
+    title: "for business",
     icon: Landmark,
     isFeature: true,
     items: [
-      { href: "/dashboard/business-msme", icon: Briefcase, label: "Business Hub" },
-      { href: "/dashboard/finances-billing", icon: Landmark, label: "Legal Fees" },
+      { href: "/dashboard/business-msme", icon: Briefcase, label: "business hub" },
+      { href: "/dashboard/finances-billing", icon: Landmark, label: "legal fees" },
     ],
   },
   {
-    title: "Rules",
+    title: "rules",
     icon: Scale,
     items: [
-      { href: "/dashboard/terms", icon: FileText, label: "Terms of Use" },
-      { href: "/dashboard/privacy", icon: ShieldCheck, label: "Privacy Policy" },
-      { href: "/dashboard/refund-policy", icon: CreditCard, label: "Refund Rules" },
-      { href: "/dashboard/cookie-policy", icon: Cookie, label: "Cookie Policy" },
-      { href: "/dashboard/disclaimer", icon: ShieldAlert, label: "Disclaimer" },
+      { href: "/dashboard/terms", icon: FileText, label: "terms of use" },
+      { href: "/dashboard/privacy", icon: ShieldCheck, label: "privacy policy" },
+      { href: "/dashboard/refund-policy", icon: CreditCard, label: "refund rules" },
+      { href: "/dashboard/cookie-policy", icon: Cookie, label: "cookie policy" },
+      { href: "/dashboard/disclaimer", icon: ShieldAlert, label: "disclaimer" },
     ],
   },
   {
-    title: "Account",
+    title: "account",
     icon: CircleUserRound,
     items: [
-      { href: "/dashboard/profile", icon: CircleUserRound, label: "My Profile", isFeature: true },
-      { href: "/dashboard/billing", icon: CreditCard, label: "My Plan", isFeature: true },
-      { href: "/dashboard/support", icon: LifeBuoy, label: "Contact Help" },
+      { href: "/dashboard/profile", icon: CircleUserRound, label: "my profile", isFeature: true },
+      { href: "/dashboard/billing", icon: CreditCard, label: "my plan", isFeature: true },
+      { href: "/dashboard/support", icon: LifeBuoy, label: "contact help" },
     ],
   },
   {
-    title: "Admin",
+    title: "admin",
     icon: Settings,
     isAdminOnly: true,
     items: [
-      { href: "/dashboard/management-console", icon: Shield, label: "Users" },
-      { href: "/dashboard/advocate-verification", icon: Gavel, label: "Lawyers" },
+      { href: "/dashboard/management-console", icon: Shield, label: "users" },
+      { href: "/dashboard/advocate-verification", icon: Gavel, label: "lawyers" },
     ],
   },
 ];
@@ -150,7 +151,7 @@ export function SidebarNav({ isAdmin = false, isGuest = false }: { isAdmin?: boo
               >
                 <Link href={item.href!}>
                   <item.icon className="h-5 w-5" />
-                  <span className="font-black text-[11px] uppercase tracking-widest">{item.title}</span>
+                  <span className="font-black text-[11px]">{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -172,7 +173,7 @@ export function SidebarNav({ isAdmin = false, isGuest = false }: { isAdmin?: boo
                   className="h-11 px-4 hover:bg-primary/5"
                 >
                   <item.icon className="h-5 w-5" />
-                  <span className="font-black text-[11px] uppercase tracking-widest flex-1 text-left">{item.title}</span>
+                  <span className="font-black text-[11px] flex-1 text-left">{item.title}</span>
                   {isGuest && item.isFeature && <Lock className="h-3 w-3 opacity-30 mr-2" />}
                   <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
@@ -188,7 +189,7 @@ export function SidebarNav({ isAdmin = false, isGuest = false }: { isAdmin?: boo
                       >
                         <Link href={subItem.href} className="flex items-center gap-3">
                           <subItem.icon className="h-4 w-4 opacity-70" />
-                          <span className="text-[11px] font-bold uppercase tracking-tight flex-1">{subItem.label}</span>
+                          <span className="text-[11px] font-bold tracking-tight flex-1">{subItem.label}</span>
                           {isGuest && subItem.isFeature && <Lock className="h-2.5 w-2.5 opacity-20" />}
                         </Link>
                       </SidebarMenuSubButton>
