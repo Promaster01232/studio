@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -78,7 +79,7 @@ function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 <SearchDialog>
                     <div className="w-full max-w-md cursor-pointer group transition-all">
-                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-9 font-bold text-[10px] uppercase tracking-widest text-muted-foreground/50 rounded-xl bg-muted/20 border border-primary/5 group-hover:border-primary/20 transition-all relative text-left">
+                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-9 font-bold text-[10px] tracking-widest text-muted-foreground/50 rounded-xl bg-muted/20 border border-primary/5 group-hover:border-primary/20 transition-all relative text-left">
                             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                             <span>Search registry...</span>
                             <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -99,10 +100,10 @@ function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }
             <div className="flex items-center gap-2 sm:gap-3">
                 {!userProfile ? (
                     <div className="flex items-center gap-2">
-                        <Button asChild variant="ghost" size="sm" className="h-9 px-4 font-bold text-[10px] uppercase tracking-widest rounded-xl hover:bg-primary/5">
+                        <Button asChild variant="ghost" size="sm" className="h-9 px-4 font-bold text-[10px] rounded-xl hover:bg-primary/5">
                             <Link href="/login">Login</Link>
                         </Button>
-                        <Button asChild size="sm" className="h-9 px-5 font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg active:scale-95 transition-all">
+                        <Button asChild size="sm" className="h-9 px-5 font-black text-[10px] rounded-xl shadow-lg active:scale-95 transition-all">
                             <Link href="/register">
                                 <LogIn className="mr-1.5 h-3.5 w-3.5" /> Register
                             </Link>
@@ -111,7 +112,7 @@ function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }
                 ) : (
                     <>
                         {isLimited && (
-                            <Button asChild size="sm" className="hidden lg:flex h-9 px-5 rounded-xl bg-primary text-white font-black text-[9px] uppercase tracking-widest gap-2 shadow-lg active:scale-95 transition-all">
+                            <Button asChild size="sm" className="hidden lg:flex h-9 px-5 rounded-xl bg-primary text-white font-black text-[9px] gap-2 shadow-lg active:scale-95 transition-all">
                                 <Link href="/dashboard/billing">
                                     <Zap className="h-3" />
                                     Upgrade
@@ -244,14 +245,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <div className="bg-destructive/10 p-10 rounded-[3rem] mb-8 border border-destructive/20 shadow-inner">
                   <ShieldX className="h-24 w-24 text-destructive" />
               </div>
-              <h1 className="text-4xl font-black font-headline tracking-tighter uppercase mb-4">Node Access Restricted</h1>
+              <h1 className="text-4xl font-black font-headline tracking-tighter uppercase mb-4">Node access restricted</h1>
               <p className="text-muted-foreground max-w-md font-medium leading-relaxed mb-10">
                   Your identity node has been suspended following a statutory forensic audit. Please contact root authority for restoration protocols.
               </p>
               <div className="flex gap-4">
-                  <Button onClick={handleLogout} variant="outline" className="h-12 px-10 font-bold rounded-xl border-primary/10">Terminate Session</Button>
-                  <Button asChild className="h-12 px-10 font-black uppercase text-[10px] tracking-widest rounded-xl shadow-xl shadow-primary/20">
-                      <Link href="/dashboard/contact">Contact Support</Link>
+                  <Button onClick={handleLogout} variant="outline" className="h-12 px-10 font-bold rounded-xl border-primary/10">Terminate session</Button>
+                  <Button asChild className="h-12 px-10 font-black text-[10px] tracking-widest rounded-xl shadow-xl shadow-primary/20">
+                      <Link href="/dashboard/contact">Contact support</Link>
                   </Button>
               </div>
           </div>
@@ -265,7 +266,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <Link href="/dashboard" className="flex items-center gap-3 transition-all hover:opacity-80 active:scale-95 group-data-[collapsible=icon]:justify-center group">
             <Logo className="h-8 w-8 border-none shadow-none p-0 bg-transparent" priority={true} />
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
-              <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none animate-pan">
+              <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none">
                   Nyaya Sahayak
               </span>
             </div>
@@ -279,11 +280,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <div className="p-4 space-y-3 text-left">
                         <div className="flex items-center gap-2">
                             <Zap className="h-3.5 w-3.5 text-primary" />
-                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Upgrade Node</span>
+                            <span className="text-[9px] font-black text-primary">Upgrade node</span>
                         </div>
                         <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">Unlock elite forensic tools.</p>
-                        <Button asChild size="sm" className="w-full h-8 font-black text-[9px] uppercase tracking-widest rounded-xl shadow-lg text-center">
-                            <Link href="/dashboard/billing">View Plans</Link>
+                        <Button asChild size="sm" className="w-full h-8 font-black text-[9px] rounded-xl shadow-lg text-center">
+                            <Link href="/dashboard/billing">View plans</Link>
                         </Button>
                     </div>
                 </Card>
@@ -294,36 +295,36 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
            {profileLoading ? <Skeleton className="h-10 w-full rounded-xl" /> : userProfile ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left group data-[state=collapsed]:w-10 data-[state=collapsed]:justify-center hover:bg-primary/5 rounded-xl transition-all">
+                <Button variant="ghost" className="w-full justify-start items-center gap-3 p-2 h-auto text-left group data-[state=collapsed]:w-10 data-[state=collapsed]:justify-center hover:bg-primary/5 rounded-xl transition-all" silent>
                   <Avatar className="h-8 w-8 border border-background shadow-md rounded-lg">
                       <AvatarImage src={userProfile.photoURL} className="object-cover" />
                       <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">{userProfile.firstName?.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 truncate group-data-[state=collapsed]:hidden text-left">
-                    <div className="font-black text-xs truncate tracking-tight text-foreground leading-tight uppercase">{userProfile.firstName}</div>
-                    <div className="text-[8px] text-muted-foreground truncate font-bold uppercase tracking-widest mt-0.5">{userProfile.userType}</div>
+                    <div className="font-black text-xs truncate tracking-tight text-foreground leading-tight">{userProfile.firstName}</div>
+                    <div className="text-[8px] text-muted-foreground truncate font-bold uppercase mt-0.5">{userProfile.userType}</div>
                   </div>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" align="end" className="w-64 mb-4 ml-4 p-3 rounded-2xl shadow-3xl glass border-primary/10">
-                <DropdownMenuLabel className="px-2 pb-2 text-left font-black uppercase text-[9px] tracking-widest text-muted-foreground/50">My Account</DropdownMenuLabel>
-                <DropdownMenuItem asChild className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 mb-1 cursor-pointer">
+                <DropdownMenuLabel className="px-2 pb-2 text-left font-black text-[9px] text-muted-foreground/50">My account</DropdownMenuLabel>
+                <DropdownMenuItem asChild className="rounded-lg h-10 font-bold text-[10px] gap-3 mb-1 cursor-pointer">
                     <Link href="/dashboard/profile"><User className="h-4 w-4 text-primary opacity-60" /> Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="my-2 opacity-5" />
                 <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setTheme(v as 'light' | 'dark')}>
-                    <DropdownMenuRadioItem value="light" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Light Mode</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="dark" className="rounded-lg h-10 font-bold text-[10px] uppercase tracking-widest gap-3 cursor-pointer">Dark Mode</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="light" className="rounded-lg h-10 font-bold text-[10px] gap-3 cursor-pointer">Light mode</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="dark" className="rounded-lg h-10 font-bold text-[10px] gap-3 cursor-pointer">Dark mode</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator className="my-2 opacity-5" />
-                <DropdownMenuItem onClick={handleLogout} className="rounded-lg h-12 font-black text-[10px] uppercase tracking-widest text-destructive focus:text-destructive focus:bg-destructive/10 gap-3 cursor-pointer transition-all">
-                    <LogOut className="h-4 w-4" /> Sign Out
+                <DropdownMenuItem onClick={handleLogout} className="rounded-lg h-12 font-black text-[10px] text-destructive focus:text-destructive focus:bg-destructive/10 gap-3 cursor-pointer transition-all">
+                    <LogOut className="h-4 w-4" /> Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-             <Button asChild className="w-full rounded-xl h-12 font-black tracking-widest uppercase text-[10px] shadow-lg">
-                <Link href="/login">Sign In</Link>
+             <Button asChild className="w-full rounded-xl h-12 font-black tracking-widest text-[10px] shadow-lg">
+                <Link href="/login">Sign in</Link>
              </Button>
           )}
         </SidebarFooter>

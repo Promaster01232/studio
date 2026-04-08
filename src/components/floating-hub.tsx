@@ -59,10 +59,11 @@ export function FloatingHub() {
             <Button
               asChild
               className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-white dark:bg-zinc-900 border border-primary/10 shadow-2xl hover:bg-primary/5 text-primary group transition-all"
+              silent
             >
               <Link href="/dashboard/research-analytics/new">
                 <Plus className="h-6 w-6 transition-transform group-hover:rotate-90" />
-                <span className="sr-only">initialize post</span>
+                <span className="sr-only">Initialize post</span>
               </Link>
             </Button>
           </motion.div>
@@ -93,7 +94,7 @@ export function FloatingHub() {
 
 function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'ai', text: "namaste! i am nyaya sahayak, your ai legal co-pilot. how can i assist your forensic research today?" }
+        { role: 'ai', text: "Namaste! I am Nyaya Sahayak, your AI legal co-pilot. How can I assist your forensic research today?" }
     ]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -116,7 +117,7 @@ function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
         setTimeout(() => {
             setMessages(prev => [...prev, { 
                 role: 'ai', 
-                text: "i am analyzing your query against the statutory registry. for a more detailed deconstruction, please utilize the specialized terminals like 'narrate problem' or 'strength matrix'." 
+                text: "I am analyzing your query against the statutory registry. For a more detailed deconstruction, please utilize the specialized terminals like 'Narrate problem' or 'Strength matrix'." 
             }]);
             setIsLoading(false);
         }, 1500);
@@ -133,10 +134,10 @@ function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
                         <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-primary shadow-sm animate-pulse" />
                     </div>
                     <div className="text-left flex-1 min-w-0">
-                        <DialogTitle className="text-xl font-black tracking-tighter leading-none text-white">nyaya sahayak chat</DialogTitle>
-                        <DialogDescription className="text-[9px] font-bold text-white/60 mt-1">forensic assistant node active</DialogDescription>
+                        <DialogTitle className="text-xl font-black tracking-tighter leading-none text-white">Nyaya Sahayak chat</DialogTitle>
+                        <DialogDescription className="text-[9px] font-bold text-white/60 mt-1">Forensic assistant node active</DialogDescription>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="text-white/60 hover:text-white hover:bg-white/10 rounded-full h-8 w-8">
+                    <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="text-white/60 hover:text-white hover:bg-white/10 rounded-full h-8 w-8" silent>
                         <X className="h-4 w-4" />
                     </Button>
                 </DialogHeader>
@@ -163,14 +164,14 @@ function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
                                         {m.text}
                                     </div>
                                     <span className="text-[8px] font-bold text-muted-foreground px-1">
-                                        {m.role === 'ai' ? 'nyaya sahayak' : 'registry node'}
+                                        {m.role === 'ai' ? 'Nyaya Sahayak' : 'Registry node'}
                                     </span>
                                 </motion.div>
                             ))}
                             {isLoading && (
                                 <div className="flex gap-2 items-center text-primary/40 p-2">
                                     <Loader2 className="h-3 w-3 animate-spin" />
-                                    <span className="text-[10px] font-black animate-pulse">neural ingress...</span>
+                                    <span className="text-[10px] font-black animate-pulse">Neural ingress...</span>
                                 </div>
                             )}
                         </div>
@@ -182,7 +183,7 @@ function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                                placeholder="consult the ai co-pilot..." 
+                                placeholder="Consult the AI co-pilot..." 
                                 className="h-11 rounded-xl glass border-primary/10 focus:border-primary font-bold text-xs"
                             />
                             <Button 
@@ -195,7 +196,7 @@ function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
                         </div>
                         <div className="mt-3 flex items-center justify-center gap-2 opacity-30">
                             <ShieldCheck className="h-3 w-3" />
-                            <span className="text-[8px] font-black">encrypted session</span>
+                            <span className="text-[8px] font-black">Encrypted session</span>
                         </div>
                     </div>
                 </div>
