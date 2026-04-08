@@ -31,7 +31,8 @@ import {
   FileSearch,
   Scale,
   BadgeCheck,
-  User
+  User,
+  Library
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -382,29 +383,35 @@ export default function DashboardHomePage() {
         </div>
 
         <div className="lg:col-span-4">
-            <Card className="border-primary/5 bg-muted/20 rounded-[3rem] shadow-sm overflow-hidden h-full flex flex-col">
+            <Card className="border-primary/5 bg-card/40 backdrop-blur-sm rounded-[3rem] shadow-xl overflow-hidden h-full flex flex-col group hover:border-primary/20 transition-all duration-500">
                 <CardHeader className="p-8 pb-4 border-b border-primary/5 bg-primary/5 text-left">
                     <div className="flex items-center gap-3">
-                        <ShieldCheck className="h-5 w-5 text-primary" />
-                        <CardTitle className="text-[10px] font-black text-muted-foreground">Neural matrix status</CardTitle>
+                        <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                            <Library className="h-5 w-5" />
+                        </div>
+                        <CardTitle className="text-xs font-black text-foreground uppercase tracking-tight">Quick guides</CardTitle>
                     </div>
                 </CardHeader>
-                <CardContent className="p-8 space-y-8 text-left flex-1 flex flex-col justify-center">
-                    <div className="flex justify-between items-center text-[10px] font-black">
-                        <span className="flex items-center gap-3 text-muted-foreground"><Activity className="h-4 w-4 text-green-500" /> AI core</span>
-                        <span className="text-green-500">Synchronized</span>
-                    </div>
-                    <div className="flex justify-between items-center text-[10px] font-black">
-                        <span className="flex items-center gap-3 text-muted-foreground"><Clock className="h-4 w-4 text-blue-500" /> Global latency</span>
-                        <span className="text-foreground">42ms Optimal</span>
-                    </div>
-                    <div className="flex justify-between items-center text-[10px] font-black">
-                        <span className="flex items-center gap-3 text-muted-foreground"><ShieldCheck className="h-4 w-4 text-indigo-500" /> Statutory guard</span>
-                        <span className="text-foreground">AES-256 Active</span>
-                    </div>
+                <CardContent className="p-6 space-y-2 flex-1 flex flex-col justify-center text-left">
+                    {[
+                        { label: "Fundamental rights", href: "/dashboard/learn/fundamental-rights", icon: Scale },
+                        { label: "Criminal jurisprudence", href: "/dashboard/learn/criminal-law-jurisprudence", icon: Gavel },
+                        { label: "Filing an FIR", href: "/dashboard/police-guide/fir-complaints", icon: ShieldCheck },
+                        { label: "Arrest & bail rights", href: "/dashboard/police-guide/arrest-bail-process", icon: FileText },
+                    ].map((item, i) => (
+                        <Link key={i} href={item.href} className="flex items-center justify-between p-3 rounded-2xl hover:bg-primary/5 transition-all group/item border border-transparent hover:border-primary/10">
+                            <div className="flex items-center gap-3">
+                                <item.icon className="h-4 w-4 text-primary/60 group-hover/item:text-primary transition-colors" />
+                                <span className="text-[11px] font-bold text-muted-foreground group-hover/item:text-foreground transition-colors">{item.label}</span>
+                            </div>
+                            <ChevronRight className="h-3 w-3 text-muted-foreground/30 group-hover/item:text-primary group-hover/item:translate-x-1 transition-all" />
+                        </Link>
+                    ))}
                 </CardContent>
                 <div className="p-6 bg-primary/5 border-t border-primary/5 text-center">
-                    <p className="text-[8px] font-black text-primary/40">Registry validated // Network optimized</p>
+                    <Button variant="link" asChild className="h-auto p-0 text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary">
+                        <Link href="/dashboard/learn">Explore full library</Link>
+                    </Button>
                 </div>
             </Card>
         </div>
