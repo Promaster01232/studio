@@ -162,7 +162,7 @@ export default function DocumentGeneratorPage() {
           <CardHeader className="bg-primary/5 border-b border-primary/5 p-8 text-left">
             <div className="flex items-center gap-3 mb-2 text-primary">
                 <Zap className="h-5 w-5" />
-                <CardTitle className="text-xl font-black tracking-tight uppercase">Instrument setup</CardTitle>
+                <CardTitle className="text-xl font-black uppercase tracking-tight">Instrument setup</CardTitle>
             </div>
             <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Initialize statutory conditions for your legal draft.</CardDescription>
           </CardHeader>
@@ -324,7 +324,7 @@ export default function DocumentGeneratorPage() {
             )}>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
                     <div className="space-y-6 text-left flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex items-center gap-4">
                             <div className={cn(
                                 "flex items-center gap-3 px-4 py-1.5 rounded-full border",
                                 state.status === 'success' ? "bg-white/10 border-white/20" : "bg-primary/10 border-primary/20"
@@ -334,17 +334,6 @@ export default function DocumentGeneratorPage() {
                                     Official AI report
                                 </span>
                             </div>
-                            <Badge variant="outline" className={cn(
-                                "text-[9px] font-black uppercase tracking-[0.3em] px-4 py-1.5",
-                                state.status === 'success' ? "border-white/20 text-white/80" : "border-primary/20 text-primary/60"
-                            )}>
-                                NS-DRAFT-STAT-4.2
-                            </Badge>
-                            {state.isSimulated && (
-                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[9px] font-black uppercase tracking-widest px-4 py-1.5">
-                                    <Cpu className="h-3 w-3 mr-1.5" /> Local system fallback
-                                </Badge>
-                            )}
                         </div>
                         <div className="space-y-2">
                             <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
@@ -416,7 +405,7 @@ export default function DocumentGeneratorPage() {
                             </div>
                             <div className="space-y-3">
                                 <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Deconstructing facts...</p>
-                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Initializing forensic document engine // BNS-V4.2 Ingress</p>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Initializing forensic document engine...</p>
                             </div>
                         </motion.div>
                     ) : state.status === 'success' && state.data ? (

@@ -40,7 +40,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
-import { collection, query, orderBy, limit, onSnapshot, Timestamp, doc, getDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, Timestamp, doc, getDoc } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -134,7 +134,6 @@ export default function DashboardHomePage() {
   return (
     <div className="max-w-7xl mx-auto space-y-16 py-8 px-4 sm:px-6 text-left font-body">
       
-      {/* Primary Ingress: Share Your Spark Banner */}
       <motion.section 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -152,7 +151,7 @@ export default function DashboardHomePage() {
                   <p className="text-sm text-muted-foreground font-medium leading-relaxed">
                     What brilliant idea is on your mind today? Let the community know.
                   </p>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-sky-500/60">Community Transmission Hub</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-sky-500/60">Community transmission hub</p>
                 </div>
               </div>
             </div>
@@ -165,7 +164,6 @@ export default function DashboardHomePage() {
         </Card>
       </motion.section>
 
-      {/* Hero AI Assistant Section */}
       <motion.section 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -242,7 +240,6 @@ export default function DashboardHomePage() {
         </div>
       </motion.section>
 
-      {/* AI Report Stream */}
       <AnimatePresence>
         {messages.length > 0 && (
             <motion.section 
@@ -279,7 +276,7 @@ export default function DashboardHomePage() {
                                             <div className="space-y-1">
                                                 <CardTitle className="text-xl sm:text-2xl font-black tracking-tight leading-none uppercase">Statutory guide summary</CardTitle>
                                                 <p className="text-[10px] font-bold text-white/60 uppercase tracking-[0.4em] flex items-center gap-2">
-                                                    <Globe className="h-3 w-3" /> NS-INTEL-ST-4.2 // Encrypted
+                                                    <Globe className="h-3 w-3" /> Encrypted session
                                                 </p>
                                             </div>
                                         </div>
@@ -322,7 +319,6 @@ export default function DashboardHomePage() {
         )}
       </AnimatePresence>
 
-      {/* Community Transmissions Section */}
       <section className="space-y-8">
         <div className="flex items-center justify-between border-b border-primary/5 pb-4">
             <div className="flex items-center gap-3">
@@ -397,7 +393,6 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
-      {/* Forensic Terminals Grid */}
       <section className="space-y-8">
         <div className="flex items-center gap-3 px-1 text-left">
             <div className="p-2 rounded-lg bg-blue-500/10">
@@ -447,7 +442,6 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
-      {/* Upgrade & Quick Guides Section */}
       <div className="grid lg:grid-cols-12 gap-8 pt-10">
         <div className="lg:col-span-8">
             <Card className="bg-primary text-primary-foreground rounded-[3rem] overflow-hidden border-none shadow-3xl shadow-primary/20 group relative">
@@ -510,7 +504,6 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
-      {/* Footer System Status */}
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
         <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">nyayasahayak.in // Terminal hub // 2025</p>
         <div className="flex items-center gap-8">

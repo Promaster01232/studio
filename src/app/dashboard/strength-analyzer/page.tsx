@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useActionState, useEffect, useState, useRef } from "react";
@@ -73,7 +72,7 @@ export default function StrengthAnalyzerPage() {
             />
             <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-foreground text-[10px] uppercase tracking-widest" asChild>
             <Link href="/dashboard">
-                <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Terminal
+                <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to terminal
             </Link>
             </Button>
         </motion.div>
@@ -97,7 +96,7 @@ export default function StrengthAnalyzerPage() {
                 <form action={formAction} className="space-y-10 text-left">
                     <div className="space-y-4">
                     <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Statutory narrative matrix</Label>
-                    <Textarea id="caseDescription" name="caseDescription" placeholder="Enter sequence of events, evidence IDs, and statutory nodes..." rows={8} required className="bg-muted/20 border-primary/10 rounded-[2rem] font-bold text-sm p-8 shadow-inner focus:border-foreground transition-all min-h-[200px]" />
+                    <Textarea id="caseDescription" name="caseDescription" placeholder="Enter sequence of events, evidence IDs, and statutory entries..." rows={8} required className="bg-muted/20 border-primary/10 rounded-[2rem] font-bold text-sm p-8 shadow-inner focus:border-foreground transition-all min-h-[200px]" />
                     </div>
                     
                     <div className="space-y-4">
@@ -153,12 +152,6 @@ export default function StrengthAnalyzerPage() {
                                         Official AI report hub
                                     </span>
                                 </div>
-                                <Badge variant="outline" className={cn(
-                                    "text-[9px] font-black uppercase tracking-[0.3em] px-4 py-1.5",
-                                    state.status === 'success' ? "border-background/20 text-background/80" : "border-foreground/10 text-foreground/60"
-                                )}>
-                                    NS-MATX-ST-4.2
-                                </Badge>
                             </div>
                             <div className="space-y-2">
                                 <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
