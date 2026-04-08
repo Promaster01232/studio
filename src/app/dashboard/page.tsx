@@ -32,7 +32,8 @@ import {
   Scale,
   BadgeCheck,
   User,
-  Library
+  Library,
+  Edit
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -121,12 +122,46 @@ export default function DashboardHomePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-16 py-8 px-4 sm:px-6 text-left font-body">
+    <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 text-left font-body">
       
+      {/* Primary Ingress: Share Your Spark Banner */}
+      <motion.section 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-5xl mx-auto"
+      >
+        <Card className="border border-primary/5 bg-white dark:bg-zinc-950 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[1.5rem] overflow-hidden group">
+          <div className="p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+            <div className="flex items-start gap-6">
+              <div className="p-3.5 rounded-xl bg-sky-50 text-sky-500 dark:bg-sky-500/10 shadow-sm border border-sky-100 dark:border-sky-500/20">
+                <Edit className="h-7 w-7" />
+              </div>
+              <div className="space-y-2 text-left">
+                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">Share your spark</h2>
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                    What brilliant idea is on your mind today? Let the community know!
+                  </p>
+                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                    Have an idea? Ready to ask a question or start a poll? Let&apos;s get started.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <Button asChild className="h-12 px-8 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs gap-3 shadow-lg shadow-sky-500/20 active:scale-95 transition-all shrink-0">
+              <Link href="/dashboard/research-analytics/new">
+                Share your spark <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </Card>
+      </motion.section>
+
+      {/* Hero AI Assistant Section */}
       <motion.section 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-4xl mx-auto w-full flex flex-col items-center text-center space-y-8 py-12"
+        className="max-w-4xl mx-auto w-full flex flex-col items-center text-center space-y-8 py-6"
       >
         <div className="space-y-4">
             <div className="flex items-center justify-center gap-3 mb-2">
@@ -144,7 +179,7 @@ export default function DashboardHomePage() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
             
             <div className="p-6 pb-2 text-left relative z-10">
-                <span className="text-[10px] font-black text-primary/40 ml-3">Nyaya Sahayak AI hub</span>
+                <span className="text-[10px] font-black text-primary/40 ml-3">Nyaya Sahayak AI assistant</span>
             </div>
             <div className="px-4 pb-4 space-y-4 relative z-10">
                 <div className="relative">
@@ -189,7 +224,7 @@ export default function DashboardHomePage() {
                     whileTap={{ scale: 0.95 }}
                 >
                     <Link href={chip.href}>
-                        <Badge variant="outline" className="h-11 px-6 rounded-full bg-background/50 hover:bg-primary hover:text-white hover:border-primary cursor-pointer border-primary/10 font-black text-[10px] transition-all flex items-center gap-2.5 shadow-sm">
+                        <Badge variant="outline" className="h-11 px-6 rounded-full bg-background/50 hover:bg-primary hover:text-white hover:border-primary border-primary/10 font-black text-[10px] transition-all flex items-center gap-2.5 shadow-sm">
                             <chip.icon className="h-3.5 w-3.5" />
                             {chip.label}
                         </Badge>
@@ -225,13 +260,14 @@ export default function DashboardHomePage() {
                 {isProcessing && (
                     <div className="flex gap-4 items-center pl-14 text-primary/40">
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-[10px] font-black animate-pulse">Neural ingress...</span>
+                        <span className="text-[10px] font-black animate-pulse">Neural processing...</span>
                     </div>
                 )}
             </motion.section>
         )}
       </AnimatePresence>
 
+      {/* Community Transmissions Section */}
       <section className="space-y-8">
         <div className="flex items-center justify-between border-b border-primary/5 pb-4">
             <div className="flex items-center gap-3">
@@ -240,12 +276,12 @@ export default function DashboardHomePage() {
                 </div>
                 <div className="text-left">
                     <h2 className="text-2xl font-black font-headline tracking-tighter leading-none">Community transmissions</h2>
-                    <p className="text-[10px] font-bold text-muted-foreground mt-1">Live statutory ideas from verified citizen registry.</p>
+                    <p className="text-[10px] font-bold text-muted-foreground mt-1">Live statutory ideas from verified citizen records.</p>
                 </div>
             </div>
             <Button variant="ghost" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-xl hover:bg-primary/5 border border-primary/5">
               <Link href="/dashboard/research-analytics">
-                View all records <ChevronRight className="ml-1 h-4 w-4" />
+                View all transmissions <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
         </div>
@@ -255,7 +291,7 @@ export default function DashboardHomePage() {
                 {loading ? (
                     <div className="col-span-full py-20 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                        <p className="text-[10px] font-black text-muted-foreground animate-pulse">Syncing registry...</p>
+                        <p className="text-[10px] font-black text-muted-foreground animate-pulse">Syncing transmissions...</p>
                     </div>
                 ) : posts.map((post, idx) => (
                     <motion.div
@@ -265,7 +301,7 @@ export default function DashboardHomePage() {
                         transition={{ delay: idx * 0.1 }}
                     >
                         <Link href={`/dashboard/research-analytics`} className="block group h-full">
-                            <Card className="h-full border-primary/10 hover:border-primary/30 transition-all duration-500 rounded-[2.5rem] bg-card/40 backdrop-blur-sm shadow-lg hover:shadow-2xl overflow-hidden relative flex flex-col">
+                            <Card className="h-full border-primary/10 hover:border-primary/30 transition-all duration-500 rounded-[2rem] bg-card/40 backdrop-blur-sm shadow-lg hover:shadow-2xl overflow-hidden relative flex flex-col">
                                 <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary/20 group-hover:bg-primary transition-all" />
                                 <CardHeader className="p-8 pb-4 text-left">
                                     <div className="flex items-start justify-between mb-6">
@@ -306,6 +342,7 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
+      {/* Forensic Terminals Grid */}
       <section className="space-y-8">
         <div className="flex items-center gap-3 px-1 text-left">
             <div className="p-2 rounded-lg bg-blue-500/10">
@@ -355,6 +392,7 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
+      {/* Upgrade & Quick Guides Section */}
       <div className="grid lg:grid-cols-12 gap-8 pt-10">
         <div className="lg:col-span-8">
             <Card className="bg-primary text-primary-foreground rounded-[3rem] overflow-hidden border-none shadow-3xl shadow-primary/20 group relative">
@@ -417,16 +455,17 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
+      {/* Footer System Status */}
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
         <p className="text-[9px] font-black text-muted-foreground">nyayasahayak.in // Terminal hub // 2025</p>
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4" />
-                <span className="text-[9px] font-black">Secured</span>
+                <span className="text-[9px] font-black">Secured system</span>
             </div>
             <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4" />
-                <span className="text-[9px] font-black">Live system</span>
+                <span className="text-[9px] font-black">Live terminal ingress</span>
             </div>
         </div>
       </div>
