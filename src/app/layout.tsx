@@ -73,7 +73,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     "@context": "https://schema.org",
     "@type": "LegalService",
     "name": "Nyaya Sahayak",
-    "alternateName": "AI Nyaya Mitra",
+    "alternateName": "Nyaya Sahayak AI",
     "url": "https://nyayasahayak.in",
     "logo": "https://nyayasahayak.in/Logo.png",
     "description": "Premium AI-driven legal assistance and forensic document auditing platform for the Indian judicial system.",

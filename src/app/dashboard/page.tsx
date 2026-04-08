@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -81,7 +80,7 @@ export default function DashboardHomePage() {
   const [loading, setLoading] = useState(true);
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState([
-    { role: 'ai', text: "Namaste. I am Nyaya Mitra, your AI legal co-pilot. How can I assist your forensic research today?" }
+    { role: 'ai', text: "Namaste. I am Nyaya Sahayak, your AI legal co-pilot. How can I assist your forensic research today?" }
   ]);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -170,7 +169,7 @@ export default function DashboardHomePage() {
                         <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-green-500 rounded-full border-2 border-[#0D1B2A] shadow-sm animate-pulse" />
                     </div>
                     <div className="text-left">
-                        <CardTitle className="text-2xl font-black tracking-tighter uppercase leading-none">Nyaya Mitra AI</CardTitle>
+                        <CardTitle className="text-2xl font-black tracking-tighter uppercase leading-none">Nyaya Sahayak AI</CardTitle>
                         <p className="text-[10px] font-bold text-primary/60 uppercase tracking-[0.3em] mt-1.5">Official Problem Solver Node</p>
                     </div>
                 </div>

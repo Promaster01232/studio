@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -97,7 +96,7 @@ export function FloatingHub() {
 
 function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'ai', text: "Namaste! I am Nyaya Mitra, your AI legal co-pilot. How can I assist your forensic research today?" }
+        { role: 'ai', text: "Namaste! I am Nyaya Sahayak, your AI legal co-pilot. How can I assist your forensic research today?" }
     ]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -129,7 +128,7 @@ function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[2rem] border-none shadow-[0_0_100px_rgba(0,0,0,0.2)] bg-card text-left">
+            <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[2rem] border-none shadow-[0_0_100_rgba(0,0,0,0.2)] bg-card text-left">
                 <DialogHeader className="bg-primary p-6 text-white border-none flex flex-row items-center gap-4 space-y-0">
                     <div className="relative">
                         <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md">
@@ -138,7 +137,7 @@ function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
                         <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-primary shadow-sm animate-pulse" />
                     </div>
                     <div className="text-left flex-1 min-w-0">
-                        <DialogTitle className="text-xl font-black tracking-tighter leading-none text-white">Nyaya Mitra Chat</DialogTitle>
+                        <DialogTitle className="text-xl font-black tracking-tighter leading-none text-white">Nyaya Sahayak Chat</DialogTitle>
                         <DialogDescription className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/60 mt-1">Forensic Assistant Node Active</DialogDescription>
                     </div>
                     <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="text-white/60 hover:text-white hover:bg-white/10 rounded-full h-8 w-8">
@@ -168,7 +167,7 @@ function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
                                         {m.text}
                                     </div>
                                     <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest px-1">
-                                        {m.role === 'ai' ? 'Nyaya Mitra' : 'Registry Node'}
+                                        {m.role === 'ai' ? 'Nyaya Sahayak' : 'Registry Node'}
                                     </span>
                                 </motion.div>
                             ))}
