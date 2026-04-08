@@ -30,7 +30,8 @@ import {
   ChevronDown,
   X,
   FileCheck,
-  Search
+  Search,
+  Zap
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
@@ -126,7 +127,7 @@ export default function DocumentIntelligencePage() {
                                     <div className="p-3 rounded-xl bg-background shadow-sm border border-primary/5 group-hover:scale-110 transition-transform">
                                         <FileSearch className="h-6 w-6 text-primary opacity-40" />
                                     </div>
-                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-center px-4">
                                         {fileName ? fileName : "Upload Instrument Node"}
                                     </p>
                                 </div>
