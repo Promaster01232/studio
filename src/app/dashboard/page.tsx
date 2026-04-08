@@ -1,11 +1,10 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Mic,
   Search,
@@ -33,7 +32,10 @@ import {
   BadgeCheck,
   User,
   Library,
-  Edit
+  Edit,
+  FileCheck,
+  Globe,
+  Fingerprint
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -44,6 +46,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/logo";
 import { getGeneralAiResponseAction } from "./chat-actions";
+import { AudioAssistant } from "@/components/audio-assistant";
 
 interface Post {
     id: string;
@@ -81,6 +84,7 @@ export default function DashboardHomePage() {
   const [userName, setUserName] = useState("citizen");
   const [messages, setMessages] = useState<{role: 'user' | 'ai', text: string}[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (auth.currentUser) {
@@ -104,6 +108,12 @@ export default function DashboardHomePage() {
     return () => unsub();
   }, [firestore, auth.currentUser]);
 
+  useEffect(() => {
+    if (messages.length > 0 && scrollRef.current) {
+        scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [messages]);
+
   const handleSendMessage = async () => {
     if (!chatInput.trim() || isProcessing) return;
     
@@ -122,7 +132,7 @@ export default function DashboardHomePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 text-left font-body">
+    <div className="max-w-7xl mx-auto space-y-16 py-8 px-4 sm:px-6 text-left font-body">
       
       {/* Primary Ingress: Share Your Spark Banner */}
       <motion.section 
@@ -138,13 +148,11 @@ export default function DashboardHomePage() {
               </div>
               <div className="space-y-2 text-left">
                 <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">Share your spark</h2>
-                <div className="space-y-4">
+                <div className="space-y-1">
                   <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-                    What brilliant idea is on your mind today? Let the community know!
+                    What brilliant idea is on your mind today? Let the community know.
                   </p>
-                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-                    Have an idea? Ready to ask a question or start a poll? Let&apos;s get started.
-                  </p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-sky-500/60">Community Transmission Hub</p>
                 </div>
               </div>
             </div>
@@ -179,7 +187,7 @@ export default function DashboardHomePage() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
             
             <div className="p-6 pb-2 text-left relative z-10">
-                <span className="text-[10px] font-black text-primary/40 ml-3">Nyaya Sahayak AI assistant</span>
+                <span className="text-[10px] font-black text-primary/40 ml-3 uppercase tracking-widest">Ask Nyaya Sahayak AI</span>
             </div>
             <div className="px-4 pb-4 space-y-4 relative z-10">
                 <div className="relative">
@@ -224,7 +232,7 @@ export default function DashboardHomePage() {
                     whileTap={{ scale: 0.95 }}
                 >
                     <Link href={chip.href}>
-                        <Badge variant="outline" className="h-11 px-6 rounded-full bg-background/50 hover:bg-primary hover:text-white hover:border-primary border-primary/10 font-black text-[10px] transition-all flex items-center gap-2.5 shadow-sm">
+                        <Badge variant="outline" className="h-11 px-6 rounded-full bg-background/50 hover:bg-primary hover:text-white hover:border-primary border-primary/10 font-black text-[10px] transition-all flex items-center gap-2.5 shadow-sm uppercase tracking-tight">
                             <chip.icon className="h-3.5 w-3.5" />
                             {chip.label}
                         </Badge>
@@ -234,33 +242,80 @@ export default function DashboardHomePage() {
         </div>
       </motion.section>
 
+      {/* AI Report Stream */}
       <AnimatePresence>
         {messages.length > 0 && (
             <motion.section 
+                ref={scrollRef}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-3xl mx-auto w-full space-y-6 pt-10 border-t border-primary/5"
+                className="max-w-4xl mx-auto w-full space-y-10 pt-10 border-t border-primary/5"
             >
                 {messages.map((m, i) => (
-                    <div key={i} className={cn("flex gap-4 items-start", m.role === 'user' ? "flex-row-reverse" : "")}>
-                        <div className={cn(
-                            "h-10 w-10 rounded-xl flex items-center justify-center shrink-0 border border-primary/10",
-                            m.role === 'ai' ? "bg-primary/5 text-primary" : "bg-muted text-muted-foreground"
-                        )}>
-                            {m.role === 'ai' ? <Logo className="h-6 w-6 border-none p-0 shadow-none" priority={false} /> : <User className="h-5 w-5" />}
-                        </div>
-                        <div className={cn(
-                            "px-6 py-4 rounded-[1.5rem] text-sm font-bold leading-relaxed max-w-[80%] shadow-sm",
-                            m.role === 'ai' ? "bg-muted/30 text-foreground" : "bg-primary text-white"
-                        )}>
-                            {m.text}
-                        </div>
+                    <div key={i} className={cn("flex gap-6 items-start", m.role === 'user' ? "flex-row-reverse" : "flex-col")}>
+                        {m.role === 'user' ? (
+                            <>
+                                <div className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0 border border-primary/10 bg-muted text-muted-foreground shadow-sm">
+                                    <User className="h-5 w-5" />
+                                </div>
+                                <div className="px-6 py-4 rounded-[1.5rem] rounded-tr-none text-sm font-bold leading-relaxed max-w-[80%] shadow-lg bg-primary text-white">
+                                    {m.text}
+                                </div>
+                            </>
+                        ) : (
+                            <Card className="w-full glass border-primary/20 shadow-3xl rounded-[2.5rem] overflow-hidden relative">
+                                <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
+                                    <Logo className="h-[400px] w-[400px] border-none p-0 shadow-none" priority={false} />
+                                </div>
+                                <CardHeader className="p-8 sm:p-10 bg-primary text-primary-foreground relative z-10 border-b border-white/10">
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+                                        <div className="space-y-4 text-left">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 rounded-lg bg-white/10 backdrop-blur-md">
+                                                    <FileCheck className="h-5 w-5 text-white" />
+                                                </div>
+                                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Official forensic report</span>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <CardTitle className="text-xl sm:text-2xl font-black tracking-tight leading-none uppercase">Statutory guide summary</CardTitle>
+                                                <p className="text-[10px] font-bold text-white/60 uppercase tracking-[0.4em] flex items-center gap-2">
+                                                    <Globe className="h-3 w-3" /> NS-INTEL-ST-4.2 // Encrypted
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <AudioAssistant text={m.text} language="English" />
+                                            <Badge variant="outline" className="border-white/20 text-white font-black text-[9px] uppercase tracking-widest h-9 px-4">Registry active</Badge>
+                                        </div>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="p-8 sm:p-12 relative z-10 text-left">
+                                    <div className="prose dark:prose-invert max-w-none">
+                                        <div className="whitespace-pre-line leading-loose text-sm sm:text-base font-medium text-foreground/90 selection:bg-primary/10">
+                                            {m.text}
+                                        </div>
+                                    </div>
+                                    <div className="mt-12 pt-10 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30">
+                                        <div className="flex items-center gap-4">
+                                            <div className="p-3 rounded-2xl bg-primary/5 text-primary">
+                                                <ShieldCheck className="h-6 w-6" />
+                                            </div>
+                                            <div className="text-left">
+                                                <p className="text-[10px] font-black uppercase tracking-widest">Statutory security</p>
+                                                <p className="text-[9px] font-bold">This dossier is protected under attorney-client transience protocols.</p>
+                                            </div>
+                                        </div>
+                                        <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // REPORT TERMINAL</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
                 ))}
                 {isProcessing && (
-                    <div className="flex gap-4 items-center pl-14 text-primary/40">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-[10px] font-black animate-pulse">Neural processing...</span>
+                    <div className="flex gap-4 items-center pl-4 text-primary/40">
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        <span className="text-[10px] font-black animate-pulse uppercase tracking-[0.3em]">Deconstructing statutory matrix...</span>
                     </div>
                 )}
             </motion.section>
@@ -275,11 +330,11 @@ export default function DashboardHomePage() {
                     <Newspaper className="h-6 w-6" />
                 </div>
                 <div className="text-left">
-                    <h2 className="text-2xl font-black font-headline tracking-tighter leading-none">Community transmissions</h2>
-                    <p className="text-[10px] font-bold text-muted-foreground mt-1">Live statutory ideas from verified citizen records.</p>
+                    <h2 className="text-2xl font-black font-headline tracking-tighter leading-none uppercase">Community transmissions</h2>
+                    <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Live statutory ideas from verified citizen records.</p>
                 </div>
             </div>
-            <Button variant="ghost" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-xl hover:bg-primary/5 border border-primary/5">
+            <Button variant="ghost" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-xl hover:bg-primary/5 border border-primary/5 uppercase tracking-widest">
               <Link href="/dashboard/research-analytics">
                 View all transmissions <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
@@ -291,7 +346,7 @@ export default function DashboardHomePage() {
                 {loading ? (
                     <div className="col-span-full py-20 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                        <p className="text-[10px] font-black text-muted-foreground animate-pulse">Syncing transmissions...</p>
+                        <p className="text-[10px] font-black text-muted-foreground animate-pulse uppercase tracking-widest">Syncing transmissions...</p>
                     </div>
                 ) : posts.map((post, idx) => (
                     <motion.div
@@ -312,14 +367,14 @@ export default function DashboardHomePage() {
                                             </Avatar>
                                             <div className="text-left">
                                                 <p className="text-xs font-black tracking-tight">{post.isAnonymous ? 'Identity masked' : post.authorName}</p>
-                                                <p className="text-[9px] text-muted-foreground font-black opacity-40">{post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}</p>
+                                                <p className="text-[9px] text-muted-foreground font-black opacity-40 uppercase tracking-tight">{post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}</p>
                                             </div>
                                         </div>
-                                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black px-3 py-1 rounded-full">
+                                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black px-3 py-1 rounded-full uppercase">
                                             {post.postType || 'Idea'}
                                         </Badge>
                                     </div>
-                                    <h3 className="text-lg font-black tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2">{post.title}</h3>
+                                    <h3 className="text-lg font-black tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2 uppercase">{post.title}</h3>
                                 </CardHeader>
                                 <CardContent className="p-8 pt-0 flex-1 text-left">
                                     <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed font-medium">
@@ -327,10 +382,10 @@ export default function DashboardHomePage() {
                                     </p>
                                 </CardContent>
                                 <CardFooter className="p-8 pt-0 flex items-center gap-6">
-                                    <div className="flex items-center gap-2 text-red-500/60 font-black text-[10px]">
+                                    <div className="flex items-center gap-2 text-red-500/60 font-black text-[10px] uppercase">
                                         <Heart className="h-4 w-4 fill-current" /> {post.likes}
                                     </div>
-                                    <div className="flex items-center gap-2 text-primary/60 font-black text-[10px]">
+                                    <div className="flex items-center gap-2 text-primary/60 font-black text-[10px] uppercase">
                                         <MessageCircle className="h-4 w-4" /> Discussion
                                     </div>
                                 </CardFooter>
@@ -348,7 +403,7 @@ export default function DashboardHomePage() {
             <div className="p-2 rounded-lg bg-blue-500/10">
                 <Zap className="h-5 w-5 text-blue-500" />
             </div>
-            <h2 className="text-xl font-black text-foreground font-headline">Forensic terminals</h2>
+            <h2 className="text-xl font-black text-foreground font-headline uppercase">Forensic terminals</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {tools.map((tool, i) => (
@@ -371,14 +426,14 @@ export default function DashboardHomePage() {
                         <tool.icon className="h-7 w-7" />
                     </div>
                     <div className="space-y-2">
-                        <h3 className="text-xl font-black tracking-tight leading-none">{tool.title}</h3>
+                        <h3 className="text-xl font-black tracking-tight leading-none uppercase">{tool.title}</h3>
                         <p className="text-[11px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
                             {tool.desc}
                         </p>
                     </div>
                     <div className="mt-10 flex items-center justify-between">
-                        <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors">
-                        Initialize tool
+                        <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors uppercase tracking-widest">
+                        Initialize terminal
                         </div>
                         <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                             <ArrowRight className="h-5 w-5" />
@@ -405,14 +460,14 @@ export default function DashboardHomePage() {
                         <div className="space-y-3">
                             <div className="flex items-center justify-center md:justify-start gap-2">
                                 <Zap className="h-5 w-5 text-amber-400 fill-amber-400" />
-                                <span className="text-[10px] font-black opacity-60">Statutory expansion</span>
+                                <span className="text-[10px] font-black opacity-60 uppercase tracking-widest">Statutory expansion</span>
                             </div>
-                            <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.9]">Elevate your authority.</h3>
+                            <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.9] uppercase">Elevate your authority.</h3>
                             <p className="text-sm sm:text-lg opacity-80 font-medium leading-relaxed max-w-lg">
                                 Unlock unlimited AI forensic scans, professional document drafting, and root access to the legal registry.
                             </p>
                         </div>
-                        <Button variant="secondary" className="w-full md:w-auto font-black text-[10px] rounded-2xl h-14 px-12 shadow-2xl active:scale-95 transition-all" asChild>
+                        <Button variant="secondary" className="w-full md:w-auto font-black text-[10px] rounded-2xl h-14 px-12 shadow-2xl active:scale-95 transition-all uppercase tracking-widest" asChild>
                             <Link href="/dashboard/billing">Upgrade registry clearance</Link>
                         </Button>
                     </div>
@@ -440,7 +495,7 @@ export default function DashboardHomePage() {
                         <Link key={i} href={item.href} className="flex items-center justify-between p-3 rounded-2xl hover:bg-primary/5 transition-all group/item border border-transparent hover:border-primary/10">
                             <div className="flex items-center gap-3">
                                 <item.icon className="h-4 w-4 text-primary/60 group-hover/item:text-primary transition-colors" />
-                                <span className="text-[11px] font-bold text-muted-foreground group-hover/item:text-foreground transition-colors">{item.label}</span>
+                                <span className="text-[11px] font-bold text-muted-foreground group-hover/item:text-foreground transition-colors uppercase tracking-tight">{item.label}</span>
                             </div>
                             <ChevronRight className="h-3 w-3 text-muted-foreground/30 group-hover/item:text-primary group-hover/item:translate-x-1 transition-all" />
                         </Link>
@@ -457,15 +512,15 @@ export default function DashboardHomePage() {
 
       {/* Footer System Status */}
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
-        <p className="text-[9px] font-black text-muted-foreground">nyayasahayak.in // Terminal hub // 2025</p>
+        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">nyayasahayak.in // Terminal hub // 2025</p>
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4" />
-                <span className="text-[9px] font-black">Secured system</span>
+                <span className="text-[9px] font-black uppercase tracking-widest">Secured system</span>
             </div>
             <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4" />
-                <span className="text-[9px] font-black">Live terminal ingress</span>
+                <span className="text-[9px] font-black uppercase tracking-widest">Live terminal ingress</span>
             </div>
         </div>
       </div>

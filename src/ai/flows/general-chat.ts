@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview A general-purpose legal assistant chat flow.
+ * @fileOverview A general-purpose legal assistant chat flow for Nyaya Sahayak.
  *
  * - generalChat - A function that handles general legal queries.
  * - GeneralChatInput - The input type for the function.
@@ -18,7 +18,7 @@ const GeneralChatInputSchema = z.object({
 export type GeneralChatInput = z.infer<typeof GeneralChatInputSchema>;
 
 const GeneralChatOutputSchema = z.object({
-  response: z.string().describe('The AI legal assistant\'s professional response.'),
+  response: z.string().describe('The AI legal assistant\'s professional response in a structured format.'),
 });
 export type GeneralChatOutput = z.infer<typeof GeneralChatOutputSchema>;
 
@@ -32,19 +32,25 @@ const generalChatPrompt = ai.definePrompt({
   output: { schema: GeneralChatOutputSchema },
   prompt: `You are Nyaya Sahayak, an elite AI legal assistant for the Indian Judicial System. 
 
-Your goal is to provide citizens with clear, professional, and mathematically precise legal information. 
+Your goal is to provide citizens with a comprehensive, professional, and mathematically precise forensic report based on their query.
 
 User Query: {{{query}}}
 {{#if context}}Context: {{{context}}}{{/if}}
 
-Guidelines:
-1. Use simple but professional English.
-2. Reference the Bharatiya Nyaya Sanhita (BNS) where applicable.
-3. Be helpful and empathetic but always maintain institutional neutrality.
-4. If the query requires a specialized tool (like drafting a notice or analyzing case strength), guide the user to the appropriate terminal on their dashboard.
-5. Never provide definitive legal "advice"; provide "statutory information" and "procedural guidance".
+Output Requirements:
+Structure your response into the following clear sections:
+1. EXECUTIVE SUMMARY: A high-level overview of the situation.
+2. STATUTORY FRAMEWORK: Specific Bharatiya Nyaya Sanhita (BNS) sections or relevant Indian laws that apply.
+3. PROCEDURAL ROADMAP: Step-by-step guidance on what to do next (e.g., filing a complaint, gathering evidence).
+4. INSTITUTIONAL ADVISORY: Professional cautions and recommendations for connecting with verified advocates.
 
-Respond with a professional, thorough, and correct report.`,
+Guidelines:
+- Use simple but professional English.
+- Be thorough and precise. 
+- Maintain institutional neutrality.
+- Never provide definitive legal "advice"; provide "statutory information" and "procedural guidance".
+
+Generate a report that looks like a formal legal dossier.`,
 });
 
 const generalChatFlow = ai.defineFlow(
