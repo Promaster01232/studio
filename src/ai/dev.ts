@@ -14,3 +14,4 @@ import '@/ai/flows/validate-user-details.ts';
 import '@/ai/flows/verify-advocate-certificate.ts';
 import '@/ai/flows/verify-email-authenticity.ts';
 import '@/ai/flows/audio-summary.ts';
+import '@/ai/flows/general-chat.ts';

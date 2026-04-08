@@ -41,6 +41,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/logo";
+import { getGeneralAiResponseAction } from "./chat-actions";
 
 interface Post {
     id: string;
@@ -101,7 +102,7 @@ export default function DashboardHomePage() {
     return () => unsub();
   }, [firestore, auth.currentUser]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!chatInput.trim() || isProcessing) return;
     
     const userMsg = chatInput.trim();
@@ -109,13 +110,13 @@ export default function DashboardHomePage() {
     setChatInput("");
     setIsProcessing(true);
 
-    setTimeout(() => {
-        setMessages(prev => [...prev, { 
-            role: 'ai', 
-            text: "I am analyzing your query against the latest BNS statutory registry. For a definitive forensic audit, I recommend using the specialized terminals below." 
-        }]);
-        setIsProcessing(false);
-    }, 1500);
+    const result = await getGeneralAiResponseAction(userMsg);
+    
+    setMessages(prev => [...prev, { 
+        role: 'ai', 
+        text: result.response 
+    }]);
+    setIsProcessing(false);
   };
 
   return (

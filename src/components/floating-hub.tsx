@@ -28,6 +28,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/firebase";
+import { getGeneralAiResponseAction } from "@/app/dashboard/chat-actions";
 
 interface Message {
     role: 'user' | 'ai';
@@ -106,7 +107,7 @@ function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
         }
     }, [messages]);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!input.trim() || isLoading) return;
         
         const userMsg = input.trim();
@@ -114,18 +115,18 @@ function AIChatDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
         setInput("");
         setIsLoading(true);
 
-        setTimeout(() => {
-            setMessages(prev => [...prev, { 
-                role: 'ai', 
-                text: "I am analyzing your query against the statutory registry. For a more detailed deconstruction, please utilize the specialized terminals like 'Narrate problem' or 'Strength matrix'." 
-            }]);
-            setIsLoading(false);
-        }, 1500);
+        const result = await getGeneralAiResponseAction(userMsg);
+
+        setMessages(prev => [...prev, { 
+            role: 'ai', 
+            text: result.response 
+        }]);
+        setIsLoading(false);
     };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[2rem] border-none shadow-[0_0_100_rgba(0,0,0,0.2)] bg-card text-left">
+            <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-[2rem] border-none shadow-[0_0_100px_rgba(0,0,0,0.2)] bg-card text-left">
                 <DialogHeader className="bg-primary p-6 text-white border-none flex flex-row items-center gap-4 space-y-0">
                     <div className="relative">
                         <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md">
