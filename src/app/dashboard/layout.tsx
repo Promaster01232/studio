@@ -245,9 +245,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <div className="bg-destructive/10 p-10 rounded-[3rem] mb-8 border border-destructive/20 shadow-inner">
                   <ShieldX className="h-24 w-24 text-destructive" />
               </div>
-              <h1 className="text-4xl font-black font-headline tracking-tighter uppercase mb-4">Node access restricted</h1>
+              <h1 className="text-4xl font-black font-headline tracking-tighter uppercase mb-4">Access restricted</h1>
               <p className="text-muted-foreground max-w-md font-medium leading-relaxed mb-10">
-                  Your identity node has been suspended following a statutory forensic audit. Please contact root authority for restoration protocols.
+                  Your identity has been suspended following a statutory forensic audit. Please contact root authority for restoration protocols.
               </p>
               <div className="flex gap-4">
                   <Button onClick={handleLogout} variant="outline" className="h-12 px-10 font-bold rounded-xl border-primary/10">Terminate session</Button>
@@ -280,7 +280,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <div className="p-4 space-y-3 text-left">
                         <div className="flex items-center gap-2">
                             <Zap className="h-3.5 w-3.5 text-primary" />
-                            <span className="text-[9px] font-black text-primary">Upgrade node</span>
+                            <span className="text-[9px] font-black text-primary">Upgrade access</span>
                         </div>
                         <p className="text-[9px] font-medium text-muted-foreground leading-relaxed">Unlock elite forensic tools.</p>
                         <Button asChild size="sm" className="w-full h-8 font-black text-[9px] rounded-xl shadow-lg text-center">

@@ -22,7 +22,6 @@ import {
   Heart,
   Newspaper,
   Plus,
-  MessageSquare,
   MessageCircle,
   Sparkles,
   Zap,
@@ -31,12 +30,8 @@ import {
   Layers,
   FileSearch,
   Scale,
-  Edit3,
-  SquarePen,
-  ChevronDown,
-  User,
   BadgeCheck,
-  PlusCircle
+  User
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -243,7 +238,7 @@ export default function DashboardHomePage() {
                 </div>
                 <div className="text-left">
                     <h2 className="text-2xl font-black font-headline tracking-tighter leading-none">Community transmissions</h2>
-                    <p className="text-[10px] font-bold text-muted-foreground mt-1">Live statutory ideas from verified citizen nodes.</p>
+                    <p className="text-[10px] font-bold text-muted-foreground mt-1">Live statutory ideas from verified citizen registry.</p>
                 </div>
             </div>
             <Button variant="ghost" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-xl hover:bg-primary/5 border border-primary/5">
@@ -258,7 +253,7 @@ export default function DashboardHomePage() {
                 {loading ? (
                     <div className="col-span-full py-20 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                        <p className="text-[10px] font-black text-muted-foreground animate-pulse">Syncing registry nodes...</p>
+                        <p className="text-[10px] font-black text-muted-foreground animate-pulse">Syncing registry...</p>
                     </div>
                 ) : posts.map((post, idx) => (
                     <motion.div
@@ -283,7 +278,7 @@ export default function DashboardHomePage() {
                                             </div>
                                         </div>
                                         <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black px-3 py-1 rounded-full">
-                                            {post.postType || 'Node'}
+                                            {post.postType || 'Idea'}
                                         </Badge>
                                     </div>
                                     <h3 className="text-lg font-black tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2">{post.title}</h3>
@@ -344,7 +339,7 @@ export default function DashboardHomePage() {
                     </div>
                     <div className="mt-10 flex items-center justify-between">
                         <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors">
-                        Initialize node
+                        Initialize tool
                         </div>
                         <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                             <ArrowRight className="h-5 w-5" />
@@ -378,7 +373,7 @@ export default function DashboardHomePage() {
                             </p>
                         </div>
                         <Button variant="secondary" className="w-full md:w-auto font-black text-[10px] rounded-2xl h-14 px-12 shadow-2xl active:scale-95 transition-all" asChild>
-                            <Link href="/dashboard/billing">Upgrade registry node</Link>
+                            <Link href="/dashboard/billing">Upgrade registry clearance</Link>
                         </Button>
                     </div>
                 </CardContent>
@@ -395,7 +390,7 @@ export default function DashboardHomePage() {
                 </CardHeader>
                 <CardContent className="p-8 space-y-8 text-left flex-1 flex flex-col justify-center">
                     <div className="flex justify-between items-center text-[10px] font-black">
-                        <span className="flex items-center gap-3 text-muted-foreground"><Activity className="h-4 w-4 text-green-500" /> AI core node</span>
+                        <span className="flex items-center gap-3 text-muted-foreground"><Activity className="h-4 w-4 text-green-500" /> AI core</span>
                         <span className="text-green-500">Synchronized</span>
                     </div>
                     <div className="flex justify-between items-center text-[10px] font-black">
@@ -423,7 +418,7 @@ export default function DashboardHomePage() {
             </div>
             <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4" />
-                <span className="text-[9px] font-black">Live node</span>
+                <span className="text-[9px] font-black">Live system</span>
             </div>
         </div>
       </div>

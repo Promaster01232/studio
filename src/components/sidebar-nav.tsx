@@ -29,7 +29,6 @@ import {
   ChevronRight,
   Settings,
   CreditCard,
-  Lock,
   Scale,
   ShieldCheck,
   Cookie,
@@ -174,7 +173,6 @@ export function SidebarNav({ isAdmin = false, isGuest = false }: { isAdmin?: boo
                 >
                   <item.icon className="h-5 w-5" />
                   <span className="font-black text-[11px] flex-1 text-left">{item.title}</span>
-                  {isGuest && item.isFeature && <Lock className="h-3 w-3 opacity-30 mr-2" />}
                   <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
@@ -190,7 +188,6 @@ export function SidebarNav({ isAdmin = false, isGuest = false }: { isAdmin?: boo
                         <Link href={subItem.href} className="flex items-center gap-3">
                           <subItem.icon className="h-4 w-4 opacity-70" />
                           <span className="text-[11px] font-bold tracking-tight flex-1">{subItem.label}</span>
-                          {isGuest && subItem.isFeature && <Lock className="h-2.5 w-2.5 opacity-20" />}
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>

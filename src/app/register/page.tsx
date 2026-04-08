@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -86,7 +87,7 @@ export default function RegisterPage() {
     }
 
     if (!mobileRegex.test(cleanMobile)) {
-        toast({ variant: "destructive", title: "Invalid Mobile Number", description: "Please provide a valid 10-digit Indian mobile number." });
+        toast({ variant: "destructive", title: "Invalid mobile number", description: "Please provide a valid 10-digit Indian mobile number." });
         return;
     }
 
@@ -104,7 +105,7 @@ export default function RegisterPage() {
         const emailValidation = await verifyEmailAuthenticity({ email: trimmedEmail });
         if (!emailValidation.isAuthentic) {
           securityStatus = 'flagged_for_review';
-          console.warn("[SECURITY] Identity node flagged:", emailValidation.reason);
+          console.warn("[SECURITY] Identity flagged:", emailValidation.reason);
         }
         setEmailStatus('valid');
       } catch (aiError) {
@@ -117,7 +118,7 @@ export default function RegisterPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
       const user = userCredential.user;
 
-      if (!user) throw new Error("Identity node generation failed.");
+      if (!user) throw new Error("Identity generation failed.");
 
       await updateProfile(user, { displayName: `${cleanFirstName} ${cleanLastName}` });
 
@@ -152,15 +153,15 @@ export default function RegisterPage() {
           createdAt: Date.now()
       }).catch(() => console.warn("[RTDB] Identity sync deferred."));
 
-      toast({ title: "Registration Synchronized", description: "Welcome to your Nyaya Sahayak terminal." });
+      toast({ title: "Registration synchronized", description: "Welcome to your Nyaya Sahayak terminal." });
       router.push("/dashboard");
 
     } catch (error: any) {
       console.error("Enrollment failed:", error);
-      let errorMsg = "Identity node initialization refused. Please try again.";
-      if (error.code === 'auth/email-already-in-use') errorMsg = "This email node is already registered.";
+      let errorMsg = "Identity initialization refused. Please try again.";
+      if (error.code === 'auth/email-already-in-use') errorMsg = "This email is already registered.";
       
-      toast({ variant: "destructive", title: "Enrollment Failure", description: errorMsg });
+      toast({ variant: "destructive", title: "Enrollment failure", description: errorMsg });
       setLoading(false);
       setIsValidating(false);
     }
@@ -170,7 +171,7 @@ export default function RegisterPage() {
     if (!acceptedTerms) {
         toast({ 
             variant: "destructive", 
-            title: "Protocol Refused", 
+            title: "Protocol refused", 
             description: "Please acknowledge the system terms before initializing authorization." 
         });
         return;
@@ -182,11 +183,11 @@ export default function RegisterPage() {
       provider.setCustomParameters({ prompt: 'select_account' });
       await signInWithPopup(auth, provider);
     } catch (error: any) {
-      console.error("Google Access Error:", error);
+      console.error("Google access error:", error);
       toast({
         variant: "destructive",
-        title: "Google Access Failed",
-        description: "Authentication node busy or restricted. Please try again.",
+        title: "Google access failed",
+        description: "Authentication system busy or restricted. Please try again.",
       });
       setIsGoogleLoading(false);
     }
@@ -205,19 +206,19 @@ export default function RegisterPage() {
                 <h1 className="text-2xl font-black tracking-tight text-primary leading-none">
                     Nyaya Sahayak
                 </h1>
-                <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground mt-1">Institutional Hub</span>
+                <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground mt-1">Institutional hub</span>
               </div>
           </div>
           
           <div className="space-y-1 mb-8">
             <h2 className="text-3xl font-black font-headline tracking-tighter text-foreground uppercase">Enrollment</h2>
-            <p className="text-sm text-muted-foreground font-medium">Initialize your secure statutory node.</p>
+            <p className="text-sm text-muted-foreground font-medium">Initialize your secure statutory terminal.</p>
           </div>
           
           <div className="grid gap-5">
               <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2 text-left">
-                    <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given Name</Label>
+                    <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given name</Label>
                     <Input placeholder="Rajesh" value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary" />
                   </div>
                   <div className="grid gap-2 text-left">
@@ -228,8 +229,8 @@ export default function RegisterPage() {
               
               <div className="grid gap-2 text-left">
                   <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center justify-between ml-1">
-                    <span>Registry Email</span>
-                    {isValidating && <span className="text-[8px] text-primary font-black animate-pulse uppercase tracking-wider">AI Auditing Node...</span>}
+                    <span>Registry email</span>
+                    {isValidating && <span className="text-[8px] text-primary font-black animate-pulse uppercase tracking-wider">AI auditing...</span>}
                   </Label>
                   <div className="relative">
                     <Input
@@ -248,7 +249,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="grid gap-2 text-left">
-                  <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile Node</Label>
+                  <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile access</Label>
                   <div className="relative">
                     <Input type="tel" placeholder="+91 98765 43210" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} disabled={loading} className="h-12 font-bold pl-12 rounded-xl border-primary/10 focus:border-primary" />
                     <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
@@ -256,48 +257,48 @@ export default function RegisterPage() {
               </div>
 
               <div className="grid gap-2 text-left">
-                  <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Statutory Role</Label>
+                  <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Statutory role</Label>
                   <Select value={userType} onValueChange={setUserType} disabled={loading}>
                       <SelectTrigger className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary">
                           <SelectValue placeholder="Select role" />
                       </SelectTrigger>
                       <SelectContent className="rounded-xl glass">
-                          <SelectItem value="citizen" className="font-bold">Citizen Node</SelectItem>
+                          <SelectItem value="citizen" className="font-bold">Citizen</SelectItem>
                           <SelectItem value="businessman" className="font-bold">Business / MSME</SelectItem>
-                          <SelectItem value="student" className="font-bold">Law Student</SelectItem>
+                          <SelectItem value="student" className="font-bold">Law student</SelectItem>
                       </SelectContent>
                   </Select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2 text-left">
-                      <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Access Key</Label>
+                      <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Access key</Label>
                       <div className="relative">
                           <Input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} className="h-12 font-bold pr-12 rounded-xl border-primary/10 focus:border-primary" />
                           <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors">{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>
                       </div>
                   </div>
                   <div className="grid gap-2 text-left">
-                      <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Confirm Key</Label>
+                      <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Confirm key</Label>
                       <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary" />
                   </div>
               </div>
 
               <div className="flex items-start space-x-3 text-left p-4 rounded-2xl bg-primary/5 border border-primary/10 mt-2">
                   <Checkbox id="terms" checked={acceptedTerms} onCheckedChange={(c) => setAcceptedTerms(c as boolean)} className="data-[state=checked]:bg-primary mt-1 border-primary/30" />
-                  <Label htmlFor="terms" className="text-[10px] font-bold text-muted-foreground leading-relaxed cursor-pointer">I acknowledge the statutory protocols, user agreement, and <Link href="/privacy" className="text-primary hover:underline font-black">Privacy Policy</Link> of Nyaya Sahayak.</Label>
+                  <Label htmlFor="terms" className="text-[10px] font-bold text-muted-foreground leading-relaxed cursor-pointer">I acknowledge the statutory protocols, user agreement, and <Link href="/privacy" className="text-primary hover:underline font-black">Privacy policy</Link> of Nyaya Sahayak.</Label>
               </div>
 
               <Button className="w-full h-14 font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 active:scale-95 transition-all mt-4 rounded-xl group relative overflow-hidden" onClick={handleRegister} disabled={loading || !acceptedTerms}>
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                   {loading ? <Loader2 className="animate-spin h-5 w-5 mr-3" /> : <ShieldCheck className="h-5 w-5 mr-3" />}
-                  {loading ? "INITIALIZING NODE..." : "ACTIVATE REGISTRY NODE"}
+                  {loading ? "Initializing..." : "Activate registry terminal"}
               </Button>
 
               <div className="relative py-2">
                   <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-primary/10" /></div>
                   <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.4em]">
-                      <span className="bg-background px-4 text-muted-foreground/40">Secure Ingress</span>
+                      <span className="bg-background px-4 text-muted-foreground/40">Secure ingress</span>
                   </div>
               </div>
 
@@ -314,7 +315,7 @@ export default function RegisterPage() {
                       <GoogleIcon />
                     </div>
                   )}
-                  {isGoogleLoading ? "SYNCHRONIZING..." : "CONTINUE WITH GOOGLE"}
+                  {isGoogleLoading ? "Synchronizing..." : "Continue with Google"}
               </Button>
           </div>
           
@@ -331,13 +332,13 @@ export default function RegisterPage() {
                 <Scale className="h-24 w-24 text-primary opacity-40 group-hover:opacity-100 transition-opacity duration-700" />
             </div>
             <div className="space-y-3">
-                <h3 className="text-2xl font-black font-headline tracking-tighter uppercase text-foreground leading-tight">Identity <br /> Enrollment</h3>
+                <h3 className="text-2xl font-black font-headline tracking-tighter uppercase text-foreground leading-tight">Identity <br /> enrollment</h3>
                 <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest max-w-[240px] mx-auto leading-relaxed">Secure your digital presence within the Nyaya Sahayak legal ecosystem.</p>
             </div>
             <div className="flex items-center justify-center gap-4 pt-4">
                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-background border border-primary/10 shadow-sm">
                     <Zap className="h-3 w-3 text-primary animate-pulse" />
-                    <span className="text-[8px] font-black uppercase tracking-widest">Active Node</span>
+                    <span className="text-[8px] font-black uppercase tracking-widest">System active</span>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-background border border-primary/10 shadow-sm">
                     <Lock className="h-3 w-3 text-primary" />
@@ -345,7 +346,7 @@ export default function RegisterPage() {
                 </div>
             </div>
         </div>
-        <div className="absolute bottom-8 text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/30">NYAYASAHAYAK.IN // TRANSience REGISTRY</div>
+        <div className="absolute bottom-8 text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/30">NYAYASAHAYAK.IN // TRANSIENCE REGISTRY</div>
       </div>
     </Card>
   );

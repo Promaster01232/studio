@@ -1,8 +1,9 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
 import { PageHeader } from '@/components/page-header';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,48 +11,28 @@ import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   LogOut, 
-  Trash2, 
   KeyRound, 
   ShieldCheck, 
-  Moon, 
   Edit, 
   Loader2, 
   Camera, 
-  X, 
   ImageUp, 
-  ShieldAlert, 
   BadgeCheck, 
   Zap, 
   QrCode,
   Activity,
   Globe,
-  CreditCard,
-  Award,
   Download,
-  Lightbulb,
-  Mail,
-  User,
+  Lightbulb
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth, useFirestore, useDatabase } from '@/firebase';
-import { doc, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
-import { ref, update, remove } from 'firebase/database';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { ref, update } from 'firebase/database';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
-import { signOut, deleteUser } from 'firebase/auth';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { 
-  AlertDialog, 
-  AlertDialogAction, 
-  AlertDialogCancel, 
-  AlertDialogContent, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogHeader, 
-  AlertDialogTitle, 
-  AlertDialogTrigger 
-} from '@/components/ui/alert-dialog';
+import { signOut } from 'firebase/auth';
 import { motion } from 'framer-motion';
 import { verifyEmailAuthenticity } from "@/ai/flows/verify-email-authenticity";
 import { Badge } from '@/components/ui/badge';
@@ -92,23 +73,20 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                 format: 'a4'
             });
 
-            // 1. Background & Borders (Tricolor)
             doc.setFillColor(255, 255, 255);
             doc.rect(0, 0, 297, 210, 'F');
-            doc.setFillColor(255, 153, 51); // Saffron
+            doc.setFillColor(255, 153, 51);
             doc.rect(5, 5, 287, 5, 'F');
-            doc.setFillColor(18, 136, 7); // Green
+            doc.setFillColor(18, 136, 7);
             doc.rect(5, 200, 287, 5, 'F');
-            doc.setDrawColor(0, 0, 128); // Navy
+            doc.setDrawColor(0, 0, 128);
             doc.rect(12, 12, 273, 186);
 
-            // 2. Logo
             const logoImg = new Image();
             logoImg.src = '/Logo.png';
             await new Promise((resolve) => { logoImg.onload = resolve; });
             doc.addImage(logoImg, 'PNG', 133.5, 20, 30, 30);
 
-            // 3. Typography
             doc.setFont("helvetica", "bold");
             doc.setFontSize(10);
             doc.setTextColor(153, 75, 0);
@@ -123,18 +101,16 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
             doc.text(`${profile.firstName} ${profile.lastName}`.toUpperCase(), 148.5, 115, { align: 'center' });
             doc.setFontSize(14);
             doc.setTextColor(100, 100, 100);
-            const desc = `has been granted an Upgraded Statutory Node within the Nyaya Sahayak legal ecosystem. Subject to the Terms of Protocol and Forensic Security Standards of Bharat. Access to advanced neural auditing terminals is authorized.`;
+            const desc = `has been granted an Upgraded Statutory Access within the Nyaya Sahayak legal ecosystem. Subject to the Terms of Protocol and Forensic Security Standards of Bharat. Access to advanced neural auditing terminals is authorized.`;
             doc.text(doc.splitTextToSize(desc, 220), 148.5, 135, { align: 'center' });
 
-            // 4. Metadata
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
-            doc.text(`Registry Node ID: NS-REG-${profile.uid.substring(0, 12).toUpperCase()}`, 25, 170);
+            doc.text(`Registry ID: NS-REG-${profile.uid.substring(0, 12).toUpperCase()}`, 25, 170);
             doc.text(`Verification Date: ${today}`, 25, 178);
             doc.text(`Support: nyayasahayakhelp@gmail.com`, 25, 186);
             doc.text(`Web: https://nyayasahayak.in`, 25, 194);
 
-            // 5. Signature
             doc.setFont("helvetica", "bolditalic");
             doc.setFontSize(22);
             doc.text("Hardy Pie", 230, 175, { align: 'center' });
@@ -166,13 +142,13 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                 </header>
                 <div className="space-y-6 sm:space-y-8 max-w-2xl mx-auto text-center px-2">
                     <p className="text-xs sm:text-base font-medium text-muted-foreground leading-relaxed">
-                        This document formally certifies that the node identified as <span className="text-foreground font-black uppercase tracking-tight">{profile.firstName} {profile.lastName}</span> has been granted an <span className="text-primary font-black uppercase tracking-tight">Upgraded Statutory Node</span>.
+                        This document formally certifies that the account identified as <span className="text-foreground font-black uppercase tracking-tight">{profile.firstName} {profile.lastName}</span> has been granted an <span className="text-primary font-black uppercase tracking-tight">Upgraded Statutory Access</span>.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 pt-4 sm:pt-8 items-end text-left sm:text-left">
                     <div className="space-y-4 sm:space-y-6 order-2 sm:order-1">
                         <div className="space-y-1">
-                            <p className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest text-muted-foreground">Registry Node ID</p>
+                            <p className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest text-muted-foreground">Registry ID</p>
                             <p className="text-[9px] sm:text-[10px] font-mono font-bold text-primary">NS-REG-{profile.uid.substring(0, 8).toUpperCase()}</p>
                         </div>
                         <div className="pt-1 sm:pt-2 flex items-center gap-3">
@@ -215,7 +191,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <Logo className="h-6 w-6 sm:h-8 sm:w-8 shadow-none p-0 border-none bg-transparent" priority={false} />
                         <div className="flex flex-col">
                             <span className="font-black text-[10px] sm:text-xs tracking-tighter leading-none">NYAYA SAHAYAK</span>
-                            <span className="text-[6px] sm:text-[7px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary/80">{isAdmin ? "Root Authority Node" : "Forensic Terminal"}</span>
+                            <span className="text-[6px] sm:text-[7px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary/80">{isAdmin ? "Root Authority system" : "Forensic Terminal"}</span>
                         </div>
                     </div>
                     <div className="bg-white/10 backdrop-blur-xl px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl border border-white/10">
@@ -246,11 +222,11 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <p className="text-[8px] sm:text-[9px] font-bold truncate text-white/80 max-w-[120px] sm:max-w-none">{profile.email}</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-[6px] sm:text-[7px] font-bold uppercase opacity-40 tracking-widest">Clearance Node</p>
+                        <p className="text-[6px] sm:text-[7px] font-bold uppercase opacity-40 tracking-widest">Clearance system</p>
                         <p className={cn(
                             "text-[8px] sm:text-[9px] font-black uppercase tracking-tighter",
                             isAdmin || isUpgraded ? "text-amber-400" : "text-green-400"
-                        )}>{isAdmin ? "Absolute Statutory Hub" : isUpgraded ? "Premium Forensic Node" : "Standard Identity Ingress"}</p>
+                        )}>{isAdmin ? "Absolute Statutory Hub" : isUpgraded ? "Premium Forensic terminal" : "Standard Identity access"}</p>
                     </div>
                 </div>
             </div>
@@ -270,12 +246,11 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-
+  const [photoURL, setPhotoURL] = useState('');
+  
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
-  const [photoURL, setPhotoURL] = useState('');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -409,7 +384,7 @@ export default function ProfilePage() {
                             </div>
                         </div>
                         <div className="space-y-2 sm:space-y-3">
-                            <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Contact Node (Mobile)</Label>
+                            <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Contact access (Mobile)</Label>
                             <Input value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="h-12 sm:h-14 glass border-primary/10 rounded-xl sm:rounded-2xl font-bold px-4 sm:px-5" />
                         </div>
                         <div className="flex justify-end pt-2">
