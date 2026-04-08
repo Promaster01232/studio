@@ -151,7 +151,7 @@ export default function DashboardHomePage() {
                   <p className="text-sm text-muted-foreground font-medium leading-relaxed">
                     What brilliant idea is on your mind today? Let the community know.
                   </p>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-sky-500/60">Community transmission hub</p>
+                  <p className="text-[10px] font-black text-sky-500/60">Community hub</p>
                 </div>
               </div>
             </div>
@@ -185,7 +185,7 @@ export default function DashboardHomePage() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
             
             <div className="p-6 pb-2 text-left relative z-10">
-                <span className="text-[10px] font-black text-primary/40 ml-3 uppercase tracking-widest">Ask Nyaya Sahayak AI</span>
+                <span className="text-[10px] font-black text-primary/40 ml-3">Ask Nyaya Sahayak AI</span>
             </div>
             <div className="px-4 pb-4 space-y-4 relative z-10">
                 <div className="relative">
@@ -230,7 +230,7 @@ export default function DashboardHomePage() {
                     whileTap={{ scale: 0.95 }}
                 >
                     <Link href={chip.href}>
-                        <Badge variant="outline" className="h-11 px-6 rounded-full bg-background/50 hover:bg-primary hover:text-white hover:border-primary border-primary/10 font-black text-[10px] transition-all flex items-center gap-2.5 shadow-sm uppercase tracking-tight">
+                        <Badge variant="outline" className="h-11 px-6 rounded-full bg-background/50 hover:bg-primary hover:text-white hover:border-primary border-primary/10 font-black text-[10px] transition-all flex items-center gap-2.5 shadow-sm tracking-tight">
                             <chip.icon className="h-3.5 w-3.5" />
                             {chip.label}
                         </Badge>
@@ -271,10 +271,10 @@ export default function DashboardHomePage() {
                                                 <div className="p-2 rounded-lg bg-white/10 backdrop-blur-md">
                                                     <FileCheck className="h-5 w-5 text-white" />
                                                 </div>
-                                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Official forensic report</span>
+                                                <span className="text-[10px] font-black">Official forensic report</span>
                                             </div>
                                             <div className="space-y-1 text-left">
-                                                <CardTitle className="text-xl sm:text-2xl font-black tracking-tighter leading-none uppercase">Statutory guide summary</CardTitle>
+                                                <CardTitle className="text-xl sm:text-2xl font-black tracking-tighter leading-none">Statutory guide summary</CardTitle>
                                                 <div className="text-[10px] font-bold text-white/60 flex items-center gap-2">
                                                     <Globe className="h-3 w-3" /> Encrypted session active
                                                 </div>
@@ -282,7 +282,7 @@ export default function DashboardHomePage() {
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <AudioAssistant text={m.text} language="English" />
-                                            <Badge variant="outline" className="border-white/20 text-white font-black text-[9px] uppercase tracking-widest h-9 px-4">Registry active</Badge>
+                                            <Badge variant="outline" className="border-white/20 text-white font-black text-[9px] h-9 px-4">Registry active</Badge>
                                         </div>
                                     </div>
                                 </CardHeader>
@@ -298,11 +298,11 @@ export default function DashboardHomePage() {
                                                 <ShieldCheck className="h-6 w-6" />
                                             </div>
                                             <div className="text-left">
-                                                <p className="text-[10px] font-black uppercase tracking-widest">Statutory security</p>
+                                                <p className="text-[10px] font-black">Statutory security</p>
                                                 <p className="text-[9px] font-bold">This dossier is protected under attorney-client transience protocols.</p>
                                             </div>
                                         </div>
-                                        <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // REPORT TERMINAL</p>
+                                        <p className="text-[9px] font-black">nyayasahayak.in // report terminal</p>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -312,7 +312,7 @@ export default function DashboardHomePage() {
                 {isProcessing && (
                     <div className="flex gap-4 items-center pl-4 text-primary/40">
                         <Loader2 className="h-5 w-5 animate-spin" />
-                        <span className="text-[10px] font-black animate-pulse uppercase tracking-[0.3em]">Deconstructing statutory matrix...</span>
+                        <span className="text-[10px] font-black animate-pulse">Deconstructing statutory matrix...</span>
                     </div>
                 )}
             </motion.section>
@@ -326,13 +326,12 @@ export default function DashboardHomePage() {
                     <Newspaper className="h-6 w-6" />
                 </div>
                 <div className="text-left">
-                    <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter leading-none">Community transmissions</h2>
-                    <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Live statutory ideas from verified citizen records.</p>
+                    <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter leading-none">Posts</h2>
                 </div>
             </div>
-            <Button variant="ghost" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-xl hover:bg-primary/5 border border-primary/5 uppercase tracking-widest">
+            <Button variant="ghost" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-xl hover:bg-primary/5 border border-primary/5">
               <Link href="/dashboard/research-analytics">
-                View all transmissions <ChevronRight className="ml-1 h-4 w-4" />
+                View all posts <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
         </div>
@@ -342,7 +341,7 @@ export default function DashboardHomePage() {
                 {loading ? (
                     <div className="col-span-full py-20 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                        <p className="text-[10px] font-black text-muted-foreground animate-pulse uppercase tracking-widest">Syncing transmissions...</p>
+                        <p className="text-[10px] font-black text-muted-foreground animate-pulse">Syncing transmissions...</p>
                     </div>
                 ) : posts.map((post, idx) => (
                     <motion.div
@@ -366,7 +365,7 @@ export default function DashboardHomePage() {
                                                 <p className="text-[9px] text-muted-foreground font-black opacity-40 uppercase tracking-tight">{post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}</p>
                                             </div>
                                         </div>
-                                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black px-3 py-1 rounded-full uppercase">
+                                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black px-3 py-1 rounded-full">
                                             {post.postType || 'Idea'}
                                         </Badge>
                                     </div>
@@ -378,10 +377,10 @@ export default function DashboardHomePage() {
                                     </p>
                                 </CardContent>
                                 <CardFooter className="p-8 pt-0 flex items-center gap-6">
-                                    <div className="flex items-center gap-2 text-red-500/60 font-black text-[10px] uppercase">
+                                    <div className="flex items-center gap-2 text-red-500/60 font-black text-[10px]">
                                         <Heart className="h-4 w-4 fill-current" /> {post.likes}
                                     </div>
-                                    <div className="flex items-center gap-2 text-primary/60 font-black text-[10px] uppercase">
+                                    <div className="flex items-center gap-2 text-primary/60 font-black text-[10px]">
                                         <MessageCircle className="h-4 w-4" /> Discussion
                                     </div>
                                 </CardFooter>
@@ -427,7 +426,7 @@ export default function DashboardHomePage() {
                         </p>
                     </div>
                     <div className="mt-10 flex items-center justify-between">
-                        <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors uppercase tracking-widest">
+                        <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors">
                         Initialize tool
                         </div>
                         <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
@@ -454,14 +453,14 @@ export default function DashboardHomePage() {
                         <div className="space-y-3">
                             <div className="flex items-center justify-center md:justify-start gap-2">
                                 <Zap className="h-5 w-5 text-amber-400 fill-amber-400" />
-                                <span className="text-[10px] font-black opacity-60 uppercase tracking-widest">Statutory expansion</span>
+                                <span className="text-[10px] font-black opacity-60">Statutory expansion</span>
                             </div>
                             <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.9]">Elevate your authority.</h3>
                             <p className="text-sm sm:text-lg opacity-80 font-medium leading-relaxed max-w-lg">
                                 Unlock unlimited AI forensic scans, professional document drafting, and root access to the legal registry.
                             </p>
                         </div>
-                        <Button variant="secondary" className="w-full md:w-auto font-black text-[10px] rounded-2xl h-14 px-12 shadow-2xl active:scale-95 transition-all uppercase tracking-widest" asChild>
+                        <Button variant="secondary" className="w-full md:w-auto font-black text-[10px] rounded-2xl h-14 px-12 shadow-2xl active:scale-95 transition-all uppercase" asChild>
                             <Link href="/dashboard/billing">Upgrade registry clearance</Link>
                         </Button>
                     </div>
@@ -476,7 +475,7 @@ export default function DashboardHomePage() {
                         <div className="p-2 rounded-lg bg-primary/10 text-primary">
                             <Library className="h-5 w-5" />
                         </div>
-                        <CardTitle className="text-xs font-black text-foreground uppercase tracking-tight">Quick guides</CardTitle>
+                        <CardTitle className="text-xs font-black text-foreground">Quick guides</CardTitle>
                     </div>
                 </CardHeader>
                 <CardContent className="p-6 space-y-2 flex-1 flex flex-col justify-center text-left">
@@ -496,7 +495,7 @@ export default function DashboardHomePage() {
                     ))}
                 </CardContent>
                 <div className="p-6 bg-primary/5 border-t border-primary/5 text-center">
-                    <Button variant="link" asChild className="h-auto p-0 text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary">
+                    <Button variant="link" asChild className="h-auto p-0 text-[10px] font-black text-primary/60 hover:text-primary">
                         <Link href="/dashboard/learn">Explore full library</Link>
                     </Button>
                 </div>
@@ -505,15 +504,15 @@ export default function DashboardHomePage() {
       </div>
 
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
-        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">nyayasahayak.in // Terminal hub // 2025</p>
+        <p className="text-[9px] font-black text-muted-foreground uppercase">nyayasahayak.in // terminal hub // 2025</p>
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4" />
-                <span className="text-[9px] font-black uppercase tracking-widest">Secured system</span>
+                <span className="text-[9px] font-black uppercase">Secured system</span>
             </div>
             <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4" />
-                <span className="text-[9px] font-black uppercase tracking-widest">Live terminal ingress</span>
+                <span className="text-[9px] font-black uppercase">Live terminal ingress</span>
             </div>
         </div>
       </div>
