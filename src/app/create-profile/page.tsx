@@ -88,7 +88,7 @@ export default function CreateProfilePage() {
           userType: data.userType,
         });
       } catch (aiError) {
-        console.warn("AI Validation node busy.");
+        console.warn("AI Validation busy.");
       }
 
       const userProfile = {
@@ -132,7 +132,7 @@ export default function CreateProfilePage() {
   return (
     <div className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden shadow-2xl rounded-[2.5rem] border border-primary/5 bg-card text-left">
       <div className="hidden md:flex flex-col items-center justify-center bg-primary/5 p-12 relative overflow-hidden border-r border-primary/5">
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none grayscale flex items-center justify-center">
             <Logo className="h-[500px] w-[500px]" priority={true} />
         </div>
         <div className="relative z-10 space-y-10 text-center">
@@ -140,17 +140,17 @@ export default function CreateProfilePage() {
                 <Logo className="h-24 w-24 group-hover:scale-110 transition-transform duration-700" priority={true} />
             </div>
             <div className="space-y-3">
-                <h2 className="text-3xl font-black tracking-tighter uppercase leading-tight">Identity <br /> Calibration</h2>
-                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest leading-relaxed max-w-[240px] mx-auto">Finalizing your institutional access nodes for elite AI assistance.</p>
+                <h2 className="text-3xl font-black tracking-tighter uppercase leading-tight">Identity <br /> calibration</h2>
+                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest leading-relaxed max-w-[240px] mx-auto">Finalizing your institutional access for elite AI assistance.</p>
             </div>
             <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white/50 dark:bg-black/50 border border-primary/10 shadow-sm">
                     <ShieldCheck className="h-4 w-4 text-primary" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Secure session Active</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Secure session active</span>
                 </div>
                 <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white/50 dark:bg-black/50 border border-primary/10 shadow-sm">
                     <Activity className="h-4 w-4 text-green-600 animate-pulse" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Network Synchronized</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Network synchronized</span>
                 </div>
             </div>
         </div>
@@ -158,8 +158,8 @@ export default function CreateProfilePage() {
 
       <div className="p-8 sm:p-16 flex flex-col justify-center">
         <div className="space-y-1 mb-10 text-left">
-            <h1 className="text-3xl font-black tracking-tighter uppercase text-foreground leading-none">Onboarding</h1>
-            <p className="text-sm text-muted-foreground font-medium">Map your personal registry nodes.</p>
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tighter uppercase text-foreground leading-tight">Onboarding</h1>
+            <p className="text-sm text-muted-foreground font-medium">Map your personal registry.</p>
         </div>
 
         <Form {...form}>
@@ -171,7 +171,7 @@ export default function CreateProfilePage() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given Name</FormLabel>
+                      <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given name</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input placeholder="Rajesh" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary pl-11" />
@@ -206,7 +206,7 @@ export default function CreateProfilePage() {
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Registry Email</FormLabel>
+                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Registry email</FormLabel>
                     <FormControl>
                       <div className="relative">
                           <Input placeholder="rajesh.k@example.com" {...field} disabled className="h-12 font-bold opacity-50 bg-muted/20 rounded-xl pl-11" />
@@ -225,7 +225,7 @@ export default function CreateProfilePage() {
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile Node</FormLabel>
+                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile access</FormLabel>
                     <FormControl>
                       <div className="relative">
                           <Input placeholder="+91 12345 67890" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary pl-11" />
@@ -244,7 +244,7 @@ export default function CreateProfilePage() {
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory Role</FormLabel>
+                    <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory role</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary">
@@ -252,9 +252,9 @@ export default function CreateProfilePage() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="rounded-xl glass">
-                        <SelectItem value="citizen" className="font-bold">Citizen Node</SelectItem>
+                        <SelectItem value="citizen" className="font-bold">Citizen</SelectItem>
                         <SelectItem value="businessman" className="font-bold">Business / MSME</SelectItem>
-                        <SelectItem value="student" className="font-bold">Law Student</SelectItem>
+                        <SelectItem value="student" className="font-bold">Law student</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage className="text-[10px] font-bold" />
@@ -267,18 +267,18 @@ export default function CreateProfilePage() {
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
               {loading ? (
                   <span className="flex items-center gap-3">
-                    <Loader2 className="h-5 w-5 animate-spin" /> SYNCHRONIZING NODE...
+                    <Loader2 className="h-5 w-5 animate-spin" /> Synchronizing...
                   </span>
               ) : (
                   <span className="flex items-center gap-3">
-                    <ShieldCheck className="h-5 w-5" /> ACTIVATE REGISTRY
+                    <ShieldCheck className="h-5 w-5" /> Activate registry
                   </span>
               )}
             </Button>
           </form>
         </Form>
         <div className="mt-10 text-center opacity-30">
-            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // CALIBRATION NODE</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // CALIBRATION</p>
         </div>
       </div>
     </div>

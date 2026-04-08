@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -210,8 +209,8 @@ export default function RegisterPage() {
               </div>
           </div>
           
-          <div className="space-y-1 mb-8">
-            <h2 className="text-3xl font-black font-headline tracking-tighter text-foreground uppercase">Enrollment</h2>
+          <div className="space-y-1 mb-8 text-left">
+            <h2 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter text-foreground uppercase leading-tight">Enrollment</h2>
             <p className="text-sm text-muted-foreground font-medium">Initialize your secure statutory terminal.</p>
           </div>
           
@@ -315,7 +314,7 @@ export default function RegisterPage() {
                       <GoogleIcon />
                     </div>
                   )}
-                  {isGoogleLoading ? "Synchronizing..." : "Continue with Google"}
+                  {isGoogleLoading ? "Synchronizing..." : "Continue with google"}
               </Button>
           </div>
           
@@ -331,7 +330,7 @@ export default function RegisterPage() {
             <div className="bg-primary/5 p-10 rounded-[2.5rem] inline-block shadow-inner border border-primary/5 group">
                 <Scale className="h-24 w-24 text-primary opacity-40 group-hover:opacity-100 transition-opacity duration-700" />
             </div>
-            <div className="space-y-3">
+            <div className="space-y-3 text-center">
                 <h3 className="text-2xl font-black font-headline tracking-tighter uppercase text-foreground leading-tight">Identity <br /> enrollment</h3>
                 <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest max-w-[240px] mx-auto leading-relaxed">Secure your digital presence within the Nyaya Sahayak legal ecosystem.</p>
             </div>

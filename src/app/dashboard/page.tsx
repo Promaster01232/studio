@@ -146,7 +146,7 @@ export default function DashboardHomePage() {
                 <Edit className="h-7 w-7" />
               </div>
               <div className="space-y-2 text-left">
-                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">Share your spark</h2>
+                <h2 className="text-2xl sm:text-3xl font-black tracking-tighter text-foreground">Share your spark</h2>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground font-medium leading-relaxed">
                     What brilliant idea is on your mind today? Let the community know.
@@ -176,7 +176,7 @@ export default function DashboardHomePage() {
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-medium text-foreground/60 tracking-tight">Hi {userName}</h2>
             </div>
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tighter text-foreground leading-none">
+            <h1 className="text-3xl sm:text-6xl font-black tracking-tighter text-foreground leading-tight">
                 Where should we start?
             </h1>
         </div>
@@ -273,8 +273,8 @@ export default function DashboardHomePage() {
                                                 </div>
                                                 <span className="text-[10px] font-black uppercase tracking-[0.2em]">Official forensic report</span>
                                             </div>
-                                            <div className="space-y-1">
-                                                <CardTitle className="text-xl sm:text-2xl font-black tracking-tight leading-none uppercase">Statutory guide summary</CardTitle>
+                                            <div className="space-y-1 text-left">
+                                                <CardTitle className="text-xl sm:text-2xl font-black tracking-tighter leading-none uppercase">Statutory guide summary</CardTitle>
                                                 <div className="text-[10px] font-bold text-white/60 flex items-center gap-2">
                                                     <Globe className="h-3 w-3" /> Encrypted session active
                                                 </div>
@@ -326,7 +326,7 @@ export default function DashboardHomePage() {
                     <Newspaper className="h-6 w-6" />
                 </div>
                 <div className="text-left">
-                    <h2 className="text-2xl font-black font-headline tracking-tighter leading-none uppercase">Community transmissions</h2>
+                    <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter leading-none">Community transmissions</h2>
                     <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Live statutory ideas from verified citizen records.</p>
                 </div>
             </div>
@@ -370,7 +370,7 @@ export default function DashboardHomePage() {
                                             {post.postType || 'Idea'}
                                         </Badge>
                                     </div>
-                                    <h3 className="text-lg font-black tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2 uppercase">{post.title}</h3>
+                                    <h3 className="text-lg font-black tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2">{post.title}</h3>
                                 </CardHeader>
                                 <CardContent className="p-8 pt-0 flex-1 text-left">
                                     <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed font-medium">
@@ -398,7 +398,7 @@ export default function DashboardHomePage() {
             <div className="p-2 rounded-lg bg-blue-500/10">
                 <Zap className="h-5 w-5 text-blue-500" />
             </div>
-            <h2 className="text-xl font-black text-foreground font-headline uppercase">Forensic terminals</h2>
+            <h2 className="text-xl sm:text-2xl font-black text-foreground font-headline tracking-tighter">Forensic terminals</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {tools.map((tool, i) => (
@@ -421,7 +421,7 @@ export default function DashboardHomePage() {
                         <tool.icon className="h-7 w-7" />
                     </div>
                     <div className="space-y-2">
-                        <h3 className="text-xl font-black tracking-tight leading-none uppercase">{tool.title}</h3>
+                        <h3 className="text-xl font-black tracking-tight leading-none">{tool.title}</h3>
                         <p className="text-[11px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
                             {tool.desc}
                         </p>
@@ -456,7 +456,7 @@ export default function DashboardHomePage() {
                                 <Zap className="h-5 w-5 text-amber-400 fill-amber-400" />
                                 <span className="text-[10px] font-black opacity-60 uppercase tracking-widest">Statutory expansion</span>
                             </div>
-                            <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.9] uppercase">Elevate your authority.</h3>
+                            <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.9]">Elevate your authority.</h3>
                             <p className="text-sm sm:text-lg opacity-80 font-medium leading-relaxed max-w-lg">
                                 Unlock unlimited AI forensic scans, professional document drafting, and root access to the legal registry.
                             </p>
@@ -489,9 +489,9 @@ export default function DashboardHomePage() {
                         <Link key={i} href={item.href} className="flex items-center justify-between p-3 rounded-2xl hover:bg-primary/5 transition-all group/item border border-transparent hover:border-primary/10">
                             <div className="flex items-center gap-3">
                                 <item.icon className="h-4 w-4 text-primary/60 group-hover/item:text-primary transition-colors" />
-                                <span className="text-[11px] font-bold text-muted-foreground group-hover/item:text-foreground transition-colors uppercase tracking-tight">{item.label}</span>
+                                <span className="text-[11px] font-bold text-muted-foreground group-hover:item:text-foreground transition-colors tracking-tight">{item.label}</span>
                             </div>
-                            <ChevronRight className="h-3 w-3 text-muted-foreground/30 group-hover/item:text-primary group-hover/item:translate-x-1 transition-all" />
+                            <ChevronRight className="h-3 w-3 text-muted-foreground/30 group-hover:item:text-primary group-hover:item:translate-x-1 transition-all" />
                         </Link>
                     ))}
                 </CardContent>
