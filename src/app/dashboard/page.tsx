@@ -40,7 +40,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
-import { collection, query, orderBy, onSnapshot, Timestamp, doc, getDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, Timestamp, doc, getDoc, limit } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -139,7 +139,7 @@ export default function DashboardHomePage() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-5xl mx-auto"
       >
-        <Card className="border border-primary/5 bg-white dark:bg-zinc-950 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[1.5rem] overflow-hidden group">
+        <Card className="border border-primary/5 bg-white dark:bg-zinc-950 shadow-soft rounded-[1.5rem] overflow-hidden group">
           <div className="p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
             <div className="flex items-start gap-6">
               <div className="p-3.5 rounded-xl bg-sky-50 text-sky-500 dark:bg-sky-500/10 shadow-sm border border-sky-100 dark:border-sky-500/20">
@@ -275,9 +275,9 @@ export default function DashboardHomePage() {
                                             </div>
                                             <div className="space-y-1">
                                                 <CardTitle className="text-xl sm:text-2xl font-black tracking-tight leading-none uppercase">Statutory guide summary</CardTitle>
-                                                <p className="text-[10px] font-bold text-white/60 uppercase tracking-[0.4em] flex items-center gap-2">
-                                                    <Globe className="h-3 w-3" /> Encrypted session
-                                                </p>
+                                                <div className="text-[10px] font-bold text-white/60 flex items-center gap-2">
+                                                    <Globe className="h-3 w-3" /> Encrypted session active
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
@@ -352,7 +352,7 @@ export default function DashboardHomePage() {
                         transition={{ delay: idx * 0.1 }}
                     >
                         <Link href={`/dashboard/research-analytics`} className="block group h-full">
-                            <Card className="h-full border-primary/10 hover:border-primary/30 transition-all duration-500 rounded-[2rem] bg-card/40 backdrop-blur-sm shadow-lg hover:shadow-2xl overflow-hidden relative flex flex-col">
+                            <Card className="h-full border-primary/10 hover:border-primary/30 transition-all duration-500 rounded-[2rem] bg-card/40 backdrop-blur-sm shadow-soft hover:shadow-2xl overflow-hidden relative flex flex-col">
                                 <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary/20 group-hover:bg-primary transition-all" />
                                 <CardHeader className="p-8 pb-4 text-left">
                                     <div className="flex items-start justify-between mb-6">
@@ -413,7 +413,7 @@ export default function DashboardHomePage() {
                 <Link href={tool.href} className="block h-full">
                 <Card className={cn(
                     "h-full border-primary/5 bg-card/40 backdrop-blur-sm transition-all duration-500 rounded-[2.5rem] overflow-hidden group-hover:border-primary/20",
-                    "relative shadow-xl hover:shadow-2xl",
+                    "relative shadow-soft hover:shadow-2xl",
                     tool.glow
                 )}>
                     <CardContent className="p-8 flex flex-col justify-between h-full relative z-10 text-left">
@@ -428,7 +428,7 @@ export default function DashboardHomePage() {
                     </div>
                     <div className="mt-10 flex items-center justify-between">
                         <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors uppercase tracking-widest">
-                        Initialize terminal
+                        Initialize tool
                         </div>
                         <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                             <ArrowRight className="h-5 w-5" />
@@ -470,7 +470,7 @@ export default function DashboardHomePage() {
         </div>
 
         <div className="lg:col-span-4">
-            <Card className="border-primary/5 bg-card/40 backdrop-blur-sm rounded-[3rem] shadow-xl overflow-hidden h-full flex flex-col group hover:border-primary/20 transition-all duration-500">
+            <Card className="border-primary/5 bg-card/40 backdrop-blur-sm rounded-[3rem] shadow-soft overflow-hidden h-full flex flex-col group hover:border-primary/20 transition-all duration-500">
                 <CardHeader className="p-8 pb-4 border-b border-primary/5 bg-primary/5 text-left">
                     <div className="flex items-center gap-3">
                         <div className="p-2 rounded-lg bg-primary/10 text-primary">

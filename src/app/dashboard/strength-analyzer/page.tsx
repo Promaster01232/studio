@@ -157,12 +157,12 @@ export default function StrengthAnalyzerPage() {
                                 <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
                                     {state.status === 'success' ? <><span className="italic opacity-60">Audit dossier</span> ready.</> : "Awaiting ingress"}
                                 </CardTitle>
-                                <p className={cn(
-                                    "text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-3",
+                                <div className={cn(
+                                    "text-[10px] font-bold flex items-center gap-3",
                                     state.status === 'success' ? "text-background/40" : "text-muted-foreground"
                                 )}>
-                                    <Globe className="h-4 w-4" /> Secure session: Encrypted // Transience active
-                                </p>
+                                    <Globe className="h-4 w-4" /> Secure and encrypted session
+                                </div>
                             </div>
                         </div>
                         

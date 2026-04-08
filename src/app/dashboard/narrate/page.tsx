@@ -274,12 +274,12 @@ export default function NarrateProblemPage() {
                                 <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
                                     {state.status === 'success' ? <><span className="italic opacity-80">Your Report</span> is Ready.</> : "Awaiting Recording"}
                                 </CardTitle>
-                                <p className={cn(
-                                    "text-[10px] font-bold uppercase tracking-[0.3em] flex items-center gap-3",
+                                <div className={cn(
+                                    "text-[10px] font-bold flex items-center gap-3",
                                     state.status === 'success' ? "text-white/60" : "text-muted-foreground"
                                 )}>
-                                    <Globe className="h-4 w-4" /> Secure AI Terminal
-                                </p>
+                                    <Globe className="h-4 w-4" /> Secure and encrypted session
+                                </div>
                             </div>
                         </div>
                         
@@ -373,7 +373,7 @@ export default function NarrateProblemPage() {
                                             <ShieldCheck className="h-6 w-6" />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-[10px] font-black uppercase tracking-widest">Secure Session</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest">Statutory security</p>
                                             <p className="text-[9px] font-bold">Your case data is encrypted and kept private.</p>
                                         </div>
                                     </div>

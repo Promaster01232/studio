@@ -128,7 +128,7 @@ export default function DocumentIntelligencePage() {
                                         <FileSearch className="h-6 w-6 text-primary opacity-40" />
                                     </div>
                                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-center px-4">
-                                        {fileName ? fileName : "Upload instrument node"}
+                                        {fileName ? fileName : "Upload instrument"}
                                     </p>
                                 </div>
                             </div>
@@ -203,12 +203,12 @@ export default function DocumentIntelligencePage() {
                                 <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
                                     {state.status === 'success' ? <><span className="italic opacity-80">Audit dossier</span> ready.</> : "Awaiting ingress"}
                                 </CardTitle>
-                                <p className={cn(
-                                    "text-[10px] font-bold uppercase tracking-[0.4em] flex items-center gap-3",
+                                <div className={cn(
+                                    "text-[10px] font-bold flex items-center gap-3",
                                     state.status === 'success' ? "text-white/60" : "text-muted-foreground"
                                 )}>
-                                    <Globe className="h-4 w-4" /> Secure session: Encrypted // Transience active
-                                </p>
+                                    <Globe className="h-4 w-4" /> Secure and encrypted session
+                                </div>
                             </div>
                         </div>
                         
