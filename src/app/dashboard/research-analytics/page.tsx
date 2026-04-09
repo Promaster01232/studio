@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
@@ -23,7 +24,8 @@ import {
   Zap,
   Newspaper,
   Bot,
-  Layers
+  Layers,
+  ShieldCheck
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -174,9 +176,9 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
                             <DropdownMenuTrigger asChild><button className="h-9 w-9 rounded-2xl bg-muted/20 hover:bg-primary/5 flex items-center justify-center transition-all"><MoreVertical className="h-4 w-4" /></button></DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl glass border-primary/10">
                                 {(isAuthor || isAdmin) ? (
-                                    <DropdownMenuItem onClick={handleDelete} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive gap-3"><Trash2 className="h-4 w-4" /> Purge</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleDelete} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive gap-3"><Trash2 className="h-4 w-4" /> Purge node</DropdownMenuItem>
                                 ) : (
-                                    <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3"><Flag className="h-4 w-4" /> Flag</DropdownMenuItem>
+                                    <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3"><Flag className="h-4 w-4" /> Report breach</DropdownMenuItem>
                                 )}
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -316,6 +318,20 @@ export default function ResearchAnalyticsPage() {
                         </div>
                     </div>
                 )}
+            </div>
+
+            <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
+                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.5em]">nyayasahayak.in // community stream // 2025</p>
+                <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-2">
+                        <ShieldCheck className="h-4 w-4" />
+                        <span className="text-[10px] font-black uppercase">Verified identity</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Activity className="h-4 w-4" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">TLS 1.3 Active</span>
+                    </div>
+                </div>
             </div>
         </div>
     );

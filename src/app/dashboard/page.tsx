@@ -41,7 +41,8 @@ import {
   MoreVertical,
   Share2,
   Twitter,
-  Bookmark
+  Bookmark,
+  Flag
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -196,7 +197,7 @@ export default function DashboardHomePage() {
         className="w-full"
       >
         <Card className="border border-primary/5 bg-white dark:bg-zinc-950 shadow-soft rounded-[2.5rem] overflow-hidden group transition-all hover:shadow-lg">
-          <div className="p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+          <div className="p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 text-left">
             <div className="flex items-start gap-6">
               <div className="p-3.5 rounded-xl bg-sky-50 text-sky-500 dark:bg-sky-500/10 shadow-sm border border-sky-100 dark:border-sky-500/20">
                 <Edit className="h-7 w-7" />
@@ -227,9 +228,9 @@ export default function DashboardHomePage() {
                 <div className="p-2 rounded-full bg-primary/10">
                     <Sparkles className="h-5 w-5 text-primary fill-primary/20" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-medium text-foreground/60 tracking-tight">Hi {userName}</h2>
+                <h2 className="text-xl sm:text-2xl font-medium text-foreground/60 tracking-tight text-center">Hi {userName}</h2>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-black tracking-tighter text-foreground leading-tight">
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tighter text-foreground leading-tight text-center">
                 How can I assist your research today?
             </h1>
         </div>
@@ -308,7 +309,7 @@ export default function DashboardHomePage() {
                                 <div className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0 border border-primary/10 bg-muted text-muted-foreground shadow-sm">
                                     <User className="h-5 w-5" />
                                 </div>
-                                <div className="px-6 py-4 rounded-[1.5rem] rounded-tr-none text-sm font-bold leading-relaxed max-w-[80%] shadow-lg bg-primary text-white">
+                                <div className="px-6 py-4 rounded-[1.5rem] rounded-tr-none text-sm font-bold leading-relaxed max-w-[80%] shadow-lg bg-primary text-white text-left">
                                     {m.text}
                                 </div>
                             </>
@@ -317,7 +318,7 @@ export default function DashboardHomePage() {
                                 <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
                                     <Logo className="h-[400px] w-[400px] border-none p-0 shadow-none" priority={false} />
                                 </div>
-                                <CardHeader className="p-8 sm:p-10 bg-primary text-primary-foreground relative z-10 border-b border-white/10">
+                                <CardHeader className="p-8 sm:p-10 bg-primary text-primary-foreground relative z-10 border-b border-white/10 text-left">
                                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
                                         <div className="space-y-4 text-left">
                                             <div className="flex items-center gap-3">
@@ -340,7 +341,7 @@ export default function DashboardHomePage() {
                                     </div>
                                 </CardHeader>
                                 <CardContent className="p-8 sm:p-12 relative z-10 text-left">
-                                    <div className="prose dark:prose-invert max-w-none">
+                                    <div className="prose dark:prose-invert max-w-none text-left">
                                         <div className="whitespace-pre-line leading-loose text-sm sm:text-base font-medium text-foreground/90 selection:bg-primary/10">
                                             {m.text}
                                         </div>
@@ -361,16 +362,16 @@ export default function DashboardHomePage() {
       </AnimatePresence>
 
       <section className="space-y-8">
-        <div className="flex items-center justify-between border-b-4 border-foreground pb-4 mb-10">
+        <div className="flex items-center justify-between border-b-4 border-foreground pb-4 mb-10 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
-                    <Newspaper className="h-6 w-6" />
+                    <Newspaper className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
-                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Posts</h2>
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Posts</h2>
                 </div>
             </div>
-            <Button variant="outline" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-full hover:bg-foreground hover:text-background transition-all border-foreground/20">
+            <Button variant="outline" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-full hover:bg-foreground hover:text-background transition-all border-foreground/20 uppercase tracking-widest">
               <Link href="/dashboard/research-analytics">
                 View all posts <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
@@ -420,16 +421,26 @@ export default function DashboardHomePage() {
                                                 {post.postType || 'Idea'}
                                             </Badge>
                                             
-                                            {canDelete && (
-                                                <Button 
-                                                    variant="ghost" 
-                                                    size="icon" 
-                                                    onClick={() => handleDeletePost(post.id)}
-                                                    className="h-8 w-8 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive active:scale-90 transition-all"
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            )}
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-muted-foreground hover:bg-primary/5">
+                                                        <MoreVertical className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl glass border-primary/10 shadow-2xl">
+                                                    {canDelete && (
+                                                        <DropdownMenuItem 
+                                                            onClick={() => handleDeletePost(post.id)}
+                                                            className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3 uppercase"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" /> Purge node
+                                                        </DropdownMenuItem>
+                                                    )}
+                                                    <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3 uppercase">
+                                                        <Flag className="h-4 w-4" /> Report breach
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
                                         </div>
                                     </div>
                                     <h3 className="text-xl sm:text-2xl font-black tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2">{post.title}</h3>
@@ -491,13 +502,13 @@ export default function DashboardHomePage() {
       </section>
 
       <section className="space-y-8">
-        <div className="flex items-center justify-between border-b-4 border-foreground pb-4 mb-10">
+        <div className="flex items-center justify-between border-b-4 border-foreground pb-4 mb-10 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
                     <Zap className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
-                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Forensic terminals</h2>
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Forensic terminals</h2>
                 </div>
             </div>
         </div>
@@ -528,7 +539,7 @@ export default function DashboardHomePage() {
                         </p>
                     </div>
                     <div className="mt-10 flex items-center justify-between">
-                        <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors">
+                        <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors uppercase tracking-widest">
                         Initialize tool
                         </div>
                         <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
@@ -548,21 +559,21 @@ export default function DashboardHomePage() {
             <Card className="bg-primary text-primary-foreground rounded-[2.5rem] overflow-hidden border-none shadow-3xl shadow-primary/20 group relative h-full">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
-                    <Logo className="h-40 w-40 border-none shadow-none grayscale" />
+                    <Logo className="h-40 w-40 border-none shadow-none grayscale" priority={false} />
                 </div>
                 <CardContent className="p-10 sm:p-16 flex flex-col md:flex-row items-center gap-12 relative z-10 text-center md:text-left h-full">
-                    <div className="space-y-6 flex-1">
+                    <div className="space-y-6 flex-1 text-left">
                         <div className="space-y-3">
                             <div className="flex items-center justify-center md:justify-start gap-2">
                                 <Zap className="h-5 w-5 text-amber-400 fill-amber-400" />
-                                <span className="text-[10px] font-black opacity-60">Registry upgrade</span>
+                                <span className="text-[10px] font-black opacity-60 uppercase tracking-widest">Registry upgrade</span>
                             </div>
-                            <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.9]">Elevate your authority.</h3>
+                            <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.9] uppercase">Elevate your authority.</h3>
                             <p className="text-sm sm:text-lg opacity-80 font-medium leading-relaxed max-w-lg">
                                 Unlock unlimited AI forensic scans, professional document drafting, and root access to the legal registry.
                             </p>
                         </div>
-                        <Button variant="secondary" className="w-full md:w-auto font-black text-[10px] rounded-2xl h-14 px-12 shadow-2xl active:scale-95 transition-all uppercase" asChild>
+                        <Button variant="secondary" className="w-full md:w-auto font-black text-[10px] rounded-2xl h-14 px-12 shadow-2xl active:scale-95 transition-all uppercase tracking-widest" asChild>
                             <Link href="/dashboard/billing">Upgrade registry clearance</Link>
                         </Button>
                     </div>
@@ -577,7 +588,7 @@ export default function DashboardHomePage() {
                         <div className="p-2 rounded-lg bg-primary/10 text-primary">
                             <Library className="h-5 w-5" />
                         </div>
-                        <CardTitle className="text-xs font-black text-foreground">Quick guides</CardTitle>
+                        <CardTitle className="text-[10px] font-black text-foreground uppercase tracking-widest">Quick guides</CardTitle>
                     </div>
                 </CardHeader>
                 <CardContent className="p-6 space-y-2 flex-1 flex flex-col justify-center text-left">
@@ -597,7 +608,7 @@ export default function DashboardHomePage() {
                     ))}
                 </CardContent>
                 <div className="p-6 bg-primary/5 border-t border-primary/5 text-center">
-                    <Button variant="link" asChild className="h-auto p-0 text-[10px] font-black text-primary/60 hover:text-primary">
+                    <Button variant="link" asChild className="h-auto p-0 text-[10px] font-black text-primary/60 hover:text-primary uppercase tracking-widest">
                         <Link href="/dashboard/learn">Explore full library</Link>
                     </Button>
                 </div>
@@ -606,7 +617,7 @@ export default function DashboardHomePage() {
       </div>
 
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
-        <p className="text-[9px] font-black text-muted-foreground uppercase">nyayasahayak.in // terminal hub // 2025</p>
+        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.5em]">nyayasahayak.in // terminal hub // 2025</p>
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4" />
