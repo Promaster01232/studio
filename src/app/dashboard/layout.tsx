@@ -63,7 +63,7 @@ const PUBLIC_DASHBOARD_ROUTES = [
 ];
 
 function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }) {
-    const isElite = isAdmin || userProfile?.subscriptionType?.includes('unlimited');
+    const isElite = isAdmin || userProfile?.subscriptionType?.startsWith('unlimited');
     const isLimited = userProfile && !isElite;
     
     return (
@@ -237,8 +237,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
+  const isElite = isAdmin || userProfile?.subscriptionType?.startsWith('unlimited');
   const isUpgraded = isAdmin || (userProfile?.subscriptionType && userProfile.subscriptionType !== 'free');
-  const isLimited = userProfile && !isUpgraded;
 
   if (userProfile?.isBlocked) {
       return (
@@ -274,8 +274,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </Link>
         </SidebarHeader>
         <SidebarContent className="pt-2 px-2">
-          <SidebarNav isAdmin={isAdmin} isUpgraded={isUpgraded} />
-          {isLimited && !profileLoading && (
+          <SidebarNav isAdmin={isAdmin} isElite={isElite} />
+          {!isUpgraded && !profileLoading && (
             <div className="px-3 py-4 group-data-[collapsible=icon]:hidden">
                 <Card className="bg-primary/5 border-primary/5 rounded-2xl overflow-hidden shadow-sm">
                     <div className="p-4 space-y-3 text-left">

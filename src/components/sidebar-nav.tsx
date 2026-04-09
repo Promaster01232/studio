@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -30,8 +31,6 @@ import {
   CreditCard,
   Scale,
   ShieldCheck,
-  Cookie,
-  ShieldAlert,
   Zap,
   FileCheck,
   RotateCcw,
@@ -110,7 +109,7 @@ const navigationItems = [
   },
 ];
 
-export function SidebarNav({ isAdmin = false, isUpgraded = false }: { isAdmin?: boolean, isUpgraded?: boolean }) {
+export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boolean, isElite?: boolean }) {
   const pathname = usePathname();
 
   const isSubItemActive = (href: string) => {
@@ -124,7 +123,7 @@ export function SidebarNav({ isAdmin = false, isUpgraded = false }: { isAdmin?: 
   const filteredItems = navigationItems
     .filter(item => !item.isAdminOnly || isAdmin)
     .map(item => {
-      if (item.title === "AI tools" && !isUpgraded) {
+      if (item.title === "AI tools" && !isElite) {
         return {
           ...item,
           items: item.items.filter(sub => !sub.isPremium)
