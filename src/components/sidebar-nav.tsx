@@ -63,10 +63,10 @@ const navigationItems = [
       { href: "/dashboard/bond-generator", icon: FileSignature, label: "Create bonds" },
       { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "Check chance" },
       { href: "/dashboard/court-assistant", icon: Gavel, label: "Court helper" },
-      { href: "/dashboard/evidence-audit", icon: ShieldCheck, label: "Check evidence" },
-      { href: "/dashboard/bail-estimator", icon: Scale, label: "Bail helper" },
-      { href: "/dashboard/statutory-linker", icon: Zap, label: "Law linker" },
-      { href: "/dashboard/contract-auditor", icon: FileCheck, label: "Check contract" },
+      { href: "/dashboard/evidence-audit", icon: ShieldCheck, label: "Check evidence", isPremium: true },
+      { href: "/dashboard/bail-estimator", icon: Scale, label: "Bail helper", isPremium: true },
+      { href: "/dashboard/statutory-linker", icon: Zap, label: "Law linker", isPremium: true },
+      { href: "/dashboard/contract-auditor", icon: FileCheck, label: "Check contract", isPremium: true },
     ],
   },
   {
@@ -90,17 +90,6 @@ const navigationItems = [
     ],
   },
   {
-    title: "Rules",
-    icon: Scale,
-    items: [
-      { href: "/dashboard/terms", icon: FileText, label: "Terms of use" },
-      { href: "/dashboard/privacy", icon: ShieldCheck, label: "Privacy policy" },
-      { href: "/dashboard/refund-policy", icon: CreditCard, label: "Refund rules" },
-      { href: "/dashboard/cookie-policy", icon: Cookie, label: "Cookie policy" },
-      { href: "/dashboard/disclaimer", icon: ShieldAlert, label: "Disclaimer" },
-    ],
-  },
-  {
     title: "Account",
     icon: CircleUserRound,
     items: [
@@ -120,7 +109,7 @@ const navigationItems = [
   },
 ];
 
-export function SidebarNav({ isAdmin = false, isGuest = false }: { isAdmin?: boolean, isGuest?: boolean }) {
+export function SidebarNav({ isAdmin = false, isUpgraded = false }: { isAdmin?: boolean, isUpgraded?: boolean }) {
   const pathname = usePathname();
 
   const isSubItemActive = (href: string) => {
@@ -131,7 +120,17 @@ export function SidebarNav({ isAdmin = false, isGuest = false }: { isAdmin?: boo
     return items.some((item) => isSubItemActive(item.href));
   };
 
-  const filteredItems = navigationItems.filter(item => !item.isAdminOnly || isAdmin);
+  const filteredItems = navigationItems
+    .filter(item => !item.isAdminOnly || isAdmin)
+    .map(item => {
+      if (item.title === "AI tools" && !isUpgraded) {
+        return {
+          ...item,
+          items: item.items.filter(sub => !sub.isPremium)
+        };
+      }
+      return item;
+    });
 
   return (
     <SidebarMenu className="gap-2 px-2 py-4">

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -175,8 +176,8 @@ export default function DashboardHomePage() {
                 </div>
                 <h2 className="text-xl sm:text-2xl font-medium text-foreground/60 tracking-tight">Hi {userName}</h2>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tighter text-foreground leading-tight">
-                Where should we start?
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tighter text-foreground leading-tight">
+                How can I assist your research today?
             </h1>
         </div>
 
@@ -319,68 +320,18 @@ export default function DashboardHomePage() {
         )}
       </AnimatePresence>
 
-      {/* Box 4: Terminals Box */}
+      {/* Box 4: Posts Box */}
       <section className="space-y-8">
-        <div className="flex items-center gap-3 px-1 text-left">
-            <div className="p-2 rounded-lg bg-blue-500/10">
-                <Zap className="h-5 w-5 text-blue-500" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black text-foreground font-headline tracking-tighter">Forensic terminals</h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {tools.map((tool, i) => (
-            <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 + (i * 0.1) }}
-                whileHover={{ y: -5 }}
-                className="group"
-            >
-                <Link href={tool.href} className="block h-full">
-                <Card className={cn(
-                    "h-full border-primary/5 bg-card/40 backdrop-blur-sm transition-all duration-500 rounded-[2.2rem] overflow-hidden group-hover:border-primary/20",
-                    "relative shadow-soft hover:shadow-2xl",
-                    tool.glow
-                )}>
-                    <CardContent className="p-8 flex flex-col justify-between h-full relative z-10 text-left">
-                    <div className={cn("p-4 rounded-2xl w-fit mb-8 shadow-inner transition-transform duration-500 group-hover:scale-110", tool.bg, tool.color)}>
-                        <tool.icon className="h-7 w-7" />
-                    </div>
-                    <div className="space-y-2">
-                        <h3 className="text-xl font-black tracking-tight leading-none">{tool.title}</h3>
-                        <p className="text-[11px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
-                            {tool.desc}
-                        </p>
-                    </div>
-                    <div className="mt-10 flex items-center justify-between">
-                        <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors">
-                        Initialize tool
-                        </div>
-                        <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                            <ArrowRight className="h-5 w-5" />
-                        </div>
-                    </div>
-                    </CardContent>
-                </Card>
-                </Link>
-            </motion.div>
-            ))}
-        </div>
-      </section>
-
-      {/* Box 5: Posts Box */}
-      <section className="space-y-8">
-        <div className="flex items-center justify-between border-b border-primary/5 pb-4">
-            <div className="flex items-center gap-3">
-                <div className="p-3 rounded-2xl bg-primary/10 text-primary">
+        <div className="flex items-center justify-between border-b-4 border-foreground pb-4 mb-10">
+            <div className="flex items-center gap-4">
+                <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
                     <Newspaper className="h-6 w-6" />
                 </div>
                 <div className="text-left">
-                    <h2 className="text-xl sm:text-2xl font-black font-headline tracking-tighter leading-none">Posts</h2>
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Posts</h2>
                 </div>
             </div>
-            <Button variant="ghost" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-xl hover:bg-primary/5 border border-primary/5">
+            <Button variant="outline" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-full hover:bg-foreground hover:text-background transition-all border-foreground/20">
               <Link href="/dashboard/research-analytics">
                 View all posts <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
@@ -440,6 +391,60 @@ export default function DashboardHomePage() {
                     </motion.div>
                 ))}
             </AnimatePresence>
+        </div>
+      </section>
+
+      {/* Box 5: Terminals Box */}
+      <section className="space-y-8">
+        <div className="flex items-center justify-between border-b-4 border-foreground pb-4 mb-10">
+            <div className="flex items-center gap-4">
+                <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
+                    <Zap className="h-6 w-6 text-primary" />
+                </div>
+                <div className="text-left">
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Forensic terminals</h2>
+                </div>
+            </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {tools.map((tool, i) => (
+            <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 + (i * 0.1) }}
+                whileHover={{ y: -5 }}
+                className="group"
+            >
+                <Link href={tool.href} className="block h-full">
+                <Card className={cn(
+                    "h-full border-primary/5 bg-card/40 backdrop-blur-sm transition-all duration-500 rounded-[2.2rem] overflow-hidden group-hover:border-primary/20",
+                    "relative shadow-soft hover:shadow-2xl",
+                    tool.glow
+                )}>
+                    <CardContent className="p-8 flex flex-col justify-between h-full relative z-10 text-left">
+                    <div className={cn("p-4 rounded-2xl w-fit mb-8 shadow-inner transition-transform duration-500 group-hover:scale-110", tool.bg, tool.color)}>
+                        <tool.icon className="h-7 w-7" />
+                    </div>
+                    <div className="space-y-2">
+                        <h3 className="text-xl font-black tracking-tight leading-none">{tool.title}</h3>
+                        <p className="text-[11px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
+                            {tool.desc}
+                        </p>
+                    </div>
+                    <div className="mt-10 flex items-center justify-between">
+                        <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors">
+                        Initialize tool
+                        </div>
+                        <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                            <ArrowRight className="h-5 w-5" />
+                        </div>
+                    </div>
+                    </CardContent>
+                </Card>
+                </Link>
+            </motion.div>
+            ))}
         </div>
       </section>
 
