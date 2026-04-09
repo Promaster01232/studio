@@ -78,9 +78,17 @@ interface Post {
     content: string;
     likes: number;
     likedBy?: string[];
-    postType?: string;
+    postType?: 'Idea' | 'Question' | 'Suggestion' | 'Poll' | 'News';
     isAnonymous?: boolean;
 }
+
+const typeConfig: Record<string, { color: string, bg: string, border: string, icon: any, gradient: string, glow: string }> = {
+    'Idea': { color: 'text-amber-600', bg: 'bg-amber-500/10', border: 'border-amber-500/20', icon: Sparkles, gradient: 'from-amber-500/5', glow: 'shadow-amber-500/10' },
+    'Question': { color: 'text-blue-600', bg: 'bg-blue-500/10', border: 'border-blue-500/20', icon: Bot, gradient: 'from-blue-500/5', glow: 'shadow-blue-500/10' },
+    'Suggestion': { color: 'text-emerald-600', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', icon: Zap, gradient: 'from-emerald-500/5', glow: 'shadow-emerald-500/10' },
+    'Poll': { color: 'text-purple-600', bg: 'bg-purple-500/10', border: 'border-purple-500/20', icon: Layers, gradient: 'from-purple-500/5', glow: 'shadow-purple-500/10' },
+    'News': { color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20', icon: Newspaper, gradient: 'from-primary/5', glow: 'shadow-primary/10' },
+};
 
 const tools = [
     { icon: Mic, title: "Voice summary", desc: "Convert your story into a clear legal roadmap.", href: "/dashboard/narrate", color: "text-blue-500", bg: "bg-blue-500/5", glow: "shadow-blue-500/20" },
@@ -129,12 +137,6 @@ export default function DashboardHomePage() {
     
     return () => unsub();
   }, [firestore, auth.currentUser]);
-
-  useEffect(() => {
-    if (messages.length > 0 && scrollRef.current) {
-        scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [messages]);
 
   const handleSendMessage = async () => {
     if (!chatInput.trim() || isProcessing) return;
@@ -297,7 +299,6 @@ export default function DashboardHomePage() {
       <AnimatePresence>
         {messages.length > 0 && (
             <motion.section 
-                ref={scrollRef}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="w-full max-w-4xl mx-auto space-y-10"
@@ -390,6 +391,7 @@ export default function DashboardHomePage() {
                     const isAdmin = auth.currentUser?.email && ADMIN_EMAILS.includes(auth.currentUser.email.toLowerCase());
                     const canDelete = isAuthor || isAdmin;
                     const userHasLiked = post.likedBy?.includes(auth.currentUser?.uid ?? '');
+                    const config = typeConfig[post.postType || 'Idea'] || typeConfig['Idea'];
 
                     return (
                         <motion.div
@@ -398,14 +400,17 @@ export default function DashboardHomePage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.1 }}
                         >
-                            <Card className="h-full border-primary/10 hover:border-primary/30 transition-all duration-500 rounded-[2.5rem] bg-card/40 backdrop-blur-sm shadow-soft hover:shadow-2xl overflow-hidden relative flex flex-col group">
-                                <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary/20 group-hover:bg-primary transition-all" />
-                                <CardHeader className="p-8 pb-4 text-left">
+                            <Card className={cn(
+                                "h-full border-primary/10 hover:border-primary/30 transition-all duration-500 rounded-[2.5rem] bg-card/40 backdrop-blur-sm shadow-soft hover:shadow-2xl overflow-hidden relative flex flex-col group",
+                                config.glow
+                            )}>
+                                <div className={cn("absolute top-0 left-0 bottom-0 w-1.5 transition-all", config.bg.replace('bg-', 'bg-').replace('/10', ''))} />
+                                <CardHeader className="p-8 pb-4 text-left ml-1.5">
                                     <div className="flex items-start justify-between mb-6">
                                         <div className="flex items-center gap-3">
                                             <Avatar className="h-10 w-10 rounded-xl border border-primary/10 shadow-sm">
                                                 {!post.isAnonymous && post.authorAvatar && <AvatarImage src={post.authorAvatar} className="object-cover" />}
-                                                <AvatarFallback className="text-xs font-black bg-primary/5 text-primary">
+                                                <AvatarFallback className="text-xs font-black bg-primary/10 text-primary">
                                                     {post.isAnonymous ? 'A' : post.authorName.charAt(0)}
                                                 </AvatarFallback>
                                             </Avatar>
@@ -417,7 +422,7 @@ export default function DashboardHomePage() {
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black px-3 py-1 rounded-full uppercase">
+                                            <Badge variant="secondary" className={cn("bg-primary/5 text-primary border-primary/10 text-[8px] font-black px-3 py-1 rounded-full uppercase", config.bg, config.color)}>
                                                 {post.postType || 'Idea'}
                                             </Badge>
                                             
@@ -445,12 +450,12 @@ export default function DashboardHomePage() {
                                     </div>
                                     <h3 className="text-xl sm:text-2xl font-black tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2">{post.title}</h3>
                                 </CardHeader>
-                                <CardContent className="p-8 pt-0 flex-1 text-left">
+                                <CardContent className="p-8 pt-0 flex-1 text-left ml-1.5">
                                     <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed font-medium">
                                         {post.content}
                                     </p>
                                 </CardContent>
-                                <CardFooter className="p-8 pt-4 border-t border-primary/5 flex items-center justify-between">
+                                <CardFooter className="p-8 pt-4 border-t border-primary/5 flex items-center justify-between ml-1.5">
                                     <div className="flex items-center gap-4">
                                         <button 
                                             onClick={() => handleLikePost(post)}
