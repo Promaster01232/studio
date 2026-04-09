@@ -81,16 +81,20 @@ export default function DocumentIntelligencePage() {
   };
 
   return (
-    <div className="space-y-10 max-w-6xl mx-auto pb-20 px-2 sm:px-0 text-left">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6">
-            <PageHeader
-            title="Forensic audit"
-            description="Institutional AI analysis for legal document risk assessment."
-            />
-            <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
-            <Link href="/dashboard">
-                <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to terminal
-            </Link>
+    <div className="space-y-12 max-w-6xl mx-auto pb-32 px-4 sm:px-6 text-left">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-center justify-between border-b-4 border-foreground pb-4 mb-10 gap-6">
+            <div className="flex items-center gap-4">
+                <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
+                    <FileSearch className="h-6 w-6 text-primary" />
+                </div>
+                <div className="text-left">
+                    <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Document scan</h1>
+                </div>
+            </div>
+            <Button variant="outline" size="sm" className="rounded-full font-black text-[10px] uppercase tracking-widest h-10 px-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all" asChild>
+                <Link href="/dashboard">
+                    <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to terminal
+                </Link>
             </Button>
         </motion.div>
 
@@ -99,20 +103,20 @@ export default function DocumentIntelligencePage() {
             animate={{ opacity: 1, scale: 1 }}
             className="max-w-3xl mx-auto"
         >
-            <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
+            <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5 bg-card">
                 <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
                     <div className="flex items-center gap-3 mb-2 text-primary">
                         <FileUp className="h-5 w-5" />
-                        <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Upload hub</CardTitle>
+                        <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Statutory ingress</CardTitle>
                     </div>
-                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Send your file for secure analysis.</CardDescription>
+                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Upload your legal instrument for neural audit.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-8 sm:p-10">
-                    <form action={formAction} className="space-y-8 text-left">
-                        <div className="space-y-3">
-                            <Label htmlFor="document" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Legal document</Label>
+                    <form action={formAction} className="space-y-10 text-left">
+                        <div className="space-y-4">
+                            <Label htmlFor="document" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Legal instrument</Label>
                             <div className="relative group">
-                                <div className="absolute inset-0 bg-primary/5 rounded-2xl transition-all group-hover:bg-primary/10 border-2 border-dashed border-primary/10 pointer-events-none"></div>
+                                <div className="absolute inset-0 bg-primary/5 rounded-[2rem] transition-all group-hover:bg-primary/10 border-2 border-dashed border-primary/10 pointer-events-none"></div>
                                 <Input 
                                     id="document" 
                                     name="document" 
@@ -121,49 +125,52 @@ export default function DocumentIntelligencePage() {
                                     onChange={handleFileChange}
                                     ref={fileInputRef}
                                     accept=".pdf,.doc,.docx,image/*"
-                                    className="h-32 opacity-0 cursor-pointer relative z-10"
+                                    className="h-40 opacity-0 cursor-pointer relative z-10"
                                 />
-                                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none">
-                                    <div className="p-3 rounded-xl bg-background shadow-sm border border-primary/5 group-hover:scale-110 transition-transform">
-                                        <FileSearch className="h-6 w-6 text-primary opacity-40" />
+                                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 pointer-events-none">
+                                    <div className="p-4 rounded-2xl bg-white dark:bg-zinc-900 shadow-xl border border-primary/5 group-hover:scale-110 transition-transform duration-500">
+                                        <Search className="h-8 w-8 text-primary opacity-40" />
                                     </div>
-                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-center px-4">
-                                        {fileName ? fileName : "Select your file"}
-                                    </p>
+                                    <div className="space-y-1 text-center px-6">
+                                        <p className="text-xs font-black uppercase tracking-widest text-foreground">
+                                            {fileName ? fileName : "Click to initialize upload"}
+                                        </p>
+                                        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em]">PDF, DOC, or image assets</p>
+                                    </div>
                                 </div>
                             </div>
                             {fileName && (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-4 p-4 bg-green-500/5 rounded-xl border border-green-500/10">
-                                    <CheckCircle2 className="h-5 w-5 text-green-600" />
-                                    <p className="text-[11px] font-bold text-green-600 truncate flex-1 uppercase tracking-tight">{fileName}</p>
-                                    <button type="button" onClick={() => { setFileName(""); if(fileInputRef.current) fileInputRef.current.value=""; }} className="text-muted-foreground hover:text-destructive active:scale-90 transition-all p-1">
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-4 p-5 bg-green-500/5 rounded-2xl border border-green-500/10 shadow-inner">
+                                    <div className="bg-green-500 p-1.5 rounded-lg text-white"><CheckCircle2 className="h-4 w-4" /></div>
+                                    <p className="text-xs font-black truncate flex-1 uppercase tracking-tight text-green-700 dark:text-green-400">{fileName}</p>
+                                    <button type="button" onClick={() => { setFileName(""); if(fileInputRef.current) fileInputRef.current.value=""; }} className="text-muted-foreground hover:text-destructive active:scale-90 transition-all p-2 rounded-full hover:bg-destructive/5">
                                         <X className="h-4 w-4" />
                                     </button>
                                 </motion.div>
                             )}
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1 flex items-center gap-2">
-                                <Languages className="h-3 w-3" /> Report language
+                                <Languages className="h-3.5 w-3.5 text-primary" /> Audit dialect
                             </Label>
                             <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
-                                <SelectTrigger id="language" className="h-12 glass border-primary/5 font-bold rounded-xl active:scale-95 transition-all">
+                                <SelectTrigger id="language" className="h-14 glass border-primary/5 font-black uppercase text-[10px] rounded-2xl active:scale-95 transition-all">
                                     <SelectValue />
                                 </SelectTrigger>
-                                <SelectContent className="glass border-primary/5 rounded-xl">
-                                    <SelectItem value="English" className="font-bold">English</SelectItem>
-                                    <SelectItem value="Hindi" className="font-bold">Hindi</SelectItem>
+                                <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
+                                    <SelectItem value="English" className="font-black uppercase text-[10px]">English protocol</SelectItem>
+                                    <SelectItem value="Hindi" className="font-black uppercase text-[10px]">Hindi protocol</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
-                        <Button type="submit" disabled={state.status === "loading"} className="w-full h-16 text-xs font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 rounded-[1.5rem] group relative overflow-hidden active:scale-95 transition-all">
+                        <Button type="submit" disabled={state.status === "loading"} className="w-full h-16 text-[11px] font-black uppercase tracking-[0.4em] shadow-2xl shadow-primary/20 rounded-[2rem] group relative overflow-hidden active:scale-95 transition-all">
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                             {state.status === "loading" ? (
-                                <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Analyzing your document...</>
+                                <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Running neural scan...</>
                             ) : (
-                                <><ShieldCheck className="mr-3 h-5 w-5" /> Start analysis</>
+                                <><ShieldCheck className="mr-3 h-5 w-5" /> Start forensic audit</>
                             )}
                         </Button>
                     </form>
@@ -173,17 +180,17 @@ export default function DocumentIntelligencePage() {
 
         <div ref={reportRef} className="space-y-8 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-4">
-                <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
-                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Report entry</Badge>
+                <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-20" />
+                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-6 py-2 rounded-full">Report node</Badge>
             </div>
 
-            <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col">
+            <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col bg-card">
                 <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
                     <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
                 </div>
 
                 <CardHeader className={cn(
-                    "p-8 sm:p-12 relative z-10 transition-colors duration-500 border-b border-primary/10",
+                    "p-8 sm:p-12 relative z-10 transition-colors duration-700 border-b border-primary/10",
                     state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-muted/30 text-foreground"
                 )}>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
@@ -194,20 +201,20 @@ export default function DocumentIntelligencePage() {
                                     state.status === 'success' ? "bg-white/10 border-white/20" : "bg-background border-primary/5"
                                 )}>
                                     <Bot className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
-                                    <span className={cn("text-[10px] font-bold", state.status === 'success' ? "text-white" : "text-primary")}>
-                                        {state.status === 'success' ? "Analysis complete" : "AI analysis"}
+                                    <span className={cn("text-[10px] font-bold uppercase", state.status === 'success' ? "text-white" : "text-primary")}>
+                                        {state.status === 'success' ? "Scan complete" : "Awaiting scan"}
                                     </span>
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none">
-                                    {state.status === 'success' ? "Your report is ready" : "Waiting for your file"}
+                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none uppercase">
+                                    {state.status === 'success' ? "Statutory report ready" : "Awaiting instrument"}
                                 </CardTitle>
                                 <div className={cn(
                                     "text-[11px] font-medium flex items-center gap-3",
                                     state.status === 'success' ? "text-white/70" : "text-muted-foreground"
                                 )}>
-                                    <ShieldCheck className="h-4 w-4" /> Your data is protected
+                                    <ShieldCheck className="h-4 w-4" /> End-to-end encrypted session
                                 </div>
                             </div>
                         </div>
@@ -218,9 +225,9 @@ export default function DocumentIntelligencePage() {
                                     variant="secondary" 
                                     size="sm" 
                                     onClick={handleReset}
-                                    className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl"
+                                    className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl active:scale-95"
                                 >
-                                    <PlusCircle className="h-4 w-4" /> New report
+                                    <PlusCircle className="h-4 w-4" /> New scan
                                 </Button>
                                 <AudioAssistant 
                                     text={`${state.data?.summary}. Risks identified: ${state.data?.legalRisks}.`} 
@@ -231,7 +238,7 @@ export default function DocumentIntelligencePage() {
                     </div>
                 </CardHeader>
                 
-                <CardContent className="p-8 sm:p-12 flex-1 relative z-10">
+                <CardContent className="p-10 sm:p-16 flex-1 relative z-10">
                     <AnimatePresence mode="wait">
                         {state.status === 'loading' ? (
                             <motion.div 
@@ -239,17 +246,17 @@ export default function DocumentIntelligencePage() {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="flex flex-col items-center justify-center h-full py-20 text-center gap-10"
+                                className="flex flex-col items-center justify-center h-full py-24 text-center gap-12"
                             >
                                 <div className="relative w-fit mx-auto">
-                                    <Loader2 className="h-20 w-20 animate-spin text-primary opacity-20" />
+                                    <Loader2 className="h-24 w-24 animate-spin text-primary opacity-20" />
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <Activity className="h-8 w-8 text-primary animate-pulse" />
+                                        <Activity className="h-10 w-10 text-primary animate-pulse" />
                                     </div>
                                 </div>
-                                <div className="space-y-3">
-                                    <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Analyzing your document...</p>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Running AI risk scan...</p>
+                                <div className="space-y-4">
+                                    <p className="font-black text-3xl tracking-tighter uppercase text-foreground">Analyzing instrument...</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground animate-pulse">Deconstructing statutory clauses...</p>
                                 </div>
                             </motion.div>
                         ) : state.status === "success" && state.data ? (
@@ -257,52 +264,57 @@ export default function DocumentIntelligencePage() {
                                 key="report-content"
                                 initial={{ opacity: 0, y: 20 }} 
                                 animate={{ opacity: 1, y: 0 }} 
-                                className="space-y-12 pb-10 text-left"
+                                className="space-y-16 pb-12 text-left"
                             >
-                                <div className="p-8 glass rounded-[2.5rem] border border-primary/10 shadow-inner bg-primary/[0.02]">
-                                    <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
-                                        <Fingerprint className="h-5 w-5" />
-                                        <span className="text-[11px] font-black uppercase tracking-widest">Report summary</span>
+                                <div className="p-10 glass rounded-[3rem] border border-primary/10 shadow-inner bg-primary/[0.02] relative overflow-hidden">
+                                    <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary"></div>
+                                    <div className="flex items-center gap-3 mb-6 text-primary opacity-40">
+                                        <Fingerprint className="h-6 w-6" />
+                                        <span className="text-[11px] font-black uppercase tracking-[0.4em]">Registry summary</span>
                                     </div>
-                                    <p className="text-sm sm:text-lg text-foreground font-black leading-relaxed tracking-tight">{state.data.summary}</p>
+                                    <p className="text-xl sm:text-2xl text-foreground font-black leading-tight tracking-tight uppercase">{state.data.summary}</p>
                                 </div>
                                 
-                                <div className="grid sm:grid-cols-2 gap-8 text-left">
-                                    <Card className="bg-red-500/[0.03] rounded-[2.5rem] border-red-500/10 p-8 shadow-sm hover:shadow-xl transition-all group">
-                                        <h3 className="text-[11px] font-black text-red-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <AlertTriangle className="h-4 w-4" /> Risk factors
+                                <div className="grid md:grid-cols-2 gap-10 text-left">
+                                    <Card className="bg-red-500/[0.03] rounded-[2.5rem] border border-red-500/10 p-10 shadow-sm hover:shadow-2xl transition-all group relative overflow-hidden">
+                                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-red-500"></div>
+                                        <h3 className="text-[11px] font-black text-red-600 uppercase tracking-[0.4em] mb-8 flex items-center gap-4">
+                                            <AlertTriangle className="h-5 w-5" /> Risk indicators
                                         </h3>
-                                        <p className="text-sm font-bold text-muted-foreground leading-relaxed">{state.data.legalRisks}</p>
+                                        <p className="text-sm font-bold text-muted-foreground leading-loose">{state.data.legalRisks}</p>
                                     </Card>
-                                    <Card className="bg-amber-500/[0.03] rounded-[2.5rem] border-amber-500/10 p-8 shadow-sm hover:shadow-xl transition-all group">
-                                        <h3 className="text-[11px] font-black text-amber-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <CalendarClock className="h-4 w-4" /> Important dates
+                                    <Card className="bg-amber-500/[0.03] rounded-[2.5rem] border border-amber-500/10 p-10 shadow-sm hover:shadow-2xl transition-all group relative overflow-hidden">
+                                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-amber-500"></div>
+                                        <h3 className="text-[11px] font-black text-amber-600 uppercase tracking-[0.4em] mb-8 flex items-center gap-4">
+                                            <CalendarClock className="h-5 w-5" /> Statutory dates
                                         </h3>
-                                        <p className="text-sm font-bold text-muted-foreground leading-relaxed">{state.data.deadlines}</p>
+                                        <p className="text-sm font-bold text-muted-foreground leading-loose">{state.data.deadlines}</p>
                                     </Card>
                                 </div>
 
-                                <div className="p-8 sm:p-10 bg-background rounded-[3rem] border border-primary/10 shadow-2xl relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none group-hover:scale-110 transition-transform duration-700">
-                                        <Search className="h-32 w-32" />
+                                <div className="p-10 sm:p-12 bg-background rounded-[4rem] border border-primary/10 shadow-3xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
+                                        <Search className="h-40 w-40" />
                                     </div>
-                                    <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] mb-6 flex items-center gap-3 relative z-10">
-                                        <ListChecks className="h-4 w-4" /> Action plan
+                                    <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.4em] mb-8 flex items-center gap-4 relative z-10">
+                                        <ListChecks className="h-6 w-6" /> Action roadmap
                                     </h3>
-                                    <p className="text-sm sm:text-base font-bold text-muted-foreground leading-loose whitespace-pre-line relative z-10">{state.data.requiredActions}</p>
+                                    <div className="prose dark:prose-invert max-w-none relative z-10">
+                                        <p className="text-sm sm:text-base font-bold text-muted-foreground leading-relaxed whitespace-pre-line">{state.data.requiredActions}</p>
+                                    </div>
                                 </div>
 
-                                <div className="pt-10 mt-10 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
-                                    <div className="flex items-center gap-4">
-                                        <div className="p-3 rounded-2xl bg-primary/5 text-primary">
-                                            <ShieldCheck className="h-6 w-6" />
+                                <div className="pt-12 mt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-10 opacity-30">
+                                    <div className="flex items-center gap-5">
+                                        <div className="p-4 rounded-2xl bg-muted text-foreground shadow-inner">
+                                            <ShieldCheck className="h-7 w-7" />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-[10px] font-black uppercase tracking-widest">Secure system</p>
-                                            <p className="text-[9px] font-bold">This report is protected by high-level encryption.</p>
+                                            <p className="text-[11px] font-black uppercase tracking-widest">Statutory security</p>
+                                            <p className="text-[10px] font-bold">This terminal is protected under TLS 1.3 protocol.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.6em]">NYAYASAHAYAK.IN // SCAN-OS</p>
                                 </div>
                             </motion.div>
                         ) : (
@@ -310,25 +322,25 @@ export default function DocumentIntelligencePage() {
                                 key="idle" 
                                 initial={{ opacity: 0, scale: 0.95 }} 
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="flex flex-col items-center justify-center py-32 text-center gap-10"
+                                className="flex flex-col items-center justify-center py-40 text-center gap-12"
                             >
                                 <div className="relative">
-                                    <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl animate-pulse"></div>
-                                    <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
-                                        <FileSearch className="h-20 w-20 text-primary opacity-40 group-hover:opacity-100 transition-opacity" />
+                                    <div className="absolute -inset-8 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
+                                    <div className="p-12 rounded-[3rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
+                                        <FileSearch className="h-24 w-24 text-primary opacity-20 group-hover:opacity-40 transition-opacity" />
                                     </div>
                                 </div>
-                                <div className="space-y-4 max-w-sm px-6 text-center">
-                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready to start</h3>
-                                    <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
-                                        Upload a document to start your AI analysis.
+                                <div className="space-y-6 max-w-md px-8 text-center">
+                                    <h3 className="font-black text-4xl tracking-tighter uppercase text-foreground leading-none">Ready for scan</h3>
+                                    <p className="text-[11px] text-muted-foreground font-black uppercase tracking-[0.3em] leading-relaxed italic opacity-40">
+                                        Upload a legal instrument to initialize the neural forensic audit.
                                     </p>
                                 </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </CardContent>
-                <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+                <div className="h-3 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
             </Card>
         </div>
     </div>

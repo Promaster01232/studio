@@ -13,18 +13,15 @@ import {
   Upload, 
   ShieldCheck, 
   Activity, 
-  Cpu,
-  Clock,
-  Globe,
-  Fingerprint,
-  PlusCircle,
-  ArrowLeft,
-  FileSearch,
-  ChevronDown,
-  X,
-  FileCheck
+  Globe, 
+  Fingerprint, 
+  PlusCircle, 
+  ArrowLeft, 
+  FileSearch, 
+  ChevronDown, 
+  X, 
+  FileCheck 
 } from "lucide-react";
-import { PageHeader } from "@/components/page-header";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
@@ -67,7 +64,7 @@ export default function NarrateProblemPage() {
         setHasPermission(false);
         toast({
           variant: "destructive",
-          title: "Microphone Denied",
+          title: "Microphone denied",
           description: "Please allow microphone access in your settings to use this feature.",
         });
       }
@@ -78,7 +75,7 @@ export default function NarrateProblemPage() {
   useEffect(() => {
     if (state.status === 'success' && auth.currentUser) {
         const userRef = doc(firestore, "users", auth.currentUser.uid);
-        updateDoc(userRef, { aiUsageCount: increment(1) }).catch(console.error);
+        updateDoc(userRef, { aiUsageCount: increment(1) }).catch(() => {});
         
         setTimeout(() => {
             reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -110,7 +107,7 @@ export default function NarrateProblemPage() {
                 formData.append("language", language);
                 startTransition(() => formAction(formData));
             } else {
-                 toast({ variant: "destructive", title: "Too Short", description: "Your recording was too short to analyze." });
+                 toast({ variant: "destructive", title: "Too short", description: "Your recording was too short to analyze." });
             }
             setIsRecording(false);
         };
@@ -118,7 +115,7 @@ export default function NarrateProblemPage() {
     } catch(err) {
         setIsRecording(false);
         if (timerInterval.current) clearInterval(timerInterval.current);
-        toast({ variant: "destructive", title: "Error", description: "Could not start recording." });
+        toast({ variant: "destructive", title: "Recording error", description: "Could not start audio capture." });
     }
   };
 
@@ -148,18 +145,20 @@ export default function NarrateProblemPage() {
       window.location.reload();
   };
 
-  const isLoading = state.status === "loading";
-
   return (
-    <div className="space-y-10 max-w-6xl mx-auto pb-32 px-4 sm:px-0 text-left">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-primary/5 pb-6 text-left">
-            <PageHeader
-                title="Voice Assistant"
-                description="Describe your case using your voice for an instant AI summary."
-            />
-            <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
+    <div className="space-y-12 max-w-6xl mx-auto pb-32 px-4 sm:px-6 text-left">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-center justify-between border-b-4 border-foreground pb-4 mb-10 gap-6">
+            <div className="flex items-center gap-4">
+                <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
+                    <Mic className="h-6 w-6 text-primary" />
+                </div>
+                <div className="text-left">
+                    <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Voice summary</h1>
+                </div>
+            </div>
+            <Button variant="outline" size="sm" className="rounded-full font-black text-[10px] uppercase tracking-widest h-10 px-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all" asChild>
                 <Link href="/dashboard">
-                    <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Home
+                    <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to terminal
                 </Link>
             </Button>
         </motion.div>
@@ -167,27 +166,27 @@ export default function NarrateProblemPage() {
         <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="max-w-4xl mx-auto"
+            className="max-w-3xl mx-auto"
         >
             <Card className="glass shadow-2xl overflow-hidden rounded-[2.5rem] border-primary/5">
                 <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
                     <div className="flex items-center gap-3 mb-2 text-primary">
-                        <Mic className="h-5 w-5" />
-                        <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Recording</CardTitle>
+                        <Activity className="h-5 w-5 animate-pulse" />
+                        <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Audio capture</CardTitle>
                     </div>
-                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Speak naturally to describe your situation.</CardDescription>
+                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Record your narrative for statutory summary.</CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col items-center justify-center space-y-10 pt-10 pb-10">
+                <CardContent className="flex flex-col items-center justify-center space-y-12 pt-12 pb-12">
                     <div className="w-full max-w-sm space-y-4 px-2 text-left">
                         <div className="space-y-3">
-                            <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Language</Label>
-                            <Select value={language} onValueChange={setLanguage} disabled={isRecording || isLoading}>
+                            <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Registry dialect</Label>
+                            <Select value={language} onValueChange={setLanguage} disabled={isRecording || state.status === 'loading'}>
                                 <SelectTrigger className="h-12 glass border-primary/5 font-bold rounded-xl active:scale-95 transition-all">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
-                                    <SelectItem value="English" className="font-bold">English</SelectItem>
-                                    <SelectItem value="Hindi" className="font-bold">Hindi</SelectItem>
+                                    <SelectItem value="English" className="font-bold">Simple English</SelectItem>
+                                    <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -216,27 +215,27 @@ export default function NarrateProblemPage() {
 
                         <Button
                             onClick={isRecording ? stopRecording : startRecording}
-                            disabled={!hasPermission || isLoading}
+                            disabled={!hasPermission || state.status === 'loading'}
                             className={cn(
-                                "h-36 w-36 rounded-[3rem] shadow-3xl flex flex-col gap-3 transition-all duration-500 active:scale-90 relative group overflow-hidden",
+                                "h-36 w-36 rounded-[3.5rem] shadow-3xl flex flex-col gap-3 transition-all duration-500 active:scale-90 relative group overflow-hidden",
                                 isRecording ? 'bg-red-500 hover:bg-red-600 scale-110 text-white' : 'bg-primary text-white'
                             )}
                         >
                             <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            {isRecording ? <div className="h-12 w-12 bg-white rounded-2xl animate-pulse z-10" /> : <Mic className="h-14 w-14 z-10" />}
-                            <span className="text-[10px] font-black uppercase tracking-widest z-10">{isRecording ? "Stop" : isLoading ? "Analyzing" : "Tap to Speak"}</span>
+                            {isRecording ? <div className="h-12 w-12 bg-white rounded-2xl animate-pulse z-10" /> : <Mic className="h-14 w-14 z-10 transition-transform group-hover:scale-110" />}
+                            <span className="text-[10px] font-black uppercase tracking-widest z-10">{isRecording ? "Stop" : state.status === 'loading' ? "Syncing" : "Tap to speak"}</span>
                         </Button>
                         
                         <div className="text-center space-y-2">
-                            <p className={cn("text-6xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-primary")}>{formatTime(timer)}</p>
-                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em]">{isRecording ? "Recording..." : isLoading ? "Processing with AI" : "Ready to listen"}</p>
+                            <p className={cn("text-6xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-foreground")}>{formatTime(timer)}</p>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em]">{isRecording ? "Transmitting audio..." : state.status === 'loading' ? "Neural processing..." : "Ready for ingress"}</p>
                         </div>
                     </div>
 
                     <div className="w-full pt-8 border-t border-primary/5 text-center">
                         <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="audio/*" className="hidden" />
-                        <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || isLoading} className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary gap-3 rounded-xl hover:bg-primary/5 px-6">
-                            <Upload className="h-4 w-4" /> Upload file
+                        <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || state.status === 'loading'} className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary gap-3 rounded-xl hover:bg-primary/5 px-8 h-10 transition-all">
+                            <Upload className="h-4 w-4" /> Upload record
                         </Button>
                     </div>
                 </CardContent>
@@ -245,8 +244,8 @@ export default function NarrateProblemPage() {
 
         <div ref={reportRef} className="space-y-8 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-4">
-                <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-40" />
-                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Report entry</Badge>
+                <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-20" />
+                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-6 py-2 rounded-full">Report entry</Badge>
             </div>
 
             <Card className="glass border-primary/20 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col">
@@ -265,21 +264,21 @@ export default function NarrateProblemPage() {
                                     "flex items-center gap-3 px-4 py-1.5 rounded-full border shadow-sm",
                                     state.status === 'success' ? "bg-white/10 border-white/20" : "bg-background border-primary/5"
                                 )}>
-                                    <Bot className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
-                                    <span className={cn("text-[10px] font-bold", state.status === 'success' ? "text-white" : "text-primary")}>
-                                        {state.status === 'success' ? "Analysis complete" : "AI analysis"}
+                                    <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
+                                    <span className={cn("text-[10px] font-bold uppercase", state.status === 'success' ? "text-white" : "text-primary")}>
+                                        {state.status === 'success' ? "Audit complete" : "Statutory audit"}
                                     </span>
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none">
-                                    {state.status === 'success' ? "Your report is ready" : "Waiting for your recording"}
+                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none uppercase">
+                                    {state.status === 'success' ? "Report initialized" : "Awaiting narration"}
                                 </CardTitle>
                                 <div className={cn(
                                     "text-[11px] font-medium flex items-center gap-3",
                                     state.status === 'success' ? "text-white/70" : "text-muted-foreground"
                                 )}>
-                                    <ShieldCheck className="h-4 w-4" /> Your data is protected
+                                    <Globe className="h-4 w-4" /> Secure statutory session
                                 </div>
                             </div>
                         </div>
@@ -290,9 +289,9 @@ export default function NarrateProblemPage() {
                                     variant="secondary" 
                                     size="sm" 
                                     onClick={handleReset}
-                                    className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-lg"
+                                    className="h-12 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest gap-3 shadow-2xl active:scale-95"
                                 >
-                                    <PlusCircle className="h-4 w-4" /> New report
+                                    <PlusCircle className="h-4 w-4" /> New audit
                                 </Button>
                                 <AudioAssistant 
                                     text={`Summary: ${state.data?.caseSummary}. Next steps: ${state.data?.nextActions}.`} 
@@ -305,13 +304,13 @@ export default function NarrateProblemPage() {
                 
                 <CardContent className="p-8 sm:p-12 flex-1 relative z-10">
                     <AnimatePresence mode="wait">
-                        {isLoading ? (
+                        {state.status === 'loading' ? (
                             <motion.div 
                                 key="loading"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="flex flex-col items-center justify-center h-full py-20 text-center gap-10"
+                                className="flex flex-col items-center justify-center h-full py-24 text-center gap-12"
                             >
                                 <div className="relative w-fit mx-auto">
                                     <Loader2 className="h-20 w-20 animate-spin text-primary opacity-20" />
@@ -319,9 +318,9 @@ export default function NarrateProblemPage() {
                                         <Activity className="h-8 w-8 text-primary animate-pulse" />
                                     </div>
                                 </div>
-                                <div className="space-y-3">
-                                    <p className="font-black text-2xl tracking-tighter uppercase text-foreground">Analyzing your voice...</p>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Running AI analysis...</p>
+                                <div className="space-y-4">
+                                    <p className="font-black text-3xl tracking-tighter uppercase text-foreground">Synchronizing narration...</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground animate-pulse">Running forensic audio audit...</p>
                                 </div>
                             </motion.div>
                         ) : state.status === "success" && state.data ? (
@@ -331,24 +330,27 @@ export default function NarrateProblemPage() {
                                 animate={{ opacity: 1, y: 0 }} 
                                 className="space-y-12 pb-10 text-left"
                             >
-                                <div className="p-8 glass rounded-[2rem] border-primary/5 italic text-sm sm:text-base font-medium text-muted-foreground leading-relaxed shadow-inner bg-muted/5">
+                                <div className="p-8 glass rounded-[2.5rem] border border-primary/10 italic text-sm sm:text-base font-medium text-muted-foreground leading-relaxed shadow-inner bg-muted/5 relative overflow-hidden">
+                                    <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-blue-500"></div>
                                     <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
                                         <Fingerprint className="h-4 w-4" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Transcription</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Transcription record</span>
                                     </div>
                                     "{state.data.transcription}"
                                 </div>
 
                                 <div className="grid md:grid-cols-2 gap-8">
-                                    <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left bg-primary/[0.02] shadow-sm hover:shadow-xl transition-all group">
+                                    <Card className="p-8 rounded-[2.5rem] border-primary/5 text-left bg-primary/[0.02] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
+                                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary"></div>
                                         <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <StepForward className="h-4 w-4" /> Summary
+                                            <StepForward className="h-4 w-4" /> Executive summary
                                         </h3>
-                                        <p className="text-sm sm:text-base font-black leading-relaxed tracking-tight text-foreground">{state.data.caseSummary}</p>
+                                        <p className="text-sm sm:text-base font-black leading-relaxed tracking-tight text-foreground uppercase">{state.data.caseSummary}</p>
                                     </Card>
-                                    <Card className="p-8 glass rounded-[2.5rem] border-primary/10 text-left bg-blue-500/[0.02] shadow-sm hover:shadow-xl transition-all group">
-                                        <h3 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <Globe className="h-4 w-4" /> Next steps
+                                    <Card className="p-8 rounded-[2.5rem] border-primary/5 text-left bg-green-500/[0.02] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
+                                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-green-500"></div>
+                                        <h3 className="text-[11px] font-black text-green-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
+                                            <Globe className="h-4 w-4" /> Recommended path
                                         </h3>
                                         <p className="text-sm font-bold leading-relaxed text-foreground/80">{state.data.nextActions}</p>
                                     </Card>
@@ -357,28 +359,30 @@ export default function NarrateProblemPage() {
                                 <div className="space-y-6">
                                     <div className="flex items-center justify-between border-b border-primary/10 pb-4">
                                         <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-3">
-                                            <FileSearch className="h-5 w-5" /> Analysis report
+                                            <FileSearch className="h-5 w-5" /> Forensic analysis
                                         </h3>
                                     </div>
-                                    <div className="p-8 sm:p-12 glass rounded-[3rem] border-primary/10 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-lg bg-muted/10 relative overflow-hidden group">
+                                    <div className="p-8 sm:p-12 glass rounded-[3rem] border border-primary/10 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-xl bg-muted/10 relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
                                             <Logo className="h-64 w-64 grayscale" priority={false} />
                                         </div>
-                                        {state.data.detailedAnalysis}
+                                        <div className="prose dark:prose-invert max-w-none">
+                                            {state.data.detailedAnalysis}
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div className="pt-10 mt-10 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
+                                <div className="pt-10 mt-10 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30">
                                     <div className="flex items-center gap-4">
-                                        <div className="p-3 rounded-2xl bg-primary/5 text-primary">
+                                        <div className="p-3 rounded-2xl bg-muted text-foreground">
                                             <ShieldCheck className="h-6 w-6" />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-[10px] font-black uppercase tracking-widest">Secure system</p>
-                                            <p className="text-[9px] font-bold">Your data is encrypted and kept private.</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest">Statutory security</p>
+                                            <p className="text-[9px] font-bold">This audit record is encrypted and private.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN</p>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // NARRATE-OS</p>
                                 </div>
                             </motion.div>
                         ) : (
@@ -386,25 +390,25 @@ export default function NarrateProblemPage() {
                                 key="idle" 
                                 initial={{ opacity: 0, scale: 0.95 }} 
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="flex flex-col items-center justify-center py-32 text-center gap-10"
+                                className="flex flex-col items-center justify-center py-32 text-center gap-12"
                             >
                                 <div className="relative">
-                                    <div className="absolute -inset-6 bg-primary/5 rounded-full blur-2xl animate-pulse"></div>
-                                    <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
-                                        <Mic className="h-20 w-20 text-primary opacity-20" />
+                                    <div className="absolute -inset-8 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
+                                    <div className="p-12 rounded-[2.5rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
+                                        <Mic className="h-24 w-24 text-primary opacity-20" />
                                     </div>
                                 </div>
-                                <div className="space-y-4 max-sm px-6 text-center">
-                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready to start</h3>
-                                    <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.2em] leading-relaxed italic opacity-60">
-                                        Please record or upload a file to start the analysis.
+                                <div className="space-y-4 max-w-sm px-6 text-center">
+                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready for ingress</h3>
+                                    <p className="text-[11px] text-muted-foreground font-black uppercase tracking-[0.3em] leading-relaxed italic opacity-40">
+                                        Initialize the terminal by recording or uploading your case narration.
                                     </p>
                                 </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </CardContent>
-                <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+                <div className="h-3 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
             </Card>
         </div>
     </div>
