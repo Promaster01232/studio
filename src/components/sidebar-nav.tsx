@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -33,7 +32,6 @@ import {
   ShieldCheck,
   Zap,
   FileCheck,
-  RotateCcw,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -94,7 +92,6 @@ const navigationItems = [
     items: [
       { href: "/dashboard/profile", icon: CircleUserRound, label: "My profile", isFeature: true },
       { href: "/dashboard/billing", icon: CreditCard, label: "My plan", isFeature: true },
-      { href: "/dashboard/refund-policy", icon: RotateCcw, label: "Refund policy" },
       { href: "/dashboard/support", icon: LifeBuoy, label: "Contact help" },
     ],
   },
