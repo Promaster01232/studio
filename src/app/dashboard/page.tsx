@@ -132,51 +132,50 @@ export default function DashboardHomePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-16 py-8 px-4 sm:px-6 text-left font-body">
+    <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 text-left font-body">
       
+      {/* Box 1: Spark Banner */}
       <motion.section 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-5xl mx-auto"
+        className="w-full"
       >
-        <Card className="border border-primary/5 bg-white dark:bg-zinc-950 shadow-soft rounded-[1.5rem] overflow-hidden group">
-          <div className="p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+        <Card className="border border-primary/5 bg-white dark:bg-zinc-950 shadow-soft rounded-[2rem] overflow-hidden group transition-all hover:shadow-lg">
+          <div className="p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
             <div className="flex items-start gap-6">
               <div className="p-3.5 rounded-xl bg-sky-50 text-sky-500 dark:bg-sky-500/10 shadow-sm border border-sky-100 dark:border-sky-500/20">
                 <Edit className="h-7 w-7" />
               </div>
-              <div className="space-y-2 text-left">
-                <h2 className="text-2xl sm:text-3xl font-black tracking-tighter text-foreground">Share your spark</h2>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-                    What brilliant idea is on your mind today? Let the community know.
-                  </p>
-                  <p className="text-[10px] font-black text-sky-500/60">Community hub</p>
-                </div>
+              <div className="space-y-1 text-left">
+                <h2 className="text-xl sm:text-2xl font-black tracking-tighter text-foreground">Share your spark</h2>
+                <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-md">
+                  What brilliant idea is on your mind today? Let the community know.
+                </p>
               </div>
             </div>
             <Button asChild className="h-12 px-8 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs gap-3 shadow-lg shadow-sky-500/20 active:scale-95 transition-all shrink-0">
               <Link href="/dashboard/research-analytics/new">
-                Share your spark <ArrowRight className="h-4 w-4" />
+                Initialize post <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>
         </Card>
       </motion.section>
 
+      {/* Box 2: AI Hub */}
       <motion.section 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-4xl mx-auto w-full flex flex-col items-center text-center space-y-8 py-6"
+        className="w-full flex flex-col items-center text-center space-y-10"
       >
         <div className="space-y-4">
-            <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="flex items-center justify-center gap-3">
                 <div className="p-2 rounded-full bg-primary/10">
-                    <Sparkles className="h-6 w-6 text-primary fill-primary/20" />
+                    <Sparkles className="h-5 w-5 text-primary fill-primary/20" />
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-medium text-foreground/60 tracking-tight">Hi {userName}</h2>
+                <h2 className="text-xl sm:text-2xl font-medium text-foreground/60 tracking-tight">Hi {userName}</h2>
             </div>
-            <h1 className="text-3xl sm:text-6xl font-black tracking-tighter text-foreground leading-tight">
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tighter text-foreground leading-tight">
                 Where should we start?
             </h1>
         </div>
@@ -185,7 +184,7 @@ export default function DashboardHomePage() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
             
             <div className="p-6 pb-2 text-left relative z-10">
-                <span className="text-[10px] font-black text-primary/40 ml-3">Ask Nyaya Sahayak AI</span>
+                <span className="text-[10px] font-black text-primary/40 ml-3">Consult assistant</span>
             </div>
             <div className="px-4 pb-4 space-y-4 relative z-10">
                 <div className="relative">
@@ -240,13 +239,14 @@ export default function DashboardHomePage() {
         </div>
       </motion.section>
 
+      {/* Box 3: AI Result Box (Conditional) */}
       <AnimatePresence>
         {messages.length > 0 && (
             <motion.section 
                 ref={scrollRef}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-4xl mx-auto w-full space-y-10 pt-10 border-t border-primary/5"
+                className="w-full max-w-4xl mx-auto space-y-10"
             >
                 {messages.map((m, i) => (
                     <div key={i} className={cn("flex gap-6 items-start", m.role === 'user' ? "flex-row-reverse" : "flex-col")}>
@@ -271,12 +271,12 @@ export default function DashboardHomePage() {
                                                 <div className="p-2 rounded-lg bg-white/10 backdrop-blur-md">
                                                     <FileCheck className="h-5 w-5 text-white" />
                                                 </div>
-                                                <span className="text-[10px] font-black">Official forensic report</span>
+                                                <span className="text-[10px] font-black">AI report</span>
                                             </div>
                                             <div className="space-y-1 text-left">
-                                                <CardTitle className="text-xl sm:text-2xl font-black tracking-tighter leading-none">Statutory guide summary</CardTitle>
+                                                <CardTitle className="text-xl sm:text-2xl font-black tracking-tighter leading-none">Your report is ready</CardTitle>
                                                 <div className="text-[10px] font-bold text-white/60 flex items-center gap-2">
-                                                    <Globe className="h-3 w-3" /> Encrypted session active
+                                                    <Globe className="h-3 w-3" /> Your data is protected
                                                 </div>
                                             </div>
                                         </div>
@@ -299,10 +299,10 @@ export default function DashboardHomePage() {
                                             </div>
                                             <div className="text-left">
                                                 <p className="text-[10px] font-black">Statutory security</p>
-                                                <p className="text-[9px] font-bold">This dossier is protected under attorney-client transience protocols.</p>
+                                                <p className="text-[9px] font-bold">This report is protected and private.</p>
                                             </div>
                                         </div>
-                                        <p className="text-[9px] font-black">nyayasahayak.in // report terminal</p>
+                                        <p className="text-[9px] font-black">nyayasahayak.in</p>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -312,13 +312,64 @@ export default function DashboardHomePage() {
                 {isProcessing && (
                     <div className="flex gap-4 items-center pl-4 text-primary/40">
                         <Loader2 className="h-5 w-5 animate-spin" />
-                        <span className="text-[10px] font-black animate-pulse">Deconstructing statutory matrix...</span>
+                        <span className="text-[10px] font-black animate-pulse">Running analysis...</span>
                     </div>
                 )}
             </motion.section>
         )}
       </AnimatePresence>
 
+      {/* Box 4: Terminals Box */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-3 px-1 text-left">
+            <div className="p-2 rounded-lg bg-blue-500/10">
+                <Zap className="h-5 w-5 text-blue-500" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-foreground font-headline tracking-tighter">Forensic terminals</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {tools.map((tool, i) => (
+            <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 + (i * 0.1) }}
+                whileHover={{ y: -5 }}
+                className="group"
+            >
+                <Link href={tool.href} className="block h-full">
+                <Card className={cn(
+                    "h-full border-primary/5 bg-card/40 backdrop-blur-sm transition-all duration-500 rounded-[2.2rem] overflow-hidden group-hover:border-primary/20",
+                    "relative shadow-soft hover:shadow-2xl",
+                    tool.glow
+                )}>
+                    <CardContent className="p-8 flex flex-col justify-between h-full relative z-10 text-left">
+                    <div className={cn("p-4 rounded-2xl w-fit mb-8 shadow-inner transition-transform duration-500 group-hover:scale-110", tool.bg, tool.color)}>
+                        <tool.icon className="h-7 w-7" />
+                    </div>
+                    <div className="space-y-2">
+                        <h3 className="text-xl font-black tracking-tight leading-none">{tool.title}</h3>
+                        <p className="text-[11px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
+                            {tool.desc}
+                        </p>
+                    </div>
+                    <div className="mt-10 flex items-center justify-between">
+                        <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors">
+                        Initialize tool
+                        </div>
+                        <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                            <ArrowRight className="h-5 w-5" />
+                        </div>
+                    </div>
+                    </CardContent>
+                </Card>
+                </Link>
+            </motion.div>
+            ))}
+        </div>
+      </section>
+
+      {/* Box 5: Posts Box */}
       <section className="space-y-8">
         <div className="flex items-center justify-between border-b border-primary/5 pb-4">
             <div className="flex items-center gap-3">
@@ -341,7 +392,7 @@ export default function DashboardHomePage() {
                 {loading ? (
                     <div className="col-span-full py-20 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                        <p className="text-[10px] font-black text-muted-foreground animate-pulse">Syncing transmissions...</p>
+                        <p className="text-[10px] font-black text-muted-foreground animate-pulse">Syncing registry...</p>
                     </div>
                 ) : posts.map((post, idx) => (
                     <motion.div
@@ -392,68 +443,20 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
-      <section className="space-y-8">
-        <div className="flex items-center gap-3 px-1 text-left">
-            <div className="p-2 rounded-lg bg-blue-500/10">
-                <Zap className="h-5 w-5 text-blue-500" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black text-foreground font-headline tracking-tighter">Forensic terminals</h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {tools.map((tool, i) => (
-            <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 + (i * 0.1) }}
-                whileHover={{ y: -5 }}
-                className="group"
-            >
-                <Link href={tool.href} className="block h-full">
-                <Card className={cn(
-                    "h-full border-primary/5 bg-card/40 backdrop-blur-sm transition-all duration-500 rounded-[2.5rem] overflow-hidden group-hover:border-primary/20",
-                    "relative shadow-soft hover:shadow-2xl",
-                    tool.glow
-                )}>
-                    <CardContent className="p-8 flex flex-col justify-between h-full relative z-10 text-left">
-                    <div className={cn("p-4 rounded-2xl w-fit mb-8 shadow-inner transition-transform duration-500 group-hover:scale-110", tool.bg, tool.color)}>
-                        <tool.icon className="h-7 w-7" />
-                    </div>
-                    <div className="space-y-2">
-                        <h3 className="text-xl font-black tracking-tight leading-none">{tool.title}</h3>
-                        <p className="text-[11px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
-                            {tool.desc}
-                        </p>
-                    </div>
-                    <div className="mt-10 flex items-center justify-between">
-                        <div className="flex items-center text-[10px] font-black text-primary/60 group-hover:text-primary transition-colors">
-                        Initialize tool
-                        </div>
-                        <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                            <ArrowRight className="h-5 w-5" />
-                        </div>
-                    </div>
-                    </CardContent>
-                </Card>
-                </Link>
-            </motion.div>
-            ))}
-        </div>
-      </section>
-
+      {/* Box 6: Bottom Grid (Upgrade & Guides) */}
       <div className="grid lg:grid-cols-12 gap-8 pt-10">
         <div className="lg:col-span-8">
-            <Card className="bg-primary text-primary-foreground rounded-[3rem] overflow-hidden border-none shadow-3xl shadow-primary/20 group relative">
+            <Card className="bg-primary text-primary-foreground rounded-[2.5rem] overflow-hidden border-none shadow-3xl shadow-primary/20 group relative h-full">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
                     <Logo className="h-40 w-40 border-none shadow-none grayscale" />
                 </div>
-                <CardContent className="p-10 sm:p-16 flex flex-col md:flex-row items-center gap-12 relative z-10 text-center md:text-left">
+                <CardContent className="p-10 sm:p-16 flex flex-col md:flex-row items-center gap-12 relative z-10 text-center md:text-left h-full">
                     <div className="space-y-6 flex-1">
                         <div className="space-y-3">
                             <div className="flex items-center justify-center md:justify-start gap-2">
                                 <Zap className="h-5 w-5 text-amber-400 fill-amber-400" />
-                                <span className="text-[10px] font-black opacity-60">Statutory expansion</span>
+                                <span className="text-[10px] font-black opacity-60">Registry upgrade</span>
                             </div>
                             <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.9]">Elevate your authority.</h3>
                             <p className="text-sm sm:text-lg opacity-80 font-medium leading-relaxed max-w-lg">
@@ -469,7 +472,7 @@ export default function DashboardHomePage() {
         </div>
 
         <div className="lg:col-span-4">
-            <Card className="border-primary/5 bg-card/40 backdrop-blur-sm rounded-[3rem] shadow-soft overflow-hidden h-full flex flex-col group hover:border-primary/20 transition-all duration-500">
+            <Card className="border-primary/5 bg-card/40 backdrop-blur-sm rounded-[2.5rem] shadow-soft overflow-hidden h-full flex flex-col group hover:border-primary/20 transition-all duration-500">
                 <CardHeader className="p-8 pb-4 border-b border-primary/5 bg-primary/5 text-left">
                     <div className="flex items-center gap-3">
                         <div className="p-2 rounded-lg bg-primary/10 text-primary">
@@ -503,6 +506,7 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
+      {/* Footer Nodes */}
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
         <p className="text-[9px] font-black text-muted-foreground uppercase">nyayasahayak.in // terminal hub // 2025</p>
         <div className="flex items-center gap-8">
