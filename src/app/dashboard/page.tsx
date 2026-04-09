@@ -564,7 +564,7 @@ export default function DashboardHomePage() {
                 <CardContent className="p-10 sm:p-16 flex flex-col md:flex-row items-center gap-12 relative z-10 text-center md:text-left h-full">
                     <div className="space-y-6 flex-1 text-left">
                         <div className="space-y-3">
-                            <div className="flex items-center justify-center md:justify-start gap-2">
+                            <div className="flex items-center gap-2">
                                 <Zap className="h-5 w-5 text-amber-400 fill-amber-400" />
                                 <span className="text-[10px] font-black opacity-60 uppercase tracking-widest">Registry upgrade</span>
                             </div>

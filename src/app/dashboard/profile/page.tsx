@@ -208,7 +208,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                     </Avatar>
                     <div className="flex-1 min-w-0">
                         <h3 className="font-black text-sm sm:text-xl tracking-tight truncate uppercase leading-none">{profile.firstName} {profile.lastName}</h3>
-                        <p className="text-[7px] sm:text-[9px] font-bold uppercase tracking-widest text-primary leading-none mt-1">{isAdmin ? "Institutional Admin" : profile.userType}</p>
+                        <p className="text-[7px] font-bold uppercase tracking-widest text-primary leading-none mt-1">{isAdmin ? "Institutional Admin" : profile.userType}</p>
                         <div className="flex items-center gap-1.5 pt-1">
                             <p className="text-[9px] sm:text-[11px] font-mono font-bold tracking-wider opacity-60">{systemId}</p>
                             <BadgeCheck className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-blue-400" />
@@ -333,7 +333,7 @@ export default function ProfilePage() {
                                 <AvatarFallback className="bg-primary/5 text-primary text-xl sm:text-2xl font-black">{firstName.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div className="absolute -bottom-2 -right-2 flex gap-1.5 sm:gap-2 z-20">
-                                <button className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-800 shadow-2xl flex items-center justify-center border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => setIsCameraOpen(true)}><Camera className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></button>
+                                <button className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-800 shadow-2xl flex items-center justify-center border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}><Camera className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></button>
                                 <button className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-800 shadow-2xl flex items-center justify-center border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}><ImageUp className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></button>
                             </div>
                         </div>
