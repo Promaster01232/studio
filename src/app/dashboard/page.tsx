@@ -36,18 +36,34 @@ import {
   Edit,
   FileCheck,
   Globe,
-  Fingerprint
+  Fingerprint,
+  Trash2,
+  MoreVertical,
+  Share2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
-import { collection, query, orderBy, onSnapshot, Timestamp, doc, getDoc, limit } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, Timestamp, doc, getDoc, limit, deleteDoc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/logo";
 import { getGeneralAiResponseAction } from "./chat-actions";
 import { AudioAssistant } from "@/components/audio-assistant";
+import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const ADMIN_EMAILS = [
+  'enterspaceindia@gmail.com', 
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
+];
 
 interface Post {
     id: string;
@@ -58,6 +74,7 @@ interface Post {
     title: string;
     content: string;
     likes: number;
+    likedBy?: string[];
     postType?: string;
     isAnonymous?: boolean;
 }
@@ -79,6 +96,7 @@ const actionChips = [
 export default function DashboardHomePage() {
   const auth = useAuth();
   const firestore = useFirestore();
+  const { toast } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [chatInput, setChatInput] = useState("");
@@ -132,10 +150,31 @@ export default function DashboardHomePage() {
     setIsProcessing(false);
   };
 
+  const handleDeletePost = async (postId: string) => {
+      if (!confirm("Confirm Record Purge: This action will permanently erase this transmission from the registry.")) return;
+      try {
+          await deleteDoc(doc(firestore, "posts", postId));
+          toast({ title: "Transmission Purged", description: "The record has been erased successfully." });
+      } catch (e) {
+          toast({ variant: "destructive", title: "Access Denied", description: "You do not have permission to delete this record." });
+      }
+  };
+
+  const handleLikePost = async (post: Post) => {
+      if (!auth.currentUser) return;
+      const userHasLiked = post.likedBy?.includes(auth.currentUser.uid);
+      const postRef = doc(firestore, "posts", post.id);
+      try {
+          await updateDoc(postRef, {
+              likes: increment(userHasLiked ? -1 : 1),
+              likedBy: userHasLiked ? arrayRemove(auth.currentUser.uid) : arrayUnion(auth.currentUser.uid)
+          });
+      } catch (e) {}
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 text-left font-body">
       
-      {/* Box 1: Spark Banner */}
       <motion.section 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -163,7 +202,6 @@ export default function DashboardHomePage() {
         </Card>
       </motion.section>
 
-      {/* Box 2: AI Hub */}
       <motion.section 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -240,7 +278,6 @@ export default function DashboardHomePage() {
         </div>
       </motion.section>
 
-      {/* Box 3: AI Result Box (Conditional) */}
       <AnimatePresence>
         {messages.length > 0 && (
             <motion.section 
@@ -312,7 +349,7 @@ export default function DashboardHomePage() {
                 ))}
                 {isProcessing && (
                     <div className="flex gap-4 items-center pl-4 text-primary/40">
-                        <Loader2 className="h-5 w-5 animate-spin" />
+                        <Loader2 className="h-3 w-3 animate-spin" />
                         <span className="text-[10px] font-black animate-pulse">Running analysis...</span>
                     </div>
                 )}
@@ -320,7 +357,6 @@ export default function DashboardHomePage() {
         )}
       </AnimatePresence>
 
-      {/* Box 4: Posts Box */}
       <section className="space-y-8">
         <div className="flex items-center justify-between border-b-4 border-foreground pb-4 mb-10">
             <div className="flex items-center gap-4">
@@ -338,63 +374,109 @@ export default function DashboardHomePage() {
             </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
                 {loading ? (
                     <div className="col-span-full py-20 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
                         <p className="text-[10px] font-black text-muted-foreground animate-pulse">Syncing registry...</p>
                     </div>
-                ) : posts.map((post, idx) => (
-                    <motion.div
-                        key={post.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.1 }}
-                    >
-                        <Link href={`/dashboard/research-analytics`} className="block group h-full">
-                            <Card className="h-full border-primary/10 hover:border-primary/30 transition-all duration-500 rounded-[2rem] bg-card/40 backdrop-blur-sm shadow-soft hover:shadow-2xl overflow-hidden relative flex flex-col">
+                ) : posts.map((post, idx) => {
+                    const isAuthor = post.authorUid === auth.currentUser?.uid;
+                    const isAdmin = auth.currentUser?.email && ADMIN_EMAILS.includes(auth.currentUser.email.toLowerCase());
+                    const canDelete = isAuthor || isAdmin;
+                    const userHasLiked = post.likedBy?.includes(auth.currentUser?.uid ?? '');
+
+                    return (
+                        <motion.div
+                            key={post.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.1 }}
+                        >
+                            <Card className="h-full border-primary/10 hover:border-primary/30 transition-all duration-500 rounded-[2.5rem] bg-card/40 backdrop-blur-sm shadow-soft hover:shadow-2xl overflow-hidden relative flex flex-col group">
                                 <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary/20 group-hover:bg-primary transition-all" />
                                 <CardHeader className="p-8 pb-4 text-left">
                                     <div className="flex items-start justify-between mb-6">
                                         <div className="flex items-center gap-3">
-                                            <Avatar className="h-9 w-9 rounded-xl border border-primary/10 shadow-sm">
-                                                {post.authorAvatar && <AvatarImage src={post.authorAvatar} />}
-                                                <AvatarFallback className="text-[10px] font-black bg-primary/5 text-primary">{post.isAnonymous ? 'A' : post.authorName.charAt(0)}</AvatarFallback>
+                                            <Avatar className="h-10 w-10 rounded-xl border border-primary/10 shadow-sm">
+                                                {!post.isAnonymous && post.authorAvatar && <AvatarImage src={post.authorAvatar} className="object-cover" />}
+                                                <AvatarFallback className="text-xs font-black bg-primary/5 text-primary">
+                                                    {post.isAnonymous ? 'A' : post.authorName.charAt(0)}
+                                                </AvatarFallback>
                                             </Avatar>
                                             <div className="text-left">
                                                 <p className="text-xs font-black tracking-tight">{post.isAnonymous ? 'Identity masked' : post.authorName}</p>
-                                                <p className="text-[9px] text-muted-foreground font-black opacity-40 uppercase tracking-tight">{post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}</p>
+                                                <p className="text-[9px] text-muted-foreground font-black opacity-40 uppercase tracking-tight">
+                                                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
+                                                </p>
                                             </div>
                                         </div>
-                                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black px-3 py-1 rounded-full">
-                                            {post.postType || 'Idea'}
-                                        </Badge>
+                                        <div className="flex items-center gap-2">
+                                            <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] font-black px-3 py-1 rounded-full uppercase">
+                                                {post.postType || 'Idea'}
+                                            </Badge>
+                                            
+                                            {canDelete && (
+                                                <Button 
+                                                    variant="ghost" 
+                                                    size="icon" 
+                                                    onClick={() => handleDeletePost(post.id)}
+                                                    className="h-8 w-8 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive active:scale-90 transition-all"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            )}
+                                        </div>
                                     </div>
-                                    <h3 className="text-lg font-black tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2">{post.title}</h3>
+                                    <Link href={`/dashboard/research-analytics`} className="block group/title">
+                                        <h3 className="text-xl font-black tracking-tight group-hover/title:text-primary transition-colors leading-tight line-clamp-2">{post.title}</h3>
+                                    </Link>
                                 </CardHeader>
                                 <CardContent className="p-8 pt-0 flex-1 text-left">
                                     <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed font-medium">
                                         {post.content}
                                     </p>
                                 </CardContent>
-                                <CardFooter className="p-8 pt-0 flex items-center gap-6">
-                                    <div className="flex items-center gap-2 text-red-500/60 font-black text-[10px]">
-                                        <Heart className="h-4 w-4 fill-current" /> {post.likes}
+                                <CardFooter className="p-8 pt-4 border-t border-primary/5 flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <button 
+                                            onClick={() => handleLikePost(post)}
+                                            className={cn(
+                                                "flex items-center gap-2 text-[10px] font-black transition-all active:scale-95",
+                                                userHasLiked ? "text-red-500" : "text-muted-foreground hover:text-red-500"
+                                            )}
+                                        >
+                                            <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} /> {post.likes}
+                                        </button>
+                                        <Link href="/dashboard/research-analytics" className="flex items-center gap-2 text-primary/60 hover:text-primary transition-colors font-black text-[10px]">
+                                            <MessageCircle className="h-4 w-4" /> Discussion
+                                        </Link>
                                     </div>
-                                    <div className="flex items-center gap-2 text-primary/60 font-black text-[10px]">
-                                        <MessageCircle className="h-4 w-4" /> Discussion
-                                    </div>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/5 text-muted-foreground">
+                                                <Share2 className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl glass border-primary/10 shadow-2xl">
+                                            <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-9 gap-3 uppercase cursor-pointer" onClick={() => {
+                                                navigator.clipboard.writeText(window.location.origin + "/dashboard/research-analytics");
+                                                toast({ title: "Registry Link Copied" });
+                                            }}>
+                                                <Layers className="h-3.5 w-3.5" /> Copy ID
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </CardFooter>
                             </Card>
-                        </Link>
-                    </motion.div>
-                ))}
+                        </motion.div>
+                    );
+                })}
             </AnimatePresence>
         </div>
       </section>
 
-      {/* Box 5: Terminals Box */}
       <section className="space-y-8">
         <div className="flex items-center justify-between border-b-4 border-foreground pb-4 mb-10">
             <div className="flex items-center gap-4">
@@ -448,7 +530,6 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
-      {/* Box 6: Bottom Grid (Upgrade & Guides) */}
       <div className="grid lg:grid-cols-12 gap-8 pt-10">
         <div className="lg:col-span-8">
             <Card className="bg-primary text-primary-foreground rounded-[2.5rem] overflow-hidden border-none shadow-3xl shadow-primary/20 group relative h-full">
@@ -511,7 +592,6 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
-      {/* Footer Nodes */}
       <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
         <p className="text-[9px] font-black text-muted-foreground uppercase">nyayasahayak.in // terminal hub // 2025</p>
         <div className="flex items-center gap-8">
