@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
@@ -39,7 +39,9 @@ import {
   Fingerprint,
   Trash2,
   MoreVertical,
-  Share2
+  Share2,
+  Twitter,
+  Bookmark
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -88,9 +90,9 @@ const tools = [
 
 const actionChips = [
     { label: "Draft a notice", icon: FileSignature, href: "/dashboard/document-generator" },
-    { label: "Explain BNS", icon: Gavel, href: "/dashboard/learn" },
+    { label: "Explain laws", icon: Gavel, href: "/dashboard/learn" },
     { label: "Check success", icon: Scale, href: "/dashboard/strength-analyzer" },
-    { label: "Scan FIR/PDF", icon: Search, href: "/dashboard/document-intelligence" },
+    { label: "Scan papers", icon: Search, href: "/dashboard/document-intelligence" },
 ];
 
 export default function DashboardHomePage() {
@@ -151,12 +153,12 @@ export default function DashboardHomePage() {
   };
 
   const handleDeletePost = async (postId: string) => {
-      if (!confirm("Confirm Record Purge: This action will permanently erase this transmission from the registry.")) return;
+      if (!confirm("Confirm record purge? This action will permanently erase this record.")) return;
       try {
           await deleteDoc(doc(firestore, "posts", postId));
-          toast({ title: "Transmission Purged", description: "The record has been erased successfully." });
+          toast({ title: "Transmission purged" });
       } catch (e) {
-          toast({ variant: "destructive", title: "Access Denied", description: "You do not have permission to delete this record." });
+          toast({ variant: "destructive", title: "Access denied" });
       }
   };
 
@@ -172,6 +174,19 @@ export default function DashboardHomePage() {
       } catch (e) {}
   };
 
+  const handleShare = (post: Post, platform: 'whatsapp' | 'twitter' | 'copy') => {
+    const shareText = `Check out this institutional transmission on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
+    
+    if (platform === 'whatsapp') {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+    } else if (platform === 'twitter') {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+    } else if (platform === 'copy') {
+        navigator.clipboard.writeText(shareText);
+        toast({ title: "Link copied" });
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 text-left font-body">
       
@@ -180,7 +195,7 @@ export default function DashboardHomePage() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full"
       >
-        <Card className="border border-primary/5 bg-white dark:bg-zinc-950 shadow-soft rounded-[2rem] overflow-hidden group transition-all hover:shadow-lg">
+        <Card className="border border-primary/5 bg-white dark:bg-zinc-950 shadow-soft rounded-[2.5rem] overflow-hidden group transition-all hover:shadow-lg">
           <div className="p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
             <div className="flex items-start gap-6">
               <div className="p-3.5 rounded-xl bg-sky-50 text-sky-500 dark:bg-sky-500/10 shadow-sm border border-sky-100 dark:border-sky-500/20">
@@ -189,7 +204,7 @@ export default function DashboardHomePage() {
               <div className="space-y-1 text-left">
                 <h2 className="text-xl sm:text-2xl font-black tracking-tighter text-foreground">Share your spark</h2>
                 <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-md">
-                  What brilliant idea is on your mind today? Let the community know.
+                  Disseminate your institutional ideas or legal queries to the community.
                 </p>
               </div>
             </div>
@@ -330,18 +345,6 @@ export default function DashboardHomePage() {
                                             {m.text}
                                         </div>
                                     </div>
-                                    <div className="mt-12 pt-10 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30">
-                                        <div className="flex items-center gap-4">
-                                            <div className="p-3 rounded-2xl bg-primary/5 text-primary">
-                                                <ShieldCheck className="h-6 w-6" />
-                                            </div>
-                                            <div className="text-left">
-                                                <p className="text-[10px] font-black">Statutory security</p>
-                                                <p className="text-[9px] font-bold">This report is protected and private.</p>
-                                            </div>
-                                        </div>
-                                        <p className="text-[9px] font-black">nyayasahayak.in</p>
-                                    </div>
                                 </CardContent>
                             </Card>
                         )}
@@ -429,9 +432,7 @@ export default function DashboardHomePage() {
                                             )}
                                         </div>
                                     </div>
-                                    <Link href={`/dashboard/research-analytics`} className="block group/title">
-                                        <h3 className="text-xl font-black tracking-tight group-hover/title:text-primary transition-colors leading-tight line-clamp-2">{post.title}</h3>
-                                    </Link>
+                                    <h3 className="text-xl sm:text-2xl font-black tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2">{post.title}</h3>
                                 </CardHeader>
                                 <CardContent className="p-8 pt-0 flex-1 text-left">
                                     <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed font-medium">
@@ -460,11 +461,23 @@ export default function DashboardHomePage() {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl glass border-primary/10 shadow-2xl">
-                                            <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-9 gap-3 uppercase cursor-pointer" onClick={() => {
-                                                navigator.clipboard.writeText(window.location.origin + "/dashboard/research-analytics");
-                                                toast({ title: "Registry Link Copied" });
-                                            }}>
-                                                <Layers className="h-3.5 w-3.5" /> Copy ID
+                                            <DropdownMenuItem onClick={() => handleShare(post, 'whatsapp')} className="rounded-lg font-bold text-[10px] h-10 gap-3 uppercase cursor-pointer">
+                                                <div className="p-1.5 rounded-md bg-green-500/10 text-green-600">
+                                                    <MessageCircle className="h-3.5 w-3.5" />
+                                                </div>
+                                                WhatsApp
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleShare(post, 'twitter')} className="rounded-lg font-bold text-[10px] h-10 gap-3 uppercase cursor-pointer">
+                                                <div className="p-1.5 rounded-md bg-blue-500/10 text-blue-500">
+                                                    <Twitter className="h-3.5 w-3.5" />
+                                                </div>
+                                                Twitter (X)
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleShare(post, 'copy')} className="rounded-lg font-bold text-[10px] h-10 gap-3 uppercase cursor-pointer">
+                                                <div className="p-1.5 rounded-md bg-primary/10 text-primary">
+                                                    <Bookmark className="h-3.5 w-3.5" />
+                                                </div>
+                                                Copy link
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
