@@ -84,7 +84,7 @@ export default function RefundPolicyPage() {
               <span className="text-[10px] font-black uppercase tracking-[0.4em]">Official disclosure</span>
             </div>
             <div className="space-y-6 max-w-4xl">
-              <h2 className="text-3xl sm:text-6xl font-black tracking-tighter leading-[0.9] uppercase">
+              <h2 className="text-3xl sm:text-6xl font-black tracking-tighter leading-[0.9] uppercase text-foreground">
                 Statutory <br />
                 <span className="text-primary italic">Billing integrity.</span>
               </h2>
@@ -100,12 +100,12 @@ export default function RefundPolicyPage() {
       <section className="space-y-8 text-left">
         <div className="flex items-center gap-3">
             <div className="h-1 w-8 bg-primary rounded-full" />
-            <h2 className="text-xl font-black uppercase tracking-tighter">Policy nodes</h2>
+            <h2 className="text-xl font-black uppercase tracking-tighter">Policy entries</h2>
         </div>
         <div className="grid gap-8 sm:grid-cols-2">
             {policyNodes.map((node, idx) => (
                 <Card key={idx} className="h-full border-none ring-1 ring-primary/5 bg-card/30 rounded-[2.5rem] shadow-lg group hover:ring-primary/20 transition-all relative overflow-hidden">
-                    <div className={cn("absolute top-0 left-0 bottom-0 w-1.5 transition-all group-hover:w-2", node.bg.replace('bg-', 'bg-').replace('/10', ''))} />
+                    <div className={cn("absolute top-0 left-0 bottom-0 w-1.5 transition-all duration-500 group-hover:w-2", node.bg.replace('bg-', 'bg-').replace('/10', ''))} />
                     <CardContent className="p-10 space-y-6 text-left ml-1.5">
                         <div className={cn("p-4 rounded-2xl w-fit transition-transform group-hover:scale-110 duration-500 shadow-xl", node.bg, node.color)}>
                             <node.icon className="h-7 w-7" />
@@ -134,8 +134,8 @@ export default function RefundPolicyPage() {
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
-                    <Activity className="h-3 w-3 text-primary" />
-                    <span className="text-[9px] font-black uppercase">Live gateway sync</span>
+                    <Activity className="h-3.5 w-3.5 text-primary animate-pulse" />
+                    <span className="text-[9px] font-black uppercase tracking-widest">Live gateway sync</span>
                 </div>
             </div>
           </div>
@@ -144,15 +144,15 @@ export default function RefundPolicyPage() {
                 <Mail className="h-20 w-20 text-primary" />
             </div>
             <div className="relative z-10 space-y-6">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 text-left">
                     <div className="p-2 bg-primary/10 rounded-lg"><Mail className="h-5 w-5 text-primary" /></div>
                     <span className="text-[10px] font-black uppercase tracking-widest text-primary">Claim hub</span>
                 </div>
-                <div className="space-y-1">
-                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Dispatch TXID to:</p>
+                <div className="space-y-1 text-left">
+                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">Email TXID to:</p>
                     <p className="text-sm font-black text-primary hover:underline cursor-pointer select-all truncate">nyayasahayakhelp@gmail.com</p>
                 </div>
-                <Button className="w-full h-12 font-black uppercase text-[10px] rounded-xl shadow-lg active:scale-95 transition-all">
+                <Button className="w-full h-12 font-black uppercase text-[10px] rounded-xl shadow-xl active:scale-95 transition-all">
                     Email support
                 </Button>
             </div>
