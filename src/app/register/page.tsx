@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -296,7 +297,7 @@ export default function RegisterPage() {
                 variant="outline" 
                 className="w-full font-black text-[10px] uppercase tracking-widest h-14 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group rounded-xl" 
                 onClick={handleGoogleLogin} 
-                disabled={loading || isGoogleLoading}
+                disabled={isGoogleLoading}
               >
                   {isGoogleLoading ? (
                     <Loader2 className="mr-3 h-5 w-5 animate-spin text-primary" />
