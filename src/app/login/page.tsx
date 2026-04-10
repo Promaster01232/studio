@@ -177,19 +177,27 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
-    setAcceptedTerms(true); // Frictionless Google ingress
     setIsGoogleLoading(true);
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
       await signInWithPopup(auth, provider);
+      // Policy is automatically acknowledged via Google ingress
     } catch (error: any) {
       console.error("Google access error:", error);
-      toast({
-        variant: "destructive",
-        title: "Google access failed",
-        description: "Authentication system busy or restricted. Please try again.",
-      });
+      if (error.code === 'auth/unauthorized-domain') {
+          toast({
+            variant: "destructive",
+            title: "Registry Authorization Error",
+            description: "Workstation domain not authorized. Please add it to Firebase Console.",
+          });
+      } else {
+          toast({
+            variant: "destructive",
+            title: "Google access failed",
+            description: "Authentication system busy or restricted. Please try again.",
+          });
+      }
       setIsGoogleLoading(false);
     }
   };

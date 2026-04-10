@@ -206,7 +206,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <AvatarFallback className="bg-white/10 text-white font-black text-lg sm:text-xl">{profile.firstName?.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                        <h3 className="font-black text-sm sm:text-xl tracking-tight truncate uppercase leading-none">{profile.firstName} {profile.lastName}</h3>
+                        <h3 className="font-black text-sm sm:xl tracking-tight truncate uppercase leading-none">{profile.firstName} {profile.lastName}</h3>
                         <p className="text-[7px] font-bold uppercase tracking-widest text-primary leading-none mt-1">{isAdmin ? "Institutional Admin" : profile.userType}</p>
                         <div className="flex items-center gap-1.5 pt-1">
                             <p className="text-[9px] sm:text-[11px] font-mono font-bold tracking-wider opacity-60">{systemId}</p>

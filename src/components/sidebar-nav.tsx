@@ -50,7 +50,7 @@ const navigationItems = [
     items: [],
   },
   {
-    title: "AI tools",
+    title: "AI systems",
     icon: BrainCircuit,
     isFeature: true,
     items: [
@@ -120,7 +120,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
   const filteredItems = navigationItems
     .filter(item => !item.isAdminOnly || isAdmin)
     .map(item => {
-      if (item.title === "AI tools" && !isElite) {
+      if (item.title === "AI systems" && !isElite) {
         return {
           ...item,
           items: item.items.filter(sub => !sub.isPremium)

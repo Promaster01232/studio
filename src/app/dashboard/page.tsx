@@ -533,7 +533,7 @@ export default function DashboardHomePage() {
                     <Zap className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
-                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Forensic terminals</h2>
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Analytical modules</h2>
                 </div>
             </div>
         </div>
