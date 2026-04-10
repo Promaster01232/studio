@@ -604,7 +604,7 @@ export default function DashboardHomePage() {
                                 <item.icon className="h-4 w-4 text-primary/60 group-hover/item:text-primary transition-colors" />
                                 <span className="text-[11px] font-bold text-muted-foreground group-hover:item:text-foreground transition-colors tracking-tight">{item.label}</span>
                             </div>
-                            <ChevronRight className="h-3 w-3 text-muted-foreground/30 group-hover:item:text-primary group-hover:item:translate-x-1 transition-all" />
+                            <ChevronRight className="h-3 w-3 text-muted-foreground/30 group-hover/item:text-primary group-hover/item:translate-x-1 transition-all" />
                         </Link>
                     ))}
                 </CardContent>
@@ -614,20 +614,6 @@ export default function DashboardHomePage() {
                     </Button>
                 </div>
             </Card>
-        </div>
-      </div>
-
-      <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
-        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.5em]">nyayasahayak.in // terminal hub // 2025</p>
-        <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4" />
-                <span className="text-[9px] font-black uppercase">Secured system</span>
-            </div>
-            <div className="flex items-center gap-2">
-                <Activity className="h-4 w-4" />
-                <span className="text-[9px] font-black uppercase">Live terminal ingress</span>
-            </div>
         </div>
       </div>
     </div>
