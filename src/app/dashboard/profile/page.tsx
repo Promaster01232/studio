@@ -60,7 +60,7 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-function EliteCertificateNode({ profile }: { profile: UserProfile }) {
+function EliteCertificateView({ profile }: { profile: UserProfile }) {
     const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
     const { toast } = useToast();
 
@@ -100,7 +100,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
             doc.text(`${profile.firstName} ${profile.lastName}`.toUpperCase(), 148.5, 115, { align: 'center' });
             doc.setFontSize(14);
             doc.setTextColor(100, 100, 100);
-            const desc = `is fully authorized to perform all statutory operations. The AI forensic node is 100% synchronized and the platform is fully operational, stable, and ready to execute all forensic tasks with absolute precision and correct results.`;
+            const desc = `is fully authorized to perform all statutory operations. The AI forensic hub is 100% synchronized and the platform is fully operational, stable, and ready to execute all forensic tasks with absolute precision and correct results.`;
             doc.text(doc.splitTextToSize(desc, 220), 148.5, 135, { align: 'center' });
 
             doc.setFontSize(10);
@@ -141,7 +141,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                 </header>
                 <div className="space-y-6 sm:space-y-8 max-w-2xl mx-auto text-center px-2">
                     <p className="text-xs sm:text-base font-medium text-muted-foreground leading-relaxed">
-                        This account is fully authorized to perform all statutory operations. The AI forensic node is 100% synchronized and the platform is fully operational, stable, and ready to execute all forensic tasks with absolute precision and correct results.
+                        This account is fully authorized to perform all statutory operations. The AI forensic hub is 100% synchronized and the platform is fully operational, stable, and ready to execute all forensic tasks with absolute precision and correct results.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 pt-4 sm:pt-8 items-end text-left sm:text-left">
@@ -190,7 +190,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <Logo className="h-6 w-6 sm:h-8 sm:w-8 shadow-none p-0 border-none bg-transparent" priority={false} />
                         <div className="flex flex-col">
                             <span className="font-black text-[10px] sm:text-xs tracking-tighter leading-none">NYAYA SAHAYAK</span>
-                            <span className="text-[6px] sm:text-[7px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary/80">{isAdmin ? "Root Authority system" : "Forensic Terminal"}</span>
+                            <span className="text-[6px] sm:text-[7px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary/80">{isAdmin ? "Root Authority hub" : "Forensic Terminal"}</span>
                         </div>
                     </div>
                     <div className="bg-white/10 backdrop-blur-xl px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl border border-white/10">
@@ -221,7 +221,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <p className="text-[8px] sm:text-[9px] font-bold truncate text-white/80 max-w-[120px] sm:max-w-none">{profile.email}</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-[6px] sm:text-[7px] font-bold uppercase opacity-40 tracking-widest">Clearance system</p>
+                        <p className="text-[6px] sm:text-[7px] font-bold uppercase opacity-40 tracking-widest">Clearance tier</p>
                         <p className={cn(
                             "text-[8px] sm:text-[9px] font-black uppercase tracking-tighter",
                             isAdmin || isUpgraded ? "text-amber-400" : "text-green-400"
@@ -393,7 +393,7 @@ export default function ProfilePage() {
                         </div>
                     </CardContent>
                 </Card>
-                {isUpgraded && userProfile && <EliteCertificateNode profile={userProfile} />}
+                {isUpgraded && userProfile && <EliteCertificateView profile={userProfile} />}
             </div>
         </div>
     </motion.div>

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 /**
- * Institutional Identity Node (Logo)
+ * Institutional Identity Hub (Logo)
  * 
  * Optimized for Largest Contentful Paint (LCP) with priority rendering support.
  * Added continuous pulse animation to indicate active session protection.

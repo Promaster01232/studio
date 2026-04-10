@@ -296,7 +296,7 @@ export default function LoginPage() {
         
         <div className="mt-8 text-center text-xs font-bold text-muted-foreground">
             New to registry?{" "}
-            <Link href="/register" className="font-black text-primary hover:underline uppercase tracking-widest ml-1">Enroll node</Link>
+            <Link href="/register" className="font-black text-primary hover:underline uppercase tracking-widest ml-1">Enroll account</Link>
         </div>
       </motion.div>
       

@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -247,7 +246,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   <ShieldX className="h-24 w-24 text-destructive" />
               </div>
               <h1 className="text-4xl font-black font-headline tracking-tighter uppercase mb-4">Access restricted</h1>
-              <p className="text-muted-foreground max-w-md font-medium leading-relaxed mb-10">
+              <p className="text-muted-foreground max-md font-medium leading-relaxed mb-10">
                   Your identity has been suspended following a statutory forensic audit. Please contact root authority for restoration protocols.
               </p>
               <div className="flex gap-4">

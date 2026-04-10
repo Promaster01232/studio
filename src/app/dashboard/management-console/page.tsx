@@ -104,7 +104,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                             <span className="text-lg font-black tracking-tight">₹{(tx.amount || 0).toLocaleString('en-IN')}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Clearance Node</span>
+                            <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Clearance Hub</span>
                             <Badge variant="outline" className="font-bold text-[10px] uppercase tracking-widest border-primary/20">{tx.planId?.replace('_', ' ') || 'N/A'}</Badge>
                         </div>
                     </div>
@@ -186,7 +186,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
         const qTrans = query(transCol, where("status", "==", "CAPTURED"));
         const unsubTrans = onSnapshot(qTrans, 
             (snapshot) => {
-                const list = snapshot.docs.map(doc => ({ ...doc.data(), id: d.id } as TransactionRecord));
+                const list = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as TransactionRecord));
                 setTransactions(list.sort((a, b) => (b.createdAt?.toMillis ? b.createdAt.toMillis() : 0) - (a.createdAt?.toMillis ? a.createdAt.toMillis() : 0)));
             },
             async (err) => {
@@ -204,7 +204,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
     try {
         await updateDoc(doc(firestore, "users", user.uid), { isBlocked });
         await update(ref(rtdb, `users/${user.uid}`), { isBlocked });
-        toast({ title: isBlocked ? "Node Suspended" : "Node Activated" });
+        toast({ title: isBlocked ? "Hub Suspended" : "Hub Activated" });
     } catch (e) {}
   };
 
@@ -230,7 +230,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                 <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
                     <div className="space-y-0.5 text-left">
                         <CardTitle className="font-black text-lg text-primary uppercase tracking-tight">Citizen Registry Dossier</CardTitle>
-                        <CardDescription className="text-[9px] font-bold uppercase tracking-widest opacity-60">Identity nodes active in system.</CardDescription>
+                        <CardDescription className="text-[9px] font-bold uppercase tracking-widest opacity-60">Identity systems active.</CardDescription>
                     </div>
                     <div className="relative group">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -244,7 +244,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                                 <TableRow>
                                     <TableHead className="font-black text-[9px] uppercase tracking-widest pl-6 h-10">User Identity</TableHead>
                                     <TableHead className="font-black text-[9px] uppercase tracking-widest text-center h-10">Tier</TableHead>
-                                    <TableHead className="font-black text-[9px] uppercase tracking-widest text-center h-10">Node Status</TableHead>
+                                    <TableHead className="font-black text-[9px] uppercase tracking-widest text-center h-10">System Status</TableHead>
                                     <TableHead className="font-black text-[9px] uppercase tracking-widest text-right pr-6 h-10">Controls</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -278,7 +278,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                                                     <DropdownMenuTrigger asChild><button className="h-8 w-8 rounded-lg hover:bg-muted flex items-center justify-center transition-all active:scale-90"><MoreHorizontal className="h-4 w-4" /></button></DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl glass border-primary/10 shadow-2xl">
                                                         <DropdownMenuItem onClick={() => setUserToPurge(user)} className="rounded-lg h-9 font-bold text-[10px] cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-2.5 uppercase">
-                                                            <Trash2 className="h-3.5 w-3.5" /> <span>Purge Node</span>
+                                                            <Trash2 className="h-3.5 w-3.5" /> <span>Purge System</span>
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -363,7 +363,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                   </div>
                   <AlertDialogTitle className="font-black text-2xl tracking-tighter uppercase leading-none">Confirm Statutory Purge</AlertDialogTitle>
                   <AlertDialogDescription className="text-xs font-medium pt-3 leading-relaxed">
-                      You are about to execute an irreversible erasure of the node belonging to <span className="text-foreground font-black">{userToPurge?.firstName} {userToPurge?.lastName}</span>. All registry records will be purged from statutory nodes.
+                      You are about to execute an irreversible erasure of the account belonging to <span className="text-foreground font-black">{userToPurge?.firstName} {userToPurge?.lastName}</span>. All registry records will be purged from statutory databases.
                   </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="flex gap-3 mt-8">
@@ -374,7 +374,7 @@ export default function ManagementConsolePage(props: { params: Promise<any>, sea
                         await deleteDoc(userDocRef);
                         await remove(ref(rtdb, `users/${userToPurge.uid}`));
                         setUserToPurge(null);
-                        toast({ title: "Node Purged", description: "Registry data erased successfully." });
+                        toast({ title: "Account Purged", description: "Registry data erased successfully." });
                       }
                   }} variant="destructive" className="font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px] shadow-xl shadow-destructive/20 active:scale-95 transition-all text-center">
                       Execute Purge

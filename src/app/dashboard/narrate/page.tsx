@@ -147,7 +147,7 @@ export default function NarrateProblemPage() {
 
   return (
     <div className="space-y-12 max-w-6xl mx-auto pb-32 px-4 sm:px-6 text-left">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-center justify-between border-b-4 border-foreground pb-4 mb-10 gap-6">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-center justify-between border-b-4 border-foreground pb-4 mb-10 gap-6 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
                     <Mic className="h-6 w-6 text-primary" />
@@ -228,7 +228,7 @@ export default function NarrateProblemPage() {
                         
                         <div className="text-center space-y-2">
                             <p className={cn("text-6xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-foreground")}>{formatTime(timer)}</p>
-                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em]">{isRecording ? "Transmitting audio..." : state.status === 'loading' ? "Neural processing..." : "Ready for ingress"}</p>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em]">{isRecording ? "Transmitting audio..." : state.status === 'loading' ? "Neural processing..." : "Ready for access"}</p>
                         </div>
                     </div>
 
@@ -313,7 +313,7 @@ export default function NarrateProblemPage() {
                                 className="flex flex-col items-center justify-center h-full py-24 text-center gap-12"
                             >
                                 <div className="relative w-fit mx-auto">
-                                    <Loader2 className="h-20 w-20 animate-spin text-primary opacity-20" />
+                                    <Activity className="h-20 w-20 animate-spin text-primary opacity-20" />
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <Activity className="h-8 w-8 text-primary animate-pulse" />
                                     </div>
@@ -382,7 +382,7 @@ export default function NarrateProblemPage() {
                                             <p className="text-[9px] font-bold">This audit record is encrypted and private.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // NARRATE-OS</p>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">NYAYASAHAYAK.IN // NARRATE-HUB</p>
                                 </div>
                             </motion.div>
                         ) : (
@@ -399,7 +399,7 @@ export default function NarrateProblemPage() {
                                     </div>
                                 </div>
                                 <div className="space-y-4 max-w-sm px-6 text-center">
-                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready for ingress</h3>
+                                    <h3 className="font-black text-3xl tracking-tighter uppercase text-foreground leading-none">Ready for access</h3>
                                     <p className="text-[11px] text-muted-foreground font-black uppercase tracking-[0.3em] leading-relaxed italic opacity-40">
                                         Initialize the terminal by recording or uploading your case narration.
                                     </p>

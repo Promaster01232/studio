@@ -39,7 +39,7 @@ const plans = [
         amount: 99,
         desc: 'Essential statutory expansion.',
         credits: '20 Forensic credits',
-        features: ['Voice narration (20x)', 'Document audit (20x)', 'Extended case tracker', 'Priority AI ingress'],
+        features: ['Voice narration (20x)', 'Document audit (20x)', 'Extended case tracker', 'Priority AI access'],
         color: 'text-blue-500',
         bg: 'bg-blue-500/5',
         border: 'border-blue-500/20',
@@ -53,7 +53,7 @@ const plans = [
         amount: 599,
         desc: 'Continuous institutional access.',
         credits: 'Absolute clearance',
-        features: ['Unlimited AI forensic scans', 'Unlimited document audits', 'Full case strategy hub', 'Verified connect ingress', 'Priority neural support'],
+        features: ['Unlimited AI forensic scans', 'Unlimited document audits', 'Full case strategy hub', 'Verified connect access', 'Priority neural support'],
         color: 'text-primary',
         bg: 'bg-primary/5',
         border: 'border-primary/20',
@@ -67,11 +67,11 @@ const plans = [
         amount: 4999,
         desc: 'Permanent statutory authority.',
         credits: 'Absolute clearance',
-        features: ['Everything in unlimited', 'Advanced contract node', 'Custom PDF export protocol', 'Root system access', 'Institutional branding'],
+        features: ['Everything in unlimited', 'Advanced contract hub', 'Custom PDF export protocol', 'Root system access', 'Institutional branding'],
         color: 'text-amber-600',
         bg: 'bg-amber-500/5',
         border: 'border-amber-500/20',
-        badge: 'Elite node',
+        badge: 'Elite hub',
         icon: ShieldCheck
     }
 ];
@@ -180,7 +180,7 @@ export default function BillingPage() {
 
         const res = await loadRazorpay();
         if (!res) {
-            toast({ variant: "destructive", title: "Gateway failure", description: "Could not connect to payment node." });
+            toast({ variant: "destructive", title: "Gateway failure", description: "Could not connect to payment hub." });
             return;
         }
 
@@ -267,7 +267,7 @@ export default function BillingPage() {
             <div className="max-w-md ml-0 space-y-4 pb-8">
                 <div className="flex items-center gap-2 mb-2 text-primary">
                     <Zap className="h-4 w-4" />
-                    <Label className="text-[10px] font-black uppercase tracking-[0.3em]">Promo registry node</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-[0.3em]">Promo registry entry</Label>
                 </div>
                 <div className="flex gap-3">
                     <Input 
@@ -359,7 +359,7 @@ export default function BillingPage() {
                             <thead className="bg-muted/30 border-b border-primary/10">
                                 <tr>
                                     <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Timestamp</th>
-                                    <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Clearance node</th>
+                                    <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Clearance tier</th>
                                     <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Authorization</th>
                                     <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Value</th>
                                     <th className="px-8 py-5 text-right text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground pr-12">TXID</th>

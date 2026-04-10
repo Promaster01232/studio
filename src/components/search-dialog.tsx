@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -154,7 +153,7 @@ export function SearchDialog({ children }: { children: ReactNode }) {
 
                         <section className="space-y-3">
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 px-1 flex items-center gap-2">
-                                <Activity className="h-3 w-3" /> Navigation Nodes
+                                <Activity className="h-3 w-3" /> Navigation Hubs
                             </h3>
                             <div className="grid gap-2">
                                 {suggestions.filter(s => s.name.toLowerCase().includes(query.toLowerCase())).map((item) => (

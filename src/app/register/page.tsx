@@ -284,7 +284,7 @@ export default function RegisterPage() {
                   <Button className="w-full h-14 font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 active:scale-95 transition-all mt-4 rounded-xl group relative overflow-hidden" onClick={handleRegister} disabled={loading || !acceptedTerms}>
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                       {loading ? <Loader2 className="animate-spin h-5 w-5 mr-3" /> : <ShieldCheck className="h-5 w-5 mr-3" />}
-                      {loading ? "Initializing..." : "Activate registry terminal"}
+                      {loading ? "Initializing..." : "Activate registry hub"}
                   </Button>
 
                   <Button 
@@ -306,7 +306,7 @@ export default function RegisterPage() {
           </div>
           
           <div className="mt-8 text-center text-xs font-bold text-muted-foreground">
-              Already in registry? <Link href="/login" className="font-black text-primary hover:underline uppercase tracking-widest ml-1">Sign in terminal</Link>
+              Already in registry? <Link href="/login" className="font-black text-primary hover:underline uppercase tracking-widest ml-1">Sign in hub</Link>
           </div>
       </motion.div>
       <div className="hidden md:flex flex-col items-center justify-center bg-muted/30 border-l border-primary/5 relative overflow-hidden">

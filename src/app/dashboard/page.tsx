@@ -103,6 +103,30 @@ const actionChips = [
     { label: "Scan papers", icon: Search, href: "/dashboard/document-intelligence" },
 ];
 
+function AuthorIdentityView({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
+    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
+    const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
+    const fallback = post.isAnonymous ? 'A' : (authorName?.charAt(0) || '');
+
+    return (
+        <Link href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} className={cn("flex items-center gap-3", post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer")}>
+            <Avatar className="h-10 w-10 border border-primary/10 shadow-lg rounded-xl">
+                {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
+                <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 text-left">
+                <div className="flex items-center gap-1.5">
+                    <p className="font-black text-xs tracking-tight">{authorName}</p>
+                    {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
+                </div>
+                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-40">
+                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
+                </p>
+            </div>
+        </Link>
+    );
+}
+
 export default function DashboardHomePage() {
   const auth = useAuth();
   const firestore = useFirestore();
@@ -437,7 +461,7 @@ export default function DashboardHomePage() {
                                                             onClick={() => handleDeletePost(post.id)}
                                                             className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3 uppercase"
                                                         >
-                                                            <Trash2 className="h-4 w-4" /> Purge node
+                                                            <Trash2 className="h-4 w-4" /> Purge hub
                                                         </DropdownMenuItem>
                                                     )}
                                                     <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3 uppercase">

@@ -18,10 +18,10 @@ import { motion } from "framer-motion";
 import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
 
-const disclaimerNodes = [
+const disclaimerSteps = [
   {
     title: "AI Probabilistic Nature",
-    desc: "Nyaya Sahayak utilizes probabilistic LLM nodes. Outputs are generated via neural processing and may contain hallucinated sections or outdated legal citations. Accuracy verification rests with the user.",
+    desc: "Nyaya Sahayak utilizes probabilistic LLM systems. Outputs are generated via neural processing and may contain hallucinated sections or outdated legal citations. Accuracy verification rests with the user.",
     icon: BrainCircuit,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
@@ -37,7 +37,7 @@ const disclaimerNodes = [
   },
   {
     title: "Jurisdictional Limitations",
-    desc: "Intelligence nodes are primarily trained on the Indian Judicial System. Use for foreign jurisdictions is not recommended and is done at the user's sole risk.",
+    desc: "Intelligence tools are primarily trained on the Indian Judicial System. Use for foreign jurisdictions is not recommended and is done at the user's sole risk.",
     icon: Landmark,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
@@ -89,7 +89,7 @@ export default function DisclaimerPage() {
                 <div className="bg-destructive/10 p-3 rounded-2xl shadow-inner">
                   <Gavel className="h-8 w-8" />
                 </div>
-                <h3 className="font-black uppercase tracking-tighter text-2xl leading-none">Non-Official Node</h3>
+                <h3 className="font-black uppercase tracking-tighter text-2xl leading-none">Non-Official Hub</h3>
               </div>
               <p className="text-sm sm:text-base font-black leading-relaxed text-destructive/80 uppercase tracking-tight">
                 The AI Nyaya Mitra Assistant is <span className="underline decoration-2 underline-offset-4">NOT</span> a law firm or government entity. We provide forensic intelligence and procedural roadmaps, not legal advice.
@@ -119,17 +119,17 @@ export default function DisclaimerPage() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
-        {disclaimerNodes.map((node, idx) => (
+        {disclaimerSteps.map((step, idx) => (
           <motion.div key={idx} variants={itemVariants} initial="hidden" animate="visible">
-            <Card className={`h-full border-none ring-1 ${node.border} bg-card/30 hover:bg-card/50 transition-all duration-500 group rounded-[2.5rem] shadow-lg`}>
+            <Card className={`h-full border-none ring-1 ${step.border} bg-card/30 hover:bg-card/50 transition-all duration-500 group rounded-[2.5rem] shadow-lg`}>
               <CardContent className="p-8 space-y-6 text-left">
-                <div className={`${node.bg} p-4 rounded-2xl w-fit shadow-xl group-hover:scale-110 transition-transform duration-500`}>
-                  <node.icon className={`h-6 w-6 ${node.color}`} />
+                <div className={`${step.bg} p-4 rounded-2xl w-fit shadow-xl group-hover:scale-110 transition-transform duration-500`}>
+                  <step.icon className={`h-6 w-6 ${step.color}`} />
                 </div>
                 <div className="space-y-3">
-                  <h3 className="text-xl font-black tracking-tight uppercase leading-tight">{node.title}</h3>
+                  <h3 className="text-xl font-black tracking-tight uppercase leading-tight">{step.title}</h3>
                   <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                    {node.desc}
+                    {step.desc}
                   </p>
                 </div>
               </CardContent>
@@ -157,7 +157,7 @@ export default function DisclaimerPage() {
                 By utilizing dashboard modules on nyayasahayak.in, you acknowledge that the system operates on probabilistic AI. Our mission is to democratize legal information, not replace human strategy required for litigation.
               </p>
               <p>
-                Institutional nodes serve as <span className="font-bold text-foreground">navigational facilitators.</span> Connect with our <span className="font-bold text-primary italic">Verified Advocate Registry</span> for personalized strategy. Only a human professional provides the empathy and foresight required for justice.
+                Institutional systems serve as <span className="font-bold text-foreground">navigational facilitators.</span> Connect with our <span className="font-bold text-primary italic">Verified Advocate Registry</span> for personalized strategy. Only a human professional provides the empathy and foresight required for justice.
               </p>
             </div>
           </CardContent>
