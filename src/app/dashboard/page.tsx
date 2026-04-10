@@ -368,12 +368,12 @@ export default function DashboardHomePage() {
                     <Newspaper className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
-                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Posts</h2>
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Transmissions</h2>
                 </div>
             </div>
             <Button variant="outline" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-full hover:bg-foreground hover:text-background transition-all border-foreground/20 uppercase tracking-widest">
               <Link href="/dashboard/research-analytics">
-                View all posts <ChevronRight className="ml-1 h-4 w-4" />
+                View stream <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
         </div>
@@ -473,19 +473,19 @@ export default function DashboardHomePage() {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl glass border-primary/10 shadow-2xl">
-                                            <DropdownMenuItem onClick={() => handleShare(post, 'whatsapp')} className="rounded-lg font-bold text-[10px] h-10 gap-3 uppercase cursor-pointer">
-                                                <div className="p-1.5 rounded-md bg-green-500/10 text-green-600">
+                                            <DropdownMenuItem onClick={() => handleShare(post, 'whatsapp')} className="rounded-lg font-bold text-[10px] h-10 gap-3 uppercase cursor-pointer text-left">
+                                                <div className="bg-green-500/10 p-1.5 rounded-md text-green-600">
                                                     <MessageCircle className="h-3.5 w-3.5" />
                                                 </div>
                                                 WhatsApp
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => handleShare(post, 'twitter')} className="rounded-lg font-bold text-[10px] h-10 gap-3 uppercase cursor-pointer">
-                                                <div className="p-1.5 rounded-md bg-blue-500/10 text-blue-500">
+                                            <DropdownMenuItem onClick={() => handleShare(post, 'twitter')} className="rounded-lg font-bold text-[10px] h-10 gap-3 uppercase cursor-pointer text-left">
+                                                <div className="bg-blue-500/10 p-1.5 rounded-md text-blue-500">
                                                     <Twitter className="h-3.5 w-3.5" />
                                                 </div>
                                                 Twitter (X)
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => handleShare(post, 'copy')} className="rounded-lg font-bold text-[10px] h-10 gap-3 uppercase cursor-pointer">
+                                            <DropdownMenuItem onClick={() => handleShare(post, 'copy')} className="rounded-lg font-bold text-[10px] h-10 gap-3 uppercase cursor-pointer text-left">
                                                 <div className="p-1.5 rounded-md bg-primary/10 text-primary">
                                                     <Bookmark className="h-3.5 w-3.5" />
                                                 </div>
