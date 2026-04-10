@@ -370,7 +370,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1 w-full space-y-6 sm:space-y-8">
                 <Card className="glass shadow-2xl rounded-[1.5rem] sm:rounded-[2.5rem] border-primary/5 overflow-hidden">
-                    <CardHeader className="p-6 sm:p-10 bg-primary/5 border-b border-primary/10"><CardTitle className="text-xl sm:text-3xl font-black tracking-tight leading-none uppercase">Identity Protocols</CardTitle></CardHeader>
+                    <CardHeader className="p-6 sm:p-10 bg-primary/5 border-b border-primary/10"><CardTitle className="text-xl sm:text-3xl font-black tracking-tight leading-none uppercase text-left">Identity Protocols</CardTitle></CardHeader>
                     <CardContent className="p-6 sm:p-10 space-y-6 sm:space-y-8 text-left">
                         <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
                             <div className="space-y-2 sm:space-y-3">

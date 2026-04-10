@@ -280,7 +280,7 @@ export default function UserPublicProfilePage({
       <motion.div variants={itemVariants} className="relative rounded-[2.5rem] overflow-hidden border-none shadow-2xl bg-card">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-white/5 to-accent/10 dark:from-primary/10 dark:via-black/5 dark:to-accent/5 -z-10"></div>
           <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
-              <Logo className="h-64 w-64 border-none p-0 bg-transparent shadow-none" />
+              <Logo className="h-64 w-64 border-none p-0 bg-transparent shadow-none" priority={false} />
           </div>
           <div className="p-8 sm:p-12 flex flex-col sm:flex-row items-center sm:items-start gap-8 relative z-10">
               <div className="relative group">
