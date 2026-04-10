@@ -167,15 +167,7 @@ export default function RegisterPage() {
   };
 
   const handleGoogleLogin = async () => {
-    if (!acceptedTerms) {
-        toast({ 
-            variant: "destructive", 
-            title: "Protocol refused", 
-            description: "Please acknowledge the system terms before initializing authorization." 
-        });
-        return;
-    }
-    
+    // Institutional Ingress: Bina tick mkiye hi accept ho jaega policy
     setIsGoogleLoading(true);
     try {
       const provider = new GoogleAuthProvider();
@@ -305,7 +297,7 @@ export default function RegisterPage() {
                 variant="outline" 
                 className="w-full font-black text-[10px] uppercase tracking-widest h-14 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group rounded-xl" 
                 onClick={handleGoogleLogin} 
-                disabled={loading || isGoogleLoading || !acceptedTerms}
+                disabled={loading || isGoogleLoading}
               >
                   {isGoogleLoading ? (
                     <Loader2 className="mr-3 h-5 w-5 animate-spin text-primary" />

@@ -318,20 +318,6 @@ export default function ResearchAnalyticsPage() {
                     </div>
                 )}
             </div>
-
-            <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
-                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.5em]">nyayasahayak.in // community stream // 2025</p>
-                <div className="flex items-center gap-8">
-                    <div className="flex items-center gap-2">
-                        <ShieldCheck className="h-4 w-4" />
-                        <span className="text-[10px] font-black uppercase">Verified identity</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Activity className="h-4 w-4" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">TLS 1.3 Active</span>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 }
