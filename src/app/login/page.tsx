@@ -177,7 +177,6 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
-    // Institutional Ingress: Bina tick mkiye hi accept ho jaega policy
     setIsGoogleLoading(true);
     try {
       const provider = new GoogleAuthProvider();
