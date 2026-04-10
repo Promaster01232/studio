@@ -604,7 +604,7 @@ export default function DashboardHomePage() {
                                 <item.icon className="h-4 w-4 text-primary/60 group-hover/item:text-primary transition-colors" />
                                 <span className="text-[11px] font-bold text-muted-foreground group-hover:item:text-foreground transition-colors tracking-tight">{item.label}</span>
                             </div>
-                            <ChevronRight className="h-3 w-3 text-muted-foreground/30 group-hover/item:text-primary group-hover/item:translate-x-1 transition-all" />
+                            <ChevronRight className="h-3 w-3 text-muted-foreground/30 group-hover:item:text-primary group-hover:item:translate-x-1 transition-all" />
                         </Link>
                     ))}
                 </CardContent>
