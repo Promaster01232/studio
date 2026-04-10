@@ -19,7 +19,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle2, Scale, Smartphone, Lock, Zap } from "lucide-react";
+import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle2, Scale, Smartphone, Lock, Zap, Activity } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -320,7 +320,7 @@ export default function RegisterPage() {
         </div>
         <div className="p-12 text-center space-y-8 relative z-10">
             <div className="bg-primary/5 p-10 rounded-[2.5rem] inline-block shadow-inner border border-primary/5 group">
-                <Scale className="h-24 w-24 text-primary opacity-40 group-hover:opacity-100 transition-opacity duration-700" />
+                <Scale className="h-24 w-24 text-primary opacity-40" />
             </div>
             <div className="space-y-3 text-center">
                 <h3 className="text-2xl font-black font-headline tracking-tighter uppercase text-foreground leading-tight">Identity <br /> enrollment</h3>
