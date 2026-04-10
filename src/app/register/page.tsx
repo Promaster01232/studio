@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -280,34 +279,29 @@ export default function RegisterPage() {
                   <Label htmlFor="terms" className="text-[10px] font-bold text-muted-foreground leading-relaxed cursor-pointer">I acknowledge the statutory protocols, user agreement, and <Link href="/privacy" className="text-primary hover:underline font-black">Privacy policy</Link> of Nyaya Sahayak.</Label>
               </div>
 
-              <Button className="w-full h-14 font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 active:scale-95 transition-all mt-4 rounded-xl group relative overflow-hidden" onClick={handleRegister} disabled={loading || !acceptedTerms}>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                  {loading ? <Loader2 className="animate-spin h-5 w-5 mr-3" /> : <ShieldCheck className="h-5 w-5 mr-3" />}
-                  {loading ? "Initializing..." : "Activate registry terminal"}
-              </Button>
+              <div className="grid gap-4">
+                  <Button className="w-full h-14 font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 active:scale-95 transition-all mt-4 rounded-xl group relative overflow-hidden" onClick={handleRegister} disabled={loading || !acceptedTerms}>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                      {loading ? <Loader2 className="animate-spin h-5 w-5 mr-3" /> : <ShieldCheck className="h-5 w-5 mr-3" />}
+                      {loading ? "Initializing..." : "Activate registry terminal"}
+                  </Button>
 
-              <div className="relative py-2">
-                  <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-primary/10" /></div>
-                  <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.4em]">
-                      <span className="bg-background px-4 text-muted-foreground/40">Secure ingress</span>
-                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="w-full font-black text-[10px] uppercase tracking-widest h-14 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group rounded-xl" 
+                    onClick={handleGoogleLogin} 
+                    disabled={isGoogleLoading}
+                  >
+                      {isGoogleLoading ? (
+                        <Loader2 className="mr-3 h-5 w-5 animate-spin text-primary" />
+                      ) : (
+                        <div className="mr-3 transition-transform group-hover:scale-110">
+                          <GoogleIcon />
+                        </div>
+                      )}
+                      {isGoogleLoading ? "Synchronizing..." : "Continue with google"}
+                  </Button>
               </div>
-
-              <Button 
-                variant="outline" 
-                className="w-full font-black text-[10px] uppercase tracking-widest h-14 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group rounded-xl" 
-                onClick={handleGoogleLogin} 
-                disabled={isGoogleLoading}
-              >
-                  {isGoogleLoading ? (
-                    <Loader2 className="mr-3 h-5 w-5 animate-spin text-primary" />
-                  ) : (
-                    <div className="mr-3 transition-transform group-hover:scale-110">
-                      <GoogleIcon />
-                    </div>
-                  )}
-                  {isGoogleLoading ? "Synchronizing..." : "Continue with google"}
-              </Button>
           </div>
           
           <div className="mt-8 text-center text-xs font-bold text-muted-foreground">

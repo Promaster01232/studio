@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -268,35 +267,30 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <Button className="w-full font-black uppercase tracking-[0.2em] h-14 shadow-2xl shadow-primary/20 active:scale-95 transition-all rounded-xl text-[10px] group relative overflow-hidden" onClick={handleLogin} disabled={isLoading || !acceptedTerms}>
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                    {isEmailLoading ? <Loader2 className="animate-spin h-5 w-5 mr-3" /> : <ShieldCheck className="h-5 w-5 mr-3" />}
-                    {isEmailLoading ? "Authorizing..." : "Initialize terminal"}
-                </Button>
-            </div>
-            
-            <div className="relative py-4">
-                <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-primary/10" /></div>
-                <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.4em]">
-                    <span className="bg-background px-4 text-muted-foreground/40">Secure ingress</span>
+                <div className="grid gap-4">
+                    <Button className="w-full font-black uppercase tracking-[0.2em] h-14 shadow-2xl shadow-primary/20 active:scale-95 transition-all rounded-xl text-[10px] group relative overflow-hidden" onClick={handleLogin} disabled={isLoading || !acceptedTerms}>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        {isEmailLoading ? <Loader2 className="animate-spin h-5 w-5 mr-3" /> : <ShieldCheck className="h-5 w-5 mr-3" />}
+                        {isEmailLoading ? "Authorizing..." : "Initialize terminal"}
+                    </Button>
+
+                    <Button 
+                      variant="outline" 
+                      className="w-full font-black text-[10px] uppercase tracking-widest h-14 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group rounded-xl" 
+                      onClick={handleGoogleLogin} 
+                      disabled={isGoogleLoading}
+                    >
+                        {isGoogleLoading ? (
+                          <Loader2 className="mr-3 h-5 w-5 animate-spin text-primary" />
+                        ) : (
+                          <div className="mr-3 transition-transform group-hover:scale-110">
+                            <GoogleIcon />
+                          </div>
+                        )}
+                        {isGoogleLoading ? "Synchronizing..." : "Continue with google"}
+                    </Button>
                 </div>
             </div>
-
-            <Button 
-              variant="outline" 
-              className="w-full font-black text-[10px] uppercase tracking-widest h-14 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group rounded-xl" 
-              onClick={handleGoogleLogin} 
-              disabled={isGoogleLoading}
-            >
-                {isGoogleLoading ? (
-                  <Loader2 className="mr-3 h-5 w-5 animate-spin text-primary" />
-                ) : (
-                  <div className="mr-3 transition-transform group-hover:scale-110">
-                    <GoogleIcon />
-                  </div>
-                )}
-                {isGoogleLoading ? "Synchronizing..." : "Continue with google"}
-            </Button>
         </div>
         
         <div className="mt-8 text-center text-xs font-bold text-muted-foreground">

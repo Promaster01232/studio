@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -142,7 +141,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                 </header>
                 <div className="space-y-6 sm:space-y-8 max-w-2xl mx-auto text-center px-2">
                     <p className="text-xs sm:text-base font-medium text-muted-foreground leading-relaxed">
-                        This document formally certifies that the account identified as <span className="text-foreground font-black uppercase tracking-tight">{profile.firstName} {profile.lastName}</span> is fully authorized to perform all statutory operations. Every AI terminal and forensic module is synchronized and 100% ready to execute all forensic tasks with absolute precision and correct results.
+                        This account is fully authorized to perform all statutory operations. Every AI terminal and forensic module is synchronized and 100% ready to execute all forensic tasks with absolute precision and correct results.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 pt-4 sm:pt-8 items-end text-left sm:text-left">

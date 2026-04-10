@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -260,7 +259,7 @@ export default function BillingPage() {
                         <CreditCard className="h-6 w-6 text-primary" />
                     </div>
                     <div className="text-left">
-                        <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Statutory clearance</h1>
+                        <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Statutory clearance</h1>
                     </div>
                 </div>
             </div>
@@ -272,11 +271,7 @@ export default function BillingPage() {
                 </div>
                 <div className="flex gap-3">
                     <Input 
-<<<<<<< HEAD
                         placeholder="Enter coupon (e.g. NYAYA50)" 
-=======
-                        placeholder="Enter Coupon (e.g. ABCD12)" 
->>>>>>> f63228a (example chnage ABCD (_for element <Input>_))
                         value={couponInput} 
                         onChange={(e) => setCouponInput(e.target.value)}
                         className="h-12 glass border-primary/10 font-bold uppercase rounded-xl px-5"
@@ -411,16 +406,6 @@ export default function BillingPage() {
                     </div>
                 </Card>
             </section>
-
-            <div className="pt-8 border-t border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-20 text-center sm:text-left">
-                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.5em]">nyayasahayak.in // billing hub // 2025</p>
-                <div className="flex items-center gap-8">
-                    <div className="flex items-center gap-2">
-                        <ShieldCheck className="h-4 w-4" />
-                        <span className="text-[9px] font-black uppercase">Secured by Razorpay</span>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 }

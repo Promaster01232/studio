@@ -79,4 +79,40 @@
 @layer utilities {
   .glass { @apply bg-background/60 backdrop-blur-md border border-border/50; }
   .shadow-soft { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
+  
+  .glass-3xl { @apply bg-card/40 backdrop-blur-3xl border border-primary/10; }
+  
+  .shadow-3xl {
+    box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.15);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 rounded-full hover:bg-primary/40 transition-colors;
+  }
+
+  /* Animated Name Protocol */
+  .animate-pan {
+    background: linear-gradient(
+      to right,
+      hsl(var(--primary)) 0%,
+      #60a5fa 25%,
+      hsl(var(--primary)) 50%,
+      #60a5fa 75%,
+      hsl(var(--primary)) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: pan 3s linear infinite;
+  }
+
+  @keyframes pan {
+    to { background-position: 200% center; }
+  }
 }

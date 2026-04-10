@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef, useState, useEffect } from "react";
+import { useActionState, useRef, useState, useEffect, use } from "react";
 import { understandDocumentAction, type DocumentIntelligenceState } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,7 +48,11 @@ const initialState: DocumentIntelligenceState = {
   error: null,
 };
 
-export default function DocumentIntelligencePage() {
+export default function DocumentIntelligencePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+  // unwrap params to avoid enumeration error
+  use(props.params);
+  use(props.searchParams);
+
   const [state, formAction] = useActionState(understandDocumentAction, initialState);
   const [fileName, setFileName] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("English");
@@ -99,7 +103,7 @@ export default function DocumentIntelligencePage() {
         </motion.div>
 
         <motion.div 
-            initial={{ opacity: 0, scale: 0.98 }}
+            initial={{ opacity: 0, scale: 0.99 }}
             animate={{ opacity: 1, scale: 1 }}
             className="max-w-3xl mx-auto"
         >
@@ -150,7 +154,7 @@ export default function DocumentIntelligencePage() {
                             )}
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                             <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1 flex items-center gap-2">
                                 <Languages className="h-3.5 w-3.5 text-primary" /> Audit dialect
                             </Label>
@@ -262,7 +266,7 @@ export default function DocumentIntelligencePage() {
                         ) : state.status === "success" && state.data ? (
                             <motion.div 
                                 key="report-content"
-                                initial={{ opacity: 0, y: 20 }} 
+                                initial={{ opacity: 0, y: 10 }} 
                                 animate={{ opacity: 1, y: 0 }} 
                                 className="space-y-16 pb-12 text-left"
                             >

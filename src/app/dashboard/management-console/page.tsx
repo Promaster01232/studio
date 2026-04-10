@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -140,7 +140,11 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
     );
 }
 
-export default function ManagementConsolePage() {
+export default function ManagementConsolePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
+  // unwrap params to avoid enumeration error
+  use(props.params); 
+  use(props.searchParams);
+
   const firestore = useFirestore();
   const rtdb = useDatabase();
   const auth = useAuth();
@@ -182,7 +186,7 @@ export default function ManagementConsolePage() {
         const qTrans = query(transCol, where("status", "==", "CAPTURED"));
         const unsubTrans = onSnapshot(qTrans, 
             (snapshot) => {
-                const list = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as TransactionRecord));
+                const list = snapshot.docs.map(doc => ({ ...doc.data(), id: d.id } as TransactionRecord));
                 setTransactions(list.sort((a, b) => (b.createdAt?.toMillis ? b.createdAt.toMillis() : 0) - (a.createdAt?.toMillis ? a.createdAt.toMillis() : 0)));
             },
             async (err) => {
