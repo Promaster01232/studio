@@ -96,7 +96,6 @@
     @apply bg-primary/20 rounded-full hover:bg-primary/40 transition-colors;
   }
 
-  /* Animated Name Protocol */
   .animate-pan {
     background: linear-gradient(
       to right,

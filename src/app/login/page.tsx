@@ -308,7 +308,7 @@ export default function LoginPage() {
             <div className="bg-primary/5 p-10 rounded-[2.5rem] inline-block animate-pulse shadow-inner border border-primary/5">
                 <Scale className="h-24 w-24 text-primary opacity-40" />
             </div>
-            <div className="space-y-3">
+            <div className="space-y-3 text-center">
                 <h3 className="text-2xl font-black font-headline tracking-tighter uppercase text-foreground leading-tight">Statutory <br /> Ingress</h3>
                 <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest max-w-[240px] mx-auto leading-relaxed">Mathematically precise legal assistant for Indian citizens.</p>
             </div>
