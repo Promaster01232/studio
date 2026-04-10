@@ -465,9 +465,6 @@ export default function DashboardHomePage() {
                                         >
                                             <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} /> {post.likes}
                                         </button>
-                                        <Link href="/dashboard/research-analytics" className="flex items-center gap-2 text-primary/60 hover:text-primary transition-colors font-black text-[10px]">
-                                            <MessageCircle className="h-4 w-4" /> Discussion
-                                        </Link>
                                     </div>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
