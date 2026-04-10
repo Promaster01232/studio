@@ -177,6 +177,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
+    setAcceptedTerms(true); // Frictionless Google ingress
     setIsGoogleLoading(true);
     try {
       const provider = new GoogleAuthProvider();

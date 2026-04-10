@@ -100,7 +100,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
             doc.text(`${profile.firstName} ${profile.lastName}`.toUpperCase(), 148.5, 115, { align: 'center' });
             doc.setFontSize(14);
             doc.setTextColor(100, 100, 100);
-            const desc = `is fully authorized to perform all statutory operations. Every AI terminal and forensic module is synchronized and 100% ready to execute every forensic task with absolute precision and accuracy.`;
+            const desc = `is fully authorized to perform all statutory operations. The AI forensic node is 100% synchronized and the platform is fully operational, stable, and ready to execute all forensic tasks with absolute precision and correct results.`;
             doc.text(doc.splitTextToSize(desc, 220), 148.5, 135, { align: 'center' });
 
             doc.setFontSize(10);
@@ -141,7 +141,7 @@ function EliteCertificateNode({ profile }: { profile: UserProfile }) {
                 </header>
                 <div className="space-y-6 sm:space-y-8 max-w-2xl mx-auto text-center px-2">
                     <p className="text-xs sm:text-base font-medium text-muted-foreground leading-relaxed">
-                        This account is fully authorized to perform all statutory operations. Every AI terminal and forensic module is synchronized and 100% ready to execute all forensic tasks with absolute precision and correct results.
+                        This account is fully authorized to perform all statutory operations. The AI forensic node is 100% synchronized and the platform is fully operational, stable, and ready to execute all forensic tasks with absolute precision and correct results.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 pt-4 sm:pt-8 items-end text-left sm:text-left">
