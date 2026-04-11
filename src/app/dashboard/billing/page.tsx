@@ -29,13 +29,13 @@ const plansData = [
     id: "free",
     name: "Free",
     icon: Zap,
-    desc: "Trial & Light Users",
+    desc: "Trial & light users",
     monthlyPrice: 0,
     annualPrice: 0,
     features: {
       queries: "100",
-      limit: "10 Per Day",
-      output: "~40,000 Words"
+      limit: "10 per day",
+      output: "~40,000 words"
     },
     color: "text-gray-400",
     bg: "bg-gray-500/10"
@@ -44,15 +44,15 @@ const plansData = [
     id: "plus",
     name: "Plus",
     icon: Crown,
-    desc: "Regular & Serious Users",
+    desc: "Regular & serious users",
     monthlyPrice: 499,
     annualPrice: 3990,
     originalAnnualPrice: 4788,
     monthlyEquivalent: "333",
     features: {
       queries: "200",
-      limit: "No Daily Limit",
-      output: "~1,50,000 Words"
+      limit: "No daily limit",
+      output: "~1,50,000 words"
     },
     color: "text-amber-500",
     bg: "bg-amber-500/10"
@@ -61,7 +61,7 @@ const plansData = [
     id: "premium",
     name: "Premium",
     icon: Star,
-    desc: "Power / Professional Users",
+    desc: "Power / professional users",
     monthlyPrice: 899,
     annualPrice: 6990,
     originalAnnualPrice: 8388,
@@ -69,8 +69,8 @@ const plansData = [
     popular: true,
     features: {
       queries: "Unlimited",
-      limit: "No Daily Limit",
-      output: "Unlimited Words"
+      limit: "No daily limit",
+      output: "Unlimited words"
     },
     color: "text-amber-500",
     bg: "bg-amber-500/10"
@@ -148,7 +148,7 @@ export default function BillingPage() {
     
     setTimeout(() => {
       toast({
-        title: "Gateway Redirecting",
+        title: "Gateway redirecting",
         description: "Connecting to Razorpay secure node..."
       });
       setProcessingId(null);
@@ -164,25 +164,25 @@ export default function BillingPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-16 pb-32 px-4 sm:px-6 text-left">
       <div className="space-y-2">
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">Plans & Pricing</h1>
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">Plans & pricing</h1>
         <p className="text-gray-500 font-medium">Choose the plan that fits your legal research needs</p>
       </div>
 
-      {/* Billing Toggle */}
+      {/* Billing toggle */}
       <div className="flex items-center justify-center gap-4">
-        <span className={cn("text-xs font-bold uppercase tracking-widest transition-colors", !isAnnual ? "text-white" : "text-gray-600")}>Monthly</span>
+        <span className={cn("text-xs font-bold transition-colors", !isAnnual ? "text-white" : "text-gray-600")}>Monthly</span>
         <Switch 
           checked={isAnnual} 
           onCheckedChange={setIsAnnual} 
           className="data-[state=checked]:bg-primary"
         />
         <div className="flex items-center gap-3">
-          <span className={cn("text-xs font-bold uppercase tracking-widest transition-colors", isAnnual ? "text-white" : "text-gray-600")}>Annual</span>
-          <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 text-[9px] font-black uppercase tracking-widest px-2 py-0.5">Save 17%</Badge>
+          <span className={cn("text-xs font-bold transition-colors", isAnnual ? "text-white" : "text-gray-600")}>Annual</span>
+          <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 text-[9px] font-black px-2 py-0.5">Save 17%</Badge>
         </div>
       </div>
 
-      {/* Pricing Cards */}
+      {/* Pricing cards */}
       <div className="grid md:grid-cols-3 gap-8 items-stretch">
         {plansData.map((plan) => {
           const isActive = profile?.subscriptionType === plan.id;
@@ -193,7 +193,7 @@ export default function BillingPage() {
             <div key={plan.id} className="relative flex flex-col">
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
-                  <Badge className="bg-primary text-primary-foreground font-black text-[9px] uppercase tracking-widest px-4 py-1 rounded-lg border-2 border-[#050505]">Most Popular</Badge>
+                  <Badge className="bg-primary text-primary-foreground font-black text-[9px] px-4 py-1 rounded-lg border-2 border-[#050505]">Most popular</Badge>
                 </div>
               )}
               
@@ -201,13 +201,13 @@ export default function BillingPage() {
                 "flex-1 bg-[#161b22] border-white/5 rounded-[2.5rem] p-8 flex flex-col text-center transition-all duration-500 hover:border-primary/20",
                 plan.popular && "border-primary/40 ring-1 ring-primary/20"
               )}>
-                <CardHeader className="p-0 space-y-6 mb-10">
+                <CardHeader className="p-0 space-y-6 mb-10 text-center">
                   <div className={cn("mx-auto p-4 rounded-full", plan.bg, plan.color)}>
                     <plan.icon className="h-8 w-8" />
                   </div>
                   <div className="space-y-1">
                     <h3 className="text-2xl font-black text-white">{plan.name}</h3>
-                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{plan.desc}</p>
+                    <p className="text-[10px] font-bold text-gray-500">{plan.desc}</p>
                   </div>
                   <div className="space-y-1">
                     <div className="flex items-baseline justify-center gap-1">
@@ -215,11 +215,11 @@ export default function BillingPage() {
                         <span className="text-sm text-gray-600 line-through mr-2">₹{plan.originalAnnualPrice}</span>
                       )}
                       <span className="text-4xl font-black text-white">₹{price}</span>
-                      <span className="text-gray-500 font-bold">/{isAnnual ? 'Year' : 'Month'}</span>
+                      <span className="text-gray-500 font-bold">/{isAnnual ? 'year' : 'month'}</span>
                     </div>
                     {isAnnual && plan.monthlyEquivalent && (
-                      <p className="text-[10px] font-bold text-green-500 uppercase tracking-widest">
-                        ₹{plan.monthlyEquivalent}/Mo · 2 Months Free
+                      <p className="text-[10px] font-bold text-green-500">
+                        ₹{plan.monthlyEquivalent}/mo · 2 months free
                       </p>
                     )}
                   </div>
@@ -231,11 +231,11 @@ export default function BillingPage() {
                     disabled={isActive || isProcessing}
                     variant={isActive ? "outline" : "default"}
                     className={cn(
-                      "w-full h-12 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-lg",
+                      "w-full h-12 rounded-xl font-black text-[10px] transition-all active:scale-95 shadow-lg",
                       isActive ? "border-primary text-primary bg-primary/5" : "bg-primary text-primary-foreground shadow-primary/20"
                     )}
                   >
-                    {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "Current Plan" : "Upgrade Now"}
+                    {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "Current plan" : "Upgrade now"}
                   </Button>
                 </CardFooter>
               </Card>
@@ -244,39 +244,39 @@ export default function BillingPage() {
         })}
       </div>
 
-      {/* Comparison Table */}
+      {/* Comparison table */}
       <div className="pt-10 max-w-4xl mx-auto w-full">
-        <div className="grid grid-cols-4 gap-4 pb-6 border-b border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+        <div className="grid grid-cols-4 gap-4 pb-6 border-b border-white/5 text-[10px] font-black text-gray-500">
           <div className="col-span-1 flex items-center gap-2">
-            <Activity className="h-3.5 w-3.5" /> Queries / Month
+            <Activity className="h-3.5 w-3.5" /> Queries / month
           </div>
           <div className="text-center text-white">100</div>
           <div className="text-center text-white">200</div>
           <div className="text-center text-primary">Unlimited</div>
         </div>
         
-        <div className="grid grid-cols-4 gap-4 py-6 border-b border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
-          <div className="col-span-1">Daily Query Limit</div>
-          <div className="text-center text-white">10 Per Day</div>
-          <div className="text-center text-white">No Daily Limit</div>
-          <div className="text-center text-white">No Daily Limit</div>
+        <div className="grid grid-cols-4 gap-4 py-6 border-b border-white/5 text-[10px] font-black text-gray-500">
+          <div className="col-span-1">Daily query limit</div>
+          <div className="text-center text-white">10 per day</div>
+          <div className="text-center text-white">No daily limit</div>
+          <div className="text-center text-white">No daily limit</div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 py-6 border-b border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
-          <div className="col-span-1">Monthly Output</div>
-          <div className="text-center text-white underline decoration-dotted underline-offset-4">~40,000 Words</div>
-          <div className="text-center text-white underline decoration-dotted underline-offset-4">~1,50,000 Words</div>
-          <div className="text-center text-white underline decoration-dotted underline-offset-4">Unlimited Words</div>
+        <div className="grid grid-cols-4 gap-4 py-6 border-b border-white/5 text-[10px] font-black text-gray-500">
+          <div className="col-span-1">Monthly output</div>
+          <div className="text-center text-white underline decoration-dotted underline-offset-4">~40,000 words</div>
+          <div className="text-center text-white underline decoration-dotted underline-offset-4">~1,50,000 words</div>
+          <div className="text-center text-white underline decoration-dotted underline-offset-4">Unlimited words</div>
         </div>
       </div>
 
-      {/* Transaction Ledger */}
+      {/* Transaction ledger */}
       <section className="pt-20 space-y-8">
         <div className="flex items-center gap-4 border-b border-white/5 pb-4">
           <div className="p-3 rounded-xl bg-white/5 border border-white/10">
             <CreditCard className="h-5 w-5 text-primary" />
           </div>
-          <h2 className="text-xl font-black text-white uppercase tracking-tight">Verified Ledger</h2>
+          <h2 className="text-xl font-black text-white">Verified ledger</h2>
         </div>
         
         <Card className="bg-[#161b22] border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
@@ -284,11 +284,11 @@ export default function BillingPage() {
             <table className="w-full text-left">
               <thead className="bg-white/5 border-b border-white/5">
                 <tr>
-                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">Timestamp</th>
-                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">Clearance</th>
-                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500 text-center">Status</th>
-                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">Value</th>
-                  <th className="px-8 py-5 text-right text-[9px] font-black uppercase tracking-widest text-gray-500 pr-12">Txid</th>
+                  <th className="px-8 py-5 text-[9px] font-black text-gray-500">Timestamp</th>
+                  <th className="px-8 py-5 text-[9px] font-black text-gray-500">Clearance</th>
+                  <th className="px-8 py-5 text-[9px] font-black text-gray-500 text-center">Status</th>
+                  <th className="px-8 py-5 text-[9px] font-black text-gray-500">Value</th>
+                  <th className="px-8 py-5 text-right text-[9px] font-black text-gray-500 pr-12">Txid</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
@@ -301,12 +301,12 @@ export default function BillingPage() {
                       </div>
                     </td>
                     <td className="px-8 py-5">
-                      <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[8px] font-black uppercase px-2">
+                      <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[8px] font-black px-2">
                         {tx.planId?.replace('_', ' ') || 'Standard'}
                       </Badge>
                     </td>
                     <td className="px-8 py-5 text-center">
-                      <div className="flex items-center justify-center gap-1.5 text-green-500 font-black text-[8px] uppercase tracking-widest">
+                      <div className="flex items-center justify-center gap-1.5 text-green-500 font-black text-[8px]">
                         <CheckCircle2 className="h-3 w-3" /> Captured success
                       </div>
                     </td>
@@ -320,7 +320,7 @@ export default function BillingPage() {
                     <td colSpan={5} className="px-8 py-20 text-center opacity-30">
                       <div className="flex flex-col items-center gap-4">
                         <Activity className="h-12 w-12 text-gray-500" />
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500">Registry clear. Awaiting captures.</p>
+                        <p className="text-[10px] font-black tracking-[0.4em] text-gray-500">Registry clear. Awaiting captures.</p>
                       </div>
                     </td>
                   </tr>
@@ -332,7 +332,7 @@ export default function BillingPage() {
       </section>
 
       <div className="text-center pt-8 opacity-30">
-        <p className="text-[9px] font-black uppercase tracking-[0.6em] text-gray-500">Nyayasahayak.in // Financial Protocol // 2025</p>
+        <p className="text-[9px] font-black tracking-[0.6em] text-gray-500">Nyayasahayak.in // Financial protocol // 2025</p>
       </div>
     </div>
   );

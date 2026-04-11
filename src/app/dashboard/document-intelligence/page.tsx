@@ -84,21 +84,21 @@ export default function DocumentIntelligencePage({
 
   return (
     <div className="min-h-full space-y-10 max-w-5xl mx-auto pb-32 px-4 sm:px-6 text-center">
-        {/* Header Navigation */}
+        {/* Header navigation */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between border-b border-white/5 pb-6 mb-10 text-left">
             <div className="flex items-center gap-4">
                 <Button variant="ghost" size="icon" className="rounded-xl hover:bg-white/5 text-gray-400" asChild>
                     <Link href="/dashboard"><ArrowLeft className="h-5 w-5" /></Link>
                 </Button>
                 <div>
-                    <h1 className="text-xl font-black tracking-tight text-white uppercase">Scan Documents</h1>
-                    <p className="text-[10px] font-bold text-gray-500 tracking-widest">Forensic Ai Analysis Hub</p>
+                    <h1 className="text-xl font-black tracking-tight text-white">Scan documents</h1>
+                    <p className="text-[10px] font-bold text-gray-500 tracking-widest">Forensic Ai analysis hub</p>
                 </div>
             </div>
             <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
                     <History className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-[9px] font-black text-gray-400 tracking-widest">Audit Registry</span>
+                    <span className="text-[9px] font-black text-gray-400 tracking-widest">Audit registry</span>
                 </div>
             </div>
         </motion.div>
@@ -120,7 +120,7 @@ export default function DocumentIntelligencePage({
                     </div>
                     
                     <div className="space-y-2">
-                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-none">No Files Yet</h2>
+                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-none">No files yet</h2>
                         <p className="text-sm font-medium text-gray-500 tracking-wide">Upload your first document to get started</p>
                     </div>
 
@@ -134,7 +134,7 @@ export default function DocumentIntelligencePage({
                         />
                         <Button className="h-14 px-8 rounded-2xl bg-primary text-primary-foreground font-black text-xs tracking-widest shadow-[0_20px_50px_rgba(153,75,0,0.3)] active:scale-95 transition-all gap-3">
                             <FileUp className="h-5 w-5" />
-                            Upload Document
+                            Upload document
                         </Button>
                     </div>
                 </motion.div>
@@ -152,8 +152,8 @@ export default function DocumentIntelligencePage({
                         </div>
                     </div>
                     <div className="space-y-3">
-                        <h3 className="text-2xl font-black tracking-tight text-white uppercase">Analyzing Record...</h3>
-                        <p className="text-[10px] font-black text-gray-500 tracking-[0.4em] animate-pulse">Running Forensic Ocr Engine</p>
+                        <h3 className="text-2xl font-black tracking-tight text-white">Analyzing record...</h3>
+                        <p className="text-[10px] font-black text-gray-500 tracking-[0.4em] animate-pulse">Running forensic Ocr engine</p>
                     </div>
                 </motion.div>
             ) : state.status === 'success' && state.data ? (
@@ -170,16 +170,16 @@ export default function DocumentIntelligencePage({
                                 <FileCheck className="h-7 w-7" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-black tracking-tight text-white uppercase leading-none">Analysis Protocol Ready</h3>
+                                <h3 className="text-xl font-black tracking-tight text-white leading-none">Analysis protocol ready</h3>
                                 <div className="flex items-center gap-3 mt-2">
-                                    <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/20 text-[8px] font-black px-2">Verified Scan</Badge>
-                                    <span className="text-[10px] font-bold text-gray-500 tracking-widest">{fileName || 'Untitled Instrument'}</span>
+                                    <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/20 text-[8px] font-black px-2">Verified scan</Badge>
+                                    <span className="text-[10px] font-bold text-gray-500 tracking-widest">{fileName || 'Untitled instrument'}</span>
                                 </div>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
                             <Button variant="outline" size="sm" onClick={handleReset} className="h-10 px-5 rounded-xl border-white/10 hover:bg-white/5 text-[10px] font-black tracking-widest">
-                                <Plus className="h-3.5 w-3.5 mr-2" /> New Scan
+                                <Plus className="h-3.5 w-3.5 mr-2" /> New scan
                             </Button>
                             <AudioAssistant text={`${state.data.summary}. Risks: ${state.data.legalRisks}`} language="English" />
                         </div>
@@ -193,22 +193,22 @@ export default function DocumentIntelligencePage({
                             <div className="flex-1 bg-[#161b22] border border-white/5 p-8 rounded-[2rem] rounded-tl-none shadow-xl space-y-6">
                                 <div className="flex items-center gap-2 text-primary opacity-40">
                                     <Sparkles className="h-4 w-4" />
-                                    <span className="text-[10px] font-black tracking-widest">Executive Audit</span>
+                                    <span className="text-[10px] font-black tracking-widest">Executive audit</span>
                                 </div>
-                                <p className="text-lg font-black text-white leading-tight tracking-tight uppercase">{state.data.summary}</p>
+                                <p className="text-lg font-black text-white leading-tight tracking-tight">{state.data.summary}</p>
                             </div>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-6">
                             <Card className="bg-red-500/[0.03] border-red-500/10 rounded-[2rem] p-8 shadow-sm hover:shadow-2xl transition-all group overflow-hidden">
                                 <h4 className="text-[10px] font-black text-red-600 tracking-[0.3em] mb-6 flex items-center gap-3">
-                                    <AlertTriangle className="h-4 w-4" /> Statutory Risks
+                                    <AlertTriangle className="h-4 w-4" /> Statutory risks
                                 </h4>
                                 <p className="text-sm font-bold text-gray-400 leading-relaxed">{state.data.legalRisks}</p>
                             </Card>
                             <Card className="bg-amber-500/[0.03] border-amber-500/10 rounded-[2rem] p-8 shadow-sm hover:shadow-2xl transition-all group overflow-hidden">
                                 <h4 className="text-[10px] font-black text-amber-600 tracking-[0.3em] mb-6 flex items-center gap-3">
-                                    <CalendarClock className="h-4 w-4" /> Procedural Deadlines
+                                    <CalendarClock className="h-4 w-4" /> Procedural deadlines
                                 </h4>
                                 <p className="text-sm font-bold text-gray-400 leading-relaxed">{state.data.deadlines}</p>
                             </Card>
@@ -222,9 +222,9 @@ export default function DocumentIntelligencePage({
                                 <div className="flex items-center justify-between border-b border-white/5 pb-4">
                                     <div className="flex items-center gap-2 text-indigo-400">
                                         <Activity className="h-4 w-4" />
-                                        <span className="text-[10px] font-black tracking-widest">Recommended Actions</span>
+                                        <span className="text-[10px] font-black tracking-widest">Recommended actions</span>
                                     </div>
-                                    <Badge variant="outline" className="border-indigo-500/20 text-indigo-400 text-[8px]">Procedural Path</Badge>
+                                    <Badge variant="outline" className="border-indigo-500/20 text-indigo-400 text-[8px]">Procedural path</Badge>
                                 </div>
                                 <div className="prose dark:prose-invert max-w-none">
                                     <p className="text-sm sm:text-base font-bold text-gray-400 leading-relaxed whitespace-pre-line">
@@ -243,7 +243,7 @@ export default function DocumentIntelligencePage({
                                     <AlertTriangle className="h-8 w-8" />
                                 </div>
                                 <div className="space-y-2 text-center sm:text-left">
-                                    <h4 className="text-[10px] font-black text-destructive tracking-[0.4em]">Audit Warning: Consequences</h4>
+                                    <h4 className="text-[10px] font-black text-destructive tracking-[0.4em]">Audit warning: Consequences</h4>
                                     <p className="text-sm font-medium text-gray-500 leading-relaxed max-w-3xl">{state.data.consequences}</p>
                                 </div>
                             </div>
@@ -253,13 +253,13 @@ export default function DocumentIntelligencePage({
                     <div className="pt-10 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-40">
                         <div className="flex items-center gap-6">
                             <Button variant="ghost" size="sm" className="h-9 px-4 rounded-xl font-bold text-[10px] gap-2 hover:bg-white/5">
-                                <Download className="h-3.5 w-3.5" /> Save Record
+                                <Download className="h-3.5 w-3.5" /> Save record
                             </Button>
                             <Button variant="ghost" size="sm" className="h-9 px-4 rounded-xl font-bold text-[10px] gap-2 hover:bg-white/5">
-                                <Printer className="h-3.5 w-3.5" /> Print Dossier
+                                <Printer className="h-3.5 w-3.5" /> Print dossier
                             </Button>
                         </div>
-                        <p className="text-[10px] font-black tracking-[0.6em] text-white">Nyayasahayak.in // Scan-Hub</p>
+                        <p className="text-[10px] font-black tracking-[0.6em] text-white">Nyayasahayak.in // Scan-hub</p>
                     </div>
                 </motion.div>
             ) : null}
