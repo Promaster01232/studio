@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Newspaper, Calendar, ArrowRight, Sparkles, Zap, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const posts = [
   {
@@ -51,7 +52,7 @@ export default function BlogPage() {
           title="Institutional blog"
           description="Statutory news, legal awareness updates, and the latest amendments in the Indian judicial system."
         />
-        <Badge variant="outline" className="font-bold text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Legal News</Badge>
+        <Badge variant="outline" className="font-bold text-[9px] bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Legal news</Badge>
       </motion.div>
 
       <div className="grid gap-8">
@@ -69,7 +70,7 @@ export default function BlogPage() {
                 </div>
                 <div className="md:col-span-3 p-10 space-y-6 flex flex-col justify-center">
                   <div className="flex items-center gap-4">
-                    <Badge variant="outline" className="text-[8px] font-black uppercase border-white/10">{post.category}</Badge>
+                    <Badge variant="outline" className="text-[8px] font-bold border-white/10">{post.category}</Badge>
                     <span className="text-[10px] font-bold text-muted-foreground flex items-center gap-2">
                       <Calendar className="h-3 w-3" /> {post.date}
                     </span>
@@ -78,7 +79,7 @@ export default function BlogPage() {
                     <h3 className="text-2xl font-black tracking-tighter text-white group-hover:text-primary transition-colors leading-tight">{post.title}</h3>
                     <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-2xl">{post.excerpt}</p>
                   </div>
-                  <Button variant="ghost" className="w-fit p-0 h-auto hover:bg-transparent font-black text-[10px] uppercase tracking-widest text-primary gap-2">
+                  <Button variant="ghost" className="w-fit p-0 h-auto hover:bg-transparent font-bold text-[10px] text-primary gap-2">
                     <span>Read full report</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </Button>
@@ -90,7 +91,7 @@ export default function BlogPage() {
       </div>
 
       <div className="text-center pt-8 opacity-30">
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // TRANSMISSION HUB</p>
+          <p className="text-[9px] font-bold tracking-[0.5em] text-muted-foreground uppercase">Nyayasahayak.in // Transmission hub</p>
       </div>
     </div>
   );

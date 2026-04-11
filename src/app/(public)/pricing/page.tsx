@@ -77,7 +77,7 @@ export default function PricingPage() {
           title="Statutory plans"
           description="Select your institutional clearance level to access advanced AI forensic tools."
         />
-        <Badge variant="outline" className="font-bold text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Financial Protocol</Badge>
+        <Badge variant="outline" className="font-bold text-[9px] bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Financial protocol</Badge>
       </motion.div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
@@ -92,7 +92,7 @@ export default function PricingPage() {
             <Card className="h-full flex flex-col border-white/5 bg-card/40 backdrop-blur-md rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-3xl group">
               {plan.badge && (
                 <div className="absolute top-6 right-6 z-20">
-                  <Badge className="bg-primary/10 text-primary border-primary/20 font-black text-[8px] uppercase px-2.5 py-1 rounded-lg">
+                  <Badge className="bg-primary/10 text-primary border-primary/20 font-bold text-[8px] px-2.5 py-1 rounded-lg">
                     {plan.badge}
                   </Badge>
                 </div>
@@ -105,7 +105,7 @@ export default function PricingPage() {
                     {plan.id !== 'free' && <span className="text-xs font-bold text-muted-foreground">/period</span>}
                   </div>
                 </div>
-                <p className="text-[11px] font-bold text-muted-foreground leading-relaxed uppercase tracking-tighter min-h-[32px]">
+                <p className="text-[11px] font-bold text-muted-foreground leading-relaxed min-h-[32px]">
                   {plan.desc}
                 </p>
               </CardHeader>
@@ -121,7 +121,7 @@ export default function PricingPage() {
                 </ul>
               </CardContent>
               <CardFooter className="p-8 pt-0">
-                <Button asChild className="w-full h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-xl shadow-primary/20">
+                <Button asChild className="w-full h-14 rounded-2xl font-bold text-xs transition-all active:scale-95 shadow-xl shadow-primary/20">
                   <Link href="/register">Initialize access</Link>
                 </Button>
               </CardFooter>
@@ -134,14 +134,14 @@ export default function PricingPage() {
           <div className="flex items-center justify-center gap-6 mb-4">
               <div className="flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4" />
-                  <span className="text-[9px] font-black uppercase tracking-widest">Secure Gateway Sync</span>
+                  <span className="text-[9px] font-bold">Secure gateway sync</span>
               </div>
               <div className="flex items-center gap-2">
                   <Activity className="h-4 w-4" />
-                  <span className="text-[9px] font-black uppercase tracking-widest">Institutional Ledger</span>
+                  <span className="text-[9px] font-bold">Institutional ledger</span>
               </div>
           </div>
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // FINANCIAL LEDGER</p>
+          <p className="text-[9px] font-bold tracking-[0.5em] text-muted-foreground uppercase">Nyayasahayak.in // Financial ledger</p>
       </div>
     </div>
   );

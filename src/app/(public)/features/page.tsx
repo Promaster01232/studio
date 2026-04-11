@@ -21,7 +21,8 @@ import {
   Shield,
   BookMarked,
   Clock,
-  ChevronRight
+  ChevronRight,
+  ArrowRight
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
@@ -135,7 +136,7 @@ export default function FeaturesPage() {
         className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-white/5 pb-12"
       >
         <div className="space-y-4">
-            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full text-[10px] font-bold">
                 Protocol 2025
             </Badge>
             <PageHeader
@@ -143,7 +144,7 @@ export default function FeaturesPage() {
               description="A comprehensive registry of high-fidelity AI tools engineered for the Indian legal ecosystem."
             />
         </div>
-        <Button size="lg" className="rounded-2xl font-black text-xs uppercase tracking-widest h-14 px-10 shadow-2xl shadow-primary/20 active:scale-95 transition-all" asChild>
+        <Button size="lg" className="rounded-2xl font-bold text-xs h-14 px-10 shadow-2xl shadow-primary/20 active:scale-95 transition-all" asChild>
             <Link href="/register">Initialize access <ArrowRight className="ml-2 h-4 w-4" /></Link>
         </Button>
       </motion.div>
@@ -172,7 +173,7 @@ export default function FeaturesPage() {
                 </div>
                 <div className="pt-4">
                     <div className="h-px w-full bg-white/5 mb-6" />
-                    <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">
+                    <button className="flex items-center gap-2 text-[10px] font-bold text-primary/40 group-hover:text-primary transition-colors">
                         Learn more <ChevronRight className="h-3 w-3" />
                     </button>
                 </div>
@@ -182,7 +183,6 @@ export default function FeaturesPage() {
         ))}
       </motion.div>
 
-      {/* Trust Registry Section - Exactly as shown in the provided image */}
       <section className="py-20 border-t border-white/5">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {trustBadges.map((badge, idx) => (
@@ -197,7 +197,7 @@ export default function FeaturesPage() {
                     <div className="h-12 w-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary shadow-xl transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/5 group-hover:border-primary/20">
                         <badge.icon className="h-5 w-5" />
                     </div>
-                    <p className="text-[11px] font-black uppercase tracking-tight text-gray-400 max-w-[140px] leading-relaxed transition-colors group-hover:text-white">
+                    <p className="text-[11px] font-bold text-gray-400 max-w-[140px] leading-relaxed transition-colors group-hover:text-white">
                         {badge.label}
                     </p>
                 </motion.div>
@@ -206,7 +206,7 @@ export default function FeaturesPage() {
       </section>
 
       <div className="pt-10 text-center opacity-20">
-          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // FORENSIC REGISTRY // 2025</p>
+          <p className="text-[9px] font-bold tracking-[0.6em] text-muted-foreground uppercase">Nyayasahayak.in // Forensic registry // 2025</p>
       </div>
     </div>
   );
