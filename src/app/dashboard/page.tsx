@@ -21,15 +21,19 @@ import {
   Zap,
   ArrowRight,
   Search,
-  History as HistoryIcon
+  History as HistoryIcon,
+  Upload,
+  User,
+  Plus
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const features = [
   {
@@ -120,12 +124,24 @@ const suggestions = [
   "Explain domestic violence act"
 ];
 
+const ADMIN_EMAILS = [
+  'enterspaceindia@gmail.com', 
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
+];
+
 export default function DashboardHomePage() {
   const auth = useAuth();
   const firestore = useFirestore();
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [greeting, setGreeting] = useState("");
 
   useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting("Good morning");
+    else if (hour < 17) setGreeting("Good afternoon");
+    else setGreeting("Good evening");
+
     if (auth.currentUser) {
       const userRef = doc(firestore, "users", auth.currentUser.uid);
       const unsub = onSnapshot(userRef, (doc) => {
@@ -147,11 +163,59 @@ export default function DashboardHomePage() {
     visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
   };
 
+  const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
+  const planLabel = isAdmin ? "Root" : (userProfile?.subscriptionType === 'free' || !userProfile?.subscriptionType ? "Free" : "Pro");
+
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-32 px-4 sm:px-6">
+    <div className="max-w-6xl mx-auto space-y-10 pb-32 px-4 sm:px-6">
       
-      {/* Central clean hub ingress */}
-      <section className="pt-10 flex flex-col items-center">
+      {/* Reference-Matched Welcome Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full bg-[#f0f4ff] dark:bg-[#1a1f2e] border border-blue-100/50 dark:border-blue-900/20 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6"
+      >
+        <div className="flex items-center gap-6 text-left">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-amber-700 blur-lg opacity-20 group-hover:opacity-40 transition-opacity rounded-full"></div>
+            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-4 border-white dark:border-zinc-800 shadow-xl rounded-full relative z-10">
+              <AvatarImage src={userProfile?.photoURL} className="object-cover" />
+              <AvatarFallback className="bg-gradient-to-br from-[#4a4a4a] to-[#1a1a1a] text-white font-black text-2xl">
+                {userProfile?.firstName?.charAt(0) || <User className="h-8 w-8" />}
+              </AvatarFallback>
+            </Avatar>
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-3">
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
+                {greeting}, {userProfile?.firstName || 'there'}!
+              </h2>
+              <Badge variant="outline" className="bg-white/50 dark:bg-black/20 border-slate-200 dark:border-slate-700 text-[10px] font-bold px-2.5 py-0.5 rounded-lg text-slate-500 dark:text-slate-400">
+                {planLabel}
+              </Badge>
+            </div>
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+              Welcome to your Nyaya Sahayak dashboard
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <Button variant="outline" className="flex-1 md:flex-none h-12 px-6 rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-zinc-900 font-bold text-xs gap-2 shadow-sm hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all active:scale-95" asChild>
+            <Link href="/dashboard/document-intelligence">
+              <Upload className="h-4 w-4" />
+              Upload
+            </Link>
+          </Button>
+          <Button className="flex-1 md:flex-none h-12 px-6 rounded-xl bg-[#1e293b] hover:bg-[#0f172a] text-white font-bold text-xs gap-2 shadow-xl active:scale-95 transition-all">
+            <Sparkles className="h-4 w-4 text-primary" />
+            New chat
+          </Button>
+        </div>
+      </motion.div>
+
+      {/* Central hub ingress */}
+      <section className="flex flex-col items-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -259,7 +323,7 @@ export default function DashboardHomePage() {
               Every forensic report and narration is encrypted via tls 1.3 and is strictly confidential. We do not train foundation models on citizen narratives.
             </p>
             <Button variant="outline" className="h-12 px-8 rounded-xl border-primary/20 text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary/5" asChild>
-              <Link href="/dashboard/privacy">Audit security protocol <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
+              <Link href="/privacy">Audit security protocol <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
             </Button>
           </div>
           <div className="grid grid-cols-2 gap-4 w-full md:w-auto relative z-10">
