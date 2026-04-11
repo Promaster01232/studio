@@ -114,10 +114,6 @@ export default function FaqsPage() {
           ))}
         </Accordion>
       </motion.div>
-
-      <div className="text-center pt-12 opacity-20">
-          <p className="text-[9px] font-bold tracking-[0.6em] text-white uppercase">Nyayasahayak.in // Institutional registry</p>
-      </div>
     </div>
   );
 }

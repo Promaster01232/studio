@@ -110,10 +110,6 @@ export default function HowItWorksPage() {
           </div>
         </Card>
       </motion.div>
-
-      <div className="text-center pt-8 opacity-30">
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // PROTOCOL V1.0</p>
-      </div>
     </div>
   );
 }

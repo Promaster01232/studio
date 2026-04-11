@@ -225,10 +225,6 @@ export default function AboutPage() {
               <p className="text-2xl sm:text-4xl font-black text-foreground tracking-tighter leading-tight italic font-headline">
                   "Engineering dignity through precise <span className="text-primary">legal intelligence.</span> We don't just provide answers; we build procedural paths to justice."
               </p>
-              <div className="space-y-2">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-primary">Nyaya Sahayak // Official portal</p>
-                <p className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-widest">Since 2024</p>
-              </div>
           </div>
       </motion.div>
     </motion.div>

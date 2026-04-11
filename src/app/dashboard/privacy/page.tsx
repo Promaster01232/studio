@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -13,7 +14,7 @@ import {
   Mail,
   MapPin,
   CheckCircle2,
-  History,
+  History as LucideHistory,
   Trash2,
   Clock,
   Scale,
@@ -260,7 +261,7 @@ export default function PrivacyPage() {
                                 <div className="p-4 rounded-2xl bg-primary/10 text-primary shadow-sm"><UserCheck className="h-7 w-7" /></div>
                                 <h4 className="text-xl sm:text-2xl font-black tracking-tight text-primary uppercase">7. Handling social logins</h4>
                             </div>
-                            <div className="space-y-8 text-sm text-muted-foreground font-medium leading-relaxed text-left">
+                            <div className="space-y-8 text-sm font-medium leading-relaxed text-left">
                                 <p>Google login retrievals are limited to public identifiers needed for identity synchronization.</p>
                             </div>
                         </section>
@@ -369,10 +370,6 @@ export default function PrivacyPage() {
                 </div>
             </div>
         </Card>
-      </div>
-
-      <div className="text-center pt-8 opacity-30">
-          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // MEMORY PROTOCOL // <History className="inline h-3 w-3" /> 2025</p>
       </div>
     </div>
   );

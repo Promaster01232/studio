@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -488,10 +489,6 @@ export default function TermsPage() {
             </div>
         </section>
 
-      </div>
-
-      <div className="text-center pt-24 pb-12 opacity-30">
-          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // JUSTICE FOR BHARAT // <History className="inline h-3 w-3" /> 2025</p>
       </div>
     </div>
   );

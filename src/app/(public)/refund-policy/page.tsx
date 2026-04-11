@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -139,7 +140,7 @@ export default function RefundPolicyPage() {
                 </div>
             </div>
           </div>
-          <Card className="p-10 bg-primary/5 border border-primary/10 rounded-[3rem] w-full sm:w-96 shrink-0 shadow-2xl relative overflow-hidden group">
+          <Card className="p-10 bg-primary/5 border-primary/10 rounded-[3rem] w-full sm:w-96 shrink-0 shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-6 opacity-[0.02] pointer-events-none group-hover:scale-110 transition-transform">
                 <Mail className="h-20 w-20 text-primary" />
             </div>
@@ -159,10 +160,6 @@ export default function RefundPolicyPage() {
           </Card>
         </div>
       </motion.div>
-
-      <div className="text-center pt-8 opacity-30">
-          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // FINANCIAL PROTOCOL // 2025</p>
-      </div>
     </div>
   );
 }

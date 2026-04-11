@@ -265,10 +265,6 @@ export default function BlogPage() {
           )}
         </AnimatePresence>
       </section>
-
-      <div className="pt-12 text-center opacity-20">
-        <p className="text-[10px] font-bold text-white uppercase tracking-widest">Nyayasahayak.in // Transmission hub // 2025</p>
-      </div>
     </div>
   );
 }

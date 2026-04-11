@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -277,9 +278,6 @@ export default function CreateProfilePage() {
             </Button>
           </form>
         </Form>
-        <div className="mt-10 text-center opacity-30">
-            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // CALIBRATION</p>
-        </div>
       </div>
     </div>
   );

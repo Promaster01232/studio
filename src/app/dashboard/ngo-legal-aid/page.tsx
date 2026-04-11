@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -186,7 +187,6 @@ export default function NgoLegalAidPage() {
                   <span className="text-[9px] font-black uppercase tracking-widest">Statutory Aid Network</span>
               </div>
           </div>
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // PROTOCOL AID-OS</p>
       </div>
     </div>
   );

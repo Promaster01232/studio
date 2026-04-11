@@ -1,7 +1,6 @@
 
 "use client";
 
-import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -199,7 +198,6 @@ export default function LearnPage() {
                 </div>
             </div>
         </div>
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/40 shrink-0">NYAYASAHAYAK.IN</p>
       </div>
     </div>
   );

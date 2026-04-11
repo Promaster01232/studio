@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -276,10 +277,6 @@ export default function DashboardHomePage() {
           </div>
         </Card>
       </section>
-
-      <div className="pt-12 text-center opacity-20">
-        <p className="text-[10px] font-bold text-white/20">Nyayasahayak.in // Institutional terminal // 2025</p>
-      </div>
     </div>
   );
 }

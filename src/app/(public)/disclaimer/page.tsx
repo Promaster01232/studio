@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -119,7 +120,7 @@ export default function DisclaimerPage() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
-        {disclaimerSteps.map((step, idx) => (
+        {disclaimerNodes.map((step, idx) => (
           <motion.div key={idx} variants={itemVariants} initial="hidden" animate="visible">
             <Card className={`h-full border-none ring-1 ${step.border} bg-card/30 hover:bg-card/50 transition-all duration-500 group rounded-[2.5rem] shadow-lg`}>
               <CardContent className="p-8 space-y-6 text-left">
@@ -164,10 +165,6 @@ export default function DisclaimerPage() {
           <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
         </Card>
       </motion.div>
-
-      <div className="text-center pt-8 opacity-30">
-        <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // STATUTORY LIMITATION // 2024</p>
-      </div>
     </div>
   );
 }

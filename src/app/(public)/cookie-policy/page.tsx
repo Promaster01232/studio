@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -178,10 +179,6 @@ export default function CookiePolicyPage() {
             </div>
         </Card>
       </motion.div>
-
-      <div className="text-center pt-8 opacity-30">
-          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // MEMORY PROTOCOL // 2025</p>
-      </div>
     </div>
   );
 }

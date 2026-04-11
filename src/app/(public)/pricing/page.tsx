@@ -141,7 +141,6 @@ export default function PricingPage() {
                   <span className="text-[9px] font-bold">Institutional ledger</span>
               </div>
           </div>
-          <p className="text-[9px] font-bold tracking-[0.5em] text-muted-foreground uppercase">Nyayasahayak.in // Financial ledger</p>
       </div>
     </div>
   );

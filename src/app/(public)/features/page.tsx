@@ -204,10 +204,6 @@ export default function FeaturesPage() {
             ))}
         </div>
       </section>
-
-      <div className="pt-10 text-center opacity-20">
-          <p className="text-[9px] font-bold tracking-[0.6em] text-muted-foreground uppercase">Nyayasahayak.in // Forensic registry // 2025</p>
-      </div>
     </div>
   );
 }

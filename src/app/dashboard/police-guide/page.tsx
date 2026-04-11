@@ -57,10 +57,6 @@ export default function PoliceGuidePage() {
           </motion.div>
         ))}
       </div>
-
-      <div className="pt-16 border-t border-primary/5 text-center opacity-30">
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // PROTOCOL REGISTRY</p>
-      </div>
     </div>
   );
 }

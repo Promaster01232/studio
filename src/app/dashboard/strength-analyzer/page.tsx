@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useEffect, useState, useRef } from "react";
@@ -272,19 +273,6 @@ export default function StrengthAnalyzerPage() {
                                             {state.data.forensicResearch}
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <div className="pt-16 mt-16 border-t-2 border-white/5 flex flex-col sm:flex-row items-center justify-between gap-12 opacity-30">
-                                    <div className="flex items-center gap-6">
-                                        <div className="p-5 rounded-[1.5rem] bg-white/5 text-white shadow-inner">
-                                            <ShieldCheck className="h-8 w-8" />
-                                        </div>
-                                        <div className="text-left">
-                                            <p className="text-[12px] font-bold">Institutional security</p>
-                                            <p className="text-[11px] font-bold">This terminal record is encrypted and restricted.</p>
-                                        </div>
-                                    </div>
-                                    <p className="text-[11px] font-bold tracking-[0.8em] text-white uppercase">Nyayasahayak.in // Matrix-hub</p>
                                 </div>
                             </motion.div>
                         ) : (
