@@ -380,7 +380,7 @@ export default function NarrateProblemPage() {
                                     </div>
                                 </div>
                                 <div className="space-y-4 max-sm px-6 text-center">
-                                    <h3 className="font-black text-3xl tracking-tighter text-white">System standby</h3>
+                                    <h3 className="font-black text-2xl tracking-tighter text-white">System standby</h3>
                                     <p className="text-[11px] text-gray-500 font-bold leading-relaxed italic opacity-40">
                                         Initialize the terminal by recording or uploading your case narration.
                                     </p>

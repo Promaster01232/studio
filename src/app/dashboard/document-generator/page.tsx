@@ -461,7 +461,7 @@ export default function DocumentGeneratorPage() {
                                 </div>
                             </div>
                             <div className="space-y-6 max-w-md px-8 text-center">
-                                <h3 className="font-black text-4xl tracking-tighter text-white leading-none">Terminal idle</h3>
+                                <h3 className="font-black text-2xl tracking-tighter text-white leading-none">Terminal idle</h3>
                                 <p className="text-[11px] text-gray-500 font-bold leading-relaxed italic opacity-40">
                                     Provide instrument setup parameters to start your neural statutory draft.
                                 </p>

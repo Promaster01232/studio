@@ -74,7 +74,7 @@ export default function StrengthAnalyzerPage() {
                     <div className="p-3 rounded-2xl bg-black border border-white/5 shadow-inner">
                         <Activity className="h-6 w-6 animate-pulse" />
                     </div>
-                    <CardTitle className="text-2xl font-black tracking-tight">Forensic ingress</CardTitle>
+                    <CardTitle className="text-2xl font-black tracking-tight text-left">Forensic ingress</CardTitle>
                 </div>
                 <CardDescription className="text-[10px] font-bold opacity-40">Provide the case narrative for high-fidelity probability modeling.</CardDescription>
                 </CardHeader>
@@ -268,7 +268,7 @@ export default function StrengthAnalyzerPage() {
                                         <div className="absolute top-0 right-0 p-20 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
                                             <Logo className="h-96 w-96 grayscale opacity-20" priority={false} />
                                         </div>
-                                        <div className="relative z-10 prose dark:prose-invert max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-primary">
+                                        <div className="relative z-10 prose dark:prose-invert max-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-primary">
                                             {state.data.forensicResearch}
                                         </div>
                                     </div>
@@ -292,7 +292,7 @@ export default function StrengthAnalyzerPage() {
                                 key="idle" 
                                 initial={{ opacity: 0, scale: 0.95 }} 
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="flex flex-col items-center justify-center py-48 text-center gap-16"
+                                className="flex flex-col items-center justify-center h-full py-48 text-center gap-16"
                             >
                                 <div className="relative">
                                     <div className="absolute -inset-12 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
@@ -301,7 +301,7 @@ export default function StrengthAnalyzerPage() {
                                     </div>
                                 </div>
                                 <div className="space-y-8 max-w-md px-10 text-center">
-                                    <h3 className="font-black text-5xl tracking-tighter text-white leading-none">System standby</h3>
+                                    <h3 className="font-black text-2xl tracking-tighter text-white leading-none">System standby</h3>
                                     <p className="text-[12px] text-gray-500 font-bold tracking-[0.4em] leading-relaxed italic opacity-40">
                                         Provide case narrative to start neural success modeling.
                                     </p>
