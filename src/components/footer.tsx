@@ -33,7 +33,7 @@ export function Footer() {
   return (
     <footer className="w-full border-t border-white/5 bg-[#050505] pt-20 pb-10 text-left">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-10">
           {/* Brand identity node */}
           <div className="lg:col-span-4 space-y-8">
             <Link href="/" className="flex items-center gap-3 active:scale-95 transition-all group">
@@ -96,15 +96,6 @@ export function Footer() {
                 ))}
               </nav>
             </div>
-          </div>
-        </div>
-        
-        <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-6">
-          <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">
-            © 2025 Nyaya sahayak. All rights reserved.
-          </p>
-          <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-600">
-            Made with <span className="text-red-500 animate-pulse">❤️</span> in india
           </div>
         </div>
       </div>
