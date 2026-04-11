@@ -65,18 +65,18 @@ export default function StrengthAnalyzerPage() {
 
   return (
     <div className="space-y-12 max-w-6xl mx-auto pb-32 px-4 sm:px-6 text-left">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-center justify-between border-b-4 border-foreground pb-4 mb-10 gap-6">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-center justify-between border-b-4 border-foreground pb-4 mb-10 gap-6 text-left">
             <div className="flex items-center gap-4">
                 <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
                     <BrainCircuit className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
-                    <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Strength matrix</h1>
+                    <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Strength Matrix</h1>
                 </div>
             </div>
             <Button variant="outline" size="sm" className="rounded-full font-black text-[10px] uppercase tracking-widest h-10 px-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all" asChild>
             <Link href="/dashboard">
-                <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to terminal
+                <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to hub
             </Link>
             </Button>
         </motion.div>
@@ -86,30 +86,30 @@ export default function StrengthAnalyzerPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="max-w-3xl mx-auto"
         >
-            <Card className="glass shadow-3xl rounded-[3rem] overflow-hidden border-primary/5 bg-card">
-                <CardHeader className="bg-primary/5 border-b border-primary/10 p-10 text-left">
+            <Card className="bg-[#161b22] shadow-3xl rounded-[3rem] overflow-hidden border-white/5">
+                <CardHeader className="bg-white/5 border-b border-white/5 p-10 text-left">
                 <div className="flex items-center gap-4 mb-3 text-primary">
-                    <div className="p-3 rounded-2xl bg-background border border-primary/10 shadow-inner">
+                    <div className="p-3 rounded-2xl bg-black border border-white/5 shadow-inner">
                         <Activity className="h-6 w-6 animate-pulse" />
                     </div>
-                    <CardTitle className="text-2xl font-black uppercase tracking-tight">Forensic input</CardTitle>
+                    <CardTitle className="text-2xl font-black uppercase tracking-tight">Forensic Ingress</CardTitle>
                 </div>
-                <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-40">Provide the narrative for probability modeling.</CardDescription>
+                <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-40">Provide the case narrative for high-fidelity probability modeling.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-10">
                 <form action={formAction} className="space-y-10 text-left">
                     <div className="space-y-4">
-                    <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Case narration</Label>
-                    <Textarea id="caseDescription" name="caseDescription" placeholder="Enter chronological sequence of events, evidence details, and parties involved..." rows={8} required className="bg-muted/20 border-primary/10 rounded-[2rem] font-bold text-sm p-8 shadow-inner focus:border-primary transition-all min-h-[220px]" />
+                    <Label htmlFor="caseDescription" className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 ml-1">Case Narration</Label>
+                    <Textarea id="caseDescription" name="caseDescription" placeholder="Enter chronological sequence of events, evidence details, and parties involved..." rows={8} required className="bg-white/5 border-white/5 rounded-[2rem] font-bold text-sm p-8 shadow-inner focus:border-primary transition-all min-h-[220px]" />
                     </div>
                     
                     <div className="space-y-4 max-w-sm">
-                        <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Audit language</Label>
+                        <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 ml-1">Audit Protocol Language</Label>
                         <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
-                        <SelectTrigger id="language" className="h-14 bg-muted/20 border-primary/10 font-black uppercase text-[10px] rounded-2xl active:scale-95 transition-all">
+                        <SelectTrigger id="language" className="h-14 bg-white/5 border-white/5 font-black uppercase text-[10px] rounded-2xl active:scale-95 transition-all">
                             <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="rounded-[1.5rem] glass">
+                        <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
                             <SelectItem value="English" className="font-black uppercase text-[10px]">English protocol</SelectItem>
                             <SelectItem value="Hindi" className="font-black uppercase text-[10px]">Hindi protocol</SelectItem>
                         </SelectContent>
@@ -119,9 +119,9 @@ export default function StrengthAnalyzerPage() {
                     <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-[11px] font-black uppercase tracking-[0.4em] shadow-2xl shadow-primary/10 transition-all active:scale-95 rounded-[2.5rem] group overflow-hidden relative">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                         {state.status === 'loading' ? (
-                            <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Calculating success probability...</>
+                            <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Modeling Probabilities...</>
                         ) : (
-                            <><Sparkles className="mr-3 h-5 w-5" /> Execute strength analysis</>
+                            <><Sparkles className="mr-3 h-5 w-5" /> Execute Strength Analysis</>
                         )}
                     </Button>
                 </form>
@@ -131,39 +131,39 @@ export default function StrengthAnalyzerPage() {
 
         <div ref={reportRef} className="space-y-10 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-6">
-                <ChevronDown className="h-8 w-8 text-foreground animate-bounce opacity-20" />
-                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-[0.4em] bg-muted px-8 py-2.5 rounded-full border-primary/10 shadow-sm">Audit report entry</Badge>
+                <ChevronDown className="h-8 w-8 text-white animate-bounce opacity-20" />
+                <Badge variant="outline" className="font-black text-[10px] uppercase tracking-[0.4em] bg-white/5 px-8 py-2.5 rounded-full border-white/5 shadow-sm">Report Entry</Badge>
             </div>
 
-            <Card className="border-primary/10 shadow-3xl rounded-[4rem] overflow-hidden relative min-h-[700px] flex flex-col bg-card">
+            <Card className="bg-[#161b22] border-white/5 shadow-3xl rounded-[4rem] overflow-hidden relative min-h-[700px] flex flex-col">
                 <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
-                    <Logo className="h-[600px] w-[600px] border-none p-0" priority={false} />
+                    <Logo className="h-[600px] w-[600px] border-none p-0 bg-transparent shadow-none" priority={false} />
                 </div>
 
                 <CardHeader className={cn(
-                    "p-10 sm:p-16 relative z-10 transition-colors duration-700 border-b border-primary/10",
-                    state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-muted/30 text-foreground"
+                    "p-10 sm:p-16 relative z-10 transition-colors duration-700 border-b border-white/5",
+                    state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-white/5 text-white"
                 )}>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
                         <div className="space-y-8 text-left flex-1 min-w-0">
                             <div className="flex flex-wrap items-center gap-4">
                                 <div className={cn(
                                     "flex items-center gap-3 px-5 py-2 rounded-full border shadow-sm",
-                                    state.status === 'success' ? "bg-white/10 border-white/20" : "bg-background border-primary/5"
+                                    state.status === 'success' ? "bg-white/10 border-white/20" : "bg-black/20 border-white/5"
                                 )}>
                                     <FileCheck className={cn("h-5 w-5", state.status === 'success' ? "text-white" : "text-primary")} />
                                     <span className={cn("text-[11px] font-black uppercase tracking-widest", state.status === 'success' ? "text-white" : "text-primary")}>
-                                        {state.status === 'success' ? "Analysis synthesized" : "Awaiting ingress"}
+                                        {state.status === 'success' ? "Analysis synthesized" : "System Standby"}
                                     </span>
                                 </div>
                             </div>
                             <div className="space-y-3">
                                 <CardTitle className="text-2xl sm:text-4xl font-black font-headline leading-none uppercase tracking-tighter">
-                                    {state.status === 'success' ? "Success matrix ready" : "Awaiting case details"}
+                                    {state.status === 'success' ? "Success Matrix Ready" : "Awaiting Forensic Parameters"}
                                 </CardTitle>
                                 <div className={cn(
                                     "text-[11px] font-bold uppercase tracking-[0.2em] flex items-center gap-3",
-                                    state.status === 'success' ? "text-white/70" : "text-muted-foreground"
+                                    state.status === 'success' ? "text-white/70" : "text-gray-500"
                                 )}>
                                     <Globe className="h-4 w-4" /> End-to-end statutory encryption active
                                 </div>
@@ -200,14 +200,14 @@ export default function StrengthAnalyzerPage() {
                                 className="flex flex-col items-center justify-center h-full py-32 text-center gap-12"
                             >
                                 <div className="relative w-fit mx-auto">
-                                    <Loader2 className="h-24 w-24 animate-spin text-foreground opacity-10" />
+                                    <Loader2 className="h-24 w-24 animate-spin text-white opacity-10" />
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <Activity className="h-10 w-10 text-foreground animate-pulse" />
+                                        <Activity className="h-10 w-10 text-white animate-pulse" />
                                     </div>
                                 </div>
                                 <div className="space-y-4">
-                                    <p className="font-black text-3xl tracking-tighter uppercase text-foreground">Modeling success probability...</p>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground animate-pulse">Running neural forensic matrix...</p>
+                                    <p className="font-black text-3xl tracking-tighter uppercase text-white">Modeling Success Probabilities...</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-500 animate-pulse">Running neural forensic matrix...</p>
                                 </div>
                             </motion.div>
                         ) : state.status === "success" && state.data ? (
@@ -220,28 +220,28 @@ export default function StrengthAnalyzerPage() {
                                 <div className="flex flex-col lg:flex-row items-center gap-20">
                                     <div className="relative h-72 w-72 flex items-center justify-center shrink-0">
                                         <svg className="h-full w-full transform -rotate-90">
-                                            <circle cx="50%" cy="50%" r="45%" className="stroke-muted/10 fill-none" strokeWidth="20" />
+                                            <circle cx="50%" cy="50%" r="45%" className="stroke-white/5 fill-none" strokeWidth="20" />
                                             <motion.circle 
                                                 initial={{ strokeDasharray: "0 314" }}
                                                 animate={{ strokeDasharray: `${state.data.strengthScore * 3.14} 314` }}
                                                 transition={{ duration: 2, ease: "easeOut" }}
                                                 cx="50%" cy="50%" r="45%" 
-                                                className="fill-none stroke-foreground drop-shadow-2xl" 
+                                                className="fill-none stroke-white drop-shadow-2xl" 
                                                 strokeWidth="20" 
                                                 strokeLinecap="round" 
                                             />
                                         </svg>
                                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                                            <span className="text-8xl font-black tracking-tighter leading-none">{state.data.strengthScore}%</span>
-                                            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.4em] mt-4">Success probability</span>
+                                            <span className="text-8xl font-black tracking-tighter leading-none text-white">{state.data.strengthScore}%</span>
+                                            <span className="text-[10px] font-black uppercase text-gray-500 tracking-[0.4em] mt-4">Success Score</span>
                                         </div>
                                     </div>
                                     <div className="flex-1 space-y-10 text-left">
-                                        <div className="flex items-center gap-5 text-muted-foreground opacity-40">
+                                        <div className="flex items-center gap-5 text-gray-500 opacity-40">
                                             <Fingerprint className="h-8 w-8" />
-                                            <span className="text-[12px] font-black uppercase tracking-[0.5em]">Forensic summary record</span>
+                                            <span className="text-[12px] font-black uppercase tracking-[0.5em]">Forensic Registry Entry</span>
                                         </div>
-                                        <p className="text-2xl sm:text-4xl font-black leading-[1.1] tracking-tighter text-foreground uppercase">{state.data.summary}</p>
+                                        <p className="text-2xl sm:text-4xl font-black leading-[1.1] tracking-tighter text-white uppercase">{state.data.summary}</p>
                                     </div>
                                 </div>
 
@@ -249,11 +249,11 @@ export default function StrengthAnalyzerPage() {
                                     <Card className="p-10 rounded-[3rem] border border-red-500/10 text-left bg-red-500/[0.02] shadow-sm hover:shadow-2xl transition-all group relative overflow-hidden">
                                         <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-red-500"></div>
                                         <h3 className="text-[11px] font-black text-red-600 uppercase tracking-[0.4em] mb-10 flex items-center gap-4">
-                                            <ShieldAlert className="h-6 w-6" /> Statutory risk factors
+                                            <ShieldAlert className="h-6 w-6" /> Statutory Risk Nodes
                                         </h3>
                                         <ul className="space-y-8">
                                             {state.data.riskIndicators.map((r, i) => (
-                                                <li key={i} className="text-sm font-bold flex gap-5 text-muted-foreground">
+                                                <li key={i} className="text-sm font-bold flex gap-5 text-gray-400">
                                                     <div className="h-2.5 w-2.5 rounded-full bg-red-500 mt-1.5 shrink-0 group-hover:scale-125 transition-transform" />
                                                     {r}
                                                 </li>
@@ -263,11 +263,11 @@ export default function StrengthAnalyzerPage() {
                                     <Card className="p-10 rounded-[3rem] border border-primary/10 text-left bg-primary/[0.02] shadow-sm hover:shadow-2xl transition-all group relative overflow-hidden">
                                         <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary"></div>
                                         <h3 className="text-[11px] font-black text-primary uppercase tracking-[0.4em] mb-10 flex items-center gap-4">
-                                            <Activity className="h-6 w-6" /> Strategic recommendations
+                                            <Activity className="h-6 w-6" /> Strategic Roadmap
                                         </h3>
                                         <ul className="space-y-8">
                                             {state.data.recommendedActions.map((a, i) => (
-                                                <li key={i} className="text-sm font-bold flex gap-5 text-muted-foreground">
+                                                <li key={i} className="text-sm font-bold flex gap-5 text-gray-400">
                                                     <div className="h-2.5 w-2.5 rounded-full bg-primary mt-1.5 shrink-0 group-hover:scale-125 transition-transform" />
                                                     {a}
                                                 </li>
@@ -277,14 +277,14 @@ export default function StrengthAnalyzerPage() {
                                 </div>
 
                                 <div className="space-y-10 text-left">
-                                    <div className="flex items-center justify-between border-b-2 border-primary/10 pb-6">
-                                        <h3 className="text-[11px] font-black text-foreground uppercase tracking-[0.5em] flex items-center gap-5">
-                                            <FileSearch className="h-7 w-7" /> Deep forensic research
+                                    <div className="flex items-center justify-between border-b-2 border-white/5 pb-6">
+                                        <h3 className="text-[11px] font-black text-white uppercase tracking-[0.5em] flex items-center gap-5">
+                                            <FileSearch className="h-7 w-7" /> Deep Forensic Registry
                                         </h3>
                                     </div>
-                                    <div className="p-10 sm:p-20 rounded-[4rem] border-2 border-primary/10 text-sm sm:text-lg font-medium leading-loose whitespace-pre-line text-left shadow-3xl bg-muted/10 relative overflow-hidden group">
-                                        <div className="absolute top-0 right-0 p-20 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-1000">
-                                            <Logo className="h-96 w-96 grayscale" priority={false} />
+                                    <div className="p-10 sm:p-20 rounded-[4rem] border-2 border-white/5 text-sm sm:text-lg font-medium leading-loose whitespace-pre-line text-left shadow-3xl bg-white/[0.01] relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 p-20 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
+                                            <Logo className="h-96 w-96 grayscale opacity-20" priority={false} />
                                         </div>
                                         <div className="relative z-10 prose dark:prose-invert max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-headings:text-primary">
                                             {state.data.forensicResearch}
@@ -292,9 +292,9 @@ export default function StrengthAnalyzerPage() {
                                     </div>
                                 </div>
                                 
-                                <div className="pt-16 mt-16 border-t-2 border-primary/5 flex flex-col sm:flex-row items-center justify-between gap-12 opacity-30">
+                                <div className="pt-16 mt-16 border-t-2 border-white/5 flex flex-col sm:flex-row items-center justify-between gap-12 opacity-30">
                                     <div className="flex items-center gap-6">
-                                        <div className="p-5 rounded-[1.5rem] bg-muted text-foreground shadow-inner">
+                                        <div className="p-5 rounded-[1.5rem] bg-white/5 text-white shadow-inner">
                                             <ShieldCheck className="h-8 w-8" />
                                         </div>
                                         <div className="text-left">
@@ -302,7 +302,7 @@ export default function StrengthAnalyzerPage() {
                                             <p className="text-[11px] font-bold">This terminal record is encrypted and restricted.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[11px] font-black uppercase tracking-[0.8em]">NYAYASAHAYAK.IN // MATRIX-OS</p>
+                                    <p className="text-[11px] font-black uppercase tracking-[0.8em] text-white">NYAYASAHAYAK.IN // MATRIX-HUB</p>
                                 </div>
                             </motion.div>
                         ) : (
@@ -313,22 +313,22 @@ export default function StrengthAnalyzerPage() {
                                 className="flex flex-col items-center justify-center py-48 text-center gap-16"
                             >
                                 <div className="relative">
-                                    <div className="absolute -inset-12 bg-foreground/5 rounded-full blur-3xl animate-pulse"></div>
-                                    <div className="p-16 rounded-[4rem] bg-muted/30 border border-primary/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
-                                        <Cpu className="h-32 w-32 text-foreground opacity-10 group-hover:opacity-30 transition-opacity" />
+                                    <div className="absolute -inset-12 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+                                    <div className="p-16 rounded-[4rem] bg-white/5 border border-white/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
+                                        <Cpu className="h-32 w-32 text-white opacity-10 group-hover:opacity-30 transition-opacity" />
                                     </div>
                                 </div>
                                 <div className="space-y-8 max-w-md px-10 text-center">
-                                    <h3 className="font-black text-5xl tracking-tighter uppercase text-foreground leading-none">Terminal idle</h3>
-                                    <p className="text-[12px] text-muted-foreground font-black uppercase tracking-[0.4em] leading-relaxed italic opacity-40">
-                                        Input case narrative to start neural success modeling.
+                                    <h3 className="font-black text-5xl tracking-tighter uppercase text-white leading-none">System Standby</h3>
+                                    <p className="text-[12px] text-gray-500 font-black uppercase tracking-[0.4em] leading-relaxed italic opacity-40">
+                                        Provide case narrative to start neural success modeling.
                                     </p>
                                 </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </CardContent>
-                <div className="h-4 w-full bg-foreground/10"></div>
+                <div className="h-4 w-full bg-white/5"></div>
             </Card>
         </div>
     </div>
