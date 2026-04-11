@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
@@ -36,7 +37,6 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/logo";
-import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
@@ -494,9 +494,6 @@ export default function UserPublicProfilePage({
                                             <div className="flex justify-between items-start mb-4">
                                                 <div className="space-y-1">
                                                     <h3 className="text-lg sm:text-xl font-black tracking-tight group-hover:text-primary transition-colors">{post.title}</h3>
-                                                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
-                                                        transmission // {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Processing...'}
-                                                    </p>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <Badge className="bg-primary/10 text-primary border-primary/10 text-[8px] font-black uppercase tracking-widest">

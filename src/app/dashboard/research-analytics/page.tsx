@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,22 +15,18 @@ import {
   MoreVertical, 
   Trash2, 
   Flag,
-  Activity,
   BadgeCheck,
   MessageCircle,
   Twitter,
-  Clock,
   Sparkles,
   Zap,
   Newspaper,
   Bot,
-  Layers,
-  ShieldCheck
+  Layers
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, orderBy, onSnapshot, Timestamp, getDoc, doc, updateDoc, increment, arrayUnion, arrayRemove, deleteDoc } from "firebase/firestore";
-import { formatDistanceToNow } from "date-fns";
+import { collection, query, orderBy, onSnapshot, Timestamp, doc, updateDoc, increment, arrayUnion, arrayRemove, deleteDoc } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -92,9 +89,6 @@ function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean })
                     <p className="font-black text-xs tracking-tight">{authorName}</p>
                     {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
                 </div>
-                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-40">
-                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
-                </p>
             </div>
         </Link>
     );
@@ -218,7 +212,6 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <div className="flex items-center gap-2 text-[9px] font-black uppercase opacity-40"><Clock className="h-3 w-3" /> Transience: Purge in 56H</div>
             </CardFooter>
         </Card>
     );
@@ -289,7 +282,7 @@ export default function ResearchAnalyticsPage() {
                                 Live <span className="text-primary italic">Transmissions.</span>
                             </h1>
                             <p className="text-xs sm:text-sm text-muted-foreground font-medium max-w-lg leading-relaxed opacity-80" >
-                                Publicly audited statutory ideas. Every node is purged after 56 hours.
+                                Publicly audited statutory ideas.
                             </p>
                         </div>
                     </div>

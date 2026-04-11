@@ -5,13 +5,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, 
-  Calendar, 
-  Clock, 
   Share2, 
   MessageCircle, 
   Twitter, 
   Bookmark, 
-  User, 
   Newspaper, 
   ChevronRight 
 } from "lucide-react";
@@ -200,15 +197,7 @@ export default function BlogPage() {
                         </p>
                       </div>
 
-                      <div className="pt-6 border-t border-border/10 space-y-6">
-                        <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest">
-                          <div className="flex flex-wrap items-center gap-4">
-                            <span className="flex items-center gap-1.5"><User className="h-3 w-3" /> {post.author}</span>
-                            <span className="flex items-center gap-1.5"><Calendar className="h-3 w-3" /> {post.date}</span>
-                            <span className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> {post.readTime}</span>
-                          </div>
-                        </div>
-
+                      <div className="pt-6 border-t border-border/10">
                         <div className="flex items-center justify-between gap-4">
                           <Button variant="ghost" asChild className="p-0 h-auto font-black text-[10px] uppercase tracking-widest text-primary gap-2 hover:bg-transparent">
                             <Link href={`/blog/${post.id}`}>
