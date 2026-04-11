@@ -159,14 +159,16 @@ export default function RootPage() {
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" asChild className="text-xs font-bold hover:bg-white/5">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Button variant="ghost" asChild className="text-xs font-bold hover:bg-white/5 text-white h-10 px-4 sm:px-6">
               <Link href="/login">Login</Link>
             </Button>
-            <Button asChild className="bg-primary text-primary-foreground font-bold text-xs px-6 rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
-              <Link href="/register">Join hub</Link>
-            </Button>
+            <div className="hidden md:block">
+              <Button asChild className="bg-primary text-primary-foreground font-bold text-xs px-6 h-10 rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                <Link href="/register">Join hub</Link>
+              </Button>
+            </div>
           </div>
 
           {/* Mobile Menu Ingress */}

@@ -59,7 +59,7 @@ export function PublicHeader() {
           </div>
         )}
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {user ? (
             <Button asChild size="sm" variant="outline" className="font-bold rounded-xl h-10 px-6 border-white/10 hover:bg-white/5 text-white">
               <Link href="/dashboard">
@@ -68,10 +68,13 @@ export function PublicHeader() {
             </Button>
           ) : (
             <>
-              <div className="hidden md:flex items-center gap-2">
-                <Button asChild variant="ghost" size="sm" className="font-bold text-xs h-10 px-6 hover:bg-white/5 text-white">
-                  <Link href="/login">Login</Link>
-                </Button>
+              {/* Login Button - Visible on all screens */}
+              <Button asChild variant="ghost" size="sm" className="font-bold text-xs h-10 px-4 sm:px-6 hover:bg-white/5 text-white">
+                <Link href="/login">Login</Link>
+              </Button>
+
+              {/* Join Hub - Desktop Only */}
+              <div className="hidden md:block">
                 <Button asChild size="sm" className="bg-primary text-primary-foreground font-bold text-xs h-10 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">
                   <Link href="/register">
                     Join hub
@@ -79,6 +82,7 @@ export function PublicHeader() {
                 </Button>
               </div>
 
+              {/* Mobile Menu Trigger */}
               <div className="md:hidden">
                 <Sheet open={isOpen} onOpenChange={setIsOpen}>
                   <SheetTrigger asChild>
