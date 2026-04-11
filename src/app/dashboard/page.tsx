@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import React, { useState, useEffect } from "react";
 import {
   MessageSquare,
-  Zap,
   Sparkles,
   Paperclip,
   SlidersHorizontal,
@@ -15,19 +14,18 @@ import {
   Upload,
   FileText,
   FileSearch,
-  BookOpen,
   Lock,
   Globe,
   Lightbulb,
   MessageCircle,
   ShieldCheck,
-  ChevronRight,
   Plus,
   BrainCircuit,
   Gavel,
   Scale,
   FileCheck,
-  FileSignature
+  FileSignature,
+  Zap
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth, useFirestore } from "@/firebase";
@@ -131,7 +129,7 @@ const steps = [
   {
     num: "02",
     title: "Get Ai analysis",
-    desc: "NyayGuru checks relevant acts, sections, and court judgments.",
+    desc: "Nyayguru checks relevant acts, sections, and court judgments.",
     icon: Lightbulb
   },
   {
@@ -179,7 +177,7 @@ export default function DashboardHomePage() {
   return (
     <div className="max-w-6xl mx-auto space-y-16 pb-32 px-4 sm:px-6">
       
-      {/* GREETING CARD */}
+      {/* Greeting card */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -221,7 +219,7 @@ export default function DashboardHomePage() {
         </Card>
       </motion.div>
 
-      {/* CENTRAL CHAT HUB */}
+      {/* Central chat hub */}
       <div className="flex flex-col items-center justify-center pt-10 text-center">
         <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="mb-8">
           <div className="p-4 rounded-full bg-primary/10 border border-primary/20 shadow-[0_0_40px_rgba(153,75,0,0.15)]">
@@ -230,14 +228,14 @@ export default function DashboardHomePage() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="space-y-4 mb-10">
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">Hello, how can I help you?</h1>
-          <p className="text-gray-400 text-lg font-medium max-w-2xl mx-auto leading-relaxed">Ask NyayGuru about Indian statutes, procedural roadmaps, or case research.</p>
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">Hello, how can i help you?</h1>
+          <p className="text-gray-400 text-lg font-medium max-w-2xl mx-auto leading-relaxed">Ask Nyayguru about Indian statutes, procedural roadmaps, or case research.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="w-full max-w-3xl">
           <Card className="bg-[#161b22] border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
             <div className="p-6 space-y-4 text-left">
-              <Textarea placeholder="Ask NyayGuru legal Ai..." className="bg-transparent border-none focus-visible:ring-0 text-white text-lg placeholder:text-gray-600 min-h-[120px] resize-none p-0 custom-scrollbar" />
+              <Textarea placeholder="Ask Nyayguru legal Ai..." className="bg-transparent border-none focus-visible:ring-0 text-white text-lg placeholder:text-gray-600 min-h-[120px] resize-none p-0 custom-scrollbar" />
               <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between pt-4 border-t border-white/5">
                 <div className="flex items-center gap-4 text-gray-500">
                   <button className="hover:text-primary transition-all p-1"><Paperclip className="h-4 w-4" /></button>
@@ -259,11 +257,11 @@ export default function DashboardHomePage() {
         </motion.div>
       </div>
 
-      {/* FEATURES SECTION */}
+      {/* Features section */}
       <section className="pt-20 space-y-16">
         <div className="text-center space-y-4">
           <Badge variant="outline" className="bg-amber-500/5 text-amber-500 border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black tracking-widest">Ai tool registry</Badge>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white">What you can do with NyayGuru</h2>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white">What you can do with Nyayguru</h2>
           <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto font-medium">Explore our suite of ten elite legal research terminals, synced with your account.</p>
         </div>
 
@@ -288,16 +286,15 @@ export default function DashboardHomePage() {
         </motion.div>
       </section>
 
-      {/* HOW IT WORKS SECTION */}
+      {/* How it works section */}
       <section className="pt-24 space-y-16">
         <div className="text-center space-y-4">
           <Badge variant="outline" className="bg-amber-500/5 text-amber-500 border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black tracking-widest">How it works</Badge>
           <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white">How it works</h2>
-          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto font-medium">No appointments. No waiting. Works 24/7, even at 2 Am on a Sunday.</p>
+          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto font-medium">No appointments. No waiting. Works 24/7, even at 2 am on a sunday.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-          {/* Connecting line for desktop */}
           <div className="hidden md:block absolute top-1/3 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent -z-10" />
           
           {steps.map((s, i) => (

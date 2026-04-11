@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -15,8 +14,6 @@ import {
   Loader2, 
   Languages, 
   FileSignature, 
-  ArrowLeft, 
-  FileText,
   Edit3,
   Save,
   Globe,
@@ -28,19 +25,15 @@ import {
   Activity,
   FileSearch,
   ChevronDown,
-  AlertTriangle,
   User,
   MapPin,
   Calendar,
-  Gavel,
-  Cpu,
-  X
+  Cpu
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
@@ -140,22 +133,6 @@ export default function BondGeneratorPage() {
 
   return (
     <div className="space-y-12 max-w-7xl mx-auto pb-32 px-4 sm:px-6 text-left">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-center justify-between border-b-4 border-foreground pb-4 mb-10 gap-6 text-left">
-        <div className="flex items-center gap-4">
-            <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
-                <FileSignature className="h-6 w-6 text-primary" />
-            </div>
-            <div className="text-left">
-                <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Create bonds</h1>
-            </div>
-        </div>
-        <Button variant="outline" size="sm" className="rounded-full font-bold text-xs h-10 px-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all" asChild>
-          <Link href="/dashboard">
-            <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to hub
-          </Link>
-        </Button>
-      </motion.div>
-      
       <motion.div 
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}

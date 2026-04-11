@@ -11,7 +11,6 @@ import {
   CalendarClock, 
   ListChecks, 
   ShieldCheck, 
-  ArrowLeft, 
   Loader2, 
   Activity, 
   FileText,
@@ -20,12 +19,10 @@ import {
   Sparkles,
   Download,
   Printer,
-  History,
   ChevronDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AudioAssistant } from "@/components/audio-assistant";
-import Link from "next/link";
 import { useFirestore, useAuth } from "@/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { Logo } from "@/components/logo";
@@ -86,25 +83,6 @@ export default function DocumentIntelligencePage({
 
   return (
     <div className="min-h-full space-y-8 max-w-4xl mx-auto pb-32 px-4 sm:px-6 text-center">
-        {/* Header navigation */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between border-b border-white/5 pb-6 text-left">
-            <div className="flex items-center gap-4">
-                <Button variant="ghost" size="icon" className="rounded-xl hover:bg-white/5 text-gray-400" asChild>
-                    <Link href="/dashboard"><ArrowLeft className="h-5 w-5" /></Link>
-                </Button>
-                <div>
-                    <h1 className="text-xl font-black tracking-tight text-white">Scan documents</h1>
-                    <p className="text-[10px] font-bold text-gray-500 tracking-widest uppercase">Forensic Ai analysis hub</p>
-                </div>
-            </div>
-            <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
-                    <History className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-[9px] font-black text-gray-400 tracking-widest uppercase">Audit registry</span>
-                </div>
-            </div>
-        </motion.div>
-
         <AnimatePresence mode="wait">
             {state.status === 'idle' && !fileName ? (
                 <motion.div 

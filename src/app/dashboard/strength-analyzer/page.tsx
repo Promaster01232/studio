@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Loader2, 
   Sparkles, 
-  ArrowLeft, 
   BrainCircuit, 
   ShieldCheck, 
   ShieldAlert, 
@@ -64,22 +63,6 @@ export default function StrengthAnalyzerPage() {
 
   return (
     <div className="space-y-12 max-w-6xl mx-auto pb-32 px-4 sm:px-6 text-left">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-center justify-between border-b-4 border-foreground pb-4 mb-10 gap-6 text-left">
-            <div className="flex items-center gap-4">
-                <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
-                    <BrainCircuit className="h-6 w-6 text-primary" />
-                </div>
-                <div className="text-left">
-                    <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Strength matrix</h1>
-                </div>
-            </div>
-            <Button variant="outline" size="sm" className="rounded-full font-bold text-xs h-10 px-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all" asChild>
-            <Link href="/dashboard">
-                <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to hub
-            </Link>
-            </Button>
-        </motion.div>
-
         <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -157,7 +140,7 @@ export default function StrengthAnalyzerPage() {
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <CardTitle className="text-2xl sm:text-4xl font-black font-headline leading-none tracking-tighter">
+                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none tracking-tighter">
                                     {state.status === 'success' ? "Success matrix ready" : "Awaiting forensic parameters"}
                                 </CardTitle>
                                 <div className={cn(
