@@ -9,7 +9,7 @@ import {
   Lock, 
   Activity, 
   MousePointer2, 
-  History,
+  History as HistoryIcon,
   Info,
   ExternalLink,
   Mail,
@@ -73,9 +73,9 @@ export default function CookiePolicyPage() {
           <div className="absolute top-0 right-0 p-16 opacity-[0.03] pointer-events-none grayscale">
             <Logo className="h-64 w-64" />
           </div>
-          <CardContent className="p-8 sm:p-16 relative z-10 text-left">
+          <CardContent className="p-8 sm:p-16 relative z-10 text-left space-y-8">
             <div className="flex items-center gap-3 text-primary mb-6">
-              <div className="bg-primary/10 p-2.5 rounded-xl">
+              <div className="bg-primary/10 p-2.5 rounded-xl shadow-inner">
                 <Info className="h-6 w-6" />
               </div>
               <span className="text-[10px] font-black uppercase tracking-[0.4em]">Last updated: June 23, 2025</span>
@@ -152,7 +152,7 @@ export default function CookiePolicyPage() {
           </Card>
           <Card className="rounded-[2.5rem] border-primary/5 bg-muted/30 p-8 sm:p-10 space-y-6 text-left">
               <h3 className="text-xl font-black uppercase tracking-tight flex items-center gap-3">
-                  <History className="h-5 w-5 text-primary" />
+                  <HistoryIcon className="h-5 w-5 text-primary" />
                   5. Policy Changes
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">

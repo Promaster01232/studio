@@ -20,7 +20,7 @@ import {
   Zap,
   ArrowRight,
   Search,
-  History
+  History as HistoryIcon
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth, useFirestore } from "@/firebase";
@@ -200,7 +200,7 @@ export default function DashboardHomePage() {
                 </div>
               </div>
             </div>
-            <p className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em]">Free to use. Your conversations are private.</p>
+            <p className="text-[10px] font-bold text-white/20 tracking-wide">Free to use. Your conversations are private.</p>
           </div>
         </motion.div>
       </section>
@@ -208,8 +208,8 @@ export default function DashboardHomePage() {
       {/* Feature matrix */}
       <section className="space-y-12">
         <div className="text-left border-l-4 border-primary pl-6 py-2">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-primary mb-1">Institutional core</h2>
-          <h3 className="text-3xl font-black tracking-tighter text-white uppercase">Forensic ai registry</h3>
+          <h2 className="text-[10px] font-bold text-primary mb-1">Institutional core</h2>
+          <h3 className="text-3xl font-black tracking-tighter text-white">Forensic ai registry</h3>
           <p className="text-sm text-gray-500 font-medium mt-1">Select a specialized tool to start your statutory audit.</p>
         </div>
 
@@ -251,9 +251,9 @@ export default function DashboardHomePage() {
               <div className="p-2 rounded-lg bg-primary/10">
                 <ShieldCheck className="h-5 w-5 animate-pulse" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Statutory trust</span>
+              <span className="text-[10px] font-bold text-primary">Statutory trust</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white uppercase leading-none tracking-tighter">Your data is <br /> <span className="text-primary italic">your property.</span></h2>
+            <h2 className="text-3xl sm:text-5xl font-black text-white leading-none tracking-tighter">Your data is <br /> <span className="text-primary italic">your property.</span></h2>
             <p className="text-sm sm:text-lg text-gray-400 font-medium leading-relaxed">
               Every forensic report and narration is encrypted via TLS 1.3 and is strictly confidential. We do not train foundation models on citizen narratives.
             </p>
@@ -265,12 +265,12 @@ export default function DashboardHomePage() {
             {[
               { label: "Encrypted", icon: Lock },
               { label: "Private", icon: ShieldCheck },
-              { label: "Secure", icon: History },
+              { label: "Secure", icon: HistoryIcon },
               { label: "Audit ready", icon: Search }
             ].map((n, i) => (
               <div key={i} className="p-6 rounded-3xl bg-white/5 border border-white/5 flex flex-col items-center gap-3 text-center">
                 <n.icon className="h-6 w-6 text-primary opacity-40" />
-                <span className="text-[10px] font-black uppercase text-white tracking-widest">{n.label}</span>
+                <span className="text-[10px] font-bold text-white/60">{n.label}</span>
               </div>
             ))}
           </div>
@@ -278,7 +278,7 @@ export default function DashboardHomePage() {
       </section>
 
       <div className="pt-12 text-center opacity-20">
-        <p className="text-[9px] font-black uppercase tracking-[0.8em] text-white">Nyayasahayak.in // Institutional terminal // 2025</p>
+        <p className="text-[10px] font-bold text-white/20">Nyayasahayak.in // Institutional terminal // 2025</p>
       </div>
     </div>
   );

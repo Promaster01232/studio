@@ -6,7 +6,12 @@ import Link from "next/link";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useState, useEffect } from "react";
-import { LogIn, ArrowLeft } from "lucide-react";
+import { LogIn, ArrowLeft, Menu } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const publicNavItems = [
   "Features",
@@ -57,16 +62,48 @@ export function PublicHeader() {
               </Link>
             </Button>
           ) : (
-            <div className="flex items-center gap-2">
-              <Button asChild variant="ghost" size="sm" className="font-black text-[10px] uppercase tracking-widest h-10 px-6 hover:bg-white/5 text-white">
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button asChild size="sm" className="bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest h-10 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">
-                <Link href="/register">
-                  Join hub
-                </Link>
-              </Button>
-            </div>
+            <>
+              <div className="hidden md:flex items-center gap-2">
+                <Button asChild variant="ghost" size="sm" className="font-black text-[10px] uppercase tracking-widest h-10 px-6 hover:bg-white/5 text-white">
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button asChild size="sm" className="bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest h-10 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">
+                  <Link href="/register">
+                    Join hub
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Mobile Menu Ingress */}
+              <div className="md:hidden">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon" className="text-white hover:bg-white/5 rounded-xl h-10 w-10">
+                      <Menu className="h-6 w-6" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="right" className="bg-[#0a0a0a] border-white/5 text-white w-[280px]">
+                    <div className="flex flex-col gap-6 mt-10">
+                      {publicNavItems.map((item) => (
+                        <button 
+                          key={item} 
+                          className="text-left text-lg font-medium text-white/60 hover:text-white transition-all"
+                        >
+                          {item}
+                        </button>
+                      ))}
+                      <div className="h-px bg-white/5 my-2" />
+                      <Button asChild variant="ghost" className="justify-start px-0 text-white/60 hover:text-white h-10 font-bold">
+                        <Link href="/login">Login</Link>
+                      </Button>
+                      <Button asChild className="bg-primary text-primary-foreground font-bold h-12 rounded-xl">
+                        <Link href="/register">Join hub</Link>
+                      </Button>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+            </>
           )}
         </div>
       </div>

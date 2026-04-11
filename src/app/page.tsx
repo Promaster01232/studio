@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -177,11 +176,11 @@ export default function RootPage() {
             transition={{ duration: 0.6 }}
             className="flex flex-col items-center"
           >
-            <Badge variant="outline" className="bg-white/5 text-white/60 border-white/10 px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest mb-10">
+            <Badge variant="outline" className="bg-white/5 text-white/60 border-white/10 px-4 py-1.5 rounded-full text-[9px] font-bold mb-10">
               Platform status: active
             </Badge>
             
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8 uppercase text-white">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8 text-white">
               Your complete <br /> <span className="text-primary italic">Legal research toolkit.</span>
             </h1>
             
@@ -196,7 +195,7 @@ export default function RootPage() {
             transition={{ delay: 0.4 }}
             className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4"
           >
-            <Button asChild className="h-14 px-8 rounded-2xl bg-primary text-primary-foreground font-black text-xs tracking-widest shadow-2xl shadow-primary/20 active:scale-95 transition-all">
+            <Button asChild className="h-14 px-8 rounded-2xl bg-primary text-primary-foreground font-bold text-xs shadow-2xl shadow-primary/20 active:scale-95 transition-all">
               <Link href="/dashboard">
                 <span className="relative z-10 flex items-center">
                   Start your first legal query free <ArrowRight className="ml-2 h-4 w-4" />
@@ -213,10 +212,10 @@ export default function RootPage() {
         
         <div className="max-w-7xl mx-auto space-y-24">
           <div className="text-center space-y-6">
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-5 py-1.5 rounded-full text-[9px] font-black tracking-[0.3em] uppercase mb-4">
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-5 py-1.5 rounded-full text-[10px] font-bold mb-4">
               Features
             </Badge>
-            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-white uppercase">
+            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-white">
               What you can do with nyayguru
             </h2>
             <p className="text-lg text-white/40 font-medium tracking-tight">
@@ -263,7 +262,7 @@ export default function RootPage() {
         <div className="max-w-7xl mx-auto px-6 text-center space-y-16">
           <div className="flex items-center justify-center gap-6">
             <div className="h-[1px] w-16 bg-primary/20" />
-            <h3 className="text-[11px] font-black tracking-[0.4em] text-primary/60 uppercase">Institutional trust</h3>
+            <h3 className="text-[11px] font-bold text-primary/60">Institutional trust</h3>
             <div className="h-[1px] w-16 bg-primary/20" />
           </div>
           
@@ -273,7 +272,7 @@ export default function RootPage() {
                 <div className="p-2 rounded-lg bg-white/5 border border-white/10 transition-all group-hover:border-primary/40 group-hover:bg-primary/5">
                     <logo.icon className="h-6 w-6 text-white group-hover:text-primary transition-colors" />
                 </div>
-                <span className="font-black text-sm tracking-tight text-white/80 group-hover:text-white uppercase">{logo.name}</span>
+                <span className="font-bold text-sm tracking-tight text-white/80 group-hover:text-white uppercase">{logo.name}</span>
               </div>
             ))}
           </div>
@@ -287,7 +286,7 @@ export default function RootPage() {
               <Logo className="h-8 w-8 border-none shadow-none bg-transparent grayscale p-0" priority={false} />
               <span className="text-xl font-black tracking-tighter">Nyayguru</span>
             </div>
-            <p className="text-[9px] font-black tracking-[0.8em] text-white uppercase">Nyayasahayak.in // Justice for bharat // 2025</p>
+            <p className="text-[10px] font-bold text-white">Nyayasahayak.in // Justice for bharat // 2025</p>
         </div>
       </footer>
     </div>
