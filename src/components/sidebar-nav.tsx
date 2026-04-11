@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -10,28 +11,18 @@ import {
 } from "@/components/ui/sidebar";
 import {
   Home,
-  Briefcase,
-  CircleUserRound,
-  Library,
-  BrainCircuit,
-  Mic,
-  FileSearch,
+  MessageSquare,
   FileText,
-  FileSignature,
-  Gavel,
-  FolderKanban,
-  HeartHandshake,
-  Shield,
-  Newspaper,
-  Landmark,
-  LifeBuoy,
-  ChevronRight,
+  FileSearch,
   Settings,
+  HelpCircle,
   CreditCard,
-  Scale,
-  ShieldCheck,
-  Zap,
+  ChevronRight,
+  Plus,
+  History,
+  FolderKanban,
   FileCheck,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -44,65 +35,44 @@ import {
 
 const navigationItems = [
   {
-    title: "Home",
+    title: "Dashboard",
     icon: Home,
     href: "/dashboard",
     items: [],
   },
   {
-    title: "AI systems",
-    icon: BrainCircuit,
-    isFeature: true,
+    title: "New Chat",
+    icon: Plus,
+    href: "/dashboard/narrate",
+    items: [],
+  },
+  {
+    title: "My Chats",
+    icon: History,
     items: [
-      { href: "/dashboard/narrate", icon: Mic, label: "Voice help" },
-      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Scan file" },
-      { href: "/dashboard/document-generator", icon: FileText, label: "Write papers" },
-      { href: "/dashboard/bond-generator", icon: FileSignature, label: "Create bonds" },
-      { href: "/dashboard/strength-analyzer", icon: BrainCircuit, label: "Win chance" },
-      { href: "/dashboard/court-assistant", icon: Gavel, label: "Court help" },
-      { href: "/dashboard/evidence-audit", icon: ShieldCheck, label: "Check proof", isPremium: true },
-      { href: "/dashboard/bail-estimator", icon: Scale, label: "Bail help", isPremium: true },
-      { href: "/dashboard/statutory-linker", icon: Zap, label: "Law linker", isPremium: true },
-      { href: "/dashboard/contract-auditor", icon: FileCheck, label: "Check contract", isPremium: true },
+      { href: "/dashboard/research-analytics", icon: MessageSquare, label: "All Chats" },
     ],
   },
   {
-    title: "Case hub",
-    icon: Library,
+    title: "My Docs",
+    icon: FolderKanban,
     items: [
-      { href: "/dashboard/my-cases", icon: FolderKanban, label: "My cases", isFeature: true },
-      { href: "/dashboard/ngo-legal-aid", icon: HeartHandshake, label: "Free help" },
-      { href: "/dashboard/learn", icon: Library, label: "Learn law" },
-      { href: "/dashboard/police-guide", icon: Shield, label: "Help guides" },
-      { href: "/dashboard/research-analytics", icon: Newspaper, label: "Posts" },
+      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Documents" },
+      { href: "/dashboard/document-generator", icon: FileText, label: "Notes" },
     ],
   },
   {
-    title: "For business",
-    icon: Landmark,
-    isFeature: true,
-    items: [
-      { href: "/dashboard/business-msme", icon: Briefcase, label: "Business hub" },
-      { href: "/dashboard/finances-billing", icon: Landmark, label: "Legal fees" },
-    ],
-  },
-  {
-    title: "Account",
-    icon: CircleUserRound,
-    items: [
-      { href: "/dashboard/profile", icon: CircleUserRound, label: "My profile", isFeature: true },
-      { href: "/dashboard/billing", icon: CreditCard, label: "Upgrade plan", isFeature: true },
-      { href: "/dashboard/support", icon: LifeBuoy, label: "Contact help" },
-    ],
-  },
-  {
-    title: "Admin",
+    title: "Settings",
     icon: Settings,
-    isAdminOnly: true,
     items: [
-      { href: "/dashboard/management-console", icon: Shield, label: "Users" },
-      { href: "/dashboard/advocate-verification", icon: Gavel, label: "Lawyers" },
+      { href: "/dashboard/billing", icon: CreditCard, label: "Pricing & Plans" },
     ],
+  },
+  {
+    title: "Help",
+    icon: HelpCircle,
+    href: "/dashboard/support",
+    items: [],
   },
 ];
 
@@ -117,21 +87,9 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
     return items.some((item) => isSubItemActive(item.href));
   };
 
-  const filteredItems = navigationItems
-    .filter(item => !item.isAdminOnly || isAdmin)
-    .map(item => {
-      if (item.title === "AI systems" && !isElite) {
-        return {
-          ...item,
-          items: item.items.filter(sub => !sub.isPremium)
-        };
-      }
-      return item;
-    });
-
   return (
     <SidebarMenu className="gap-2 px-2 py-4">
-      {filteredItems.map((item) => {
+      {navigationItems.map((item) => {
         const hasSubItems = item.items.length > 0;
         const isActive = item.href ? pathname === item.href : isGroupActive(item.items);
 
@@ -142,11 +100,14 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                 asChild
                 isActive={isActive}
                 tooltip={item.title}
-                className="h-11 px-4"
+                className={cn(
+                  "h-11 px-4 transition-all",
+                  isActive ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "hover:bg-primary/5"
+                )}
               >
                 <Link href={item.href!}>
                   <item.icon className="h-5 w-5" />
-                  <span className="font-black text-[11px]">{item.title}</span>
+                  <span className="font-black text-[11px] uppercase tracking-tight">{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -165,10 +126,13 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                 <SidebarMenuButton
                   isActive={isActive}
                   tooltip={item.title}
-                  className="h-11 px-4 hover:bg-primary/5"
+                  className={cn(
+                    "h-11 px-4 hover:bg-primary/5 transition-all",
+                    isActive && !item.href && "text-primary"
+                  )}
                 >
                   <item.icon className="h-5 w-5" />
-                  <span className="font-black text-[11px] flex-1 text-left">{item.title}</span>
+                  <span className="font-black text-[11px] flex-1 text-left uppercase tracking-tight">{item.title}</span>
                   <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
@@ -197,3 +161,5 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
     </SidebarMenu>
   );
 }
+
+import { cn } from "@/lib/utils";
