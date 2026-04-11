@@ -117,6 +117,15 @@ export default function RootPage() {
     },
   };
 
+  const navItems = [
+    { name: "Features", href: "/features" },
+    { name: "How it works", href: "/how-it-works" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Faqs", href: "/faqs" },
+    { name: "Blog", href: "/blog" },
+    { name: "About", href: "/about" },
+  ];
+
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-primary/30 overflow-x-hidden font-body text-left">
       {/* Navigation ingress */}
@@ -127,13 +136,14 @@ export default function RootPage() {
         </div>
         
         <div className="hidden md:flex items-center gap-10">
-          {["Features", "How it works", "Pricing", "Faqs", "Blog", "About"].map((item) => (
-            <button 
-              key={item} 
+          {navItems.map((item) => (
+            <Link 
+              key={item.name} 
+              href={item.href}
               className="text-sm font-medium text-white/60 hover:text-white transition-all duration-300"
             >
-              {item}
-            </button>
+              {item.name}
+            </Link>
           ))}
         </div>
 

@@ -26,6 +26,7 @@ const navItems = [
 export function PublicHeader() {
   const auth = useAuth();
   const [user, setUser] = useState<User | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     return onAuthStateChanged(auth, setUser);
@@ -76,7 +77,7 @@ export function PublicHeader() {
               </div>
 
               <div className="md:hidden">
-                <Sheet>
+                <Sheet open={isOpen} onOpenChange={setIsOpen}>
                   <SheetTrigger asChild>
                     <Button variant="ghost" size="icon" className="text-white hover:bg-white/5 rounded-xl h-10 w-10">
                       <Menu className="h-6 w-6" />
@@ -88,16 +89,17 @@ export function PublicHeader() {
                         <Link 
                           key={item.name} 
                           href={item.href}
+                          onClick={() => setIsOpen(false)}
                           className="text-left text-lg font-medium text-white/60 hover:text-white transition-all"
                         >
                           {item.name}
                         </Link>
                       ))}
                       <div className="h-px bg-white/5 my-2" />
-                      <Button asChild variant="ghost" className="justify-start px-0 text-white/60 hover:text-white h-10 font-bold">
+                      <Button asChild variant="ghost" className="justify-start px-0 text-white/60 hover:text-white h-10 font-bold" onClick={() => setIsOpen(false)}>
                         <Link href="/login">Login</Link>
                       </Button>
-                      <Button asChild className="bg-primary text-primary-foreground font-bold h-12 rounded-xl">
+                      <Button asChild className="bg-primary text-primary-foreground font-bold h-12 rounded-xl" onClick={() => setIsOpen(false)}>
                         <Link href="/register">Join hub</Link>
                       </Button>
                     </div>
