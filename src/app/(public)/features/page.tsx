@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -36,6 +37,7 @@ const features = [
     icon: MessageSquare,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
+    href: "/dashboard"
   },
   {
     title: "Record voice",
@@ -43,6 +45,7 @@ const features = [
     icon: Mic,
     color: "text-indigo-500",
     bg: "bg-indigo-500/10",
+    href: "/dashboard/narrate"
   },
   {
     title: "Scan documents",
@@ -50,6 +53,7 @@ const features = [
     icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
+    href: "/dashboard/document-intelligence"
   },
   {
     title: "Write documents",
@@ -57,6 +61,7 @@ const features = [
     icon: FileText,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
+    href: "/dashboard/document-generator"
   },
   {
     title: "Create bonds",
@@ -64,6 +69,7 @@ const features = [
     icon: FileSignature,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
+    href: "/dashboard/bond-generator"
   },
   {
     title: "Check chance",
@@ -71,6 +77,7 @@ const features = [
     icon: BrainCircuit,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
+    href: "/dashboard/strength-analyzer"
   },
   {
     title: "Court helper",
@@ -78,6 +85,7 @@ const features = [
     icon: Gavel,
     color: "text-cyan-500",
     bg: "bg-cyan-500/10",
+    href: "/dashboard/court-assistant"
   },
   {
     title: "Check evidence",
@@ -85,6 +93,7 @@ const features = [
     icon: ShieldCheck,
     color: "text-rose-500",
     bg: "bg-rose-500/10",
+    href: "/dashboard/evidence-audit"
   },
   {
     title: "Law linker",
@@ -92,6 +101,7 @@ const features = [
     icon: Zap,
     color: "text-pink-500",
     bg: "bg-pink-500/10",
+    href: "/dashboard/statutory-linker"
   },
   {
     title: "Check contract",
@@ -99,6 +109,7 @@ const features = [
     icon: FileCheck,
     color: "text-teal-500",
     bg: "bg-teal-500/10",
+    href: "/dashboard/contract-auditor"
   }
 ];
 
@@ -172,8 +183,8 @@ export default function FeaturesPage() {
                 </div>
                 <div className="pt-4">
                     <div className="h-px w-full bg-white/5 mb-6" />
-                    <Link href="/login" className="flex items-center gap-2 text-[10px] font-bold text-primary/40 group-hover:text-primary transition-colors">
-                        Login <ChevronRight className="h-3 w-3" />
+                    <Link href={f.href} className="flex items-center gap-2 text-[10px] font-bold text-primary/40 group-hover:text-primary transition-colors">
+                        Initialize tool <ChevronRight className="h-3 w-3" />
                     </Link>
                 </div>
               </CardContent>
