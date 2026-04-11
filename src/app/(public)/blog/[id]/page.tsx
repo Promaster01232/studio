@@ -1,4 +1,3 @@
-
 "use client";
 
 import { use, useMemo } from "react";
@@ -25,7 +24,8 @@ import {
   Globe,
   Info,
   ChevronRight,
-  TrendingUp
+  TrendingUp,
+  ArrowRight
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
