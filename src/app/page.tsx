@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -138,12 +137,12 @@ export default function RootPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-primary/30 overflow-x-hidden font-body text-left">
+    <div className="min-h-screen bg-background text-foreground bg-golden-animate selection:bg-primary/30 overflow-x-hidden font-body text-left">
       {/* Navigation ingress */}
-      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-black/40 backdrop-blur-md border-b border-white/5">
+      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-background/40 backdrop-blur-md border-b border-border/10">
         <div className="flex items-center gap-2">
           <Logo className="h-10 w-10 border-none bg-transparent shadow-none p-0" priority={true} />
-          <span className="text-xl font-black font-headline tracking-tighter">Nyaya Sahayak</span>
+          <span className="text-xl font-black font-headline tracking-tighter text-foreground">Nyaya Sahayak</span>
         </div>
         
         {/* Desktop Links */}
@@ -152,7 +151,7 @@ export default function RootPage() {
             <Link 
               key={item.name} 
               href={item.href}
-              className="text-sm font-medium text-white/60 hover:text-white transition-all duration-300"
+              className="text-sm font-medium text-foreground/60 hover:text-primary transition-all duration-300"
             >
               {item.name}
             </Link>
@@ -161,7 +160,7 @@ export default function RootPage() {
 
         <div className="flex items-center gap-2 sm:gap-4">
           <div className="flex items-center gap-2 sm:gap-4">
-            <Button variant="ghost" asChild className="text-xs font-bold hover:bg-white/5 text-white h-10 px-4 sm:px-6">
+            <Button variant="ghost" asChild className="text-xs font-bold hover:bg-primary/5 text-foreground h-10 px-4 sm:px-6">
               <Link href="/login">Login</Link>
             </Button>
             <div className="hidden md:block">
@@ -175,14 +174,14 @@ export default function RootPage() {
           <div className="md:hidden">
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/5 rounded-xl h-10 w-10">
+                <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/5 rounded-xl h-10 w-10">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-[#0a0a0a] border-white/5 text-white w-[280px] p-0">
-                <SheetHeader className="p-6 border-b border-white/5">
-                  <SheetTitle className="text-white text-left font-headline font-black text-xl tracking-tighter">Navigation</SheetTitle>
-                  <SheetDescription className="text-white/40 text-left text-[10px] uppercase font-bold tracking-widest">Institutional hub</SheetDescription>
+              <SheetContent side="right" className="bg-background border-border/10 text-foreground w-[280px] p-0">
+                <SheetHeader className="p-6 border-b border-border/10">
+                  <SheetTitle className="text-foreground text-left font-headline font-black text-xl tracking-tighter">Navigation</SheetTitle>
+                  <SheetDescription className="text-muted-foreground text-left text-[10px] uppercase font-bold tracking-widest">Institutional hub</SheetDescription>
                 </SheetHeader>
                 <div className="flex flex-col p-6 gap-6 text-left">
                   {navItems.map((item) => (
@@ -190,13 +189,13 @@ export default function RootPage() {
                       key={item.name} 
                       href={item.href}
                       onClick={() => setIsMenuOpen(false)}
-                      className="text-left text-lg font-bold text-white/60 hover:text-white transition-all"
+                      className="text-left text-lg font-bold text-foreground/60 hover:text-primary transition-all"
                     >
                       {item.name}
                     </Link>
                   ))}
-                  <div className="h-px bg-white/5 my-2" />
-                  <Button asChild variant="ghost" className="justify-start px-0 text-white/60 hover:text-white h-10 font-bold" onClick={() => setIsMenuOpen(false)}>
+                  <div className="h-px bg-border/10 my-2" />
+                  <Button asChild variant="ghost" className="justify-start px-0 text-foreground/60 hover:text-primary h-10 font-bold" onClick={() => setIsMenuOpen(false)}>
                     <Link href="/login">Login</Link>
                   </Button>
                   <Button asChild className="bg-primary text-primary-foreground font-bold h-12 rounded-xl" onClick={() => setIsMenuOpen(false)}>
@@ -218,15 +217,15 @@ export default function RootPage() {
             transition={{ duration: 0.6 }}
             className="flex flex-col items-center"
           >
-            <Badge variant="outline" className="bg-white/5 text-white/60 border-white/10 px-4 py-1.5 rounded-full text-[9px] font-bold mb-10">
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-bold mb-10 uppercase tracking-widest">
               Platform status: active
             </Badge>
             
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8 text-white">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8 text-foreground">
               Your complete <br /> <span className="text-primary italic">Legal research toolkit.</span>
             </h1>
             
-            <p className="text-lg sm:text-xl text-white/60 font-medium max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
               Ai-powered chat, document analysis, voice input, and multi-language support. everything you need to navigate indian law with absolute confidence.
             </p>
           </motion.div>
@@ -250,17 +249,17 @@ export default function RootPage() {
 
       {/* Feature matrix */}
       <section className="py-32 px-4 sm:px-6 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
         
         <div className="max-w-7xl mx-auto space-y-24">
           <div className="text-center space-y-6">
             <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-5 py-1.5 rounded-full text-[10px] font-bold mb-4">
               Features
             </Badge>
-            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-white">
+            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-foreground">
               What you can do with Nyaya Sahayak
             </h2>
-            <p className="text-lg text-white/40 font-medium tracking-tight">
+            <p className="text-lg text-muted-foreground font-medium tracking-tight">
               Eight tools, all included free. from chat to document ocr to voice input.
             </p>
           </div>
@@ -279,15 +278,15 @@ export default function RootPage() {
                 whileHover={{ y: -8 }}
                 className="group"
               >
-                <Card className="h-full bg-[#161b22] border-white/5 rounded-[2rem] overflow-hidden transition-all duration-500 group-hover:border-primary/20 group-hover:shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
+                <Card className="h-full bg-card border-border/10 rounded-[2rem] overflow-hidden transition-all duration-500 hover:border-primary/20 hover:shadow-3xl">
                   <CardContent className="p-8 sm:p-10 flex flex-col h-full text-left space-y-8">
-                    <div className={cn("p-4 rounded-2xl h-fit w-fit shadow-xl border border-white/5 transition-transform group-hover:scale-110 duration-500", item.bg, item.color)}>
+                    <div className={cn("p-4 rounded-2xl h-fit w-fit shadow-xl border border-border/5 transition-transform group-hover:scale-110 duration-500", item.bg, item.color)}>
                       <item.icon className="h-6 w-6" />
                     </div>
                     
                     <div className="space-y-3">
-                      <h3 className="text-xl font-black tracking-tight text-white leading-tight">{item.title}</h3>
-                      <p className="text-xs text-white/40 leading-relaxed font-medium">
+                      <h3 className="text-xl font-black tracking-tight text-foreground leading-tight">{item.title}</h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                         {item.desc}
                       </p>
                     </div>

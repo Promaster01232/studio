@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -85,22 +84,22 @@ function Header({ userProfile }: { userProfile: any }) {
     return (
         <header className={cn(
             "sticky top-0 z-[40] flex h-16 items-center gap-4 border-b px-4 sm:px-6 transition-all",
-            "bg-[#0a0a0a] border-white/5"
+            "bg-background/80 backdrop-blur-md border-border/10"
         )}>
             <div className="flex items-center gap-3 md:hidden">
-                <SidebarTrigger className="h-9 w-9 rounded-xl hover:bg-primary/5 border border-primary/5 text-white" />
+                <SidebarTrigger className="h-9 w-9 rounded-xl hover:bg-primary/5 border border-primary/5 text-foreground" />
             </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 <SearchDialog>
                     <div className="w-full max-w-md cursor-pointer group transition-all">
-                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[11px] tracking-tight text-gray-500 rounded-xl bg-white/5 border border-white/5 group-hover:border-primary/20 transition-all relative text-left">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-hover:text-primary transition-colors" />
+                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[11px] tracking-tight text-muted-foreground rounded-xl bg-muted/30 border border-border/10 group-hover:border-primary/20 transition-all relative text-left">
+                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                             <span>Search chats, docs, notes... (ctrl+k)</span>
                         </div>
                         <div className="md:hidden">
-                            <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-white/5 bg-white/5">
-                                <Search className="h-4 w-4 text-gray-500" />
+                            <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-border/10 bg-muted/30">
+                                <Search className="h-4 w-4 text-muted-foreground" />
                             </Button>
                         </div>
                     </div>
@@ -115,12 +114,12 @@ function Header({ userProfile }: { userProfile: any }) {
                     </Button>
                 </SosDialog>
 
-                <div className="flex items-center gap-4 text-gray-400">
-                    <button className="flex items-center gap-1.5 hover:text-white transition-colors">
+                <div className="flex items-center gap-4 text-muted-foreground">
+                    <button className="flex items-center gap-1.5 hover:text-primary transition-colors">
                         <Globe className="h-4 w-4" />
                         <span className="text-[10px] font-bold lowercase">en</span>
                     </button>
-                    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="hover:text-white transition-colors">
+                    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="hover:text-primary transition-colors">
                         <Moon className="h-4 w-4" />
                     </button>
                 </div>
@@ -130,19 +129,19 @@ function Header({ userProfile }: { userProfile: any }) {
                         <Link href="/login">Sign in</Link>
                     </Button>
                 ) : (
-                    <div className="flex items-center gap-2 border-l border-white/10 pl-4">
+                    <div className="flex items-center gap-2 border-l border-border/10 pl-4">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <button className="outline-none active:scale-95 transition-transform">
                                     <Avatar className="h-8 w-8 border-2 border-primary/20 shadow-sm cursor-pointer">
                                         <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                                        <AvatarFallback className="font-bold bg-[#e91e63] text-white text-[10px]">
+                                        <AvatarFallback className="font-bold bg-primary text-primary-foreground text-[10px]">
                                             {userProfile.firstName?.charAt(0)?.toLowerCase() || "p"}
                                         </AvatarFallback>
                                     </Avatar>
                                 </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-64 p-2 rounded-2xl shadow-2xl glass border-white/10 mt-2">
+                            <DropdownMenuContent align="end" className="w-64 p-2 rounded-2xl shadow-2xl glass border-border/10 mt-2">
                                 <div className="p-4 space-y-1 text-left">
                                     <p className="font-bold text-sm tracking-tight text-foreground">
                                         {userProfile.firstName} {userProfile.lastName}
@@ -151,7 +150,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                         {userProfile.email}
                                     </p>
                                 </div>
-                                <DropdownMenuSeparator className="bg-white/5" />
+                                <DropdownMenuSeparator className="bg-border/5" />
                                 <div className="p-2">
                                     <DropdownMenuItem className="rounded-xl h-10 px-3 flex items-center justify-between group focus:bg-primary/10 cursor-pointer">
                                         <div className="flex items-center gap-3">
@@ -161,7 +160,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                         <span className="text-[10px] font-bold uppercase text-primary/60">{planLabel}</span>
                                     </DropdownMenuItem>
                                     
-                                    <DropdownMenuSeparator className="bg-white/5 my-1" />
+                                    <DropdownMenuSeparator className="bg-border/5 my-1" />
                                     
                                     <DropdownMenuItem asChild className="rounded-xl h-10 px-3 focus:bg-primary/10 cursor-pointer">
                                         <Link href="/dashboard" className="flex items-center gap-3 w-full">
@@ -170,7 +169,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                         </Link>
                                     </DropdownMenuItem>
                                     
-                                    <DropdownMenuSeparator className="bg-white/5 my-1" />
+                                    <DropdownMenuSeparator className="bg-border/5 my-1" />
                                     
                                     <DropdownMenuItem 
                                         onClick={handleLogout}
@@ -257,14 +256,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <SidebarProvider>
-      <Sidebar collapsible="icon" className="border-r border-white/5 bg-[#0a0a0a]">
+      <Sidebar collapsible="icon" className="border-r border-border/10 bg-sidebar">
         <SidebarHeader className="p-6 mb-2">
           <Link href="/dashboard" className="flex items-center gap-3 group transition-all">
             <div className="p-1 rounded-lg bg-primary/10">
                 <Logo className="h-8 w-8 border-none shadow-none p-0 bg-transparent" priority={true} />
             </div>
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
-              <span className="text-xl font-black font-headline tracking-tighter text-white leading-none">
+              <span className="text-xl font-black font-headline tracking-tighter text-foreground leading-none">
                   nyaya sahayak
               </span>
               <span className="text-[8px] font-bold text-primary/60 tracking-widest mt-1">legal intelligence</span>
@@ -274,7 +273,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <SidebarContent className="pt-2 px-2">
           <SidebarNav isAdmin={isAdmin} isElite={isElite} />
         </SidebarContent>
-        <SidebarFooter className="p-4 border-t border-white/5">
+        <SidebarFooter className="p-4 border-t border-border/10">
            <AnimatePresence mode="wait">
              {userProfile ? (
                <motion.div
@@ -285,16 +284,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                  <Link href="/dashboard/profile">
                    <Button 
                      variant="ghost" 
-                     className="w-full h-14 justify-start items-center gap-3 px-2 hover:bg-white/5 rounded-2xl transition-all group"
+                     className="w-full h-14 justify-start items-center gap-3 px-2 hover:bg-muted/50 rounded-2xl transition-all group"
                    >
                      <Avatar className="h-9 w-9 border-2 border-primary/20 shadow-sm shrink-0">
                        <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                       <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">
+                       <AvatarFallback className="font-black bg-primary text-primary-foreground text-[10px]">
                          {userProfile.firstName?.charAt(0)}
                        </AvatarFallback>
                      </Avatar>
                      <div className="flex flex-col items-start overflow-hidden group-data-[state=collapsed]:hidden">
-                       <span className="text-[11px] font-black text-white truncate w-full">
+                       <span className="text-[11px] font-black text-foreground truncate w-full">
                          {userProfile.firstName} {userProfile.lastName}
                        </span>
                        <span className="text-[9px] font-bold text-muted-foreground truncate w-full">
@@ -309,7 +308,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                <Button 
                  variant="ghost" 
                  onClick={() => router.push('/dashboard')}
-                 className="w-full justify-start items-center gap-3 h-11 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl transition-all"
+                 className="w-full justify-start items-center gap-3 h-11 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all"
                >
                  <ChevronRight className="h-4 w-4 rotate-180" />
                  <span className="font-bold text-[11px] tracking-tight group-data-[state=collapsed]:hidden">Collapse</span>
@@ -318,7 +317,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
            </AnimatePresence>
         </SidebarFooter>
       </Sidebar>
-      <SidebarInset className="bg-[#050505] relative overflow-hidden">
+      <SidebarInset className="bg-background relative overflow-hidden bg-golden-animate">
         <Header userProfile={userProfile} />
         <main className="flex-1 overflow-y-auto custom-scrollbar relative">
             <AnimatePresence mode="wait">
