@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where } from "firebase/firestore";
+import { doc, onSnapshot, collection, query, where } from "firebase/firestore";
 import { 
   CheckCircle2, 
   Zap, 
@@ -10,20 +10,16 @@ import {
   Star, 
   Loader2, 
   Activity, 
-  Info,
-  ChevronRight,
-  ShieldCheck,
   CreditCard,
   Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 import { formatDistanceToNow } from "date-fns";
@@ -31,50 +27,50 @@ import { formatDistanceToNow } from "date-fns";
 const plansData = [
   {
     id: "free",
-    name: "free",
+    name: "Free",
     icon: Zap,
-    desc: "trial & light users",
+    desc: "Trial & Light Users",
     monthlyPrice: 0,
     annualPrice: 0,
     features: {
       queries: "100",
-      limit: "10 per day",
-      output: "~40,000 words"
+      limit: "10 Per Day",
+      output: "~40,000 Words"
     },
     color: "text-gray-400",
     bg: "bg-gray-500/10"
   },
   {
     id: "plus",
-    name: "plus",
+    name: "Plus",
     icon: Crown,
-    desc: "regular & serious users",
+    desc: "Regular & Serious Users",
     monthlyPrice: 499,
     annualPrice: 3990,
     originalAnnualPrice: 4788,
     monthlyEquivalent: "333",
     features: {
       queries: "200",
-      limit: "no daily limit",
-      output: "~1,50,000 words"
+      limit: "No Daily Limit",
+      output: "~1,50,000 Words"
     },
     color: "text-amber-500",
     bg: "bg-amber-500/10"
   },
   {
     id: "premium",
-    name: "premium",
+    name: "Premium",
     icon: Star,
-    desc: "power / professional users",
+    desc: "Power / Professional Users",
     monthlyPrice: 899,
     annualPrice: 6990,
     originalAnnualPrice: 8388,
     monthlyEquivalent: "583",
     popular: true,
     features: {
-      queries: "unlimited",
-      limit: "no daily limit",
-      output: "unlimited words"
+      queries: "Unlimited",
+      limit: "No Daily Limit",
+      output: "Unlimited Words"
     },
     color: "text-amber-500",
     bg: "bg-amber-500/10"
@@ -150,12 +146,10 @@ export default function BillingPage() {
 
     setProcessingId(plan.id);
     
-    // Razorpay Integration logic would go here
-    // For now, providing a professional simulated feedback
     setTimeout(() => {
       toast({
-        title: "gateway redirecting",
-        description: "connecting to razorpay secure node..."
+        title: "Gateway Redirecting",
+        description: "Connecting to Razorpay secure node..."
       });
       setProcessingId(null);
     }, 1000);
@@ -170,25 +164,25 @@ export default function BillingPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-16 pb-32 px-4 sm:px-6 text-left">
       <div className="space-y-2">
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">plans & pricing</h1>
-        <p className="text-gray-500 font-medium">choose the plan that fits your legal research needs</p>
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">Plans & Pricing</h1>
+        <p className="text-gray-500 font-medium">Choose the plan that fits your legal research needs</p>
       </div>
 
-      {/* BILLING TOGGLE */}
+      {/* Billing Toggle */}
       <div className="flex items-center justify-center gap-4">
-        <span className={cn("text-xs font-bold uppercase tracking-widest transition-colors", !isAnnual ? "text-white" : "text-gray-600")}>monthly</span>
+        <span className={cn("text-xs font-bold uppercase tracking-widest transition-colors", !isAnnual ? "text-white" : "text-gray-600")}>Monthly</span>
         <Switch 
           checked={isAnnual} 
           onCheckedChange={setIsAnnual} 
           className="data-[state=checked]:bg-primary"
         />
         <div className="flex items-center gap-3">
-          <span className={cn("text-xs font-bold uppercase tracking-widest transition-colors", isAnnual ? "text-white" : "text-gray-600")}>annual</span>
-          <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 text-[9px] font-black uppercase tracking-widest px-2 py-0.5">save 17%</Badge>
+          <span className={cn("text-xs font-bold uppercase tracking-widest transition-colors", isAnnual ? "text-white" : "text-gray-600")}>Annual</span>
+          <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 text-[9px] font-black uppercase tracking-widest px-2 py-0.5">Save 17%</Badge>
         </div>
       </div>
 
-      {/* PRICING CARDS */}
+      {/* Pricing Cards */}
       <div className="grid md:grid-cols-3 gap-8 items-stretch">
         {plansData.map((plan) => {
           const isActive = profile?.subscriptionType === plan.id;
@@ -199,7 +193,7 @@ export default function BillingPage() {
             <div key={plan.id} className="relative flex flex-col">
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
-                  <Badge className="bg-primary text-primary-foreground font-black text-[9px] uppercase tracking-widest px-4 py-1 rounded-lg border-2 border-[#050505]">most popular</Badge>
+                  <Badge className="bg-primary text-primary-foreground font-black text-[9px] uppercase tracking-widest px-4 py-1 rounded-lg border-2 border-[#050505]">Most Popular</Badge>
                 </div>
               )}
               
@@ -221,11 +215,11 @@ export default function BillingPage() {
                         <span className="text-sm text-gray-600 line-through mr-2">₹{plan.originalAnnualPrice}</span>
                       )}
                       <span className="text-4xl font-black text-white">₹{price}</span>
-                      <span className="text-gray-500 font-bold">/{isAnnual ? 'year' : 'month'}</span>
+                      <span className="text-gray-500 font-bold">/{isAnnual ? 'Year' : 'Month'}</span>
                     </div>
                     {isAnnual && plan.monthlyEquivalent && (
                       <p className="text-[10px] font-bold text-green-500 uppercase tracking-widest">
-                        ₹{plan.monthlyEquivalent}/mo · 2 months free
+                        ₹{plan.monthlyEquivalent}/Mo · 2 Months Free
                       </p>
                     )}
                   </div>
@@ -241,7 +235,7 @@ export default function BillingPage() {
                       isActive ? "border-primary text-primary bg-primary/5" : "bg-primary text-primary-foreground shadow-primary/20"
                     )}
                   >
-                    {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "current plan" : "upgrade now"}
+                    {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "Current Plan" : "Upgrade Now"}
                   </Button>
                 </CardFooter>
               </Card>
@@ -250,39 +244,39 @@ export default function BillingPage() {
         })}
       </div>
 
-      {/* COMPARISON TABLE */}
+      {/* Comparison Table */}
       <div className="pt-10 max-w-4xl mx-auto w-full">
         <div className="grid grid-cols-4 gap-4 pb-6 border-b border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
           <div className="col-span-1 flex items-center gap-2">
-            <Activity className="h-3.5 w-3.5" /> queries / month
+            <Activity className="h-3.5 w-3.5" /> Queries / Month
           </div>
           <div className="text-center text-white">100</div>
           <div className="text-center text-white">200</div>
-          <div className="text-center text-primary">unlimited</div>
+          <div className="text-center text-primary">Unlimited</div>
         </div>
         
         <div className="grid grid-cols-4 gap-4 py-6 border-b border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
-          <div className="col-span-1">daily query limit</div>
-          <div className="text-center text-white">10 per day</div>
-          <div className="text-center text-white">no daily limit</div>
-          <div className="text-center text-white">no daily limit</div>
+          <div className="col-span-1">Daily Query Limit</div>
+          <div className="text-center text-white">10 Per Day</div>
+          <div className="text-center text-white">No Daily Limit</div>
+          <div className="text-center text-white">No Daily Limit</div>
         </div>
 
         <div className="grid grid-cols-4 gap-4 py-6 border-b border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
-          <div className="col-span-1">monthly output</div>
-          <div className="text-center text-white underline decoration-dotted underline-offset-4">~40,000 words</div>
-          <div className="text-center text-white underline decoration-dotted underline-offset-4">~1,50,000 words</div>
-          <div className="text-center text-white underline decoration-dotted underline-offset-4">unlimited words</div>
+          <div className="col-span-1">Monthly Output</div>
+          <div className="text-center text-white underline decoration-dotted underline-offset-4">~40,000 Words</div>
+          <div className="text-center text-white underline decoration-dotted underline-offset-4">~1,50,000 Words</div>
+          <div className="text-center text-white underline decoration-dotted underline-offset-4">Unlimited Words</div>
         </div>
       </div>
 
-      {/* TRANSACTION LEDGER */}
+      {/* Transaction Ledger */}
       <section className="pt-20 space-y-8">
         <div className="flex items-center gap-4 border-b border-white/5 pb-4">
           <div className="p-3 rounded-xl bg-white/5 border border-white/10">
             <CreditCard className="h-5 w-5 text-primary" />
           </div>
-          <h2 className="text-xl font-black text-white uppercase tracking-tight">verified ledger</h2>
+          <h2 className="text-xl font-black text-white uppercase tracking-tight">Verified Ledger</h2>
         </div>
         
         <Card className="bg-[#161b22] border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
@@ -290,11 +284,11 @@ export default function BillingPage() {
             <table className="w-full text-left">
               <thead className="bg-white/5 border-b border-white/5">
                 <tr>
-                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">timestamp</th>
-                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">clearance</th>
-                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500 text-center">status</th>
-                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">value</th>
-                  <th className="px-8 py-5 text-right text-[9px] font-black uppercase tracking-widest text-gray-500 pr-12">txid</th>
+                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">Timestamp</th>
+                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">Clearance</th>
+                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500 text-center">Status</th>
+                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">Value</th>
+                  <th className="px-8 py-5 text-right text-[9px] font-black uppercase tracking-widest text-gray-500 pr-12">Txid</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
@@ -308,12 +302,12 @@ export default function BillingPage() {
                     </td>
                     <td className="px-8 py-5">
                       <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[8px] font-black uppercase px-2">
-                        {tx.planId?.replace('_', ' ') || 'standard'}
+                        {tx.planId?.replace('_', ' ') || 'Standard'}
                       </Badge>
                     </td>
                     <td className="px-8 py-5 text-center">
                       <div className="flex items-center justify-center gap-1.5 text-green-500 font-black text-[8px] uppercase tracking-widest">
-                        <CheckCircle2 className="h-3 w-3" /> captured
+                        <CheckCircle2 className="h-3 w-3" /> Captured success
                       </div>
                     </td>
                     <td className="px-8 py-5 text-sm font-black text-white">₹{(tx.amount || 0).toLocaleString('en-IN')}</td>
@@ -326,7 +320,7 @@ export default function BillingPage() {
                     <td colSpan={5} className="px-8 py-20 text-center opacity-30">
                       <div className="flex flex-col items-center gap-4">
                         <Activity className="h-12 w-12 text-gray-500" />
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500">registry clear. awaiting captures.</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500">Registry clear. Awaiting captures.</p>
                       </div>
                     </td>
                   </tr>
@@ -338,7 +332,7 @@ export default function BillingPage() {
       </section>
 
       <div className="text-center pt-8 opacity-30">
-        <p className="text-[9px] font-black uppercase tracking-[0.6em] text-gray-500">NYAYASAHAYAK.IN // FINANCIAL PROTOCOL // 2025</p>
+        <p className="text-[9px] font-black uppercase tracking-[0.6em] text-gray-500">Nyayasahayak.in // Financial Protocol // 2025</p>
       </div>
     </div>
   );
