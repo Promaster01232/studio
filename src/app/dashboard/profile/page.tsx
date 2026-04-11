@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -217,7 +218,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                 </div>
                 <div className="pt-2 sm:pt-4 border-t border-white/10 flex justify-between items-center bg-white/5 -mx-4 sm:-mx-6 px-4 sm:px-6 mt-1 sm:mt-2">
                     <div className="space-y-0.5">
-                        <p className="text-[6px] sm:text-[7px] font-bold uppercase opacity-40 tracking-widest">Digital Registry Email</p>
+                        <p className="text-[6px] sm:text-[7px] font-bold uppercase opacity-40 tracking-widest">Registry Email</p>
                         <p className="text-[8px] sm:text-[9px] font-bold truncate text-white/80 max-w-[120px] sm:max-w-none">{profile.email}</p>
                     </div>
                     <div className="text-right">
@@ -225,7 +226,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <p className={cn(
                             "text-[8px] sm:text-[9px] font-black uppercase tracking-tighter",
                             isAdmin || isUpgraded ? "text-amber-400" : "text-green-400"
-                        )}>{isAdmin ? "Absolute Statutory Hub" : isUpgraded ? "Premium Forensic hub" : "Standard Identity access"}</p>
+                        )}>{isAdmin ? "Absolute Hub" : isUpgraded ? "Premium Hub" : "Standard access"}</p>
                     </div>
                 </div>
             </div>
@@ -346,7 +347,7 @@ export default function ProfilePage() {
                             ) : (
                                 <Button size="sm" variant="outline" className="h-8 sm:h-9 px-3 sm:px-4 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-red-500 border-red-200 rounded-lg sm:rounded-xl" onClick={handleVerifySelf} disabled={isVerifying}>
                                     {isVerifying ? <Loader2 className="h-3 w-3 animate-spin mr-1.5 sm:mr-2" /> : <ShieldCheck className="h-3 w-3 mr-1.5 sm:mr-2" />}
-                                    Run Forensic Scan
+                                    Run Security Scan
                                 </Button>
                             )}
                         </div>
@@ -370,7 +371,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1 w-full space-y-6 sm:space-y-8">
                 <Card className="glass shadow-2xl rounded-[1.5rem] sm:rounded-[2.5rem] border-primary/5 overflow-hidden">
-                    <CardHeader className="p-6 sm:p-10 bg-primary/5 border-b border-primary/10"><CardTitle className="text-xl sm:text-3xl font-black tracking-tight leading-none uppercase text-left">Identity Protocols</CardTitle></CardHeader>
+                    <CardHeader className="p-6 sm:p-10 bg-primary/5 border-b border-primary/10"><CardTitle className="text-xl sm:text-3xl font-black tracking-tight leading-none uppercase text-left">Identity Profile</CardTitle></CardHeader>
                     <CardContent className="p-6 sm:p-10 space-y-6 sm:space-y-8 text-left">
                         <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
                             <div className="space-y-2 sm:space-y-3">

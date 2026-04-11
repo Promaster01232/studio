@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -182,7 +183,7 @@ export default function DashboardHomePage() {
       if (!confirm("Confirm record purge? This action will permanently erase this record.")) return;
       try {
           await deleteDoc(doc(firestore, "posts", postId));
-          toast({ title: "Transmission purged" });
+          toast({ title: "Post purged" });
       } catch (e) {
           toast({ variant: "destructive", title: "Access denied" });
       }
@@ -201,7 +202,7 @@ export default function DashboardHomePage() {
   };
 
   const handleShare = (post: Post, platform: 'whatsapp' | 'twitter' | 'copy') => {
-    const shareText = `Check out this institutional transmission on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
+    const shareText = `Check out this post on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
     
     if (platform === 'whatsapp') {
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
@@ -360,7 +361,7 @@ export default function DashboardHomePage() {
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <AudioAssistant text={m.text} language="English" />
-                                            <Badge variant="outline" className="border-white/20 text-white font-black text-[9px] h-9 px-4">Registry active</Badge>
+                                            <Badge variant="outline" className="border-white/20 text-white font-black text-[9px] h-9 px-4">System active</Badge>
                                         </div>
                                     </div>
                                 </CardHeader>
@@ -461,7 +462,7 @@ export default function DashboardHomePage() {
                                                             onClick={() => handleDeletePost(post.id)}
                                                             className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 gap-3 uppercase"
                                                         >
-                                                            <Trash2 className="h-4 w-4" /> Purge hub
+                                                            <Trash2 className="h-4 w-4" /> Purge record
                                                         </DropdownMenuItem>
                                                     )}
                                                     <DropdownMenuItem className="rounded-lg font-bold text-[10px] h-10 px-3 cursor-pointer gap-3 uppercase">
@@ -599,7 +600,7 @@ export default function DashboardHomePage() {
                             </p>
                         </div>
                         <Button variant="secondary" className="w-full md:w-auto font-black text-[10px] rounded-2xl h-14 px-12 shadow-2xl active:scale-95 transition-all uppercase tracking-widest" asChild>
-                            <Link href="/dashboard/billing">Upgrade registry hub</Link>
+                            <Link href="/dashboard/billing">Upgrade hub</Link>
                         </Button>
                     </div>
                 </CardContent>

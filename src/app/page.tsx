@@ -20,7 +20,8 @@ import {
   Activity,
   ArrowRight,
   Gavel,
-  Scale
+  Scale,
+  Globe
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -160,7 +161,7 @@ export default function RootPage() {
         </div>
       </main>
 
-      {/* Institutional Trust Section */}
+      {/* Trust Registry Section */}
       <section className="py-24 bg-white/[0.01] border-y border-white/5">
         <div className="max-w-7xl mx-auto px-6 text-center space-y-16">
           <div className="flex items-center justify-center gap-6">
