@@ -36,7 +36,7 @@ const policySections = [
   {
     id: "section-3",
     title: "3. Your order cancellation rights",
-    content: "You are entitled to cancel your order within 7 days without giving any reason for doing so. The deadline for cancelling an order is 7 days from the date on which you received the goods or access to the digital node."
+    content: "You are entitled to cancel your order within 7 days without giving any reason for doing so. The deadline for cancelling an order is 7 days from the date on which you received the access to the digital node."
   },
   {
     id: "section-4",
@@ -46,12 +46,12 @@ const policySections = [
   {
     id: "section-5",
     title: "5. Conditions for returns",
-    content: "In order for the goods to be eligible for a return, please make sure that: the goods were purchased in the last 7 days and they are in the original packaging. Personalized supply of goods or digital content that deteriorates rapidly are not suitable for return."
+    content: "In order for the claim to be eligible, please make sure that: the access was purchased in the last 7 days. Personalized digital content that deteriorates rapidly or is fully consumed is not suitable for return."
   },
   {
     id: "section-6",
     title: "6. Returning goods",
-    content: "You are responsible for the cost and risk of returning the goods to us. We recommend an insured and trackable mail service. We are unable to issue a refund without actual receipt of the goods or proof of received return delivery."
+    content: "We provide digital-only node access. We are unable to issue a refund without actual proof of the transaction ID and a clear statement of the operational failure encountered."
   },
   {
     id: "section-7",
@@ -60,7 +60,7 @@ const policySections = [
   }
 ];
 
-export default function RefundPolicyPage() {
+export default function RefundPolicyPublicPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-12 pb-32 px-4 sm:px-6 text-left">
       <motion.div 
@@ -95,7 +95,7 @@ export default function RefundPolicyPage() {
             <p className="text-sm font-bold text-white">Effective date: <span className="text-primary">04-02-2023</span></p>
             <p className="text-sm font-bold text-white">Last updated: <span className="text-primary">04-02-2026</span></p>
           </div>
-          <p className="text-lg text-white/60 font-medium leading-relaxed max-w-3xl">
+          <p className="text-lg text-white/60 font-medium leading-relaxed max-w-3xl text-left">
             This refund & cancellation policy governs payments made for subscriptions, credits, and paid services on <span className="text-white font-bold">Nyaya Sahayak</span> (https://nyayasahayak.in). By purchasing or subscribing to any paid plan, you agree to the terms of this policy.
           </p>
           <div className="h-px w-full bg-white/5" />
@@ -109,13 +109,13 @@ export default function RefundPolicyPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="space-y-6"
+              className="space-y-6 text-left"
             >
-              <h2 className="text-3xl font-black tracking-tighter text-white font-headline">
+              <h2 className="text-3xl font-black tracking-tighter text-white font-headline text-left">
                 {section.title}
               </h2>
-              <div className="prose dark:prose-invert max-w-none">
-                <p className="text-lg text-white/40 font-medium leading-loose whitespace-pre-line">
+              <div className="prose dark:prose-invert max-w-none text-left">
+                <p className="text-lg text-white/40 font-medium leading-loose whitespace-pre-line text-left">
                   {section.content}
                 </p>
               </div>
@@ -141,8 +141,8 @@ export default function RefundPolicyPage() {
               </div>
               <span className="text-[10px] font-bold text-primary uppercase">Statutory trust</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white leading-none tracking-tighter">Refund <br /> <span className="text-primary italic">Inquiry node.</span></h2>
-            <p className="text-sm sm:text-lg text-gray-400 font-medium leading-relaxed">
+            <h2 className="text-3xl sm:text-5xl font-black text-white leading-none tracking-tighter text-left">Refund <br /> <span className="text-primary italic">Inquiry node.</span></h2>
+            <p className="text-sm sm:text-lg text-gray-400 font-medium leading-relaxed text-left">
               If your claim meets our institutional requirements, please transmit your transaction ID to our fiduciary desk for immediate restoration.
             </p>
             <Button size="lg" className="rounded-xl font-bold h-12 px-8" asChild>

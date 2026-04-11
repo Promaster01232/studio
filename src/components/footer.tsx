@@ -25,8 +25,9 @@ const footerLinks = {
   legal: [
     { name: "Privacy policy", href: "/privacy" },
     { name: "Terms of service", href: "/terms" },
-    { name: "Refund policy", href: "/dashboard/refund-policy" },
+    { name: "Refund policy", href: "/refund-policy" },
     { name: "Disclaimer", href: "/disclaimer" },
+    { name: "Cookie policy", href: "/cookie-policy" },
   ]
 };
 
@@ -35,7 +36,7 @@ export function Footer() {
     <footer className="w-full border-t border-white/5 bg-[#050505] pt-20 pb-10 text-left">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-20">
-          {/* Brand Identity Node */}
+          {/* Brand identity node */}
           <div className="lg:col-span-4 space-y-8">
             <Link href="/" className="flex items-center gap-3 active:scale-95 transition-all group">
               <Logo className="h-10 w-10 shadow-none border-none p-0 bg-transparent" priority={false} />
@@ -63,7 +64,7 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Links Grid */}
+          {/* Links matrix */}
           <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-10">
             <div className="space-y-6">
               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Product</h4>
