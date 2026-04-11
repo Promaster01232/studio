@@ -61,6 +61,18 @@
       "imageHint": "ecommerce"
     },
     {
+      "id": "blog-vs-gpt-hero",
+      "description": "Artificial intelligence versus the scales of justice",
+      "imageUrl": "https://images.unsplash.com/photo-1677442136019-21780ecad995?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwbGF3fGVufDB8fHx8MTc3MDc2ODQ3NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ai law"
+    },
+    {
+      "id": "ai-judicial-node",
+      "description": "Neural judicial network node",
+      "imageUrl": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzY2llbmNlJTIwdGVjaG5vbG9neXxlbnwwfHx8fDE3NzA3Njg0NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "science tech"
+    },
+    {
       "id": "login-hero",
       "description": "Premium legal brand background",
       "imageUrl": "/Login_bg.jpeg",
