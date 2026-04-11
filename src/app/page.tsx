@@ -5,7 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { 
   ArrowRight, 
   Sparkles,
-  Scale
+  Scale,
+  MessageSquare,
+  Globe,
+  Upload,
+  Heart
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -103,9 +107,17 @@ export default function RootPage() {
               AI-powered chat, document analysis, voice input, and multi-language support. Everything you need to navigate Indian law with confidence.
             </p>
             
-            <p className="text-[11px] font-bold text-white/20 uppercase tracking-[0.3em] mt-10">
-              Built for Indian litigants, lawyers, law students, and legal researchers.
-            </p>
+            <motion.div 
+              className="flex flex-wrap items-center justify-center gap-6 mt-10 text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+            >
+              <div className="flex items-center gap-2"><MessageSquare className="h-3.5 w-3.5 text-primary" /> Ask Legal Query</div>
+              <div className="flex items-center gap-2"><Globe className="h-3.5 w-3.5 text-primary" /> Any Language</div>
+              <div className="flex items-center gap-2"><Upload className="h-3.5 w-3.5 text-primary" /> Upload PDFs</div>
+              <div className="flex items-center gap-2"><Heart className="h-3.5 w-3.5 text-primary" /> Free Forever</div>
+            </motion.div>
           </motion.div>
 
           {/* Hero Actions */}
@@ -116,10 +128,8 @@ export default function RootPage() {
             className="flex flex-col sm:flex-row justify-center items-center gap-5 pt-6"
           >
             <Button asChild className="h-16 px-10 rounded-2xl bg-primary text-primary-foreground font-black text-sm uppercase tracking-tight shadow-[0_20px_50px_rgba(153,75,0,0.3)] active:scale-95 transition-all group overflow-hidden relative">
-              <Link href="/dashboard" className="flex items-center gap-3">
-                <span className="relative z-10 flex items-center gap-2">
-                  Ask Your First Legal Question Free <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </span>
+              <Link href="/dashboard">
+                Ask Your First Legal Question Free <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
               </Link>
             </Button>
