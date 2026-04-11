@@ -5,18 +5,15 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, 
-  Grid, 
-  List, 
   Calendar, 
   Clock, 
-  ArrowRight,
-  Share2,
-  MessageCircle,
-  Twitter,
-  Bookmark,
-  User,
-  Newspaper,
-  ChevronRight
+  Share2, 
+  MessageCircle, 
+  Twitter, 
+  Bookmark, 
+  User, 
+  Newspaper, 
+  ChevronRight 
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -121,32 +118,32 @@ export default function BlogPage() {
             Legal insights & updates
           </Badge>
           
-          <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-none text-white">
+          <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-none text-foreground">
             Nyaya Sahayak <span className="text-primary">blog</span>
           </h1>
           
-          <p className="text-sm sm:text-lg text-white/40 font-medium max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-lg text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
             Stay informed with the latest legal news, guides, and insights from India's leading AI legal assistant.
           </p>
         </motion.div>
 
         {/* Search ingress */}
         <div className="max-w-xl mx-auto relative group">
-          <div className="absolute inset-0 bg-white/5 rounded-2xl border border-white/10 pointer-events-none group-focus-within:border-primary/40 transition-colors" />
+          <div className="absolute inset-0 bg-muted/50 rounded-2xl border border-border/10 pointer-events-none group-focus-within:border-primary/40 transition-colors" />
           <div className="flex items-center gap-4 p-2 relative z-10">
-            <Search className="ml-4 h-5 w-5 text-white/20" />
+            <Search className="ml-4 h-5 w-5 text-muted-foreground/40" />
             <Input 
               placeholder="Search articles..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent border-none focus-visible:ring-0 text-white font-medium placeholder:text-white/20" 
+              className="flex-1 bg-transparent border-none focus-visible:ring-0 text-foreground font-medium placeholder:text-muted-foreground/20" 
             />
           </div>
         </div>
       </section>
 
       {/* Filter section */}
-      <section className="flex flex-col sm:flex-row items-center justify-center gap-8 border-b border-white/5 pb-8">
+      <section className="flex flex-col sm:flex-row items-center justify-center gap-8 border-b border-border/10 pb-8">
         <div className="flex flex-wrap justify-center gap-6">
           {categories.map((cat) => (
             <button
@@ -154,7 +151,7 @@ export default function BlogPage() {
               onClick={() => setActiveCategory(cat)}
               className={cn(
                 "text-xs font-black uppercase tracking-widest transition-all",
-                activeCategory === cat ? "text-primary border-b-2 border-primary pb-2" : "text-white/40 hover:text-white pb-2"
+                activeCategory === cat ? "text-primary border-b-2 border-primary pb-2" : "text-muted-foreground hover:text-foreground pb-2"
               )}
             >
               {cat}
@@ -177,7 +174,7 @@ export default function BlogPage() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="bg-[#161b22] border-white/5 rounded-[2rem] overflow-hidden hover:border-primary/20 transition-all duration-500 group text-left h-full flex flex-col shadow-2xl">
+                  <Card className="bg-card border-border/10 rounded-[2rem] overflow-hidden hover:border-primary/20 transition-all duration-500 group text-left h-full flex flex-col shadow-2xl">
                     <div className="relative overflow-hidden aspect-[16/10]">
                       <Image 
                         src={post.image} 
@@ -194,18 +191,18 @@ export default function BlogPage() {
                           {post.category}
                         </Badge>
                         
-                        <h3 className="text-xl font-black text-white group-hover:text-primary transition-colors leading-tight tracking-tight">
+                        <h3 className="text-xl font-black text-foreground group-hover:text-primary transition-colors leading-tight tracking-tight">
                           {post.title}
                         </h3>
                         
-                        <p className="text-sm text-white/40 font-medium leading-relaxed line-clamp-3">
+                        <p className="text-sm text-muted-foreground font-medium leading-relaxed line-clamp-3">
                           {post.excerpt}
                         </p>
                       </div>
 
-                      <div className="pt-6 border-t border-white/5 space-y-6">
-                        <div className="flex items-center justify-between text-[10px] font-bold text-white/30 uppercase tracking-widest">
-                          <div className="flex items-center gap-4">
+                      <div className="pt-6 border-t border-border/10 space-y-6">
+                        <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest">
+                          <div className="flex flex-wrap items-center gap-4">
                             <span className="flex items-center gap-1.5"><User className="h-3 w-3" /> {post.author}</span>
                             <span className="flex items-center gap-1.5"><Calendar className="h-3 w-3" /> {post.date}</span>
                             <span className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> {post.readTime}</span>
@@ -221,7 +218,7 @@ export default function BlogPage() {
 
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl bg-white/5 border border-white/5 hover:bg-primary hover:text-white transition-all">
+                              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl bg-muted/50 border border-border/10 hover:bg-primary hover:text-primary-foreground transition-all">
                                 <Share2 className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
