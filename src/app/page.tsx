@@ -29,6 +29,7 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { Footer } from "@/components/footer";
 
 const capabilities = [
   {
@@ -248,15 +249,7 @@ export default function RootPage() {
       </section>
 
       {/* Institutional footer */}
-      <footer className="py-20 border-t border-white/5 bg-[#050505] text-center">
-        <div className="flex flex-col items-center gap-8 opacity-30">
-            <div className="flex items-center gap-3">
-              <Logo className="h-8 w-8 border-none shadow-none bg-transparent grayscale p-0" priority={false} />
-              <span className="text-xl font-black tracking-tighter">Nyaya Sahayak</span>
-            </div>
-            <p className="text-[10px] font-bold text-white uppercase tracking-widest">nyayasahayak.in // justice for bharat // 2025</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -41,7 +41,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-3 active:scale-95 transition-all group">
               <Logo className="h-10 w-10 shadow-none border-none p-0 bg-transparent" priority={false} />
               <div className="flex flex-col">
-                <span className="text-2xl font-black tracking-tighter text-white font-headline leading-none">Nyaya Sahayak</span>
+                <span className="text-2xl font-black tracking-tighter text-white font-headline leading-none">Nyaya sahayak</span>
                 <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/60 mt-1">Legal intelligence for india</span>
               </div>
             </Link>
@@ -103,7 +103,7 @@ export function Footer() {
         
         <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-6">
           <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">
-            © 2025 Nyaya Sahayak. All rights reserved.
+            © 2025 Nyaya sahayak. All rights reserved.
           </p>
           <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-600">
             Made with <span className="text-red-500 animate-pulse">❤️</span> in india
