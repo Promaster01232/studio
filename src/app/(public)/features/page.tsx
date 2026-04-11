@@ -1,4 +1,3 @@
-
 "use client";
 
 import { PageHeader } from "@/components/page-header";
@@ -173,9 +172,9 @@ export default function FeaturesPage() {
                 </div>
                 <div className="pt-4">
                     <div className="h-px w-full bg-white/5 mb-6" />
-                    <button className="flex items-center gap-2 text-[10px] font-bold text-primary/40 group-hover:text-primary transition-colors">
-                        Learn more <ChevronRight className="h-3 w-3" />
-                    </button>
+                    <Link href="/login" className="flex items-center gap-2 text-[10px] font-bold text-primary/40 group-hover:text-primary transition-colors">
+                        Login <ChevronRight className="h-3 w-3" />
+                    </Link>
                 </div>
               </CardContent>
             </Card>
