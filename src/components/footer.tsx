@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Logo } from "@/components/logo";
@@ -19,7 +18,6 @@ const footerLinks = {
   ],
   company: [
     { name: "About us", href: "/about" },
-    { name: "Careers", href: "#" },
     { name: "Contact", href: "/contact" },
   ],
   legal: [
