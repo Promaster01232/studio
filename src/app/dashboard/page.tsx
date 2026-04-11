@@ -35,56 +35,56 @@ import Link from "next/link";
 
 const features = [
   {
-    title: "AI Legal Chat",
+    title: "ai legal chat",
     desc: "Ask about any act or section. Get an explanation with the relevant law cited.",
     icon: MessageSquare,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
   },
   {
-    title: "Document OCR",
+    title: "document ocr",
     desc: "Upload a court order or notice as PDF or image. Text is extracted automatically.",
     icon: FileSearch,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
   },
   {
-    title: "Smart Notes",
+    title: "smart notes",
     desc: "Save chats, add notes, organize into collections. Search across everything.",
     icon: FileText,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
   },
   {
-    title: "Case Laws",
+    title: "case laws",
     desc: "Responses reference Supreme Court and High Court judgments where relevant.",
     icon: BookOpen,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
   },
   {
-    title: "Files Storage",
+    title: "files storage",
     desc: "Keep your documents (PDF, Word, images) in one place. Encrypted cloud storage.",
     icon: Upload,
     color: "text-pink-500",
     bg: "bg-pink-500/10",
   },
   {
-    title: "Multi-Language",
+    title: "multi-language",
     desc: "Works in Hindi, English, Marathi, Tamil, Telugu, Kannada, Malayalam, and more.",
     icon: Globe,
     color: "text-cyan-500",
     bg: "bg-cyan-500/10",
   },
   {
-    title: "Voice Input",
+    title: "voice input",
     desc: "Don't want to type? Speak your question. Works on mobile and desktop.",
     icon: Mic,
     color: "text-blue-600",
     bg: "bg-blue-600/10",
   },
   {
-    title: "Privacy First",
+    title: "privacy first",
     desc: "End-to-end encryption. No data sharing. No training on your conversations.",
     icon: Lock,
     color: "text-orange-600",
@@ -95,19 +95,19 @@ const features = [
 const steps = [
   {
     num: "01",
-    title: "Ask Your Question",
+    title: "ask your question",
     desc: "Type or speak your legal question in plain language.",
     icon: MessageCircle
   },
   {
     num: "02",
-    title: "Get AI Analysis",
+    title: "get ai analysis",
     desc: "NyayGuru checks relevant acts, sections, and court judgments.",
     icon: Lightbulb
   },
   {
     num: "03",
-    title: "Receive Guidance",
+    title: "receive guidance",
     desc: "You get a clear answer with the exact law sections and next steps.",
     icon: ShieldCheck
   }
@@ -117,7 +117,7 @@ export default function DashboardHomePage() {
   const auth = useAuth();
   const firestore = useFirestore();
   const [userProfile, setUserProfile] = useState<any>(null);
-  const [greeting, setGreeting] = useState("Good day");
+  const [greeting, setGreeting] = useState("good day");
 
   useEffect(() => {
     if (auth.currentUser) {
@@ -129,19 +129,19 @@ export default function DashboardHomePage() {
       });
 
       const hour = new Date().getHours();
-      if (hour < 12) setGreeting("Good morning");
-      else if (hour < 17) setGreeting("Good afternoon");
-      else setGreeting("Good evening");
+      if (hour < 12) setGreeting("good morning");
+      else if (hour < 17) setGreeting("good afternoon");
+      else setGreeting("good evening");
 
       return () => unsub();
     }
   }, [auth, firestore]);
 
   const stats = [
-    { label: "Total Chats", value: "0", icon: MessageSquare, color: "text-blue-500", bg: "bg-blue-500/10" },
-    { label: "Documents", value: "0", icon: FileSearch, color: "text-emerald-500", bg: "bg-emerald-500/10" },
-    { label: "Notes", value: "0", icon: FileText, color: "text-purple-500", bg: "bg-purple-500/10" },
-    { label: "AI Usage", value: `${userProfile?.aiUsageCount || 0} / 100`, icon: Zap, color: "text-amber-500", bg: "bg-amber-500/10" },
+    { label: "total chats", value: "0", icon: MessageSquare, color: "text-blue-500", bg: "bg-blue-500/10" },
+    { label: "documents", value: "0", icon: FileSearch, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+    { label: "notes", value: "0", icon: FileText, color: "text-purple-500", bg: "bg-purple-500/10" },
+    { label: "ai usage", value: `${userProfile?.aiUsageCount || 0} / 100`, icon: Zap, color: "text-amber-500", bg: "bg-amber-500/10" },
   ];
 
   const containerVariants = {
@@ -169,30 +169,30 @@ export default function DashboardHomePage() {
               <Avatar className="h-14 w-14 border-2 border-white/10 rounded-2xl shadow-2xl">
                 <AvatarImage src={userProfile?.photoURL} className="object-cover" />
                 <AvatarFallback className="bg-[#e91e63] text-white font-black text-xl">
-                  {userProfile?.firstName?.charAt(0) || "P"}
+                  {userProfile?.firstName?.charAt(0) || "p"}
                 </AvatarFallback>
               </Avatar>
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-3">
                   <h2 className="text-xl sm:text-3xl font-black tracking-tighter text-white leading-none">
-                    {greeting}, {userProfile?.firstName || "Friend"}!
+                    {greeting}, {userProfile?.firstName || "friend"}!
                   </h2>
-                  <Badge variant="secondary" className="bg-white/5 text-gray-400 border-white/10 font-bold text-[9px] uppercase tracking-widest px-2.5 py-0.5 rounded-lg">
-                    Free Tier
+                  <Badge variant="secondary" className="bg-white/5 text-gray-400 border-white/10 font-bold text-[9px] tracking-widest px-2.5 py-0.5 rounded-lg">
+                    free tier
                   </Badge>
                 </div>
                 <p className="text-xs sm:text-sm text-gray-500 font-medium tracking-tight">
-                  Welcome back to your institutional terminal.
+                  welcome back to your institutional terminal.
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-3 w-full md:w-auto">
               <Button variant="outline" className="flex-1 md:flex-none h-11 px-6 rounded-xl border-white/10 bg-white/5 text-white font-bold text-xs gap-2" asChild>
-                <Link href="/dashboard/document-intelligence"><Upload className="h-4 w-4" /> Upload</Link>
+                <Link href="/dashboard/document-intelligence"><Upload className="h-4 w-4" /> upload</Link>
               </Button>
-              <Button className="flex-1 md:flex-none h-11 px-6 rounded-xl bg-primary text-primary-foreground font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 gap-2" asChild>
-                <Link href="/dashboard/narrate"><Plus className="h-4 w-4" /> New Chat</Link>
+              <Button className="flex-1 md:flex-none h-11 px-6 rounded-xl bg-primary text-primary-foreground font-black text-xs tracking-widest shadow-lg shadow-primary/20 gap-2" asChild>
+                <Link href="/dashboard/narrate"><Plus className="h-4 w-4" /> new chat</Link>
               </Button>
             </div>
           </CardContent>
@@ -209,7 +209,7 @@ export default function DashboardHomePage() {
                   <stat.icon className="h-5 w-5" />
                 </div>
                 <div className="space-y-0.5">
-                  <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{stat.label}</p>
+                  <p className="text-[10px] font-bold text-gray-500 tracking-widest">{stat.label}</p>
                   <p className="text-xl sm:text-2xl font-black text-white tracking-tighter">{stat.value}</p>
                 </div>
               </CardContent>
@@ -227,23 +227,23 @@ export default function DashboardHomePage() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="space-y-4 mb-10">
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">Hello, how can I help you?</h1>
-          <p className="text-gray-400 text-lg font-medium max-w-2xl mx-auto leading-relaxed">Ask NyayGuru about Indian statutes, procedural roadmaps, or case research.</p>
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">hello, how can i help you?</h1>
+          <p className="text-gray-400 text-lg font-medium max-w-2xl mx-auto leading-relaxed">ask nyayguru about indian statutes, procedural roadmaps, or case research.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="w-full max-w-3xl">
           <Card className="bg-[#161b22] border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
             <div className="p-6 space-y-4 text-left">
-              <Textarea placeholder="Ask NyayGuru Legal AI..." className="bg-transparent border-none focus-visible:ring-0 text-white text-lg placeholder:text-gray-600 min-h-[120px] resize-none p-0 custom-scrollbar" />
+              <Textarea placeholder="ask nyayguru legal ai..." className="bg-transparent border-none focus-visible:ring-0 text-white text-lg placeholder:text-gray-600 min-h-[120px] resize-none p-0 custom-scrollbar" />
               <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between pt-4 border-t border-white/5">
                 <div className="flex items-center gap-4 text-gray-500">
                   <button className="hover:text-primary transition-all p-1"><Paperclip className="h-4 w-4" /></button>
                   <button className="hover:text-primary transition-all p-1"><SlidersHorizontal className="h-4 w-4" /></button>
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-tighter">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-[10px] font-black tracking-tighter">
                     <MessageSquare className="h-3.5 w-3.5" /> 10/10
                   </div>
                   <div className="flex items-center gap-1.5 hover:text-gray-300 transition-colors cursor-pointer">
-                    <Clock className="h-3.5 w-3.5" /> <span className="text-[10px] font-black uppercase tracking-widest">Saved</span>
+                    <Clock className="h-3.5 w-3.5" /> <span className="text-[10px] font-black tracking-widest">saved</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-end gap-4">
@@ -259,9 +259,9 @@ export default function DashboardHomePage() {
       {/* FEATURES SECTION (What You Can Do) */}
       <section className="pt-20 space-y-16">
         <div className="text-center space-y-4">
-          <Badge variant="outline" className="bg-amber-500/5 text-amber-500 border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">Features</Badge>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase">What You Can Do with NyayGuru</h2>
-          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto font-medium">Eight tools, all included free. From chat to document OCR to voice input.</p>
+          <Badge variant="outline" className="bg-amber-500/5 text-amber-500 border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black tracking-widest">features</Badge>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white">what you can do with nyayguru</h2>
+          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto font-medium">eight tools, all included free. from chat to document ocr to voice input.</p>
         </div>
 
         <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -286,9 +286,9 @@ export default function DashboardHomePage() {
       {/* HOW IT WORKS SECTION */}
       <section className="pt-24 space-y-16">
         <div className="text-center space-y-4">
-          <Badge variant="outline" className="bg-amber-500/5 text-amber-500 border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">How It Works</Badge>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase">How It Works</h2>
-          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto font-medium">No appointments. No waiting. Works 24/7, even at 2 AM on a Sunday.</p>
+          <Badge variant="outline" className="bg-amber-500/5 text-amber-500 border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black tracking-widest">how it works</Badge>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white">how it works</h2>
+          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto font-medium">no appointments. no waiting. works 24/7, even at 2 am on a sunday.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
@@ -314,7 +314,7 @@ export default function DashboardHomePage() {
                 </div>
               </div>
               <div className="space-y-2 max-w-[240px]">
-                <h3 className="font-black text-xl text-white tracking-tight uppercase">{s.title}</h3>
+                <h3 className="font-black text-xl text-white tracking-tight">{s.title}</h3>
                 <p className="text-xs text-gray-500 font-medium leading-relaxed">{s.desc}</p>
               </div>
             </motion.div>
