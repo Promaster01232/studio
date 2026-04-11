@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { Loader2, Eye, EyeOff, Mail, Lock, ChevronLeft, ShieldCheck } from "lucide-react";
+import { Loader2, Eye, EyeOff, Mail, Lock, ShieldCheck } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { 
   signInWithEmailAndPassword,
@@ -142,11 +141,6 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-8">
-            <button className="flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-[#1e3a5f] transition-colors">
-              <ChevronLeft className="h-3.5 w-3.5" />
-              Back to passwordless
-            </button>
-
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2 text-left">

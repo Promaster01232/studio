@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -19,7 +18,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle2, User, Mail, Lock, Smartphone, ChevronLeft, Zap } from "lucide-react";
+import { Loader2, Eye, EyeOff, ShieldCheck, User, Mail, Lock, Smartphone, Zap } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -214,11 +213,6 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-8">
-            <button className="flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-[#1e3a5f] transition-colors">
-              <ChevronLeft className="h-3.5 w-3.5" />
-              Back to passwordless
-            </button>
-
             <div className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2 text-left">
@@ -255,7 +249,7 @@ export default function RegisterPage() {
                     className={cn("h-12 pl-11 bg-white border-slate-200 rounded-xl font-medium", emailStatus === 'valid' && "border-green-500/50")}
                   />
                   <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                    {emailStatus === 'valid' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
+                    {emailStatus === 'valid' && <Link className="h-4 w-4 text-green-600" href="#" />}
                   </div>
                 </div>
               </div>
@@ -321,6 +315,7 @@ export default function RegisterPage() {
                 </Button>
 
                 <Button 
+                  type="button"
                   variant="outline" 
                   onClick={handleGoogleLogin} 
                   disabled={isGoogleLoading}
