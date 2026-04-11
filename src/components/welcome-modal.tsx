@@ -18,7 +18,8 @@ import {
   Sparkles, 
   ArrowRight,
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -89,7 +90,7 @@ export function WelcomeModal() {
 
             <DialogHeader className="space-y-2 border-none mb-8">
                 <DialogTitle className="text-2xl sm:text-3xl font-black tracking-tighter text-white uppercase leading-none">
-                    Welcome to Nyaya Sahayak! 🎉
+                    Welcome to Nyaya Sahayak
                 </DialogTitle>
                 <DialogDescription className="text-sm font-bold text-white/40 uppercase tracking-widest">
                     Your ai-powered legal assistant for india
@@ -99,7 +100,7 @@ export function WelcomeModal() {
             <div className="w-full space-y-3 mb-10">
                 <FeatureItem 
                     icon={MessageSquare} 
-                    title="Legal Q&A" 
+                    title="Legal q&a" 
                     desc="Ask any legal question and get instant, reliable answers" 
                     color="text-blue-400" 
                     bg="bg-blue-500/10"
