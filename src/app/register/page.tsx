@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -151,7 +152,7 @@ export default function RegisterPage() {
           createdAt: Date.now()
       }).catch(() => {});
 
-      toast({ title: "Registration synchronized", description: "Welcome to your nyaya sahayak terminal." });
+      toast({ title: "Registration synchronized", description: "Welcome to your Nyaya Sahayak terminal." });
       router.push("/dashboard");
 
     } catch (error: any) {
@@ -194,7 +195,7 @@ export default function RegisterPage() {
               <Logo className="h-12 w-12 text-[#1e3a5f]" priority={true} />
               <div className="space-y-1">
                 <h1 className="text-2xl font-black tracking-tight text-[#1e3a5f] leading-none">
-                  Nyayguru
+                  Nyaya Sahayak
                 </h1>
                 <p className="text-[10px] font-medium text-slate-400 tracking-wide">
                   Legal intelligence for india
@@ -204,7 +205,7 @@ export default function RegisterPage() {
             
             <div className="space-y-2">
               <h2 className="text-2xl font-bold text-[#1e3a5f] tracking-tight">
-                Enroll to nyayguru
+                Enroll to Nyaya Sahayak
               </h2>
               <p className="text-sm text-slate-400 font-medium">
                 Initialize your secure statutory terminal
@@ -305,7 +306,7 @@ export default function RegisterPage() {
               <div className="flex items-start space-x-3 text-left p-4 rounded-xl bg-slate-50 border border-slate-100">
                 <Checkbox id="terms" checked={acceptedTerms} onCheckedChange={(c) => setAcceptedTerms(c as boolean)} className="mt-1" />
                 <Label htmlFor="terms" className="text-xs font-medium text-slate-500 leading-relaxed cursor-pointer">
-                  I acknowledge the statutory protocols and <Link href="/privacy" className="text-[#1e3a5f] hover:underline font-bold">Privacy policy</Link> of nyayguru.
+                  I acknowledge the statutory protocols and <Link href="/privacy" className="text-[#1e3a5f] hover:underline font-bold">Privacy policy</Link> of Nyaya Sahayak.
                 </Label>
               </div>
 

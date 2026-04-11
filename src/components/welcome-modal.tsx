@@ -89,10 +89,10 @@ export function WelcomeModal() {
 
             <DialogHeader className="space-y-2 border-none mb-8">
                 <DialogTitle className="text-2xl sm:text-3xl font-black tracking-tighter text-white uppercase leading-none">
-                    Welcome to Nyaya Guru! 🎉
+                    Welcome to Nyaya Sahayak! 🎉
                 </DialogTitle>
                 <DialogDescription className="text-sm font-bold text-white/40 uppercase tracking-widest">
-                    Your AI-powered legal assistant for India
+                    Your ai-powered legal assistant for india
                 </DialogDescription>
             </DialogHeader>
 
@@ -107,7 +107,7 @@ export function WelcomeModal() {
                 />
                 <FeatureItem 
                     icon={Search} 
-                    title="Web Search" 
+                    title="Web search" 
                     desc="Find latest judgments and legal updates from the web" 
                     color="text-purple-400" 
                     bg="bg-purple-500/10"
@@ -115,15 +115,15 @@ export function WelcomeModal() {
                 />
                 <FeatureItem 
                     icon={FileSearch} 
-                    title="Document Analysis" 
-                    desc="Upload contracts & agreements for AI-powered review" 
+                    title="Document analysis" 
+                    desc="Upload contracts & agreements for ai-powered review" 
                     color="text-orange-400" 
                     bg="bg-orange-500/10"
                     delay={0.3}
                 />
                 <FeatureItem 
                     icon={BookText} 
-                    title="Notes & Docs" 
+                    title="Notes & docs" 
                     desc="Organize your legal documents and notes in one place" 
                     color="text-green-400" 
                     bg="bg-green-500/10"
@@ -135,12 +135,12 @@ export function WelcomeModal() {
                 onClick={handleClose}
                 className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest text-xs rounded-2xl shadow-[0_20px_50px_rgba(153,75,0,0.3)] active:scale-95 transition-all group overflow-hidden relative"
             >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                <Sparkles className="mr-2 h-4 w-4" /> Get Started
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <Sparkles className="mr-2 h-4 w-4" /> Get started
             </Button>
 
             <p className="mt-8 text-[10px] font-medium text-white/20 leading-relaxed max-w-[280px]">
-                Nyaya Guru provides general legal information, not legal advice. Consult a lawyer for specific matters.
+                Nyaya Sahayak provides general legal information, not legal advice. Consult a lawyer for specific matters.
             </p>
         </div>
       </DialogContent>

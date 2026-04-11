@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Logo } from "@/components/logo";
@@ -29,7 +30,7 @@ export function PublicHeader() {
         <Link href="/" className="flex items-center gap-3 active:scale-95 transition-all">
           <Logo className="h-8 w-8 shadow-none border-none p-0 bg-transparent" priority={true} />
           <span className="text-xl font-black tracking-tight text-white font-headline">
-            Nyayguru
+            Nyaya Sahayak
           </span>
         </Link>
 

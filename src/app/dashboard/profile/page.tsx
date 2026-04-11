@@ -101,7 +101,7 @@ function EliteCertificateView({ profile }: { profile: UserProfile }) {
             doc.text(`${profile.firstName} ${profile.lastName}`.toUpperCase(), 148.5, 115, { align: 'center' });
             doc.setFontSize(14);
             doc.setTextColor(100, 100, 100);
-            const desc = `is fully authorized to perform all statutory operations. Every AI system and analytical module is synchronized and 100% ready to execute all forensic tasks with absolute precision and correct results.`;
+            const desc = `is fully authorized to perform all statutory operations. Every ai system and analytical module is synchronized and 100% ready to execute all forensic tasks with absolute precision and correct results.`;
             doc.text(doc.splitTextToSize(desc, 220), 148.5, 135, { align: 'center' });
 
             doc.setFontSize(10);
@@ -142,7 +142,7 @@ function EliteCertificateView({ profile }: { profile: UserProfile }) {
                 </header>
                 <div className="space-y-6 sm:space-y-8 max-w-2xl mx-auto text-center px-2">
                     <p className="text-xs sm:text-base font-medium text-muted-foreground leading-relaxed">
-                        This account is fully authorized to perform all statutory operations. Every AI system and analytical module is synchronized and 100% ready to execute all forensic tasks with absolute precision and correct results.
+                        This account is fully authorized to perform all statutory operations. Every ai system and analytical module is synchronized and 100% ready to execute all forensic tasks with absolute precision and correct results.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 pt-4 sm:pt-8 items-end text-left sm:text-left">
@@ -156,7 +156,7 @@ function EliteCertificateView({ profile }: { profile: UserProfile }) {
                                 <Lightbulb className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                             </div>
                             <div>
-                                <p className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest text-primary">Developed by IdeaSpark</p>
+                                <p className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest text-primary">Developed by Ideaspark</p>
                             </div>
                         </div>
                     </div>
@@ -168,7 +168,7 @@ function EliteCertificateView({ profile }: { profile: UserProfile }) {
                     </div>
                 </div>
                 <Button onClick={downloadCertificate} className="w-full sm:w-auto rounded-xl h-12 sm:h-14 px-6 sm:px-10 font-black uppercase tracking-widest text-[10px] sm:text-xs shadow-2xl shadow-primary/20 transition-all active:scale-95">
-                    <Download className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 w-5" /> Export Statutory Record (PDF)
+                    <Download className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 w-5" /> Export statutory record (pdf)
                 </Button>
             </div>
         </Card>
@@ -191,13 +191,13 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <Logo className="h-6 w-6 sm:h-8 sm:w-8 shadow-none p-0 border-none bg-transparent" priority={false} />
                         <div className="flex flex-col">
                             <span className="font-black text-[10px] sm:text-xs tracking-tighter leading-none">NYAYA SAHAYAK</span>
-                            <span className="text-[6px] sm:text-[7px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary/80">{isAdmin ? "Root Authority hub" : "Forensic hub"}</span>
+                            <span className="text-[6px] sm:text-[7px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary/80">{isAdmin ? "Root authority hub" : "Forensic hub"}</span>
                         </div>
                     </div>
                     <div className="bg-white/10 backdrop-blur-xl px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl border border-white/10">
                         <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 sm:gap-2">
                             <div className="h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-green-500 animate-pulse" />
-                            {isAdmin || isUpgraded ? "Elite Registry" : "Citizen Registry"}
+                            {isAdmin || isUpgraded ? "Elite registry" : "Citizen registry"}
                         </span>
                     </div>
                 </div>
@@ -218,7 +218,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                 </div>
                 <div className="pt-2 sm:pt-4 border-t border-white/10 flex justify-between items-center bg-white/5 -mx-4 sm:-mx-6 px-4 sm:px-6 mt-1 sm:mt-2">
                     <div className="space-y-0.5">
-                        <p className="text-[6px] sm:text-[7px] font-bold uppercase opacity-40 tracking-widest">Registry Email</p>
+                        <p className="text-[6px] sm:text-[7px] font-bold uppercase opacity-40 tracking-widest">Registry email</p>
                         <p className="text-[8px] sm:text-[9px] font-bold truncate text-white/80 max-w-[120px] sm:max-w-none">{profile.email}</p>
                     </div>
                     <div className="text-right">
@@ -226,7 +226,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <p className={cn(
                             "text-[8px] sm:text-[9px] font-black uppercase tracking-tighter",
                             isAdmin || isUpgraded ? "text-amber-400" : "text-green-400"
-                        )}>{isAdmin ? "Absolute Hub" : isUpgraded ? "Premium Hub" : "Standard access"}</p>
+                        )}>{isAdmin ? "Absolute hub" : isUpgraded ? "Premium hub" : "Standard access"}</p>
                     </div>
                 </div>
             </div>
@@ -279,11 +279,11 @@ export default function ProfilePage() {
         const v = await verifyEmailAuthenticity({ email: userProfile.email });
         if (v.isAuthentic) {
             await setDoc(doc(firestore, "users", userProfile.uid), { emailVerified: true }, { merge: true });
-            toast({ title: "Audit Passed" });
+            toast({ title: "Audit passed" });
         } else {
-            toast({ variant: "destructive", title: "Security Flag", description: v.reason });
+            toast({ variant: "destructive", title: "Security flag", description: v.reason });
         }
-    } catch (e) { toast({ variant: "destructive", title: "Audit Error" }); }
+    } catch (e) { toast({ variant: "destructive", title: "Audit error" }); }
     finally { setIsVerifying(false); }
   };
 
@@ -310,7 +310,7 @@ export default function ProfilePage() {
     setDoc(doc(firestore, "users", auth.currentUser.uid), upd, { merge: true })
       .then(() => {
         update(ref(rtdb, `users/${auth.currentUser?.uid}`), upd);
-        toast({ title: 'Registry Synced' });
+        toast({ title: 'Registry synced' });
       })
       .finally(() => setSaving(false));
   };
@@ -342,54 +342,54 @@ export default function ProfilePage() {
                         <div className="flex flex-col items-center gap-2 sm:gap-3 mt-2">
                             {userProfile?.emailVerified || isAdmin ? (
                                 <Badge className="bg-green-500/10 text-green-600 border-green-500/20 py-1 px-3 sm:px-4 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest shadow-sm">
-                                    <BadgeCheck className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-1.5 sm:mr-2" /> Identity Verified
+                                    <BadgeCheck className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-1.5 sm:mr-2" /> Identity verified
                                 </Badge>
                             ) : (
                                 <Button size="sm" variant="outline" className="h-8 sm:h-9 px-3 sm:px-4 text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-red-500 border-red-200 rounded-lg sm:rounded-xl" onClick={handleVerifySelf} disabled={isVerifying}>
                                     {isVerifying ? <Loader2 className="h-3 w-3 animate-spin mr-1.5 sm:mr-2" /> : <ShieldCheck className="h-3 w-3 mr-1.5 sm:mr-2" />}
-                                    Run Security Scan
+                                    Run security scan
                                 </Button>
                             )}
                         </div>
                     </div>
                     <CardContent className="p-5 sm:p-8 space-y-4 text-left">
                         <div className="flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/30 border border-primary/5">
-                            <span className="text-[11px] sm:text-xs font-bold">Dark Protocol</span>
+                            <span className="text-[11px] sm:text-xs font-bold">Dark protocol</span>
                             <Switch checked={theme === 'dark'} onCheckedChange={(c) => setTheme(c ? 'dark' : 'light')} />
                         </div>
                         <Button variant="outline" className="w-full h-11 sm:h-12 justify-start font-bold border-primary/5 rounded-xl sm:rounded-2xl hover:bg-primary/5 transition-all" asChild>
-                            <Link href="/dashboard/privacy"><KeyRound className="mr-2 sm:mr-3 h-4 w-4 opacity-40" /><span className="text-[11px] sm:text-xs">Security Protocols</span></Link>
+                            <Link href="/dashboard/privacy"><KeyRound className="mr-2 sm:mr-3 h-4 w-4 opacity-40" /><span className="text-[11px] sm:text-xs">Security protocols</span></Link>
                         </Button>
                     </CardContent>
                 </Card>
                 {userProfile && <DigitalIdentityCard profile={userProfile} isAdmin={isAdmin || false} />}
                 <Card className="border-destructive/10 bg-destructive/5 shadow-xl rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden p-5 sm:p-8">
                     <Button variant="destructive" className="w-full h-11 sm:h-12 font-black text-[10px] sm:text-xs uppercase tracking-widest rounded-xl sm:rounded-2xl active:scale-95 shadow-lg shadow-destructive/20" onClick={() => signOut(auth).then(() => router.push('/login'))}>
-                        <LogOut className="mr-2 sm:mr-3 h-4 w-4" /> Terminate Session
+                        <LogOut className="mr-2 sm:mr-3 h-4 w-4" /> Terminate session
                     </Button>
                 </Card>
             </div>
             <div className="flex-1 w-full space-y-6 sm:space-y-8">
                 <Card className="glass shadow-2xl rounded-[1.5rem] sm:rounded-[2.5rem] border-primary/5 overflow-hidden">
-                    <CardHeader className="p-6 sm:p-10 bg-primary/5 border-b border-primary/10"><CardTitle className="text-xl sm:text-3xl font-black tracking-tight leading-none uppercase text-left">Identity Profile</CardTitle></CardHeader>
+                    <CardHeader className="p-6 sm:p-10 bg-primary/5 border-b border-primary/10"><CardTitle className="text-xl sm:text-3xl font-black tracking-tight leading-none uppercase text-left">Identity profile</CardTitle></CardHeader>
                     <CardContent className="p-6 sm:p-10 space-y-6 sm:space-y-8 text-left">
                         <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
                             <div className="space-y-2 sm:space-y-3">
-                                <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Given Name</Label>
+                                <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Given name</Label>
                                 <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} className="h-12 sm:h-14 glass border-primary/10 rounded-xl sm:rounded-2xl font-bold px-4 sm:px-5" />
                             </div>
                             <div className="space-y-2 sm:space-y-3">
-                                <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Family Name</Label>
+                                <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Family name</Label>
                                 <Input value={lastName} onChange={(e) => setLastName(e.target.value)} className="h-12 sm:h-14 glass border-primary/10 rounded-xl sm:rounded-2xl font-bold px-4 sm:px-5" />
                             </div>
                         </div>
                         <div className="space-y-2 sm:space-y-3">
-                            <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Contact access (Mobile)</Label>
+                            <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Contact access (mobile)</Label>
                             <Input value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="h-12 sm:h-14 glass border-primary/10 rounded-xl sm:rounded-2xl font-bold px-4 sm:px-5" />
                         </div>
                         <div className="flex justify-end pt-2">
                             <Button onClick={handleSaveChanges} disabled={saving} className="w-full sm:w-auto h-12 sm:h-14 px-8 sm:px-12 font-black uppercase tracking-widest text-[10px] sm:text-xs shadow-xl shadow-primary/20 rounded-xl sm:rounded-2xl active:scale-95 transition-all">
-                                {saving ? <Loader2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5 animate-spin" /> : <Edit className="mr-2 h-4 w-4" />} Synchronize Registry
+                                {saving ? <Loader2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5 animate-spin" /> : <Edit className="mr-2 h-4 w-4" />} Synchronize registry
                             </Button>
                         </div>
                     </CardContent>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -21,7 +22,8 @@ import {
   Settings,
   LayoutDashboard,
   Crown,
-  User as UserIcon
+  User as UserIcon,
+  ShieldAlert
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
@@ -46,6 +48,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SosDialog } from "@/components/sos-dialog";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -105,10 +108,12 @@ function Header({ userProfile }: { userProfile: any }) {
             </div>
 
             <div className="flex items-center gap-4 sm:gap-6">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
-                    <Zap className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-[10px] font-black text-gray-300 tracking-tighter lowercase">100 left</span>
-                </div>
+                <SosDialog>
+                    <Button variant="outline" size="sm" className="h-9 px-4 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-black text-[9px] uppercase tracking-widest gap-2">
+                        <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+                        Emergency no.
+                    </Button>
+                </SosDialog>
 
                 <div className="flex items-center gap-4 text-gray-400">
                     <button className="flex items-center gap-1.5 hover:text-white transition-colors">
@@ -272,7 +277,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </div>
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
               <span className="text-xl font-black font-headline tracking-tighter text-white leading-none">
-                  nyayguru
+                  nyaya sahayak
               </span>
               <span className="text-[8px] font-bold text-primary/60 tracking-widest mt-1">legal intelligence</span>
             </div>

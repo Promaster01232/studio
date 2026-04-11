@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -28,14 +29,6 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-
-const logos = [
-  { name: "Erode law college", icon: Gavel },
-  { name: "Commonwealth lawyers association", icon: ShieldCheck },
-  { name: "Legal service india", icon: Scale },
-  { name: "Lawful legal", icon: BookOpen },
-  { name: "Ijirl law journal", icon: Activity },
-];
 
 const capabilities = [
   {
@@ -130,7 +123,7 @@ export default function RootPage() {
       <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-black/40 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center gap-2">
           <Logo className="h-10 w-10 border-none bg-transparent shadow-none p-0" priority={true} />
-          <span className="text-xl font-black font-headline tracking-tighter">Nyayguru</span>
+          <span className="text-xl font-black font-headline tracking-tighter">Nyaya Sahayak</span>
         </div>
         
         <div className="hidden md:flex items-center gap-10">
@@ -203,7 +196,7 @@ export default function RootPage() {
               Features
             </Badge>
             <h2 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-white">
-              What you can do with nyayguru
+              What you can do with Nyaya Sahayak
             </h2>
             <p className="text-lg text-white/40 font-medium tracking-tight">
               Eight tools, all included free. from chat to document ocr to voice input.
@@ -249,9 +242,9 @@ export default function RootPage() {
         <div className="flex flex-col items-center gap-8 opacity-30">
             <div className="flex items-center gap-3">
               <Logo className="h-8 w-8 border-none shadow-none bg-transparent grayscale p-0" priority={false} />
-              <span className="text-xl font-black tracking-tighter">Nyayguru</span>
+              <span className="text-xl font-black tracking-tighter">Nyaya Sahayak</span>
             </div>
-            <p className="text-[10px] font-bold text-white uppercase tracking-widest">Nyayasahayak.in // Justice for bharat // 2025</p>
+            <p className="text-[10px] font-bold text-white uppercase tracking-widest">nyayasahayak.in // justice for bharat // 2025</p>
         </div>
       </footer>
     </div>
