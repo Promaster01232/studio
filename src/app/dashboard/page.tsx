@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -345,9 +344,6 @@ export default function DashboardHomePage() {
             <div className="relative group">
               <div className="absolute inset-0 bg-primary/5 rounded-2xl border border-primary/20 pointer-events-none group-focus-within:border-primary/40 transition-colors" />
               <div className="flex items-center gap-4 p-3 relative z-10">
-                <div className="h-10 w-10 shrink-0 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-                  <Sparkles className="h-5 w-5" />
-                </div>
                 <Textarea 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -366,7 +362,7 @@ export default function DashboardHomePage() {
                   <button 
                     onClick={() => handleSend()}
                     disabled={!input.trim() || isLoading}
-                    className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-xl active:scale-95 transition-all disabled:opacity-50"
+                    className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-xl active:scale-[0.95] transition-all disabled:opacity-50"
                   >
                     <Send className="h-5 w-5 fill-current" />
                   </button>
