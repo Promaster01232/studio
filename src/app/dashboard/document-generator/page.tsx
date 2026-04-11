@@ -439,7 +439,6 @@ export default function DocumentGeneratorPage() {
                                                     <p className="text-[10px] font-bold">This instrument is protected under attorney-client privilege.</p>
                                                 </div>
                                             </div>
-                                            <p className="text-[10px] font-bold tracking-[0.6em] text-white">Nyayasahayak.in // Draft-hub</p>
                                         </div>
                                     </div>
                                 </div>

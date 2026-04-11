@@ -363,7 +363,6 @@ export default function NarrateProblemPage() {
                                             <p className="text-[9px] font-bold">This report record is private and encrypted.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[9px] font-bold tracking-[0.5em] uppercase">Nyayasahayak.in // Summary-hub</p>
                                 </div>
                             </motion.div>
                         ) : (

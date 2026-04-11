@@ -520,7 +520,6 @@ export default function BondGeneratorPage() {
                                                     <p className="text-[10px] font-bold">This instrument is protected under forensic transience.</p>
                                                 </div>
                                             </div>
-                                            <p className="text-[10px] font-bold tracking-[0.6em] text-white">Nyayasahayak.in // Bond-hub</p>
                                         </div>
                                     </div>
                                 </div>

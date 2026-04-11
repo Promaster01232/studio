@@ -271,11 +271,6 @@ export default function UserPublicProfilePage({
             <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> back to stream
           </Link>
         </Button>
-        <div className="flex items-center gap-2">
-            <Badge variant="outline" className="h-8 border-primary/10 font-bold bg-background shadow-sm px-4 rounded-lg text-10 uppercase tracking-widest text-muted-foreground">
-                registry synced // active terminal
-            </Badge>
-        </div>
       </motion.div>
 
       <motion.div variants={itemVariants} className="relative rounded-[2.5rem] overflow-hidden border-none shadow-2xl bg-card">
@@ -583,10 +578,6 @@ export default function UserPublicProfilePage({
               </motion.div>
           )}
       </AnimatePresence>
-
-      <div className="text-center pt-12 opacity-30">
-          <p className="text-[8px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // THE FUTURE OF JUSTICE IS NEURAL</p>
-      </div>
     </motion.div>
   );
 }

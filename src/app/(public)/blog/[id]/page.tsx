@@ -78,7 +78,6 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
             <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
               Statutory comparison
             </Badge>
-            <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-widest">Protocol NS-AUD-001</span>
           </div>
           
           <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[0.9] text-foreground font-headline">
@@ -281,10 +280,6 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
             <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
           </Card>
         </motion.div>
-      </div>
-
-      <div className="text-center pt-20 opacity-30">
-        <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground mb-2">NYAYASAHAYAK.IN // KNOWLEDGE NODE // 2025</p>
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -337,7 +336,6 @@ export default function NewPostPage() {
                             <p className="text-[9px] font-bold text-muted-foreground">Your input is encrypted and subject to community standards.</p>
                         </div>
                     </div>
-                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">Nyaya Sahayak // NS-TX-PROT</p>
                 </CardFooter>
             </Card>
         </motion.div>

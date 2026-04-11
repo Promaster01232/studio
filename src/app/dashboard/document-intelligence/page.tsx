@@ -244,7 +244,6 @@ export default function DocumentIntelligencePage({
                                     <Printer className="h-3 w-3" /> Print dossier
                                 </Button>
                             </div>
-                            <p className="text-[9px] font-black tracking-[0.6em] text-white uppercase">Nyayasahayak.in // Scan hub</p>
                         </div>
                     </div>
                 </motion.div>

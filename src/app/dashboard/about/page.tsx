@@ -214,9 +214,6 @@ export default function AboutPage() {
             </p>
             <p className="text-sm italic font-medium text-primary">"Precision AI for the Modern Legal Ecosystem. Navigate the Law with Dignity."</p>
           </div>
-          <div className="pt-6 border-t border-primary/5 w-full max-w-xs">
-            <p className="text-[9px] font-black uppercase tracking-widest opacity-40">System ID: NS-NODE-ALPHA</p>
-          </div>
         </div>
       </motion.div>
     </motion.div>

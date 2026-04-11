@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useActionState, useEffect, useState, useRef } from "react";
@@ -222,7 +221,6 @@ export default function StrengthAnalyzerPage() {
                                     <div className="flex-1 space-y-10 text-left">
                                         <div className="flex items-center gap-5 text-gray-500 opacity-40">
                                             <Fingerprint className="h-8 w-8" />
-                                            <span className="text-[12px] font-bold tracking-[0.5em]">Forensic registry entry</span>
                                         </div>
                                         <p className="text-2xl sm:text-4xl font-black leading-[1.1] tracking-tighter text-white">{state.data.summary}</p>
                                     </div>
@@ -271,6 +269,18 @@ export default function StrengthAnalyzerPage() {
                                         </div>
                                         <div className="relative z-10 prose dark:prose-invert max-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-primary text-left">
                                             {state.data.forensicResearch}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="pt-10 mt-10 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30">
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-3 rounded-2xl bg-white/5 text-white">
+                                            <ShieldCheck className="h-6 w-6" />
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="text-[10px] font-bold">Identity protection</p>
+                                            <p className="text-[9px] font-bold">This report record is private and encrypted.</p>
                                         </div>
                                     </div>
                                 </div>
