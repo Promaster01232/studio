@@ -39,10 +39,14 @@ User Query: {{{query}}}
 
 Output Requirements:
 Structure your response into the following clear sections:
-1. EXECUTIVE SUMMARY: A high-level overview of the situation.
-2. STATUTORY FRAMEWORK: Specific Bharatiya Nyaya Sanhita (BNS) sections or relevant Indian laws that apply.
-3. PROCEDURAL ROADMAP: Step-by-step guidance on what to do next (e.g., filing a complaint, gathering evidence).
-4. INSTITUTIONAL ADVISORY: Professional cautions and recommendations for connecting with verified advocates.
+
+### SMALL REPORT (EXECUTIVE SUMMARY)
+Provide a high-level, 2-3 sentence overview of the situation and the immediate statutory answer.
+
+### FULL FORENSIC DOSSIER (PERFECT REPORT)
+1. STATUTORY FRAMEWORK: Specific Bharatiya Nyaya Sanhita (BNS) sections or relevant Indian laws that apply.
+2. PROCEDURAL ROADMAP: Step-by-step guidance on what to do next (e.g., filing a complaint, gathering evidence).
+3. INSTITUTIONAL ADVISORY: Professional cautions and recommendations for connecting with verified advocates.
 
 Guidelines:
 - Use simple but professional English.
@@ -60,7 +64,29 @@ const generalChatFlow = ai.defineFlow(
     outputSchema: GeneralChatOutputSchema,
   },
   async input => {
-    const { output } = await generalChatPrompt(input);
-    return output!;
+    let retries = 5;
+    let delay = 2000;
+    while (retries >= 0) {
+      try {
+        const { output } = await generalChatPrompt(input);
+        return output!;
+      } catch (error: any) {
+        const isTransient = 
+            error.message?.includes('429') || 
+            error.status === 429 || 
+            error.message?.toLowerCase().includes('busy') || 
+            error.message?.toLowerCase().includes('quota');
+
+        if (retries > 0 && isTransient) {
+          console.warn(`[AI HUB] Rate limit hit. Retrying in ${delay/1000}s...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay = Math.min(delay * 1.5, 10000);
+          retries--;
+          continue;
+        }
+        throw error;
+      }
+    }
+    throw new Error("AI hub saturated.");
   }
 );
