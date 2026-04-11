@@ -377,9 +377,9 @@ export default function DashboardHomePage() {
       {/* Feature Matrix */}
       <section className="space-y-12">
         <div className="text-left border-l-4 border-primary pl-6 py-2">
-          <h2 className="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest">Institutional core</h2>
-          <h3 className="text-3xl font-black tracking-tighter text-white">Forensic ai registry</h3>
-          <p className="text-sm text-gray-500 font-medium mt-1">Select a specialized tool to start your statutory audit.</p>
+          <h2 className="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest">Core hub</h2>
+          <h3 className="text-3xl font-black tracking-tighter text-white">Ai terminals</h3>
+          <p className="text-sm text-gray-500 font-medium mt-1">Select tool to start.</p>
         </div>
 
         <motion.div 
