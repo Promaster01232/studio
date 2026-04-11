@@ -1,241 +1,118 @@
 
 "use client";
 
-import { PageHeader } from "@/components/page-header";
-import { Card, CardContent } from "@/components/ui/card";
-import { 
-  ShieldCheck, 
-  Lock, 
-  Database, 
-  Cpu, 
-  Fingerprint,
-  Info,
-  ChevronRight,
-  Mail,
-  MapPin,
-  CheckCircle2,
-  History as LucideHistory,
-  Trash2,
-  Clock,
-  Scale,
-  BellRing,
-  Globe,
-  Bot,
-  Sparkles,
-  Zap,
-  Activity,
-  Mic,
-  Server,
-  Share2,
-  FileText,
-  AlertTriangle,
-  Smartphone,
-  ShieldAlert,
-  Search,
-  FileSearch,
-  ExternalLink,
-  UserCheck,
-  Gavel,
-  RefreshCw
-} from "lucide-react";
 import { motion } from "framer-motion";
-import { Logo } from "@/components/logo";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-
-const summaryPoints = [
-  {
-    title: "Simple collection",
-    desc: "We only take what is needed: your name, phone, voice recordings of problems, and photos of legal papers.",
-    icon: Database,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10"
-  },
-  {
-    title: "Secure AI",
-    desc: "Our AI helps you but doesn't keep your secrets. Your data is never used to train other AI models.",
-    icon: Lock,
-    color: "text-purple-500",
-    bg: "bg-purple-500/10"
-  },
-  {
-    title: "You are the boss",
-    desc: "You have full control. You can ask for your data copy or delete everything permanently anytime.",
-    icon: Cpu,
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/10"
-  }
-];
-
-const toc = [
-  { id: "section-1", title: "1. What information do we collect?" },
-  { id: "section-2", title: "2. How do we process your information?" },
-  { id: "section-3", title: "3. What legal bases do we rely on?" },
-  { id: "section-4", title: "4. When and with whom do we share info?" },
-  { id: "section-5", title: "5. Stance on third-party websites" },
-  { id: "section-6", title: "6. Artificial intelligence products" },
-  { id: "section-7", title: "7. Handling social logins" },
-  { id: "section-8", title: "8. Data retention period" },
-  { id: "section-9", title: "9. Collection from minors" },
-  { id: "section-10", title: "10. Your privacy rights" },
-  { id: "section-11", title: "11. Do-Not-Track features" },
-  { id: "section-12", title: "12. US State privacy rights" },
-  { id: "section-13", title: "13. Indian resident rights (DPDP Act)" },
-  { id: "section-14", title: "14. Updates to this notice" },
-  { id: "section-15", title: "15. Contact us" },
-  { id: "section-16", title: "16. Review or delete your data" }
-];
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 export default function PrivacyPage() {
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="max-w-5xl mx-auto space-y-12 pb-32 px-4 sm:px-6 text-left"
-    >
-      <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8 text-left">
-        <PageHeader
-          title="Privacy rules"
-          description="Last updated: February 24, 2025 // Official statutory notice"
-        />
-        <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Protocol 2025</Badge>
-      </div>
-
-      <Card className="border-none ring-1 ring-primary/10 shadow-3xl rounded-[2.5rem] overflow-hidden bg-card/40 backdrop-blur-xl relative">
-        <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none grayscale">
-          <Logo className="h-64 w-64" />
-        </div>
-        <CardContent className="p-8 sm:p-12 relative z-10 text-left space-y-8">
-          <div className="flex items-center gap-3 text-primary mb-2">
-            <div className="bg-primary/10 p-2.5 rounded-xl shadow-inner">
-              <Fingerprint className="h-6 w-6" />
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Official disclosure protocol</span>
-          </div>
+    <div className="max-w-4xl mx-auto py-20 px-6 text-left selection:bg-primary/20">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-12"
+      >
+        {/* Header Section */}
+        <div className="space-y-8">
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter text-white font-headline">
+            Privacy Policy
+          </h1>
           
-          <div className="space-y-6">
-            <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-4xl text-left">
-              This Privacy Notice for <span className="text-foreground font-bold">Nyaya Sahayak</span> ("we," "us," or "our"), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services ("Services").
-            </p>
-            <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 space-y-4 shadow-inner text-left">
-              <p className="text-sm font-bold text-foreground">Questions or concerns?</p>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                Reading this Privacy Notice will help you understand your privacy rights and choices. If you do not agree with our policies and practices, please do not use our Services. For concerns, contact us at <span className="text-primary font-black">nyayasahayakhelp@gmail.com</span>.
-              </p>
-            </div>
+          <div className="space-y-2 text-sm sm:text-base font-bold text-white/60 uppercase tracking-widest">
+            <p>Effective Date: <span className="text-primary">04-02-2023</span></p>
+            <p>Last Updated: <span className="text-primary">09-02-2026</span></p>
           </div>
-        </CardContent>
-      </Card>
 
-      <section className="space-y-8 text-left">
-        <div className="flex items-center gap-3">
-            <div className="h-1 w-8 bg-primary rounded-full" />
-            <h2 className="text-xl font-black uppercase tracking-tighter">Quick summary</h2>
+          <div className="space-y-6 text-lg text-white/80 font-medium leading-relaxed max-w-3xl">
+            <p>
+              Nyaya Sahayak (&ldquo;Nyaya Sahayak&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, store, and protect your information when you access or use our website, applications, dashboards, and services (collectively, the &ldquo;Platform&rdquo;).
+            </p>
+            <p>
+              By using Nyaya Sahayak, you agree to the collection and use of information in accordance with this Privacy Policy.
+            </p>
+          </div>
         </div>
-        <div className="grid gap-6 sm:grid-cols-3">
-            {summaryPoints.map((point, idx) => (
-                <Card key={idx} className="border-primary/5 bg-muted/20 rounded-[2rem] hover:bg-primary/[0.02] transition-all group">
-                    <CardContent className="p-8 space-y-4">
-                        <div className={cn("p-3 rounded-xl w-fit shadow-sm transition-transform group-hover:scale-110", point.bg, point.color)}>
-                            <point.icon className="h-5 w-5" />
-                        </div>
-                        <h3 className="font-black text-xs uppercase tracking-widest text-left">{point.title}</h3>
-                        <p className="text-[11px] font-medium text-muted-foreground leading-relaxed text-left">{point.desc}</p>
-                    </CardContent>
-                </Card>
-            ))}
+
+        <Separator className="bg-white/10" />
+
+        {/* Content Sections */}
+        <div className="space-y-16 pt-4">
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">1. Information we collect</h2>
+            <p className="text-white/60 leading-relaxed font-medium">We collect information to provide, operate, improve, and secure the Platform.</p>
+            
+            <div className="space-y-8 pl-4 border-l-2 border-primary/20">
+              <div className="space-y-3">
+                <h3 className="text-lg font-bold text-white">1.1 Information you provide directly</h3>
+                <ul className="list-disc pl-5 space-y-2 text-white/60 font-medium text-sm sm:text-base">
+                  <li>Email address (for account creation, login, and communication)</li>
+                  <li>Name or profile details (if provided)</li>
+                  <li>Documents, text, or files uploaded by you</li>
+                  <li>Chat messages, prompts, and responses</li>
+                  <li>Feedback, support requests, or communications with us</li>
+                </ul>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-bold text-white">1.2 Information collected automatically</h3>
+                <ul className="list-disc pl-5 space-y-2 text-white/60 font-medium text-sm sm:text-base">
+                  <li>IP address</li>
+                  <li>Device type, browser type, and operating system</li>
+                  <li>Usage data such as pages visited, features used, time spent, and interactions</li>
+                  <li>Session identifiers and authentication metadata</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">2. How we use your information</h2>
+            <ul className="list-disc pl-5 space-y-3 text-white/60 font-medium text-sm sm:text-base">
+              <li>To provide and operate Nyaya Sahayak services</li>
+              <li>To authenticate users and manage accounts</li>
+              <li>To enable AI-powered legal information features</li>
+              <li>To process documents, OCR, and file analysis</li>
+              <li>To manage usage limits, credits, and subscriptions</li>
+              <li>To communicate service updates, security notices, or support messages</li>
+              <li>To detect and prevent misuse, fraud, or security issues</li>
+              <li>To comply with legal and regulatory obligations</li>
+            </ul>
+            <p className="font-bold text-primary italic">We do not sell your personal data.</p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">3. AI processing & user content</h2>
+            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              <p>Nyaya Sahayak uses AI systems to generate responses and analyze uploaded content.</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Chat messages and uploaded documents are processed to provide responses and features.</li>
+                <li>Your content is not used to create a lawyer-client relationship.</li>
+                <li>We do not use your private documents or chats for public disclosure.</li>
+                <li>You remain the owner of your uploaded content.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">4. Data security</h2>
+            <p className="text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              We implement reasonable technical and organizational measures to protect your data, including secure authentication mechanisms and encrypted data transmission. However, no system is completely secure. While we strive to protect your data, we cannot guarantee absolute security.
+            </p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">5. Contact us</h2>
+            <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 space-y-4">
+              <p className="text-white/80 font-medium">If you have questions, concerns, or requests regarding this Privacy Policy or your data, please contact us at:</p>
+              <div className="flex flex-col gap-2">
+                <a href="mailto:nyayasahayakhelp@gmail.com" className="text-xl font-black text-primary hover:underline transition-all">nyayasahayakhelp@gmail.com</a>
+                <Link href="/contact" className="text-sm font-bold text-white/40 hover:text-white uppercase tracking-widest transition-colors">Visit contact page</Link>
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
-
-      <div className="space-y-6 text-left">
-        <div className="flex items-center gap-3">
-            <div className="h-1 w-8 bg-primary rounded-full" />
-            <h2 className="text-xl font-black uppercase tracking-tighter">Table of contents</h2>
-        </div>
-        <Card className="border-primary/5 bg-background shadow-inner rounded-[2rem] p-8 sm:p-10">
-            <div className="grid sm:grid-cols-2 gap-x-12 gap-y-4">
-                {toc.map((item, idx) => (
-                    <button 
-                        key={idx} 
-                        onClick={() => scrollToSection(item.id)}
-                        className="flex items-center gap-3 group text-left transition-colors hover:text-primary"
-                    >
-                        <ChevronRight className="h-3 w-3 text-primary/40 group-hover:translate-x-1 transition-transform" />
-                        <span className="text-[11px] font-bold uppercase tracking-tight opacity-70 group-hover:opacity-100">{item.title}</span>
-                    </button>
-                ))}
-            </div>
-        </Card>
-      </div>
-
-      <div className="space-y-32 pt-16 border-t border-primary/5">
-        
-        {/* Section 1 */}
-        <section id="section-1" className="space-y-10 scroll-mt-24 text-left">
-            <div className="flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500 shadow-sm"><Database className="h-7 w-7" /></div>
-                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase text-left">1. What information do we collect?</h3>
-            </div>
-            <div className="space-y-10 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed text-left">
-                <p>Personal information you disclose to us at <span className="text-foreground font-bold">Nyaya Sahayak</span> is collected with the highest standard of statutory integrity. We collect personal information that you voluntarily provide to us when you register on the terminal.</p>
-                
-                <div className="space-y-6 text-left">
-                    <p className="font-black text-xs uppercase tracking-widest text-primary border-b border-primary/10 pb-2">Institutional identity data points:</p>
-                    <div className="grid sm:grid-cols-2 gap-8">
-                        <ul className="text-xs space-y-3 list-disc pl-6 font-bold uppercase tracking-tight opacity-80">
-                            <li>Legal Names and Surnames</li>
-                            <li>Verified Email Addresses</li>
-                            <li>Mobile Communication Points</li>
-                        </ul>
-                        <ul className="text-xs space-y-3 list-disc pl-6 font-bold uppercase tracking-tight opacity-80">
-                            <li>Salted & Hashed Authentication Keys</li>
-                            <li>Citizen Type</li>
-                            <li>Institutional Billing Metadata</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        {/* Section 13 */}
-        <section id="section-13" className="space-y-12 scroll-mt-24 text-left">
-            <div className="flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-orange-500/10 text-orange-500 shadow-sm"><Scale className="h-7 w-7" /></div>
-                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase text-left">13. Indian resident rights (DPDP Act)</h3>
-            </div>
-            <div className="space-y-10 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed text-left">
-                <p>As a resident of India, you are recognized as a "Data Principal" under the <span className="text-foreground font-bold">Digital Personal Data Protection Act, 2023 (DPDP Act).</span> Nyaya Sahayak grants you extensive sovereign authority over your digital registry profile.</p>
-            </div>
-        </section>
-
-        {/* Section 16 */}
-        <section id="section-16" className="space-y-10 scroll-mt-24 text-left">
-            <div className="flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-red-500/10 text-red-500 shadow-sm"><Trash2 className="h-7 w-7" /></div>
-                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase text-left">16. Review or delete your data</h3>
-            </div>
-            <div className="space-y-10 text-sm sm:text-base text-muted-foreground font-medium leading-loose text-left">
-                <p>Citizens maintain sovereign authority over their registry entry. You can initiate a <span className="text-foreground font-bold underline">"Total Registry Erasure"</span> through your profile terminal settings or by transmitting a formal email to our data fiduciary hub at <span className="text-primary font-black">nyayasahayakhelp@gmail.com</span>.</p>
-                <div className="p-10 bg-destructive/5 border border-destructive/20 rounded-[3rem] shadow-inner relative overflow-hidden text-left group">
-                    <div className="absolute top-0 right-0 p-6 opacity-[0.05] group-hover:scale-110 transition-transform"><ShieldAlert className="h-32 w-32 text-destructive" /></div>
-                    <p className="text-xs font-black text-destructive flex items-center gap-4 mb-6 uppercase tracking-tighter">
-                        <ShieldAlert className="h-6 w-6" /> Irreversible purge protocol
-                    </p>
-                    <p className="text-[11px] sm:text-xs opacity-80 leading-relaxed font-black uppercase tracking-tight max-w-3xl">
-                        EVERYTHING—INCLUDING YOUR LEGAL IDENTITY MARKERS, FORENSIC REPORTS, BIOMETRIC VOICE DOSSIERS, AND TRANSACTION LOGS—WILL BE PERMANENTLY ERASED WITHIN 30 STATUTORY DAYS. THIS ACTION IS FINAL AND CANNOT BE UNDONE.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
