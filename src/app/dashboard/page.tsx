@@ -55,6 +55,7 @@ import { Logo } from "@/components/logo";
 import { getGeneralAiResponseAction } from "./chat-actions";
 import { AudioAssistant } from "@/components/audio-assistant";
 import { useToast } from "@/hooks/use-toast";
+import { WelcomeModal } from "@/components/welcome-modal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -104,30 +105,6 @@ const actionChips = [
     { label: "Scan papers", icon: Search, href: "/dashboard/document-intelligence" },
 ];
 
-function AuthorIdentityView({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
-    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
-    const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
-    const fallback = post.isAnonymous ? 'A' : (authorName?.charAt(0) || '');
-
-    return (
-        <Link href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} className={cn("flex items-center gap-3", post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer")}>
-            <Avatar className="h-10 w-10 border border-primary/10 shadow-lg rounded-xl">
-                {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
-                <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 text-left">
-                <div className="flex items-center gap-1.5">
-                    <p className="font-black text-xs tracking-tight">{authorName}</p>
-                    {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
-                </div>
-                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-40">
-                    {post.createdAt ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Syncing...'}
-                </p>
-            </div>
-        </Link>
-    );
-}
-
 export default function DashboardHomePage() {
   const auth = useAuth();
   const firestore = useFirestore();
@@ -138,7 +115,6 @@ export default function DashboardHomePage() {
   const [userName, setUserName] = useState("citizen");
   const [messages, setMessages] = useState<{role: 'user' | 'ai', text: string}[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (auth.currentUser) {
@@ -201,21 +177,9 @@ export default function DashboardHomePage() {
       } catch (e) {}
   };
 
-  const handleShare = (post: Post, platform: 'whatsapp' | 'twitter' | 'copy') => {
-    const shareText = `Check out this post on Nyaya Sahayak: "${post.title}"\n\nRead more at: ${window.location.origin}/dashboard/research-analytics`;
-    
-    if (platform === 'whatsapp') {
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
-    } else if (platform === 'twitter') {
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
-    } else if (platform === 'copy') {
-        navigator.clipboard.writeText(shareText);
-        toast({ title: "Link copied" });
-    }
-  };
-
   return (
     <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 text-left font-body">
+      <WelcomeModal />
       
       <motion.section 
         initial={{ opacity: 0, y: -20 }}
@@ -491,33 +455,6 @@ export default function DashboardHomePage() {
                                             <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} /> {post.likes}
                                         </button>
                                     </div>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/5 text-muted-foreground">
-                                                <Share2 className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl glass border-primary/10 shadow-2xl">
-                                            <DropdownMenuItem onClick={() => handleShare(post, 'whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3 text-left">
-                                                <div className="bg-green-500/10 p-1.5 rounded-md text-green-600">
-                                                    <MessageCircle className="h-3.5 w-3.5" />
-                                                </div>
-                                                WhatsApp
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => handleShare(post, 'twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3 text-left">
-                                                <div className="bg-blue-500/10 p-1.5 rounded-md text-blue-500">
-                                                    <Twitter className="h-3.5 w-3.5" />
-                                                </div>
-                                                Twitter (X)
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => handleShare(post, 'copy')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3 text-left">
-                                                <div className="p-1.5 rounded-md bg-primary/10 text-primary">
-                                                    <Bookmark className="h-3.5 w-3.5" />
-                                                </div>
-                                                Copy link
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
                                 </CardFooter>
                             </Card>
                         </motion.div>
