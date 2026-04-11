@@ -1,157 +1,142 @@
 
 "use client";
 
-import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Gavel, 
-  Scale, 
-  Info, 
-  ShieldAlert, 
-  BrainCircuit, 
-  Landmark, 
-  Users, 
-  History as LucideHistory, 
-  Fingerprint, 
-  Zap
-} from "lucide-react";
 import { motion } from "framer-motion";
-import { Logo } from "@/components/logo";
+import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-
-const disclaimerNodes = [
-  {
-    title: "AI Probabilistic Nature",
-    desc: "Nyaya Sahayak utilizes probabilistic LLM nodes. Outputs are generated via neural processing and may contain hallucinated sections or outdated citations. Accuracy verification rests with the user.",
-    icon: BrainCircuit,
-    color: "text-amber-500",
-    bg: "bg-amber-500/10",
-    border: "border-amber-500/20"
-  },
-  {
-    title: "No Attorney-Client Registry",
-    desc: "Utilization of these tools does NOT create an attorney-client relationship. Information is for navigational purposes only. Direct advice is available through our Verified Advocate Registry.",
-    icon: Users,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
-    border: "border-blue-500/20"
-  },
-  {
-    title: "Jurisdictional Limitations",
-    desc: "Intelligence nodes are primarily trained on the Indian Judicial System. Use for foreign jurisdictions is not recommended and is done at the user's sole risk.",
-    icon: Landmark,
-    color: "text-purple-500",
-    bg: "bg-purple-500/10",
-    border: "border-purple-500/20"
-  },
-  {
-    title: "Institutional Immunity",
-    desc: "IdeaSpark and Nyaya Sahayak are not liable for legal outcomes, financial losses, or procedural failures resulting from reliance on AI data. Users are responsible for all official filings.",
-    icon: ShieldAlert,
-    color: "text-destructive",
-    bg: "bg-destructive/10",
-    border: "border-destructive/20"
-  }
-];
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function DisclaimerDashboardPage() {
   return (
-    <div className="max-w-6xl mx-auto space-y-10 pb-20 px-2 sm:px-6 text-left">
+    <div className="max-w-4xl mx-auto py-10 pb-32 px-4 text-left selection:bg-primary/20">
       <motion.div 
-        initial={{ opacity: 0, y: -10 }} 
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8 text-left"
+        className="space-y-12"
       >
-        <PageHeader
-          title="Legal disclaimer & AI mandate"
-          description="Mandatory institutional disclosure regarding AI intelligence and human advocacy at nyayasahayak.in."
-        />
-        <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Clearance required</Badge>
-      </motion.div>
+        {/* Navigation Ingress */}
+        <div className="flex items-center justify-between border-b border-white/5 pb-6">
+          <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-white/5 group h-10 px-6 border border-white/5 text-white text-[10px] uppercase tracking-widest" asChild>
+            <Link href="/dashboard">
+              <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to dashboard
+            </Link>
+          </Button>
+        </div>
 
-      <div className="grid gap-8 sm:grid-cols-2 text-left">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="border-none ring-1 ring-destructive/20 bg-destructive/5 rounded-[2.5rem] overflow-hidden shadow-2xl h-full relative text-left">
-            <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-                <ShieldAlert className="h-32 w-32" />
-            </div>
-            <CardContent className="p-8 sm:p-12 space-y-6 text-left relative z-10">
-              <div className="flex items-center gap-4 text-destructive text-left">
-                <div className="bg-destructive/10 p-3 rounded-2xl shadow-inner">
-                  <Gavel className="h-8 w-8" />
-                </div>
-                <h3 className="font-black uppercase tracking-tighter text-2xl leading-none text-left">Non-official node</h3>
-              </div>
-              <p className="text-sm sm:text-base font-black leading-relaxed text-destructive/80 uppercase tracking-tight text-left">
-                The AI Nyaya Mitra Assistant is <span className="underline decoration-2 underline-offset-4">NOT</span> a law firm or government entity. We provide forensic intelligence and procedural roadmaps, not legal advice.
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="border-none ring-1 ring-amber-500/20 bg-amber-500/5 rounded-[2.5rem] overflow-hidden shadow-2xl h-full relative text-left">
-            <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-                <Zap className="h-32 w-32" />
-            </div>
-            <CardContent className="p-8 sm:p-12 space-y-6 text-left relative z-10">
-              <div className="flex items-center gap-4 text-amber-600 text-left">
-                <div className="bg-amber-500/10 p-3 rounded-2xl shadow-inner">
-                  <Scale className="h-8 w-8" />
-                </div>
-                <h3 className="font-black uppercase tracking-tighter text-2xl leading-none text-left">Human mandate</h3>
-              </div>
-              <p className="text-sm sm:text-base font-black leading-relaxed text-amber-600/80 uppercase tracking-tight text-left">
-                All documents generated by AI <span className="underline decoration-2 underline-offset-4">MUST</span> be reviewed, edited, and finalized by a qualified human advocate before service or filing in any court.
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-
-      <div className="grid gap-6 sm:grid-cols-2 text-left">
-        {disclaimerNodes.map((node, idx) => (
-          <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}>
-            <Card className={`h-full border-none ring-1 ${node.border} bg-card/30 hover:bg-card/50 transition-all duration-500 group rounded-[2.5rem] shadow-lg text-left`}>
-              <CardContent className="p-8 space-y-6 text-left">
-                <div className={`${node.bg} p-4 rounded-2xl w-fit shadow-xl group-hover:scale-110 transition-transform duration-500`}>
-                  <node.icon className={`h-6 w-6 ${node.color}`} />
-                </div>
-                <div className="space-y-3 text-left">
-                  <h3 className="text-xl font-black tracking-tight uppercase leading-tight">{node.title}</h3>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
-                    {node.desc}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-        <Card className="border-none ring-1 ring-primary/10 shadow-3xl rounded-[3rem] overflow-hidden bg-card/40 backdrop-blur-xl relative text-left">
-          <div className="absolute top-0 right-0 p-16 opacity-[0.02] pointer-events-none grayscale">
-            <Fingerprint className="h-64 w-64" />
+        {/* Header Section */}
+        <div className="space-y-8 pt-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tighter text-white font-headline">
+              Disclaimer
+            </h1>
+            <Badge variant="outline" className="w-fit font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">
+              Institutional notice
+            </Badge>
           </div>
-          <CardHeader className="p-8 sm:p-12 pb-0 border-none text-left">
-            <div className="flex items-center gap-3 text-primary mb-4 text-left">
-              <div className="bg-primary/10 p-2.5 rounded-xl shadow-inner">
-                <Info className="h-6 w-6" />
-              </div>
-              <CardTitle className="text-2xl sm:text-4xl font-black tracking-tight uppercase leading-none">Full disclosure agreement</CardTitle>
+          
+          <div className="space-y-2 text-sm sm:text-base font-bold text-white/60 uppercase tracking-widest">
+            <p>Effective date: <span className="text-primary">04-02-2023</span></p>
+            <p>Last updated: <span className="text-primary">09-02-2026</span></p>
+          </div>
+
+          <div className="space-y-6 text-lg text-white/80 font-medium leading-relaxed max-w-3xl">
+            <p>
+              Nyaya Sahayak is an AI-powered legal information platform designed to help users understand Indian laws and legal processes. Please read this Disclaimer carefully before using the Platform.
+            </p>
+            <p>
+              By accessing or using Nyaya Sahayak (nyayasahayak.in), you acknowledge and agree to the terms of this Disclaimer.
+            </p>
+          </div>
+        </div>
+
+        <Separator className="bg-white/10" />
+
+        {/* Content Sections */}
+        <div className="space-y-16 pt-4">
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">1. General information only – Not legal advice</h2>
+            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              <p>Nyaya Sahayak provides general legal information based on Indian laws for educational and informational purposes only.</p>
+              <ul className="list-disc pl-5 space-y-3">
+                <li>The information generated by the AI chatbot does not constitute legal advice.</li>
+                <li>The content is not tailored to your specific facts, circumstances, or jurisdiction.</li>
+                <li>You should not act or refrain from acting based solely on information obtained from Nyaya Sahayak.</li>
+                <li>For advice specific to your legal issue, you must consult a qualified and licensed advocate.</li>
+              </ul>
             </div>
-          </CardHeader>
-          <CardContent className="p-8 sm:p-12 pt-6 space-y-8 text-left relative z-10">
-            <div className="space-y-8 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed max-w-4xl text-left">
-              <p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">2. No lawyer–client relationship</h2>
+            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              <p>Use of Nyaya Sahayak does not create any lawyer–client relationship between you and Nyaya Sahayak, its founders, or contributors.</p>
+              <p>Nyaya Sahayak is not a law firm and does not offer professional legal representation.</p>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">3. AI-generated content & limitations</h2>
+            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              <p>Nyaya Sahayak uses artificial intelligence to generate responses. As a result:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Responses may be incomplete, outdated, inaccurate, or oversimplified.</li>
+                <li>Laws, rules, procedures, and interpretations may change over time.</li>
+                <li>AI systems may occasionally produce incorrect or misleading outputs.</li>
+              </ul>
+              <p>Accuracy verification rests with the user.</p>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">4. Jurisdictional scope</h2>
+            <p className="text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              Nyaya Sahayak provides information only with respect to Indian law. Users are responsible for verifying applicability to their specific state jurisdiction.
+            </p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">5. Documents, uploads & analysis</h2>
+            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              <p>Any analysis or response provided for uploaded documents is informational only and does not replace professional legal scrutiny.</p>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">6. Paid services clarification</h2>
+            <p className="text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              Fees are charged for platform access and AI features only. Payment does not create an attorney-client relationship.
+            </p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">7. No warranties</h2>
+            <p className="text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              Nyaya Sahayak is provided on an &ldquo;as is&rdquo; basis without warranties of accuracy or reliability.
+            </p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">8. Limitation of liability</h2>
+            <p className="text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              To the maximum extent permitted by law, Nyaya Sahayak shall not be liable for any loss arising from use of or reliance on information provided by the Platform.
+            </p>
+          </section>
+
+          <section className="space-y-6 pb-10">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">11. Acceptance of disclaimer</h2>
+            <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 space-y-4">
+              <p className="text-white/80 font-medium leading-relaxed">
                 By utilizing dashboard modules on nyayasahayak.in, you acknowledge that the system operates on probabilistic AI. Our mission is to democratize legal information, not replace human strategy required for litigation.
               </p>
+              <div className="flex flex-col gap-2 pt-4">
+                <a href="mailto:nyayasahayakhelp@gmail.com" className="text-2xl font-black text-primary hover:underline transition-all">nyayasahayakhelp@gmail.com</a>
+                <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">Nyaya Sahayak // Disclaimer Protocol</p>
+              </div>
             </div>
-          </CardContent>
-          <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
-        </Card>
+          </section>
+        </div>
       </motion.div>
     </div>
   );
