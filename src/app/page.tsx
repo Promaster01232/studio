@@ -2,26 +2,24 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   MessageSquare, 
-  Languages, 
   Upload, 
-  Heart, 
-  Paperclip, 
-  Mic, 
-  Send, 
+  ShieldCheck, 
+  Zap, 
+  Activity, 
+  ArrowRight, 
+  Gavel, 
+  Scale, 
+  Globe,
   Sparkles,
-  ShieldCheck,
-  BookOpen,
-  Zap,
-  Activity,
-  ArrowRight,
-  Gavel,
-  Scale,
-  Globe
+  FileSearch,
+  FolderKanban,
+  Lock,
+  Search,
+  BookOpen
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -37,26 +35,42 @@ const logos = [
   { name: "IJIRL Law Journal", icon: Activity },
 ];
 
-const features = [
+const capabilities = [
   {
-    title: "All Major Acts",
-    desc: "IPC, BNS, CrPC, CPC, family, property, consumer, labour, and more",
-    icon: Scale,
+    title: "AI Legal Chat",
+    desc: "Ask anything about Indian law. Get answers grounded in statutes, judgments, and legal procedures in any Indian language.",
+    icon: MessageSquare,
+    color: "text-blue-500",
+    bg: "bg-blue-500/10",
+    border: "border-blue-500/20",
+    badges: ["Multi-language", "Voice Input", "Live Web Search"]
   },
   {
-    title: "Real Case References",
-    desc: "Supreme Court and High Court judgments cited inline",
-    icon: BookOpen,
+    title: "Document Intelligence",
+    desc: "Upload contracts, notices, or case files. Ask questions and get AI-powered analysis instantly.",
+    icon: FileSearch,
+    color: "text-emerald-500",
+    bg: "bg-emerald-500/10",
+    border: "border-emerald-500/20",
+    badges: ["PDF & DOCX", "OCR Support", "Cloud Storage"]
   },
   {
-    title: "Fully Private",
-    desc: "Your conversations stay between you and the AI",
-    icon: ShieldCheck,
+    title: "Case & Knowledge Management",
+    desc: "Keep your legal research organized by case, client, or topic in collections. Find any insight in seconds.",
+    icon: FolderKanban,
+    color: "text-orange-500",
+    bg: "bg-orange-500/10",
+    border: "border-orange-500/20",
+    badges: ["Collections", "Global Search", "Share via Link"]
   },
   {
-    title: "Answers in Seconds",
-    desc: "No appointments, no fees, no waiting",
-    icon: Zap,
+    title: "Security & Privacy",
+    desc: "Enterprise-grade security. Your conversations and documents remain completely confidential.",
+    icon: Lock,
+    color: "text-purple-500",
+    bg: "bg-purple-500/10",
+    border: "border-purple-500/20",
+    badges: ["End-to-End Privacy", "Not Used for AI Training", "Delete Anytime"]
   }
 ];
 
@@ -74,7 +88,7 @@ export default function RootPage() {
       {/* Navigation Ingress */}
       <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-black/20 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center gap-2">
-          <Logo className="h-10 w-10 border-none bg-transparent shadow-none" priority={true} />
+          <Logo className="h-10 w-10 border-none bg-transparent shadow-none p-0" priority={true} />
           <span className="text-xl font-black font-headline tracking-tighter">Nyaya Sahayak</span>
         </div>
         <div className="flex items-center gap-4">
@@ -89,77 +103,103 @@ export default function RootPage() {
 
       {/* Hero Section */}
       <main className="pt-32 pb-20 px-4">
-        <div className="max-w-5xl mx-auto text-center space-y-10">
+        <div className="max-w-5xl mx-auto text-center space-y-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            className="flex flex-col items-center"
           >
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest mb-8">
-              <div className="h-1.5 w-1.5 rounded-full bg-green-500 mr-2 animate-pulse" />
-              India's First Law Bot, since 2023
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest mb-10 flex items-center gap-2">
+              <Sparkles className="h-3 w-3" />
+              Platform Features
             </Badge>
             
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8 font-serif">
-              NyayGuru: <span className="text-primary italic">Your Legal AI for Indian Law</span>
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8">
+              Your Complete <span className="text-primary italic">Legal Research Toolkit</span>
             </h1>
             
-            <p className="text-lg sm:text-2xl text-white/60 font-medium max-w-3xl mx-auto leading-relaxed">
-              Got a property dispute? Cheque bounce? Tenant trouble?<br />
-              Ask in plain Hindi or English. Get clear answers with the law cited. Free.
+            <p className="text-lg sm:text-xl text-white/60 font-medium max-w-2xl mx-auto leading-relaxed">
+              AI-powered chat, document analysis, voice input, and multi-language support. Everything you need to navigate Indian law with confidence.
+            </p>
+            
+            <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mt-6">
+              Built for Indian litigants, lawyers, law students, and legal researchers.
             </p>
           </motion.div>
 
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-wrap justify-center gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/40"
-          >
-            <div className="flex items-center gap-2"><MessageSquare className="h-3.5 w-3.5 text-primary" /> Ask Legal Query</div>
-            <div className="flex items-center gap-2"><Globe className="h-3.5 w-3.5 text-primary" /> Any Language</div>
-            <div className="flex items-center gap-2"><Upload className="h-3.5 w-3.5 text-primary" /> Upload PDFs</div>
-            <div className="flex items-center gap-2"><Heart className="h-3.5 w-3.5 text-primary" /> Free Forever</div>
-          </motion.div>
-
-          {/* Neural Search Hub */}
+          {/* Hero Actions */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6 }}
-            className="max-w-4xl mx-auto pt-10"
+            transition={{ delay: 0.4 }}
+            className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4"
           >
-            <div className="relative p-[1px] rounded-[2rem] bg-gradient-to-br from-primary/40 via-primary/5 to-white/10 shadow-[0_0_50px_rgba(153,75,0,0.15)]">
-              <div className="bg-[#0a0a0a] rounded-[1.95rem] p-5 flex items-center gap-4 border border-white/5 transition-all group focus-within:border-primary/40">
-                <div className="p-3 rounded-2xl bg-primary/10 text-primary shadow-inner">
-                  <Sparkles className="h-6 w-6" />
-                </div>
-                <div className="flex-1 relative flex items-center">
-                  <span className="text-xl font-bold text-white/20 absolute pointer-events-none left-0">
-                    Type your<span className="animate-cursor ml-1">|</span>
-                  </span>
-                  <Input 
-                    className="bg-transparent border-none focus-visible:ring-0 text-xl font-bold h-14 w-full p-0 shadow-none text-white selection:bg-primary/30" 
-                    placeholder=""
-                  />
-                </div>
-                <div className="flex items-center gap-3 pr-2">
-                  <Button variant="ghost" size="icon" className="h-11 w-11 rounded-xl text-white/30 hover:text-white hover:bg-white/5" silent>
-                    <Paperclip className="h-5 w-5" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-11 w-11 rounded-xl text-white/30 hover:text-white hover:bg-white/5" silent>
-                    <Mic className="h-5 w-5" />
-                  </Button>
-                  <Button className="h-12 w-12 rounded-full bg-primary text-primary-foreground shadow-2xl shadow-primary/40 active:scale-90 transition-transform group">
-                    <Send className="h-5 w-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <p className="mt-6 text-[10px] font-black uppercase tracking-[0.5em] text-white/20">Free to use. Your conversations are private.</p>
+            <Button asChild className="h-14 px-8 rounded-2xl bg-primary text-primary-foreground font-black text-xs uppercase tracking-widest shadow-2xl shadow-primary/20 active:scale-95 transition-all">
+              <Link href="/dashboard">
+                Ask Your First Legal Question Free <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button variant="outline" asChild className="h-14 px-8 rounded-2xl border-white/10 hover:bg-white/5 text-white font-black text-xs uppercase tracking-widest transition-all">
+              <Link href="/dashboard/about">
+                Explore All Features
+              </Link>
+            </Button>
           </motion.div>
         </div>
       </main>
+
+      {/* Core Capabilities Registry */}
+      <section className="py-24 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto space-y-20">
+          <div className="text-center space-y-4">
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest mb-2">
+              Core Capabilities
+            </Badge>
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase leading-none">
+              Everything You Need for Legal Clarity
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {capabilities.map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -5 }}
+                className="group"
+              >
+                <Card className="h-full bg-white/[0.03] border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 group-hover:bg-white/[0.05] group-hover:border-primary/20 group-hover:shadow-[0_30px_60px_rgba(0,0,0,0.3)]">
+                  <CardContent className="p-8 sm:p-10 flex flex-col h-full text-left">
+                    <div className="flex gap-6 mb-8">
+                      <div className={cn("p-4 rounded-[1.5rem] h-fit shadow-xl border border-white/5", item.bg, item.color)}>
+                        <item.icon className="h-7 w-7" />
+                      </div>
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-black tracking-tight">{item.title}</h3>
+                        <p className="text-sm text-white/40 leading-relaxed font-medium">
+                          {item.desc}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-auto flex flex-wrap gap-2">
+                      {item.badges.map((b, idx) => (
+                        <Badge key={idx} variant="secondary" className="bg-white/5 text-white/40 border-white/5 font-black text-[8px] uppercase tracking-widest px-3 py-1.5 rounded-lg">
+                          {b}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Trust Registry Section */}
       <section className="py-24 bg-white/[0.01] border-y border-white/5">
@@ -185,55 +225,6 @@ export default function RootPage() {
             <p className="text-sm sm:text-base font-medium text-white/40 max-w-2xl mx-auto leading-relaxed">
                 Used and trusted by <span className="text-primary font-black">3,00,000+ Indians</span> including advocates, litigants, law schools, students, and researchers
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Feature Capabilities Grid */}
-      <section className="py-32 px-4 bg-black">
-        <div className="max-w-6xl mx-auto space-y-24">
-          <div className="text-center space-y-6">
-            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter uppercase leading-none font-serif">
-              Covers Every Area of <span className="text-primary italic">Indian Law</span>
-            </h2>
-            <p className="text-base sm:text-xl text-white/40 font-medium max-w-3xl mx-auto leading-relaxed italic opacity-80">
-              "Whether you're a citizen with a tenant dispute, a startup checking GST compliance, or a lawyer cross-referencing case law, just ask."
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((f, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -10 }}
-                className="group"
-              >
-                <Card className="h-full bg-white/[0.02] border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 group-hover:bg-white/[0.04] group-hover:border-primary/20 group-hover:shadow-[0_20px_50px_rgba(153,75,0,0.1)]">
-                  <CardContent className="p-10 space-y-8 text-center">
-                    <div className="mx-auto h-16 w-16 rounded-[1.2rem] bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-xl border border-primary/5">
-                      <f.icon className="h-8 w-8" />
-                    </div>
-                    <div className="space-y-3">
-                      <h4 className="text-xl font-black uppercase tracking-tight leading-tight">{f.title}</h4>
-                      <p className="text-[11px] font-bold text-white/30 leading-relaxed uppercase tracking-widest">{f.desc}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="flex justify-center pt-10">
-            <Button asChild className="rounded-[1.5rem] font-black uppercase tracking-[0.4em] text-xs h-16 px-12 shadow-2xl shadow-primary/20 group active:scale-95 transition-all relative overflow-hidden">
-              <Link href="/dashboard" className="flex items-center gap-4 relative z-10">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                Initialize System <ArrowRight className="h-5 w-5 group-hover:translate-x-2 transition-transform" />
-              </Link>
-            </Button>
           </div>
         </div>
       </section>
