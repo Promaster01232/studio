@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Button } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import React, { useState, useEffect } from "react";
 import {
@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -70,7 +70,7 @@ export default function DashboardHomePage() {
   return (
     <div className="max-w-6xl mx-auto space-y-10 pb-20">
       
-      {/* 1. ANIMATED GREETING TERMINAL (Top Section) */}
+      {/* 1. ANIMATED GREETING CARD (Top Section) */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -98,7 +98,7 @@ export default function DashboardHomePage() {
                   </Badge>
                 </div>
                 <p className="text-xs sm:text-sm text-gray-500 font-medium tracking-tight">
-                  Welcome to your NyayGuru dashboard
+                  Welcome back to your institutional terminal.
                 </p>
               </div>
             </div>
@@ -150,7 +150,7 @@ export default function DashboardHomePage() {
         ))}
       </div>
 
-      {/* 3. CENTRAL GREETING & CHAT HUB */}
+      {/* 3. CENTRAL CHAT HUB */}
       <div className="flex flex-col items-center justify-center pt-10 text-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
@@ -171,8 +171,8 @@ export default function DashboardHomePage() {
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
             Hello, how can I help you today?
           </h1>
-          <p className="text-gray-400 text-lg font-medium max-w-2xl mx-auto">
-            Ask me about Indian law, case citations, or legal guidance
+          <p className="text-gray-400 text-lg font-medium max-w-2xl mx-auto leading-relaxed">
+            Ask NyayGuru about Indian statutes, procedural roadmaps, or case research.
           </p>
         </motion.div>
 
