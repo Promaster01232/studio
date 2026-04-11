@@ -20,7 +20,7 @@ import {
   Zap,
   ArrowRight,
   Search,
-  History as HistoryIcon
+  History as LucideHistory
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth, useFirestore } from "@/firebase";
@@ -49,7 +49,7 @@ const features = [
   },
   {
     title: "Write documents",
-    desc: "Draft professional legal notices and complaints in any Indian language.",
+    desc: "Draft professional legal notices and complaints in any indian language.",
     icon: FileText,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
@@ -89,7 +89,7 @@ const features = [
   },
   {
     title: "Bail helper",
-    desc: "Predictive modeling for bail success based on Bns sections and records.",
+    desc: "Predictive modeling for bail success based on bns sections and records.",
     icon: Scale,
     color: "text-red-500",
     bg: "bg-red-500/10",
@@ -97,7 +97,7 @@ const features = [
   },
   {
     title: "Law linker",
-    desc: "Locate specific Bns sections and amendments relevant to your situation.",
+    desc: "Locate specific bns sections and amendments relevant to your situation.",
     icon: Zap,
     color: "text-pink-500",
     bg: "bg-pink-500/10",
@@ -188,7 +188,7 @@ export default function DashboardHomePage() {
                   <Sparkles className="h-5 w-5" />
                 </div>
                 <Textarea 
-                  placeholder="Type" 
+                  placeholder="Ask anything about the law..." 
                   className="flex-1 bg-transparent border-none focus-visible:ring-0 text-white text-lg placeholder:text-white/20 min-h-[48px] h-10 py-2 resize-none overflow-hidden" 
                 />
                 <div className="flex items-center gap-2 pr-2">
@@ -255,7 +255,7 @@ export default function DashboardHomePage() {
             </div>
             <h2 className="text-3xl sm:text-5xl font-black text-white leading-none tracking-tighter">Your data is <br /> <span className="text-primary italic">your property.</span></h2>
             <p className="text-sm sm:text-lg text-gray-400 font-medium leading-relaxed">
-              Every forensic report and narration is encrypted via TLS 1.3 and is strictly confidential. We do not train foundation models on citizen narratives.
+              Every forensic report and narration is encrypted via tls 1.3 and is strictly confidential. We do not train foundation models on citizen narratives.
             </p>
             <Button variant="outline" className="h-12 px-8 rounded-xl border-primary/20 text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary/5" asChild>
               <Link href="/dashboard/privacy">Audit security protocol <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
@@ -263,9 +263,9 @@ export default function DashboardHomePage() {
           </div>
           <div className="grid grid-cols-2 gap-4 w-full md:w-auto relative z-10">
             {[
-              { label: "Encrypted", icon: Lock },
+              { label: "Encrypted", icon: LucideHistory },
               { label: "Private", icon: ShieldCheck },
-              { label: "Secure", icon: HistoryIcon },
+              { label: "Secure", icon: LucideHistory },
               { label: "Audit ready", icon: Search }
             ].map((n, i) => (
               <div key={i} className="p-6 rounded-3xl bg-white/5 border border-white/5 flex flex-col items-center gap-3 text-center">

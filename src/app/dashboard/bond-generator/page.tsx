@@ -116,7 +116,7 @@ export default function BondGeneratorPage() {
       doc.text(lines, 20, 40);
       
       doc.save(`${title.replace(/[\s/]/g, '-')}.pdf`);
-      toast({ title: "Statutory Pdf ready", description: "Bond document saved to local storage." });
+      toast({ title: "Statutory pdf ready", description: "Bond document saved to local storage." });
     } catch (e) { 
         toast({ variant: "destructive", title: "Export failed", description: "Pdf generation engine encountered an error." }); 
     }
@@ -142,7 +142,7 @@ export default function BondGeneratorPage() {
           <CardHeader className="bg-white/5 border-b border-white/5 p-8 text-left">
             <div className="flex items-center gap-3 mb-2 text-primary">
                 <Zap className="h-5 w-5" />
-                <CardTitle className="text-xl font-black tracking-tight">Instrument setup</CardTitle>
+                <CardTitle className="text-xl font-black tracking-tight text-left">Instrument setup</CardTitle>
             </div>
             <CardDescription className="text-[10px] font-bold opacity-60">Initialize statutory conditions for your official bond draft.</CardDescription>
           </CardHeader>
@@ -152,7 +152,7 @@ export default function BondGeneratorPage() {
                 <div className="space-y-4 text-left">
                   <Label htmlFor="bondType" className="text-[10px] font-bold text-gray-500 ml-1">Statutory type</Label>
                   <Select name="bondType" required value={bondType} onValueChange={setBondType}>
-                    <SelectTrigger id="bondType" className="h-14 bg-white/5 border-white/5 font-bold text-xs rounded-2xl active:scale-95 transition-all">
+                    <SelectTrigger id="bondType" className="h-14 bg-white/5 border-white/5 font-bold text-xs rounded-2xl active:scale-95 transition-all text-left">
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
@@ -170,7 +170,7 @@ export default function BondGeneratorPage() {
                 <div className="space-y-4 text-left">
                   <Label htmlFor="language" className="text-[10px] font-bold text-gray-500 ml-1 flex items-center gap-2"><Languages className="h-3.5 w-3.5 text-primary" /> Dialect registry</Label>
                   <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
-                    <SelectTrigger id="language" className="h-14 bg-white/5 border-white/5 font-bold text-xs rounded-2xl active:scale-95 transition-all">
+                    <SelectTrigger id="language" className="h-14 bg-white/5 border-white/5 font-bold text-xs rounded-2xl active:scale-95 transition-all text-left">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
@@ -251,7 +251,7 @@ export default function BondGeneratorPage() {
                         <FormSectionTitle>Surety ingress</FormSectionTitle>
                         <div className="grid md:grid-cols-2 gap-8">
                             <Input name="suretyName" placeholder="Full name of surety" required className="h-12 bg-white/5 border-white/5 font-bold rounded-xl px-5" />
-                            <Textarea name="suretyAddress" placeholder="Address..." required className="bg-white/5 border-white/5 rounded-[1.5rem] font-medium text-sm p-6 min-h-[100px] shadow-inner" />
+                            <Textarea name="suretyAddress" placeholder="Full permanent address of surety..." required className="bg-white/5 border-white/5 rounded-[1.5rem] font-medium text-sm p-6 min-h-[100px] shadow-inner" />
                         </div>
                         <FormSectionTitle>Instrument details</FormSectionTitle>
                         <div className="grid md:grid-cols-2 gap-8">
@@ -390,7 +390,7 @@ export default function BondGeneratorPage() {
                             )}
                         </div>
                         <div className="space-y-2">
-                            <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none">
+                            <CardTitle className="text-xl sm:text-3xl font-black uppercase tracking-tight font-headline leading-none text-left">
                                 {state.status === 'success' ? "Instrument record initialized" : "Awaiting bond parameters"}
                             </CardTitle>
                             <p className={cn(
@@ -426,7 +426,7 @@ export default function BondGeneratorPage() {
                                 onClick={() => handleDownloadPdf(editedContent, `Generated ${bondType}`)} 
                                 className="h-12 px-8 rounded-2xl font-bold text-xs gap-3 shadow-2xl active:scale-95"
                             >
-                                <Download className="h-4 w-4" /> Save Pdf
+                                <Download className="h-4 w-4" /> Save pdf
                             </Button>
                             <Button 
                                 variant="secondary" 

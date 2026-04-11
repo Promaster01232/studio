@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -87,7 +86,7 @@ export default function RegisterPage() {
     }
 
     if (!mobileRegex.test(cleanMobile)) {
-        toast({ variant: "destructive", title: "Invalid mobile number", description: "Please provide a valid 10-digit Indian mobile number." });
+        toast({ variant: "destructive", title: "Invalid mobile number", description: "Please provide a valid 10-digit indian mobile number." });
         return;
     }
 
@@ -152,7 +151,7 @@ export default function RegisterPage() {
           createdAt: Date.now()
       }).catch(() => {});
 
-      toast({ title: "Registration synchronized", description: "Welcome to your Nyaya Sahayak terminal." });
+      toast({ title: "Registration synchronized", description: "Welcome to your nyaya sahayak terminal." });
       router.push("/dashboard");
 
     } catch (error: any) {
@@ -182,7 +181,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#f8fafc] p-4 font-body">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#f8fafc] p-4 font-body text-left">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -273,7 +272,7 @@ export default function RegisterPage() {
               <div className="space-y-2 text-left">
                 <Label className="text-sm font-bold text-[#1e3a5f]">Statutory role</Label>
                 <Select value={userType} onValueChange={setUserType} disabled={loading}>
-                  <SelectTrigger className="h-12 bg-white border-slate-200 rounded-xl font-medium">
+                  <SelectTrigger className="h-12 bg-white border-slate-200 rounded-xl font-medium text-left">
                     <SelectValue placeholder="Select role" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">

@@ -153,7 +153,7 @@ export default function DocumentGeneratorPage() {
                 <div className="space-y-4 text-left">
                   <Label htmlFor="documentType" className="text-[10px] font-bold text-gray-500 ml-1">Instrument type</Label>
                   <Select name="documentType" required value={documentType} onValueChange={setDocumentType}>
-                    <SelectTrigger id="documentType" className="h-14 bg-white/5 border-white/5 font-bold rounded-2xl active:scale-95 transition-all">
+                    <SelectTrigger id="documentType" className="h-14 bg-white/5 border-white/5 font-bold rounded-2xl active:scale-95 transition-all text-left">
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
@@ -168,7 +168,7 @@ export default function DocumentGeneratorPage() {
                 <div className="space-y-4 text-left">
                   <Label htmlFor="language" className="text-[10px] font-bold text-gray-500 ml-1 flex items-center gap-2"><Languages className="h-3.5 w-3.5 text-primary" /> Dialect protocol</Label>
                   <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
-                    <SelectTrigger id="language" className="h-14 bg-white/5 border-white/5 font-bold rounded-2xl active:scale-95 transition-all">
+                    <SelectTrigger id="language" className="h-14 bg-white/5 border-white/5 font-bold rounded-2xl active:scale-95 transition-all text-left">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">

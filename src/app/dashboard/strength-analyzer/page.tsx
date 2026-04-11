@@ -88,7 +88,7 @@ export default function StrengthAnalyzerPage() {
                     <div className="space-y-4 max-w-sm">
                         <Label htmlFor="language" className="text-[10px] font-bold text-gray-500 ml-1">Audit protocol language</Label>
                         <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
-                        <SelectTrigger id="language" className="h-14 bg-white/5 border-white/5 font-bold text-xs rounded-2xl active:scale-95 transition-all">
+                        <SelectTrigger id="language" className="h-14 bg-white/5 border-white/5 font-bold text-xs rounded-2xl active:scale-95 transition-all text-left">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
@@ -140,7 +140,7 @@ export default function StrengthAnalyzerPage() {
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none tracking-tighter">
+                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none tracking-tighter text-left">
                                     {state.status === 'success' ? "Success matrix ready" : "Awaiting forensic parameters"}
                                 </CardTitle>
                                 <div className={cn(
@@ -284,7 +284,7 @@ export default function StrengthAnalyzerPage() {
                                             <p className="text-[11px] font-bold">This terminal record is encrypted and restricted.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[11px] font-bold tracking-[0.8em] text-white">Nyayasahayak.in // Matrix-hub</p>
+                                    <p className="text-[11px] font-bold tracking-[0.8em] text-white uppercase">Nyayasahayak.in // Matrix-hub</p>
                                 </div>
                             </motion.div>
                         ) : (

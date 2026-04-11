@@ -124,7 +124,7 @@ export default function BillingPage() {
     setTimeout(() => {
       toast({
         title: "Redirecting to gateway",
-        description: "Connecting to secure Razorpay node..."
+        description: "Connecting to secure razorpay node..."
       });
       setProcessingId(null);
     }, 800);

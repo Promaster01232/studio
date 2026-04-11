@@ -74,7 +74,7 @@ export function PublicHeader() {
                     </Button>
                   </SheetTrigger>
                   <SheetContent side="right" className="bg-[#0a0a0a] border-white/5 text-white w-[280px]">
-                    <div className="flex flex-col gap-6 mt-10">
+                    <div className="flex flex-col gap-6 mt-10 text-left">
                       {navItems.map((item) => (
                         <button 
                           key={item} 

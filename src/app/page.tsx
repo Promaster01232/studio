@@ -47,7 +47,7 @@ const capabilities = [
   },
   {
     title: "Document ocr",
-    desc: "Upload a court order or notice as Pdf or image. Text is extracted.",
+    desc: "Upload a court order or notice as pdf or image. Text is extracted.",
     icon: FileSearch,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
@@ -61,21 +61,21 @@ const capabilities = [
   },
   {
     title: "Case laws",
-    desc: "Responses reference Supreme Court and High Court judgments where relevant.",
+    desc: "Responses reference supreme court and high court judgments where relevant.",
     icon: BookOpen,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
   },
   {
     title: "Files storage",
-    desc: "Keep your documents (Pdf, Word, images) in one place. Encrypted cloud storage.",
+    desc: "Keep your documents (pdf, word, images) in one place. Encrypted cloud storage.",
     icon: Upload,
     color: "text-rose-500",
     bg: "bg-rose-500/10",
   },
   {
     title: "Multi-language",
-    desc: "Works in Hindi, English, Marathi, Tamil, Telugu, Kannada, Malayalam, and more.",
+    desc: "Works in hindi, english, marathi, tamil, telugu, kannada, malayalam, and more.",
     icon: Languages,
     color: "text-cyan-500",
     bg: "bg-cyan-500/10",
@@ -125,7 +125,7 @@ export default function RootPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-primary/30 overflow-x-hidden font-body">
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-primary/30 overflow-x-hidden font-body text-left">
       {/* Navigation ingress */}
       <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-black/40 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center gap-2">
@@ -244,28 +244,6 @@ export default function RootPage() {
         </div>
       </section>
 
-      {/* Trust registry section */}
-      <section className="py-24 bg-white/[0.01] border-y border-white/5">
-        <div className="max-w-7xl mx-auto px-6 text-center space-y-16">
-          <div className="flex items-center justify-center gap-6">
-            <div className="h-[1px] w-16 bg-primary/20" />
-            <h3 className="text-[11px] font-bold text-primary/60">Institutional trust</h3>
-            <div className="h-[1px] w-16 bg-primary/20" />
-          </div>
-          
-          <div className="flex flex-wrap justify-center items-center gap-10 sm:gap-20 opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-1000">
-            {logos.map((logo, i) => (
-              <div key={i} className="flex items-center gap-4 group">
-                <div className="p-2 rounded-lg bg-white/5 border border-white/10 transition-all group-hover:border-primary/40 group-hover:bg-primary/5">
-                    <logo.icon className="h-6 w-6 text-white group-hover:text-primary transition-colors" />
-                </div>
-                <span className="font-bold text-sm tracking-tight text-white/80 group-hover:text-white uppercase">{logo.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Institutional footer */}
       <footer className="py-20 border-t border-white/5 bg-[#050505] text-center">
         <div className="flex flex-col items-center gap-8 opacity-30">
@@ -273,7 +251,7 @@ export default function RootPage() {
               <Logo className="h-8 w-8 border-none shadow-none bg-transparent grayscale p-0" priority={false} />
               <span className="text-xl font-black tracking-tighter">Nyayguru</span>
             </div>
-            <p className="text-[10px] font-bold text-white">Nyayasahayak.in // Justice for bharat // 2025</p>
+            <p className="text-[10px] font-bold text-white uppercase tracking-widest">Nyayasahayak.in // Justice for bharat // 2025</p>
         </div>
       </footer>
     </div>

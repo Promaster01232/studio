@@ -91,9 +91,9 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 <SearchDialog>
                     <div className="w-full max-w-md cursor-pointer group transition-all">
-                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[11px] tracking-tight text-gray-500 rounded-xl bg-white/5 border border-white/5 group-hover:border-primary/20 transition-all relative text-left lowercase">
+                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[11px] tracking-tight text-gray-500 rounded-xl bg-white/5 border border-white/5 group-hover:border-primary/20 transition-all relative text-left">
                             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-hover:text-primary transition-colors" />
-                            <span>search chats, docs, notes... (ctrl+k)</span>
+                            <span>Search chats, docs, notes... (ctrl+k)</span>
                         </div>
                         <div className="md:hidden">
                             <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-white/5 bg-white/5">
@@ -121,8 +121,8 @@ function Header({ userProfile }: { userProfile: any }) {
                 </div>
 
                 {!userProfile ? (
-                    <Button asChild size="sm" className="h-9 px-5 font-black text-[10px] rounded-xl shadow-lg active:scale-95 transition-all lowercase">
-                        <Link href="/login">sign in</Link>
+                    <Button asChild size="sm" className="h-9 px-5 font-black text-[10px] rounded-xl shadow-lg active:scale-95 transition-all">
+                        <Link href="/login">Sign in</Link>
                     </Button>
                 ) : (
                     <div className="flex items-center gap-2 border-l border-white/10 pl-4">
@@ -138,7 +138,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                 </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-64 p-2 rounded-2xl shadow-2xl glass border-white/10 mt-2">
-                                <div className="p-4 space-y-1">
+                                <div className="p-4 space-y-1 text-left">
                                     <p className="font-black text-sm tracking-tight text-foreground">
                                         {userProfile.firstName} {userProfile.lastName}
                                     </p>
@@ -271,10 +271,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <Logo className="h-8 w-8 border-none shadow-none p-0 bg-transparent" priority={true} />
             </div>
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
-              <span className="text-xl font-black font-headline tracking-tighter text-white leading-none lowercase">
+              <span className="text-xl font-black font-headline tracking-tighter text-white leading-none">
                   nyayguru
               </span>
-              <span className="text-[8px] font-bold text-primary/60 tracking-widest mt-1 lowercase">legal intelligence</span>
+              <span className="text-[8px] font-bold text-primary/60 tracking-widest mt-1">legal intelligence</span>
             </div>
           </Link>
         </SidebarHeader>
@@ -288,7 +288,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
              className="w-full justify-start items-center gap-3 h-11 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl transition-all"
            >
              <ChevronRight className="h-4 w-4 rotate-180" />
-             <span className="font-black text-[11px] tracking-tight group-data-[state=collapsed]:hidden lowercase">collapse</span>
+             <span className="font-black text-[11px] tracking-tight group-data-[state=collapsed]:hidden">Collapse</span>
            </Button>
         </SidebarFooter>
       </Sidebar>

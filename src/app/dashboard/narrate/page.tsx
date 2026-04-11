@@ -162,7 +162,7 @@ export default function NarrateProblemPage() {
                         <div className="space-y-3">
                             <Label className="text-[10px] font-bold text-gray-500 ml-1">Select language</Label>
                             <Select value={language} onValueChange={setLanguage} disabled={isRecording || state.status === 'loading'}>
-                                <SelectTrigger className="h-12 bg-white/5 border-white/5 font-bold rounded-xl active:scale-95 transition-all">
+                                <SelectTrigger className="h-12 bg-white/5 border-white/5 font-bold rounded-xl active:scale-95 transition-all text-left">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
@@ -252,7 +252,7 @@ export default function NarrateProblemPage() {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none tracking-tighter">
+                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none tracking-tighter text-left">
                                     {state.status === 'success' ? "Institutional analysis ready" : "Awaiting audio entry"}
                                 </CardTitle>
                                 <div className={cn(
@@ -363,7 +363,7 @@ export default function NarrateProblemPage() {
                                             <p className="text-[9px] font-bold">This report record is private and encrypted.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[9px] font-bold tracking-[0.5em]">Nyayasahayak.in // Summary-hub</p>
+                                    <p className="text-[9px] font-bold tracking-[0.5em] uppercase">Nyayasahayak.in // Summary-hub</p>
                                 </div>
                             </motion.div>
                         ) : (
