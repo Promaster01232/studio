@@ -1,97 +1,240 @@
 
 "use client";
 
-import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
-import { Newspaper, Calendar, ArrowRight, Sparkles, Zap, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Search, 
+  Grid, 
+  List, 
+  Calendar, 
+  Clock, 
+  ArrowRight,
+  Sparkles,
+  Newspaper,
+  BookOpen,
+  Zap,
+  ShieldCheck
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import Image from "next/image";
+
+const categories = ["All", "Legal guides", "Legal tech", "Nyaya Sahayak updates"];
 
 const posts = [
   {
+    id: 1,
     title: "Understanding the Bharatiya Nyaya Sanhita (BNS) 2023",
     excerpt: "A forensic breakdown of the major shifts from the IPC 1860 to the new BNS framework and how it affects the citizen.",
     date: "June 15, 2025",
-    category: "Statutory Law",
-    icon: Newspaper,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10"
+    readTime: "8 min read",
+    category: "Legal guides",
+    image: "https://picsum.photos/seed/blog1/800/500",
+    imageHint: "legal gavel",
+    featured: true
   },
   {
+    id: 2,
     title: "The role of AI in procedural justice",
     excerpt: "How neural forensic engines are democratizing legal information and providing personalized roadmaps for 1.4 billion people.",
     date: "June 10, 2025",
-    category: "Legal Tech",
-    icon: Sparkles,
-    color: "text-amber-500",
-    bg: "bg-amber-500/10"
+    readTime: "5 min read",
+    category: "Legal tech",
+    image: "https://picsum.photos/seed/blog2/800/500",
+    imageHint: "artificial intelligence"
   },
   {
-    title: "Data privacy under the DPDP Act 2023",
+    id: 3,
+    title: "Data privacy under the DPDP act 2023",
     excerpt: "Protecting citizen data sovereignty in the digital age: a guide to your new statutory rights in Bharat.",
     date: "June 02, 2025",
-    category: "Privacy",
-    icon: ShieldCheck,
-    color: "text-green-500",
-    bg: "bg-green-500/10"
+    readTime: "6 min read",
+    category: "Nyaya Sahayak updates",
+    image: "https://picsum.photos/seed/blog3/800/500",
+    imageHint: "data security"
   }
 ];
 
 export default function BlogPage() {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewType, setViewType] = useState<'grid' | 'list'>('list');
+
+  const filteredPosts = posts.filter(post => {
+    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = activeCategory === "All" || post.category === activeCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-32 px-4 sm:px-6 text-left">
-      <motion.div 
-        initial={{ opacity: 0, y: -10 }} 
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-white/10 pb-8"
-      >
-        <PageHeader
-          title="Institutional blog"
-          description="Statutory news, legal awareness updates, and the latest amendments in the Indian judicial system."
-        />
-        <Badge variant="outline" className="font-bold text-[9px] bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Legal news</Badge>
-      </motion.div>
+    <div className="max-w-7xl mx-auto space-y-16 pb-32 px-4 sm:px-6 text-center">
+      {/* Header section */}
+      <section className="space-y-8 pt-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-center gap-6"
+        >
+          <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">
+            Legal insights & updates
+          </Badge>
+          
+          <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-none text-white">
+            Nyaya Sahayak <span className="text-primary">blog</span>
+          </h1>
+          
+          <p className="text-sm sm:text-lg text-white/40 font-medium max-w-2xl mx-auto leading-relaxed">
+            Stay informed with the latest legal news, guides, and insights from India's leading AI legal assistant.
+          </p>
+        </motion.div>
 
-      <div className="grid gap-8">
-        {posts.map((post, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.1 }}
+        {/* Search ingress */}
+        <div className="max-w-xl mx-auto relative group">
+          <div className="absolute inset-0 bg-white/5 rounded-2xl border border-white/10 pointer-events-none group-focus-within:border-primary/40 transition-colors" />
+          <div className="flex items-center gap-4 p-2 relative z-10">
+            <Search className="ml-4 h-5 w-5 text-white/20" />
+            <Input 
+              placeholder="Search articles by title or content..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 bg-transparent border-none focus-visible:ring-0 text-white font-medium placeholder:text-white/20" 
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Filter and View Switcher section */}
+      <section className="flex flex-col sm:flex-row items-center justify-between gap-8 border-b border-white/5 pb-8">
+        <div className="flex flex-wrap justify-center sm:justify-start gap-6">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={cn(
+                "text-xs font-black uppercase tracking-widest transition-all",
+                activeCategory === cat ? "text-primary border-b-2 border-primary pb-2" : "text-white/40 hover:text-white pb-2"
+              )}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center bg-white/5 p-1 rounded-xl border border-white/10">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setViewType('grid')}
+            className={cn("h-8 w-8 rounded-lg", viewType === 'grid' ? "bg-primary text-primary-foreground shadow-lg" : "text-white/40")}
           >
-            <Card className="border-white/5 bg-card/40 backdrop-blur-md rounded-[2.5rem] overflow-hidden hover:border-primary/20 transition-all group">
-              <div className="grid md:grid-cols-4 gap-0 h-full">
-                <div className={cn("p-10 flex items-center justify-center md:border-r border-white/5", post.bg)}>
-                  <post.icon className={cn("h-16 w-16", post.color)} />
-                </div>
-                <div className="md:col-span-3 p-10 space-y-6 flex flex-col justify-center">
-                  <div className="flex items-center gap-4">
-                    <Badge variant="outline" className="text-[8px] font-bold border-white/10">{post.category}</Badge>
-                    <span className="text-[10px] font-bold text-muted-foreground flex items-center gap-2">
-                      <Calendar className="h-3 w-3" /> {post.date}
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-2xl font-black tracking-tighter text-white group-hover:text-primary transition-colors leading-tight">{post.title}</h3>
-                    <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-2xl">{post.excerpt}</p>
-                  </div>
-                  <Button variant="ghost" className="w-fit p-0 h-auto hover:bg-transparent font-bold text-[10px] text-primary gap-2">
-                    <span>Read full report</span>
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+            <Grid className="h-4 w-4" />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setViewType('list')}
+            className={cn("h-8 w-8 rounded-lg", viewType === 'list' ? "bg-primary text-primary-foreground shadow-lg" : "text-white/40")}
+          >
+            <List className="h-4 w-4" />
+          </Button>
+        </div>
+      </section>
 
-      <div className="text-center pt-8 opacity-30">
-          <p className="text-[9px] font-bold tracking-[0.5em] text-muted-foreground uppercase">Nyayasahayak.in // Transmission hub</p>
+      {/* Posts registry */}
+      <section className="space-y-12">
+        <AnimatePresence mode="popLayout">
+          {filteredPosts.length > 0 ? (
+            <div className={cn(
+              "grid gap-8",
+              viewType === 'grid' ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
+            )}>
+              {filteredPosts.map((post, index) => (
+                <motion.div
+                  key={post.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Link href={`/blog/${post.id}`}>
+                    <Card className={cn(
+                      "bg-[#161b22] border-white/5 rounded-[2rem] overflow-hidden hover:border-primary/20 transition-all duration-500 group text-left",
+                      viewType === 'list' && "md:flex items-center"
+                    )}>
+                      <div className={cn(
+                        "relative overflow-hidden",
+                        viewType === 'list' ? "md:w-2/5 aspect-[16/10]" : "aspect-[16/9]"
+                      )}>
+                        <Image 
+                          src={post.image} 
+                          alt={post.title} 
+                          fill 
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                          data-ai-hint={post.imageHint}
+                        />
+                        <div className="absolute top-6 left-6 flex gap-2">
+                          <Badge className="bg-primary text-primary-foreground font-black text-[8px] uppercase px-3 py-1 rounded-lg">
+                            {post.category}
+                          </Badge>
+                          {post.featured && (
+                            <Badge className="bg-white/10 backdrop-blur-md text-white font-black text-[8px] uppercase px-3 py-1 rounded-lg border border-white/10">
+                              Latest
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <CardContent className={cn(
+                        "p-8 sm:p-10 space-y-6",
+                        viewType === 'list' && "md:w-3/5"
+                      )}>
+                        <div className="flex items-center gap-4 text-[10px] font-bold text-white/40 uppercase tracking-widest">
+                          <span className="flex items-center gap-1.5"><Calendar className="h-3 w-3" /> {post.date}</span>
+                          <span className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> {post.readTime}</span>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <h3 className="text-xl sm:text-2xl font-black text-white group-hover:text-primary transition-colors leading-tight tracking-tight">
+                            {post.title}
+                          </h3>
+                          <p className="text-sm text-white/40 font-medium leading-relaxed line-clamp-3">
+                            {post.excerpt}
+                          </p>
+                        </div>
+
+                        <div className="pt-4 border-t border-white/5">
+                          <Button variant="ghost" className="p-0 h-auto font-black text-[10px] uppercase tracking-widest text-primary gap-2 hover:bg-transparent">
+                            Read full report <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="py-32 flex flex-col items-center gap-6 opacity-20"
+            >
+              <Newspaper className="h-16 w-16" />
+              <p className="text-sm font-black uppercase tracking-[0.4em]">No matching transmissions found</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+
+      <div className="pt-12 text-center opacity-20">
+        <p className="text-[10px] font-bold text-white uppercase tracking-widest">Nyayasahayak.in // Transmission hub // 2025</p>
       </div>
     </div>
   );
