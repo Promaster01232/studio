@@ -10,7 +10,19 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { LogOut, Loader2, Search, Zap, Moon, Globe, ChevronRight } from "lucide-react";
+import { 
+  LogOut, 
+  Loader2, 
+  Search, 
+  Zap, 
+  Moon, 
+  Globe, 
+  ChevronRight,
+  Settings,
+  LayoutDashboard,
+  Crown,
+  User as UserIcon
+} from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -26,6 +38,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { onSnapshot, doc } from "firebase/firestore";
 import { FloatingHub } from "@/components/floating-hub";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -48,7 +68,17 @@ const PUBLIC_DASHBOARD_ROUTES = [
 
 function Header({ userProfile }: { userProfile: any }) {
     const { theme, setTheme } = useTheme();
+    const auth = useAuth();
+    const router = useRouter();
     
+    const handleLogout = async () => {
+        await signOut(auth);
+        router.push("/login");
+    };
+
+    const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
+    const planLabel = isAdmin ? "Root" : (userProfile?.subscriptionType === 'free' || !userProfile?.subscriptionType ? "Free" : "Pro");
+
     return (
         <header className={cn(
             "sticky top-0 z-[40] flex h-16 items-center gap-4 border-b px-4 sm:px-6 transition-all",
@@ -96,14 +126,66 @@ function Header({ userProfile }: { userProfile: any }) {
                     </Button>
                 ) : (
                     <div className="flex items-center gap-2 border-l border-white/10 pl-4">
-                        <Link href="/dashboard/profile">
-                            <Avatar className="h-8 w-8 border-2 border-primary/20 shadow-sm">
-                                <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                                <AvatarFallback className="font-black bg-[#e91e63] text-white text-[10px]">
-                                    {userProfile.firstName?.charAt(0)?.toLowerCase() || "p"}
-                                </AvatarFallback>
-                            </Avatar>
-                        </Link>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className="outline-none active:scale-95 transition-transform">
+                                    <Avatar className="h-8 w-8 border-2 border-primary/20 shadow-sm cursor-pointer">
+                                        <AvatarImage src={userProfile.photoURL} className="object-cover" />
+                                        <AvatarFallback className="font-black bg-[#e91e63] text-white text-[10px]">
+                                            {userProfile.firstName?.charAt(0)?.toLowerCase() || "p"}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-64 p-2 rounded-2xl shadow-2xl glass border-white/10 mt-2">
+                                <div className="p-4 space-y-1">
+                                    <p className="font-black text-sm tracking-tight text-foreground">
+                                        {userProfile.firstName} {userProfile.lastName}
+                                    </p>
+                                    <p className="text-[10px] font-medium text-muted-foreground truncate">
+                                        {userProfile.email}
+                                    </p>
+                                </div>
+                                <DropdownMenuSeparator className="bg-white/5" />
+                                <div className="p-2">
+                                    <DropdownMenuItem className="rounded-xl h-10 px-3 flex items-center justify-between group focus:bg-primary/10 cursor-pointer">
+                                        <div className="flex items-center gap-3">
+                                            <Crown className="h-4 w-4 text-primary" />
+                                            <span className="text-xs font-bold text-foreground">Plan</span>
+                                        </div>
+                                        <span className="text-[10px] font-black uppercase text-primary/60">{planLabel}</span>
+                                    </DropdownMenuItem>
+                                    
+                                    <DropdownMenuSeparator className="bg-white/5 my-1" />
+                                    
+                                    <DropdownMenuItem asChild className="rounded-xl h-10 px-3 focus:bg-primary/10 cursor-pointer">
+                                        <Link href="/dashboard" className="flex items-center gap-3 w-full">
+                                            <LayoutDashboard className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                            <span className="text-xs font-bold text-foreground">Dashboard</span>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    
+                                    <DropdownMenuItem asChild className="rounded-xl h-10 px-3 focus:bg-primary/10 cursor-pointer">
+                                        <Link href="/dashboard/profile" className="flex items-center gap-3 w-full">
+                                            <Settings className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                            <span className="text-xs font-bold text-foreground">Settings</span>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    
+                                    <DropdownMenuSeparator className="bg-white/5 my-1" />
+                                    
+                                    <DropdownMenuItem 
+                                        onClick={handleLogout}
+                                        className="rounded-xl h-10 px-3 focus:bg-destructive/10 cursor-pointer group"
+                                    >
+                                        <div className="flex items-center gap-3 w-full text-destructive">
+                                            <LogOut className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                                            <span className="text-xs font-black uppercase tracking-widest">Log out</span>
+                                        </div>
+                                    </DropdownMenuItem>
+                                </div>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 )}
             </div>
