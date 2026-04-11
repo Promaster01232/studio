@@ -15,12 +15,15 @@ import {
   Upload,
   FileText,
   FileSearch,
-  BookOpen,
-  Lock,
+  FileSignature,
+  BrainCircuit,
+  Gavel,
+  ShieldCheck,
+  Scale,
+  FileCheck,
   Globe,
   Lightbulb,
   MessageCircle,
-  ShieldCheck,
   ChevronRight,
   Plus
 } from "lucide-react";
@@ -35,60 +38,84 @@ import Link from "next/link";
 
 const features = [
   {
-    title: "ai legal chat",
-    desc: "Ask about any act or section. Get an explanation with the relevant law cited.",
-    icon: MessageSquare,
-    color: "text-amber-500",
-    bg: "bg-amber-500/10",
-  },
-  {
-    title: "document ocr",
-    desc: "Upload a court order or notice as PDF or image. Text is extracted automatically.",
-    icon: FileSearch,
+    title: "record voice",
+    desc: "speak your legal problem. get a quick word-for-word summary and analysis.",
+    icon: Mic,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
+    href: "/dashboard/narrate"
   },
   {
-    title: "smart notes",
-    desc: "Save chats, add notes, organize into collections. Search across everything.",
-    icon: FileText,
+    title: "scan documents",
+    desc: "upload court orders or notices. ai reads and identifies statutory risks.",
+    icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
+    href: "/dashboard/document-intelligence"
   },
   {
-    title: "case laws",
-    desc: "Responses reference Supreme Court and High Court judgments where relevant.",
-    icon: BookOpen,
+    title: "write documents",
+    desc: "draft professional legal notices and complaints in any indian language.",
+    icon: FileText,
+    color: "text-orange-500",
+    bg: "bg-orange-500/10",
+    href: "/dashboard/document-generator"
+  },
+  {
+    title: "create bonds",
+    desc: "generate legally sound bail, personal, and indemnity bonds instantly.",
+    icon: FileSignature,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
+    href: "/dashboard/bond-generator"
   },
   {
-    title: "files storage",
-    desc: "Keep your documents (PDF, Word, images) in one place. Encrypted cloud storage.",
-    icon: Upload,
-    color: "text-pink-500",
-    bg: "bg-pink-500/10",
+    title: "check chance",
+    desc: "analyze case details to see the statistical probability of a win or bail.",
+    icon: BrainCircuit,
+    color: "text-amber-500",
+    bg: "bg-amber-500/10",
+    href: "/dashboard/strength-analyzer"
   },
   {
-    title: "multi-language",
-    desc: "Works in Hindi, English, Marathi, Tamil, Telugu, Kannada, Malayalam, and more.",
-    icon: Globe,
+    title: "court helper",
+    desc: "get prepared questions for witness cross-examination and preparation.",
+    icon: Gavel,
     color: "text-cyan-500",
     bg: "bg-cyan-500/10",
+    href: "/dashboard/court-assistant"
   },
   {
-    title: "voice input",
-    desc: "Don't want to type? Speak your question. Works on mobile and desktop.",
-    icon: Mic,
-    color: "text-blue-600",
-    bg: "bg-blue-600/10",
+    title: "check evidence",
+    desc: "audit your digital and physical evidence for statutory admissibility.",
+    icon: ShieldCheck,
+    color: "text-indigo-500",
+    bg: "bg-indigo-500/10",
+    href: "/dashboard/evidence-audit"
   },
   {
-    title: "privacy first",
-    desc: "End-to-end encryption. No data sharing. No training on your conversations.",
-    icon: Lock,
-    color: "text-orange-600",
-    bg: "bg-orange-600/10",
+    title: "bail helper",
+    desc: "predictive modeling for bail success based on bns sections and records.",
+    icon: Scale,
+    color: "text-red-500",
+    bg: "bg-red-500/10",
+    href: "/dashboard/bail-estimator"
+  },
+  {
+    title: "law linker",
+    desc: "locate specific bns sections and amendments relevant to your situation.",
+    icon: Zap,
+    color: "text-pink-500",
+    bg: "bg-pink-500/10",
+    href: "/dashboard/statutory-linker"
+  },
+  {
+    title: "check contract",
+    desc: "identify unfavorable clauses and verify fairness in any legal deed.",
+    icon: FileCheck,
+    color: "text-teal-500",
+    bg: "bg-teal-500/10",
+    href: "/dashboard/contract-auditor"
   }
 ];
 
@@ -96,19 +123,19 @@ const steps = [
   {
     num: "01",
     title: "ask your question",
-    desc: "Type or speak your legal question in plain language.",
+    desc: "type or speak your legal question in plain language.",
     icon: MessageCircle
   },
   {
     num: "02",
     title: "get ai analysis",
-    desc: "NyayGuru checks relevant acts, sections, and court judgments.",
+    desc: "nyayguru checks relevant acts, sections, and court judgments.",
     icon: Lightbulb
   },
   {
     num: "03",
     title: "receive guidance",
-    desc: "You get a clear answer with the exact law sections and next steps.",
+    desc: "you get a clear answer with the exact law sections and next steps.",
     icon: ShieldCheck
   }
 ];
@@ -146,7 +173,7 @@ export default function DashboardHomePage() {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
   };
 
   const itemVariants = {
@@ -169,7 +196,7 @@ export default function DashboardHomePage() {
               <Avatar className="h-14 w-14 border-2 border-white/10 rounded-2xl shadow-2xl">
                 <AvatarImage src={userProfile?.photoURL} className="object-cover" />
                 <AvatarFallback className="bg-[#e91e63] text-white font-black text-xl">
-                  {userProfile?.firstName?.charAt(0) || "p"}
+                  {userProfile?.firstName?.charAt(0) || "P"}
                 </AvatarFallback>
               </Avatar>
               <div className="space-y-1">
@@ -177,7 +204,7 @@ export default function DashboardHomePage() {
                   <h2 className="text-xl sm:text-3xl font-black tracking-tighter text-white leading-none">
                     {greeting}, {userProfile?.firstName || "friend"}!
                   </h2>
-                  <Badge variant="secondary" className="bg-white/5 text-gray-400 border-white/10 font-bold text-[9px] tracking-widest px-2.5 py-0.5 rounded-lg">
+                  <Badge variant="secondary" className="bg-white/5 text-gray-400 border-white/10 font-bold text-[9px] uppercase tracking-widest px-2.5 py-0.5 rounded-lg">
                     free tier
                   </Badge>
                 </div>
@@ -191,7 +218,7 @@ export default function DashboardHomePage() {
               <Button variant="outline" className="flex-1 md:flex-none h-11 px-6 rounded-xl border-white/10 bg-white/5 text-white font-bold text-xs gap-2" asChild>
                 <Link href="/dashboard/document-intelligence"><Upload className="h-4 w-4" /> upload</Link>
               </Button>
-              <Button className="flex-1 md:flex-none h-11 px-6 rounded-xl bg-primary text-primary-foreground font-black text-xs tracking-widest shadow-lg shadow-primary/20 gap-2" asChild>
+              <Button className="flex-1 md:flex-none h-11 px-6 rounded-xl bg-primary text-primary-foreground font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 gap-2" asChild>
                 <Link href="/dashboard/narrate"><Plus className="h-4 w-4" /> new chat</Link>
               </Button>
             </div>
@@ -209,7 +236,7 @@ export default function DashboardHomePage() {
                   <stat.icon className="h-5 w-5" />
                 </div>
                 <div className="space-y-0.5">
-                  <p className="text-[10px] font-bold text-gray-500 tracking-widest">{stat.label}</p>
+                  <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{stat.label}</p>
                   <p className="text-xl sm:text-2xl font-black text-white tracking-tighter">{stat.value}</p>
                 </div>
               </CardContent>
@@ -243,7 +270,7 @@ export default function DashboardHomePage() {
                     <MessageSquare className="h-3.5 w-3.5" /> 10/10
                   </div>
                   <div className="flex items-center gap-1.5 hover:text-gray-300 transition-colors cursor-pointer">
-                    <Clock className="h-3.5 w-3.5" /> <span className="text-[10px] font-black tracking-widest">saved</span>
+                    <Clock className="h-3.5 w-3.5" /> <span className="text-[10px] font-black uppercase tracking-widest">saved</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-end gap-4">
@@ -256,28 +283,30 @@ export default function DashboardHomePage() {
         </motion.div>
       </div>
 
-      {/* FEATURES SECTION (What You Can Do) */}
+      {/* FEATURES SECTION (Matching Menu Tools) */}
       <section className="pt-20 space-y-16">
         <div className="text-center space-y-4">
-          <Badge variant="outline" className="bg-amber-500/5 text-amber-500 border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black tracking-widest">features</Badge>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white">what you can do with nyayguru</h2>
-          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto font-medium">eight tools, all included free. from chat to document ocr to voice input.</p>
+          <Badge variant="outline" className="bg-amber-500/5 text-amber-500 border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black tracking-widest uppercase">ai tool registry</Badge>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase">what you can do with nyayguru</h2>
+          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto font-medium">explore our suite of ten elite legal research terminals, synced with your account.</p>
         </div>
 
-        <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {features.map((f, i) => (
             <motion.div key={i} variants={itemVariants}>
-              <Card className="bg-[#161b22] border-white/5 rounded-[2rem] h-full overflow-hidden hover:border-primary/30 transition-all duration-500 group">
-                <CardContent className="p-8 flex flex-col gap-6 text-left">
-                  <div className={cn("p-3 rounded-xl w-fit transition-transform group-hover:scale-110 shadow-lg", f.bg, f.color)}>
-                    <f.icon className="h-6 w-6" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="font-black text-lg text-white tracking-tight leading-none">{f.title}</h3>
-                    <p className="text-xs text-gray-500 leading-relaxed font-medium">{f.desc}</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <Link href={f.href}>
+                <Card className="bg-[#161b22] border-white/5 rounded-[2rem] h-full overflow-hidden hover:border-primary/30 transition-all duration-500 group cursor-pointer active:scale-95">
+                  <CardContent className="p-6 flex flex-col gap-4 text-left">
+                    <div className={cn("p-2.5 rounded-xl transition-transform group-hover:scale-110 shadow-lg w-fit", f.bg, f.color)}>
+                      <f.icon className="h-5 w-5" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="font-black text-sm text-white tracking-tight leading-none uppercase">{f.title}</h3>
+                      <p className="text-[10px] text-gray-500 leading-relaxed font-medium line-clamp-3">{f.desc}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
@@ -286,8 +315,8 @@ export default function DashboardHomePage() {
       {/* HOW IT WORKS SECTION */}
       <section className="pt-24 space-y-16">
         <div className="text-center space-y-4">
-          <Badge variant="outline" className="bg-amber-500/5 text-amber-500 border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black tracking-widest">how it works</Badge>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white">how it works</h2>
+          <Badge variant="outline" className="bg-amber-500/5 text-amber-500 border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black tracking-widest uppercase">how it works</Badge>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase">how it works</h2>
           <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto font-medium">no appointments. no waiting. works 24/7, even at 2 am on a sunday.</p>
         </div>
 
@@ -314,7 +343,7 @@ export default function DashboardHomePage() {
                 </div>
               </div>
               <div className="space-y-2 max-w-[240px]">
-                <h3 className="font-black text-xl text-white tracking-tight">{s.title}</h3>
+                <h3 className="font-black text-xl text-white tracking-tight uppercase">{s.title}</h3>
                 <p className="text-xs text-gray-500 font-medium leading-relaxed">{s.desc}</p>
               </div>
             </motion.div>
