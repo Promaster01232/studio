@@ -15,16 +15,13 @@ import {
   Globe,
   Sparkles,
   FileSearch,
-  FolderKanban,
-  Lock,
-  Search,
-  BookOpen,
-  Mic,
   FileText,
   FileSignature,
   BrainCircuit,
   FileCheck,
-  Languages
+  Languages,
+  BookOpen,
+  Mic
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -99,15 +96,6 @@ const capabilities = [
   }
 ];
 
-const publicNavItems = [
-  "Features",
-  "How it works",
-  "Pricing",
-  "Faqs",
-  "Blog",
-  "About"
-];
-
 export default function RootPage() {
   const [mounted, setMounted] = useState(false);
 
@@ -145,9 +133,8 @@ export default function RootPage() {
           <span className="text-xl font-black font-headline tracking-tighter">Nyayguru</span>
         </div>
         
-        {/* Elite Public Menu */}
         <div className="hidden md:flex items-center gap-10">
-          {publicNavItems.map((item) => (
+          {["Features", "How it works", "Pricing", "Faqs", "Blog", "About"].map((item) => (
             <button 
               key={item} 
               className="text-sm font-medium text-white/60 hover:text-white transition-all duration-300"

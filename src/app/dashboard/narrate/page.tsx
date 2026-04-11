@@ -166,7 +166,7 @@ export default function NarrateProblemPage() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
-                                    <SelectItem value="English" className="font-bold text-xs">Simple English</SelectItem>
+                                    <SelectItem value="English" className="font-bold text-xs">Simple english</SelectItem>
                                     <SelectItem value="Hindi" className="font-bold text-xs">Hindi (Official)</SelectItem>
                                 </SelectContent>
                             </Select>
@@ -347,7 +347,7 @@ export default function NarrateProblemPage() {
                                         <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
                                             <Logo className="h-64 w-64 grayscale opacity-20" priority={false} />
                                         </div>
-                                        <div className="prose dark:prose-invert max-w-none relative z-10">
+                                        <div className="prose dark:prose-invert max-w-none relative z-10 text-left">
                                             {state.data.detailedAnalysis}
                                         </div>
                                     </div>

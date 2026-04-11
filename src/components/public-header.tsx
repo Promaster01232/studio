@@ -6,21 +6,12 @@ import Link from "next/link";
 import { useAuth } from "@/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useState, useEffect } from "react";
-import { LogIn, ArrowLeft, Menu } from "lucide-react";
+import { ArrowLeft, Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-const publicNavItems = [
-  "Features",
-  "How it works",
-  "Pricing",
-  "Faqs",
-  "Blog",
-  "About"
-];
 
 export function PublicHeader() {
   const auth = useAuth();
@@ -29,6 +20,8 @@ export function PublicHeader() {
   useEffect(() => {
     return onAuthStateChanged(auth, setUser);
   }, [auth]);
+
+  const navItems = ["Features", "How it works", "Pricing", "Faqs", "Blog", "About"];
 
   return (
     <header className="sticky top-0 z-[100] w-full border-b bg-black/90 backdrop-blur-md border-white/5">
@@ -40,10 +33,9 @@ export function PublicHeader() {
           </span>
         </Link>
 
-        {/* Professional Navigation Hub */}
         {!user && (
           <div className="hidden md:flex items-center gap-10">
-            {publicNavItems.map((item) => (
+            {navItems.map((item) => (
               <button 
                 key={item} 
                 className="text-sm font-medium text-white/60 hover:text-white transition-all duration-300"
@@ -74,7 +66,6 @@ export function PublicHeader() {
                 </Button>
               </div>
 
-              {/* Mobile Menu Ingress */}
               <div className="md:hidden">
                 <Sheet>
                   <SheetTrigger asChild>
@@ -84,7 +75,7 @@ export function PublicHeader() {
                   </SheetTrigger>
                   <SheetContent side="right" className="bg-[#0a0a0a] border-white/5 text-white w-[280px]">
                     <div className="flex flex-col gap-6 mt-10">
-                      {publicNavItems.map((item) => (
+                      {navItems.map((item) => (
                         <button 
                           key={item} 
                           className="text-left text-lg font-medium text-white/60 hover:text-white transition-all"

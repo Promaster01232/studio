@@ -116,7 +116,7 @@ export default function CourtAssistantPage() {
                         <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-cyan-300/60 ml-1">Registry transcription</h3>
                         <div className="w-full h-48 bg-black/40 rounded-2xl p-6 overflow-y-auto border border-white/5 shadow-inner text-left">
                             {isRecording ? <Waveform /> : transcript.length === 0 && <p className="text-gray-600 text-center pt-12 text-xs font-bold uppercase tracking-widest">Awaiting capture signal</p>}
-                            <div className="mt-6 space-y-2 text-sm font-mono text-cyan-100/80">
+                            <div className="mt-6 space-y-2 text-sm font-mono text-cyan-100/80 text-left">
                                 {transcript.map((line, i) => (
                                     <p key={i} className="animate-in fade-in slide-in-from-left-2">{"{>}"} {line}</p>
                                 ))}
@@ -144,7 +144,7 @@ export default function CourtAssistantPage() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-8 text-left">
-                    <form action={formAction} className="space-y-6">
+                    <form action={formAction} className="space-y-6 text-left">
                         <div className="space-y-2 text-left">
                             <Label htmlFor="witnessName" className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Witness identity</Label>
                             <Input id="witnessName" name="witnessName" placeholder="e.g., John Doe" className="h-12 bg-white/5 border-white/5 text-white font-bold rounded-xl focus:border-cyan-400" />
@@ -181,7 +181,7 @@ export default function CourtAssistantPage() {
                                    {state.data?.questions.map((q, i) => (
                                        <div key={i} className="flex gap-4 group">
                                            <span className="font-mono text-cyan-500 font-bold">{i + 1}.</span>
-                                           <p className="font-medium text-white/80 leading-relaxed group-hover:text-white transition-colors">{q}</p>
+                                           <p className="font-medium text-white/80 leading-relaxed group-hover:text-white transition-colors text-left">{q}</p>
                                        </div>
                                    ))}
                                 </div>

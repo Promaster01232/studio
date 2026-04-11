@@ -174,8 +174,8 @@ export default function BondGeneratorPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
-                      <SelectItem value="Simple English" className="font-bold text-xs">Simple English</SelectItem>
-                      <SelectItem value="Legal English" className="font-bold text-xs">Legal English</SelectItem>
+                      <SelectItem value="Simple English" className="font-bold text-xs">Simple english</SelectItem>
+                      <SelectItem value="Legal English" className="font-bold text-xs">Legal english</SelectItem>
                       <SelectItem value="Hindi" className="font-bold text-xs">Hindi (Official)</SelectItem>
                     </SelectContent>
                   </Select>

@@ -29,14 +29,12 @@ import {
   Activity,
   FileSearch,
   ChevronDown,
-  Smartphone,
-  FileSignature
+  Smartphone
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
@@ -174,8 +172,8 @@ export default function DocumentGeneratorPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
-                      <SelectItem value="Simple English" className="font-bold">Simple English</SelectItem>
-                      <SelectItem value="Legal English" className="font-bold">Legal English</SelectItem>
+                      <SelectItem value="Simple English" className="font-bold">Simple english</SelectItem>
+                      <SelectItem value="Legal English" className="font-bold">Legal english</SelectItem>
                       <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
                     </SelectContent>
                   </Select>

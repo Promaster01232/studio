@@ -268,7 +268,7 @@ export default function StrengthAnalyzerPage() {
                                         <div className="absolute top-0 right-0 p-20 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
                                             <Logo className="h-96 w-96 grayscale opacity-20" priority={false} />
                                         </div>
-                                        <div className="relative z-10 prose dark:prose-invert max-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-primary">
+                                        <div className="relative z-10 prose dark:prose-invert max-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-primary text-left">
                                             {state.data.forensicResearch}
                                         </div>
                                     </div>
@@ -300,7 +300,7 @@ export default function StrengthAnalyzerPage() {
                                         <Cpu className="h-32 w-32 text-white opacity-10 group-hover:opacity-30 transition-opacity" />
                                     </div>
                                 </div>
-                                <div className="space-y-8 max-w-md px-10 text-center">
+                                <div className="space-y-8 max-md px-10 text-center">
                                     <h3 className="font-black text-2xl tracking-tighter text-white leading-none">System standby</h3>
                                     <p className="text-[12px] text-gray-500 font-bold tracking-[0.4em] leading-relaxed italic opacity-40">
                                         Provide case narrative to start neural success modeling.

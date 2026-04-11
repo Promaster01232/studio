@@ -134,7 +134,7 @@ export default function DocumentIntelligencePage({
                     </div>
                     <div className="space-y-3">
                         <h3 className="text-2xl font-black tracking-tight text-white">Analyzing record...</h3>
-                        <p className="text-[10px] font-black text-gray-500 tracking-[0.4em] animate-pulse uppercase">Running forensic Ocr engine</p>
+                        <p className="text-[10px] font-black text-gray-500 tracking-[0.4em] animate-pulse uppercase">Running forensic ocr engine</p>
                     </div>
                 </motion.div>
             ) : state.status === 'success' && state.data ? (
