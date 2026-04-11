@@ -8,7 +8,6 @@ import { motion } from 'framer-motion';
  * Institutional Identity Hub (Logo)
  * 
  * Optimized for Largest Contentful Paint (LCP) with priority rendering support.
- * Added continuous pulse animation to indicate active session protection.
  */
 export function Logo({ className, imageClassName, priority = true }: { className?: string, imageClassName?: string, priority?: boolean }) {
   return (
@@ -33,7 +32,6 @@ export function Logo({ className, imageClassName, priority = true }: { className
           priority={priority}
         />
       </div>
-      {/* Design Polish: Subtle Glow indicative of Active Protection */}
       <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent pointer-events-none" />
       <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-full blur-xl pointer-events-none" />
     </motion.div>

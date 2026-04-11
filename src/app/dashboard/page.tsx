@@ -90,10 +90,10 @@ const typeConfig: Record<string, { color: string, bg: string, border: string, ic
 };
 
 const tools = [
-    { icon: Mic, title: "Voice summary", desc: "Convert your story into a clear legal roadmap.", href: "/dashboard/narrate", color: "text-blue-500", bg: "bg-blue-500/5", glow: "shadow-blue-500/20" },
-    { icon: FileSearch, title: "Document scan", desc: "Identify risks and deadlines in your legal papers.", href: "/dashboard/document-intelligence", color: "text-indigo-500", bg: "bg-indigo-500/5", glow: "shadow-indigo-500/20" },
-    { icon: FileText, title: "Write drafts", desc: "Generate professional legal documents instantly.", href: "/dashboard/document-generator", color: "text-sky-500", bg: "bg-sky-500/5", glow: "shadow-sky-500/20" },
-    { icon: BrainCircuit, title: "Strength matrix", desc: "Calculate the probability of case success.", href: "/dashboard/strength-analyzer", color: "text-cyan-500", bg: "bg-cyan-500/5", glow: "shadow-cyan-500/20" },
+    { icon: Mic, title: "Voice help", desc: "Convert your story into a clear legal roadmap.", href: "/dashboard/narrate", color: "text-blue-500", bg: "bg-blue-500/5", glow: "shadow-blue-500/20" },
+    { icon: FileSearch, title: "Scan file", desc: "Identify risks and deadlines in your legal papers.", href: "/dashboard/document-intelligence", color: "text-indigo-500", bg: "bg-indigo-500/5", glow: "shadow-indigo-500/20" },
+    { icon: FileText, title: "Write papers", desc: "Generate professional legal documents instantly.", href: "/dashboard/document-generator", color: "text-sky-500", bg: "bg-sky-500/5", glow: "shadow-sky-500/20" },
+    { icon: BrainCircuit, title: "Win chance", desc: "Calculate the probability of case success.", href: "/dashboard/strength-analyzer", color: "text-cyan-500", bg: "bg-cyan-500/5", glow: "shadow-cyan-500/20" },
 ];
 
 const actionChips = [
@@ -392,7 +392,7 @@ export default function DashboardHomePage() {
                     <Newspaper className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
-                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Transmissions</h2>
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Posts</h2>
                 </div>
             </div>
             <Button variant="outline" size="sm" asChild className="h-10 px-6 text-[10px] font-black rounded-full hover:bg-foreground hover:text-background transition-all border-foreground/20 uppercase tracking-widest">
@@ -533,7 +533,7 @@ export default function DashboardHomePage() {
                     <Zap className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
-                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Analytical modules</h2>
+                    <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">AI tools</h2>
                 </div>
             </div>
         </div>
@@ -593,13 +593,13 @@ export default function DashboardHomePage() {
                                 <Zap className="h-5 w-5 text-amber-400 fill-amber-400" />
                                 <span className="text-[10px] font-black opacity-60 uppercase tracking-widest">Registry upgrade</span>
                             </div>
-                            <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.9] uppercase">Elevate your authority.</h3>
+                            <h3 className="text-3xl sm:text-5xl font-black font-headline tracking-tighter leading-[0.9] uppercase">Get more help.</h3>
                             <p className="text-sm sm:text-lg opacity-80 font-medium leading-relaxed max-w-lg">
                                 Unlock unlimited AI forensic scans, professional document drafting, and root access to the legal registry.
                             </p>
                         </div>
                         <Button variant="secondary" className="w-full md:w-auto font-black text-[10px] rounded-2xl h-14 px-12 shadow-2xl active:scale-95 transition-all uppercase tracking-widest" asChild>
-                            <Link href="/dashboard/billing">Upgrade registry clearance</Link>
+                            <Link href="/dashboard/billing">Upgrade registry hub</Link>
                         </Button>
                     </div>
                 </CardContent>

@@ -100,7 +100,7 @@ function EliteCertificateView({ profile }: { profile: UserProfile }) {
             doc.text(`${profile.firstName} ${profile.lastName}`.toUpperCase(), 148.5, 115, { align: 'center' });
             doc.setFontSize(14);
             doc.setTextColor(100, 100, 100);
-            const desc = `is fully authorized to perform all statutory operations. The AI forensic hub is 100% synchronized and the platform is fully operational, stable, and ready to execute all forensic tasks with absolute precision and correct results.`;
+            const desc = `is fully authorized to perform all statutory operations. Every AI system and analytical module is synchronized and 100% ready to execute all forensic tasks with absolute precision and correct results.`;
             doc.text(doc.splitTextToSize(desc, 220), 148.5, 135, { align: 'center' });
 
             doc.setFontSize(10);
@@ -141,7 +141,7 @@ function EliteCertificateView({ profile }: { profile: UserProfile }) {
                 </header>
                 <div className="space-y-6 sm:space-y-8 max-w-2xl mx-auto text-center px-2">
                     <p className="text-xs sm:text-base font-medium text-muted-foreground leading-relaxed">
-                        This account is fully authorized to perform all statutory operations. The AI forensic hub is 100% synchronized and the platform is fully operational, stable, and ready to execute all forensic tasks with absolute precision and correct results.
+                        This account is fully authorized to perform all statutory operations. Every AI system and analytical module is synchronized and 100% ready to execute all forensic tasks with absolute precision and correct results.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 pt-4 sm:pt-8 items-end text-left sm:text-left">
@@ -190,7 +190,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <Logo className="h-6 w-6 sm:h-8 sm:w-8 shadow-none p-0 border-none bg-transparent" priority={false} />
                         <div className="flex flex-col">
                             <span className="font-black text-[10px] sm:text-xs tracking-tighter leading-none">NYAYA SAHAYAK</span>
-                            <span className="text-[6px] sm:text-[7px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary/80">{isAdmin ? "Root Authority hub" : "Forensic Terminal"}</span>
+                            <span className="text-[6px] sm:text-[7px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary/80">{isAdmin ? "Root Authority hub" : "Forensic hub"}</span>
                         </div>
                     </div>
                     <div className="bg-white/10 backdrop-blur-xl px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl border border-white/10">
@@ -225,7 +225,7 @@ function DigitalIdentityCard({ profile, isAdmin }: { profile: UserProfile, isAdm
                         <p className={cn(
                             "text-[8px] sm:text-[9px] font-black uppercase tracking-tighter",
                             isAdmin || isUpgraded ? "text-amber-400" : "text-green-400"
-                        )}>{isAdmin ? "Absolute Statutory Hub" : isUpgraded ? "Premium Forensic terminal" : "Standard Identity access"}</p>
+                        )}>{isAdmin ? "Absolute Statutory Hub" : isUpgraded ? "Premium Forensic hub" : "Standard Identity access"}</p>
                     </div>
                 </div>
             </div>
@@ -321,7 +321,7 @@ export default function ProfilePage() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 sm:space-y-10 max-w-6xl mx-auto pb-20 px-1 sm:px-0 text-left">
-        <PageHeader title="Registry Dossier" description="Manage your identity and institutional platform configurations." />
+        <PageHeader title="My profile" description="Manage your identity and institutional platform configurations." />
         <div className="flex flex-col lg:flex-row gap-6 sm:gap-10 items-start">
             <div className="w-full lg:w-[380px] space-y-6">
                 <Card className="glass shadow-2xl rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden border-primary/5">
@@ -332,8 +332,8 @@ export default function ProfilePage() {
                                 <AvatarFallback className="bg-primary/5 text-primary text-xl sm:text-2xl font-black">{firstName.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div className="absolute -bottom-2 -right-2 flex gap-1.5 sm:gap-2 z-20">
-                                <button className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-800 shadow-2xl flex items-center justify-center border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}><Camera className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></button>
-                                <button className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-800 shadow-2xl flex items-center justify-center border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}><ImageUp className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></button>
+                                <button className="h-8 w-8 sm:h-9 w-9 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-800 shadow-2xl flex items-center justify-center border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}><Camera className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></button>
+                                <button className="h-8 w-8 sm:h-9 w-9 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-800 shadow-2xl flex items-center justify-center border border-primary/10 hover:bg-primary hover:text-white transition-all" onClick={() => fileInputRef.current?.click()}><ImageUp className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></button>
                             </div>
                         </div>
                         <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />

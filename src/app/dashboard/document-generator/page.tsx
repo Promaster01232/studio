@@ -33,7 +33,8 @@ import {
   ChevronDown,
   Smartphone,
   Cpu,
-  X
+  X,
+  FileSignature
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { jsPDF } from "jspdf";
@@ -50,7 +51,7 @@ const initialState: DocumentGeneratorState = {
 };
 
 const FormSectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mt-10 mb-6 flex items-center gap-2">
+    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mt-10 mb-6 flex items-center gap-2 text-left">
         <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
         {children}
     </h3>
@@ -145,12 +146,12 @@ export default function DocumentGeneratorPage() {
                 <FileSignature className="h-6 w-6 text-primary" />
             </div>
             <div className="text-left">
-                <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Drafting terminal</h1>
+                <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Write papers</h1>
             </div>
         </div>
         <Button variant="outline" size="sm" className="rounded-full font-black text-[10px] uppercase tracking-widest h-10 px-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all" asChild>
           <Link href="/dashboard">
-            <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to terminal
+            <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to hub
           </Link>
         </Button>
       </motion.div>
@@ -164,7 +165,7 @@ export default function DocumentGeneratorPage() {
           <CardHeader className="bg-primary/5 border-b border-primary/10 p-8 text-left">
             <div className="flex items-center gap-3 mb-2 text-primary">
                 <Zap className="h-5 w-5" />
-                <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Draft configuration</CardTitle>
+                <CardTitle className="text-xl font-black uppercase tracking-tight text-left">Setup file</CardTitle>
             </div>
             <CardDescription className="text-[10px] font-bold uppercase tracking-widest opacity-60">Specify the parameters for your professional instrument.</CardDescription>
           </CardHeader>
@@ -187,7 +188,7 @@ export default function DocumentGeneratorPage() {
                   </Select>
                 </div>
                 <div className="space-y-4 text-left">
-                  <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3.5 w-3.5 text-primary" /> Dialect protocol</Label>
+                  <Label htmlFor="language" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1 flex items-center gap-2"><Languages className="h-3.5 w-3.5 text-primary" /> Dialect registry</Label>
                   <Select name="language" defaultValue={selectedLanguage} onValueChange={setSelectedLanguage} required>
                     <SelectTrigger id="language" className="h-14 glass border-primary/5 font-black uppercase text-[10px] rounded-2xl active:scale-95 transition-all">
                       <SelectValue />
@@ -203,7 +204,7 @@ export default function DocumentGeneratorPage() {
 
               <div className="space-y-10">
                   <div className="space-y-8">
-                      <FormSectionTitle>Author information</FormSectionTitle>
+                      <FormSectionTitle>Author info</FormSectionTitle>
                       <div className="grid sm:grid-cols-2 gap-8">
                           <div className="space-y-3 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Full legal name</Label>
@@ -232,7 +233,7 @@ export default function DocumentGeneratorPage() {
                   </div>
 
                   <div className="space-y-8">
-                      <FormSectionTitle>Opponent information</FormSectionTitle>
+                      <FormSectionTitle>Opponent info</FormSectionTitle>
                       <div className="grid sm:grid-cols-2 gap-8">
                           <div className="space-y-3 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Entity name</Label>
@@ -257,7 +258,7 @@ export default function DocumentGeneratorPage() {
                                   </div>
                               </div>
                               <div className="space-y-3 text-left">
-                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Location node</Label>
+                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Location point</Label>
                                   <Input name="incidentPlace" placeholder="Precise location" required className="h-12 glass font-bold rounded-xl px-5" />
                               </div>
                           </div>
@@ -269,7 +270,7 @@ export default function DocumentGeneratorPage() {
                   )}
 
                   <div className="space-y-8">
-                      <FormSectionTitle>Forensic narrative</FormSectionTitle>
+                      <FormSectionTitle>Case narration</FormSectionTitle>
                       <div className="space-y-6">
                           <div className="space-y-3 text-left">
                               <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Detailed events</Label>
@@ -277,7 +278,7 @@ export default function DocumentGeneratorPage() {
                           </div>
                           { documentType !== 'RTI Application' && (
                               <div className="space-y-3 text-left">
-                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Requested restitution</Label>
+                                  <Label className="text-[9px] font-black uppercase tracking-widest opacity-40 ml-1">Requested remedy</Label>
                                   <div className="relative">
                                       <AlertTriangle className="absolute left-6 top-8 h-4 w-4 text-primary opacity-40" />
                                       <Textarea name="remedySought" placeholder="What statutory action is required from the opponent?" required className="glass rounded-[2rem] font-medium text-base p-8 pl-14 shadow-inner min-h-[120px] transition-all focus:border-primary" />
@@ -291,7 +292,7 @@ export default function DocumentGeneratorPage() {
               <Button type="submit" disabled={state.status === 'loading'} className="w-full h-16 text-[11px] font-black uppercase tracking-[0.4em] shadow-2xl shadow-primary/20 transition-all active:scale-95 rounded-[2rem] mt-8 group overflow-hidden relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 {state.status === 'loading' ? (
-                    <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Initializing document engine...</>
+                    <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Analyzing requirements...</>
                 ) : (
                     <><FileText className="mr-3 h-5 w-5" /> Execute draft generation</>
                 )}
@@ -304,7 +305,7 @@ export default function DocumentGeneratorPage() {
       <div ref={reportRef} className="space-y-8 scroll-mt-20">
         <div className="flex flex-col items-center gap-4 mb-4">
             <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-20" />
-            <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-6 py-2 rounded-full">Report ingress</Badge>
+            <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-6 py-2 rounded-full">Report entry</Badge>
         </div>
 
         <Card className="glass border-primary/20 shadow-3xl overflow-hidden rounded-[3rem] relative min-h-[600px] flex flex-col bg-card">
@@ -325,13 +326,13 @@ export default function DocumentGeneratorPage() {
                             )}>
                                 <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
                                 <span className={cn("text-[10px] font-bold uppercase", state.status === 'success' ? "text-white" : "text-primary")}>
-                                    {state.status === 'success' ? "Draft synthesized" : "Awaiting ingress"}
+                                    {state.status === 'success' ? "Draft synthesized" : "Awaiting entry"}
                                 </span>
                             </div>
                         </div>
                         <div className="space-y-2">
                             <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none uppercase">
-                                {state.status === 'success' ? "Professional draft ready" : "Awaiting statutory nodes"}
+                                {state.status === 'success' ? "Professional draft ready" : "Awaiting registry info"}
                             </CardTitle>
                             <div className={cn(
                                 "text-[11px] font-medium flex items-center gap-3",
@@ -399,7 +400,7 @@ export default function DocumentGeneratorPage() {
                             </div>
                             <div className="space-y-4">
                                 <p className="font-black text-3xl tracking-tighter uppercase text-foreground">Drafting instrument...</p>
-                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground animate-pulse">Running document engine...</p>
+                                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground animate-pulse">Running document system...</p>
                             </div>
                         </motion.div>
                     ) : state.status === 'success' && state.data ? (
@@ -497,7 +498,7 @@ export default function DocumentGeneratorPage() {
                             <div className="space-y-6 max-w-md px-8 text-center">
                                 <h3 className="font-black text-4xl tracking-tighter uppercase text-foreground leading-none">Terminal idle</h3>
                                 <p className="text-[11px] text-muted-foreground font-black uppercase tracking-[0.3em] leading-relaxed italic opacity-40">
-                                    Provide instrument configuration to start your neural draft.
+                                    Provide instrument setup to start your neural draft.
                                 </p>
                             </div>
                         </motion.div>
