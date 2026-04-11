@@ -229,8 +229,8 @@ export default function RootPage() {
 
           <div className="flex justify-center pt-10">
             <Button asChild className="rounded-[1.5rem] font-black uppercase tracking-[0.4em] text-xs h-16 px-12 shadow-2xl shadow-primary/20 group active:scale-95 transition-all relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
               <Link href="/dashboard" className="flex items-center gap-4 relative z-10">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 Initialize System <ArrowRight className="h-5 w-5 group-hover:translate-x-2 transition-transform" />
               </Link>
             </Button>

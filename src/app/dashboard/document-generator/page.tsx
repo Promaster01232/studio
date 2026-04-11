@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState, useState, useEffect, useRef } from "react";
@@ -146,7 +147,7 @@ export default function DocumentGeneratorPage() {
                 <FileSignature className="h-6 w-6 text-primary" />
             </div>
             <div className="text-left">
-                <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Write papers</h1>
+                <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Write papers</h1>
             </div>
         </div>
         <Button variant="outline" size="sm" className="rounded-full font-black text-[10px] uppercase tracking-widest h-10 px-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all" asChild>
