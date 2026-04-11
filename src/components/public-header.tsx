@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Logo } from "@/components/logo";
@@ -36,11 +35,11 @@ export function PublicHeader() {
   }, [auth]);
 
   return (
-    <header className="sticky top-0 z-[100] w-full border-b bg-black/90 backdrop-blur-md border-white/5">
+    <header className="sticky top-0 z-[100] w-full border-b bg-background/40 backdrop-blur-md border-border/10">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 active:scale-95 transition-all">
           <Logo className="h-8 w-8 shadow-none border-none p-0 bg-transparent" priority={true} />
-          <span className="text-xl font-black tracking-tight text-white font-headline">
+          <span className="text-xl font-black tracking-tight text-foreground font-headline">
             Nyaya Sahayak
           </span>
         </Link>
@@ -51,7 +50,7 @@ export function PublicHeader() {
               <Link 
                 key={item.name} 
                 href={item.href}
-                className="text-sm font-medium text-white/60 hover:text-white transition-all duration-300"
+                className="text-sm font-medium text-foreground/60 hover:text-primary transition-all duration-300"
               >
                 {item.name}
               </Link>
@@ -61,39 +60,36 @@ export function PublicHeader() {
         
         <div className="flex items-center gap-2 sm:gap-4">
           {user ? (
-            <Button asChild size="sm" variant="outline" className="font-bold rounded-xl h-10 px-6 border-white/10 hover:bg-white/5 text-white">
+            <Button asChild size="sm" variant="outline" className="font-bold rounded-xl h-10 px-6 border-border/10 hover:bg-primary/5 text-foreground">
               <Link href="/dashboard">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Dashboard
               </Link>
             </Button>
           ) : (
             <>
-              {/* Login Button - Visible on all screens */}
-              <Button asChild variant="ghost" size="sm" className="font-bold text-xs h-10 px-4 sm:px-6 hover:bg-white/5 text-white">
+              <Button asChild variant="ghost" size="sm" className="font-bold text-xs h-10 px-4 sm:px-6 hover:bg-primary/5 text-foreground">
                 <Link href="/login">Login</Link>
               </Button>
 
-              {/* Join Hub - Desktop Only */}
               <div className="hidden md:block">
-                <Button asChild size="sm" className="bg-primary text-primary-foreground font-bold text-xs h-10 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">
+                <Button asChild size="sm" className="bg-primary text-primary-foreground font-bold text-xs h-10 px-6 rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
                   <Link href="/register">
                     Join hub
                   </Link>
                 </Button>
               </div>
 
-              {/* Mobile Menu Trigger */}
               <div className="md:hidden">
                 <Sheet open={isOpen} onOpenChange={setIsOpen}>
                   <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-white hover:bg-white/5 rounded-xl h-10 w-10">
+                    <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/5 rounded-xl h-10 w-10">
                       <Menu className="h-6 w-6" />
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="right" className="bg-[#0a0a0a] border-white/5 text-white w-[280px] p-0">
-                    <SheetHeader className="p-6 border-b border-white/5">
-                      <SheetTitle className="text-white text-left font-headline font-black text-xl tracking-tighter">Navigation</SheetTitle>
-                      <SheetDescription className="text-white/40 text-left text-[10px] uppercase font-bold tracking-widest">Public terminal</SheetDescription>
+                  <SheetContent side="right" className="bg-background border-border/10 text-foreground w-[280px] p-0">
+                    <SheetHeader className="p-6 border-b border-border/10">
+                      <SheetTitle className="text-foreground text-left font-headline font-black text-xl tracking-tighter">Navigation</SheetTitle>
+                      <SheetDescription className="text-muted-foreground text-left text-[10px] uppercase font-bold tracking-widest">Public terminal</SheetDescription>
                     </SheetHeader>
                     <div className="flex flex-col p-6 gap-6 text-left">
                       {navItems.map((item) => (
@@ -101,13 +97,13 @@ export function PublicHeader() {
                           key={item.name} 
                           href={item.href}
                           onClick={() => setIsOpen(false)}
-                          className="text-left text-lg font-bold text-white/60 hover:text-white transition-all"
+                          className="text-left text-lg font-bold text-foreground/60 hover:text-primary transition-all"
                         >
                           {item.name}
                         </Link>
                       ))}
-                      <div className="h-px bg-white/5 my-2" />
-                      <Button asChild variant="ghost" className="justify-start px-0 text-white/60 hover:text-white h-10 font-bold" onClick={() => setIsOpen(false)}>
+                      <div className="h-px bg-border/10 my-2" />
+                      <Button asChild variant="ghost" className="justify-start px-0 text-foreground/60 hover:text-primary h-10 font-bold" onClick={() => setIsOpen(false)}>
                         <Link href="/login">Login</Link>
                       </Button>
                       <Button asChild className="bg-primary text-primary-foreground font-bold h-12 rounded-xl" onClick={() => setIsOpen(false)}>

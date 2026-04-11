@@ -93,8 +93,8 @@ const capabilities = [
     title: "Privacy first",
     desc: "End-to-end encryption. No data sharing. No training on your conversations.",
     icon: ShieldCheck,
-    color: "text-orange-600",
-    bg: "bg-orange-600/10",
+    color: "text-primary",
+    bg: "bg-primary/10",
   }
 ];
 
@@ -138,14 +138,12 @@ export default function RootPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground bg-golden-animate selection:bg-primary/30 overflow-x-hidden font-body text-left">
-      {/* Navigation ingress */}
       <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-background/40 backdrop-blur-md border-b border-border/10">
         <div className="flex items-center gap-2">
           <Logo className="h-10 w-10 border-none bg-transparent shadow-none p-0" priority={true} />
           <span className="text-xl font-black font-headline tracking-tighter text-foreground">Nyaya Sahayak</span>
         </div>
         
-        {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-10">
           {navItems.map((item) => (
             <Link 
@@ -170,7 +168,6 @@ export default function RootPage() {
             </div>
           </div>
 
-          {/* Mobile Menu Ingress */}
           <div className="md:hidden">
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
@@ -208,7 +205,6 @@ export default function RootPage() {
         </div>
       </nav>
 
-      {/* Hero section */}
       <main className="pt-48 pb-20 px-4">
         <div className="max-w-5xl mx-auto text-center space-y-12">
           <motion.div
@@ -247,7 +243,6 @@ export default function RootPage() {
         </div>
       </main>
 
-      {/* Feature matrix */}
       <section className="py-32 px-4 sm:px-6 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
         
@@ -298,7 +293,6 @@ export default function RootPage() {
         </div>
       </section>
 
-      {/* Institutional footer */}
       <Footer />
     </div>
   );
