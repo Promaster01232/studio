@@ -275,14 +275,47 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <SidebarNav isAdmin={isAdmin} isElite={isElite} />
         </SidebarContent>
         <SidebarFooter className="p-4 border-t border-white/5">
-           <Button 
-             variant="ghost" 
-             onClick={() => router.push('/dashboard')}
-             className="w-full justify-start items-center gap-3 h-11 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl transition-all"
-           >
-             <ChevronRight className="h-4 w-4 rotate-180" />
-             <span className="font-bold text-[11px] tracking-tight group-data-[state=collapsed]:hidden">Collapse</span>
-           </Button>
+           <AnimatePresence mode="wait">
+             {userProfile ? (
+               <motion.div
+                 initial={{ opacity: 0 }}
+                 animate={{ opacity: 1 }}
+                 exit={{ opacity: 0 }}
+               >
+                 <Link href="/dashboard/profile">
+                   <Button 
+                     variant="ghost" 
+                     className="w-full h-14 justify-start items-center gap-3 px-2 hover:bg-white/5 rounded-2xl transition-all group"
+                   >
+                     <Avatar className="h-9 w-9 border-2 border-primary/20 shadow-sm shrink-0">
+                       <AvatarImage src={userProfile.photoURL} className="object-cover" />
+                       <AvatarFallback className="font-black bg-primary/5 text-primary text-[10px]">
+                         {userProfile.firstName?.charAt(0)}
+                       </AvatarFallback>
+                     </Avatar>
+                     <div className="flex flex-col items-start overflow-hidden group-data-[state=collapsed]:hidden">
+                       <span className="text-[11px] font-black text-white truncate w-full">
+                         {userProfile.firstName} {userProfile.lastName}
+                       </span>
+                       <span className="text-[9px] font-bold text-muted-foreground truncate w-full">
+                         Registry node active
+                       </span>
+                     </div>
+                     <ChevronRight className="ml-auto h-3 w-3 text-muted-foreground group-hover:text-primary transition-all group-data-[state=collapsed]:hidden" />
+                   </Button>
+                 </Link>
+               </motion.div>
+             ) : (
+               <Button 
+                 variant="ghost" 
+                 onClick={() => router.push('/dashboard')}
+                 className="w-full justify-start items-center gap-3 h-11 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl transition-all"
+               >
+                 <ChevronRight className="h-4 w-4 rotate-180" />
+                 <span className="font-bold text-[11px] tracking-tight group-data-[state=collapsed]:hidden">Collapse</span>
+               </Button>
+             )}
+           </AnimatePresence>
         </SidebarFooter>
       </Sidebar>
       <SidebarInset className="bg-[#050505] relative overflow-hidden">
