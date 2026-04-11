@@ -23,9 +23,9 @@ function generateDeterministicAudit(lang: string): UnderstandLegalDocumentOutput
     const isHindi = lang.toLowerCase().includes('hindi');
     return {
         summary: isHindi ? "दस्तावेज़ का स्थानीय ऑडिट पूर्ण। यह आपके विवरण पर आधारित एक प्रारंभिक वैधानिक रिपोर्ट है।" : "Local document audit complete. This is a preliminary statutory report based on the uploaded instrument.",
-        legalRisks: isHindi ? "स्थानीय नोड द्वारा मध्यम जोखिम की पहचान की गई। प्रक्रियात्मक साक्ष्य की जांच आवश्यक है।" : "Medium risks identified by local node. Procedural evidence verification is required.",
+        legalRisks: isHindi ? "स्थानीय सिस्टम द्वारा मध्यम जोखिम की पहचान की गई। प्रक्रियात्मक साक्ष्य की जांच आवश्यक है।" : "Medium risks identified by local system. Procedural evidence verification is required.",
         deadlines: isHindi ? "कृपया महत्वपूर्ण तिथियों और वैधानिक सीमाओं के लिए दस्तावेज़ की मैन्युअल रूप से जाँच करें।" : "Please check document manually for critical dates and statutory limitations.",
-        requiredActions: isHindi ? "नोड को सत्यापित अधिवक्ता के साथ सिंक करें।" : "Sync node with a verified advocate via Lawyer Connect.",
+        requiredActions: isHindi ? "रिकॉर्ड को सत्यापित अधिवक्ता के साथ सिंक करें।" : "Sync record with a verified advocate via lawyer connect.",
         consequences: isHindi ? "प्रक्रियात्मक देरी या वैधानिक चूक की संभावना।" : "Procedural delays or statutory lapses are possible without review."
     };
 }
