@@ -164,13 +164,6 @@ export default function DashboardHomePage() {
     }
   }, [auth, firestore]);
 
-  const stats = [
-    { label: "total chats", value: "0", icon: MessageSquare, color: "text-blue-500", bg: "bg-blue-500/10" },
-    { label: "documents", value: "0", icon: FileSearch, color: "text-emerald-500", bg: "bg-emerald-500/10" },
-    { label: "notes", value: "0", icon: FileText, color: "text-purple-500", bg: "bg-purple-500/10" },
-    { label: "ai usage", value: `${userProfile?.aiUsageCount || 0} / 100`, icon: Zap, color: "text-amber-500", bg: "bg-amber-500/10" },
-  ];
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
@@ -225,25 +218,6 @@ export default function DashboardHomePage() {
           </CardContent>
         </Card>
       </motion.div>
-
-      {/* STATS */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-        {stats.map((stat, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + (i * 0.05) }}>
-            <Card className="bg-[#161b22] border-white/5 rounded-2xl overflow-hidden group hover:border-primary/20 transition-all">
-              <CardContent className="p-5 sm:p-6 flex flex-col items-start gap-4 text-left">
-                <div className={cn("p-2.5 rounded-xl transition-transform group-hover:scale-110", stat.bg, stat.color)}>
-                  <stat.icon className="h-5 w-5" />
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-[10px] font-bold text-gray-500 lowercase tracking-widest">{stat.label}</p>
-                  <p className="text-xl sm:text-2xl font-black text-white tracking-tighter">{stat.value}</p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
 
       {/* CENTRAL CHAT HUB */}
       <div className="flex flex-col items-center justify-center pt-10 text-center">
