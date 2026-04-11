@@ -22,7 +22,8 @@ import {
   FileCheck,
   Languages,
   BookOpen,
-  Mic
+  Mic,
+  Menu
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -30,6 +31,14 @@ import { Logo } from "@/components/logo";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Footer } from "@/components/footer";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 
 const capabilities = [
   {
@@ -90,8 +99,18 @@ const capabilities = [
   }
 ];
 
+const navItems = [
+  { name: "Features", href: "/features" },
+  { name: "How it works", href: "/how-it-works" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "Faqs", href: "/faqs" },
+  { name: "Blog", href: "/blog" },
+  { name: "About", href: "/about" },
+];
+
 export default function RootPage() {
   const [mounted, setMounted] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -118,15 +137,6 @@ export default function RootPage() {
     },
   };
 
-  const navItems = [
-    { name: "Features", href: "/features" },
-    { name: "How it works", href: "/how-it-works" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "Faqs", href: "/faqs" },
-    { name: "Blog", href: "/blog" },
-    { name: "About", href: "/about" },
-  ];
-
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-primary/30 overflow-x-hidden font-body text-left">
       {/* Navigation ingress */}
@@ -136,6 +146,7 @@ export default function RootPage() {
           <span className="text-xl font-black font-headline tracking-tighter">Nyaya Sahayak</span>
         </div>
         
+        {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-10">
           {navItems.map((item) => (
             <Link 
@@ -149,12 +160,50 @@ export default function RootPage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost" asChild className="text-[10px] font-black uppercase tracking-widest hover:bg-white/5">
-            <Link href="/login">Login</Link>
-          </Button>
-          <Button asChild className="bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest px-6 rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
-            <Link href="/register">Join hub</Link>
-          </Button>
+          <div className="hidden md:flex items-center gap-4">
+            <Button variant="ghost" asChild className="text-xs font-bold hover:bg-white/5">
+              <Link href="/login">Login</Link>
+            </Button>
+            <Button asChild className="bg-primary text-primary-foreground font-bold text-xs px-6 rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
+              <Link href="/register">Join hub</Link>
+            </Button>
+          </div>
+
+          {/* Mobile Menu Ingress */}
+          <div className="md:hidden">
+            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/5 rounded-xl h-10 w-10">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="bg-[#0a0a0a] border-white/5 text-white w-[280px] p-0">
+                <SheetHeader className="p-6 border-b border-white/5">
+                  <SheetTitle className="text-white text-left font-headline font-black text-xl tracking-tighter">Navigation</SheetTitle>
+                  <SheetDescription className="text-white/40 text-left text-[10px] uppercase font-bold tracking-widest">Institutional hub</SheetDescription>
+                </SheetHeader>
+                <div className="flex flex-col p-6 gap-6 text-left">
+                  {navItems.map((item) => (
+                    <Link 
+                      key={item.name} 
+                      href={item.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="text-left text-lg font-bold text-white/60 hover:text-white transition-all"
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                  <div className="h-px bg-white/5 my-2" />
+                  <Button asChild variant="ghost" className="justify-start px-0 text-white/60 hover:text-white h-10 font-bold" onClick={() => setIsMenuOpen(false)}>
+                    <Link href="/login">Login</Link>
+                  </Button>
+                  <Button asChild className="bg-primary text-primary-foreground font-bold h-12 rounded-xl" onClick={() => setIsMenuOpen(false)}>
+                    <Link href="/register">Join hub</Link>
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </nav>
 

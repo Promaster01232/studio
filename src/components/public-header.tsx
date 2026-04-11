@@ -12,6 +12,9 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
 
 const navItems = [
@@ -66,10 +69,10 @@ export function PublicHeader() {
           ) : (
             <>
               <div className="hidden md:flex items-center gap-2">
-                <Button asChild variant="ghost" size="sm" className="font-black text-[10px] uppercase tracking-widest h-10 px-6 hover:bg-white/5 text-white">
+                <Button asChild variant="ghost" size="sm" className="font-bold text-xs h-10 px-6 hover:bg-white/5 text-white">
                   <Link href="/login">Login</Link>
                 </Button>
-                <Button asChild size="sm" className="bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest h-10 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">
+                <Button asChild size="sm" className="bg-primary text-primary-foreground font-bold text-xs h-10 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95">
                   <Link href="/register">
                     Join hub
                   </Link>
@@ -83,14 +86,18 @@ export function PublicHeader() {
                       <Menu className="h-6 w-6" />
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="right" className="bg-[#0a0a0a] border-white/5 text-white w-[280px]">
-                    <div className="flex flex-col gap-6 mt-10 text-left">
+                  <SheetContent side="right" className="bg-[#0a0a0a] border-white/5 text-white w-[280px] p-0">
+                    <SheetHeader className="p-6 border-b border-white/5">
+                      <SheetTitle className="text-white text-left font-headline font-black text-xl tracking-tighter">Navigation</SheetTitle>
+                      <SheetDescription className="text-white/40 text-left text-[10px] uppercase font-bold tracking-widest">Public terminal</SheetDescription>
+                    </SheetHeader>
+                    <div className="flex flex-col p-6 gap-6 text-left">
                       {navItems.map((item) => (
                         <Link 
                           key={item.name} 
                           href={item.href}
                           onClick={() => setIsOpen(false)}
-                          className="text-left text-lg font-medium text-white/60 hover:text-white transition-all"
+                          className="text-left text-lg font-bold text-white/60 hover:text-white transition-all"
                         >
                           {item.name}
                         </Link>
