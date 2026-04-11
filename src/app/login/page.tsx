@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Logo } from "@/components/logo";
 import { motion } from "framer-motion";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const GoogleIcon = () => (
   <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,6 +42,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -63,6 +65,10 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acceptedTerms) {
+        toast({ variant: "destructive", title: "Protocol required", description: "Please acknowledge the statutory terms to continue."});
+        return;
+    }
     if (!email || !password) {
         toast({ variant: "destructive", title: "Information missing", description: "Please enter both credentials."});
         return;
@@ -84,6 +90,10 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
+    if (!acceptedTerms) {
+        toast({ variant: "destructive", title: "Protocol required", description: "Please acknowledge the statutory terms to continue."});
+        return;
+    }
     setIsGoogleLoading(true);
     try {
       const provider = new GoogleAuthProvider();
@@ -188,10 +198,17 @@ export default function LoginPage() {
                 </div>
               </div>
 
+              <div className="flex items-start space-x-3 text-left p-4 rounded-xl bg-slate-50 border border-slate-100">
+                <Checkbox id="terms" checked={acceptedTerms} onCheckedChange={(c) => setAcceptedTerms(c as boolean)} className="mt-1" />
+                <Label htmlFor="terms" className="text-xs font-medium text-slate-500 leading-relaxed cursor-pointer">
+                  I acknowledge the statutory protocols and <Link href="/privacy" className="text-[#1e3a5f] hover:underline font-bold">Privacy policy</Link> of nyayguru.
+                </Label>
+              </div>
+
               <div className="space-y-4">
                 <Button 
                   type="submit" 
-                  disabled={isLoading || isGoogleLoading} 
+                  disabled={isLoading || isGoogleLoading || !acceptedTerms} 
                   className="w-full h-12 bg-[#1e3a5f] hover:bg-[#162d4a] text-white font-bold text-sm rounded-xl shadow-lg active:scale-[0.98] transition-all"
                 >
                   {isLoading ? (
@@ -205,7 +222,7 @@ export default function LoginPage() {
                   type="button"
                   variant="outline" 
                   onClick={handleGoogleLogin} 
-                  disabled={isLoading || isGoogleLoading}
+                  disabled={isLoading || isGoogleLoading || !acceptedTerms}
                   className="w-full h-12 border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-sm rounded-xl active:scale-[0.98] transition-all gap-3"
                 >
                   {isGoogleLoading ? <Loader2 className="animate-spin h-5 w-5" /> : <GoogleIcon />}
