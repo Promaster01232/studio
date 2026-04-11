@@ -61,7 +61,7 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 <SearchDialog>
                     <div className="w-full max-w-md cursor-pointer group transition-all">
-                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[11px] tracking-tight text-gray-500 rounded-xl bg-white/5 border border-white/5 group-hover:border-primary/20 transition-all relative text-left">
+                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[11px] tracking-tight text-gray-500 rounded-xl bg-white/5 border border-white/5 group-hover:border-primary/20 transition-all relative text-left lowercase">
                             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-hover:text-primary transition-colors" />
                             <span>search chats, docs, notes... (ctrl+k)</span>
                         </div>
@@ -77,13 +77,13 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex items-center gap-4 sm:gap-6">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
                     <Zap className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-[10px] font-black text-gray-300 tracking-tighter">100 left</span>
+                    <span className="text-[10px] font-black text-gray-300 tracking-tighter lowercase">100 left</span>
                 </div>
 
                 <div className="flex items-center gap-4 text-gray-400">
                     <button className="flex items-center gap-1.5 hover:text-white transition-colors">
                         <Globe className="h-4 w-4" />
-                        <span className="text-[10px] font-black">en</span>
+                        <span className="text-[10px] font-black lowercase">en</span>
                     </button>
                     <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="hover:text-white transition-colors">
                         <Moon className="h-4 w-4" />
@@ -91,7 +91,7 @@ function Header({ userProfile }: { userProfile: any }) {
                 </div>
 
                 {!userProfile ? (
-                    <Button asChild size="sm" className="h-9 px-5 font-black text-[10px] rounded-xl shadow-lg active:scale-95 transition-all">
+                    <Button asChild size="sm" className="h-9 px-5 font-black text-[10px] rounded-xl shadow-lg active:scale-95 transition-all lowercase">
                         <Link href="/login">sign in</Link>
                     </Button>
                 ) : (
@@ -100,7 +100,7 @@ function Header({ userProfile }: { userProfile: any }) {
                             <Avatar className="h-8 w-8 border-2 border-primary/20 shadow-sm">
                                 <AvatarImage src={userProfile.photoURL} className="object-cover" />
                                 <AvatarFallback className="font-black bg-[#e91e63] text-white text-[10px]">
-                                    {userProfile.firstName?.charAt(0) || "p"}
+                                    {userProfile.firstName?.charAt(0)?.toLowerCase() || "p"}
                                 </AvatarFallback>
                             </Avatar>
                         </Link>
@@ -189,10 +189,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <Logo className="h-8 w-8 border-none shadow-none p-0 bg-transparent" priority={true} />
             </div>
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
-              <span className="text-xl font-black font-headline tracking-tighter text-white leading-none">
+              <span className="text-xl font-black font-headline tracking-tighter text-white leading-none lowercase">
                   nyayguru
               </span>
-              <span className="text-[8px] font-bold text-primary/60 tracking-widest mt-1">legal intelligence</span>
+              <span className="text-[8px] font-bold text-primary/60 tracking-widest mt-1 lowercase">legal intelligence</span>
             </div>
           </Link>
         </SidebarHeader>
@@ -206,7 +206,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
              className="w-full justify-start items-center gap-3 h-11 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl transition-all"
            >
              <ChevronRight className="h-4 w-4 rotate-180" />
-             <span className="font-black text-[11px] tracking-tight group-data-[state=collapsed]:hidden">collapse</span>
+             <span className="font-black text-[11px] tracking-tight group-data-[state=collapsed]:hidden lowercase">collapse</span>
            </Button>
         </SidebarFooter>
       </Sidebar>

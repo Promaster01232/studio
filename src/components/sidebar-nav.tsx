@@ -42,56 +42,56 @@ import { motion } from "framer-motion";
 
 const navGroups = [
   {
-    label: "Home",
+    label: "home",
     items: [
-      { title: "Dashboard", icon: Home, href: "/dashboard" },
+      { title: "dashboard", icon: Home, href: "/dashboard" },
     ]
   },
   {
-    label: "Ai Tools",
+    label: "ai tools",
     items: [
-      { title: "Record Voice", icon: Mic, href: "/dashboard/narrate" },
-      { title: "Scan Documents", icon: FileSearch, href: "/dashboard/document-intelligence" },
-      { title: "Write Documents", icon: FileText, href: "/dashboard/document-generator" },
-      { title: "Create Bonds", icon: FileSignature, href: "/dashboard/bond-generator" },
-      { title: "Check Chance", icon: BrainCircuit, href: "/dashboard/strength-analyzer" },
-      { title: "Court Helper", icon: Gavel, href: "/dashboard/court-assistant" },
-      { title: "Check Evidence", icon: ShieldCheck, href: "/dashboard/evidence-audit" },
-      { title: "Bail Helper", icon: Scale, href: "/dashboard/bail-estimator" },
-      { title: "Law Linker", icon: Zap, href: "/dashboard/statutory-linker" },
-      { title: "Check Contract", icon: FileCheck, href: "/dashboard/contract-auditor" },
+      { title: "record voice", icon: Mic, href: "/dashboard/narrate" },
+      { title: "scan documents", icon: FileSearch, href: "/dashboard/document-intelligence" },
+      { title: "write documents", icon: FileText, href: "/dashboard/document-generator" },
+      { title: "create bonds", icon: FileSignature, href: "/dashboard/bond-generator" },
+      { title: "check chance", icon: BrainCircuit, href: "/dashboard/strength-analyzer" },
+      { title: "court helper", icon: Gavel, href: "/dashboard/court-assistant" },
+      { title: "check evidence", icon: ShieldCheck, href: "/dashboard/evidence-audit" },
+      { title: "bail helper", icon: Scale, href: "/dashboard/bail-estimator" },
+      { title: "law linker", icon: Zap, href: "/dashboard/statutory-linker" },
+      { title: "check contract", icon: FileCheck, href: "/dashboard/contract-auditor" },
     ]
   },
   {
-    label: "Case Hub",
+    label: "case hub",
     items: [
-      { title: "My Cases", icon: FolderSearch, href: "/dashboard/my-cases" },
-      { title: "Free Help", icon: HandHelping, href: "/dashboard/ngo-legal-aid" },
-      { title: "Learn Law", icon: Library, href: "/dashboard/learn" },
-      { title: "Help Guides", icon: Newspaper, href: "/dashboard/police-guide" },
-      { title: "Community", icon: Users, href: "/dashboard/research-analytics" },
+      { title: "my cases", icon: FolderSearch, href: "/dashboard/my-cases" },
+      { title: "free help", icon: HandHelping, href: "/dashboard/ngo-legal-aid" },
+      { title: "learn law", icon: Library, href: "/dashboard/learn" },
+      { title: "help guides", icon: Newspaper, href: "/dashboard/police-guide" },
+      { title: "community", icon: Users, href: "/dashboard/research-analytics" },
     ]
   },
   {
-    label: "For Business",
+    label: "for business",
     items: [
-      { title: "Business Hub", icon: Building, href: "/dashboard/business-msme" },
-      { title: "Legal Fees", icon: ReceiptText, href: "/dashboard/finances-billing" },
+      { title: "business hub", icon: Building, href: "/dashboard/business-msme" },
+      { title: "legal fees", icon: ReceiptText, href: "/dashboard/finances-billing" },
     ]
   },
   {
-    label: "Account",
+    label: "account",
     items: [
-      { title: "My Profile", icon: User, href: "/dashboard/profile" },
-      { title: "My Plan", icon: CreditCard, href: "/dashboard/billing" },
-      { title: "Contact Help", icon: Headset, href: "/dashboard/support" },
+      { title: "my profile", icon: User, href: "/dashboard/profile" },
+      { title: "my plan", icon: CreditCard, href: "/dashboard/billing" },
+      { title: "contact help", icon: Headset, href: "/dashboard/support" },
     ]
   }
 ];
 
 const adminItems = [
-  { title: "Users", icon: ShieldAlert, href: "/dashboard/management-console" },
-  { title: "Verify Pros", icon: UserPlus, href: "/dashboard/advocate-verification" },
+  { title: "users", icon: ShieldAlert, href: "/dashboard/management-console" },
+  { title: "verify pros", icon: UserPlus, href: "/dashboard/advocate-verification" },
 ];
 
 export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boolean, isElite?: boolean }) {
@@ -105,7 +105,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
     <div className="space-y-6">
       {navGroups.map((group) => (
         <SidebarGroup key={group.label} className="p-0">
-          <SidebarGroupLabel className="px-4 text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 mb-2">
+          <SidebarGroupLabel className="px-4 text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 mb-2 lowercase">
             {group.label}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -130,7 +130,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                           "h-4 w-4 shrink-0 transition-transform group-hover/btn:scale-110",
                           active ? "text-primary-foreground" : "text-gray-500 group-hover/btn:text-primary"
                         )} />
-                        <span className="text-[11px] font-bold tracking-tight truncate">
+                        <span className="text-[11px] font-bold tracking-tight truncate lowercase">
                           {item.title}
                         </span>
                         {active && (
@@ -151,8 +151,8 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
 
       {isAdmin && (
         <SidebarGroup className="p-0 border-t border-white/5 pt-6 mt-6">
-          <SidebarGroupLabel className="px-4 text-[9px] font-black uppercase tracking-[0.3em] text-red-500/60 mb-2">
-            Admin Registry
+          <SidebarGroupLabel className="px-4 text-[9px] font-black uppercase tracking-[0.3em] text-red-500/60 mb-2 lowercase">
+            admin registry
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-1 px-2">
@@ -172,7 +172,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                     >
                       <Link href={item.href}>
                         <item.icon className="h-4 w-4" />
-                        <span className="text-[11px] font-black uppercase tracking-tight">{item.title}</span>
+                        <span className="text-[11px] font-black lowercase tracking-tight">{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

@@ -28,49 +28,49 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 const logos = [
-  { name: "Erode Law College", icon: Gavel },
-  { name: "Commonwealth Lawyers Association", icon: ShieldCheck },
-  { name: "Legal Service India", icon: Scale },
-  { name: "Lawful Legal", icon: BookOpen },
-  { name: "Ijirl Law Journal", icon: Activity },
+  { name: "erode law college", icon: Gavel },
+  { name: "commonwealth lawyers association", icon: ShieldCheck },
+  { name: "legal service india", icon: Scale },
+  { name: "lawful legal", icon: BookOpen },
+  { name: "ijirl law journal", icon: Activity },
 ];
 
 const capabilities = [
   {
-    title: "Ai Legal Chat",
-    desc: "Ask anything about Indian law. Get answers grounded in statutes, judgments, and legal procedures in any Indian language.",
+    title: "ai legal chat",
+    desc: "ask anything about indian law. get answers grounded in statutes, judgments, and legal procedures in any indian language.",
     icon: MessageSquare,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
     border: "border-blue-500/20",
-    badges: ["Multi-language", "Voice Input", "Live Web Search"]
+    badges: ["multi-language", "voice input", "live web search"]
   },
   {
-    title: "Document Intelligence",
-    desc: "Upload contracts, notices, or case files. Ask questions and get Ai-powered analysis instantly.",
+    title: "document intelligence",
+    desc: "upload contracts, notices, or case files. ask questions and get ai-powered analysis instantly.",
     icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
     border: "border-emerald-500/20",
-    badges: ["Pdf & Docx", "Ocr Support", "Cloud Storage"]
+    badges: ["pdf & docx", "ocr support", "cloud storage"]
   },
   {
-    title: "Case & Knowledge Management",
-    desc: "Keep your legal research organized by case, client, or topic in collections. Find any insight in seconds.",
+    title: "case & knowledge management",
+    desc: "keep your legal research organized by case, client, or topic in collections. find any insight in seconds.",
     icon: FolderKanban,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
     border: "border-orange-500/20",
-    badges: ["Collections", "Global Search", "Share Via Link"]
+    badges: ["collections", "global search", "share via link"]
   },
   {
-    title: "Security & Privacy",
-    desc: "Enterprise-grade security. Your conversations and documents remain completely confidential.",
+    title: "security & privacy",
+    desc: "enterprise-grade security. your conversations and documents remain completely confidential.",
     icon: Lock,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
     border: "border-purple-500/20",
-    badges: ["End-to-End Privacy", "Not Used For Ai Training", "Delete Anytime"]
+    badges: ["end-to-end privacy", "not used for ai training", "delete anytime"]
   }
 ];
 
@@ -89,14 +89,14 @@ export default function RootPage() {
       <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-black/20 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center gap-2">
           <Logo className="h-10 w-10 border-none bg-transparent shadow-none p-0" priority={true} />
-          <span className="text-xl font-black font-headline tracking-tighter">Nyaya Sahayak</span>
+          <span className="text-xl font-black font-headline tracking-tighter lowercase">nyaya sahayak</span>
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="ghost" asChild className="text-[10px] font-black uppercase tracking-widest hover:bg-white/5">
-            <Link href="/login">Login</Link>
+          <Button variant="ghost" asChild className="text-[10px] font-black uppercase tracking-widest hover:bg-white/5 lowercase">
+            <Link href="/login">login</Link>
           </Button>
-          <Button asChild className="bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest px-6 rounded-xl shadow-lg shadow-primary/20">
-            <Link href="/register">Join Hub</Link>
+          <Button asChild className="bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest px-6 rounded-xl shadow-lg shadow-primary/20 lowercase">
+            <Link href="/register">join hub</Link>
           </Button>
         </div>
       </nav>
@@ -110,29 +110,29 @@ export default function RootPage() {
             transition={{ duration: 0.6 }}
             className="flex flex-col items-center"
           >
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest mb-10 flex items-center gap-2">
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest mb-10 flex items-center gap-2 lowercase">
               <Sparkles className="h-3 w-3" />
-              Platform Features
+              platform features
             </Badge>
             
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8">
-              Your Complete <span className="text-primary italic">Legal Research Toolkit</span>
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8 lowercase">
+              your complete <span className="text-primary italic">legal research toolkit</span>
             </h1>
             
-            <p className="text-lg sm:text-xl text-white/60 font-medium max-w-2xl mx-auto leading-relaxed">
-              Ai-powered chat, document analysis, voice input, and multi-language support. Everything you need to navigate Indian law with confidence.
+            <p className="text-lg sm:text-xl text-white/60 font-medium max-w-2xl mx-auto leading-relaxed lowercase">
+              ai-powered chat, document analysis, voice input, and multi-language support. everything you need to navigate indian law with confidence.
             </p>
             
             <motion.div 
-              className="flex flex-wrap items-center justify-center gap-6 mt-8 text-[10px] font-bold text-white/30 tracking-[0.2em]"
+              className="flex flex-wrap items-center justify-center gap-6 mt-8 text-[10px] font-bold text-white/30 tracking-[0.2em] lowercase"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
             >
-              <div className="flex items-center gap-2"><MessageSquare className="h-3.5 w-3.5 text-primary" /> Ask Legal Query</div>
-              <div className="flex items-center gap-2"><Globe className="h-3.5 w-3.5 text-primary" /> Any Language</div>
-              <div className="flex items-center gap-2"><Upload className="h-3.5 w-3.5 text-primary" /> Upload Pdfs</div>
-              <div className="flex items-center gap-2"><Heart className="h-3.5 w-3.5 text-primary" /> Free Forever</div>
+              <div className="flex items-center gap-2"><MessageSquare className="h-3.5 w-3.5 text-primary" /> ask legal query</div>
+              <div className="flex items-center gap-2"><Globe className="h-3.5 w-3.5 text-primary" /> any language</div>
+              <div className="flex items-center gap-2"><Upload className="h-3.5 w-3.5 text-primary" /> upload pdfs</div>
+              <div className="flex items-center gap-2"><Heart className="h-3.5 w-3.5 text-primary" /> free forever</div>
             </motion.div>
           </motion.div>
 
@@ -143,16 +143,16 @@ export default function RootPage() {
             transition={{ delay: 0.4 }}
             className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4"
           >
-            <Button asChild className="h-14 px-8 rounded-2xl bg-primary text-primary-foreground font-black text-xs tracking-widest shadow-2xl shadow-primary/20 active:scale-95 transition-all">
+            <Button asChild className="h-14 px-8 rounded-2xl bg-primary text-primary-foreground font-black text-xs tracking-widest shadow-2xl shadow-primary/20 active:scale-95 transition-all lowercase">
               <Link href="/dashboard">
                 <span className="relative z-10 flex items-center">
-                  Ask Your First Legal Question Free <ArrowRight className="ml-2 h-4 w-4" />
+                  ask your first legal question free <ArrowRight className="ml-2 h-4 w-4" />
                 </span>
               </Link>
             </Button>
-            <Button variant="outline" asChild className="h-14 px-8 rounded-2xl border-white/10 hover:bg-white/5 text-white font-black text-xs tracking-widest transition-all">
+            <Button variant="outline" asChild className="h-14 px-8 rounded-2xl border-white/10 hover:bg-white/5 text-white font-black text-xs tracking-widest transition-all lowercase">
               <Link href="/dashboard/about">
-                Explore All Features
+                explore all features
               </Link>
             </Button>
           </motion.div>
@@ -163,11 +163,11 @@ export default function RootPage() {
       <section className="py-24 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto space-y-20">
           <div className="text-center space-y-4">
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest mb-2">
-              Core Capabilities
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest mb-2 lowercase">
+              core capabilities
             </Badge>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter tracking-tight leading-none">
-              Everything You Need For Legal Clarity
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter lowercase leading-none">
+              everything you need for legal clarity
             </h2>
           </div>
 
@@ -189,8 +189,8 @@ export default function RootPage() {
                         <item.icon className="h-7 w-7" />
                       </div>
                       <div className="space-y-2">
-                        <h3 className="text-xl font-black tracking-tight">{item.title}</h3>
-                        <p className="text-sm text-white/40 leading-relaxed font-medium">
+                        <h3 className="text-xl font-black tracking-tight lowercase">{item.title}</h3>
+                        <p className="text-sm text-white/40 leading-relaxed font-medium lowercase">
                           {item.desc}
                         </p>
                       </div>
@@ -198,7 +198,7 @@ export default function RootPage() {
                     
                     <div className="mt-auto flex flex-wrap gap-2">
                       {item.badges.map((b, idx) => (
-                        <Badge key={idx} variant="secondary" className="bg-white/5 text-white/40 border-white/5 font-black text-[8px] tracking-widest px-3 py-1.5 rounded-lg">
+                        <Badge key={idx} variant="secondary" className="bg-white/5 text-white/40 border-white/5 font-black text-[8px] tracking-widest px-3 py-1.5 rounded-lg lowercase">
                           {b}
                         </Badge>
                       ))}
@@ -216,7 +216,7 @@ export default function RootPage() {
         <div className="max-w-7xl mx-auto px-6 text-center space-y-16">
           <div className="flex items-center justify-center gap-6">
             <div className="h-[1px] w-16 bg-primary/20" />
-            <h3 className="text-[11px] font-black tracking-[0.4em] text-primary/60">As Seen In</h3>
+            <h3 className="text-[11px] font-black tracking-[0.4em] text-primary/60 lowercase">as seen in</h3>
             <div className="h-[1px] w-16 bg-primary/20" />
           </div>
           
@@ -226,14 +226,14 @@ export default function RootPage() {
                 <div className="p-2 rounded-lg bg-white/5 border border-white/10 transition-all group-hover:border-primary/40 group-hover:bg-primary/5">
                     <logo.icon className="h-6 w-6 text-white group-hover:text-primary transition-colors" />
                 </div>
-                <span className="font-black text-sm tracking-tight text-white/80 group-hover:text-white">{logo.name}</span>
+                <span className="font-black text-sm tracking-tight text-white/80 group-hover:text-white lowercase">{logo.name}</span>
               </div>
             ))}
           </div>
           
           <div className="pt-4">
-            <p className="text-sm sm:text-base font-medium text-white/40 max-w-2xl mx-auto leading-relaxed">
-                Used and trusted by <span className="text-primary font-black">3,00,000+ Indians</span> including advocates, litigants, law schools, students, and researchers
+            <p className="text-sm sm:text-base font-medium text-white/40 max-w-2xl mx-auto leading-relaxed lowercase">
+                used and trusted by <span className="text-primary font-black">3,00,000+ indians</span> including advocates, litigants, law schools, students, and researchers
             </p>
           </div>
         </div>
@@ -243,7 +243,7 @@ export default function RootPage() {
       <footer className="py-16 border-t border-white/5 bg-[#050505] text-center">
         <div className="flex flex-col items-center gap-6 opacity-30">
             <Logo className="h-10 w-10 border-none shadow-none bg-transparent grayscale p-0" priority={false} />
-            <p className="text-[10px] font-black uppercase tracking-[0.8em] text-white">Nyayasahayak.in // Justice For Bharat // 2025</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.8em] text-white lowercase">nyayasahayak.in // justice for bharat // 2025</p>
         </div>
       </footer>
     </div>
