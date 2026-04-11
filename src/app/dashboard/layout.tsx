@@ -11,30 +11,17 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { LogOut, Loader2, Search, ShieldAlert, Zap, User, LogIn, Lock, Activity, ChevronRight, ShieldX, Moon, Globe } from "lucide-react";
+import { LogOut, Loader2, Search, Zap, Moon, Globe, ChevronRight } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { Footer } from "@/components/footer";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-} from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/theme-provider";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
-import { SosDialog } from "@/components/sos-dialog";
 import { SearchDialog } from "@/components/search-dialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -60,16 +47,16 @@ const PUBLIC_DASHBOARD_ROUTES = [
   '/dashboard/contact',
 ];
 
-function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }) {
+function Header({ userProfile }: { userProfile: any }) {
     const { theme, setTheme } = useTheme();
     
     return (
         <header className={cn(
             "sticky top-0 z-[40] flex h-16 items-center gap-4 border-b px-4 sm:px-6 transition-all",
-            "bg-[#0a0a0a]/90 backdrop-blur-xl border-white/5"
+            "bg-[#0a0a0a] border-white/5"
         )}>
             <div className="flex items-center gap-3 md:hidden">
-                <SidebarTrigger className="h-9 w-9 rounded-xl hover:bg-primary/5 border border-primary/5" />
+                <SidebarTrigger className="h-9 w-9 rounded-xl hover:bg-primary/5 border border-primary/5 text-white" />
             </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
@@ -91,15 +78,15 @@ function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }
             <div className="flex items-center gap-4 sm:gap-6">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
                     <Zap className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-[10px] font-black text-gray-300">100 left</span>
+                    <span className="text-[10px] font-black text-gray-300 uppercase tracking-tighter">100 left</span>
                 </div>
 
                 <div className="flex items-center gap-4 text-gray-400">
-                    <button className="flex items-center gap-1.5 hover:text-primary transition-colors">
+                    <button className="flex items-center gap-1.5 hover:text-white transition-colors">
                         <Globe className="h-4 w-4" />
                         <span className="text-[10px] font-black uppercase">EN</span>
                     </button>
-                    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="hover:text-primary transition-colors">
+                    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="hover:text-white transition-colors">
                         <Moon className="h-4 w-4" />
                     </button>
                 </div>
@@ -113,8 +100,8 @@ function Header({ userProfile, isAdmin }: { userProfile: any, isAdmin: boolean }
                         <Link href="/dashboard/profile">
                             <Avatar className="h-8 w-8 border-2 border-primary/20 shadow-sm">
                                 <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                                <AvatarFallback className="font-black bg-primary text-primary-foreground text-[10px]">
-                                    {userProfile.firstName?.charAt(0)}
+                                <AvatarFallback className="font-black bg-[#e91e63] text-white text-[10px]">
+                                    {userProfile.firstName?.charAt(0) || "P"}
                                 </AvatarFallback>
                             </Avatar>
                         </Link>
@@ -191,12 +178,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     }
   }, [auth.currentUser, profileLoading, pathname, router, userProfile]);
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    router.replace('/login');
-  };
-
-  const showContent = isMounted && (!profileLoading || pathname === '/create-profile');
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
   const isElite = isAdmin || userProfile?.subscriptionType?.startsWith('unlimited');
 
@@ -212,7 +193,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <span className="text-xl font-black font-headline tracking-tighter text-white leading-none">
                   NyayGuru
               </span>
-              <span className="text-[8px] font-bold text-primary/60 uppercase tracking-widest mt-1">Legal Intelligence for India</span>
+              <span className="text-[8px] font-bold text-primary/60 uppercase tracking-widest mt-1">Legal Intelligence</span>
             </div>
           </Link>
         </SidebarHeader>
@@ -231,10 +212,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </SidebarFooter>
       </Sidebar>
       <SidebarInset className="bg-[#050505] relative overflow-hidden">
-        <Header userProfile={userProfile} isAdmin={isAdmin} />
+        <Header userProfile={userProfile} />
         <main className="flex-1 overflow-y-auto custom-scrollbar relative">
             <AnimatePresence mode="wait">
-                {showContent ? (
+                {isMounted && (!profileLoading || pathname === '/create-profile') ? (
                     <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-4 sm:p-8 min-h-[calc(100vh-64px)] flex flex-col">
                         <div className="flex-1">{children}</div>
                         <Footer />
