@@ -100,6 +100,15 @@ const capabilities = [
   }
 ];
 
+const publicNavItems = [
+  "Features",
+  "How it works",
+  "Pricing",
+  "Faqs",
+  "Blog",
+  "About"
+];
+
 export default function RootPage() {
   const [mounted, setMounted] = useState(false);
 
@@ -131,23 +140,29 @@ export default function RootPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-primary/30 overflow-x-hidden font-body">
       {/* Navigation ingress */}
-      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-black/20 backdrop-blur-md border-b border-white/5">
+      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-black/40 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center gap-2">
           <Logo className="h-10 w-10 border-none bg-transparent shadow-none p-0" priority={true} />
           <span className="text-xl font-black font-headline tracking-tighter">Nyayguru</span>
         </div>
-        <div className="hidden md:flex items-center gap-8">
-          {['Features', 'How it works', 'Pricing', 'Faqs', 'Blog', 'About'].map((item) => (
-            <button key={item} className="text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-colors">
+        
+        {/* Elite Public Menu */}
+        <div className="hidden md:flex items-center gap-10">
+          {publicNavItems.map((item) => (
+            <button 
+              key={item} 
+              className="text-sm font-medium text-white/60 hover:text-white transition-all duration-300"
+            >
               {item}
             </button>
           ))}
         </div>
+
         <div className="flex items-center gap-4">
           <Button variant="ghost" asChild className="text-[10px] font-black uppercase tracking-widest hover:bg-white/5">
             <Link href="/login">Login</Link>
           </Button>
-          <Button asChild className="bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest px-6 rounded-xl shadow-lg shadow-primary/20">
+          <Button asChild className="bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest px-6 rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
             <Link href="/register">Join hub</Link>
           </Button>
         </div>
@@ -166,7 +181,7 @@ export default function RootPage() {
               Platform status: active
             </Badge>
             
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8 uppercase">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8 uppercase text-white">
               Your complete <br /> <span className="text-primary italic">Legal research toolkit.</span>
             </h1>
             
@@ -192,7 +207,7 @@ export default function RootPage() {
         </div>
       </main>
 
-      {/* Feature matrix precisely matching design */}
+      {/* Feature matrix */}
       <section className="py-32 px-4 sm:px-6 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         
@@ -201,7 +216,7 @@ export default function RootPage() {
             <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-5 py-1.5 rounded-full text-[9px] font-black tracking-[0.3em] uppercase mb-4">
               Features
             </Badge>
-            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-white">
+            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-white uppercase">
               What you can do with nyayguru
             </h2>
             <p className="text-lg text-white/40 font-medium tracking-tight">
@@ -230,7 +245,7 @@ export default function RootPage() {
                     </div>
                     
                     <div className="space-y-3">
-                      <h3 className="text-xl font-black tracking-tight text-white">{item.title}</h3>
+                      <h3 className="text-xl font-black tracking-tight text-white leading-tight">{item.title}</h3>
                       <p className="text-xs text-white/40 leading-relaxed font-medium">
                         {item.desc}
                       </p>
