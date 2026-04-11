@@ -14,6 +14,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
+const navItems = [
+  { name: "Features", href: "/features" },
+  { name: "How it works", href: "/how-it-works" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "Faqs", href: "/faqs" },
+  { name: "Blog", href: "/blog" },
+  { name: "About", href: "/about" },
+];
+
 export function PublicHeader() {
   const auth = useAuth();
   const [user, setUser] = useState<User | null>(null);
@@ -21,8 +30,6 @@ export function PublicHeader() {
   useEffect(() => {
     return onAuthStateChanged(auth, setUser);
   }, [auth]);
-
-  const navItems = ["Features", "How it works", "Pricing", "Faqs", "Blog", "About"];
 
   return (
     <header className="sticky top-0 z-[100] w-full border-b bg-black/90 backdrop-blur-md border-white/5">
@@ -37,12 +44,13 @@ export function PublicHeader() {
         {!user && (
           <div className="hidden md:flex items-center gap-10">
             {navItems.map((item) => (
-              <button 
-                key={item} 
+              <Link 
+                key={item.name} 
+                href={item.href}
                 className="text-sm font-medium text-white/60 hover:text-white transition-all duration-300"
               >
-                {item}
-              </button>
+                {item.name}
+              </Link>
             ))}
           </div>
         )}
@@ -77,12 +85,13 @@ export function PublicHeader() {
                   <SheetContent side="right" className="bg-[#0a0a0a] border-white/5 text-white w-[280px]">
                     <div className="flex flex-col gap-6 mt-10 text-left">
                       {navItems.map((item) => (
-                        <button 
-                          key={item} 
+                        <Link 
+                          key={item.name} 
+                          href={item.href}
                           className="text-left text-lg font-medium text-white/60 hover:text-white transition-all"
                         >
-                          {item}
-                        </button>
+                          {item.name}
+                        </Link>
                       ))}
                       <div className="h-px bg-white/5 my-2" />
                       <Button asChild variant="ghost" className="justify-start px-0 text-white/60 hover:text-white h-10 font-bold">
