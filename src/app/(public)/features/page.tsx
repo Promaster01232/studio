@@ -17,11 +17,17 @@ import {
   FileCheck,
   Activity,
   Globe,
-  Sparkles
+  Sparkles,
+  Shield,
+  BookMarked,
+  Clock,
+  ChevronRight
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const features = [
   {
@@ -96,6 +102,13 @@ const features = [
   }
 ];
 
+const trustBadges = [
+  { label: "Built for indian law", icon: Scale },
+  { label: "Updated with latest acts", icon: BookMarked },
+  { label: "No legal advice. information only.", icon: Shield },
+  { label: "Available 24/7", icon: Clock },
+];
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -115,40 +128,53 @@ const itemVariants = {
 
 export default function FeaturesPage() {
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-32 px-4 sm:px-6 text-left">
+    <div className="max-w-7xl mx-auto space-y-24 pb-32 px-4 sm:px-6 text-left">
       <motion.div 
         initial={{ opacity: 0, y: -10 }} 
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-white/10 pb-8"
+        className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-white/5 pb-12"
       >
-        <PageHeader
-          title="Platform capabilities"
-          description="A comprehensive registry of high-fidelity AI tools engineered for the Indian legal ecosystem."
-        />
-        <Badge variant="outline" className="font-bold text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Protocol 2025</Badge>
+        <div className="space-y-4">
+            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                Protocol 2025
+            </Badge>
+            <PageHeader
+              title="Platform capabilities"
+              description="A comprehensive registry of high-fidelity AI tools engineered for the Indian legal ecosystem."
+            />
+        </div>
+        <Button size="lg" className="rounded-2xl font-black text-xs uppercase tracking-widest h-14 px-10 shadow-2xl shadow-primary/20 active:scale-95 transition-all" asChild>
+            <Link href="/register">Initialize access <ArrowRight className="ml-2 h-4 w-4" /></Link>
+        </Button>
       </motion.div>
 
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         {features.map((f, i) => (
           <motion.div key={i} variants={itemVariants}>
-            <Card className="h-full border-white/5 bg-card/40 backdrop-blur-md hover:border-primary/20 transition-all duration-500 group rounded-[2rem] overflow-hidden relative">
+            <Card className="h-full border-white/5 bg-[#161b22] hover:border-primary/20 transition-all duration-500 group rounded-[2.5rem] overflow-hidden relative shadow-2xl">
               <div className="absolute top-0 right-0 p-6 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-                <f.icon className="h-24 w-24" />
+                <f.icon className="h-32 w-32" />
               </div>
-              <CardContent className="p-8 space-y-6 text-left relative z-10">
-                <div className={cn("p-4 rounded-2xl w-fit transition-transform group-hover:scale-110 duration-500 shadow-xl", f.bg, f.color)}>
-                  <f.icon className="h-6 w-6" />
+              <CardContent className="p-10 space-y-8 text-left relative z-10">
+                <div className={cn("p-4 rounded-2xl w-fit transition-transform group-hover:scale-110 duration-500 shadow-xl border border-white/5", f.bg, f.color)}>
+                  <f.icon className="h-7 w-7" />
                 </div>
                 <div className="space-y-3">
-                  <h3 className="text-xl font-black tracking-tight text-white leading-tight">{f.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed font-medium">
+                  <h3 className="text-2xl font-black tracking-tight text-white leading-tight">{f.title}</h3>
+                  <p className="text-xs sm:text-sm text-gray-400 leading-relaxed font-medium">
                     {f.desc}
                   </p>
+                </div>
+                <div className="pt-4">
+                    <div className="h-px w-full bg-white/5 mb-6" />
+                    <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">
+                        Learn more <ChevronRight className="h-3 w-3" />
+                    </button>
                 </div>
               </CardContent>
             </Card>
@@ -156,8 +182,31 @@ export default function FeaturesPage() {
         ))}
       </motion.div>
 
-      <div className="pt-20 text-center opacity-30">
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // FORENSIC REGISTRY</p>
+      {/* Trust Registry Section - Exactly as shown in the provided image */}
+      <section className="py-20 border-t border-white/5">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {trustBadges.map((badge, idx) => (
+                <motion.div 
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    viewport={{ once: true }}
+                    className="flex flex-col items-center gap-6 text-center group"
+                >
+                    <div className="h-12 w-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary shadow-xl transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/5 group-hover:border-primary/20">
+                        <badge.icon className="h-5 w-5" />
+                    </div>
+                    <p className="text-[11px] font-black uppercase tracking-tight text-gray-400 max-w-[140px] leading-relaxed transition-colors group-hover:text-white">
+                        {badge.label}
+                    </p>
+                </motion.div>
+            ))}
+        </div>
+      </section>
+
+      <div className="pt-10 text-center opacity-20">
+          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // FORENSIC REGISTRY // 2025</p>
       </div>
     </div>
   );
