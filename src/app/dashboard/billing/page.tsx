@@ -1,411 +1,345 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useAuth, useFirestore } from "@/firebase";
 import { doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp, query, where } from "firebase/firestore";
-import { CheckCircle2, Zap, ShieldCheck, Loader2, CreditCard, Crown, History, AlertTriangle, Mail, Clock, Activity, ArrowRight } from "lucide-react";
+import { 
+  CheckCircle2, 
+  Zap, 
+  Crown, 
+  Star, 
+  Loader2, 
+  Activity, 
+  Info,
+  ChevronRight,
+  ShieldCheck,
+  CreditCard,
+  Clock
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import { formatDistanceToNow } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
-import { Logo } from "@/components/logo";
+import { formatDistanceToNow } from "date-fns";
 
-const plans = [
-    {
-        id: 'free',
-        name: 'Citizen basic',
-        price: '₹0',
-        amount: 0,
-        desc: 'Standard identity enrollment.',
-        credits: '5 Forensic credits',
-        features: ['Voice narration (5x)', 'Document audit (5x)', 'Basic case analytics', 'Public directory access'],
-        color: 'text-muted-foreground',
-        bg: 'bg-muted/10',
-        border: 'border-muted/20'
+const plansData = [
+  {
+    id: "free",
+    name: "free",
+    icon: Zap,
+    desc: "trial & light users",
+    monthlyPrice: 0,
+    annualPrice: 0,
+    features: {
+      queries: "100",
+      limit: "10 per day",
+      output: "~40,000 words"
     },
-    {
-        id: 'pro_20',
-        name: 'Professional 20',
-        price: '₹99',
-        amount: 99,
-        desc: 'Essential statutory expansion.',
-        credits: '20 Forensic credits',
-        features: ['Voice narration (20x)', 'Document audit (20x)', 'Extended case tracker', 'Priority AI access'],
-        color: 'text-blue-500',
-        bg: 'bg-blue-500/5',
-        border: 'border-blue-500/20',
-        badge: 'Popular choice',
-        icon: Zap
+    color: "text-gray-400",
+    bg: "bg-gray-500/10"
+  },
+  {
+    id: "plus",
+    name: "plus",
+    icon: Crown,
+    desc: "regular & serious users",
+    monthlyPrice: 499,
+    annualPrice: 3990,
+    originalAnnualPrice: 4788,
+    monthlyEquivalent: "333",
+    features: {
+      queries: "200",
+      limit: "no daily limit",
+      output: "~1,50,000 words"
     },
-    {
-        id: 'unlimited_monthly',
-        name: 'Unlimited monthly',
-        price: '₹599',
-        amount: 599,
-        desc: 'Continuous institutional access.',
-        credits: 'Absolute clearance',
-        features: ['Unlimited AI forensic scans', 'Unlimited document audits', 'Full case strategy hub', 'Verified connect access', 'Priority neural support'],
-        color: 'text-primary',
-        bg: 'bg-primary/5',
-        border: 'border-primary/20',
-        badge: 'Professional tier',
-        icon: Crown
+    color: "text-amber-500",
+    bg: "bg-amber-500/10"
+  },
+  {
+    id: "premium",
+    name: "premium",
+    icon: Star,
+    desc: "power / professional users",
+    monthlyPrice: 899,
+    annualPrice: 6990,
+    originalAnnualPrice: 8388,
+    monthlyEquivalent: "583",
+    popular: true,
+    features: {
+      queries: "unlimited",
+      limit: "no daily limit",
+      output: "unlimited words"
     },
-    {
-        id: 'unlimited_yearly',
-        name: 'Institutional annual',
-        price: '₹4,999',
-        amount: 4999,
-        desc: 'Permanent statutory authority.',
-        credits: 'Absolute clearance',
-        features: ['Everything in unlimited', 'Advanced contract hub', 'Custom PDF export protocol', 'Root system access', 'Institutional branding'],
-        color: 'text-amber-600',
-        bg: 'bg-amber-500/5',
-        border: 'border-amber-500/20',
-        badge: 'Elite hub',
-        icon: ShieldCheck
-    }
+    color: "text-amber-500",
+    bg: "bg-amber-500/10"
+  }
 ];
 
-const VALID_COUPONS: Record<string, number> = {
-    "NYAYA50": 0.25,
-    "IDEASPARK20": 0.2,
-    "PROBONO": 1.0,
-    "WELCOME10": 0.1,
-    "ABCD12": 0.15,
-    "PIYUSH11": 0.99 
-};
-
 export default function BillingPage() {
-    const auth = useAuth();
-    const firestore = useFirestore();
-    const router = useRouter();
-    const { toast } = useToast();
-    const [profile, setProfile] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const [processingId, setProcessingId] = useState<string | null>(null);
-    const [syncError, setSyncError] = useState<{ paymentId: string, plan: string } | null>(null);
-    const [userTransactions, setUserTransactions] = useState<any[]>([]);
+  const auth = useAuth();
+  const firestore = useFirestore();
+  const { toast } = useToast();
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [isAnnual, setIsAnnual] = useState(true);
+  const [processingId, setProcessingId] = useState<string | null>(null);
+  const [userTransactions, setUserTransactions] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!auth.currentUser) {
+      setLoading(false);
+      return;
+    }
     
-    const [couponInput, setCouponInput] = useState("");
-    const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discount: number } | null>(null);
-
-    useEffect(() => {
-        if (!auth.currentUser) {
-            setLoading(false);
-            return;
-        }
-        
-        const userId = auth.currentUser.uid;
-        const userDocRef = doc(firestore, "users", userId);
-        
-        const unsub = onSnapshot(userDocRef, 
-            (doc) => {
-                setProfile(doc.data());
-                setLoading(false);
-            },
-            async (err) => {
-                const permissionError = new FirestorePermissionError({
-                    path: userDocRef.path,
-                    operation: 'get',
-                } satisfies SecurityRuleContext, err);
-                errorEmitter.emit('permission-error', permissionError);
-                setLoading(false);
-            }
-        );
-
-        const transCol = collection(firestore, "transactions");
-        const q = query(
-            transCol, 
-            where("userId", "==", userId),
-            where("status", "==", "CAPTURED")
-        );
-        
-        const unsubTrans = onSnapshot(q, 
-            (snap) => {
-                const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                list.sort((a: any, b: any) => {
-                    const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
-                    const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
-                    return Number(timeB) - Number(timeA);
-                });
-                setUserTransactions(list);
-            },
-            async (err) => {
-                const permissionError = new FirestorePermissionError({
-                    path: transCol.path,
-                    operation: 'list',
-                } satisfies SecurityRuleContext, err);
-                errorEmitter.emit('permission-error', permissionError);
-                setUserTransactions([]);
-            }
-        );
-
-        return () => { unsub(); unsubTrans(); };
-    }, [auth, firestore]);
-
-    const loadRazorpay = () => {
-        return new Promise((resolve) => {
-            const script = document.createElement("script");
-            script.src = "https://checkout.razorpay.com/v1/checkout.js";
-            script.onload = () => resolve(true);
-            script.onerror = () => resolve(false);
-            document.body.appendChild(script);
-        });
-    };
-
-    const handleApplyCoupon = () => {
-        const code = couponInput.toUpperCase().trim();
-        if (VALID_COUPONS[code] !== undefined) {
-            setAppliedCoupon({ code, discount: VALID_COUPONS[code] });
-            toast({ title: "Coupon applied", description: `Protocol active: ${code === 'PIYUSH11' ? '₹1 special tier' : (VALID_COUPONS[code] * 100) + '% discount'}.` });
-        } else {
-            toast({ variant: "destructive", title: "Invalid code", description: "Coupon not found in registry." });
-        }
-    };
-
-    const handleUpgrade = async (planId: string) => {
-        if (planId === profile?.subscriptionType) return;
-        const plan = plans.find(p => p.id === planId);
-        if (!plan || plan.amount === 0) return;
-
-        const res = await loadRazorpay();
-        if (!res) {
-            toast({ variant: "destructive", title: "Gateway failure", description: "Could not connect to payment hub." });
-            return;
-        }
-
-        const discount = appliedCoupon ? appliedCoupon.discount : 0;
-        let finalAmount = Math.max(0, Math.round(plan.amount * (1 - discount)));
-        
-        if (appliedCoupon?.code === 'PIYUSH11') {
-            finalAmount = 1;
-        }
-
-        setProcessingId(planId);
-
-        const options = {
-            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_SY4T9oT2oLGhiS",
-            amount: finalAmount * 100, 
-            currency: "INR",
-            name: "Nyaya Sahayak",
-            description: `Upgrade: ${plan.name}`,
-            image: "/Logo.png",
-            handler: async function (response: any) {
-                const paymentId = response.razorpay_payment_id;
-                try {
-                    const userRef = doc(firestore, "users", auth.currentUser!.uid);
-                    const now = new Date();
-                    let expiryDate = new Date();
-                    if (planId.includes('monthly')) expiryDate.setDate(now.getDate() + 30);
-                    else expiryDate.setFullYear(now.getFullYear() + 1);
-
-                    const transactionData = {
-                        userId: auth.currentUser!.uid,
-                        userEmail: profile?.email,
-                        userName: `${profile?.firstName} ${profile?.lastName}`,
-                        planId: planId,
-                        amount: finalAmount,
-                        paymentId: paymentId,
-                        createdAt: serverTimestamp(),
-                        expiryDate: expiryDate.toISOString(),
-                        status: 'CAPTURED',
-                        couponCode: appliedCoupon?.code || null
-                    };
-
-                    await addDoc(collection(firestore, "transactions"), transactionData);
-                    await updateDoc(userRef, { 
-                        subscriptionType: planId,
-                        aiUsageCount: 0,
-                        clearanceExpiry: expiryDate.toISOString(),
-                        lastPaymentId: paymentId
-                    });
-
-                    toast({ title: "Clearance upgraded", description: "Identity updated in registry." });
-                    setProcessingId(null);
-                    router.refresh();
-                } catch (err) {
-                    setSyncError({ paymentId, plan: plan.name });
-                    setProcessingId(null);
-                }
-            },
-            prefill: { name: `${profile?.firstName} ${profile?.lastName}`, email: profile?.email },
-            theme: { color: "#2563eb" },
-            modal: { ondismiss: () => setProcessingId(null) }
-        };
-
-        try {
-            const rzp = new (window as any).Razorpay(options);
-            rzp.open();
-        } catch (error) { setProcessingId(null); }
-    };
-
-    if (loading) return <div className="flex h-[70vh] items-center justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>;
-
-    return (
-        <div className="max-w-7xl mx-auto space-y-12 pb-20 px-4 sm:px-0 text-left">
-            <div className="flex items-center justify-between border-b-4 border-foreground pb-4">
-                <div className="flex items-center gap-4">
-                    <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
-                        <CreditCard className="h-6 w-6 text-primary" />
-                    </div>
-                    <div className="text-left">
-                        <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Statutory clearance</h1>
-                    </div>
-                </div>
-            </div>
-
-            <div className="max-w-md ml-0 space-y-4 pb-8">
-                <div className="flex items-center gap-2 mb-2 text-primary">
-                    <Zap className="h-4 w-4" />
-                    <Label className="text-[10px] font-black uppercase tracking-[0.3em]">Promo registry entry</Label>
-                </div>
-                <div className="flex gap-3">
-                    <Input 
-                        placeholder="Enter coupon (e.g. NYAYA50)" 
-                        value={couponInput} 
-                        onChange={(e) => setCouponInput(e.target.value)}
-                        className="h-12 glass border-primary/10 font-bold uppercase rounded-xl px-5"
-                    />
-                    <Button 
-                        onClick={handleApplyCoupon}
-                        className="h-12 px-8 font-black uppercase text-[10px] tracking-widest rounded-xl shadow-lg active:scale-95"
-                    >
-                        Apply
-                    </Button>
-                </div>
-                {appliedCoupon && (
-                    <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-[10px] font-bold text-green-600 uppercase tracking-widest flex items-center gap-2">
-                        <CheckCircle2 className="h-3 w-3" /> Protocol active: {appliedCoupon.code} {appliedCoupon.code === 'PIYUSH11' ? '(₹1 special)' : `(${(appliedCoupon.discount * 100)}% discount)`}
-                    </motion.p>
-                )}
-            </div>
-
-            <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
-                {plans.map((plan) => {
-                    const isActive = profile?.subscriptionType === plan.id;
-                    const isProcessing = processingId === plan.id;
-                    const discount = appliedCoupon ? appliedCoupon.discount : 0;
-                    
-                    let displayPrice = plan.amount === 0 ? 0 : Math.max(0, Math.round(plan.amount * (1 - discount)));
-                    if (appliedCoupon?.code === 'PIYUSH11' && plan.amount > 0) {
-                        displayPrice = 1;
-                    }
-                    
-                    return (
-                        <Card key={plan.id} className={cn(
-                            "h-full flex flex-col glass rounded-[2.5rem] border-primary/10 group transition-all duration-500 hover:shadow-2xl overflow-hidden relative",
-                            isActive && "ring-2 ring-primary shadow-primary/10"
-                        )}>
-                            <div className={cn("absolute top-0 left-0 w-1.5 bottom-0 transition-all", isActive ? "bg-primary" : "bg-primary/10 group-hover:bg-primary/40")} />
-                            <CardHeader className="p-8 pb-4 text-left ml-1.5">
-                                <div className="flex justify-between items-start mb-4">
-                                    <h3 className="text-xl font-black tracking-tight uppercase leading-tight">{plan.name}</h3>
-                                    {plan.badge && <Badge className="bg-primary/10 text-primary border-primary/20 text-[8px] font-black uppercase px-2">{plan.badge}</Badge>}
-                                </div>
-                                <div className="pt-2 flex items-baseline gap-2">
-                                    <span className="text-4xl font-black">₹{displayPrice}</span>
-                                    {plan.amount > displayPrice && (
-                                        <span className="text-sm text-muted-foreground line-through opacity-40">₹{plan.amount}</span>
-                                    )}
-                                </div>
-                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-2 opacity-60">{plan.desc}</p>
-                            </CardHeader>
-                            <CardContent className="p-8 pt-4 flex-grow space-y-6 text-left ml-1.5">
-                                <div className="space-y-3">
-                                    {plan.features.map((f, i) => (
-                                        <div key={i} className="flex items-start gap-3">
-                                            <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0 mt-0.5" />
-                                            <span className="text-[11px] font-medium text-muted-foreground">{f}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                            <CardFooter className="p-8 pt-0 ml-1.5">
-                                <Button onClick={() => handleUpgrade(plan.id)} disabled={isActive || isProcessing} className="w-full h-12 font-black uppercase text-[10px] rounded-xl shadow-lg active:scale-95 group-hover:shadow-primary/20">
-                                    {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "Active tier" : "Initialize upgrade"}
-                                </Button>
-                            </CardFooter>
-                        </Card>
-                    );
-                })}
-            </div>
-
-            <section className="pt-16 space-y-8 text-left">
-                <div className="flex items-center justify-between border-b-4 border-foreground pb-4">
-                    <div className="flex items-center gap-4">
-                        <div className="p-4 border-2 border-foreground rounded-2xl bg-foreground/5 shadow-sm">
-                            <History className="h-6 w-6 text-primary" />
-                        </div>
-                        <div className="text-left">
-                            <h2 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Success only ledger</h2>
-                        </div>
-                    </div>
-                    <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest bg-primary/5 text-primary/60 border-primary/10">Statutory record</Badge>
-                </div>
-                
-                <Card className="glass shadow-2xl rounded-[2.5rem] overflow-hidden border-primary/10">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                            <thead className="bg-muted/30 border-b border-primary/10">
-                                <tr>
-                                    <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Timestamp</th>
-                                    <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Clearance tier</th>
-                                    <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Authorization</th>
-                                    <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Value</th>
-                                    <th className="px-8 py-5 text-right text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground pr-12">TXID</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-primary/5">
-                                {userTransactions.length > 0 ? userTransactions.map((tx) => (
-                                    <tr key={tx.id} className="hover:bg-primary/5 transition-colors group">
-                                        <td className="px-8 py-5">
-                                            <p className="text-[10px] font-bold text-muted-foreground flex items-center gap-2">
-                                                <Clock className="h-3 w-3 opacity-40 group-hover:text-primary transition-colors" />
-                                                {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate ? tx.createdAt.toDate() : new Date(tx.createdAt), { addSuffix: true }) : 'Syncing...'}
-                                            </p>
-                                        </td>
-                                        <td className="px-8 py-5">
-                                            <Badge variant="outline" className="font-black text-[8px] uppercase border-primary/20 text-primary bg-primary/5 px-3 py-1">
-                                                {tx.planId?.replace('_', ' ') || 'Statutory upgrade'}
-                                            </Badge>
-                                        </td>
-                                        <td className="px-8 py-5 text-center">
-                                            <div className="flex items-center justify-center gap-1.5 text-green-600 font-black text-[8px] uppercase tracking-widest">
-                                                <CheckCircle2 className="h-3.5 w-3.5" /> CAPTURED
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-5">
-                                            <p className="font-mono font-black text-sm tracking-tight text-foreground">₹{(tx.amount || 0).toLocaleString('en-IN')}</p>
-                                        </td>
-                                        <td className="px-8 py-5 text-right pr-12">
-                                            <p className="font-mono text-[9px] opacity-40 select-all tracking-wider">{tx.paymentId}</p>
-                                        </td>
-                                    </tr>
-                                )) : (
-                                    <tr>
-                                        <td colSpan={5} className="px-8 py-20 text-center">
-                                            <div className="flex flex-col items-center gap-4 opacity-30">
-                                                <Activity className="h-12 w-12 text-muted-foreground" />
-                                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">Registry clear. Awaiting statutory captures.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </Card>
-            </section>
-        </div>
+    const userId = auth.currentUser.uid;
+    const userDocRef = doc(firestore, "users", userId);
+    
+    const unsub = onSnapshot(userDocRef, 
+      (doc) => {
+        setProfile(doc.data());
+        setLoading(false);
+      },
+      async (err) => {
+        const permissionError = new FirestorePermissionError({
+          path: userDocRef.path,
+          operation: 'get',
+        } satisfies SecurityRuleContext, err);
+        errorEmitter.emit('permission-error', permissionError);
+        setLoading(false);
+      }
     );
+
+    const transCol = collection(firestore, "transactions");
+    const q = query(
+      transCol, 
+      where("userId", "==", userId),
+      where("status", "==", "CAPTURED")
+    );
+    
+    const unsubTrans = onSnapshot(q, 
+      (snap) => {
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        list.sort((a: any, b: any) => {
+          const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
+          const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
+          return Number(timeB) - Number(timeA);
+        });
+        setUserTransactions(list);
+      },
+      async (err) => {
+        const permissionError = new FirestorePermissionError({
+          path: transCol.path,
+          operation: 'list',
+        } satisfies SecurityRuleContext, err);
+        errorEmitter.emit('permission-error', permissionError);
+      }
+    );
+
+    return () => { unsub(); unsubTrans(); };
+  }, [auth, firestore]);
+
+  const handleUpgrade = async (plan: any) => {
+    if (plan.id === profile?.subscriptionType) return;
+    if (plan.monthlyPrice === 0) return;
+
+    setProcessingId(plan.id);
+    
+    // Razorpay Integration logic would go here
+    // For now, providing a professional simulated feedback
+    setTimeout(() => {
+      toast({
+        title: "gateway redirecting",
+        description: "connecting to razorpay secure node..."
+      });
+      setProcessingId(null);
+    }, 1000);
+  };
+
+  if (loading) return (
+    <div className="flex h-[70vh] items-center justify-center">
+      <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
+    </div>
+  );
+
+  return (
+    <div className="max-w-6xl mx-auto space-y-16 pb-32 px-4 sm:px-6 text-left">
+      <div className="space-y-2">
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">plans & pricing</h1>
+        <p className="text-gray-500 font-medium">choose the plan that fits your legal research needs</p>
+      </div>
+
+      {/* BILLING TOGGLE */}
+      <div className="flex items-center justify-center gap-4">
+        <span className={cn("text-xs font-bold uppercase tracking-widest transition-colors", !isAnnual ? "text-white" : "text-gray-600")}>monthly</span>
+        <Switch 
+          checked={isAnnual} 
+          onCheckedChange={setIsAnnual} 
+          className="data-[state=checked]:bg-primary"
+        />
+        <div className="flex items-center gap-3">
+          <span className={cn("text-xs font-bold uppercase tracking-widest transition-colors", isAnnual ? "text-white" : "text-gray-600")}>annual</span>
+          <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 text-[9px] font-black uppercase tracking-widest px-2 py-0.5">save 17%</Badge>
+        </div>
+      </div>
+
+      {/* PRICING CARDS */}
+      <div className="grid md:grid-cols-3 gap-8 items-stretch">
+        {plansData.map((plan) => {
+          const isActive = profile?.subscriptionType === plan.id;
+          const isProcessing = processingId === plan.id;
+          const price = isAnnual ? plan.annualPrice : plan.monthlyPrice;
+          
+          return (
+            <div key={plan.id} className="relative flex flex-col">
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
+                  <Badge className="bg-primary text-primary-foreground font-black text-[9px] uppercase tracking-widest px-4 py-1 rounded-lg border-2 border-[#050505]">most popular</Badge>
+                </div>
+              )}
+              
+              <Card className={cn(
+                "flex-1 bg-[#161b22] border-white/5 rounded-[2.5rem] p-8 flex flex-col text-center transition-all duration-500 hover:border-primary/20",
+                plan.popular && "border-primary/40 ring-1 ring-primary/20"
+              )}>
+                <CardHeader className="p-0 space-y-6 mb-10">
+                  <div className={cn("mx-auto p-4 rounded-full", plan.bg, plan.color)}>
+                    <plan.icon className="h-8 w-8" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-2xl font-black text-white">{plan.name}</h3>
+                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{plan.desc}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-baseline justify-center gap-1">
+                      {isAnnual && plan.originalAnnualPrice && (
+                        <span className="text-sm text-gray-600 line-through mr-2">₹{plan.originalAnnualPrice}</span>
+                      )}
+                      <span className="text-4xl font-black text-white">₹{price}</span>
+                      <span className="text-gray-500 font-bold">/{isAnnual ? 'year' : 'month'}</span>
+                    </div>
+                    {isAnnual && plan.monthlyEquivalent && (
+                      <p className="text-[10px] font-bold text-green-500 uppercase tracking-widest">
+                        ₹{plan.monthlyEquivalent}/mo · 2 months free
+                      </p>
+                    )}
+                  </div>
+                </CardHeader>
+
+                <CardFooter className="p-0 mt-auto">
+                  <Button 
+                    onClick={() => handleUpgrade(plan)}
+                    disabled={isActive || isProcessing}
+                    variant={isActive ? "outline" : "default"}
+                    className={cn(
+                      "w-full h-12 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-lg",
+                      isActive ? "border-primary text-primary bg-primary/5" : "bg-primary text-primary-foreground shadow-primary/20"
+                    )}
+                  >
+                    {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "current plan" : "upgrade now"}
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* COMPARISON TABLE */}
+      <div className="pt-10 max-w-4xl mx-auto w-full">
+        <div className="grid grid-cols-4 gap-4 pb-6 border-b border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+          <div className="col-span-1 flex items-center gap-2">
+            <Activity className="h-3.5 w-3.5" /> queries / month
+          </div>
+          <div className="text-center text-white">100</div>
+          <div className="text-center text-white">200</div>
+          <div className="text-center text-primary">unlimited</div>
+        </div>
+        
+        <div className="grid grid-cols-4 gap-4 py-6 border-b border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+          <div className="col-span-1">daily query limit</div>
+          <div className="text-center text-white">10 per day</div>
+          <div className="text-center text-white">no daily limit</div>
+          <div className="text-center text-white">no daily limit</div>
+        </div>
+
+        <div className="grid grid-cols-4 gap-4 py-6 border-b border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+          <div className="col-span-1">monthly output</div>
+          <div className="text-center text-white underline decoration-dotted underline-offset-4">~40,000 words</div>
+          <div className="text-center text-white underline decoration-dotted underline-offset-4">~1,50,000 words</div>
+          <div className="text-center text-white underline decoration-dotted underline-offset-4">unlimited words</div>
+        </div>
+      </div>
+
+      {/* TRANSACTION LEDGER */}
+      <section className="pt-20 space-y-8">
+        <div className="flex items-center gap-4 border-b border-white/5 pb-4">
+          <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+            <CreditCard className="h-5 w-5 text-primary" />
+          </div>
+          <h2 className="text-xl font-black text-white uppercase tracking-tight">verified ledger</h2>
+        </div>
+        
+        <Card className="bg-[#161b22] border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead className="bg-white/5 border-b border-white/5">
+                <tr>
+                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">timestamp</th>
+                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">clearance</th>
+                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500 text-center">status</th>
+                  <th className="px-8 py-5 text-[9px] font-black uppercase tracking-widest text-gray-500">value</th>
+                  <th className="px-8 py-5 text-right text-[9px] font-black uppercase tracking-widest text-gray-500 pr-12">txid</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {userTransactions.length > 0 ? userTransactions.map((tx) => (
+                  <tr key={tx.id} className="hover:bg-white/5 transition-colors group">
+                    <td className="px-8 py-5 text-[10px] font-bold text-gray-400">
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-3 w-3 opacity-40" />
+                        {tx.createdAt ? formatDistanceToNow(tx.createdAt.toDate ? tx.createdAt.toDate() : new Date(tx.createdAt), { addSuffix: true }) : 'Syncing...'}
+                      </div>
+                    </td>
+                    <td className="px-8 py-5">
+                      <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[8px] font-black uppercase px-2">
+                        {tx.planId?.replace('_', ' ') || 'standard'}
+                      </Badge>
+                    </td>
+                    <td className="px-8 py-5 text-center">
+                      <div className="flex items-center justify-center gap-1.5 text-green-500 font-black text-[8px] uppercase tracking-widest">
+                        <CheckCircle2 className="h-3 w-3" /> captured
+                      </div>
+                    </td>
+                    <td className="px-8 py-5 text-sm font-black text-white">₹{(tx.amount || 0).toLocaleString('en-IN')}</td>
+                    <td className="px-8 py-5 text-right pr-12">
+                      <p className="font-mono text-[9px] text-gray-600 select-all tracking-wider">{tx.paymentId}</p>
+                    </td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan={5} className="px-8 py-20 text-center opacity-30">
+                      <div className="flex flex-col items-center gap-4">
+                        <Activity className="h-12 w-12 text-gray-500" />
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500">registry clear. awaiting captures.</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </section>
+
+      <div className="text-center pt-8 opacity-30">
+        <p className="text-[9px] font-black uppercase tracking-[0.6em] text-gray-500">NYAYASAHAYAK.IN // FINANCIAL PROTOCOL // 2025</p>
+      </div>
+    </div>
+  );
 }
