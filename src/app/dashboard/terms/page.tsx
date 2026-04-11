@@ -1,181 +1,160 @@
 
 "use client";
 
-import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  FileText, 
-  ShieldCheck, 
-  AlertTriangle, 
-  Scale, 
-  History as LucideHistory, 
-  Fingerprint, 
-  Gavel, 
-  Bot, 
-  Globe,
-  Ban,
-  Lock,
-  Cpu,
-  Zap,
-  Activity,
-  CheckCircle2,
-  Settings,
-  Info,
-  ChevronRight,
-  ShieldAlert,
-  UserCheck,
-  Smartphone,
-  Trash2,
-  Mail,
-  MapPin,
-  CreditCard,
-  MessageSquare,
-  Landmark,
-  UserPlus,
-  RefreshCw,
-  Layers,
-  FileSignature,
-  Star,
-  Database
-} from "lucide-react";
 import { motion } from "framer-motion";
-import { Logo } from "@/components/logo";
-import { Badge } from "@/components/ui/badge";
-
-const toc = [
-  { id: "section-1", title: "1. Our services" },
-  { id: "section-2", title: "2. Intellectual property rights" },
-  { id: "section-3", title: "3. User representations" },
-  { id: "section-4", title: "4. User registration" },
-  { id: "section-5", title: "5. Prohibited activities" },
-  { id: "section-6", title: "6. User generated contributions" },
-  { id: "section-16", title: "16. Governing law" },
-  { id: "section-19", title: "19. Disclaimer" },
-  { id: "section-30", title: "30. Contact us" }
-];
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function TermsDashboardPage() {
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <div className="max-w-6xl mx-auto space-y-10 pb-24 px-2 sm:px-6 text-left">
+    <div className="max-w-4xl mx-auto py-10 pb-32 px-4 text-left selection:bg-primary/20">
       <motion.div 
-        initial={{ opacity: 0, y: -10 }} 
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-b border-primary/5 pb-8 text-left"
+        className="space-y-12"
       >
-        <PageHeader
-          title="Statutory terms"
-          description="Institutional protocol & user agreement for the Nyaya Sahayak ecosystem."
-        />
-        <Badge variant="outline" className="font-black text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/10 px-4 py-1.5 rounded-full">Dashboard protocol</Badge>
-      </motion.div>
-
-      <Card className="border-none ring-1 ring-primary/10 shadow-3xl rounded-[3rem] overflow-hidden bg-card/40 backdrop-blur-xl relative text-left">
-        <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none grayscale">
-          <Logo className="h-64 w-64" />
+        {/* Navigation Ingress */}
+        <div className="flex items-center justify-between border-b border-white/5 pb-6">
+          <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-white/5 group h-10 px-6 border border-white/5 text-white text-[10px] uppercase tracking-widest" asChild>
+            <Link href="/dashboard">
+              <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Dashboard
+            </Link>
+          </Button>
         </div>
-        <CardContent className="p-8 sm:p-16 relative z-10 text-left space-y-8">
-          <div className="flex items-center gap-3 text-primary mb-2">
-            <div className="bg-primary/10 p-2.5 rounded-xl shadow-inner">
-              <ShieldCheck className="h-6 w-6" />
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Official binding agreement</span>
+
+        {/* Header Section */}
+        <div className="space-y-8 pt-4">
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter text-white font-headline">
+            Terms of service
+          </h1>
+          
+          <div className="space-y-2 text-sm sm:text-base font-bold text-white/60 uppercase tracking-widest">
+            <p>Effective date: <span className="text-primary">04-02-2023</span></p>
+            <p>Last updated: <span className="text-primary">09-02-2026</span></p>
           </div>
-          <div className="space-y-6 text-left">
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-tight text-foreground uppercase text-left">Agreement to our <br /><span className="text-primary italic">Legal terms</span></h2>
-            <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-4xl text-left">
-              We are <span className="text-foreground font-bold">Nyaya Sahayak</span>. We provide high-fidelity AI legal assistance and forensic document auditing via <span className="text-primary font-bold">https://nyayasahayak.in</span>.
+
+          <div className="space-y-6 text-lg text-white/80 font-medium leading-relaxed max-w-3xl">
+            <p>
+              Welcome to Nyaya Sahayak (accessible at nyayasahayak.in). These Terms of service (&ldquo;Terms&rdquo;) govern your access to and use of the Nyaya Sahayak website, applications, dashboards, and related services (collectively, the &ldquo;Platform&rdquo;).
             </p>
-            <div className="p-8 rounded-[2rem] bg-destructive/5 border border-destructive/10 space-y-4 shadow-inner text-left">
-              <p className="text-sm font-black text-destructive uppercase tracking-widest flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4" /> Binding mandate
-              </p>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed text-left">
-                By maintaining your session on this terminal, you confirm that you have read, understood, and agreed to be bound by all of these Legal Terms.
-              </p>
-            </div>
+            <p>
+              By accessing or using Nyaya Sahayak, you confirm that you have read, understood, and agreed to be bound by these Terms. If you do not agree, you must not use the Platform.
+            </p>
           </div>
-        </CardContent>
-        <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
-      </Card>
-
-      <section className="space-y-6 text-left">
-        <div className="flex items-center gap-3 text-left">
-            <div className="h-1 w-8 bg-primary rounded-full" />
-            <h2 className="text-xl font-black uppercase tracking-tighter">Table of contents</h2>
         </div>
-        <Card className="border-primary/5 bg-background shadow-inner rounded-[2.5rem] p-8 sm:p-10 text-left">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-4 text-left">
-                {toc.map((item, idx) => (
-                    <button 
-                        key={idx} 
-                        onClick={() => scrollToSection(item.id)}
-                        className="flex items-center gap-3 group text-left transition-colors hover:text-primary"
-                    >
-                        <ChevronRight className="h-3 w-3 text-primary/40 group-hover:translate-x-1 transition-transform" />
-                        <span className="text-[10px] font-bold uppercase tracking-tight opacity-70 group-hover:opacity-100 truncate">{item.title}</span>
-                    </button>
-                ))}
-            </div>
-        </Card>
-      </section>
 
-      <div className="space-y-32 pt-16 border-t border-primary/5 text-left">
-        <section id="section-1" className="space-y-8 scroll-mt-24 text-left">
-            <div className="flex items-center gap-4 text-left">
-                <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500 shadow-sm"><Globe className="h-7 w-7" /></div>
-                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase text-left">1. Our services</h3>
-            </div>
-            <div className="space-y-6 text-sm sm:text-base text-muted-foreground font-medium leading-relaxed text-left">
-                <p>Nyaya Sahayak provides an institutional-grade platform for AI-powered legal assistance within the Indian Judicial System.</p>
-            </div>
-        </section>
+        <Separator className="bg-white/10" />
 
-        <section id="section-16" className="space-y-8 scroll-mt-24 text-left">
-            <div className="flex items-center gap-4 text-left">
-                <div className="p-4 rounded-2xl bg-primary/10 text-primary shadow-sm"><Landmark className="h-7 w-7" /></div>
-                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase text-left">16. Governing law</h3>
+        {/* Content Sections */}
+        <div className="space-y-16 pt-4">
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">1. About Nyaya Sahayak</h2>
+            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              <p>Nyaya Sahayak is an AI-powered legal information platform designed to help users understand Indian laws, legal procedures, and general legal concepts. The Platform provides general legal information only and does not provide legal advice.</p>
+              <p>Nyaya Sahayak is not a law firm, does not provide professional legal services, and does not replace consultation with a qualified advocate.</p>
             </div>
-            <div className="space-y-6 text-sm text-muted-foreground font-medium leading-relaxed text-left">
-                <p>These Legal Terms shall be governed by and defined following the laws of <strong>India</strong>.</p>
-            </div>
-        </section>
+          </section>
 
-        <section id="section-30" className="space-y-12 pt-16 border-t border-primary/5 scroll-mt-24 text-left">
-            <div className="flex flex-col md:flex-row gap-16 text-left">
-                <div className="flex-1 space-y-8 text-left">
-                    <div className="flex items-center gap-4 text-left">
-                        <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500 shadow-sm"><Mail className="h-7 w-7" /></div>
-                        <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-primary uppercase text-left">30. Contact us</h3>
-                    </div>
-                    <p className="text-sm sm:text-lg leading-loose text-left">To resolve a complaint regarding the Services, utilize our official institutional channels:</p>
-                </div>
-                <div className="w-full md:w-[450px]">
-                    <Card className="p-10 bg-primary/5 border-primary/10 rounded-[3rem] shadow-3xl relative overflow-hidden group text-left">
-                        <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
-                            <Logo className="h-40 w-48" />
-                        </div>
-                        <div className="space-y-10 relative z-10 text-left">
-                            <div className="flex items-start gap-6 text-left">
-                                <div className="p-4 rounded-2xl bg-primary text-white shadow-xl shadow-primary/20"><Mail className="h-6 w-6" /></div>
-                                <div className="space-y-2 text-left">
-                                    <p className="text-[10px] font-black uppercase text-primary tracking-[0.4em]">Institutional desk</p>
-                                    <p className="text-xs font-black text-foreground hover:underline select-all lowercase">nyayasahayakhelp@gmail.com</p>
-                                </div>
-                            </div>
-                        </div>
-                    </Card>
-                </div>
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">2. Acceptance and eligibility</h2>
+            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              <p>By using Nyaya Sahayak, you represent that:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>You are at least 18 years old, or using the Platform under supervision of a legal guardian.</li>
+                <li>You have the legal capacity to enter into these Terms.</li>
+                <li>You will use the Platform only for lawful purposes.</li>
+              </ul>
+              <p>We reserve the right to refuse or suspend access to anyone at our discretion.</p>
             </div>
-        </section>
-      </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">3. Scope of services</h2>
+            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              <p>Nyaya Sahayak provides, among other features:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>AI-powered legal information chat based on Indian law</li>
+                <li>Document upload, storage, and analysis (PDF, DOC, DOCX, etc.)</li>
+                <li>OCR for scanned documents</li>
+                <li>Chat history, notes, collections, and organizational tools</li>
+                <li>Free and paid subscription plans with usage limits</li>
+              </ul>
+              <p>Features may vary by plan and may be modified, added, or removed at any time.</p>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">4. No legal advice & no lawyer–client relationship</h2>
+            <div className="p-8 rounded-[2rem] bg-destructive/5 border border-destructive/10 space-y-4">
+              <p className="font-black text-destructive uppercase tracking-widest text-sm">Important disclaimer:</p>
+              <ul className="list-disc pl-5 space-y-3 text-white/60 font-medium text-sm sm:text-base">
+                <li>Information provided by Nyaya Sahayak is general legal information, not legal advice.</li>
+                <li>No lawyer–client relationship is created between you and Nyaya Sahayak, its founders, developers, or any contributors.</li>
+                <li>AI-generated responses may be incomplete, outdated, or inaccurate.</li>
+                <li>You must consult a qualified advocate for advice specific to your situation.</li>
+                <li>Reliance on any information provided by Nyaya Sahayak is entirely at your own risk.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">5. User accounts & authentication</h2>
+            <p className="text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              To access certain features, you may be required to create an account. You agree to provide accurate information, maintain the confidentiality of your credentials, and take responsibility for all activity under your account.
+            </p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">6. User content & uploaded materials</h2>
+            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              <p>You retain ownership of documents, text, and files you upload (&ldquo;User Content&rdquo;). By uploading, you grant Nyaya Sahayak a limited license to store and process such content solely to provide services to you.</p>
+              <p>You confirm that you have the legal right to upload the content and that it does not violate any third-party rights.</p>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">7. Free and paid plans</h2>
+            <p className="text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              Nyaya Sahayak operates on a freemium model. Paid plans unlock additional features and higher limits. Fees are billed in advance and are non-refundable except where required by law.
+            </p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">8. Prohibited uses</h2>
+            <p className="text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              You agree not to use Nyaya Sahayak for unlawful purposes, reverse-engineer AI systems, or upload malicious code. Violations may result in immediate termination of access.
+            </p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">9. Intellectual property</h2>
+            <p className="text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              All platform content, including UI, branding, and AI prompts, is the intellectual property of Nyaya Sahayak. You may not reproduce or exploit any part of the Platform without prior written consent.
+            </p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">16. Governing law & jurisdiction</h2>
+            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
+              <p>These Terms shall be governed by the laws of India.</p>
+              <p>Any disputes shall be subject to the exclusive jurisdiction of courts at <span className="text-foreground font-bold">Jaipur, Rajasthan</span>, unless otherwise required by law.</p>
+            </div>
+          </section>
+
+          <section className="space-y-6 pb-10">
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">18. Contact information</h2>
+            <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 space-y-4">
+              <p className="text-white/80 font-medium">For questions or statutory notices, contact us at:</p>
+              <div className="flex flex-col gap-2">
+                <a href="mailto:nyayasahayakhelp@gmail.com" className="text-2xl font-black text-primary hover:underline transition-all">nyayasahayakhelp@gmail.com</a>
+                <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">Nyaya Sahayak // Legal Registry</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </motion.div>
     </div>
   );
 }
