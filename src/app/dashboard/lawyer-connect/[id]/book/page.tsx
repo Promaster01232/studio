@@ -28,7 +28,8 @@ export default function BookConsultationPage({
   params: Promise<{ id: string }> 
 }) {
   // Unwrap dynamic params for Next.js 15 compliance
-  const { id } = use(params);
+  const resolvedParams = use(params);
+  const id = resolvedParams.id;
 
   const rtdb = useDatabase();
   const { toast } = useToast();

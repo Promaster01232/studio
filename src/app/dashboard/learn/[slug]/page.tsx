@@ -1,4 +1,3 @@
-
 "use client";
 
 import { use, useState, useMemo } from "react";
@@ -22,7 +21,8 @@ export default function LearnTopicDetailPage({
   params: Promise<{ slug: string }>
 }) {
     // Unwrap dynamic params for Next.js 15 compliance
-    const { slug } = use(params);
+    const resolvedParams = use(params);
+    const slug = resolvedParams.slug;
     
     const [displayLang, setDisplayLang] = useState<'en' | 'hi'>('en');
 

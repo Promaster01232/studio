@@ -14,7 +14,8 @@ export default function GuideDetailPage({
   params: Promise<{ slug: string }>
 }) {
     // Unwrap dynamic params for Next.js 15 compliance
-    const { slug } = use(params);
+    const resolvedParams = use(params);
+    const slug = resolvedParams.slug;
 
     const guide = guides.find((g) => g.slug === slug);
 

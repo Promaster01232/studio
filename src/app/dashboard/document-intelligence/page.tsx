@@ -48,10 +48,16 @@ const initialState: DocumentIntelligenceState = {
   error: null,
 };
 
-export default function DocumentIntelligencePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // unwrap params to avoid enumeration error
-  use(props.params);
-  use(props.searchParams);
+export default function DocumentIntelligencePage({ 
+  params, 
+  searchParams 
+}: { 
+  params: Promise<any>, 
+  searchParams: Promise<any> 
+}) {
+  // unwrap params to comply with Next.js 15 dynamic APIs
+  use(params);
+  use(searchParams);
 
   const [state, formAction] = useActionState(understandDocumentAction, initialState);
   const [fileName, setFileName] = useState("");

@@ -220,7 +220,7 @@ export default async function SearchResultsPage({
   params: Promise<any>, 
   searchParams: Promise<CaseSearchParams> 
 }) {
-    // In Next.js 15, params and searchParams must be awaited in Server Components
+    // await params and searchParams to comply with Next.js 15
     await params;
     const resolvedSearchParams = await searchParams;
     

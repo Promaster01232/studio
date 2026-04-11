@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use } from "react";
@@ -141,10 +140,16 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
     );
 }
 
-export default function ManagementConsolePage(props: { params: Promise<any>, searchParams: Promise<any> }) {
-  // unwrap params to avoid enumeration error
-  use(props.params); 
-  use(props.searchParams);
+export default function ManagementConsolePage({ 
+  params, 
+  searchParams 
+}: { 
+  params: Promise<any>, 
+  searchParams: Promise<any> 
+}) {
+  // unwrap params to comply with Next.js 15 dynamic APIs
+  use(params); 
+  use(searchParams);
 
   const firestore = useFirestore();
   const rtdb = useDatabase();
