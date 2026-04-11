@@ -5,161 +5,183 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
 } from "@/components/ui/sidebar";
 import {
   Home,
-  MessageSquare,
-  FileText,
+  Mic,
   FileSearch,
-  Settings,
-  HelpCircle,
-  CreditCard,
-  ChevronRight,
-  Plus,
-  History,
-  FolderKanban,
-  FileCheck,
+  FileText,
+  FileSignature,
+  BrainCircuit,
+  Gavel,
+  ShieldCheck,
+  Scale,
   Zap,
+  FileCheck,
+  FolderSearch,
+  HandHelping,
+  Library,
+  Newspaper,
+  Users,
+  Building,
+  ReceiptText,
+  User,
+  CreditCard,
+  Headset,
+  ShieldAlert,
+  UserPlus,
+  ChevronRight
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
-const navigationItems = [
+const navGroups = [
   {
-    title: "Dashboard",
-    icon: Home,
-    href: "/dashboard",
-    items: [],
-  },
-  {
-    title: "New Chat",
-    icon: Plus,
-    href: "/dashboard/narrate",
-    items: [],
-  },
-  {
-    title: "My Chats",
-    icon: History,
+    label: "Terminal",
     items: [
-      { href: "/dashboard/research-analytics", icon: MessageSquare, label: "All Chats" },
-    ],
+      { title: "Home", icon: Home, href: "/dashboard" },
+    ]
   },
   {
-    title: "My Docs",
-    icon: FolderKanban,
+    label: "AI tools",
     items: [
-      { href: "/dashboard/document-intelligence", icon: FileSearch, label: "Documents" },
-      { href: "/dashboard/document-generator", icon: FileText, label: "Notes" },
-    ],
+      { title: "Record voice", icon: Mic, href: "/dashboard/narrate" },
+      { title: "Scan documents", icon: FileSearch, href: "/dashboard/document-intelligence" },
+      { title: "Write documents", icon: FileText, href: "/dashboard/document-generator" },
+      { title: "Create bonds", icon: FileSignature, href: "/dashboard/bond-generator" },
+      { title: "Check chance", icon: BrainCircuit, href: "/dashboard/strength-analyzer" },
+      { title: "Court helper", icon: Gavel, href: "/dashboard/court-assistant" },
+      { title: "Check evidence", icon: ShieldCheck, href: "/dashboard/evidence-audit" },
+      { title: "Bail helper", icon: Scale, href: "/dashboard/bail-estimator" },
+      { title: "Law linker", icon: Zap, href: "/dashboard/statutory-linker" },
+      { title: "Check contract", icon: FileCheck, href: "/dashboard/contract-auditor" },
+    ]
   },
   {
-    title: "Settings",
-    icon: Settings,
+    label: "Case hub",
     items: [
-      { href: "/dashboard/billing", icon: CreditCard, label: "Pricing & Plans" },
-    ],
+      { title: "My cases", icon: FolderSearch, href: "/dashboard/my-cases" },
+      { title: "Free help", icon: HandHelping, href: "/dashboard/ngo-legal-aid" },
+      { title: "Learn law", icon: Library, href: "/dashboard/learn" },
+      { title: "Help guides", icon: Newspaper, href: "/dashboard/police-guide" },
+      { title: "Community", icon: Users, href: "/dashboard/research-analytics" },
+    ]
   },
   {
-    title: "Help",
-    icon: HelpCircle,
-    href: "/dashboard/support",
-    items: [],
+    label: "For business",
+    items: [
+      { title: "Business hub", icon: Building, href: "/dashboard/business-msme" },
+      { title: "Legal fees", icon: ReceiptText, href: "/dashboard/finances-billing" },
+    ]
   },
+  {
+    label: "Account",
+    items: [
+      { title: "My profile", icon: User, href: "/dashboard/profile" },
+      { title: "My plan", icon: CreditCard, href: "/dashboard/billing" },
+      { title: "Contact help", icon: Headset, href: "/dashboard/support" },
+    ]
+  }
+];
+
+const adminItems = [
+  { title: "Users", icon: ShieldAlert, href: "/dashboard/management-console" },
+  { title: "Verify Pros", icon: UserPlus, href: "/dashboard/advocate-verification" },
 ];
 
 export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boolean, isElite?: boolean }) {
   const pathname = usePathname();
 
-  const isSubItemActive = (href: string) => {
-    return pathname === href || pathname.startsWith(href + "/");
-  };
-
-  const isGroupActive = (items: { href: string }[]) => {
-    return items.some((item) => isSubItemActive(item.href));
+  const isActive = (href: string) => {
+    return pathname === href || (href !== '/dashboard' && pathname.startsWith(href));
   };
 
   return (
-    <SidebarMenu className="gap-2 px-2 py-4">
-      {navigationItems.map((item) => {
-        const hasSubItems = item.items.length > 0;
-        const isActive = item.href ? pathname === item.href : isGroupActive(item.items);
+    <div className="space-y-6">
+      {navGroups.map((group) => (
+        <SidebarGroup key={group.label} className="p-0">
+          <SidebarGroupLabel className="px-4 text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 mb-2">
+            {group.label}
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-1 px-2">
+              {group.items.map((item) => {
+                const active = isActive(item.href);
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={active}
+                      tooltip={item.title}
+                      className={cn(
+                        "h-10 px-3 transition-all duration-300 rounded-xl group/btn",
+                        active 
+                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 font-black" 
+                          : "text-gray-400 hover:bg-white/5 hover:text-white"
+                      )}
+                    >
+                      <Link href={item.href}>
+                        <item.icon className={cn(
+                          "h-4 w-4 shrink-0 transition-transform group-hover/btn:scale-110",
+                          active ? "text-primary-foreground" : "text-gray-500 group-hover/btn:text-primary"
+                        )} />
+                        <span className="text-[11px] uppercase tracking-tight truncate">
+                          {item.title}
+                        </span>
+                        {active && (
+                          <motion.div 
+                            layoutId="active-pill"
+                            className="ml-auto h-1 w-1 rounded-full bg-white"
+                          />
+                        )}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      ))}
 
-        if (!hasSubItems) {
-          return (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                asChild
-                isActive={isActive}
-                tooltip={item.title}
-                className={cn(
-                  "h-11 px-4 transition-all",
-                  isActive ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "hover:bg-primary/5"
-                )}
-              >
-                <Link href={item.href!}>
-                  <item.icon className="h-5 w-5" />
-                  <span className="font-black text-[11px] uppercase tracking-tight">{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          );
-        }
-
-        return (
-          <Collapsible
-            key={item.title}
-            asChild
-            defaultOpen={isActive}
-            className="group/collapsible"
-          >
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton
-                  isActive={isActive}
-                  tooltip={item.title}
-                  className={cn(
-                    "h-11 px-4 hover:bg-primary/5 transition-all",
-                    isActive && !item.href && "text-primary"
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  <span className="font-black text-[11px] flex-1 text-left uppercase tracking-tight">{item.title}</span>
-                  <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub className="ml-4 mt-1 border-l-2 border-primary/10 gap-1 pl-2">
-                  {item.items.map((subItem: any) => (
-                    <SidebarMenuSubItem key={subItem.label}>
-                      <SidebarMenuSubButton
-                        asChild
-                        isActive={isSubItemActive(subItem.href)}
-                        className="h-9 px-3 rounded-md transition-all hover:bg-primary/10"
-                      >
-                        <Link href={subItem.href} className="flex items-center gap-3">
-                          <subItem.icon className="h-4 w-4 opacity-70" />
-                          <span className="text-[11px] font-bold tracking-tight flex-1">{subItem.label}</span>
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </SidebarMenuItem>
-          </Collapsible>
-        );
-      })}
-    </SidebarMenu>
+      {isAdmin && (
+        <SidebarGroup className="p-0 border-t border-white/5 pt-6 mt-6">
+          <SidebarGroupLabel className="px-4 text-[9px] font-black uppercase tracking-[0.3em] text-red-500/60 mb-2">
+            Admin Registry
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-1 px-2">
+              {adminItems.map((item) => {
+                const active = isActive(item.href);
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={active}
+                      className={cn(
+                        "h-10 px-3 transition-all duration-300 rounded-xl",
+                        active 
+                          ? "bg-red-600 text-white shadow-lg shadow-red-600/20" 
+                          : "text-gray-400 hover:bg-red-500/5 hover:text-red-400"
+                      )}
+                    >
+                      <Link href={item.href}>
+                        <item.icon className="h-4 w-4" />
+                        <span className="text-[11px] font-black uppercase tracking-tight">{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      )}
+    </div>
   );
 }
-
-import { cn } from "@/lib/utils";
