@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -190,11 +191,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 setProfileLoading(false);
             },
             async (err) => {
-                const permissionError = new FirestorePermissionError({
-                    path: userDocRef.path,
-                    operation: 'get',
-                } satisfies SecurityRuleContext, err);
-                errorEmitter.emit('permission-error', permissionError);
+                console.error("[STATUTORY GUARD] Profile listener denied:", err);
                 setProfileLoading(false);
             }
         );
@@ -253,6 +250,26 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   <Button onClick={handleLogout} variant="outline" className="h-12 px-10 font-bold rounded-xl border-primary/10">Terminate session</Button>
                   <Button asChild className="h-12 px-10 font-black text-[10px] tracking-widest rounded-xl shadow-xl shadow-primary/20">
                       <Link href="/dashboard/contact">Contact support</Link>
+                  </Button>
+              </div>
+          </div>
+      );
+  }
+
+  if (userProfile?.isBlocked) {
+      return (
+          <div className="flex h-screen w-full flex-col items-center justify-center bg-background p-6 text-center">
+              <div className="bg-destructive/10 p-10 rounded-[3rem] mb-8 border border-destructive/20 shadow-inner">
+                  <ShieldX className="h-24 w-24 text-destructive" />
+              </div>
+              <h1 className="text-4xl font-black font-headline tracking-tighter uppercase mb-4">Node Access Restricted</h1>
+              <p className="text-muted-foreground max-w-md font-medium leading-relaxed mb-10">
+                  Your identity node has been suspended following a statutory forensic audit. Please contact root authority for restoration protocols.
+              </p>
+              <div className="flex gap-4">
+                  <Button onClick={handleLogout} variant="outline" className="h-12 px-10 font-bold rounded-xl border-primary/10">Terminate Session</Button>
+                  <Button asChild className="h-12 px-10 font-black uppercase text-[10px] tracking-widest rounded-xl shadow-xl shadow-primary/20">
+                      <Link href="/dashboard/contact">Contact Support</Link>
                   </Button>
               </div>
           </div>

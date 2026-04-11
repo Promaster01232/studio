@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, use, useRef } from "react";
@@ -134,11 +135,15 @@ export default function UserPublicProfilePage({
       }
       setLoading(false);
     }, (err) => {
+<<<<<<< HEAD
         const permissionError = new FirestorePermissionError({
             path: userRef.path,
             operation: 'get',
         } satisfies SecurityRuleContext, err);
         errorEmitter.emit('permission-error', permissionError);
+=======
+        console.error("[STATUTORY GUARD] Profile read denied:", err);
+>>>>>>> 28a5242 (add protection and sequrity)
         setLoading(false);
     });
 
