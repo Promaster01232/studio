@@ -21,7 +21,7 @@ import {
   Zap,
   ArrowRight,
   Search,
-  History as LucideHistory
+  History as HistoryIcon
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth, useFirestore } from "@/firebase";
@@ -264,9 +264,9 @@ export default function DashboardHomePage() {
           </div>
           <div className="grid grid-cols-2 gap-4 w-full md:w-auto relative z-10">
             {[
-              { label: "Encrypted", icon: LucideHistory },
+              { label: "Encrypted", icon: HistoryIcon },
               { label: "Private", icon: ShieldCheck },
-              { label: "Secure", icon: LucideHistory },
+              { label: "Secure", icon: HistoryIcon },
               { label: "Audit ready", icon: Search }
             ].map((n, i) => (
               <div key={i} className="p-6 rounded-3xl bg-white/5 border border-white/5 flex flex-col items-center gap-3 text-center">

@@ -57,16 +57,16 @@ const ADMIN_EMAILS = [
 ];
 
 const PUBLIC_DASHBOARD_ROUTES = [
-  '/dashboard',
-  '/dashboard/research-analytics',
   '/dashboard/learn',
   '/dashboard/police-guide',
+  '/dashboard/research-analytics',
   '/dashboard/about',
   '/dashboard/terms',
   '/dashboard/privacy',
   '/dashboard/cookie-policy',
   '/dashboard/disclaimer',
   '/dashboard/contact',
+  '/dashboard/refund-policy',
 ];
 
 function Header({ userProfile }: { userProfile: any }) {
@@ -109,7 +109,7 @@ function Header({ userProfile }: { userProfile: any }) {
 
             <div className="flex items-center gap-4 sm:gap-6">
                 <SosDialog>
-                    <Button variant="outline" size="sm" className="h-9 px-4 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-black text-[9px] uppercase tracking-widest gap-2">
+                    <Button variant="outline" size="sm" className="h-9 px-4 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[9px] uppercase tracking-widest gap-2">
                         <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
                         Emergency no.
                     </Button>
@@ -118,7 +118,7 @@ function Header({ userProfile }: { userProfile: any }) {
                 <div className="flex items-center gap-4 text-gray-400">
                     <button className="flex items-center gap-1.5 hover:text-white transition-colors">
                         <Globe className="h-4 w-4" />
-                        <span className="text-[10px] font-black lowercase">en</span>
+                        <span className="text-[10px] font-bold lowercase">en</span>
                     </button>
                     <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="hover:text-white transition-colors">
                         <Moon className="h-4 w-4" />
@@ -126,7 +126,7 @@ function Header({ userProfile }: { userProfile: any }) {
                 </div>
 
                 {!userProfile ? (
-                    <Button asChild size="sm" className="h-9 px-5 font-black text-[10px] rounded-xl shadow-lg active:scale-95 transition-all">
+                    <Button asChild size="sm" className="h-9 px-5 font-bold text-[10px] rounded-xl shadow-lg active:scale-95 transition-all">
                         <Link href="/login">Sign in</Link>
                     </Button>
                 ) : (
@@ -136,7 +136,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                 <button className="outline-none active:scale-95 transition-transform">
                                     <Avatar className="h-8 w-8 border-2 border-primary/20 shadow-sm cursor-pointer">
                                         <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                                        <AvatarFallback className="font-black bg-[#e91e63] text-white text-[10px]">
+                                        <AvatarFallback className="font-bold bg-[#e91e63] text-white text-[10px]">
                                             {userProfile.firstName?.charAt(0)?.toLowerCase() || "p"}
                                         </AvatarFallback>
                                     </Avatar>
@@ -144,7 +144,7 @@ function Header({ userProfile }: { userProfile: any }) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-64 p-2 rounded-2xl shadow-2xl glass border-white/10 mt-2">
                                 <div className="p-4 space-y-1 text-left">
-                                    <p className="font-black text-sm tracking-tight text-foreground">
+                                    <p className="font-bold text-sm tracking-tight text-foreground">
                                         {userProfile.firstName} {userProfile.lastName}
                                     </p>
                                     <p className="text-[10px] font-medium text-muted-foreground truncate">
@@ -158,7 +158,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                             <Crown className="h-4 w-4 text-primary" />
                                             <span className="text-xs font-bold text-foreground">Plan</span>
                                         </div>
-                                        <span className="text-[10px] font-black uppercase text-primary/60">{planLabel}</span>
+                                        <span className="text-[10px] font-bold uppercase text-primary/60">{planLabel}</span>
                                     </DropdownMenuItem>
                                     
                                     <DropdownMenuSeparator className="bg-white/5 my-1" />
@@ -170,13 +170,6 @@ function Header({ userProfile }: { userProfile: any }) {
                                         </Link>
                                     </DropdownMenuItem>
                                     
-                                    <DropdownMenuItem asChild className="rounded-xl h-10 px-3 focus:bg-primary/10 cursor-pointer">
-                                        <Link href="/dashboard/profile" className="flex items-center gap-3 w-full">
-                                            <Settings className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                            <span className="text-xs font-bold text-foreground">Settings</span>
-                                        </Link>
-                                    </DropdownMenuItem>
-                                    
                                     <DropdownMenuSeparator className="bg-white/5 my-1" />
                                     
                                     <DropdownMenuItem 
@@ -185,7 +178,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                     >
                                         <div className="flex items-center gap-3 w-full text-destructive">
                                             <LogOut className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                                            <span className="text-xs font-black uppercase tracking-widest">Log out</span>
+                                            <span className="text-xs font-bold uppercase tracking-widest">Log out</span>
                                         </div>
                                     </DropdownMenuItem>
                                 </div>
@@ -248,14 +241,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!profileLoading) {
         if (!auth.currentUser) {
-            const isPublic = PUBLIC_DASHBOARD_ROUTES.includes(pathname) || 
-                             pathname.startsWith('/dashboard/learn/') || 
-                             pathname.startsWith('/dashboard/police-guide/') ||
-                             pathname.startsWith('/dashboard/research-analytics');
+            const isPublic = PUBLIC_DASHBOARD_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
             
-            const isProtectedFeature = !isPublic || pathname === '/dashboard/profile';
-            
-            if (isProtectedFeature && pathname.startsWith('/dashboard/')) {
+            if (pathname.startsWith('/dashboard') && !isPublic) {
                 router.replace('/login');
             }
         } else if (!userProfile && pathname !== '/create-profile' && !pathname.startsWith('/login') && !pathname.startsWith('/register')) {
@@ -293,7 +281,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
              className="w-full justify-start items-center gap-3 h-11 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl transition-all"
            >
              <ChevronRight className="h-4 w-4 rotate-180" />
-             <span className="font-black text-[11px] tracking-tight group-data-[state=collapsed]:hidden">Collapse</span>
+             <span className="font-bold text-[11px] tracking-tight group-data-[state=collapsed]:hidden">Collapse</span>
            </Button>
         </SidebarFooter>
       </Sidebar>
