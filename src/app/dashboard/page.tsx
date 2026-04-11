@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   MessageSquare,
   Sparkles,
@@ -24,7 +24,9 @@ import {
   History as HistoryIcon,
   Upload,
   User,
-  Plus
+  Plus,
+  Loader2,
+  Activity
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth, useFirestore } from "@/firebase";
@@ -34,6 +36,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getGeneralAiResponseAction } from "./chat-actions";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const features = [
   {
@@ -130,11 +134,22 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
+interface Message {
+  role: 'user' | 'ai';
+  text: string;
+}
+
 export default function DashboardHomePage() {
   const auth = useAuth();
   const firestore = useFirestore();
   const [userProfile, setUserProfile] = useState<any>(null);
   const [greeting, setGreeting] = useState("");
+  
+  // Chat States
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -153,6 +168,31 @@ export default function DashboardHomePage() {
     }
   }, [auth, firestore]);
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, isLoading]);
+
+  const handleSend = async (customInput?: string) => {
+    const queryText = customInput || input;
+    if (!queryText.trim() || isLoading) return;
+    
+    const userMsg = queryText.trim();
+    setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+    setInput("");
+    setIsLoading(true);
+
+    try {
+      const result = await getGeneralAiResponseAction(userMsg);
+      setMessages(prev => [...prev, { role: 'ai', text: result.response }]);
+    } catch (error) {
+      setMessages(prev => [...prev, { role: 'ai', text: "The neural hub is temporarily busy. Please try again in a few moments." }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
@@ -169,7 +209,7 @@ export default function DashboardHomePage() {
   return (
     <div className="max-w-6xl mx-auto space-y-10 pb-32 px-4 sm:px-6">
       
-      {/* Reference-Matched Welcome Header */}
+      {/* Welcome Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -207,43 +247,99 @@ export default function DashboardHomePage() {
               Upload
             </Link>
           </Button>
-          <Button className="flex-1 md:flex-none h-12 px-6 rounded-xl bg-[#1e293b] hover:bg-[#0f172a] text-white font-bold text-xs gap-2 shadow-xl active:scale-95 transition-all">
+          <Button 
+            onClick={() => setMessages([])}
+            className="flex-1 md:flex-none h-12 px-6 rounded-xl bg-[#1e293b] hover:bg-[#0f172a] text-white font-bold text-xs gap-2 shadow-xl active:scale-95 transition-all"
+          >
             <Sparkles className="h-4 w-4 text-primary" />
             New chat
           </Button>
         </div>
       </motion.div>
 
-      {/* Central hub ingress */}
+      {/* Central Hub Ingress */}
       <section className="flex flex-col items-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-4xl bg-[#1a1a1a] rounded-[2.5rem] p-8 sm:p-16 border border-white/5 shadow-2xl relative overflow-hidden text-center flex flex-col items-center gap-10"
+          className="w-full max-w-4xl bg-[#1a1a1a] rounded-[2.5rem] p-8 sm:p-12 border border-white/5 shadow-2xl relative overflow-hidden text-center flex flex-col items-center gap-8"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
           
-          <motion.h1 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight"
-          >
-            Hello, how can i help you today?
-          </motion.h1>
-
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {suggestions.map((s, i) => (
-              <motion.button
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.1 + (i * 0.1) }}
-                className="px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-white/40 hover:bg-white/10 hover:text-white hover:border-primary/30 transition-all text-xs font-medium"
+          <AnimatePresence mode="wait">
+            {messages.length === 0 ? (
+              <motion.div
+                key="welcome-prompt"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="space-y-8 w-full"
               >
-                {s}
-              </motion.button>
-            ))}
-          </div>
+                <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">
+                  Hello, how can i help you today?
+                </h1>
+
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  {suggestions.map((s, i) => (
+                    <motion.button
+                      key={i}
+                      onClick={() => handleSend(s)}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.1 + (i * 0.1) }}
+                      className="px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-white/40 hover:bg-white/10 hover:text-white hover:border-primary/30 transition-all text-xs font-medium"
+                    >
+                      {s}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="chat-history"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="w-full h-[400px] flex flex-col"
+              >
+                <ScrollArea className="flex-1 pr-4" viewportRef={scrollRef}>
+                  <div className="space-y-6 pb-4">
+                    {messages.map((m, i) => (
+                      <motion.div 
+                        key={i}
+                        initial={{ opacity: 0, x: m.role === 'user' ? 20 : -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className={cn(
+                          "flex flex-col max-w-[85%] space-y-1.5",
+                          m.role === 'user' ? "ml-auto items-end" : "items-start"
+                        )}
+                      >
+                        <div className={cn(
+                          "px-5 py-3 rounded-2xl text-sm sm:text-base font-medium leading-relaxed text-left shadow-lg",
+                          m.role === 'user' 
+                            ? "bg-[#2a2a2a] text-white rounded-tr-none border border-white/5" 
+                            : "bg-primary/10 border border-primary/20 text-white/90 rounded-tl-none prose dark:prose-invert max-w-none"
+                        )}>
+                          {m.text}
+                        </div>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">
+                          {m.role === 'ai' ? 'Nyaya Sahayak' : 'Registry node'}
+                        </span>
+                      </motion.div>
+                    ))}
+                    {isLoading && (
+                      <div className="flex gap-3 items-center text-primary/40 p-2">
+                        <div className="relative">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <Activity className="absolute inset-0 h-4 w-4 animate-pulse opacity-50" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">Neural ingress active...</span>
+                      </div>
+                    )}
+                  </div>
+                </ScrollArea>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="w-full max-w-3xl space-y-4">
             <div className="relative group">
@@ -253,13 +349,25 @@ export default function DashboardHomePage() {
                   <Sparkles className="h-5 w-5" />
                 </div>
                 <Textarea 
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend();
+                    }
+                  }}
                   placeholder="Ask anything about the law..." 
                   className="flex-1 bg-transparent border-none focus-visible:ring-0 text-white text-lg placeholder:text-white/20 min-h-[48px] h-10 py-2 resize-none overflow-hidden" 
                 />
                 <div className="flex items-center gap-2 pr-2">
                   <button className="p-2 text-white/40 hover:text-primary transition-colors"><Paperclip className="h-5 w-5" /></button>
                   <button className="p-2 text-white/40 hover:text-primary transition-colors"><Mic className="h-5 w-5" /></button>
-                  <button className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-xl active:scale-95 transition-all">
+                  <button 
+                    onClick={() => handleSend()}
+                    disabled={!input.trim() || isLoading}
+                    className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-xl active:scale-95 transition-all disabled:opacity-50"
+                  >
                     <Send className="h-5 w-5 fill-current" />
                   </button>
                 </div>
@@ -270,10 +378,10 @@ export default function DashboardHomePage() {
         </motion.div>
       </section>
 
-      {/* Feature matrix */}
+      {/* Feature Matrix */}
       <section className="space-y-12">
         <div className="text-left border-l-4 border-primary pl-6 py-2">
-          <h2 className="text-[10px] font-bold text-primary mb-1">Institutional core</h2>
+          <h2 className="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest">Institutional core</h2>
           <h3 className="text-3xl font-black tracking-tighter text-white">Forensic ai registry</h3>
           <p className="text-sm text-gray-500 font-medium mt-1">Select a specialized tool to start your statutory audit.</p>
         </div>
@@ -305,7 +413,7 @@ export default function DashboardHomePage() {
         </motion.div>
       </section>
 
-      {/* Modern trust node */}
+      {/* Trust Node */}
       <section className="pt-12">
         <Card className="bg-primary/5 border-primary/10 rounded-[2.5rem] p-10 sm:p-16 flex flex-col md:flex-row items-center justify-between gap-10 overflow-hidden relative group">
           <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-1000 pointer-events-none">
@@ -316,7 +424,7 @@ export default function DashboardHomePage() {
               <div className="p-2 rounded-lg bg-primary/10">
                 <ShieldCheck className="h-5 w-5 animate-pulse" />
               </div>
-              <span className="text-[10px] font-bold text-primary">Statutory trust</span>
+              <span className="text-[10px] font-bold text-primary uppercase">Statutory trust</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black text-white leading-none tracking-tighter">Your data is <br /> <span className="text-primary italic">your property.</span></h2>
             <p className="text-sm sm:text-lg text-gray-400 font-medium leading-relaxed">
@@ -335,7 +443,7 @@ export default function DashboardHomePage() {
             ].map((n, i) => (
               <div key={i} className="p-6 rounded-3xl bg-white/5 border border-white/5 flex flex-col items-center gap-3 text-center">
                 <n.icon className="h-6 w-6 text-primary opacity-40" />
-                <span className="text-[10px] font-bold text-white/60">{n.label}</span>
+                <span className="text-[10px] font-bold text-white/60 uppercase">{n.label}</span>
               </div>
             ))}
           </div>
