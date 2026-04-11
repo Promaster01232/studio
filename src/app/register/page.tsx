@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -11,14 +12,14 @@ import {
   GoogleAuthProvider,
   signInWithPopup
 } from "firebase/auth";
-import { doc, setDoc, serverTimestamp, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
 import { ref, set } from "firebase/database";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle2, Scale, Smartphone, Lock, Zap, Activity } from "lucide-react";
+import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle2, User, Mail, Lock, Smartphone, ChevronLeft, Zap } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -104,7 +105,6 @@ export default function RegisterPage() {
         const emailValidation = await verifyEmailAuthenticity({ email: trimmedEmail });
         if (!emailValidation.isAuthentic) {
           securityStatus = 'flagged_for_review';
-          console.warn("[SECURITY] Identity flagged:", emailValidation.reason);
         }
         setEmailStatus('valid');
       } catch (aiError) {
@@ -150,13 +150,12 @@ export default function RegisterPage() {
       set(ref(rtdb, `users/${user.uid}`), {
           ...userProfile,
           createdAt: Date.now()
-      }).catch(() => console.warn("[RTDB] Identity sync deferred."));
+      }).catch(() => {});
 
       toast({ title: "Registration synchronized", description: "Welcome to your Nyaya Sahayak terminal." });
       router.push("/dashboard");
 
     } catch (error: any) {
-      console.error("Enrollment failed:", error);
       let errorMsg = "Identity initialization refused. Please try again.";
       if (error.code === 'auth/email-already-in-use') errorMsg = "This email is already registered.";
       
@@ -172,176 +171,176 @@ export default function RegisterPage() {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
       await signInWithPopup(auth, provider);
-      // Policy is automatically acknowledged via Google ingress
     } catch (error: any) {
-      console.error("Google access error:", error);
-      if (error.code === 'auth/unauthorized-domain') {
-          toast({
-            variant: "destructive",
-            title: "Registry Authorization Error",
-            description: "Workstation domain not authorized. Please add it to Firebase Console.",
-          });
-      } else {
-          toast({
-            variant: "destructive",
-            title: "Google access failed",
-            description: "Authentication system busy or restricted. Please try again.",
-          });
-      }
+      toast({
+        variant: "destructive",
+        title: "Google access failed",
+        description: "Authentication system busy or restricted. Please try again.",
+      });
       setIsGoogleLoading(false);
     }
   };
 
   return (
-    <Card className="w-full max-w-4xl grid md:grid-cols-2 overflow-hidden p-0 shadow-2xl border-primary/5 rounded-[2rem] bg-card text-left">
-      <motion.div 
-          className="p-8 sm:p-12 flex flex-col justify-center"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#f8fafc] p-4 font-body">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="w-full max-w-[540px]"
       >
-          <div className="flex items-center gap-3 mb-8">
-              <Logo className="h-12 w-12" priority={true} />
-              <div className="flex flex-col">
-                <h1 className="text-2xl font-black tracking-tight text-primary leading-none">
-                    Nyaya Sahayak
+        <Card className="bg-white border border-slate-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[1.5rem] p-8 sm:p-12">
+          <div className="flex flex-col items-center text-center space-y-6 mb-10">
+            <div className="flex flex-col items-center gap-2">
+              <Logo className="h-12 w-12 text-[#1e3a5f]" priority={true} />
+              <div className="space-y-1">
+                <h1 className="text-2xl font-black tracking-tight text-[#1e3a5f] leading-none">
+                  Nyayguru
                 </h1>
-                <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground mt-1">Institutional hub</span>
+                <p className="text-[10px] font-medium text-slate-400 tracking-wide">
+                  Legal intelligence for india
+                </p>
               </div>
+            </div>
+            
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold text-[#1e3a5f] tracking-tight">
+                Enroll to nyayguru
+              </h2>
+              <p className="text-sm text-slate-400 font-medium">
+                Initialize your secure statutory terminal
+              </p>
+            </div>
           </div>
-          
-          <div className="space-y-1 mb-8 text-left">
-            <h2 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter text-foreground uppercase leading-tight">Enrollment</h2>
-            <p className="text-sm text-muted-foreground font-medium">Initialize your secure statutory terminal.</p>
-          </div>
-          
-          <div className="grid gap-5">
-              <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2 text-left">
-                    <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given name</Label>
-                    <Input placeholder="Rajesh" value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary" />
-                  </div>
-                  <div className="grid gap-2 text-left">
-                    <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Surname</Label>
-                    <Input placeholder="Kumar" value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary" />
-                  </div>
-              </div>
-              
-              <div className="grid gap-2 text-left">
-                  <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center justify-between ml-1">
-                    <span>Registry email</span>
-                    {isValidating && <span className="text-[8px] text-primary font-black animate-pulse uppercase tracking-wider">AI auditing...</span>}
-                  </Label>
-                  <div className="relative">
-                    <Input
-                        type="email"
-                        placeholder="m@example.com"
-                        value={email}
-                        onChange={(e) => { setEmail(e.target.value); setEmailStatus('idle'); }}
-                        disabled={loading}
-                        className={cn("h-12 font-bold rounded-xl border-primary/10 focus:border-primary", emailStatus === 'valid' && "border-green-500/50", emailStatus === 'invalid' && "border-red-500/50")}
-                    />
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                        {emailStatus === 'valid' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
-                        {emailStatus === 'invalid' && <AlertCircle className="h-4 w-4 text-red-600" />}
+
+          <div className="space-y-8">
+            <button className="flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-[#1e3a5f] transition-colors">
+              <ChevronLeft className="h-3.5 w-3.5" />
+              Back to passwordless
+            </button>
+
+            <div className="space-y-6">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="firstName" className="text-sm font-bold text-[#1e3a5f]">Given name</Label>
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1e3a5f] transition-colors">
+                      <User className="h-4 w-4" />
                     </div>
+                    <Input id="firstName" placeholder="Rajesh" value={firstName} onChange={(e) => setFirstName(e.target.value)} disabled={loading} className="h-12 pl-11 bg-white border-slate-200 rounded-xl font-medium" />
                   </div>
+                </div>
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="lastName" className="text-sm font-bold text-[#1e3a5f]">Surname</Label>
+                  <Input id="lastName" placeholder="Kumar" value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={loading} className="h-12 bg-white border-slate-200 rounded-xl font-medium" />
+                </div>
               </div>
 
-              <div className="grid gap-2 text-left">
-                  <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile access</Label>
-                  <div className="relative">
-                    <Input type="tel" placeholder="+91 98765 43210" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} disabled={loading} className="h-12 font-bold pl-12 rounded-xl border-primary/10 focus:border-primary" />
-                    <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40" />
+              <div className="space-y-2 text-left">
+                <Label htmlFor="email" className="text-sm font-bold text-[#1e3a5f] flex justify-between">
+                  Registry email
+                  {isValidating && <span className="text-[10px] text-[#1e3a5f] font-bold animate-pulse">Ai auditing...</span>}
+                </Label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1e3a5f] transition-colors">
+                    <Mail className="h-4 w-4" />
                   </div>
-              </div>
-
-              <div className="grid gap-2 text-left">
-                  <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Statutory role</Label>
-                  <Select value={userType} onValueChange={setUserType} disabled={loading}>
-                      <SelectTrigger className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary">
-                          <SelectValue placeholder="Select role" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl glass">
-                          <SelectItem value="citizen" className="font-bold">Citizen</SelectItem>
-                          <SelectItem value="businessman" className="font-bold">Business / MSME</SelectItem>
-                          <SelectItem value="student" className="font-bold">Law student</SelectItem>
-                      </SelectContent>
-                  </Select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2 text-left">
-                      <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Access key</Label>
-                      <div className="relative">
-                          <Input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} className="h-12 font-bold pr-12 rounded-xl border-primary/10 focus:border-primary" />
-                          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors">{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>
-                      </div>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value); setEmailStatus('idle'); }}
+                    disabled={loading}
+                    className={cn("h-12 pl-11 bg-white border-slate-200 rounded-xl font-medium", emailStatus === 'valid' && "border-green-500/50")}
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                    {emailStatus === 'valid' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
                   </div>
-                  <div className="grid gap-2 text-left">
-                      <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Confirm key</Label>
-                      <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary" />
+                </div>
+              </div>
+
+              <div className="space-y-2 text-left">
+                <Label htmlFor="mobile" className="text-sm font-bold text-[#1e3a5f]">Mobile access</Label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1e3a5f] transition-colors">
+                    <Smartphone className="h-4 w-4" />
                   </div>
+                  <Input id="mobile" placeholder="+91 98765 43210" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} disabled={loading} className="h-12 pl-11 bg-white border-slate-200 rounded-xl font-medium" />
+                </div>
               </div>
 
-              <div className="flex items-start space-x-3 text-left p-4 rounded-2xl bg-primary/5 border border-primary/10 mt-2">
-                  <Checkbox id="terms" checked={acceptedTerms} onCheckedChange={(c) => setAcceptedTerms(c as boolean)} className="data-[state=checked]:bg-primary mt-1 border-primary/30" />
-                  <Label htmlFor="terms" className="text-[10px] font-bold text-muted-foreground leading-relaxed cursor-pointer">I acknowledge the statutory protocols, user agreement, and <Link href="/privacy" className="text-primary hover:underline font-black">Privacy policy</Link> of Nyaya Sahayak.</Label>
+              <div className="space-y-2 text-left">
+                <Label className="text-sm font-bold text-[#1e3a5f]">Statutory role</Label>
+                <Select value={userType} onValueChange={setUserType} disabled={loading}>
+                  <SelectTrigger className="h-12 bg-white border-slate-200 rounded-xl font-medium">
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="citizen" className="font-medium">Citizen</SelectItem>
+                    <SelectItem value="businessman" className="font-medium">Business / Msme</SelectItem>
+                    <SelectItem value="student" className="font-medium">Law student</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              <div className="grid gap-4">
-                  <Button className="w-full h-14 font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 active:scale-95 transition-all mt-4 rounded-xl group relative overflow-hidden" onClick={handleRegister} disabled={loading || !acceptedTerms}>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                      {loading ? <Loader2 className="animate-spin h-5 w-5 mr-3" /> : <ShieldCheck className="h-5 w-5 mr-3" />}
-                      {loading ? "Initializing..." : "Activate registry hub"}
-                  </Button>
-
-                  <Button 
-                    variant="outline" 
-                    className="w-full font-black text-[10px] uppercase tracking-widest h-14 border-primary/10 hover:border-primary/20 hover:bg-primary/5 shadow-sm active:scale-[0.98] transition-all group rounded-xl" 
-                    onClick={handleGoogleLogin} 
-                    disabled={isGoogleLoading}
-                  >
-                      {isGoogleLoading ? (
-                        <Loader2 className="mr-3 h-5 w-5 animate-spin text-primary" />
-                      ) : (
-                        <div className="mr-3 transition-transform group-hover:scale-110">
-                          <GoogleIcon />
-                        </div>
-                      )}
-                      {isGoogleLoading ? "Synchronizing..." : "Continue with google"}
-                  </Button>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2 text-left">
+                  <Label className="text-sm font-bold text-[#1e3a5f]">Access key</Label>
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1e3a5f] transition-colors">
+                      <Lock className="h-4 w-4" />
+                    </div>
+                    <Input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} className="h-12 pl-11 pr-12 bg-white border-slate-200 rounded-xl font-medium" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#1e3a5f] transition-colors">
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="space-y-2 text-left">
+                  <Label className="text-sm font-bold text-[#1e3a5f]">Confirm key</Label>
+                  <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} className="h-12 bg-white border-slate-200 rounded-xl font-medium" />
+                </div>
               </div>
+
+              <div className="flex items-start space-x-3 text-left p-4 rounded-xl bg-slate-50 border border-slate-100">
+                <Checkbox id="terms" checked={acceptedTerms} onCheckedChange={(c) => setAcceptedTerms(c as boolean)} className="mt-1" />
+                <Label htmlFor="terms" className="text-xs font-medium text-slate-500 leading-relaxed cursor-pointer">
+                  I acknowledge the statutory protocols and <Link href="/privacy" className="text-[#1e3a5f] hover:underline font-bold">Privacy policy</Link> of nyayguru.
+                </Label>
+              </div>
+
+              <div className="space-y-4">
+                <Button 
+                  onClick={handleRegister} 
+                  disabled={loading || !acceptedTerms}
+                  className="w-full h-12 bg-[#1e3a5f] hover:bg-[#162d4a] text-white font-bold text-sm rounded-xl shadow-lg active:scale-[0.98] transition-all"
+                >
+                  {loading ? <Loader2 className="animate-spin h-5 w-5 mr-3" /> : <ShieldCheck className="h-5 w-5 mr-3" />}
+                  Activate account
+                </Button>
+
+                <Button 
+                  variant="outline" 
+                  onClick={handleGoogleLogin} 
+                  disabled={isGoogleLoading}
+                  className="w-full h-12 border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-sm rounded-xl active:scale-[0.98] transition-all gap-3"
+                >
+                  {isGoogleLoading ? <Loader2 className="animate-spin h-5 w-5" /> : <GoogleIcon />}
+                  Continue with google
+                </Button>
+              </div>
+            </div>
           </div>
-          
-          <div className="mt-8 text-center text-xs font-bold text-muted-foreground">
-              Already in registry? <Link href="/login" className="font-black text-primary hover:underline uppercase tracking-widest ml-1">Sign in hub</Link>
-          </div>
+        </Card>
+        
+        <div className="mt-8 text-center">
+          <p className="text-sm text-slate-400 font-medium">
+            Already in registry?{" "}
+            <Link href="/login" className="text-[#1e3a5f] hover:underline font-bold ml-1">Sign in hub</Link>
+          </p>
+        </div>
       </motion.div>
-      <div className="hidden md:flex flex-col items-center justify-center bg-muted/30 border-l border-primary/5 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none grayscale flex items-center justify-center">
-            <Logo className="h-96 w-96" priority={true} />
-        </div>
-        <div className="p-12 text-center space-y-8 relative z-10">
-            <div className="bg-primary/5 p-10 rounded-[2.5rem] inline-block shadow-inner border border-primary/5 group">
-                <Scale className="h-24 w-24 text-primary opacity-40" />
-            </div>
-            <div className="space-y-3 text-center">
-                <h3 className="text-2xl font-black font-headline tracking-tighter uppercase text-foreground leading-tight">Identity <br /> enrollment</h3>
-                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest max-w-[240px] mx-auto leading-relaxed">Secure your digital presence within the Nyaya Sahayak legal ecosystem.</p>
-            </div>
-            <div className="flex items-center justify-center gap-4 pt-4">
-                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-background border border-primary/10 shadow-sm">
-                    <Zap className="h-3 w-3 text-primary animate-pulse" />
-                    <span className="text-[8px] font-black uppercase tracking-widest">System active</span>
-                </div>
-                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-background border border-primary/10 shadow-sm">
-                    <Lock className="h-3 w-3 text-primary" />
-                    <span className="text-[8px] font-black uppercase tracking-widest">Encrypted</span>
-                </div>
-            </div>
-        </div>
-        <div className="absolute bottom-8 text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/30">NYAYASAHAYAK.IN // TRANSIENCE REGISTRY</div>
-      </div>
-    </Card>
+    </div>
   );
 }
