@@ -153,10 +153,10 @@ export default function NarrateProblemPage() {
                     <Mic className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
-                    <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none uppercase">Voice summary</h1>
+                    <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter leading-none">Voice summary</h1>
                 </div>
             </div>
-            <Button variant="outline" size="sm" className="rounded-full font-black text-[10px] h-10 px-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all" asChild>
+            <Button variant="outline" size="sm" className="rounded-full font-bold text-xs h-10 px-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all" asChild>
                 <Link href="/dashboard">
                     <ArrowLeft className="mr-2 h-3.5 w-3.5" /> Back to hub
                 </Link>
@@ -179,14 +179,14 @@ export default function NarrateProblemPage() {
                 <CardContent className="flex flex-col items-center justify-center space-y-12 pt-12 pb-12">
                     <div className="w-full max-w-sm space-y-4 px-2 text-left">
                         <div className="space-y-3">
-                            <Label className="text-[10px] font-black tracking-[0.3em] text-gray-500 ml-1">Select language</Label>
+                            <Label className="text-[10px] font-bold text-gray-500 ml-1">Select language</Label>
                             <Select value={language} onValueChange={setLanguage} disabled={isRecording || state.status === 'loading'}>
                                 <SelectTrigger className="h-12 bg-white/5 border-white/5 font-bold rounded-xl active:scale-95 transition-all">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
-                                    <SelectItem value="English" className="font-bold">Simple English</SelectItem>
-                                    <SelectItem value="Hindi" className="font-bold">Hindi (Official)</SelectItem>
+                                    <SelectItem value="English" className="font-bold text-xs">Simple English</SelectItem>
+                                    <SelectItem value="Hindi" className="font-bold text-xs">Hindi (Official)</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -223,18 +223,18 @@ export default function NarrateProblemPage() {
                         >
                             <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             {isRecording ? <div className="h-12 w-12 bg-white rounded-2xl animate-pulse z-10" /> : <Mic className="h-14 w-14 z-10 transition-transform group-hover:scale-110" />}
-                            <span className="text-[10px] font-black z-10">{isRecording ? "Stop" : state.status === 'loading' ? "Syncing" : "Tap to speak"}</span>
+                            <span className="text-[10px] font-bold z-10">{isRecording ? "Stop" : state.status === 'loading' ? "Syncing" : "Tap to speak"}</span>
                         </Button>
                         
                         <div className="text-center space-y-2">
                             <p className={cn("text-6xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-white")}>{formatTime(timer)}</p>
-                            <p className="text-[10px] text-gray-500 font-black tracking-[0.3em]">{isRecording ? "Transmitting audio..." : state.status === 'loading' ? "Neural processing..." : "Terminal ready"}</p>
+                            <p className="text-[10px] text-gray-500 font-bold tracking-[0.3em]">{isRecording ? "Transmitting audio..." : state.status === 'loading' ? "Neural processing..." : "Terminal ready"}</p>
                         </div>
                     </div>
 
                     <div className="w-full pt-8 border-t border-white/5 text-center">
                         <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="audio/*" className="hidden" />
-                        <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || state.status === 'loading'} className="text-[10px] font-black tracking-widest text-primary/60 hover:text-primary gap-3 rounded-xl hover:bg-white/5 px-8 h-10 transition-all">
+                        <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || state.status === 'loading'} className="text-[10px] font-bold text-primary/60 hover:text-primary gap-3 rounded-xl hover:bg-white/5 px-8 h-10 transition-all">
                             <Upload className="h-4 w-4" /> Upload existing record
                         </Button>
                     </div>
@@ -245,7 +245,7 @@ export default function NarrateProblemPage() {
         <div ref={reportRef} className="space-y-8 scroll-mt-20">
             <div className="flex flex-col items-center gap-4 mb-4">
                 <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-20" />
-                <Badge variant="outline" className="font-black text-[10px] bg-primary/5 px-6 py-2 rounded-full border-primary/10 shadow-sm">Statutory report</Badge>
+                <Badge variant="outline" className="font-bold text-[10px] bg-primary/5 px-6 py-2 rounded-full border-primary/10 shadow-sm">Statutory report</Badge>
             </div>
 
             <Card className="bg-[#161b22] border-white/5 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col">
@@ -289,7 +289,7 @@ export default function NarrateProblemPage() {
                                     variant="secondary" 
                                     size="sm" 
                                     onClick={handleReset}
-                                    className="h-12 px-8 rounded-2xl font-black text-[10px] gap-3 shadow-2xl active:scale-95"
+                                    className="h-12 px-8 rounded-2xl font-bold text-xs gap-3 shadow-2xl active:scale-95"
                                 >
                                     <PlusCircle className="h-4 w-4" /> New report
                                 </Button>
@@ -320,7 +320,7 @@ export default function NarrateProblemPage() {
                                 </div>
                                 <div className="space-y-4">
                                     <p className="font-black text-3xl tracking-tighter text-white">Synthesizing report...</p>
-                                    <p className="text-[10px] font-black tracking-[0.5em] text-gray-500 animate-pulse">Running forensic audio audit...</p>
+                                    <p className="text-[10px] font-bold text-gray-500 animate-pulse">Running forensic audio audit...</p>
                                 </div>
                             </motion.div>
                         ) : state.status === "success" && state.data ? (
@@ -334,7 +334,7 @@ export default function NarrateProblemPage() {
                                     <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-blue-500"></div>
                                     <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
                                         <Fingerprint className="h-4 w-4" />
-                                        <span className="text-[10px] font-black tracking-widest">Transcription registry</span>
+                                        <span className="text-[10px] font-bold">Transcription registry</span>
                                     </div>
                                     "{state.data.transcription}"
                                 </div>
@@ -342,14 +342,14 @@ export default function NarrateProblemPage() {
                                 <div className="grid md:grid-cols-2 gap-8">
                                     <Card className="p-8 rounded-[2.5rem] border-white/5 text-left bg-white/[0.02] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
                                         <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary"></div>
-                                        <h3 className="text-[11px] font-black text-primary tracking-[0.3em] mb-6 flex items-center gap-3">
+                                        <h3 className="text-[11px] font-bold text-primary tracking-[0.3em] mb-6 flex items-center gap-3">
                                             <StepForward className="h-4 w-4" /> Executive summary
                                         </h3>
                                         <p className="text-sm sm:text-base font-black leading-relaxed tracking-tight text-white">{state.data.caseSummary}</p>
                                     </Card>
                                     <Card className="p-8 rounded-[2.5rem] border-white/5 text-left bg-white/[0.02] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
                                         <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-green-500"></div>
-                                        <h3 className="text-[11px] font-black text-green-600 tracking-[0.3em] mb-6 flex items-center gap-3">
+                                        <h3 className="text-[11px] font-bold text-green-600 tracking-[0.3em] mb-6 flex items-center gap-3">
                                             <Globe className="h-4 w-4" /> Procedural path
                                         </h3>
                                         <p className="text-sm font-bold leading-relaxed text-gray-400">{state.data.nextActions}</p>
@@ -358,7 +358,7 @@ export default function NarrateProblemPage() {
 
                                 <div className="space-y-6">
                                     <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                                        <h3 className="text-[11px] font-black text-primary tracking-[0.3em] flex items-center gap-3">
+                                        <h3 className="text-[11px] font-bold text-primary tracking-[0.3em] flex items-center gap-3">
                                             <FileSearch className="h-5 w-5" /> Forensic analysis
                                         </h3>
                                     </div>
@@ -378,11 +378,11 @@ export default function NarrateProblemPage() {
                                             <ShieldCheck className="h-6 w-6" />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-[10px] font-black">Identity protection</p>
+                                            <p className="text-[10px] font-bold">Identity protection</p>
                                             <p className="text-[9px] font-bold">This report record is private and encrypted.</p>
                                         </div>
                                     </div>
-                                    <p className="text-[9px] font-black tracking-[0.5em]">Nyayasahayak.in // Summary-hub</p>
+                                    <p className="text-[9px] font-bold tracking-[0.5em]">Nyayasahayak.in // Summary-hub</p>
                                 </div>
                             </motion.div>
                         ) : (
@@ -400,7 +400,7 @@ export default function NarrateProblemPage() {
                                 </div>
                                 <div className="space-y-4 max-w-sm px-6 text-center">
                                     <h3 className="font-black text-3xl tracking-tighter text-white">System standby</h3>
-                                    <p className="text-[11px] text-gray-500 font-black tracking-[0.4em] leading-relaxed italic opacity-40">
+                                    <p className="text-[11px] text-gray-500 font-bold leading-relaxed italic opacity-40">
                                         Initialize the terminal by recording or uploading your case narration.
                                     </p>
                                 </div>
