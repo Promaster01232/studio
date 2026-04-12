@@ -1,74 +1,24 @@
+
 "use client";
 
 import { PageHeader } from "@/components/page-header";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { 
   ArrowLeft, 
-  BrainCircuit, 
-  Gavel, 
-  FileText, 
   ShieldCheck, 
-  Scale, 
-  Cpu, 
-  Sparkles,
-  Award,
+  Zap, 
+  Activity,
+  Gavel,
+  Scale,
+  FileText,
+  Users,
   Target,
   Globe
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Logo } from "@/components/logo";
-
-const features = [
-  {
-    title: "Forensic Case Auditor",
-    desc: "Our neural engine processes complex legal narratives in milliseconds, providing mathematically precise forensic reports and summaries.",
-    icon: BrainCircuit,
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
-  },
-  {
-    title: "Procedural Roadmap",
-    desc: "AI-optimized legal navigation paths that dynamically guide citizens through the complexities of the Indian judicial system.",
-    icon: Scale,
-    color: "text-amber-500",
-    bg: "bg-amber-500/10",
-  },
-  {
-    title: "Legal Drafting Node",
-    desc: "Master the art of legal communication with AI-driven notice generation and sophisticated bond structural drafting.",
-    icon: FileText,
-    color: "text-indigo-500",
-    bg: "bg-indigo-500/10",
-  },
-  {
-    title: "Registry Intelligence",
-    desc: "Access a strictly verified registry of legal professionals, ensuring identity authenticity through multi-stage forensic audits.",
-    icon: ShieldCheck,
-    color: "text-green-600",
-    bg: "bg-green-600/10",
-  }
-];
-
-const leadership = [
-  {
-    name: "Hardy Pie",
-    role: "Founder & Architect",
-    initials: "HP",
-    bio: "As the visionary and primary architect of Nyaya Sahayak, Hardy Pie engineered the core forensic logic and high-fidelity interfaces that power our ecosystem. With a commitment to technical excellence and precision engineering, he has dedicated thousands of hours to refining the citizen journey.",
-    icon: Cpu
-  },
-  {
-    name: "Piyush Singh",
-    role: "CEO & Co-founder",
-    initials: "PS",
-    bio: "As the CEO and Co-founder, Piyush Singh steers the strategic trajectory of Nyaya Sahayak. His leadership is focused on institutional growth, strategic partnerships, and the democratization of elite legal tools, ensuring that Nyaya Sahayak remains the global gold standard.",
-    icon: ShieldCheck
-  }
-];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -81,14 +31,14 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
+  hidden: { y: 10, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
     transition: {
       type: "spring",
       stiffness: 100,
-      damping: 15
+      damping: 20
     },
   },
 };
@@ -99,121 +49,133 @@ export default function AboutPage() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="max-w-6xl mx-auto space-y-12 sm:space-y-20 pb-20 px-2 sm:px-6"
+      className="max-w-5xl mx-auto space-y-12 pb-20 px-4 sm:px-6 text-left"
     >
-      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-border/10 pb-8">
         <PageHeader
           title="About Nyaya Sahayak"
-          description="The pinnacle of AI-driven legal empowerment, created by IdeaSpark."
+          description="Institutional policy and statutory mandate registry."
         />
-        <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5" asChild>
+        <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary/5 group h-10 px-6 border border-primary/5 text-primary text-[10px] uppercase tracking-widest" asChild>
           <Link href="/dashboard">
-            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to Dashboard
+            <ArrowLeft className="mr-2 h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" /> Back to Terminal
           </Link>
         </Button>
       </motion.div>
 
-      {/* Mission Section */}
-      <motion.div variants={itemVariants}>
-        <Card className="border-none shadow-2xl rounded-[2.5rem] overflow-hidden bg-card/40 backdrop-blur-xl relative">
-          <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
-            <Globe className="h-64 w-64" />
+      {/* Mandate Section */}
+      <section className="space-y-10">
+        <motion.div variants={itemVariants} className="flex flex-wrap gap-3">
+          <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm">
+            <Zap className="h-2.5 w-2.5 mr-1.5" /> AI Powered
+          </Badge>
+          <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm">
+            <ShieldCheck className="h-2.5 w-2.5 mr-1.5" /> Statutory Trust
+          </Badge>
+          <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm">
+            <Activity className="h-2.5 w-2.5 mr-1.5" /> Always Ready
+          </Badge>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="space-y-8 max-w-4xl">
+          <div className="flex items-center gap-3 text-primary">
+            <Target className="h-5 w-5" />
+            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Mandate</span>
           </div>
-          <CardContent className="p-8 sm:p-16 space-y-10 relative z-10 text-left">
-            <div className="flex items-center gap-3 text-primary">
-              <div className="p-2 rounded-xl bg-primary/10">
-                <Target className="h-5 w-5 animate-pulse" />
-              </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Mandate</span>
-            </div>
-            <div className="space-y-6 max-w-4xl">
-              <h2 className="text-3xl sm:text-6xl font-black tracking-tighter leading-none">
-                Democratizing <span className="text-primary italic">Legal Intelligence.</span>
-              </h2>
-              <p className="text-sm sm:text-xl text-muted-foreground font-medium leading-relaxed">
-                Nyaya Sahayak is built on the belief that every citizen deserves <span className="text-foreground font-bold">elite-grade legal assistance.</span> Our mission is to bridge the gap between complex judicial protocols and citizen needs through precision AI engineering, delivering forensic document audits and personalized roadmaps that empower users to navigate the law with absolute confidence.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-5 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest">AI Forensics</Badge>
-              <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20 px-5 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest">Procedural Clarity</Badge>
-              <Badge variant="secondary" className="bg-indigo-500/10 text-indigo-600 border-indigo-500/20 px-5 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest">Institutional Trust</Badge>
-            </div>
-          </CardContent>
-          <div className="h-1.5 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
-        </Card>
-      </motion.div>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-tight uppercase">
+            Democratizing <span className="text-primary italic">Legal Intelligence.</span>
+          </h2>
+          <p className="text-lg sm:text-xl text-muted-foreground font-medium leading-relaxed">
+            Nyaya Sahayak is built on the belief that every citizen deserves accessible legal assistance. Our mission is to bridge the gap between complex judicial protocols and citizen needs through precision AI engineering, delivering automated document drafting and personalized roadmaps that empower users to navigate the law with confidence.
+          </p>
+        </motion.div>
+      </section>
 
-      {/* Feature Capabilities Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {features.map((feature, idx) => (
-          <motion.div key={idx} variants={itemVariants}>
-            <Card className="h-full border-primary/5 bg-card/20 hover:border-primary/20 transition-all duration-500 group hover:shadow-2xl rounded-[2rem]">
-              <CardContent className="p-8 space-y-6 text-left">
-                <div className={`${feature.bg} p-4 rounded-2xl w-fit transition-transform group-hover:scale-110 duration-700 shadow-inner`}>
-                  <feature.icon className={`h-7 w-7 ${feature.color}`} />
-                </div>
-                <div className="space-y-3">
-                  <h3 className="text-xl font-black tracking-tight">{feature.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-                    {feature.desc}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+      <Separator className="bg-border/5" />
 
-      {/* Leadership Section */}
-      <motion.div variants={itemVariants} className="space-y-12">
-        <div className="text-left border-l-4 border-primary pl-6 py-2">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-primary mb-1">Institutional Core</h2>
-          <h3 className="text-3xl font-black tracking-tighter">Meet the Leadership</h3>
-          <p className="text-sm text-muted-foreground font-medium mt-1">The visionaries behind the forensic engine, dedicated to legal excellence.</p>
+      {/* Capabilities Ledger */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-4">
+          <div className="h-1.5 w-12 bg-primary rounded-full" />
+          <h3 className="text-xl font-black uppercase tracking-tighter">Capabilities Registry</h3>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {leadership.map((leader, i) => (
-            <motion.div key={i} variants={itemVariants}>
-              <Card className="border-none shadow-xl bg-card/30 rounded-[2.5rem] overflow-hidden group hover:shadow-2xl transition-all duration-700 h-full flex flex-col">
-                <CardHeader className="flex flex-row items-center gap-6 bg-muted/20 border-b border-primary/5 p-8 sm:p-10">
-                  <div className="relative">
-                      <div className="absolute -inset-2 rounded-2xl bg-primary/10 animate-pulse"></div>
-                      <Avatar className="h-20 w-20 border-2 border-background shadow-xl rounded-2xl relative z-10 transition-transform group-hover:rotate-2">
-                        <AvatarFallback className="font-black text-2xl bg-primary/5 text-primary">
-                          <leader.icon className="h-10 w-10" />
-                        </AvatarFallback>
-                      </Avatar>
-                  </div>
-                  <div className="text-left space-y-1">
-                    <CardTitle className="font-black tracking-tighter text-2xl">{leader.name}</CardTitle>
-                    <Badge variant="secondary" className="text-[9px] font-black text-primary uppercase tracking-widest py-0.5 px-3 rounded-full">{leader.role}</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-8 sm:p-10 text-left flex-1 flex flex-col justify-center">
-                  <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed">
-                    {leader.bio}
-                  </p>
-                </CardContent>
-              </Card>
+        <div className="grid sm:grid-cols-2 gap-10">
+          {[
+            {
+              title: "Case Analysis",
+              desc: "Our AI engine processes complex legal narratives in milliseconds, providing precise summaries and procedural guidance.",
+              icon: Gavel
+            },
+            {
+              title: "Procedural Roadmap",
+              desc: "AI-optimized legal navigation paths that dynamically guide citizens through the complexities of the judicial system.",
+              icon: Scale
+            },
+            {
+              title: "Document Drafting",
+              desc: "Master legal communication with AI-driven notice generation and sophisticated document structural drafting.",
+              icon: FileText
+            },
+            {
+              title: "Verified Directory",
+              desc: "Access a verified registry of legal professionals, ensuring identity authenticity through multi-stage manual audits.",
+              icon: Users
+            }
+          ].map((item, i) => (
+            <motion.div key={i} variants={itemVariants} className="space-y-4 text-left p-8 rounded-[2rem] bg-muted/20 border border-border/10 shadow-inner group hover:bg-primary/[0.02] transition-colors">
+              <div className="p-3 rounded-xl bg-primary/10 w-fit group-hover:scale-110 transition-transform">
+                <item.icon className="h-5 w-5 text-primary" />
+              </div>
+              <h4 className="text-xl font-black tracking-tight">{item.title}</h4>
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground leading-relaxed">{item.desc}</p>
             </motion.div>
           ))}
         </div>
-      </motion.div>
+      </section>
 
-      {/* Institutional Source */}
-      <motion.div variants={itemVariants} className="pt-12 text-center">
-        <div className="flex flex-col items-center gap-6">
-          <div className="bg-primary/5 p-6 rounded-full border border-primary/10">
-            <Cpu className="h-10 w-10 text-primary opacity-60" />
+      <Separator className="bg-border/5" />
+
+      {/* Platform Core Leadership */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-4">
+          <div className="h-1.5 w-12 bg-primary rounded-full" />
+          <div className="space-y-1">
+            <h3 className="text-xl font-black uppercase tracking-tighter">Platform Core</h3>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Meet the Leadership</p>
           </div>
-          <div className="space-y-2">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">
-              Institutional Source // Created by IdeaSpark
-            </p>
-            <p className="text-sm italic font-medium text-primary">"Precision AI for the Modern Legal Ecosystem. Navigate the Law with Dignity."</p>
-          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-12">
+          {[
+            {
+              name: "Hardy Pie",
+              role: "Founder & Architect",
+              bio: "As the visionary and primary architect, Hardy Pie engineered the core logic and high-fidelity interfaces that power our ecosystem. With a commitment to technical excellence and precision engineering, he has dedicated thousands of hours to refining the citizen journey."
+            },
+            {
+              name: "Piyush Singh",
+              role: "CEO & Co-founder",
+              bio: "As the CEO and Co-founder, Piyush Singh steers the strategic trajectory of Nyaya Sahayak. His leadership is focused on institutional growth, strategic partnerships, and the democratization of elite legal tools."
+            }
+          ].map((leader, i) => (
+            <motion.div key={i} variants={itemVariants} className="space-y-6">
+              <div className="space-y-1">
+                <h4 className="text-2xl font-black tracking-tight">{leader.name}</h4>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">{leader.role}</p>
+              </div>
+              <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md">
+                {leader.bio}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <motion.div variants={itemVariants} className="pt-20 text-center opacity-30">
+        <div className="flex flex-col items-center gap-4">
+          <Globe className="h-8 w-8 text-muted-foreground" />
+          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // REGISTRY SYNC // 2025</p>
         </div>
       </motion.div>
     </motion.div>
