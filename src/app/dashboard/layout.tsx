@@ -23,7 +23,8 @@ import {
   LayoutDashboard,
   Crown,
   User as UserIcon,
-  ShieldAlert
+  ShieldAlert,
+  Activity
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
@@ -81,7 +82,7 @@ function Header({ userProfile }: { userProfile: any }) {
     };
 
     const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
-    const planLabel = isAdmin ? "Root" : (userProfile?.subscriptionType === 'free' || !userProfile?.subscriptionType ? "Free" : "Pro");
+    const planLabel = isAdmin ? "Root Authority" : (userProfile?.subscriptionType === 'free' || !userProfile?.subscriptionType ? "Citizen Basic" : "Professional Node");
 
     return (
         <header className={cn(
@@ -97,7 +98,7 @@ function Header({ userProfile }: { userProfile: any }) {
                     <div className="w-full max-w-md cursor-pointer group transition-all">
                         <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[11px] tracking-tight text-muted-foreground rounded-xl bg-muted/30 border border-border/10 group-hover:border-primary/20 transition-all relative text-left">
                             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                            <span>Search chats, docs, notes... (ctrl+k)</span>
+                            <span>Search Chats, Docs, Notes... (ctrl+k)</span>
                         </div>
                         <div className="md:hidden">
                             <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-border/10 bg-muted/30">
@@ -112,7 +113,7 @@ function Header({ userProfile }: { userProfile: any }) {
                 <SosDialog>
                     <Button variant="outline" size="sm" className="h-9 px-4 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[9px] uppercase tracking-widest gap-2">
                         <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                        Emergency No.
+                        Emergency Node
                     </Button>
                 </SosDialog>
 
@@ -153,9 +154,9 @@ function Header({ userProfile }: { userProfile: any }) {
                                     <DropdownMenuItem className="rounded-xl h-10 px-3 flex items-center justify-between group focus:bg-primary/10 cursor-pointer">
                                         <div className="flex items-center gap-3">
                                             <Crown className="h-4 w-4 text-primary" />
-                                            <span className="text-xs font-bold text-foreground">Plan</span>
+                                            <span className="text-xs font-bold text-foreground">Clearance</span>
                                         </div>
-                                        <span className="text-[10px] font-bold uppercase text-primary/60">{planLabel}</span>
+                                        <span className="text-[10px] font-bold text-primary/60">{planLabel}</span>
                                     </DropdownMenuItem>
                                     
                                     <DropdownMenuSeparator className="bg-border/5 my-1" />
@@ -163,7 +164,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                     <DropdownMenuItem asChild className="rounded-xl h-10 px-3 focus:bg-primary/10 cursor-pointer">
                                         <Link href="/dashboard" className="flex items-center gap-3 w-full">
                                             <LayoutDashboard className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                            <span className="text-xs font-bold text-foreground">Dashboard</span>
+                                            <span className="text-xs font-bold text-foreground">Terminal Home</span>
                                         </Link>
                                     </DropdownMenuItem>
                                     
@@ -175,7 +176,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                     >
                                         <div className="flex items-center gap-3 w-full text-destructive">
                                             <LogOut className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                                            <span className="text-xs font-bold uppercase tracking-widest">Log Out</span>
+                                            <span className="text-xs font-bold uppercase tracking-widest">Terminate Session</span>
                                         </div>
                                     </DropdownMenuItem>
                                 </div>

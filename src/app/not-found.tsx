@@ -45,7 +45,7 @@ export default function NotFound() {
                 <h1 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase leading-none text-foreground">
                   Node Synchronization Failure
                 </h1>
-                <p className="text-[10px] sm:text-[12px] font-bold text-muted-foreground uppercase tracking-[0.3em] max-w-md mx-auto leading-relaxed">
+                <p className="text-[10px] sm:text-[12px] font-bold text-muted-foreground uppercase tracking-[0.4em] max-w-md mx-auto leading-relaxed">
                   The requested document path or statutory module is currently unregistered in our neural hub. This may be due to an outdated reference or a decommissioned registry node.
                 </p>
               </div>

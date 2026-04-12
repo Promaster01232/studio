@@ -44,13 +44,14 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getGeneralAiResponseAction } from "./chat-actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Logo } from "@/components/logo";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const features = [
   {
     title: "Record Voice",
-    desc: "Speak Your Legal Problem. Get A Quick Summary And Forensic Analysis.",
+    desc: "Speak your legal problem. Get a quick word-for-word summary and forensic analysis.",
     icon: Mic,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
@@ -58,7 +59,7 @@ const features = [
   },
   {
     title: "Scan Documents",
-    desc: "Upload Court Orders Or Notices. Ai Reads And Identifies Statutory Risks.",
+    desc: "Upload court orders or notices. AI reads and identifies statutory risks.",
     icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
@@ -66,7 +67,7 @@ const features = [
   },
   {
     title: "Write Documents",
-    desc: "Draft Professional Legal Notices And Complaints In Any Language.",
+    desc: "Draft professional legal notices and complaints in any Indian language.",
     icon: FileText,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
@@ -74,7 +75,7 @@ const features = [
   },
   {
     title: "Create Bonds",
-    desc: "Generate Legally Sound Bail, Personal, And Indemnity Bonds Instantly.",
+    desc: "Generate legally sound bail, personal, and indemnity bonds instantly.",
     icon: FileSignature,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
@@ -82,7 +83,7 @@ const features = [
   },
   {
     title: "Check Chance",
-    desc: "Analyze Case Details To See The Statistical Probability Of Success.",
+    desc: "Analyze case details to see the statistical probability of a win or bail.",
     icon: BrainCircuit,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
@@ -500,7 +501,7 @@ export default function DashboardHomePage() {
       <section className="space-y-12">
         <div className="text-left border-l-4 border-primary pl-6 py-2">
           <h2 className="text-[10px] font-bold text-primary mb-1">Core Hub</h2>
-          <h3 className="text-3xl font-bold tracking-tighter text-foreground">Ai Terminals</h3>
+          <h3 className="text-3xl font-bold tracking-tighter text-foreground">AI Terminals</h3>
           <p className="text-sm text-muted-foreground font-medium mt-1">Select A Tool To Initialize Forensic Audit.</p>
         </div>
 
@@ -514,7 +515,7 @@ export default function DashboardHomePage() {
           {features.map((f, i) => (
             <motion.div key={i} variants={itemVariants}>
               <Link href={f.href}>
-                <Card className="bg-card border-border/10 rounded-[2rem] h-full overflow-hidden hover:border-primary/30 transition-all duration-500 group cursor-pointer active:scale-95">
+                <Card className="bg-card border-border/10 rounded-[2rem] h-full overflow-hidden hover:border-primary/20 transition-all duration-500 group cursor-pointer active:scale-95 shadow-lg">
                   <CardContent className="p-6 flex flex-col gap-4 text-left">
                     <div className={cn("p-2.5 rounded-xl transition-transform group-hover:scale-110 shadow-lg w-fit", f.bg, f.color)}>
                       <f.icon className="h-5 w-5" />
@@ -530,6 +531,38 @@ export default function DashboardHomePage() {
           ))}
         </motion.div>
       </section>
+
+      {/* Professional Synergy Hub */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.98 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        className="pt-10"
+      >
+        <Card className="bg-primary/5 border border-primary/10 rounded-[4rem] p-12 sm:p-24 flex flex-col md:flex-row items-center justify-between gap-16 overflow-hidden relative group shadow-3xl">
+          <div className="absolute top-0 right-0 p-20 opacity-[0.03] group-hover:scale-110 transition-transform duration-[3s] pointer-events-none grayscale">
+            <Logo className="h-96 w-96" priority={false} />
+          </div>
+          <div className="space-y-8 text-left relative z-10 max-w-2xl">
+            <div className="flex items-center gap-4 text-primary">
+              <div className="p-3 rounded-2xl bg-primary/10">
+                <ShieldCheck className="h-6 w-6 animate-pulse" />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Statutory Trust</span>
+            </div>
+            <h2 className="text-4xl sm:text-6xl font-black text-foreground leading-[0.95] tracking-tighter uppercase">Democratizing <br /> <span className="text-primary italic">Legal Intelligence.</span></h2>
+            <p className="text-lg sm:text-2xl text-muted-foreground font-medium leading-relaxed">
+              Every forensic report and narration is encrypted via TLS 1.3 and is strictly confidential. We do not train models on citizen data.
+            </p>
+            <Button size="xl" className="rounded-3xl font-black uppercase tracking-widest text-xs h-16 px-12 shadow-2xl active:scale-95 transition-all shadow-primary/20" asChild>
+                <Link href="/dashboard/strength-analyzer">Start Forensic Audit <ArrowRight className="ml-3 h-5 w-5" /></Link>
+            </Button>
+          </div>
+          <div className="flex items-center justify-center p-12 bg-white/5 dark:bg-black/40 rounded-[3.5rem] border border-border/5 shadow-2xl relative z-10 group-hover:rotate-2 transition-transform duration-700">
+            <Activity className="h-32 w-32 text-primary opacity-20 group-hover:opacity-40 transition-opacity" />
+          </div>
+        </Card>
+      </motion.div>
     </div>
   );
 }
