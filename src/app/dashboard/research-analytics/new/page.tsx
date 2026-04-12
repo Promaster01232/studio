@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -49,7 +50,6 @@ export default function NewPostPage() {
     const [isPosting, setIsPosting] = useState(false);
     const [activeTab, setActiveTab] = useState('idea');
     
-    // Form states
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [link, setLink] = useState('');
@@ -93,7 +93,7 @@ export default function NewPostPage() {
         event.preventDefault();
         
         if (!auth.currentUser || !userProfile) {
-            toast({ variant: 'destructive', title: 'Authentication Error', description: 'You must be logged in to create a post.' });
+            toast({ variant: 'destructive', title: 'Authentication Error', description: 'You Must Be Logged In To Create A Post.' });
             return;
         }
 
@@ -101,7 +101,7 @@ export default function NewPostPage() {
         const finalTitle = isPoll ? pollQuestion : title;
 
         if (!finalTitle) {
-            toast({ variant: 'destructive', title: 'Missing fields', description: 'Please fill out all required fields.' });
+            toast({ variant: 'destructive', title: 'Missing Fields', description: 'Please Fill Out All Required Fields.' });
             return;
         }
         
@@ -136,7 +136,7 @@ export default function NewPostPage() {
         const postsCol = collection(firestore, "posts");
         addDoc(postsCol, newPostData)
             .then(() => {
-                toast({ title: "Post Published!", description: "Your new transmission has been added to the registry." });
+                toast({ title: "Post Published!", description: "Your New Community Transmission Has Been Added To The Registry." });
                 router.push('/dashboard/research-analytics');
             })
             .catch(async (serverError) => {
@@ -176,7 +176,7 @@ export default function NewPostPage() {
                         <CardTitle className="text-3xl font-black font-headline tracking-tighter">Initialize Registry Post</CardTitle>
                     </div>
                     <CardDescription className="text-sm font-medium opacity-70">
-                        Disseminate ideas, queries, or suggestions to the institutional community.
+                        Disseminate Ideas, Queries, Or Suggestions To The Institutional Community At https://nyayasahayak.in.
                     </CardDescription>
                 </CardHeader>
                 
@@ -203,7 +203,7 @@ export default function NewPostPage() {
                                             <Zap className="h-4 w-4" />
                                             <Label htmlFor="anonymous-idea" className="text-base font-black tracking-tight cursor-pointer">Identity Masking</Label>
                                         </div>
-                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">Hide your registry ID from the public stream.</p>
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">Hide Your Registry ID From The Public Stream.</p>
                                     </div>
                                     <Switch id="anonymous-idea" checked={isAnonymous} onCheckedChange={setIsAnonymous} className="data-[state=checked]:bg-primary" />
                                 </div>
@@ -216,7 +216,7 @@ export default function NewPostPage() {
                                             <Label htmlFor="postType" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Transmission Protocol</Label>
                                             <Select value={postType} onValueChange={setPostType}>
                                                 <SelectTrigger id="postType" className="h-14 glass border-primary/5 font-bold rounded-2xl active:scale-95 transition-all text-base">
-                                                    <SelectValue placeholder="Select type" />
+                                                    <SelectValue placeholder="Select Type" />
                                                 </SelectTrigger>
                                                 <SelectContent className="glass border-primary/5 rounded-[1.5rem]">
                                                     <SelectItem value="Idea" className="font-bold">Institutional Idea</SelectItem>
@@ -227,18 +227,18 @@ export default function NewPostPage() {
                                         </div>
                                         <div className="space-y-3">
                                             <Label htmlFor="tags" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Registry Tags</Label>
-                                            <Input id="tags" value={tags} onChange={e => setTags(e.target.value)} placeholder="policy, reform, technology" className="h-14 glass border-primary/5 rounded-2xl font-bold px-5" />
+                                            <Input id="tags" value={tags} onChange={e => setTags(e.target.value)} placeholder="Policy, Reform, Technology" className="h-14 glass border-primary/5 rounded-2xl font-bold px-5" />
                                         </div>
                                     </div>
 
                                     <div className="space-y-3">
                                         <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Statutory Headline</Label>
-                                        <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Enter a concise title for your transmission" required={activeTab === 'idea'} className="h-14 glass border-primary/5 rounded-2xl font-black text-xl px-6 tracking-tight" />
+                                        <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Enter A Concise Title For Your Transmission" required={activeTab === 'idea'} className="h-14 glass border-primary/5 rounded-2xl font-black text-xl px-6 tracking-tight" />
                                     </div>
 
                                     <div className="space-y-3">
                                         <Label htmlFor="content" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Dossier Body</Label>
-                                        <Textarea id="content" value={content} onChange={e => setContent(e.target.value)} placeholder="Elaborate on your institutional insight or query..." rows={8} className="glass border-primary/5 rounded-[2rem] font-medium text-base p-6 resize-none shadow-inner" />
+                                        <Textarea id="content" value={content} onChange={e => setContent(e.target.value)} placeholder="Elaborate On Your Institutional Insight Or Query..." rows={8} className="glass border-primary/5 rounded-[2rem] font-medium text-base p-6 resize-none shadow-inner" />
                                     </div>
                                     
                                     <div className="space-y-3">
@@ -259,7 +259,7 @@ export default function NewPostPage() {
                                 <TabsContent value="poll" key="poll" className="mt-0 space-y-8 focus-visible:ring-0">
                                     <div className="space-y-3">
                                         <Label htmlFor="pollQuestion" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Polling Mandate</Label>
-                                        <Input id="pollQuestion" value={pollQuestion} onChange={e => setPollQuestion(e.target.value)} placeholder="State the question for community consensus" required={activeTab === 'poll'} className="h-16 glass border-primary/5 rounded-2xl font-black text-xl px-6 tracking-tight" />
+                                        <Input id="pollQuestion" value={pollQuestion} onChange={e => setPollQuestion(e.target.value)} placeholder="State The Question For Community Consensus" required={activeTab === 'poll'} className="h-16 glass border-primary/5 rounded-2xl font-black text-xl px-6 tracking-tight" />
                                     </div>
 
                                     <div className="space-y-4">
@@ -301,7 +301,7 @@ export default function NewPostPage() {
 
                                     <div className="space-y-3">
                                         <Label htmlFor="tags-poll" className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Registry Tags</Label>
-                                        <Input id="tags-poll" value={tags} onChange={e => setTags(e.target.value)} placeholder="vote, reform, community" className="h-14 glass border-primary/5 rounded-2xl font-bold px-5" />
+                                        <Input id="tags-poll" value={tags} onChange={e => setTags(e.target.value)} placeholder="Vote, Reform, Community" className="h-14 glass border-primary/5 rounded-2xl font-bold px-5" />
                                     </div>
                                 </TabsContent>
                             </AnimatePresence>
@@ -333,7 +333,7 @@ export default function NewPostPage() {
                         </div>
                         <div className="text-left">
                             <p className="text-[10px] font-black uppercase tracking-widest text-primary">Data Sovereignty</p>
-                            <p className="text-[9px] font-bold text-muted-foreground">Your input is encrypted and subject to community standards.</p>
+                            <p className="text-[9px] font-bold text-muted-foreground">Your Input Is Encrypted And Subject To Community Standards At https://nyayasahayak.in.</p>
                         </div>
                     </div>
                 </CardFooter>

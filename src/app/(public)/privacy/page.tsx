@@ -13,101 +13,86 @@ export default function PrivacyPage() {
         animate={{ opacity: 1, y: 0 }}
         className="space-y-12"
       >
-        {/* Header Section */}
-        <div className="space-y-8">
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter text-white font-headline">
+        <div className="space-y-8 text-left">
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter text-foreground font-headline">
             Privacy Policy
           </h1>
           
-          <div className="space-y-2 text-sm sm:text-base font-bold text-white/60 uppercase tracking-widest">
+          <div className="space-y-2 text-sm sm:text-base font-bold text-muted-foreground uppercase tracking-widest">
             <p>Effective Date: <span className="text-primary">12/04/2026</span></p>
             <p>Last Updated: <span className="text-primary">12/04/2026</span></p>
           </div>
 
-          <div className="space-y-6 text-lg text-white/80 font-medium leading-relaxed max-w-3xl">
+          <div className="space-y-6 text-lg text-foreground/80 font-medium leading-relaxed max-w-3xl">
             <p>
-              Nyaya Sahayak (&ldquo;Nyaya Sahayak&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, store, and protect your information when you access or use our website, applications, dashboards, and services (collectively, the &ldquo;Platform&rdquo;).
+              Nyaya Sahayak ("Nyaya Sahayak", "We", "Our", Or "Us") Is Committed To Protecting Your Privacy. This Privacy Policy Explains How We Collect, Use, Store, And Protect Your Information When You Access Or Use Our Website At <Link href="https://nyayasahayak.in" className="text-primary font-bold hover:underline">https://nyayasahayak.in</Link>, Applications, Dashboards, And Services (Collectively, The "Platform").
             </p>
             <p>
-              By using Nyaya Sahayak, you agree to the collection and use of information in accordance with this Privacy Policy.
+              By Using Nyaya Sahayak, You Agree To The Collection And Use Of Information In Accordance With This Privacy Policy.
             </p>
           </div>
         </div>
 
-        <Separator className="bg-white/10" />
+        <Separator className="bg-border/10" />
 
-        {/* Content Sections */}
-        <div className="space-y-16 pt-4">
+        <div className="space-y-16 pt-4 text-left">
           <section className="space-y-6">
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">1. Information we collect</h2>
-            <p className="text-white/60 leading-relaxed font-medium">We collect information to provide, operate, improve, and secure the Platform.</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">1. Information We Collect</h2>
+            <p className="text-muted-foreground leading-relaxed font-medium">We Collect Information To Provide, Operate, Improve, And Secure The Platform At <Link href="https://nyayasahayak.in" className="text-primary hover:underline">https://nyayasahayak.in</Link>.</p>
             
             <div className="space-y-8 pl-4 border-l-2 border-primary/20">
               <div className="space-y-3">
-                <h3 className="text-lg font-bold text-white">1.1 Information you provide directly</h3>
-                <ul className="list-disc pl-5 space-y-2 text-white/60 font-medium text-sm sm:text-base">
-                  <li>Email address (for account creation, login, and communication)</li>
-                  <li>Name or profile details (if provided)</li>
-                  <li>Documents, text, or files uploaded by you</li>
-                  <li>Chat messages, prompts, and responses</li>
-                  <li>Feedback, support requests, or communications with us</li>
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-lg font-bold text-white">1.2 Information collected automatically</h3>
-                <ul className="list-disc pl-5 space-y-2 text-white/60 font-medium text-sm sm:text-base">
-                  <li>IP address</li>
-                  <li>Device type, browser type, and operating system</li>
-                  <li>Usage data such as pages visited, features used, time spent, and interactions</li>
-                  <li>Session identifiers and authentication metadata</li>
+                <h3 className="text-lg font-bold text-foreground">1.1 Information You Provide Directly</h3>
+                <ul className="list-disc pl-5 space-y-2 text-muted-foreground font-medium text-sm sm:text-base">
+                  <li>Email Address (For Account Creation, Login, And Communication)</li>
+                  <li>Name Or Profile Details (If Provided)</li>
+                  <li>Documents, Text, Or Files Uploaded By You</li>
+                  <li>Chat Messages, Prompts, And Responses</li>
+                  <li>Feedback, Support Requests, Or Communications With Us</li>
                 </ul>
               </div>
             </div>
           </section>
 
           <section className="space-y-6">
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">2. How we use your information</h2>
-            <ul className="list-disc pl-5 space-y-3 text-white/60 font-medium text-sm sm:text-base">
-              <li>To provide and operate Nyaya Sahayak services</li>
-              <li>To authenticate users and manage accounts</li>
-              <li>To enable AI-powered legal information features</li>
-              <li>To process documents, OCR, and file analysis</li>
-              <li>To manage usage limits, credits, and subscriptions</li>
-              <li>To communicate service updates, security notices, or support messages</li>
-              <li>To detect and prevent misuse, fraud, or security issues</li>
-              <li>To comply with legal and regulatory obligations</li>
+            <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">2. How We Use Your Information</h2>
+            <ul className="list-disc pl-5 space-y-3 text-muted-foreground font-medium text-sm sm:text-base">
+              <li>To Provide And Operate Nyaya Sahayak Services At <Link href="https://nyayasahayak.in" className="text-primary hover:underline">https://nyayasahayak.in</Link></li>
+              <li>To Authenticate Users And Manage Accounts</li>
+              <li>To Enable AI-Powered Legal Information Features</li>
+              <li>To Process Documents, OCR, And File Analysis</li>
+              <li>To Manage Usage Limits, Credits, And Subscriptions</li>
+              <li>To Detect And Prevent Misuse, Fraud, Or Security Issues</li>
             </ul>
-            <p className="font-bold text-primary italic">We do not sell your personal data.</p>
+            <p className="font-bold text-primary italic">We Do Not Sell Your Personal Data.</p>
           </section>
 
           <section className="space-y-6">
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">3. AI processing & user content</h2>
-            <div className="space-y-4 text-white/60 font-medium text-sm sm:text-base leading-relaxed">
-              <p>Nyaya Sahayak uses AI systems to generate responses and analyze uploaded content.</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">3. AI Processing & User Content</h2>
+            <div className="space-y-4 text-muted-foreground font-medium text-sm sm:text-base leading-relaxed">
+              <p>Nyaya Sahayak Uses AI Systems To Generate Responses And Analyze Uploaded Content At <Link href="https://nyayasahayak.in" className="text-primary hover:underline">https://nyayasahayak.in</Link>.</p>
               <ul className="list-disc pl-5 space-y-2">
-                <li>Chat messages and uploaded documents are processed to provide responses and features.</li>
-                <li>Your content is not used to create a lawyer-client relationship.</li>
-                <li>We do not use your private documents or chats for public disclosure.</li>
-                <li>You remain the owner of your uploaded content.</li>
+                <li>Chat Messages And Uploaded Documents Are Processed To Provide Responses.</li>
+                <li>Your Content Is Not Used To Create A Lawyer-Client Relationship.</li>
+                <li>You Remain The Owner Of Your Uploaded Content.</li>
               </ul>
             </div>
           </section>
 
           <section className="space-y-6">
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">4. Data security</h2>
-            <p className="text-white/60 font-medium text-sm sm:text-base leading-relaxed">
-              We implement reasonable technical and organizational measures to protect your data, including secure authentication mechanisms and encrypted data transmission. However, no system is completely secure. While we strive to protect your data, we cannot guarantee absolute security.
+            <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">4. Data Security</h2>
+            <p className="text-muted-foreground font-medium text-sm sm:text-base leading-relaxed">
+              We Implement Technical And Organizational Measures To Protect Your Data At <Link href="https://nyayasahayak.in" className="text-primary hover:underline">https://nyayasahayak.in</Link>, Including Secure Authentication Mechanisms And Encrypted Data Transmission Via TLS 1.3.
             </p>
           </section>
 
           <section className="space-y-6">
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">5. Contact us</h2>
-            <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 space-y-4">
-              <p className="text-white/80 font-medium">If you have questions, concerns, or requests regarding this Privacy Policy or your data, please contact us at:</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">5. Contact Us</h2>
+            <div className="p-8 rounded-[2rem] bg-muted/20 border border-border/10 space-y-4 text-left">
+              <p className="text-foreground/80 font-medium">If You Have Questions Regarding This Privacy Policy Or Your Data, Please Contact Us At:</p>
               <div className="flex flex-col gap-2">
                 <a href="mailto:nyayasahayakhelp@gmail.com" className="text-xl font-black text-primary hover:underline transition-all">nyayasahayakhelp@gmail.com</a>
-                <Link href="/contact" className="text-sm font-bold text-white/40 hover:text-white uppercase tracking-widest transition-colors">Visit contact page</Link>
+                <Link href="/contact" className="text-sm font-bold text-muted-foreground/40 hover:text-foreground uppercase tracking-widest transition-colors">Visit Contact Page</Link>
               </div>
             </div>
           </section>

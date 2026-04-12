@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, use } from "react";
@@ -93,11 +94,11 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                     <DialogTitle className="text-2xl font-black tracking-tighter">Transaction Protocol</DialogTitle>
                 </DialogHeader>
 
-                <div className="space-y-6">
+                <div className="space-y-6 text-left">
                     <div className="p-6 rounded-2xl border space-y-4 shadow-inner bg-green-500/5 border-green-500/10">
                         <div className="flex justify-between items-center">
                             <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Status</span>
-                            <span className="text-sm font-black text-green-600 uppercase tracking-widest">SUCCESS</span>
+                            <span className="text-sm font-black text-green-600 uppercase tracking-widest">Success</span>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-[10px] font-black uppercase text-muted-foreground opacity-60">Value</span>
@@ -115,7 +116,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                                 <div className="p-2 rounded-lg bg-muted shadow-inner"><User className="h-3.5 w-3.5 text-muted-foreground" /></div>
                                 <div className="text-left">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Citizen Identity</p>
-                                    <p className="text-xs font-bold">Identity Masked for Privacy</p>
+                                    <p className="text-xs font-bold">Identity Masked For Privacy</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-3">
@@ -128,7 +129,7 @@ function TransactionDetailDialog({ tx }: { tx: TransactionRecord }) {
                             <div className="flex items-start gap-3">
                                 <div className="p-2 rounded-lg bg-muted shadow-inner"><History className="h-3.5 w-3.5 text-muted-foreground" /></div>
                                 <div className="text-left">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">TXID Registry</p>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Transaction Registry ID</p>
                                     <p className="text-[10px] font-mono font-bold break-all opacity-80">{tx.paymentId}</p>
                                 </div>
                             </div>
@@ -147,7 +148,6 @@ export default function ManagementConsolePage({
   params: Promise<any>, 
   searchParams: Promise<any> 
 }) {
-  // unwrap params to comply with Next.js 15 dynamic APIs
   use(params); 
   use(searchParams);
 
@@ -183,7 +183,7 @@ export default function ManagementConsolePage({
                 setLoading(false);
             },
             async (err) => {
-                console.error("[STATUTORY GUARD] Citizen registry listener denied:", err);
+                console.error("[STATUTORY GUARD] Citizen Registry Listener Denied:", err);
                 setLoading(false);
             }
         );
@@ -196,7 +196,7 @@ export default function ManagementConsolePage({
                 setTransactions(list.sort((a, b) => (b.createdAt?.toMillis ? b.createdAt.toMillis() : 0) - (a.createdAt?.toMillis ? a.createdAt.toMillis() : 0)));
             },
             async (err) => {
-                console.error("[STATUTORY GUARD] Ledger listener denied:", err);
+                console.error("[STATUTORY GUARD] Ledger Listener Denied:", err);
             }
         );
 
@@ -223,7 +223,7 @@ export default function ManagementConsolePage({
 
   return (
     <div className="max-w-7xl auto space-y-6 pb-20 px-2 sm:px-4 text-left">
-      <PageHeader title="Management Console" description="Statutory oversight of the citizen registry and success-only ledger." />
+      <PageHeader title="Management Console" description="Statutory Oversight Of The Citizen Registry And Success-Only Ledger At https://nyayasahayak.in" />
 
       <Tabs defaultValue="users" className="w-full">
           <TabsList className="h-11 bg-muted/20 p-1 rounded-lg mb-6">
@@ -236,11 +236,11 @@ export default function ManagementConsolePage({
                 <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
                     <div className="space-y-0.5 text-left">
                         <CardTitle className="font-black text-lg text-primary uppercase tracking-tight">Citizen Registry Dossier</CardTitle>
-                        <CardDescription className="text-[9px] font-bold uppercase tracking-widest opacity-60">Identity systems active.</CardDescription>
+                        <CardDescription className="text-[9px] font-bold uppercase tracking-widest opacity-60">Identity Systems Active.</CardDescription>
                     </div>
                     <div className="relative group">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                        <Input placeholder="Search identity..." className="w-56 h-10 rounded-lg pl-9 font-bold text-xs border-primary/5" value={searchQuery} onChange={(e) => setSearchSearchQuery(e.target.value)} />
+                        <Input placeholder="Search Identity..." className="w-56 h-10 rounded-lg pl-9 font-bold text-xs border-primary/5" value={searchQuery} onChange={(e) => setSearchSearchQuery(e.target.value)} />
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -272,7 +272,7 @@ export default function ManagementConsolePage({
                                                 </div>
                                             </TableCell>
                                             <TableCell className="text-center">
-                                                <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest px-2 py-0.5 bg-primary/5 text-primary border-primary/10">{user.subscriptionType || 'FREE'}</Badge>
+                                                <Badge variant="secondary" className="font-black text-[8px] uppercase tracking-widest px-2 py-0.5 bg-primary/5 text-primary border-primary/10">{user.subscriptionType || 'Free'}</Badge>
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <div className="flex items-center justify-center">
@@ -305,7 +305,7 @@ export default function ManagementConsolePage({
                 <CardHeader className="bg-muted/5 border-b border-primary/5 px-6 py-4 flex items-center justify-between">
                     <div className="space-y-0.5 text-left">
                         <CardTitle className="font-black text-lg text-green-600 uppercase tracking-tight">Verified Statutory Ledger</CardTitle>
-                        <CardDescription className="text-[9px] font-bold uppercase tracking-widest opacity-60">Success-only captures.</CardDescription>
+                        <CardDescription className="text-[9px] font-bold uppercase tracking-widest opacity-60">Success-Only Captures.</CardDescription>
                     </div>
                     <Badge className="bg-green-500/10 text-green-600 border-green-500/20 font-black text-[8px] uppercase tracking-widest px-3 py-1 rounded-lg">Protocol Success</Badge>
                 </CardHeader>
@@ -347,7 +347,7 @@ export default function ManagementConsolePage({
                                         <TableCell colSpan={4} className="h-40 text-center">
                                             <div className="flex flex-col items-center gap-3 opacity-40">
                                                 <Activity className="h-10 w-10 text-muted-foreground" />
-                                                <p className="font-black text-[9px] uppercase tracking-[0.3em] text-muted-foreground">No statutory transactions recorded.</p>
+                                                <p className="font-black text-[9px] uppercase tracking-[0.3em] text-muted-foreground">No Statutory Transactions Recorded.</p>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -369,7 +369,7 @@ export default function ManagementConsolePage({
                   </div>
                   <AlertDialogTitle className="font-black text-2xl tracking-tighter uppercase leading-none">Confirm Statutory Purge</AlertDialogTitle>
                   <AlertDialogDescription className="text-xs font-medium pt-3 leading-relaxed">
-                      You are about to execute an irreversible erasure of the account belonging to <span className="text-foreground font-black">{userToPurge?.firstName} {userToPurge?.lastName}</span>. All registry records will be purged from statutory databases.
+                      You Are About To Execute An Irreversible Erasure Of The Account Belonging To <span className="text-foreground font-black">{userToPurge?.firstName} {userToPurge?.lastName}</span>. All Registry Records Will Be Purged From Statutory Databases At https://nyayasahayak.in.
                   </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="flex gap-3 mt-8">
@@ -380,7 +380,7 @@ export default function ManagementConsolePage({
                         await deleteDoc(userDocRef);
                         await remove(ref(rtdb, `users/${userToPurge.uid}`));
                         setUserToPurge(null);
-                        toast({ title: "Account Purged", description: "Registry data erased successfully." });
+                        toast({ title: "Account Purged", description: "Registry Data Erased Successfully." });
                       }
                   }} variant="destructive" className="font-black h-12 rounded-xl flex-1 uppercase tracking-widest text-[10px] shadow-xl shadow-destructive/20 active:scale-95 transition-all text-center">
                       Execute Purge

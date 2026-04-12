@@ -48,7 +48,7 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
+const TRANSIENCE_WINDOW = 56 * 60 * 60 * 1000;
 
 interface Post {
     id: string;
@@ -122,9 +122,9 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
 
     const handleDelete = () => {
         if (!isAdmin && !isAuthor) return;
-        if (!confirm("Confirm Record Purge?")) return;
+        if (!confirm("Confirm Statutory Record Purge?")) return;
         const postRef = doc(firestore, "posts", post.id);
-        deleteDoc(postRef).then(() => toast({ title: "Post Purged" }))
+        deleteDoc(postRef).then(() => toast({ title: "Transmission Purged" }))
         .catch(async (err) => {
             const permissionError = new FirestorePermissionError({
                 path: postRef.path,
@@ -132,6 +132,20 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
             } satisfies SecurityRuleContext, err);
             errorEmitter.emit('permission-error', permissionError);
         });
+    };
+
+    const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
+        const shareText = `Check Out This Institutional Transmission At https://nyayasahayak.in: "${post.title}"`;
+        const shareUrl = `${window.location.origin}/dashboard/research-analytics`;
+        
+        if (platform === 'whatsapp') {
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+        } else if (platform === 'twitter') {
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+        } else if (platform === 'copy') {
+            navigator.clipboard.writeText(shareUrl);
+            toast({ title: "Registry Link Copied" });
+        }
     };
 
     return (
@@ -146,7 +160,7 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
                             <DropdownMenuTrigger asChild><button className="h-9 w-9 rounded-2xl bg-muted/20 hover:bg-primary/5 flex items-center justify-center transition-all"><MoreVertical className="h-4 w-4" /></button></DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl glass border-primary/10">
                                 {(isAuthor || isAdmin) ? (
-                                    <DropdownMenuItem onClick={handleDelete} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive gap-3"><Trash2 className="h-4 w-4" /> Purge Node</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleDelete} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive gap-3"><Trash2 className="h-4 w-4" /> Purge System</DropdownMenuItem>
                                 ) : (
                                     <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3"><Flag className="h-4 w-4" /> Report Breach</DropdownMenuItem>
                                 )}
@@ -165,6 +179,18 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
                     <Button variant="ghost" className={cn("h-10 px-4 rounded-2xl text-[10px] font-black uppercase gap-2", userHasLiked ? "text-red-500 bg-red-500/5" : "text-primary")} onClick={handleLike} disabled={isLiking}>
                         {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} />} <span>{post.likes}</span>
                     </Button>
+                </div>
+                <div className="flex gap-2">
+                    <Button variant="ghost" size="icon" onClick={() => handleShare('copy')} className="h-10 w-10 rounded-2xl text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"><Bookmark className="h-4 w-4" /></Button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-2xl text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"><Share2 className="h-4 w-4" /></Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48 p-2 rounded-xl shadow-2xl glass border-primary/10">
+                            <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><div className="bg-green-500/10 p-1.5 rounded-md text-green-600"><MessageCircle className="h-3.5 w-3.5" /></div> WhatsApp</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-lg font-bold text-xs h-10 px-3 cursor-pointer gap-3"><div className="bg-blue-500/10 p-1.5 rounded-md text-blue-500"><Twitter className="h-3.5 w-3.5" /></div> Twitter (X)</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </CardFooter>
         </Card>
@@ -192,7 +218,7 @@ export default function ResearchAnalyticsPage() {
                 snap.docs.forEach(d => {
                     const data = d.data() as Post;
                     const ct = data.createdAt?.toMillis() || now;
-                    if (now - ct > TRANSience_WINDOW) {
+                    if (now - ct > TRANSIENCE_WINDOW) {
                         if (adminCheck) deleteDoc(doc(firestore, "posts", d.id)).catch(() => {});
                     } else {
                         list.push({ id: d.id, ...data });
@@ -227,7 +253,7 @@ export default function ResearchAnalyticsPage() {
                     <Logo className="h-48 w-48 grayscale" priority={true} />
                 </div>
                 
-                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-left">
                     <div className="space-y-4 text-left">
                         <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-lg">
                             <Sparkles className="h-3 w-3 mr-1.5 animate-pulse" /> Community Registry
@@ -237,7 +263,7 @@ export default function ResearchAnalyticsPage() {
                                 Live Transmissions
                             </h1>
                             <p className="text-sm text-muted-foreground font-medium opacity-80" >
-                                Publicly Audited Statutory Ideas. 56-Hour Transience Protocol Active.
+                                Publicly Audited Statutory Ideas At https://nyayasahayak.in. 56-Hour Transience Protocol Active.
                             </p>
                         </div>
                     </div>
