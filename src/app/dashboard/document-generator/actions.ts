@@ -1,3 +1,4 @@
+
 "use server";
 
 import { generateLegalDocument, type GenerateLegalDocumentOutput } from "@/ai/flows/generate-legal-documents";
@@ -41,6 +42,7 @@ export async function generateDocumentAction(
   let validationError = '';
 
   switch (documentType) {
+    case 'Legal notice':
     case 'Legal Notice': {
       const senderName = get(formData, 'senderName');
       const senderAddress = get(formData, 'senderAddress');
@@ -72,7 +74,9 @@ export async function generateDocumentAction(
       `;
       break;
     }
+    case 'Police complaint':
     case 'Police Complaint':
+    case 'Fir application':
     case 'FIR Application': {
       const complainantName = get(formData, 'senderName');
       const complainantAddress = get(formData, 'senderAddress');
@@ -81,7 +85,7 @@ export async function generateDocumentAction(
       const caseDetails = get(formData, 'caseDetails');
 
        if (!complainantName || !complainantAddress || !incidentDate || !incidentPlace || !caseDetails) {
-        validationError = `Please fill all required fields for the ${documentType}.`;
+        validationError = `Please fill all required fields for the document.`;
         break;
       }
       
@@ -100,6 +104,7 @@ export async function generateDocumentAction(
       `;
       break;
     }
+    case 'Consumer complaint':
     case 'Consumer Complaint': {
         const complainantName = get(formData, 'senderName');
         const complainantAddress = get(formData, 'senderAddress');
@@ -132,6 +137,7 @@ export async function generateDocumentAction(
         `;
         break;
     }
+    case 'Rti application':
     case 'RTI Application': {
         const applicantName = get(formData, 'senderName');
         const applicantAddress = get(formData, 'senderAddress');

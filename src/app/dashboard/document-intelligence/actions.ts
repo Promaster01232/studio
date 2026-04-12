@@ -1,3 +1,4 @@
+
 "use server";
 
 import { understandLegalDocument, type UnderstandLegalDocumentOutput } from "@/ai/flows/understand-legal-document";

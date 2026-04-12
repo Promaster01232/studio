@@ -1,3 +1,4 @@
+
 "use server";
 
 import { generateBondDocument, type GenerateBondDocumentOutput } from "@/ai/flows/generate-bond-document";
@@ -41,7 +42,8 @@ export async function generateBondAction(
   let validationError = '';
 
   switch (bondType) {
-    case 'Bail Bond': {
+    case 'Bail Bond':
+    case 'Bail bond': {
       const caseNumber = get(formData, 'caseNumber');
       const courtName = get(formData, 'courtName');
       const bondAmount = get(formData, 'bondAmount');
@@ -73,7 +75,8 @@ export async function generateBondAction(
       `;
       break;
     }
-    case 'Personal Bond': {
+    case 'Personal Bond':
+    case 'Personal bond': {
         const caseNumber = get(formData, 'caseNumber');
         const courtName = get(formData, 'courtName');
         const accusedName = get(formData, 'accusedName');
@@ -103,7 +106,8 @@ export async function generateBondAction(
         `;
         break;
       }
-    case 'Indemnity Bond': {
+    case 'Indemnity Bond':
+    case 'Indemnity bond': {
         const indemnifierName = get(formData, 'indemnifierName');
         const indemnifierAddress = get(formData, 'indemnifierAddress');
         const indemnityHolderName = get(formData, 'indemnityHolderName');
@@ -132,7 +136,8 @@ export async function generateBondAction(
         `;
         break;
     }
-    case 'Surety Bond': {
+    case 'Surety Bond':
+    case 'Surety bond': {
         const principalName = get(formData, 'principalName');
         const principalAddress = get(formData, 'principalAddress');
         const obligeeName = get(formData, 'obligeeName');
@@ -168,7 +173,8 @@ export async function generateBondAction(
         `;
         break;
     }
-    case 'Performance Bond': {
+    case 'Performance Bond':
+    case 'Performance bond': {
         const obligorName = get(formData, 'obligorName');
         const obligorAddress = get(formData, 'obligorAddress');
         const obligeeName = get(formData, 'obligeeName');
@@ -200,7 +206,8 @@ export async function generateBondAction(
         `;
         break;
       }
-      case 'Mortgage Bond': {
+      case 'Mortgage Bond':
+      case 'Mortgage bond': {
         const mortgagorName = get(formData, 'mortgagorName');
         const mortgagorAddress = get(formData, 'mortgagorAddress');
         const mortgageeName = get(formData, 'mortgageeName');
@@ -208,7 +215,7 @@ export async function generateBondAction(
         const propertyDetails = get(formData, 'propertyDetails');
         const loanAmount = get(formData, 'loanAmount');
   
-        if (!mortgagorName || !mortgagorAddress || !mortgeeName || !mortgageeAddress || !propertyDetails || !loanAmount) {
+        if (!mortgagorName || !mortgagorAddress || !mortgageeName || !mortgageeAddress || !propertyDetails || !loanAmount) {
           validationError = "Please fill all required fields for the Mortgage Bond.";
           break;
         }
@@ -231,7 +238,8 @@ export async function generateBondAction(
         `;
         break;
       }
-      case 'Employment Bond': {
+      case 'Employment Bond':
+      case 'Employment bond': {
         const employeeName = get(formData, 'employeeName');
         const employeeAddress = get(formData, 'employeeAddress');
         const employerName = get(formData, 'employerName');

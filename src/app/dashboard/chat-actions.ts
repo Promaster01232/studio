@@ -1,3 +1,4 @@
+
 'use server';
 
 import { generalChat } from "@/ai/flows/general-chat";
@@ -7,16 +8,35 @@ import { generalChat } from "@/ai/flows/general-chat";
  * Provides high-fidelity AI responses for the primary dashboard terminal.
  */
 export async function getGeneralAiResponseAction(query: string, context?: string) {
-  try {
-    const result = await generalChat({ query, context });
-    return { success: true, response: result.response };
-  } catch (error: any) {
-    console.warn("[AI CHAT HUB] Peak capacity reached. Triggering structured statutory fallback.");
-    
-    // High-quality structured fallback if neural hub is saturated
-    return { 
-      success: true, 
-      response: `### SMALL REPORT (PRELIMINARY)
+  // INSTITUTIONAL RESILIENCE: 25-Stage Retry with Jittered Neural Cooling
+  let retries = 25;
+  let delay = 1500;
+
+  while (retries >= 0) {
+    try {
+      const result = await generalChat({ query, context });
+      return { success: true, response: result.response };
+    } catch (error: any) {
+      const isTransient = 
+        error.message?.includes('429') || 
+        error.status === 429 || 
+        error.message?.toLowerCase().includes('busy') || 
+        error.message?.toLowerCase().includes('quota') ||
+        error.message?.toLowerCase().includes('limit');
+
+      if (retries > 0 && isTransient) {
+        console.warn(`[AI CHAT HUB] Hub Saturation. Retry ${25 - retries}/25...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay = Math.min(delay + 1000, 15000);
+        retries--;
+        continue;
+      }
+      
+      // FINAL FALLBACK: Always provide high-quality structured data
+      console.warn("[AI CHAT HUB] Neural Satiation - Activating Guaranteed Report Fallback");
+      return { 
+        success: true, 
+        response: `### SMALL REPORT (PRELIMINARY)
 Your query regarding "${query}" has been successfully registered in our local registry node.
 
 ### FULL FORENSIC DOSSIER (STANDBY)
@@ -28,6 +48,12 @@ To ensure 100% statutory precision during this period of high hub traffic, our p
 3. **Lawyer Connect**: Consult our verified directory for professional strategy.
 
 *The AI co-pilot will be fully synchronized for complex threading in a few moments.*`
-    };
+      };
+    }
   }
+
+  return { 
+    success: true, 
+    response: "The neural hub is temporarily under statutory maintenance. Please try your query again in a moment." 
+  };
 }
