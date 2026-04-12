@@ -65,18 +65,6 @@ export default function AboutPage() {
 
       {/* Mandate Section */}
       <section className="space-y-10">
-        <motion.div variants={itemVariants} className="flex flex-wrap gap-3">
-          <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm">
-            <Zap className="h-2.5 w-2.5 mr-1.5" /> AI Powered
-          </Badge>
-          <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm">
-            <ShieldCheck className="h-2.5 w-2.5 mr-1.5" /> Statutory Trust
-          </Badge>
-          <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm">
-            <Activity className="h-2.5 w-2.5 mr-1.5" /> Always Ready
-          </Badge>
-        </motion.div>
-
         <motion.div variants={itemVariants} className="space-y-8 max-w-4xl">
           <div className="flex items-center gap-3 text-primary">
             <Target className="h-5 w-5" />

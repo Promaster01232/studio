@@ -63,18 +63,6 @@ export default function AboutPage() {
       {/* Header Section */}
       <section className="space-y-10">
         <motion.div variants={itemVariants} className="space-y-6">
-          <div className="flex flex-wrap gap-3">
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-              <Zap className="h-2.5 w-2.5 mr-1.5" /> AI Powered
-            </Badge>
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-              <ShieldCheck className="h-2.5 w-2.5 mr-1.5" /> Statutory Trust
-            </Badge>
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-              <Activity className="h-2.5 w-2.5 mr-1.5" /> Always Ready
-            </Badge>
-          </div>
-          
           <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[0.9] text-foreground font-headline uppercase">
             About <br /> <span className="text-primary italic">Nyaya Sahayak.</span>
           </h1>
