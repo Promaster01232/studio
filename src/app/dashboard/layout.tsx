@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -82,7 +81,7 @@ function Header({ userProfile }: { userProfile: any }) {
     };
 
     const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
-    const planLabel = isAdmin ? "Root Authority" : (userProfile?.subscriptionType === 'free' || !userProfile?.subscriptionType ? "Citizen Basic" : "Professional Node");
+    const planLabel = isAdmin ? "Root Authority" : (userProfile?.subscriptionType === 'free' || !userProfile?.subscriptionType ? "Citizen Basic" : "Professional Access");
 
     return (
         <header className={cn(
@@ -113,7 +112,7 @@ function Header({ userProfile }: { userProfile: any }) {
                 <SosDialog>
                     <Button variant="outline" size="sm" className="h-9 px-4 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[9px] uppercase tracking-widest gap-2">
                         <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                        Emergency Node
+                        Emergency Access
                     </Button>
                 </SosDialog>
 
@@ -304,7 +303,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                          {userProfile.firstName} {userProfile.lastName}
                        </span>
                        <span className="text-[9px] font-bold text-muted-foreground truncate w-full">
-                         Registry Node Active
+                         Registry Point Active
                        </span>
                      </div>
                      <ChevronRight className="ml-auto h-3 w-3 text-muted-foreground group-hover:text-primary transition-all group-data-[state=collapsed]:hidden" />

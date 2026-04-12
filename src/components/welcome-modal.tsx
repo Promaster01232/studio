@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -99,7 +98,7 @@ export function WelcomeModal() {
                 <div className="flex flex-col items-center gap-2">
                     <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary">
                         <Activity className="h-3 w-3 animate-pulse" />
-                        <span className="text-[9px] font-black uppercase tracking-[0.3em]">Node Authorization Active</span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.3em]">Access Authorization Active</span>
                     </div>
                     <DialogTitle className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase leading-[0.95]">
                         Nyaya Sahayak <br /> <span className="text-primary italic">Synchronized.</span>
@@ -130,7 +129,7 @@ export function WelcomeModal() {
                 <FeatureItem 
                     icon={ShieldCheck} 
                     title="Statutory Privacy" 
-                    desc="All data is encrypted via TLS 1.3 and subject to strict confidentiality nodes." 
+                    desc="All data is encrypted via TLS 1.3 and subject to strict confidentiality systems." 
                     color="text-green-400" 
                     bg="bg-green-500/10"
                     delay={0.3}
@@ -150,7 +149,7 @@ export function WelcomeModal() {
             <div className="mt-10 flex items-center justify-center gap-3 opacity-20">
                 <ShieldCheck className="h-4 w-4" />
                 <p className="text-[9px] font-black uppercase tracking-widest leading-none">
-                    Registry synchronized // Secure ingress active
+                    Registry Synchronized // Secure Ingress Active
                 </p>
             </div>
         </div>

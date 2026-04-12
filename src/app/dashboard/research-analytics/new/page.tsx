@@ -163,7 +163,7 @@ export default function NewPostPage() {
                     </Link>
                 </Button>
                 <Badge variant="outline" className="h-8 border-primary/10 font-bold bg-background shadow-sm px-4 rounded-lg text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Node: New Transmission
+                    Registry: New Transmission
                 </Badge>
             </div>
 
@@ -185,7 +185,7 @@ export default function NewPostPage() {
                         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                             <TabsList className="grid w-full grid-cols-2 h-14 bg-muted/20 p-1.5 rounded-[1.2rem] mb-10">
                                 <TabsTrigger value="idea" className="font-black text-[11px] uppercase tracking-widest rounded-xl data-[state=active]:shadow-lg data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
-                                    <Edit className="mr-2 h-4 w-4"/>Textual Node
+                                    <Edit className="mr-2 h-4 w-4"/>Textual Entry
                                 </TabsTrigger>
                                 <TabsTrigger value="poll" className="font-black text-[11px] uppercase tracking-widest rounded-xl data-[state=active]:shadow-lg data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
                                     <ListPlus className="mr-2 h-4 w-4"/>Community Poll
@@ -203,7 +203,7 @@ export default function NewPostPage() {
                                             <Zap className="h-4 w-4" />
                                             <Label htmlFor="anonymous-idea" className="text-base font-black tracking-tight cursor-pointer">Identity Masking</Label>
                                         </div>
-                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">Hide your node ID from the public registry.</p>
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">Hide your registry ID from the public stream.</p>
                                     </div>
                                     <Switch id="anonymous-idea" checked={isAnonymous} onCheckedChange={setIsAnonymous} className="data-[state=checked]:bg-primary" />
                                 </div>
@@ -263,7 +263,7 @@ export default function NewPostPage() {
                                     </div>
 
                                     <div className="space-y-4">
-                                        <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Consensus Nodes (Options)</Label>
+                                        <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground ml-1">Consensus Entry (Options)</Label>
                                         <div className="grid gap-4">
                                             {pollOptions.map((option, index) => (
                                                 <motion.div 
@@ -313,7 +313,7 @@ export default function NewPostPage() {
                                 {isPosting ? (
                                     <>
                                         <Loader2 className="mr-3 h-5 w-5 animate-spin" />
-                                        Transmitting Node Data...
+                                        Transmitting Entry Data...
                                     </>
                                 ) : (
                                     <>

@@ -191,7 +191,7 @@ function DashboardPostCard({ post }: { post: Post }) {
                                 <Heart className={cn("h-3 w-3", userHasLiked && "fill-current")} />
                                 <span>{post.likes}</span>
                             </button>
-                            <span className="text-[8px] font-bold text-muted-foreground opacity-40">Registry Node</span>
+                            <span className="text-[8px] font-bold text-muted-foreground opacity-40">Registry Entry</span>
                         </div>
                     </CardContent>
                 </Card>
@@ -410,7 +410,7 @@ export default function DashboardHomePage() {
                           {m.text}
                         </div>
                         <span className="text-[8px] font-bold text-muted-foreground/40 px-2 uppercase tracking-widest">
-                          {m.role === 'ai' ? 'Nyaya Sahayak Terminal' : 'Citizen Registry Node'}
+                          {m.role === 'ai' ? 'Nyaya Sahayak Terminal' : 'Citizen Registry Point'}
                         </span>
                       </motion.div>
                     ))}
@@ -465,7 +465,7 @@ export default function DashboardHomePage() {
             </div>
           </div>
 
-          {/* Community Stream Node */}
+          {/* Community Stream Ingress */}
           <div className="w-full pt-10 border-t border-border/5">
               <div className="flex items-center justify-between mb-8 text-left">
                   <div className="space-y-1">
@@ -488,7 +488,7 @@ export default function DashboardHomePage() {
                   </div>
               ) : posts.length === 0 ? (
                   <div className="py-12 bg-muted/5 rounded-[2rem] border-2 border-dashed border-border/5 text-center">
-                      <p className="text-[10px] font-bold text-muted-foreground opacity-20 uppercase tracking-widest">No Transmissions Registered In This Node.</p>
+                      <p className="text-[10px] font-bold text-muted-foreground opacity-20 uppercase tracking-widest">No Transmissions Registered In This Hub.</p>
                   </div>
               ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

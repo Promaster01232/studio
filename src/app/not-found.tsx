@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -31,7 +30,7 @@ export default function NotFound() {
             {errorImage && (
               <Image 
                 src={errorImage.imageUrl} 
-                alt="Registry node error" 
+                alt="Registry synchronization failure" 
                 fill 
                 className="object-cover grayscale opacity-40 transition-transform duration-[20s] group-hover:scale-110"
                 data-ai-hint={errorImage.imageHint}
@@ -43,10 +42,10 @@ export default function NotFound() {
               </div>
               <div className="space-y-3">
                 <h1 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase leading-none text-foreground">
-                  Node Synchronization Failure
+                  Registry Synchronization Failure
                 </h1>
                 <p className="text-[10px] sm:text-[12px] font-bold text-muted-foreground uppercase tracking-[0.4em] max-w-md mx-auto leading-relaxed">
-                  The requested document path or statutory module is currently unregistered in our neural hub. This may be due to an outdated reference or a decommissioned registry node.
+                  The requested document path or statutory module is currently unregistered in our neural hub. This may be due to an outdated reference or a decommissioned registry entry.
                 </p>
               </div>
             </div>
@@ -101,15 +100,15 @@ export default function NotFound() {
                 href: "/dashboard/document-intelligence", 
                 color: "text-emerald-500" 
               },
-            ].map((node, i) => (
-              <Link key={i} href={node.href}>
+            ].map((entry, i) => (
+              <Link key={i} href={entry.href}>
                 <div className="p-8 h-full rounded-[2.5rem] bg-card border border-primary/5 hover:border-primary/20 transition-all group text-left space-y-6 shadow-xl hover:shadow-2xl flex flex-col">
-                  <div className={cn("p-4 rounded-2xl w-fit transition-transform group-hover:scale-110", node.color.replace('text', 'bg').replace('500', '500/10'))}>
-                    <node.icon className={cn("h-6 w-6", node.color)} />
+                  <div className={cn("p-4 rounded-2xl w-fit transition-transform group-hover:scale-110", entry.color.replace('text', 'bg').replace('500', '500/10'))}>
+                    <entry.icon className={cn("h-6 w-6", entry.color)} />
                   </div>
                   <div className="space-y-3 flex-1">
-                    <p className="text-[11px] font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">{node.title}</p>
-                    <p className="text-xs font-medium text-muted-foreground leading-relaxed">{node.desc}</p>
+                    <p className="text-[11px] font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">{entry.title}</p>
+                    <p className="text-xs font-medium text-muted-foreground leading-relaxed">{entry.desc}</p>
                   </div>
                   <div className="pt-4 border-t border-primary/5 flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">
                     Access Terminal <ArrowRight className="h-3 w-3" />

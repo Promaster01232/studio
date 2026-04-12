@@ -36,7 +36,7 @@ export async function getGeneralAiResponseAction(query: string, context?: string
       return { 
         success: true, 
         response: `### 1. Preliminary Report
-Your query regarding "${query}" has been successfully registered in our local registry node.
+Your query regarding "${query}" has been successfully registered in our local registry center.
 
 ### 2. Forensic Status: Standby
 To ensure 100% statutory precision during this period of high hub traffic, our primary neural engine is currently performing a background audit.
