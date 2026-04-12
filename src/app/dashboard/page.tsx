@@ -26,11 +26,17 @@ import {
   User,
   Plus,
   Loader2,
-  Activity
+  Activity,
+  MoreVertical,
+  Heart,
+  Layers,
+  Bot,
+  Newspaper,
+  ChevronDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth, useFirestore } from "@/firebase";
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, Timestamp, doc, updateDoc, increment, arrayUnion, arrayRemove, limit } from "firebase/firestore";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -128,11 +134,109 @@ const suggestions = [
   "Explain domestic violence act"
 ];
 
-const ADMIN_EMAILS = [
-  'enterspaceindia@gmail.com', 
-  'piyushkumrsingh23399@gmail.com',
-  'nyayasahayakhelp@gmail.com'
-];
+const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
+
+interface Post {
+    id: string;
+    authorUid: string;
+    authorName: string;
+    authorAvatar?: string;
+    createdAt: Timestamp;
+    title: string;
+    content: string;
+    likes: number;
+    likedBy?: string[];
+    postType?: 'Idea' | 'Question' | 'Suggestion' | 'Poll' | 'News';
+    poll?: {
+        options: { text: string; votes: number }[];
+        voters?: string[];
+    };
+    isAnonymous?: boolean;
+}
+
+const typeConfig: Record<string, { color: string, bg: string, border: string, icon: any, gradient: string }> = {
+    'Idea': { color: 'text-amber-600', bg: 'bg-amber-500/10', border: 'border-amber-500/20', icon: Sparkles, gradient: 'from-amber-500/5' },
+    'Question': { color: 'text-blue-600', bg: 'bg-blue-500/10', border: 'border-blue-500/20', icon: Bot, gradient: 'from-blue-500/5' },
+    'Suggestion': { color: 'text-emerald-600', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', icon: Zap, gradient: 'from-emerald-500/5' },
+    'Poll': { color: 'text-purple-600', bg: 'bg-purple-500/10', border: 'border-purple-500/20', icon: Layers, gradient: 'from-purple-500/5' },
+    'News': { color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20', icon: Newspaper, gradient: 'from-primary/5' },
+};
+
+function DashboardPostCard({ post }: { post: Post }) {
+    const firestore = useFirestore();
+    const auth = useAuth();
+    const { currentUser } = auth;
+    const [isLiking, setIsLiking] = useState(false);
+    
+    const config = typeConfig[post.postType || 'Idea'] || typeConfig['Idea'];
+    const userHasLiked = post.likedBy?.includes(currentUser?.uid ?? '');
+    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
+
+    const handleLike = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!currentUser || isLiking) return;
+        setIsLiking(true);
+        const postRef = doc(firestore, "posts", post.id);
+        
+        updateDoc(postRef, {
+            likes: increment(userHasLiked ? -1 : 1),
+            likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        }).finally(() => setIsLiking(false));
+    };
+
+    return (
+        <motion.div
+            layout
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="group"
+        >
+            <Link href={`/dashboard/profile/${post.authorUid}`}>
+                <Card className="bg-card border-border/10 rounded-3xl overflow-hidden hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-xl group active:scale-[0.98] text-left h-full relative">
+                    <div className={cn("absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-opacity", config.gradient)}></div>
+                    <CardContent className="p-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <Avatar className="h-8 w-8 border border-primary/10 rounded-lg">
+                                    <AvatarImage src={post.isAnonymous ? undefined : post.authorAvatar} className="object-cover" />
+                                    <AvatarFallback className="bg-primary/10 text-primary font-black text-[10px]">{authorName?.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-foreground/60">{authorName}</span>
+                            </div>
+                            <Badge variant="outline" className={cn("text-[8px] font-black uppercase px-2 py-0.5 rounded-full", config.bg, config.color)}>
+                                {post.postType}
+                            </Badge>
+                        </div>
+                        
+                        <div className="space-y-1">
+                            <h4 className="font-black text-sm tracking-tight text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                                {post.title}
+                            </h4>
+                            <p className="text-[11px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
+                                {post.content}
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-border/5">
+                            <button 
+                                onClick={handleLike}
+                                className={cn(
+                                    "flex items-center gap-1.5 text-[9px] font-black uppercase transition-colors",
+                                    userHasLiked ? "text-red-500" : "text-muted-foreground hover:text-primary"
+                                )}
+                            >
+                                <Heart className={cn("h-3 w-3", userHasLiked && "fill-current")} />
+                                <span>{post.likes}</span>
+                            </button>
+                            <span className="text-[8px] font-bold text-muted-foreground opacity-40 uppercase tracking-widest">Registry node active</span>
+                        </div>
+                    </CardContent>
+                </Card>
+            </Link>
+        </motion.div>
+    );
+}
 
 interface Message {
   role: 'user' | 'ai';
@@ -151,6 +255,10 @@ export default function DashboardHomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Post States
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [postsLoading, setPostsLoading] = useState(true);
+
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good morning");
@@ -164,7 +272,23 @@ export default function DashboardHomePage() {
           setUserProfile(doc.data());
         }
       });
-      return () => unsub();
+
+      // Community Stream Ingress
+      const postsCol = collection(firestore, "posts");
+      const streamQuery = query(postsCol, orderBy("createdAt", "desc"), limit(6));
+      const unsubStream = onSnapshot(streamQuery, (snap) => {
+          const now = Date.now();
+          const list: Post[] = snap.docs
+            .map(d => ({ id: d.id, ...d.data() } as Post))
+            .filter(p => {
+                const ct = p.createdAt?.toMillis() || now;
+                return (now - ct) < TRANSience_WINDOW;
+            });
+          setPosts(list);
+          setPostsLoading(false);
+      });
+
+      return () => { unsub(); unsubStream(); };
     }
   }, [auth, firestore]);
 
@@ -203,9 +327,6 @@ export default function DashboardHomePage() {
     visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
   };
 
-  const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
-  const planLabel = isAdmin ? "Root" : (userProfile?.subscriptionType === 'free' || !userProfile?.subscriptionType ? "Free" : "Pro");
-
   return (
     <div className="max-w-6xl mx-auto space-y-10 pb-32 px-4 sm:px-6">
       
@@ -230,8 +351,8 @@ export default function DashboardHomePage() {
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground leading-none">
                 {greeting}, {userProfile?.firstName || 'there'}!
               </h2>
-              <Badge variant="outline" className="bg-background/50 border-border/10 text-[10px] font-bold px-2.5 py-0.5 rounded-lg text-muted-foreground">
-                {planLabel}
+              <Badge variant="outline" className="bg-background/50 border-border/10 text-[10px] font-bold px-2.5 py-0.5 rounded-lg text-muted-foreground uppercase">
+                {userProfile?.subscriptionType || 'Free'}
               </Badge>
             </div>
             <p className="text-sm font-medium text-muted-foreground">
@@ -275,7 +396,7 @@ export default function DashboardHomePage() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="space-y-8 w-full"
               >
-                <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight leading-tight">
+                <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight leading-tight uppercase">
                   Hello, how can i help you today?
                 </h1>
 
@@ -370,7 +491,41 @@ export default function DashboardHomePage() {
                 </div>
               </div>
             </div>
-            <p className="text-[10px] font-bold text-muted-foreground/20 tracking-wide">Free to use. Your conversations are private.</p>
+            <p className="text-[10px] font-bold text-muted-foreground/20 tracking-wide uppercase">Free to use. Your conversations are private.</p>
+          </div>
+
+          {/* COMMUNITY STREAM NODE - DIRECTLY BELOW INPUT */}
+          <div className="w-full pt-10 border-t border-border/5">
+              <div className="flex items-center justify-between mb-8 text-left">
+                  <div className="space-y-1">
+                      <div className="flex items-center gap-2 text-primary">
+                          <Activity className="h-4 w-4 animate-pulse" />
+                          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Live Community Stream</span>
+                      </div>
+                      <h3 className="text-xl font-black font-headline tracking-tight uppercase text-foreground">Recent Transmissions</h3>
+                  </div>
+                  <Button variant="ghost" size="sm" asChild className="h-9 px-4 rounded-xl font-black text-[9px] uppercase tracking-widest text-primary hover:bg-primary/5">
+                      <Link href="/dashboard/research-analytics">View Full Registry <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
+                  </Button>
+              </div>
+
+              {postsLoading ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {[1, 2, 3].map(i => (
+                          <div key={i} className="h-40 rounded-3xl bg-muted/20 animate-pulse border border-border/5" />
+                      ))}
+                  </div>
+              ) : posts.length === 0 ? (
+                  <div className="py-12 bg-muted/5 rounded-[2rem] border-2 border-dashed border-border/5 text-center">
+                      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-20">No transmissions registered in this node.</p>
+                  </div>
+              ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {posts.map((post) => (
+                          <DashboardPostCard key={post.id} post={post} />
+                      ))}
+                  </div>
+              )}
           </div>
         </motion.div>
       </section>
@@ -379,7 +534,7 @@ export default function DashboardHomePage() {
       <section className="space-y-12">
         <div className="text-left border-l-4 border-primary pl-6 py-2">
           <h2 className="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest">Core hub</h2>
-          <h3 className="text-3xl font-black tracking-tighter text-foreground">Ai terminals</h3>
+          <h3 className="text-3xl font-black tracking-tighter text-foreground uppercase">Ai terminals</h3>
           <p className="text-sm text-muted-foreground font-medium mt-1">Select tool to start.</p>
         </div>
 
@@ -399,7 +554,7 @@ export default function DashboardHomePage() {
                       <f.icon className="h-5 w-5" />
                     </div>
                     <div className="space-y-1">
-                      <h3 className="font-black text-sm text-foreground tracking-tight leading-none">{f.title}</h3>
+                      <h3 className="font-black text-sm text-foreground tracking-tight leading-none uppercase">{f.title}</h3>
                       <p className="text-[10px] text-muted-foreground leading-relaxed font-medium line-clamp-3">{f.desc}</p>
                     </div>
                   </CardContent>
@@ -423,11 +578,11 @@ export default function DashboardHomePage() {
               </div>
               <span className="text-[10px] font-bold text-primary uppercase">Statutory trust</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-foreground leading-none tracking-tighter">Your data is <br /> <span className="text-primary">your property.</span></h2>
+            <h2 className="text-3xl sm:text-5xl font-black text-foreground leading-none tracking-tighter uppercase">Your data is <br /> <span className="text-primary">your property.</span></h2>
             <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
               Every forensic report and narration is encrypted via tls 1.3 and is strictly confidential. We do not train foundation models on citizen narratives.
             </p>
-            <Button variant="outline" className="h-12 px-8 rounded-xl border-primary/20 text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary/5" asChild>
+            <Button variant="outline" className="h-12 px-8 rounded-xl border-primary/20 text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary/5 shadow-sm" asChild>
               <Link href="/privacy">Audit security protocol <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
             </Button>
           </div>
@@ -438,7 +593,7 @@ export default function DashboardHomePage() {
               { label: "Secure", icon: HistoryIcon },
               { label: "Audit ready", icon: Search }
             ].map((n, i) => (
-              <div key={i} className="p-6 rounded-3xl bg-background border border-border/10 flex flex-col items-center gap-3 text-center">
+              <div key={i} className="p-6 rounded-3xl bg-background border border-border/10 flex flex-col items-center gap-3 text-center shadow-sm">
                 <n.icon className="h-6 w-6 text-primary opacity-40" />
                 <span className="text-[10px] font-bold text-muted-foreground uppercase">{n.label}</span>
               </div>
