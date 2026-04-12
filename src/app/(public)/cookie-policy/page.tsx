@@ -79,7 +79,7 @@ export default function CookiePolicyPage() {
               <div className="bg-primary/10 p-2.5 rounded-xl shadow-inner">
                 <Info className="h-6 w-6" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Last updated: June 23, 2025</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Last updated: 12/04/2026</span>
             </div>
             <div className="space-y-6 max-w-4xl">
               <h2 className="text-3xl sm:text-6xl font-black tracking-tighter leading-[0.9] uppercase">

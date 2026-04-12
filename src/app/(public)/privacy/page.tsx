@@ -20,8 +20,8 @@ export default function PrivacyPage() {
           </h1>
           
           <div className="space-y-2 text-sm sm:text-base font-bold text-white/60 uppercase tracking-widest">
-            <p>Effective Date: <span className="text-primary">04-02-2023</span></p>
-            <p>Last Updated: <span className="text-primary">09-02-2026</span></p>
+            <p>Effective Date: <span className="text-primary">12/04/2026</span></p>
+            <p>Last Updated: <span className="text-primary">12/04/2026</span></p>
           </div>
 
           <div className="space-y-6 text-lg text-white/80 font-medium leading-relaxed max-w-3xl">

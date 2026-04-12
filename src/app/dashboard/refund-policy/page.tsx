@@ -90,8 +90,8 @@ export default function RefundPolicyDashboardPage() {
           className="space-y-6"
         >
           <div className="flex flex-col gap-2">
-            <p className="text-sm font-bold text-white">Effective date: <span className="text-primary">11/04/2026</span></p>
-            <p className="text-sm font-bold text-white">Last updated: <span className="text-primary">11/04/2026</span></p>
+            <p className="text-sm font-bold text-white">Effective date: <span className="text-primary">12/04/2026</span></p>
+            <p className="text-sm font-bold text-white">Last updated: <span className="text-primary">12/04/2026</span></p>
           </div>
           <p className="text-lg text-white/60 font-medium leading-relaxed max-w-3xl text-left">
             This refund & cancellation policy governs payments made for subscriptions, credits, and paid services on <span className="text-white font-bold">Nyaya Sahayak</span> (https://nyayasahayak.in). By purchasing or subscribing to any paid plan, you agree to the terms of this policy.
