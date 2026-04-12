@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -63,9 +62,11 @@ export default function CreateProfilePage() {
       });
       setAuthLoading(false);
     } else {
-        if (typeof window !== 'undefined') {
-            router.replace('/login');
-        }
+        // Redirection should be automatic but let's be explicit
+        const timer = setTimeout(() => {
+            if (!auth.currentUser) router.replace('/login');
+        }, 1000);
+        return () => clearTimeout(timer);
     }
   }, [auth.currentUser, form, router]);
 
@@ -114,11 +115,12 @@ export default function CreateProfilePage() {
           title: "Identity Activated",
           description: "Welcome to your Nyaya Sahayak terminal.",
       });
-      router.push("/dashboard");
+      router.replace("/dashboard");
 
     } catch (error: any) {
         console.error("Profile sync issue:", error);
-        router.push("/dashboard");
+        toast({ variant: "destructive", title: "Sync failed", description: "Identity registry refused the connection." });
+        setLoading(false);
     }
   };
   
@@ -141,17 +143,17 @@ export default function CreateProfilePage() {
                 <Logo className="h-24 w-24 group-hover:scale-110 transition-transform duration-700" priority={true} />
             </div>
             <div className="space-y-3">
-                <h2 className="text-3xl font-black tracking-tighter uppercase leading-tight">Identity <br /> calibration</h2>
+                <h2 className="text-3xl font-black tracking-tighter uppercase leading-tight">Identity <br /> Calibration</h2>
                 <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest leading-relaxed max-w-[240px] mx-auto">Finalizing your institutional access for elite AI assistance.</p>
             </div>
             <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white/50 dark:bg-black/50 border border-primary/10 shadow-sm">
                     <ShieldCheck className="h-4 w-4 text-primary" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Secure session active</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Secure Session Active</span>
                 </div>
                 <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white/50 dark:bg-black/50 border border-primary/10 shadow-sm">
                     <Activity className="h-4 w-4 text-green-600 animate-pulse" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Network synchronized</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Network Synchronized</span>
                 </div>
             </div>
         </div>
@@ -172,7 +174,7 @@ export default function CreateProfilePage() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given name</FormLabel>
+                      <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Given Name</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input placeholder="Rajesh" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary pl-11" />
@@ -207,7 +209,7 @@ export default function CreateProfilePage() {
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Registry email</FormLabel>
+                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Registry Email</FormLabel>
                     <FormControl>
                       <div className="relative">
                           <Input placeholder="rajesh.k@example.com" {...field} disabled className="h-12 font-bold opacity-50 bg-muted/20 rounded-xl pl-11" />
@@ -226,7 +228,7 @@ export default function CreateProfilePage() {
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile access</FormLabel>
+                    <FormLabel className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Mobile Access</FormLabel>
                     <FormControl>
                       <div className="relative">
                           <Input placeholder="+91 12345 67890" {...field} className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary pl-11" />
@@ -245,7 +247,7 @@ export default function CreateProfilePage() {
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory role</FormLabel>
+                    <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Statutory Role</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-12 font-bold rounded-xl border-primary/10 focus:border-primary">
@@ -254,8 +256,8 @@ export default function CreateProfilePage() {
                       </FormControl>
                       <SelectContent className="rounded-xl glass">
                         <SelectItem value="citizen" className="font-bold">Citizen</SelectItem>
-                        <SelectItem value="businessman" className="font-bold">Business / MSME</SelectItem>
-                        <SelectItem value="student" className="font-bold">Law student</SelectItem>
+                        <SelectItem value="businessman" className="font-bold">Business / Msme</SelectItem>
+                        <SelectItem value="student" className="font-bold">Law Student</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage className="text-[10px] font-bold" />
@@ -272,7 +274,7 @@ export default function CreateProfilePage() {
                   </span>
               ) : (
                   <span className="flex items-center gap-3">
-                    <ShieldCheck className="h-5 w-5" /> Activate registry
+                    <ShieldCheck className="h-5 w-5" /> Activate Registry
                   </span>
               )}
             </Button>

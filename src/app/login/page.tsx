@@ -68,23 +68,33 @@ export default function LoginPage() {
         toast({ variant: "destructive", title: "Protocol required", description: "Please acknowledge the statutory terms to continue."});
         return;
     }
-    if (!email || !password) {
+    
+    const cleanEmail = email.trim().toLowerCase();
+    
+    if (!cleanEmail || !password) {
         toast({ variant: "destructive", title: "Information missing", description: "Please enter both credentials."});
         return;
     }
+    
     setIsLoading(true);
     try {
-        await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
+        await signInWithEmailAndPassword(auth, cleanEmail, password);
+        // Navigation is handled by onAuthStateChanged
     } catch (error: any) {
+        setIsLoading(false);
         let message = "Invalid email or password.";
-        if (error.code === 'auth/invalid-credential') message = "Authentication failed. Check your credentials.";
+        
+        if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+            message = "Authentication failed. Check your registry email and access key.";
+        } else if (error.code === 'auth/too-many-requests') {
+            message = "Access temporarily locked due to multiple failed attempts. Please wait.";
+        }
         
         toast({ 
             variant: "destructive", 
             title: "Access denied", 
             description: message 
         });
-        setIsLoading(false);
     }
   };
 

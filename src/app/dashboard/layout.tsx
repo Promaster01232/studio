@@ -57,19 +57,6 @@ const ADMIN_EMAILS = [
   'nyayasahayakhelp@gmail.com'
 ];
 
-const PUBLIC_DASHBOARD_ROUTES = [
-  '/dashboard/learn',
-  '/dashboard/police-guide',
-  '/dashboard/research-analytics',
-  '/dashboard/about',
-  '/dashboard/terms',
-  '/dashboard/privacy',
-  '/dashboard/cookie-policy',
-  '/dashboard/disclaimer',
-  '/dashboard/contact',
-  '/dashboard/refund-policy',
-];
-
 function Header({ userProfile }: { userProfile: any }) {
     const { theme, setTheme } = useTheme();
     const auth = useAuth();
@@ -246,9 +233,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!profileLoading) {
         if (!auth.currentUser) {
-            const isPublic = PUBLIC_DASHBOARD_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
-            
-            if (pathname.startsWith('/dashboard') && !isPublic) {
+            // STRICT INGRESS: Without login, no user can access any part of the dashboard.
+            if (pathname.startsWith('/dashboard')) {
                 router.replace('/login');
             }
         } else if (!userProfile && pathname !== '/create-profile' && !pathname.startsWith('/login') && !pathname.startsWith('/register')) {
@@ -259,6 +245,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
   const isElite = isAdmin || userProfile?.subscriptionType?.startsWith('unlimited');
+
+  if (profileLoading || (!auth.currentUser && pathname.startsWith('/dashboard'))) {
+      return (
+        <div className="flex h-screen w-full items-center justify-center bg-background">
+            <div className="relative">
+                <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
+                <Activity className="absolute inset-0 h-10 w-10 text-primary opacity-40 animate-pulse" />
+            </div>
+        </div>
+      );
+  }
 
   return (
     <SidebarProvider>
@@ -327,7 +324,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <Header userProfile={userProfile} />
         <main className="flex-1 overflow-y-auto custom-scrollbar relative">
             <AnimatePresence mode="wait">
-                {isMounted && (!profileLoading || pathname === '/create-profile') ? (
+                {isMounted ? (
                     <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-4 sm:p-8 min-h-[calc(100vh-64px)] flex flex-col">
                         <div className="flex-1">{children}</div>
                     </motion.div>

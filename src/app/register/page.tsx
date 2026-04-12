@@ -66,6 +66,8 @@ export default function RegisterPage() {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             router.replace('/dashboard');
+        } else {
+            // Already handled by Dashboard Layout but redundant check is good
         }
       }
     });
@@ -93,6 +95,11 @@ export default function RegisterPage() {
     if (password !== confirmPassword) {
       toast({ variant: "destructive", title: "Passwords mismatch", description: "Verification failed." });
       return;
+    }
+
+    if (!acceptedTerms) {
+        toast({ variant: "destructive", title: "Protocol required", description: "Please acknowledge the statutory terms to continue."});
+        return;
     }
 
     setLoading(true);
@@ -152,19 +159,30 @@ export default function RegisterPage() {
       }).catch(() => {});
 
       toast({ title: "Registration synchronized", description: "Welcome to your Nyaya Sahayak terminal." });
-      router.push("/dashboard");
+      router.replace("/dashboard");
 
     } catch (error: any) {
-      let errorMsg = "Identity initialization refused. Please try again.";
-      if (error.code === 'auth/email-already-in-use') errorMsg = "This email is already registered.";
-      
-      toast({ variant: "destructive", title: "Enrollment failure", description: errorMsg });
       setLoading(false);
       setIsValidating(false);
+      let errorMsg = "Identity initialization refused. Please try again.";
+      
+      if (error.code === 'auth/email-already-in-use') {
+          errorMsg = "This email is already registered in the system registry.";
+      } else if (error.code === 'auth/invalid-email') {
+          errorMsg = "The provided email format is invalid.";
+      } else if (error.code === 'auth/weak-password') {
+          errorMsg = "The access key is too weak. Use a stronger sequence.";
+      }
+      
+      toast({ variant: "destructive", title: "Enrollment failure", description: errorMsg });
     }
   };
 
   const handleGoogleLogin = async () => {
+    if (!acceptedTerms) {
+        toast({ variant: "destructive", title: "Protocol required", description: "Please acknowledge the statutory terms to continue."});
+        return;
+    }
     setIsGoogleLoading(true);
     try {
       const provider = new GoogleAuthProvider();
@@ -248,9 +266,6 @@ export default function RegisterPage() {
                     disabled={loading}
                     className={cn("h-12 pl-11 bg-white border-slate-200 rounded-xl font-medium", emailStatus === 'valid' && "border-green-500/50")}
                   />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                    {emailStatus === 'valid' && <Link className="h-4 w-4 text-green-600" href="#" />}
-                  </div>
                 </div>
               </div>
 
@@ -318,7 +333,7 @@ export default function RegisterPage() {
                   type="button"
                   variant="outline" 
                   onClick={handleGoogleLogin} 
-                  disabled={isGoogleLoading}
+                  disabled={isGoogleLoading || !acceptedTerms}
                   className="w-full h-12 border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-sm rounded-xl active:scale-[0.98] transition-all gap-3"
                 >
                   {isGoogleLoading ? <Loader2 className="animate-spin h-5 w-5" /> : <GoogleIcon />}
