@@ -45,7 +45,7 @@
     {
       "id": "news2",
       "description": "Image representing digital data or evidence",
-      "imageUrl": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwZGF0YXxlbnwwfHx8fDE3NzA3NjY0NjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8kaWdpdGFsJTIwZGF0YXxlbnwwfHx8fDE3NzA3NjY0NjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "digital data"
     },
     {
@@ -57,7 +57,7 @@
     {
       "id": "news4",
       "description": "Image representing e-commerce or online shopping",
-      "imageUrl": "https://images.unsplash.com/photo-1483985988355-763728e1935b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2V8ZW58MHx8fHwxNzcwNzY2NDY1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1483985988355-763728e1935b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxlY29tbWVyY2V8ZW58MHx8fHwxNzcwNzY2NDY1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "ecommerce"
     },
     {
@@ -77,6 +77,12 @@
       "description": "Premium legal brand background",
       "imageUrl": "/Login_bg.jpeg",
       "imageHint": "legal office"
+    },
+    {
+      "id": "not-found-judicial",
+      "description": "Lost in the judicial landscape",
+      "imageUrl": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjb3VydGhvdXNlfGVufDB8fHx8MTc3MDc3MzkxNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "courthouse landscape"
     }
   ]
 }
