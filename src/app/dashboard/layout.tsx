@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -47,6 +48,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SosDialog } from "@/components/sos-dialog";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -109,15 +112,11 @@ function Header({ userProfile }: { userProfile: any }) {
                 <SosDialog>
                     <Button variant="outline" size="sm" className="h-9 px-4 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[9px] uppercase tracking-widest gap-2">
                         <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                        Emergency no.
+                        Emergency No.
                     </Button>
                 </SosDialog>
 
                 <div className="flex items-center gap-4 text-muted-foreground">
-                    <button className="flex items-center gap-1.5 hover:text-primary transition-colors">
-                        <Globe className="h-4 w-4" />
-                        <span className="text-[10px] font-bold lowercase">en</span>
-                    </button>
                     <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="hover:text-primary transition-colors">
                         <Moon className="h-4 w-4" />
                     </button>
@@ -125,7 +124,7 @@ function Header({ userProfile }: { userProfile: any }) {
 
                 {!userProfile ? (
                     <Button asChild size="sm" className="h-9 px-5 font-bold text-[10px] rounded-xl shadow-lg active:scale-95 transition-all">
-                        <Link href="/login">Sign in</Link>
+                        <Link href="/login">Sign In</Link>
                     </Button>
                 ) : (
                     <div className="flex items-center gap-2 border-l border-border/10 pl-4">
@@ -176,7 +175,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                     >
                                         <div className="flex items-center gap-3 w-full text-destructive">
                                             <LogOut className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                                            <span className="text-xs font-bold uppercase tracking-widest">Log out</span>
+                                            <span className="text-xs font-bold uppercase tracking-widest">Log Out</span>
                                         </div>
                                     </DropdownMenuItem>
                                 </div>
@@ -222,6 +221,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   setUserProfile(null);
                 }
                 setProfileLoading(false);
+            },
+            async (err) => {
+                const permissionError = new FirestorePermissionError({
+                    path: userDocRef.path,
+                    operation: 'get',
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
+                setProfileLoading(false);
             }
         );
       } else {
@@ -263,9 +270,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </div>
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
               <span className="text-xl font-black font-headline tracking-tighter text-foreground leading-none">
-                  nyaya sahayak
+                  Nyaya Sahayak
               </span>
-              <span className="text-[8px] font-bold text-primary/60 tracking-widest mt-1">legal intelligence</span>
+              <span className="text-[8px] font-bold text-primary/60 tracking-widest mt-1">Legal Intelligence</span>
             </div>
           </Link>
         </SidebarHeader>
@@ -296,7 +303,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                          {userProfile.firstName} {userProfile.lastName}
                        </span>
                        <span className="text-[9px] font-bold text-muted-foreground truncate w-full">
-                         Registry node active
+                         Registry Node Active
                        </span>
                      </div>
                      <ChevronRight className="ml-auto h-3 w-3 text-muted-foreground group-hover:text-primary transition-all group-data-[state=collapsed]:hidden" />
@@ -310,7 +317,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                  className="w-full justify-start items-center gap-3 h-11 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all"
                >
                  <ChevronRight className="h-4 w-4 rotate-180" />
-                 <span className="font-bold text-[11px] tracking-tight group-data-[state=collapsed]:hidden">Collapse</span>
+                 <span className="font-bold text-[11px] tracking-tight group-data-[state=collapsed]:hidden">Collapse Terminal</span>
                </Button>
              )}
            </AnimatePresence>
@@ -326,7 +333,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     </motion.div>
                 ) : (
                     <div className="flex h-full items-center justify-center">
-                        <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
+                        <div className="relative">
+                            <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
+                            <Activity className="absolute inset-0 h-10 w-10 text-primary opacity-40 animate-pulse" />
+                        </div>
                     </div>
                 )}
             </AnimatePresence>

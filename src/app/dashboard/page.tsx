@@ -44,11 +44,13 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getGeneralAiResponseAction } from "./chat-actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const features = [
   {
     title: "Record Voice",
-    desc: "Speak your legal problem. Get a quick word-for-word summary and analysis.",
+    desc: "Speak Your Legal Problem. Get A Quick Summary And Forensic Analysis.",
     icon: Mic,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
@@ -56,7 +58,7 @@ const features = [
   },
   {
     title: "Scan Documents",
-    desc: "Upload court orders or notices. Ai reads and identifies statutory risks.",
+    desc: "Upload Court Orders Or Notices. Ai Reads And Identifies Statutory Risks.",
     icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
@@ -64,7 +66,7 @@ const features = [
   },
   {
     title: "Write Documents",
-    desc: "Draft professional legal notices and complaints in any Indian language.",
+    desc: "Draft Professional Legal Notices And Complaints In Any Language.",
     icon: FileText,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
@@ -72,7 +74,7 @@ const features = [
   },
   {
     title: "Create Bonds",
-    desc: "Generate legally sound bail, personal, and indemnity bonds instantly.",
+    desc: "Generate Legally Sound Bail, Personal, And Indemnity Bonds Instantly.",
     icon: FileSignature,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
@@ -80,57 +82,17 @@ const features = [
   },
   {
     title: "Check Chance",
-    desc: "Analyze case details to see the statistical probability of a win or bail.",
+    desc: "Analyze Case Details To See The Statistical Probability Of Success.",
     icon: BrainCircuit,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
     href: "/dashboard/strength-analyzer"
-  },
-  {
-    title: "Court Helper",
-    desc: "Get prepared questions for witness cross-examination and preparation.",
-    icon: Gavel,
-    color: "text-cyan-500",
-    bg: "bg-cyan-500/10",
-    href: "/dashboard/court-assistant"
-  },
-  {
-    title: "Check Evidence",
-    desc: "Audit your digital and physical evidence for statutory admissibility.",
-    icon: ShieldCheck,
-    color: "text-indigo-500",
-    bg: "bg-indigo-500/10",
-    href: "/dashboard/evidence-audit"
-  },
-  {
-    title: "Bail Helper",
-    desc: "Predictive modeling for bail success based on BNS sections and records.",
-    icon: Scale,
-    color: "text-red-500",
-    bg: "bg-red-500/10",
-    href: "/dashboard/bail-estimator"
-  },
-  {
-    title: "Law Linker",
-    desc: "Locate specific BNS sections and amendments relevant to your situation.",
-    icon: Zap,
-    color: "text-pink-500",
-    bg: "bg-pink-500/10",
-    href: "/dashboard/statutory-linker"
-  },
-  {
-    title: "Check Contract",
-    desc: "Identify unfavorable clauses and verify fairness in any legal deed.",
-    icon: FileCheck,
-    color: "text-teal-500",
-    bg: "bg-teal-500/10",
-    href: "/dashboard/contract-auditor"
   }
 ];
 
 const suggestions = [
-  "What are tenant rights in India?",
-  "How to file a consumer complaint?",
+  "What Are Tenant Rights In India?",
+  "How To File A Consumer Complaint?",
   "Explain Domestic Violence Act"
 ];
 
@@ -147,11 +109,6 @@ interface Post {
     likes: number;
     likedBy?: string[];
     postType?: 'Idea' | 'Question' | 'Suggestion' | 'Poll' | 'News';
-    poll?: {
-        options: { text: string; votes: number }[];
-        voters?: string[];
-    };
-    isAnonymous?: boolean;
 }
 
 const typeConfig: Record<string, { color: string, bg: string, border: string, icon: any, gradient: string }> = {
@@ -170,7 +127,6 @@ function DashboardPostCard({ post }: { post: Post }) {
     
     const config = typeConfig[post.postType || 'Idea'] || typeConfig['Idea'];
     const userHasLiked = post.likedBy?.includes(currentUser?.uid ?? '');
-    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
 
     const handleLike = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -182,6 +138,13 @@ function DashboardPostCard({ post }: { post: Post }) {
         updateDoc(postRef, {
             likes: increment(userHasLiked ? -1 : 1),
             likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        }).catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: postRef.path,
+                operation: 'update',
+                requestResourceData: { likes: userHasLiked ? -1 : 1 },
+            } satisfies SecurityRuleContext, serverError);
+            errorEmitter.emit('permission-error', permissionError);
         }).finally(() => setIsLiking(false));
     };
 
@@ -190,6 +153,7 @@ function DashboardPostCard({ post }: { post: Post }) {
             layout
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -4 }}
             className="group"
         >
             <Link href={`/dashboard/profile/${post.authorUid}`}>
@@ -199,10 +163,10 @@ function DashboardPostCard({ post }: { post: Post }) {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <Avatar className="h-8 w-8 border border-primary/10 rounded-lg">
-                                    <AvatarImage src={post.isAnonymous ? undefined : post.authorAvatar} className="object-cover" />
-                                    <AvatarFallback className="bg-primary/10 text-primary font-black text-[10px]">{authorName?.charAt(0)}</AvatarFallback>
+                                    <AvatarImage src={post.authorAvatar} className="object-cover" />
+                                    <AvatarFallback className="bg-primary/10 text-primary font-black text-[10px]">{post.authorName?.charAt(0)}</AvatarFallback>
                                 </Avatar>
-                                <span className="text-[10px] font-bold text-foreground/60">By {authorName}</span>
+                                <span className="text-[10px] font-bold text-foreground/60">By {post.authorName}</span>
                             </div>
                             <Badge variant="outline" className={cn("text-[8px] font-bold px-2 py-0.5 rounded-full", config.bg, config.color)}>
                                 {post.postType}
@@ -229,7 +193,7 @@ function DashboardPostCard({ post }: { post: Post }) {
                                 <Heart className={cn("h-3 w-3", userHasLiked && "fill-current")} />
                                 <span>{post.likes}</span>
                             </button>
-                            <span className="text-[8px] font-bold text-muted-foreground opacity-40">Registry Node Active</span>
+                            <span className="text-[8px] font-bold text-muted-foreground opacity-40">Registry Active</span>
                         </div>
                     </CardContent>
                 </Card>
@@ -249,13 +213,11 @@ export default function DashboardHomePage() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [greeting, setGreeting] = useState("");
   
-  // Chat States
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Post States
   const [posts, setPosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
 
@@ -267,13 +229,18 @@ export default function DashboardHomePage() {
 
     if (auth.currentUser) {
       const userRef = doc(firestore, "users", auth.currentUser.uid);
-      const unsub = onSnapshot(userRef, (doc) => {
-        if (doc.exists()) {
-          setUserProfile(doc.data());
+      const unsub = onSnapshot(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setUserProfile(docSnap.data());
         }
+      }, async (err) => {
+          const permissionError = new FirestorePermissionError({
+              path: userRef.path,
+              operation: 'get',
+          } satisfies SecurityRuleContext, err);
+          errorEmitter.emit('permission-error', permissionError);
       });
 
-      // Community Stream Ingress
       const postsCol = collection(firestore, "posts");
       const streamQuery = query(postsCol, orderBy("createdAt", "desc"), limit(6));
       const unsubStream = onSnapshot(streamQuery, (snap) => {
@@ -285,6 +252,13 @@ export default function DashboardHomePage() {
                 return (now - ct) < TRANSience_WINDOW;
             });
           setPosts(list);
+          setPostsLoading(false);
+      }, async (err) => {
+          const permissionError = new FirestorePermissionError({
+              path: postsCol.path,
+              operation: 'list',
+          } satisfies SecurityRuleContext, err);
+          errorEmitter.emit('permission-error', permissionError);
           setPostsLoading(false);
       });
 
@@ -337,15 +311,12 @@ export default function DashboardHomePage() {
         className="w-full bg-[#f0f4ff] dark:bg-card border border-blue-100/50 dark:border-border/10 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6"
       >
         <div className="flex items-center gap-6 text-left">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-amber-700 blur-lg opacity-20 group-hover:opacity-40 transition-opacity rounded-full"></div>
-            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-4 border-white dark:border-zinc-800 shadow-xl rounded-full relative z-10">
-              <AvatarImage src={userProfile?.photoURL} className="object-cover" />
-              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-primary-foreground font-bold text-2xl">
-                {userProfile?.firstName?.charAt(0) || <User className="h-8 w-8" />}
-              </AvatarFallback>
-            </Avatar>
-          </div>
+          <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-4 border-white dark:border-zinc-800 shadow-xl rounded-full">
+            <AvatarImage src={userProfile?.photoURL} className="object-cover" />
+            <AvatarFallback className="bg-primary text-primary-foreground font-bold text-2xl">
+              {userProfile?.firstName?.charAt(0) || <User className="h-8 w-8" />}
+            </AvatarFallback>
+          </Avatar>
           <div className="space-y-1">
             <div className="flex items-center gap-3">
               <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-none">
@@ -361,19 +332,17 @@ export default function DashboardHomePage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <Button variant="outline" className="flex-1 md:flex-none h-12 px-6 rounded-xl border-border/10 bg-background font-bold text-xs gap-2 shadow-sm hover:bg-muted/50 transition-all active:scale-95" asChild>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="h-12 px-6 rounded-xl border-border/10 bg-background font-bold text-xs gap-2 shadow-sm" asChild>
             <Link href="/dashboard/document-intelligence">
-              <Upload className="h-4 w-4" />
-              Upload
+              <Upload className="h-4 w-4" /> Upload
             </Link>
           </Button>
           <Button 
             onClick={() => setMessages([])}
-            className="flex-1 md:flex-none h-12 px-6 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-xs gap-2 shadow-xl active:scale-95 transition-all"
+            className="h-12 px-6 rounded-xl bg-primary text-primary-foreground font-bold text-xs gap-2 shadow-xl active:scale-95 transition-all"
           >
-            <Sparkles className="h-4 w-4" />
-            New Chat
+            <Sparkles className="h-4 w-4" /> New Chat
           </Button>
         </div>
       </motion.div>
@@ -449,11 +418,8 @@ export default function DashboardHomePage() {
                     ))}
                     {isLoading && (
                       <div className="flex gap-3 items-center text-primary/40 p-2">
-                        <div className="relative">
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          <Activity className="absolute inset-0 h-4 w-4 animate-pulse opacity-50" />
-                        </div>
-                        <span className="text-[10px] font-bold animate-pulse">Neural Ingress Active...</span>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="text-[10px] font-bold animate-pulse">Neural Ingress...</span>
                       </div>
                     )}
                   </div>
@@ -475,7 +441,7 @@ export default function DashboardHomePage() {
                       handleSend();
                     }
                   }}
-                  placeholder="Ask anything about the law..." 
+                  placeholder="Ask Anything About The Law..." 
                   className="flex-1 bg-transparent border-none focus-visible:ring-0 text-foreground text-lg placeholder:text-muted-foreground/30 min-h-[48px] h-10 py-2 resize-none overflow-hidden" 
                 />
                 <div className="flex items-center gap-2 pr-2">
@@ -491,7 +457,7 @@ export default function DashboardHomePage() {
                 </div>
               </div>
             </div>
-            <p className="text-[10px] font-bold text-muted-foreground/20 tracking-wide">Free to use. Your conversations are private.</p>
+            <p className="text-[10px] font-bold text-muted-foreground/20 tracking-wide">Free To Use. Your Conversations Are Private.</p>
           </div>
 
           {/* Community Stream Node */}
@@ -535,7 +501,7 @@ export default function DashboardHomePage() {
         <div className="text-left border-l-4 border-primary pl-6 py-2">
           <h2 className="text-[10px] font-bold text-primary mb-1">Core Hub</h2>
           <h3 className="text-3xl font-bold tracking-tighter text-foreground">Ai Terminals</h3>
-          <p className="text-sm text-muted-foreground font-medium mt-1">Select tool to start.</p>
+          <p className="text-sm text-muted-foreground font-medium mt-1">Select A Tool To Initialize Forensic Audit.</p>
         </div>
 
         <motion.div 
@@ -563,43 +529,6 @@ export default function DashboardHomePage() {
             </motion.div>
           ))}
         </motion.div>
-      </section>
-
-      {/* Trust Node */}
-      <section className="pt-12">
-        <Card className="bg-primary/5 border-primary/10 rounded-[2.5rem] p-10 sm:p-16 flex flex-col md:flex-row items-center justify-between gap-10 overflow-hidden relative group">
-          <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-1000 pointer-events-none">
-            <ShieldCheck className="h-64 w-64" />
-          </div>
-          <div className="space-y-6 text-left relative z-10 max-w-xl">
-            <div className="flex items-center gap-3 text-primary">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <ShieldCheck className="h-5 w-5 animate-pulse" />
-              </div>
-              <span className="text-[10px] font-bold text-primary">Statutory Trust</span>
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-bold text-foreground leading-none tracking-tighter">Your Data Is <br /> <span className="text-primary">Your Property.</span></h2>
-            <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-              Every forensic report and narration is encrypted via TLS 1.3 and is strictly confidential. We do not train foundation models on citizen narratives.
-            </p>
-            <Button variant="outline" className="h-12 px-8 rounded-xl border-primary/20 text-primary font-bold text-[10px] hover:bg-primary/5 shadow-sm" asChild>
-              <Link href="/privacy">Audit Security Protocol <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
-            </Button>
-          </div>
-          <div className="grid grid-cols-2 gap-4 w-full md:w-auto relative z-10">
-            {[
-              { label: "Encrypted", icon: HistoryIcon },
-              { label: "Private", icon: ShieldCheck },
-              { label: "Secure", icon: HistoryIcon },
-              { label: "Audit Ready", icon: Search }
-            ].map((n, i) => (
-              <div key={i} className="p-6 rounded-3xl bg-background border border-border/10 flex flex-col items-center gap-3 text-center shadow-sm">
-                <n.icon className="h-6 w-6 text-primary opacity-40" />
-                <span className="text-[10px] font-bold text-muted-foreground">{n.label}</span>
-              </div>
-            ))}
-          </div>
-        </Card>
       </section>
     </div>
   );

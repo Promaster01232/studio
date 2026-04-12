@@ -22,7 +22,8 @@ import {
   Zap,
   Newspaper,
   Bot,
-  Layers
+  Layers,
+  Activity
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -38,6 +39,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 const ADMIN_EMAILS = [
   'enterspaceindia@gmail.com', 
@@ -58,11 +61,6 @@ interface Post {
     likes: number;
     likedBy?: string[];
     postType?: 'Idea' | 'Question' | 'Suggestion' | 'Poll' | 'News';
-    poll?: {
-        options: { text: string; votes: number }[];
-        voters?: string[];
-    };
-    isAnonymous?: boolean;
 }
 
 const typeConfig: Record<string, { color: string, bg: string, border: string, icon: any, gradient: string, glow: string }> = {
@@ -74,19 +72,15 @@ const typeConfig: Record<string, { color: string, bg: string, border: string, ic
 };
 
 function AuthorIdentityNode({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
-    const authorName = post.isAnonymous ? 'Anonymous' : post.authorName;
-    const authorAvatar = post.isAnonymous ? undefined : post.authorAvatar;
-    const fallback = post.isAnonymous ? 'A' : (authorName?.charAt(0) || '');
-
     return (
-        <Link href={post.isAnonymous ? "#" : `/dashboard/profile/${post.authorUid}`} className={cn("flex items-center gap-3", post.isAnonymous ? "pointer-events-none opacity-60" : "cursor-pointer")}>
+        <Link href={`/dashboard/profile/${post.authorUid}`} className="flex items-center gap-3">
             <Avatar className="h-10 w-10 border border-primary/10 shadow-lg rounded-xl">
-                {authorAvatar && <AvatarImage src={authorAvatar} alt={authorName} className="object-cover" />}
-                <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{fallback}</AvatarFallback>
+                <AvatarImage src={post.authorAvatar} alt={post.authorName} className="object-cover" />
+                <AvatarFallback className="font-black bg-primary/10 text-primary text-xs">{post.authorName?.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex-1 text-left">
                 <div className="flex items-center gap-1.5">
-                    <p className="font-black text-xs tracking-tight">{authorName}</p>
+                    <p className="font-black text-xs tracking-tight">{post.authorName}</p>
                     {isAdmin && <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />}
                 </div>
             </div>
@@ -102,14 +96,9 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
     
     const [isLiking, setIsLiking] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
-    const [optimisticLikes, setOptimisticLikes] = useState(post.likes);
-    const [optimisticLikedBy, setOptimisticLikedBy] = useState(post.likedBy || []);
-    const [optimisticPoll, setOptimisticPoll] = useState(post.poll);
 
-    const userHasLiked = optimisticLikedBy.includes(currentUser?.uid ?? '');
+    const userHasLiked = post.likedBy?.includes(currentUser?.uid ?? '');
     const isAuthor = post.authorUid === currentUser?.uid;
-    const userHasVoted = optimisticPoll?.voters?.includes(currentUser?.uid ?? '');
-    const totalVotes = optimisticPoll ? optimisticPoll.options.reduce((acc, o) => acc + o.votes, 0) : 0;
 
     const config = typeConfig[post.postType || 'Idea'] || typeConfig['Idea'];
 
@@ -118,43 +107,31 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
         setIsLiking(true);
         const postRef = doc(firestore, "posts", post.id);
         
-        setOptimisticLikes(prev => userHasLiked ? prev - 1 : prev + 1);
-        setOptimisticLikedBy(prev => userHasLiked ? prev.filter(u => u !== currentUser.uid) : [...prev, currentUser.uid]);
-
         updateDoc(postRef, {
             likes: increment(userHasLiked ? -1 : 1),
             likedBy: userHasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        }).catch(async (err) => {
+            const permissionError = new FirestorePermissionError({
+                path: postRef.path,
+                operation: 'update',
+                requestResourceData: { likes: userHasLiked ? -1 : 1 },
+            } satisfies SecurityRuleContext, err);
+            errorEmitter.emit('permission-error', permissionError);
         }).finally(() => setIsLiking(false));
-    };
-
-    const handleVote = (idx: number) => {
-        if (!currentUser || !optimisticPoll || userHasVoted) return;
-        const postRef = doc(firestore, "posts", post.id);
-        const newOptions = [...optimisticPoll.options];
-        newOptions[idx] = { ...newOptions[idx], votes: newOptions[idx].votes + 1 };
-        const newState = { ...optimisticPoll, options: newOptions, voters: [...(optimisticPoll.voters || []), currentUser.uid] };
-        setOptimisticPoll(newState);
-        updateDoc(postRef, { poll: newState }).catch(() => setOptimisticPoll(post.poll));
     };
 
     const handleDelete = () => {
         if (!isAdmin && !isAuthor) return;
         if (!confirm("Confirm Record Purge?")) return;
-        deleteDoc(doc(firestore, "posts", post.id)).then(() => toast({ title: "Post Purged" }));
-    };
-
-    const handleShare = async (platform: string) => {
-        const shareText = `Transmission: "${post.title}" on Nyaya Sahayak`;
-        if (platform === 'copy') {
-            try { 
-                await navigator.clipboard.writeText(window.location.origin + "/dashboard/research-analytics"); 
-                toast({ title: "Link Copied" }); 
-            } catch(e) {
-                toast({ variant: "destructive", title: "Copy Failed" });
-            }
-        } else {
-            window.open(platform === 'whatsapp' ? `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}` : `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
-        }
+        const postRef = doc(firestore, "posts", post.id);
+        deleteDoc(postRef).then(() => toast({ title: "Post Purged" }))
+        .catch(async (err) => {
+            const permissionError = new FirestorePermissionError({
+                path: postRef.path,
+                operation: 'delete',
+            } satisfies SecurityRuleContext, err);
+            errorEmitter.emit('permission-error', permissionError);
+        });
     };
 
     return (
@@ -169,9 +146,9 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
                             <DropdownMenuTrigger asChild><button className="h-9 w-9 rounded-2xl bg-muted/20 hover:bg-primary/5 flex items-center justify-center transition-all"><MoreVertical className="h-4 w-4" /></button></DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl shadow-2xl glass border-primary/10">
                                 {(isAuthor || isAdmin) ? (
-                                    <DropdownMenuItem onClick={handleDelete} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive gap-3"><Trash2 className="h-4 w-4" /> Purge node</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleDelete} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer text-destructive focus:text-destructive gap-3"><Trash2 className="h-4 w-4" /> Purge Node</DropdownMenuItem>
                                 ) : (
-                                    <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3"><Flag className="h-4 w-4" /> Report breach</DropdownMenuItem>
+                                    <DropdownMenuItem className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-3"><Flag className="h-4 w-4" /> Report Breach</DropdownMenuItem>
                                 )}
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -180,37 +157,14 @@ function PostCard({ post, isAdmin }: { post: Post, isAdmin: boolean }) {
                 <div className="space-y-4">
                     <h3 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">{post.title}</h3>
                     <p className="text-sm sm:text-base text-muted-foreground font-medium leading-relaxed whitespace-pre-line">{isExpanded ? post.content : post.content?.slice(0, 200) + (post.content?.length > 200 ? "..." : "")}</p>
-                    {post.content?.length > 200 && <button onClick={() => setIsExpanded(!isExpanded)} className="text-[10px] font-black uppercase text-primary hover:underline">{isExpanded ? "Close audit" : "Expand audit"}</button>}
+                    {post.content?.length > 200 && <button onClick={() => setIsExpanded(!isExpanded)} className="text-[10px] font-black uppercase text-primary hover:underline">{isExpanded ? "Close Audit" : "Expand Audit"}</button>}
                 </div>
             </CardHeader>
-            <div className="px-6 sm:p-10 pt-6">
-                {optimisticPoll && (
-                    <div className="grid gap-3">
-                        {optimisticPoll.options.map((o, i) => {
-                            const p = totalVotes > 0 ? (o.votes / totalVotes) * 100 : 0;
-                            return (
-                                <button key={i} onClick={() => handleVote(i)} disabled={userHasVoted} className="w-full relative h-12 rounded-2xl border border-primary/5 overflow-hidden transition-all text-left px-4 bg-white dark:bg-black/20 hover:border-primary/20">
-                                    {userHasVoted && <motion.div initial={{ width: 0 }} animate={{ width: `${p}%` }} className="absolute inset-y-0 left-0 bg-primary/10 border-r border-primary/20" />}
-                                    <div className="relative z-10 flex justify-between h-full items-center"><span className="font-bold text-xs">{o.text}</span>{userHasVoted && <span className="font-black text-xs text-primary">{p.toFixed(0)}%</span>}</div>
-                                </button>
-                            );
-                        })}
-                    </div>
-                )}
-            </div>
             <CardFooter className="p-6 sm:p-10 mt-6 flex justify-between items-center bg-muted/5 border-t border-primary/5">
                 <div className="flex gap-3">
                     <Button variant="ghost" className={cn("h-10 px-4 rounded-2xl text-[10px] font-black uppercase gap-2", userHasLiked ? "text-red-500 bg-red-500/5" : "text-primary")} onClick={handleLike} disabled={isLiking}>
-                        {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} />} <span>{optimisticLikes}</span>
+                        {isLiking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className={cn("h-4 w-4", userHasLiked && "fill-current")} />} <span>{post.likes}</span>
                     </Button>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild><button className="h-10 px-4 rounded-2xl bg-white dark:bg-black/20 border border-primary/5 flex items-center gap-2 text-[10px] font-black uppercase"><Share2 className="h-4 w-4" /> Share</button></DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-60 p-2 rounded-2xl glass border-primary/10">
-                            <DropdownMenuItem onClick={() => handleShare('whatsapp')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-4"><MessageCircle className="h-4 w-4" /> WhatsApp</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleShare('twitter')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-4"><Twitter className="h-4 w-4" /> Twitter</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleShare('copy')} className="rounded-xl font-bold text-xs h-11 px-4 cursor-pointer gap-4"><Bookmark className="h-4 w-4" /> Copy ID</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
                 </div>
             </CardFooter>
         </Card>
@@ -247,7 +201,11 @@ export default function ResearchAnalyticsPage() {
                 setFeed(list);
                 setLoading(false);
             }, (err) => {
-                console.warn("[STATUTORY SYNC] Public feed restricted or permission denied.");
+                const permissionError = new FirestorePermissionError({
+                    path: postsCol.path,
+                    operation: 'list',
+                } satisfies SecurityRuleContext, err);
+                errorEmitter.emit('permission-error', permissionError);
                 setLoading(false);
             });
 
@@ -263,37 +221,33 @@ export default function ResearchAnalyticsPage() {
             <motion.div 
                 initial={{ opacity: 0, y: -20 }} 
                 animate={{ opacity: 1, y: 0 }} 
-                className="relative p-6 sm:p-8 rounded-[2rem] overflow-hidden bg-card/40 backdrop-blur-xl border border-primary/10 shadow-2xl group"
+                className="relative p-8 rounded-[2rem] overflow-hidden bg-card/40 backdrop-blur-xl border border-primary/10 shadow-2xl"
             >
-                <div className="absolute top-0 right-0 p-6 opacity-[0.02] pointer-events-none group-hover:scale-110 transition-transform duration-1000">
+                <div className="absolute top-0 right-0 p-6 opacity-[0.02] pointer-events-none">
                     <Logo className="h-48 w-48 grayscale" priority={true} />
                 </div>
                 
                 <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div className="space-y-4 text-left">
-                        <div className="flex items-center gap-2">
-                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-lg">
-                                <Sparkles className="h-3 w-3 mr-1.5 animate-pulse" /> Transience Active
-                            </Badge>
-                        </div>
-                        
+                        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-lg">
+                            <Sparkles className="h-3 w-3 mr-1.5 animate-pulse" /> Community Registry
+                        </Badge>
                         <div className="space-y-1">
-                            <h1 className="text-2xl sm:text-4xl font-black font-headline tracking-tighter uppercase leading-none text-foreground">
-                                Live <span className="text-primary italic">Transmissions.</span>
+                            <h1 className="text-3xl sm:text-4xl font-black font-headline tracking-tighter uppercase leading-none text-foreground">
+                                Live Transmissions
                             </h1>
-                            <p className="text-xs sm:text-sm text-muted-foreground font-medium max-w-lg leading-relaxed opacity-80" >
-                                Publicly audited statutory ideas.
+                            <p className="text-sm text-muted-foreground font-medium opacity-80" >
+                                Publicly Audited Statutory Ideas. 56-Hour Transience Protocol Active.
                             </p>
                         </div>
                     </div>
 
-                    <Button size="lg" className="h-12 px-8 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all w-full md:w-auto" asChild>
+                    <Button size="lg" className="h-14 px-8 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all w-full md:w-auto" asChild>
                         <Link href="/dashboard/research-analytics/new">
                             <PlusCircle className="mr-2 h-4 w-4" /> Initialize Post
                         </Link>
                     </Button>
                 </div>
-                <div className="h-1 w-full bg-gradient-to-r from-primary/20 via-primary to-primary/20 absolute bottom-0 left-0"></div>
             </motion.div>
 
             <div className="grid gap-8">
@@ -306,7 +260,7 @@ export default function ResearchAnalyticsPage() {
                         <Newspaper className="h-20 w-20" />
                         <div className="space-y-3">
                             <p className="font-black text-3xl uppercase tracking-tighter">Registry Clear</p>
-                            <p className="text-sm italic">"Awaiting institutional transmissions."</p>
+                            <p className="text-sm italic">"Awaiting Institutional Transmissions."</p>
                         </div>
                     </div>
                 )}
