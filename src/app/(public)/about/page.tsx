@@ -47,7 +47,7 @@ export default function AboutPage() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="max-w-4xl mx-auto space-y-16 pb-32 px-6 text-left selection:bg-primary/20"
+      className="max-w-4xl mx-auto space-y-12 pb-16 px-6 text-left selection:bg-primary/20"
     >
       {/* Top Navigation Node */}
       <motion.div variants={itemVariants} className="flex items-center pt-10">
@@ -56,7 +56,7 @@ export default function AboutPage() {
           className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-primary transition-colors group uppercase tracking-widest"
         >
           <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" />
-          <span>Back to registry</span>
+          <span>Back to home</span>
         </Link>
       </motion.div>
 
@@ -162,10 +162,6 @@ export default function AboutPage() {
           ))}
         </div>
       </section>
-
-      <motion.div variants={itemVariants} className="pt-20 text-center opacity-30">
-        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // INSTITUTIONAL SOURCE</p>
-      </motion.div>
     </motion.div>
   );
 }

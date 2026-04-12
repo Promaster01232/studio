@@ -49,7 +49,7 @@ export default function AboutPage() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="max-w-5xl mx-auto space-y-12 pb-20 px-4 sm:px-6 text-left"
+      className="max-w-5xl mx-auto space-y-12 pb-16 px-4 sm:px-6 text-left"
     >
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-border/10 pb-8">
         <PageHeader
@@ -70,7 +70,7 @@ export default function AboutPage() {
             <Target className="h-5 w-5" />
             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Mandate</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-tight uppercase">
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-tight uppercase text-foreground">
             Democratizing <span className="text-primary italic">Legal Intelligence.</span>
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground font-medium leading-relaxed">
@@ -149,7 +149,7 @@ export default function AboutPage() {
           ].map((leader, i) => (
             <motion.div key={i} variants={itemVariants} className="space-y-6">
               <div className="space-y-1">
-                <h4 className="text-2xl font-black tracking-tight">{leader.name}</h4>
+                <h4 className="text-2xl font-black tracking-tight text-foreground">{leader.name}</h4>
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">{leader.role}</p>
               </div>
               <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-md">
@@ -159,13 +159,6 @@ export default function AboutPage() {
           ))}
         </div>
       </section>
-
-      <motion.div variants={itemVariants} className="pt-20 text-center opacity-30">
-        <div className="flex flex-col items-center gap-4">
-          <Globe className="h-8 w-8 text-muted-foreground" />
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // REGISTRY SYNC // 2025</p>
-        </div>
-      </motion.div>
     </motion.div>
   );
 }
