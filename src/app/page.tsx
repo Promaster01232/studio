@@ -35,70 +35,70 @@ import {
 
 const capabilities = [
   {
-    title: "Record voice",
+    title: "Record Voice",
     desc: "Speak your legal problem. Get a quick word-for-word summary and analysis.",
     icon: Mic,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
   },
   {
-    title: "Scan documents",
+    title: "Scan Documents",
     desc: "Upload court orders or notices. Ai reads and identifies statutory risks.",
     icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
   },
   {
-    title: "Write documents",
-    desc: "Draft professional legal notices and complaints in any indian language.",
+    title: "Write Documents",
+    desc: "Draft professional legal notices and complaints in any Indian language.",
     icon: FileText,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
   },
   {
-    title: "Create bonds",
+    title: "Create Bonds",
     desc: "Generate legally sound bail, personal, and indemnity bonds instantly.",
     icon: FileSignature,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
   },
   {
-    title: "Check chance",
+    title: "Check Chance",
     desc: "Analyze case details to see the statistical probability of a win or bail.",
     icon: BrainCircuit,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
   },
   {
-    title: "Court helper",
+    title: "Court Helper",
     desc: "Get prepared questions for witness cross-examination and preparation.",
     icon: Gavel,
     color: "text-cyan-500",
     bg: "bg-cyan-500/10",
   },
   {
-    title: "Check evidence",
+    title: "Check Evidence",
     desc: "Audit your digital and physical evidence for statutory admissibility.",
     icon: ShieldCheck,
     color: "text-indigo-500",
     bg: "bg-indigo-500/10",
   },
   {
-    title: "Bail helper",
-    desc: "Predictive modeling for bail success based on bns sections and records.",
+    title: "Bail Helper",
+    desc: "Predictive modeling for bail success based on BNS sections and records.",
     icon: Scale,
     color: "text-red-500",
     bg: "bg-red-500/10",
   },
   {
-    title: "Law linker",
-    desc: "Locate specific bns sections and amendments relevant to your situation.",
+    title: "Law Linker",
+    desc: "Locate specific BNS sections and amendments relevant to your situation.",
     icon: Zap,
     color: "text-pink-500",
     bg: "bg-pink-500/10",
   },
   {
-    title: "Check contract",
+    title: "Check Contract",
     desc: "Identify unfavorable clauses and verify fairness in any legal deed.",
     icon: FileCheck,
     color: "text-teal-500",
@@ -108,7 +108,7 @@ const capabilities = [
 
 const navItems = [
   { name: "Features", href: "/features" },
-  { name: "How it works", href: "/how-it-works" },
+  { name: "How It Works", href: "/how-it-works" },
   { name: "Pricing", href: "/pricing" },
   { name: "Faqs", href: "/faqs" },
   { name: "Blog", href: "/blog" },
@@ -149,7 +149,7 @@ export default function RootPage() {
       <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-background/40 backdrop-blur-md border-b border-border/10">
         <div className="flex items-center gap-2">
           <Logo className="h-10 w-10 border-none bg-transparent shadow-none p-0" priority={true} />
-          <span className="text-xl font-black font-headline tracking-tighter text-foreground">Nyaya Sahayak</span>
+          <span className="text-xl font-bold tracking-tighter text-foreground">Nyaya Sahayak</span>
         </div>
         
         <div className="hidden md:flex items-center gap-10">
@@ -171,7 +171,7 @@ export default function RootPage() {
             </Button>
             <div className="hidden md:block">
               <Button asChild className="bg-primary text-primary-foreground font-bold text-xs px-6 h-10 rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
-                <Link href="/register">Join hub</Link>
+                <Link href="/register">Join Hub</Link>
               </Button>
             </div>
           </div>
@@ -185,8 +185,8 @@ export default function RootPage() {
               </SheetTrigger>
               <SheetContent side="right" className="bg-background border-border/10 text-foreground w-[280px] p-0">
                 <SheetHeader className="p-6 border-b border-border/10">
-                  <SheetTitle className="text-foreground text-left font-headline font-black text-xl tracking-tighter">Navigation</SheetTitle>
-                  <SheetDescription className="text-muted-foreground text-left text-[10px] uppercase font-bold tracking-widest">Institutional hub</SheetDescription>
+                  <SheetTitle className="text-foreground text-left font-bold text-xl tracking-tighter">Navigation</SheetTitle>
+                  <SheetDescription className="text-muted-foreground text-left text-[10px] font-bold tracking-widest">Institutional Hub</SheetDescription>
                 </SheetHeader>
                 <div className="flex flex-col p-6 gap-6 text-left">
                   {navItems.map((item) => (
@@ -204,7 +204,7 @@ export default function RootPage() {
                     <Link href="/login">Login</Link>
                   </Button>
                   <Button asChild className="bg-primary text-primary-foreground font-bold h-12 rounded-xl" onClick={() => setIsMenuOpen(false)}>
-                    <Link href="/register">Join hub</Link>
+                    <Link href="/register">Join Hub</Link>
                   </Button>
                 </div>
               </SheetContent>
@@ -221,16 +221,16 @@ export default function RootPage() {
             transition={{ duration: 0.6 }}
             className="flex flex-col items-center"
           >
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-bold mb-10 uppercase tracking-widest">
-              Platform status: active
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-bold mb-10">
+              Platform Status: Active
             </Badge>
             
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8 text-foreground">
-              Your complete <br /> <span className="text-primary">Legal research toolkit.</span>
+            <h1 className="text-4xl sm:text-7xl font-bold tracking-tighter leading-[1.1] mb-8 text-foreground">
+              Your Complete <br /> <span className="text-primary">Legal Research Toolkit.</span>
             </h1>
             
             <p className="text-lg sm:text-xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
-              Ai-powered chat, document analysis, voice input, and multi-language support. everything you need to navigate indian law with absolute confidence.
+              Ai-powered chat, document analysis, voice input, and multi-language support. Everything you need to navigate Indian law with absolute confidence.
             </p>
           </motion.div>
 
@@ -243,7 +243,7 @@ export default function RootPage() {
             <Button asChild className="h-14 px-8 rounded-2xl bg-primary text-primary-foreground font-bold text-xs shadow-2xl shadow-primary/20 active:scale-95 transition-all">
               <Link href="/dashboard">
                 <span className="relative z-10 flex items-center">
-                  Start your first legal query free <ArrowRight className="ml-2 h-4 w-4" />
+                  Start Your First Legal Query Free <ArrowRight className="ml-2 h-4 w-4" />
                 </span>
               </Link>
             </Button>
@@ -259,8 +259,8 @@ export default function RootPage() {
             <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-5 py-1.5 rounded-full text-[10px] font-bold mb-4">
               Features
             </Badge>
-            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-foreground">
-              Ten elite AI tools for legal clarity
+            <h2 className="text-4xl sm:text-6xl font-bold tracking-tighter leading-none text-foreground">
+              Ten Elite AI Tools For Legal Clarity
             </h2>
             <p className="text-lg text-muted-foreground font-medium tracking-tight">
               A comprehensive suite of forensic terminals synchronized with the modern Indian judicial landscape.
@@ -288,7 +288,7 @@ export default function RootPage() {
                     </div>
                     
                     <div className="space-y-3">
-                      <h3 className="text-xl font-black tracking-tight text-foreground leading-tight">{item.title}</h3>
+                      <h3 className="text-xl font-bold tracking-tight text-foreground leading-tight">{item.title}</h3>
                       <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                         {item.desc}
                       </p>

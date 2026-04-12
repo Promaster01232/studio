@@ -47,7 +47,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 const features = [
   {
-    title: "Record voice",
+    title: "Record Voice",
     desc: "Speak your legal problem. Get a quick word-for-word summary and analysis.",
     icon: Mic,
     color: "text-blue-500",
@@ -55,7 +55,7 @@ const features = [
     href: "/dashboard/narrate"
   },
   {
-    title: "Scan documents",
+    title: "Scan Documents",
     desc: "Upload court orders or notices. Ai reads and identifies statutory risks.",
     icon: FileSearch,
     color: "text-emerald-500",
@@ -63,15 +63,15 @@ const features = [
     href: "/dashboard/document-intelligence"
   },
   {
-    title: "Write documents",
-    desc: "Draft professional legal notices and complaints in any indian language.",
+    title: "Write Documents",
+    desc: "Draft professional legal notices and complaints in any Indian language.",
     icon: FileText,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
     href: "/dashboard/document-generator"
   },
   {
-    title: "Create bonds",
+    title: "Create Bonds",
     desc: "Generate legally sound bail, personal, and indemnity bonds instantly.",
     icon: FileSignature,
     color: "text-purple-500",
@@ -79,7 +79,7 @@ const features = [
     href: "/dashboard/bond-generator"
   },
   {
-    title: "Check chance",
+    title: "Check Chance",
     desc: "Analyze case details to see the statistical probability of a win or bail.",
     icon: BrainCircuit,
     color: "text-amber-500",
@@ -87,7 +87,7 @@ const features = [
     href: "/dashboard/strength-analyzer"
   },
   {
-    title: "Court helper",
+    title: "Court Helper",
     desc: "Get prepared questions for witness cross-examination and preparation.",
     icon: Gavel,
     color: "text-cyan-500",
@@ -95,7 +95,7 @@ const features = [
     href: "/dashboard/court-assistant"
   },
   {
-    title: "Check evidence",
+    title: "Check Evidence",
     desc: "Audit your digital and physical evidence for statutory admissibility.",
     icon: ShieldCheck,
     color: "text-indigo-500",
@@ -103,23 +103,23 @@ const features = [
     href: "/dashboard/evidence-audit"
   },
   {
-    title: "Bail helper",
-    desc: "Predictive modeling for bail success based on bns sections and records.",
+    title: "Bail Helper",
+    desc: "Predictive modeling for bail success based on BNS sections and records.",
     icon: Scale,
     color: "text-red-500",
     bg: "bg-red-500/10",
     href: "/dashboard/bail-estimator"
   },
   {
-    title: "Law linker",
-    desc: "Locate specific bns sections and amendments relevant to your situation.",
+    title: "Law Linker",
+    desc: "Locate specific BNS sections and amendments relevant to your situation.",
     icon: Zap,
     color: "text-pink-500",
     bg: "bg-pink-500/10",
     href: "/dashboard/statutory-linker"
   },
   {
-    title: "Check contract",
+    title: "Check Contract",
     desc: "Identify unfavorable clauses and verify fairness in any legal deed.",
     icon: FileCheck,
     color: "text-teal-500",
@@ -129,9 +129,9 @@ const features = [
 ];
 
 const suggestions = [
-  "What are tenant rights in india?",
+  "What are tenant rights in India?",
   "How to file a consumer complaint?",
-  "Explain domestic violence act"
+  "Explain Domestic Violence Act"
 ];
 
 const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
@@ -202,15 +202,15 @@ function DashboardPostCard({ post }: { post: Post }) {
                                     <AvatarImage src={post.isAnonymous ? undefined : post.authorAvatar} className="object-cover" />
                                     <AvatarFallback className="bg-primary/10 text-primary font-black text-[10px]">{authorName?.charAt(0)}</AvatarFallback>
                                 </Avatar>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-foreground/60">{authorName}</span>
+                                <span className="text-[10px] font-bold text-foreground/60">By {authorName}</span>
                             </div>
-                            <Badge variant="outline" className={cn("text-[8px] font-black uppercase px-2 py-0.5 rounded-full", config.bg, config.color)}>
+                            <Badge variant="outline" className={cn("text-[8px] font-bold px-2 py-0.5 rounded-full", config.bg, config.color)}>
                                 {post.postType}
                             </Badge>
                         </div>
                         
                         <div className="space-y-1">
-                            <h4 className="font-black text-sm tracking-tight text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                            <h4 className="font-bold text-sm tracking-tight text-foreground line-clamp-1 group-hover:text-primary transition-colors">
                                 {post.title}
                             </h4>
                             <p className="text-[11px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
@@ -222,14 +222,14 @@ function DashboardPostCard({ post }: { post: Post }) {
                             <button 
                                 onClick={handleLike}
                                 className={cn(
-                                    "flex items-center gap-1.5 text-[9px] font-black uppercase transition-colors",
+                                    "flex items-center gap-1.5 text-[9px] font-bold transition-colors",
                                     userHasLiked ? "text-red-500" : "text-muted-foreground hover:text-primary"
                                 )}
                             >
                                 <Heart className={cn("h-3 w-3", userHasLiked && "fill-current")} />
                                 <span>{post.likes}</span>
                             </button>
-                            <span className="text-[8px] font-bold text-muted-foreground opacity-40 uppercase tracking-widest">Registry node active</span>
+                            <span className="text-[8px] font-bold text-muted-foreground opacity-40">Registry Node Active</span>
                         </div>
                     </CardContent>
                 </Card>
@@ -261,9 +261,9 @@ export default function DashboardHomePage() {
 
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour < 12) setGreeting("Good morning");
-    else if (hour < 17) setGreeting("Good afternoon");
-    else setGreeting("Good evening");
+    if (hour < 12) setGreeting("Good Morning");
+    else if (hour < 17) setGreeting("Good Afternoon");
+    else setGreeting("Good Evening");
 
     if (auth.currentUser) {
       const userRef = doc(firestore, "users", auth.currentUser.uid);
@@ -311,7 +311,7 @@ export default function DashboardHomePage() {
       const result = await getGeneralAiResponseAction(userMsg);
       setMessages(prev => [...prev, { role: 'ai', text: result.response }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'ai', text: "The neural hub is temporarily busy. Please try again in a few moments." }]);
+      setMessages(prev => [...prev, { role: 'ai', text: "The Neural Hub Is Temporarily Busy. Please Try Again In A Few Moments." }]);
     } finally {
       setIsLoading(false);
     }
@@ -341,22 +341,22 @@ export default function DashboardHomePage() {
             <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-amber-700 blur-lg opacity-20 group-hover:opacity-40 transition-opacity rounded-full"></div>
             <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-4 border-white dark:border-zinc-800 shadow-xl rounded-full relative z-10">
               <AvatarImage src={userProfile?.photoURL} className="object-cover" />
-              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-primary-foreground font-black text-2xl">
+              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-primary-foreground font-bold text-2xl">
                 {userProfile?.firstName?.charAt(0) || <User className="h-8 w-8" />}
               </AvatarFallback>
             </Avatar>
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-3">
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground leading-none">
-                {greeting}, {userProfile?.firstName || 'there'}!
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-none">
+                {greeting}, {userProfile?.firstName || 'There'}!
               </h2>
-              <Badge variant="outline" className="bg-background/50 border-border/10 text-[10px] font-bold px-2.5 py-0.5 rounded-lg text-muted-foreground uppercase">
+              <Badge variant="outline" className="bg-background/50 border-border/10 text-[10px] font-bold px-2.5 py-0.5 rounded-lg text-muted-foreground">
                 {userProfile?.subscriptionType || 'Free'}
               </Badge>
             </div>
             <p className="text-sm font-medium text-muted-foreground">
-              Welcome to your Nyaya Sahayak dashboard
+              Welcome To Your Nyaya Sahayak Dashboard
             </p>
           </div>
         </div>
@@ -373,7 +373,7 @@ export default function DashboardHomePage() {
             className="flex-1 md:flex-none h-12 px-6 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-xs gap-2 shadow-xl active:scale-95 transition-all"
           >
             <Sparkles className="h-4 w-4" />
-            New chat
+            New Chat
           </Button>
         </div>
       </motion.div>
@@ -396,8 +396,8 @@ export default function DashboardHomePage() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="space-y-8 w-full"
               >
-                <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight leading-tight uppercase">
-                  Hello, how can i help you today?
+                <h1 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight leading-tight">
+                  Hello, How Can I Help You Today?
                 </h1>
 
                 <div className="flex flex-wrap items-center justify-center gap-3">
@@ -442,8 +442,8 @@ export default function DashboardHomePage() {
                         )}>
                           {m.text}
                         </div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">
-                          {m.role === 'ai' ? 'Nyaya Sahayak' : 'Registry node'}
+                        <span className="text-[8px] font-bold text-muted-foreground/40 px-1">
+                          {m.role === 'ai' ? 'Nyaya Sahayak' : 'Registry Node'}
                         </span>
                       </motion.div>
                     ))}
@@ -453,7 +453,7 @@ export default function DashboardHomePage() {
                           <Loader2 className="h-4 w-4 animate-spin" />
                           <Activity className="absolute inset-0 h-4 w-4 animate-pulse opacity-50" />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">Neural ingress active...</span>
+                        <span className="text-[10px] font-bold animate-pulse">Neural Ingress Active...</span>
                       </div>
                     )}
                   </div>
@@ -491,20 +491,20 @@ export default function DashboardHomePage() {
                 </div>
               </div>
             </div>
-            <p className="text-[10px] font-bold text-muted-foreground/20 tracking-wide uppercase">Free to use. Your conversations are private.</p>
+            <p className="text-[10px] font-bold text-muted-foreground/20 tracking-wide">Free to use. Your conversations are private.</p>
           </div>
 
-          {/* COMMUNITY STREAM NODE - DIRECTLY BELOW INPUT */}
+          {/* Community Stream Node */}
           <div className="w-full pt-10 border-t border-border/5">
               <div className="flex items-center justify-between mb-8 text-left">
                   <div className="space-y-1">
                       <div className="flex items-center gap-2 text-primary">
                           <Activity className="h-4 w-4 animate-pulse" />
-                          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Live Community Stream</span>
+                          <span className="text-[10px] font-bold">Live Community Stream</span>
                       </div>
-                      <h3 className="text-xl font-black font-headline tracking-tight uppercase text-foreground">Recent Transmissions</h3>
+                      <h3 className="text-xl font-bold tracking-tight text-foreground">Recent Transmissions</h3>
                   </div>
-                  <Button variant="ghost" size="sm" asChild className="h-9 px-4 rounded-xl font-black text-[9px] uppercase tracking-widest text-primary hover:bg-primary/5">
+                  <Button variant="ghost" size="sm" asChild className="h-9 px-4 rounded-xl font-bold text-[9px] text-primary hover:bg-primary/5">
                       <Link href="/dashboard/research-analytics">View Full Registry <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
                   </Button>
               </div>
@@ -517,7 +517,7 @@ export default function DashboardHomePage() {
                   </div>
               ) : posts.length === 0 ? (
                   <div className="py-12 bg-muted/5 rounded-[2rem] border-2 border-dashed border-border/5 text-center">
-                      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-20">No transmissions registered in this node.</p>
+                      <p className="text-[10px] font-bold text-muted-foreground opacity-20">No Transmissions Registered In This Node.</p>
                   </div>
               ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -533,8 +533,8 @@ export default function DashboardHomePage() {
       {/* Feature Matrix */}
       <section className="space-y-12">
         <div className="text-left border-l-4 border-primary pl-6 py-2">
-          <h2 className="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest">Core hub</h2>
-          <h3 className="text-3xl font-black tracking-tighter text-foreground uppercase">Ai terminals</h3>
+          <h2 className="text-[10px] font-bold text-primary mb-1">Core Hub</h2>
+          <h3 className="text-3xl font-bold tracking-tighter text-foreground">Ai Terminals</h3>
           <p className="text-sm text-muted-foreground font-medium mt-1">Select tool to start.</p>
         </div>
 
@@ -554,7 +554,7 @@ export default function DashboardHomePage() {
                       <f.icon className="h-5 w-5" />
                     </div>
                     <div className="space-y-1">
-                      <h3 className="font-black text-sm text-foreground tracking-tight leading-none uppercase">{f.title}</h3>
+                      <h3 className="font-bold text-sm text-foreground tracking-tight leading-none">{f.title}</h3>
                       <p className="text-[10px] text-muted-foreground leading-relaxed font-medium line-clamp-3">{f.desc}</p>
                     </div>
                   </CardContent>
@@ -576,14 +576,14 @@ export default function DashboardHomePage() {
               <div className="p-2 rounded-lg bg-primary/10">
                 <ShieldCheck className="h-5 w-5 animate-pulse" />
               </div>
-              <span className="text-[10px] font-bold text-primary uppercase">Statutory trust</span>
+              <span className="text-[10px] font-bold text-primary">Statutory Trust</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-foreground leading-none tracking-tighter uppercase">Your data is <br /> <span className="text-primary">your property.</span></h2>
+            <h2 className="text-3xl sm:text-5xl font-bold text-foreground leading-none tracking-tighter">Your Data Is <br /> <span className="text-primary">Your Property.</span></h2>
             <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
-              Every forensic report and narration is encrypted via tls 1.3 and is strictly confidential. We do not train foundation models on citizen narratives.
+              Every forensic report and narration is encrypted via TLS 1.3 and is strictly confidential. We do not train foundation models on citizen narratives.
             </p>
-            <Button variant="outline" className="h-12 px-8 rounded-xl border-primary/20 text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary/5 shadow-sm" asChild>
-              <Link href="/privacy">Audit security protocol <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
+            <Button variant="outline" className="h-12 px-8 rounded-xl border-primary/20 text-primary font-bold text-[10px] hover:bg-primary/5 shadow-sm" asChild>
+              <Link href="/privacy">Audit Security Protocol <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
             </Button>
           </div>
           <div className="grid grid-cols-2 gap-4 w-full md:w-auto relative z-10">
@@ -591,11 +591,11 @@ export default function DashboardHomePage() {
               { label: "Encrypted", icon: HistoryIcon },
               { label: "Private", icon: ShieldCheck },
               { label: "Secure", icon: HistoryIcon },
-              { label: "Audit ready", icon: Search }
+              { label: "Audit Ready", icon: Search }
             ].map((n, i) => (
               <div key={i} className="p-6 rounded-3xl bg-background border border-border/10 flex flex-col items-center gap-3 text-center shadow-sm">
                 <n.icon className="h-6 w-6 text-primary opacity-40" />
-                <span className="text-[10px] font-bold text-muted-foreground uppercase">{n.label}</span>
+                <span className="text-[10px] font-bold text-muted-foreground">{n.label}</span>
               </div>
             ))}
           </div>

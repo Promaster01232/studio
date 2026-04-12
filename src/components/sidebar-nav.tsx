@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -48,50 +49,50 @@ const navGroups = [
     ]
   },
   {
-    label: "Ai tools",
+    label: "Ai Tools",
     items: [
-      { title: "Record voice", icon: Mic, href: "/dashboard/narrate" },
-      { title: "Scan documents", icon: FileSearch, href: "/dashboard/document-intelligence" },
-      { title: "Write documents", icon: FileText, href: "/dashboard/document-generator" },
-      { title: "Create bonds", icon: FileSignature, href: "/dashboard/bond-generator" },
-      { title: "Check chance", icon: BrainCircuit, href: "/dashboard/strength-analyzer" },
-      { title: "Court helper", icon: Gavel, href: "/dashboard/court-assistant" },
-      { title: "Check evidence", icon: ShieldCheck, href: "/dashboard/evidence-audit" },
-      { title: "Bail helper", icon: Scale, href: "/dashboard/bail-estimator" },
-      { title: "Law linker", icon: Zap, href: "/dashboard/statutory-linker" },
-      { title: "Check contract", icon: FileCheck, href: "/dashboard/contract-auditor" },
+      { title: "Record Voice", icon: Mic, href: "/dashboard/narrate" },
+      { title: "Scan Documents", icon: FileSearch, href: "/dashboard/document-intelligence" },
+      { title: "Write Documents", icon: FileText, href: "/dashboard/document-generator" },
+      { title: "Create Bonds", icon: FileSignature, href: "/dashboard/bond-generator" },
+      { title: "Check Chance", icon: BrainCircuit, href: "/dashboard/strength-analyzer" },
+      { title: "Court Helper", icon: Gavel, href: "/dashboard/court-assistant" },
+      { title: "Check Evidence", icon: ShieldCheck, href: "/dashboard/evidence-audit" },
+      { title: "Bail Helper", icon: Scale, href: "/dashboard/bail-estimator" },
+      { title: "Law Linker", icon: Zap, href: "/dashboard/statutory-linker" },
+      { title: "Check Contract", icon: FileCheck, href: "/dashboard/contract-auditor" },
     ]
   },
   {
-    label: "Case hub",
+    label: "Case Hub",
     items: [
-      { title: "My cases", icon: FolderSearch, href: "/dashboard/my-cases" },
-      { title: "Free help", icon: HandHelping, href: "/dashboard/ngo-legal-aid" },
-      { title: "Learn law", icon: Library, href: "/dashboard/learn" },
-      { title: "Help guides", icon: Newspaper, href: "/dashboard/police-guide" },
+      { title: "My Cases", icon: FolderSearch, href: "/dashboard/my-cases" },
+      { title: "Free Help", icon: HandHelping, href: "/dashboard/ngo-legal-aid" },
+      { title: "Learn Law", icon: Library, href: "/dashboard/learn" },
+      { title: "Help Guides", icon: Newspaper, href: "/dashboard/police-guide" },
       { title: "Community", icon: Users, href: "/dashboard/research-analytics" },
     ]
   },
   {
-    label: "For business",
+    label: "For Business",
     items: [
-      { title: "Business hub", icon: Building, href: "/dashboard/business-msme" },
-      { title: "Legal fees", icon: ReceiptText, href: "/dashboard/finances-billing" },
+      { title: "Business Hub", icon: Building, href: "/dashboard/business-msme" },
+      { title: "Legal Fees", icon: ReceiptText, href: "/dashboard/finances-billing" },
     ]
   },
   {
     label: "Account",
     items: [
-      { title: "My profile", icon: User, href: "/dashboard/profile" },
-      { title: "My plan", icon: CreditCard, href: "/dashboard/billing" },
-      { title: "Contact help", icon: Headset, href: "/dashboard/support" },
+      { title: "My Profile", icon: User, href: "/dashboard/profile" },
+      { title: "My Plan", icon: CreditCard, href: "/dashboard/billing" },
+      { title: "Contact Help", icon: Headset, href: "/dashboard/support" },
     ]
   }
 ];
 
 const adminItems = [
   { title: "Users", icon: ShieldAlert, href: "/dashboard/management-console" },
-  { title: "Verify pros", icon: UserPlus, href: "/dashboard/advocate-verification" },
+  { title: "Verify Pros", icon: UserPlus, href: "/dashboard/advocate-verification" },
 ];
 
 export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boolean, isElite?: boolean }) {
@@ -105,7 +106,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
     <div className="space-y-6">
       {navGroups.map((group) => (
         <SidebarGroup key={group.label} className="p-0">
-          <SidebarGroupLabel className="px-4 text-[9px] font-black tracking-[0.3em] text-primary/40 mb-2">
+          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-[0.1em] text-primary/40 mb-2">
             {group.label}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -121,7 +122,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                       className={cn(
                         "h-10 px-3 transition-all duration-300 rounded-xl group/btn",
                         active 
-                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 font-black" 
+                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 font-bold" 
                           : "text-gray-400 hover:bg-white/5 hover:text-white"
                       )}
                     >
@@ -130,7 +131,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                           "h-4 w-4 shrink-0 transition-transform group-hover/btn:scale-110",
                           active ? "text-primary-foreground" : "text-gray-500 group-hover/btn:text-primary"
                         )} />
-                        <span className="text-[11px] tracking-tight truncate">
+                        <span className="text-[11px] font-bold tracking-tight truncate">
                           {item.title}
                         </span>
                         {active && (
@@ -151,8 +152,8 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
 
       {isAdmin && (
         <SidebarGroup className="p-0 border-t border-white/5 pt-6 mt-6">
-          <SidebarGroupLabel className="px-4 text-[9px] font-black tracking-[0.3em] text-red-500/60 mb-2">
-            Admin registry
+          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-[0.1em] text-red-500/60 mb-2">
+            Admin Registry
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-1 px-2">
@@ -172,7 +173,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                     >
                       <Link href={item.href}>
                         <item.icon className="h-4 w-4" />
-                        <span className="text-[11px] font-black tracking-tight">{item.title}</span>
+                        <span className="text-[11px] font-bold tracking-tight">{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

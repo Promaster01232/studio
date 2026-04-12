@@ -53,18 +53,18 @@ export default function AboutPage() {
       <motion.div variants={itemVariants} className="flex items-center pt-10">
         <Link 
           href="/" 
-          className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-primary transition-colors group uppercase tracking-widest"
+          className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-primary transition-colors group tracking-widest"
         >
           <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" />
-          <span>Back to home</span>
+          <span>Back To Home</span>
         </Link>
       </motion.div>
 
       {/* Header Section */}
       <section className="space-y-10">
         <motion.div variants={itemVariants} className="space-y-6">
-          <h1 className="text-2xl sm:text-4xl font-black tracking-tighter leading-tight text-foreground font-headline uppercase">
-            About <br /> <span className="text-primary">Nyaya Sahayak.</span>
+          <h1 className="text-2xl sm:text-4xl font-bold tracking-tighter leading-tight text-foreground font-headline">
+            About Nyaya Sahayak.
           </h1>
         </motion.div>
 
@@ -73,10 +73,10 @@ export default function AboutPage() {
         <motion.div variants={itemVariants} className="space-y-8 max-w-3xl">
           <div className="flex items-center gap-3 text-primary">
             <Target className="h-5 w-5" />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Mandate</span>
+            <span className="text-[10px] font-bold tracking-widest">Institutional Mandate</span>
           </div>
-          <h2 className="text-xl sm:text-3xl font-black tracking-tight leading-tight uppercase">
-            Democratizing <span className="text-primary">Legal Intelligence.</span>
+          <h2 className="text-xl sm:text-3xl font-bold tracking-tight leading-tight">
+            Democratizing Legal Intelligence.
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground font-medium leading-relaxed">
             Nyaya Sahayak is built on the belief that every citizen deserves accessible legal assistance. Our mission is to bridge the gap between complex judicial protocols and citizen needs through precision AI engineering, delivering automated document drafting and personalized roadmaps that empower users to navigate the law with confidence.
@@ -88,7 +88,7 @@ export default function AboutPage() {
       <section className="space-y-12">
         <div className="flex items-center gap-4">
           <div className="h-1.5 w-12 bg-primary rounded-full" />
-          <h3 className="text-xl font-black uppercase tracking-tighter">Core Capabilities</h3>
+          <h3 className="text-xl font-bold tracking-tighter">Core Capabilities</h3>
         </div>
 
         <div className="grid gap-10">
@@ -119,7 +119,7 @@ export default function AboutPage() {
                 <item.icon className="h-6 w-6 text-primary" />
               </div>
               <div className="space-y-2">
-                <h4 className="text-xl font-black tracking-tight">{item.title}</h4>
+                <h4 className="text-xl font-bold tracking-tight">{item.title}</h4>
                 <p className="text-muted-foreground font-medium leading-relaxed max-w-2xl">{item.desc}</p>
               </div>
             </motion.div>
@@ -132,8 +132,8 @@ export default function AboutPage() {
         <div className="flex items-center gap-4">
           <div className="h-1.5 w-12 bg-primary rounded-full" />
           <div className="space-y-1">
-            <h3 className="text-xl font-black uppercase tracking-tighter">Platform Core</h3>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Meet the Leadership</p>
+            <h3 className="text-xl font-bold tracking-tighter">Platform Core</h3>
+            <p className="text-xs font-bold text-muted-foreground tracking-widest">Meet The Leadership</p>
           </div>
         </div>
 
@@ -152,8 +152,8 @@ export default function AboutPage() {
           ].map((leader, i) => (
             <motion.div key={i} variants={itemVariants} className="space-y-6 p-8 rounded-[2rem] bg-muted/20 border border-border/10 shadow-inner group hover:bg-primary/[0.02] transition-colors">
               <div className="space-y-1">
-                <h4 className="text-2xl font-black tracking-tight group-hover:text-primary transition-colors">{leader.name}</h4>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">{leader.role}</p>
+                <h4 className="text-2xl font-bold tracking-tight group-hover:text-primary transition-colors">{leader.name}</h4>
+                <p className="text-[10px] font-bold tracking-[0.3em] text-primary">{leader.role}</p>
               </div>
               <p className="text-sm font-medium text-muted-foreground leading-relaxed">
                 {leader.bio}
