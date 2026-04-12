@@ -14,14 +14,11 @@ import {
   ShieldCheck,
   BrainCircuit,
   Gavel,
-  Scale,
-  FileCheck,
   FileSignature,
   Zap,
   ArrowRight,
   Upload,
   User,
-  Plus,
   Loader2,
   Activity,
   Heart,
@@ -46,7 +43,7 @@ import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/e
 const features = [
   {
     title: "Record Voice",
-    desc: "Speak Your Legal Problem. Get A Quick Word-For-Word Summary And Forensic Analysis.",
+    desc: "Speak Your Legal Problem. Get A Quick Word-For-Word Summary And Analysis.",
     icon: Mic,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
@@ -309,61 +306,59 @@ export default function DashboardHomePage() {
 
       {/* Central Hub Ingress */}
       <div className="w-full max-w-4xl mx-auto bg-card rounded-2xl p-6 sm:p-8 border border-border/10 shadow-lg text-center flex flex-col items-center gap-6">
-        <AnimatePresence mode="wait">
-          {messages.length === 0 ? (
-            <div className="space-y-6 w-full">
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight leading-tight">
-                Hello, How Can I Help You Today?
-              </h1>
+        {messages.length === 0 ? (
+          <div className="space-y-6 w-full">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight leading-tight">
+              Hello, How Can I Help You Today?
+            </h1>
 
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                {suggestions.map((s, i) => (
-                  <button
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {suggestions.map((s, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleSend(s)}
+                  className="px-4 py-2 rounded-full bg-muted/30 border border-border/10 text-muted-foreground hover:bg-muted/50 hover:text-primary transition-all text-xs font-medium"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="w-full h-[400px] flex flex-col">
+            <ScrollArea className="flex-1 pr-4" viewportRef={scrollRef}>
+              <div className="space-y-4 pb-4">
+                {messages.map((m, i) => (
+                  <div 
                     key={i}
-                    onClick={() => handleSend(s)}
-                    className="px-4 py-2 rounded-full bg-muted/30 border border-border/10 text-muted-foreground hover:bg-muted/50 hover:text-primary transition-all text-xs font-medium"
+                    className={cn(
+                      "flex flex-col max-w-[90%] space-y-1",
+                      m.role === 'user' ? "ml-auto items-end" : "items-start"
+                    )}
                   >
-                    {s}
-                  </button>
+                    <div className={cn(
+                      "px-4 py-3 rounded-2xl text-sm font-medium leading-relaxed text-left shadow-sm",
+                      m.role === 'user' 
+                        ? "bg-primary text-primary-foreground rounded-tr-none" 
+                        : "bg-muted/30 border border-border/10 text-foreground rounded-tl-none"
+                    )}>
+                      {m.text}
+                    </div>
+                    <span className="text-[7px] font-bold text-muted-foreground/40 px-2 uppercase tracking-widest">
+                      {m.role === 'ai' ? 'Nyaya Sahayak Terminal' : 'Citizen Registry Point'}
+                    </span>
+                  </div>
                 ))}
+                {isLoading && (
+                  <div className="flex gap-2 items-center text-primary/40 p-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] animate-pulse">Neural Ingress...</span>
+                  </div>
+                )}
               </div>
-            </div>
-          ) : (
-            <div className="w-full h-[400px] flex flex-col">
-              <ScrollArea className="flex-1 pr-4" viewportRef={scrollRef}>
-                <div className="space-y-4 pb-4">
-                  {messages.map((m, i) => (
-                    <div 
-                      key={i}
-                      className={cn(
-                        "flex flex-col max-w-[90%] space-y-1",
-                        m.role === 'user' ? "ml-auto items-end" : "items-start"
-                      )}
-                    >
-                      <div className={cn(
-                        "px-4 py-3 rounded-2xl text-sm font-medium leading-relaxed text-left shadow-sm",
-                        m.role === 'user' 
-                          ? "bg-primary text-primary-foreground rounded-tr-none" 
-                          : "bg-muted/30 border border-border/10 text-foreground rounded-tl-none"
-                      )}>
-                        {m.text}
-                      </div>
-                      <span className="text-[7px] font-bold text-muted-foreground/40 px-2 uppercase tracking-widest">
-                        {m.role === 'ai' ? 'Nyaya Sahayak Terminal' : 'Citizen Registry Point'}
-                      </span>
-                    </div>
-                  ))}
-                  {isLoading && (
-                    <div className="flex gap-2 items-center text-primary/40 p-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-[9px] font-black uppercase tracking-[0.2em] animate-pulse">Neural Ingress...</span>
-                    </div>
-                  )}
-                </div>
-              </ScrollArea>
-            </div>
-          )}
-        </AnimatePresence>
+            </ScrollArea>
+          </div>
+        )}
 
         <div className="w-full max-w-3xl space-y-3">
           <div className="relative">

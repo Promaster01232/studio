@@ -230,7 +230,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   if (profileLoading || (!auth.currentUser && pathname.startsWith('/dashboard'))) {
       return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
-            <Activity className="h-8 w-8 text-primary opacity-20" />
+            <div className="relative">
+                <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
+                <Activity className="absolute inset-0 h-10 w-10 text-primary opacity-40 animate-pulse" />
+            </div>
         </div>
       );
   }

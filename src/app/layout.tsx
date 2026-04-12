@@ -1,4 +1,3 @@
-
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
@@ -136,6 +135,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" suppressHydrationWarning>
       <head>
         <Script id="structured-data-org" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+        <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       </head>
       <body className={`font-body antialiased ${inter.variable}`}>
         <ThemeProvider>
