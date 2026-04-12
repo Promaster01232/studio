@@ -70,7 +70,7 @@ export default function AboutPage() {
             <Target className="h-5 w-5" />
             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Mandate</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-tight uppercase text-foreground">
+          <h2 className="text-xl sm:text-3xl font-black tracking-tighter leading-tight uppercase text-foreground">
             Democratizing <span className="text-primary">Legal Intelligence.</span>
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground font-medium leading-relaxed">

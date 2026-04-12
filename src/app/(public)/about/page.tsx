@@ -63,7 +63,7 @@ export default function AboutPage() {
       {/* Header Section */}
       <section className="space-y-10">
         <motion.div variants={itemVariants} className="space-y-6">
-          <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[0.9] text-foreground font-headline uppercase">
+          <h1 className="text-2xl sm:text-4xl font-black tracking-tighter leading-tight text-foreground font-headline uppercase">
             About <br /> <span className="text-primary">Nyaya Sahayak.</span>
           </h1>
         </motion.div>
@@ -75,7 +75,7 @@ export default function AboutPage() {
             <Target className="h-5 w-5" />
             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Mandate</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
+          <h2 className="text-xl sm:text-3xl font-black tracking-tight leading-tight uppercase">
             Democratizing <span className="text-primary">Legal Intelligence.</span>
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground font-medium leading-relaxed">
