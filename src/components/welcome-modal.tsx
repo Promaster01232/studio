@@ -12,17 +12,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { 
   MessageSquare, 
-  Search, 
   FileSearch, 
-  BookText, 
   Sparkles, 
   ArrowRight,
   ShieldCheck,
-  CheckCircle2,
-  X,
   Activity
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface FeatureProps {
@@ -145,7 +141,7 @@ export function WelcomeModal() {
                 onClick={handleClose}
                 className="w-full h-16 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-[0.2em] text-xs rounded-2xl shadow-[0_30px_60px_rgba(153,75,0,0.3)] active:scale-[0.97] transition-all group overflow-hidden relative"
             >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <span className="relative z-10 flex items-center gap-3">
                     Initialize Terminal <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </span>
