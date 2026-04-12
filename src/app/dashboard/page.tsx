@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -316,7 +317,7 @@ export default function DashboardHomePage() {
                           "px-5 py-3 rounded-2xl text-sm sm:text-base font-medium leading-relaxed text-left shadow-lg",
                           m.role === 'user' 
                             ? "bg-primary text-primary-foreground rounded-tr-none" 
-                            : "bg-muted/30 border border-border/10 text-foreground rounded-tl-none prose dark:prose-invert max-w-none"
+                            : "bg-muted/30 border border-border/10 text-foreground rounded-tl-none prose dark:prose-invert max-none"
                         )}>
                           {m.text}
                         </div>
@@ -422,7 +423,7 @@ export default function DashboardHomePage() {
               </div>
               <span className="text-[10px] font-bold text-primary uppercase">Statutory trust</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-foreground leading-none tracking-tighter">Your data is <br /> <span className="text-primary italic">your property.</span></h2>
+            <h2 className="text-3xl sm:text-5xl font-black text-foreground leading-none tracking-tighter">Your data is <br /> <span className="text-primary">your property.</span></h2>
             <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
               Every forensic report and narration is encrypted via tls 1.3 and is strictly confidential. We do not train foundation models on citizen narratives.
             </p>

@@ -71,7 +71,7 @@ export default function AboutPage() {
             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Mandate</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-tight uppercase text-foreground">
-            Democratizing <span className="text-primary italic">Legal Intelligence.</span>
+            Democratizing <span className="text-primary">Legal Intelligence.</span>
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground font-medium leading-relaxed">
             Nyaya Sahayak is built on the belief that every citizen deserves accessible legal assistance. Our mission is to bridge the gap between complex judicial protocols and citizen needs through precision AI engineering, delivering automated document drafting and personalized roadmaps that empower users to navigate the law with confidence.

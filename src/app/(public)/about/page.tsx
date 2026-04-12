@@ -64,7 +64,7 @@ export default function AboutPage() {
       <section className="space-y-10">
         <motion.div variants={itemVariants} className="space-y-6">
           <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[0.9] text-foreground font-headline uppercase">
-            About <br /> <span className="text-primary italic">Nyaya Sahayak.</span>
+            About <br /> <span className="text-primary">Nyaya Sahayak.</span>
           </h1>
         </motion.div>
 
@@ -76,7 +76,7 @@ export default function AboutPage() {
             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Institutional Mandate</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
-            Democratizing <span className="text-primary italic">Legal Intelligence.</span>
+            Democratizing <span className="text-primary">Legal Intelligence.</span>
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground font-medium leading-relaxed">
             Nyaya Sahayak is built on the belief that every citizen deserves accessible legal assistance. Our mission is to bridge the gap between complex judicial protocols and citizen needs through precision AI engineering, delivering automated document drafting and personalized roadmaps that empower users to navigate the law with confidence.

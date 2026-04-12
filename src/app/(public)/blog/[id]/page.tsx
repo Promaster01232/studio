@@ -21,7 +21,6 @@ import {
   Bot, 
   Zap, 
   Globe,
-  ChevronRight,
   TrendingUp,
   ArrowRight,
   CheckCircle2,
@@ -85,7 +84,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
           </div>
           
           <h1 className="text-4xl sm:text-8xl font-black tracking-tighter leading-[0.9] text-foreground font-headline">
-            Nyaya Sahayak <span className="text-primary italic">vs</span> ChatGPT
+            Nyaya Sahayak <span className="text-primary">vs</span> ChatGPT
           </h1>
           
           <p className="text-lg sm:text-2xl text-muted-foreground font-medium max-w-3xl leading-relaxed">
@@ -289,7 +288,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
                 <Badge variant="outline" className="border-primary/40 text-primary font-black text-[10px] uppercase tracking-[0.5em] px-8 py-2 rounded-full">Optimal strategy</Badge>
               </div>
               <div className="space-y-6 max-w-2xl mx-auto">
-                <h2 className="text-4xl sm:text-7xl font-black tracking-tighter leading-tight uppercase">Use Both <span className="text-primary italic">Together</span></h2>
+                <h2 className="text-4xl sm:text-7xl font-black tracking-tighter leading-tight uppercase">Use Both <span className="text-primary">Together</span></h2>
                 <p className="text-xl sm:text-2xl text-white/60 font-medium leading-relaxed">
                   The most powerful forensic approach involves utilizing the synergy between both analytical terminals.
                 </p>

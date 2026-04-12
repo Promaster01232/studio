@@ -8,13 +8,10 @@ import {
   Shield, 
   Users, 
   Scale, 
-  MessageSquare, 
   ArrowRight, 
   ShieldCheck, 
   Activity, 
   Globe, 
-  HeartHandshake,
-  ExternalLink,
   ChevronRight,
   HandHelping,
   Sparkles
@@ -159,7 +156,7 @@ export default function NgoLegalAidPage() {
                             <Activity className="h-4 w-4 animate-pulse" />
                             <span className="text-[10px] font-black uppercase tracking-[0.4em]">Neural Redressal Hub</span>
                         </div>
-                        <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-none text-white uppercase">Need Immediate <br /> <span className="italic opacity-80">Statutory Redress?</span></h2>
+                        <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-none text-white uppercase">Need Immediate <br /> <span className="opacity-80">Statutory Redress?</span></h2>
                     </div>
                     <p className="text-sm sm:text-lg text-white/80 font-medium leading-relaxed max-w-xl">
                         Our AI red flags critical issues and guides you through the exact procedural nodes required to connect with these organizations for free legal consultation.

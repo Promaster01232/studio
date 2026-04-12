@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -225,7 +226,7 @@ export default function RootPage() {
             </Badge>
             
             <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-[1.1] mb-8 text-foreground">
-              Your complete <br /> <span className="text-primary italic">Legal research toolkit.</span>
+              Your complete <br /> <span className="text-primary">Legal research toolkit.</span>
             </h1>
             
             <p className="text-lg sm:text-xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">

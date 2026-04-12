@@ -8,19 +8,13 @@ import {
   ShieldCheck, 
   RotateCcw, 
   Clock, 
-  Info, 
-  Mail,
-  Scale,
-  Zap,
-  Activity,
+  Activity, 
   ArrowLeft
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { Logo } from "@/components/logo";
 
 const policySections = [
   {
@@ -139,7 +133,7 @@ export default function RefundPolicyDashboardPage() {
               </div>
               <span className="text-[10px] font-bold text-primary uppercase">Statutory trust</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white leading-none tracking-tighter text-left">Refund <br /> <span className="text-primary italic">Inquiry node.</span></h2>
+            <h2 className="text-3xl sm:text-5xl font-black text-white leading-none tracking-tighter text-left">Refund <br /> <span className="text-primary">Inquiry node.</span></h2>
             <p className="text-sm sm:text-lg text-gray-400 font-medium leading-relaxed text-left">
               If your claim meets our institutional requirements, please transmit your transaction ID to our fiduciary desk for immediate restoration.
             </p>
