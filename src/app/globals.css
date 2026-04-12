@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -70,9 +71,6 @@
   body {
     @apply bg-background text-foreground font-body antialiased;
     background-attachment: fixed;
-    background-image: 
-      radial-gradient(at 0% 0%, hsla(45, 93%, 47%, 0.02) 0, transparent 50%), 
-      radial-gradient(at 100% 100%, hsla(45, 93%, 47%, 0.02) 0, transparent 50%);
   }
   h1, h2, h3, h4, h5, h6 { @apply font-bold tracking-tight; }
 }

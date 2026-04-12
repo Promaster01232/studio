@@ -4,7 +4,8 @@ import { MetadataRoute } from 'next'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://nyayasahayak.in'
   
-  const routes = [
+  // Public Routes
+  const publicRoutes = [
     '',
     '/about',
     '/contact',
@@ -14,6 +15,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/disclaimer',
     '/login',
     '/register',
+    '/blog',
+  ];
+
+  // AI Tool Routes (Dashboard)
+  const toolRoutes = [
     '/dashboard',
     '/dashboard/narrate',
     '/dashboard/document-intelligence',
@@ -21,6 +27,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/dashboard/bond-generator',
     '/dashboard/strength-analyzer',
     '/dashboard/court-assistant',
+    '/dashboard/evidence-audit',
+    '/dashboard/bail-estimator',
+    '/dashboard/statutory-linker',
+    '/dashboard/contract-auditor',
+  ];
+
+  // Resource Routes
+  const resourceRoutes = [
     '/dashboard/my-cases',
     '/dashboard/ngo-legal-aid',
     '/dashboard/learn',
@@ -29,12 +43,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/dashboard/business-msme',
     '/dashboard/finances-billing',
     '/dashboard/support',
-  ]
+  ];
 
-  return routes.map((route) => ({
+  const allRoutes = [...publicRoutes, ...toolRoutes, ...resourceRoutes];
+
+  return allRoutes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency: 'daily' as const,
-    priority: route === '' ? 1 : route.startsWith('/dashboard') ? 0.9 : 0.7,
+    changeFrequency: route === '' ? 'daily' as const : 'weekly' as const,
+    priority: route === '' ? 1 : route.startsWith('/dashboard') ? 0.8 : 0.6,
   }))
 }

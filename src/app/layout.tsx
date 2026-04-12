@@ -17,16 +17,16 @@ export const viewport: Viewport = {
   maximumScale: 1,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: dark)", color: "#050505" },
   ],
 };
 
 export const metadata: Metadata = {
   title: {
-    default: "Nyaya Sahayak | AI Legal Assistant & Forensic Auditor",
+    default: "Nyaya Sahayak | AI Legal Assistant & Forensic Auditor India",
     template: "%s | Nyaya Sahayak"
   },
-  description: "Nyaya Sahayak provides elite AI legal assistance, BNS statutory forensic scans, and automated document drafting for Bharat's 1.4 billion citizens.",
+  description: "Nyaya Sahayak Provides Elite AI Legal Assistance, BNS Statutory Forensic Scans, And Automated Document Drafting For Bharat's 1.4 Billion Citizens. Access India's Most Accurate Legal AI Toolkit.",
   keywords: [
     "AI Legal Assistant India", 
     "Nyaya Sahayak", 
@@ -37,16 +37,20 @@ export const metadata: Metadata = {
     "Legal Notice Generator India",
     "Bail Bond Generator",
     "Case Strength Probability AI",
-    "IdeaSpark Institutional Tech"
+    "Bharatiya Nyaya Sanhita Helper",
+    "Online Legal Advice India",
+    "Legal Document Drafting AI"
   ],
   authors: [{ name: "IdeaSpark" }],
   creator: "IdeaSpark",
   publisher: "IdeaSpark",
   metadataBase: new URL('https://nyayasahayak.in'),
-  alternates: { canonical: "/" },
+  alternates: { 
+    canonical: "https://nyayasahayak.in" 
+  },
   openGraph: {
-    title: "Nyaya Sahayak | Your AI-Powered Legal Co-Pilot",
-    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape.",
+    title: "Nyaya Sahayak | Your AI-Powered Legal Co-Pilot For India",
+    description: "Mathematically Precise AI Forensic Audits And Statutory Guidance For The Indian Judicial Landscape. Democratizing Legal Intelligence For Every Citizen.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
     images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Institutional Identity" }],
@@ -55,8 +59,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nyaya Sahayak | AI Legal Assistant For Bharat',
-    description: 'Transforming legal access with institutional AI intelligence.',
+    title: 'Nyaya Sahayak | Elite AI Legal Assistant For Bharat',
+    description: 'Transforming Legal Access With Institutional AI Intelligence And BNS Compliance Audits.',
     images: ['/Logo.png'],
     creator: "@IdeaSpark",
   },
@@ -92,16 +96,39 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     "alternateName": "Nyaya Sahayak AI",
     "url": "https://nyayasahayak.in",
     "logo": "https://nyayasahayak.in/Logo.png",
-    "description": "Premium AI-driven legal assistance and forensic document auditing platform for the Indian judicial system.",
+    "image": "https://nyayasahayak.in/Logo.png",
+    "description": "Premium AI-Driven Legal Assistance And Forensic Document Auditing Platform For The Indian Judicial System. Offering Statutory Insights Into BNS, IPC, And CrPC.",
     "founder": {
       "@type": "Person",
       "name": "Piyush Singh"
     },
+    "foundingDate": "2024",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "New Delhi",
       "addressRegion": "Delhi",
       "addressCountry": "IN"
+    },
+    "priceRange": "₹0 - ₹4999",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Legal AI Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Forensic Document Audit"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Legal Notice Generation"
+          }
+        }
+      ]
     }
   };
 

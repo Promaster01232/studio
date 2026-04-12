@@ -9,7 +9,9 @@ export default function robots(): MetadataRoute.Robots {
       disallow: [
         '/dashboard/management-console', 
         '/dashboard/advocate-verification',
-        '/create-profile'
+        '/create-profile',
+        '/_next/',
+        '/api/'
       ],
     },
     sitemap: 'https://nyayasahayak.in/sitemap.xml',

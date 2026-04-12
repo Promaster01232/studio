@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -158,7 +159,7 @@ export default function RootPage() {
           <div className="md:hidden">
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/5 rounded-xl h-10 w-10">
+                <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/5 rounded-xl h-10 w-10" aria-label="Toggle Navigation Menu">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
@@ -192,15 +193,15 @@ export default function RootPage() {
         </div>
       </nav>
 
-      <main className="pt-24 pb-12 px-4">
-        <div className="max-w-5xl mx-auto text-center space-y-8">
+      <main className="pt-20 pb-8 px-4">
+        <div className="max-w-5xl mx-auto text-center space-y-6">
           <div className="flex flex-col items-center">
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-bold mb-6">
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-bold mb-4">
               Platform Status: Active
             </Badge>
             
-            <h1 className="text-3xl sm:text-5xl font-bold tracking-tighter leading-tight mb-6 text-foreground">
-              Your Complete <br /> <span className="text-primary">Legal Research Toolkit.</span>
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tighter leading-tight mb-4 text-foreground">
+              Your Complete Legal Research Toolkit For India.
             </h1>
             
             <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
@@ -208,25 +209,23 @@ export default function RootPage() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
-            <Button asChild className="h-12 px-8 rounded-xl bg-primary text-primary-foreground font-bold text-xs shadow-lg active:scale-95 transition-all">
-              <Link href="/dashboard">
-                <span className="relative z-10 flex items-center">
-                  Start Your First Legal Query Free <ArrowRight className="ml-2 h-4 w-4" />
-                </span>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-2">
+            <Button asChild className="h-14 px-10 rounded-xl bg-primary text-primary-foreground font-black text-sm shadow-xl active:scale-95 transition-all">
+              <Link href="/dashboard" className="flex items-center gap-3">
+                Start Your First Legal Query Free <ArrowRight className="h-5 w-5" />
               </Link>
             </Button>
           </div>
         </div>
       </main>
 
-      <section className="py-16 px-4 sm:px-6 border-t border-border/10">
-        <div className="max-w-7xl mx-auto space-y-12">
-          <div className="text-center space-y-4">
+      <section className="py-12 px-4 sm:px-6 border-t border-border/10">
+        <div className="max-w-7xl mx-auto space-y-10">
+          <div className="text-center space-y-2">
             <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-5 py-1.5 rounded-full text-[10px] font-bold mb-2">
               Features
             </Badge>
-            <h2 className="text-3xl sm:text-5xl font-bold tracking-tighter leading-none text-foreground">
+            <h2 className="text-3xl sm:text-4xl font-black tracking-tighter leading-none text-foreground">
               Ten Elite AI Tools For Legal Clarity
             </h2>
             <p className="text-base text-muted-foreground font-medium tracking-tight">
@@ -237,12 +236,12 @@ export default function RootPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {capabilities.map((item, i) => (
               <Card key={i} className="h-full bg-card border-border/10 rounded-2xl overflow-hidden hover:border-primary/20 shadow-sm transition-all">
-                <CardContent className="p-6 flex flex-col h-full text-left space-y-6">
+                <CardContent className="p-6 flex flex-col h-full text-left space-y-4">
                   <div className={cn("p-3 rounded-xl h-fit w-fit border border-border/5", item.bg, item.color)}>
                     <item.icon className="h-5 w-5" />
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <h3 className="text-lg font-bold tracking-tight text-foreground leading-tight">{item.title}</h3>
                     <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
                       {item.desc}
