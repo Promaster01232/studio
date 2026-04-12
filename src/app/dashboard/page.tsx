@@ -43,7 +43,7 @@ import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/e
 const features = [
   {
     title: "Record Voice",
-    desc: "Speak Your Legal Problem. Get A Quick Word-For-Word Summary And Analysis.",
+    desc: "Speak your legal problem. Get a forensic report.",
     icon: Mic,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
@@ -51,7 +51,7 @@ const features = [
   },
   {
     title: "Scan Documents",
-    desc: "Upload Court Orders Or Notices. AI Reads And Identifies Statutory Risks.",
+    desc: "AI identifies statutory risks in legal papers.",
     icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
@@ -59,7 +59,7 @@ const features = [
   },
   {
     title: "Write Documents",
-    desc: "Draft Professional Legal Notices And Complaints In Any Indian Language.",
+    desc: "Draft professional legal notices instantly.",
     icon: FileText,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
@@ -67,7 +67,7 @@ const features = [
   },
   {
     title: "Create Bonds",
-    desc: "Generate Legally Sound Bail, Personal, And Indemnity Bonds Instantly.",
+    desc: "Generate legally sound bail and surety bonds.",
     icon: FileSignature,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
@@ -75,7 +75,7 @@ const features = [
   },
   {
     title: "Check Chance",
-    desc: "Analyze Case Details To See The Statistical Probability Of A Win Or Bail.",
+    desc: "Probability modeling for wins or bail success.",
     icon: BrainCircuit,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
@@ -84,9 +84,9 @@ const features = [
 ];
 
 const suggestions = [
-  "What Are Tenant Rights In India?",
-  "How To File A Consumer Complaint?",
-  "Explain Domestic Violence Act"
+  "What are tenant rights in india?",
+  "How to file a consumer complaint?",
+  "Explain domestic violence act"
 ];
 
 const TRANSIENCE_WINDOW = 56 * 60 * 60 * 1000;
@@ -104,21 +104,11 @@ interface Post {
     postType?: 'Idea' | 'Question' | 'Suggestion' | 'Poll' | 'News';
 }
 
-const typeConfig: Record<string, { color: string, bg: string, border: string, icon: any, gradient: string }> = {
-    'Idea': { color: 'text-amber-600', bg: 'bg-amber-500/10', border: 'border-amber-500/20', icon: Sparkles, gradient: 'from-amber-500/5' },
-    'Question': { color: 'text-blue-600', bg: 'bg-blue-500/10', border: 'border-blue-500/20', icon: Bot, gradient: 'from-blue-500/5' },
-    'Suggestion': { color: 'text-emerald-600', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', icon: Zap, gradient: 'from-emerald-500/5' },
-    'Poll': { color: 'text-purple-600', bg: 'bg-purple-500/10', border: 'border-purple-500/20', icon: Layers, gradient: 'from-purple-500/5' },
-    'News': { color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20', icon: Newspaper, gradient: 'from-primary/5' },
-};
-
 function DashboardPostCard({ post }: { post: Post }) {
     const firestore = useFirestore();
     const auth = useAuth();
     const { currentUser } = auth;
     const [isLiking, setIsLiking] = useState(false);
-    
-    const config = typeConfig[post.postType || 'Idea'] || typeConfig['Idea'];
     const userHasLiked = post.likedBy?.includes(currentUser?.uid ?? '');
 
     const handleLike = (e: React.MouseEvent) => {
@@ -143,17 +133,17 @@ function DashboardPostCard({ post }: { post: Post }) {
 
     return (
         <Link href={`/dashboard/profile/${post.authorUid}`} className="h-full block">
-            <Card className="bg-card border-border/10 rounded-2xl overflow-hidden hover:border-primary/30 transition-all shadow-sm active:scale-[0.98] text-left h-full relative">
-                <CardContent className="p-5 space-y-3 flex flex-col h-full">
+            <Card className="bg-card border-border/10 rounded-xl overflow-hidden hover:border-primary/30 transition-all shadow-sm active:scale-[0.98] text-left h-full">
+                <CardContent className="p-4 space-y-2 flex flex-col h-full">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <Avatar className="h-7 w-7 border border-primary/10 rounded-lg">
+                            <Avatar className="h-6 w-6 border border-primary/10 rounded-lg">
                                 <AvatarImage src={post.authorAvatar} className="object-cover" />
-                                <AvatarFallback className="bg-primary/10 text-primary font-bold text-[9px]">{post.authorName?.charAt(0)}</AvatarFallback>
+                                <AvatarFallback className="bg-primary/10 text-primary font-bold text-[8px]">{post.authorName?.charAt(0)}</AvatarFallback>
                             </Avatar>
-                            <span className="text-[9px] font-bold text-foreground/60">By {post.authorName}</span>
+                            <span className="text-[8px] font-bold text-foreground/60">By {post.authorName}</span>
                         </div>
-                        <Badge variant="outline" className={cn("text-[7px] font-bold px-2 py-0.5 rounded-full", config.bg, config.color)}>
+                        <Badge variant="outline" className="text-[7px] font-bold px-2 py-0.5 rounded-full">
                             {post.postType}
                         </Badge>
                     </div>
@@ -162,12 +152,12 @@ function DashboardPostCard({ post }: { post: Post }) {
                         <h4 className="font-bold text-xs tracking-tight text-foreground line-clamp-1">
                             {post.title}
                         </h4>
-                        <p className="text-[10px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
+                        <p className="text-[9px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
                             {post.content}
                         </p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-border/5">
+                    <div className="flex items-center justify-between pt-2 border-t border-border/5">
                         <button 
                             onClick={handleLike}
                             className={cn(
@@ -256,66 +246,59 @@ export default function DashboardHomePage() {
       const result = await getGeneralAiResponseAction(userMsg);
       setMessages(prev => [...prev, { role: 'ai', text: result.response }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'ai', text: "The Neural Hub Is Temporarily Busy. Please Try Again In A Few Moments." }]);
+      setMessages(prev => [...prev, { role: 'ai', text: "The neural hub is temporarily busy. Please try again in a few moments." }]);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-12 px-4 sm:px-6">
-      
-      <div className="w-full bg-[#f0f4ff] dark:bg-card border border-blue-100/50 dark:border-border/10 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+    <div className="max-w-5xl mx-auto space-y-6 pb-8 px-4 sm:px-6">
+      <div className="w-full bg-card border border-border/10 rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4 text-left">
-          <Avatar className="h-14 w-14 border-2 border-white dark:border-zinc-800 shadow-lg rounded-full">
+          <Avatar className="h-12 w-12 border-2 border-background shadow-md rounded-full">
             <AvatarImage src={userProfile?.photoURL} className="object-cover" />
-            <AvatarFallback className="bg-primary text-primary-foreground font-bold text-xl">
-              {userProfile?.firstName?.charAt(0) || <User className="h-6 w-6" />}
+            <AvatarFallback className="bg-primary text-primary-foreground font-bold text-lg">
+              {userProfile?.firstName?.charAt(0) || <User className="h-5 w-5" />}
             </AvatarFallback>
           </Avatar>
           <div className="space-y-0.5">
-            <div className="flex items-center gap-2">
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground leading-none">
-                {greeting}, {userProfile?.firstName || 'There'}!
-              </h2>
-              <Badge variant="outline" className="bg-background/50 border-border/10 text-[9px] font-bold px-2 py-0.5 rounded-lg text-muted-foreground">
-                {userProfile?.subscriptionType || 'Free'}
-              </Badge>
-            </div>
-            <p className="text-xs font-medium text-muted-foreground">
-              Welcome To Your Nyaya Sahayak Dashboard
+            <h2 className="text-xl font-bold tracking-tight text-foreground leading-none">
+              {greeting}, {userProfile?.firstName || 'There'}!
+            </h2>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase">
+              {userProfile?.subscriptionType || 'Free'} Clearance
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" className="h-10 px-4 rounded-xl border-border/10 bg-background font-bold text-xs gap-2" asChild>
+          <Button variant="outline" className="h-9 px-4 rounded-lg border-border/10 bg-background font-bold text-xs gap-2" asChild>
             <Link href="/dashboard/document-intelligence">
               <Upload className="h-4 w-4" /> Upload
             </Link>
           </Button>
           <Button 
             onClick={() => setMessages([])}
-            className="h-10 px-4 rounded-xl bg-primary text-primary-foreground font-bold text-xs gap-2 shadow-md active:scale-95"
+            className="h-9 px-4 rounded-lg bg-primary text-primary-foreground font-bold text-xs gap-2 shadow-sm active:scale-95"
           >
             <Sparkles className="h-4 w-4" /> New Chat
           </Button>
         </div>
       </div>
 
-      <div className="w-full max-w-4xl mx-auto bg-card rounded-2xl p-6 sm:p-8 border border-border/10 shadow-lg text-center flex flex-col items-center gap-6">
+      <div className="w-full bg-card rounded-xl p-6 border border-border/10 shadow-lg text-center flex flex-col items-center gap-6">
         {messages.length === 0 ? (
-          <div className="space-y-6 w-full">
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight leading-tight">
-              Hello, How Can I Help You Today?
+          <div className="space-y-4 w-full">
+            <h1 className="text-2xl font-black text-foreground tracking-tight leading-none">
+              Hello, How Can I Help You?
             </h1>
-
             <div className="flex flex-wrap items-center justify-center gap-2">
               {suggestions.map((s, i) => (
                 <button
                   key={i}
                   onClick={() => handleSend(s)}
-                  className="px-4 py-2 rounded-full bg-muted/30 border border-border/10 text-muted-foreground hover:bg-muted/50 hover:text-primary transition-all text-xs font-medium"
+                  className="px-3 py-1.5 rounded-full bg-muted/30 border border-border/10 text-muted-foreground hover:bg-muted/50 hover:text-primary transition-all text-[10px] font-bold uppercase tracking-tight"
                 >
                   {s}
                 </button>
@@ -323,7 +306,7 @@ export default function DashboardHomePage() {
             </div>
           </div>
         ) : (
-          <div className="w-full h-[400px] flex flex-col">
+          <div className="w-full h-[350px] flex flex-col">
             <ScrollArea className="flex-1 pr-4" viewportRef={scrollRef}>
               <div className="space-y-4 pb-4">
                 {messages.map((m, i) => (
@@ -335,7 +318,7 @@ export default function DashboardHomePage() {
                     )}
                   >
                     <div className={cn(
-                      "px-4 py-3 rounded-2xl text-sm font-medium leading-relaxed text-left shadow-sm",
+                      "px-4 py-2.5 rounded-xl text-sm font-medium leading-relaxed text-left shadow-sm",
                       m.role === 'user' 
                         ? "bg-primary text-primary-foreground rounded-tr-none" 
                         : "bg-muted/30 border border-border/10 text-foreground rounded-tl-none"
@@ -349,8 +332,8 @@ export default function DashboardHomePage() {
                 ))}
                 {isLoading && (
                   <div className="flex gap-2 items-center text-primary/40 p-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] animate-pulse">Neural Ingress...</span>
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    <span className="text-[8px] font-black uppercase tracking-widest">Neural Ingress...</span>
                   </div>
                 )}
               </div>
@@ -358,10 +341,9 @@ export default function DashboardHomePage() {
           </div>
         )}
 
-        <div className="w-full max-w-3xl space-y-3">
+        <div className="w-full space-y-3">
           <div className="relative">
-            <div className="absolute inset-0 bg-background/50 rounded-xl border border-border/10 pointer-events-none" />
-            <div className="flex items-center gap-3 p-2 relative z-10">
+            <div className="flex items-center gap-3 p-2 bg-background/50 rounded-xl border border-border/10">
               <Textarea 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -371,8 +353,8 @@ export default function DashboardHomePage() {
                     handleSend();
                   }
                 }}
-                placeholder="Consult The Forensic AI Co-Pilot..." 
-                className="flex-1 bg-transparent border-none focus-visible:ring-0 text-base placeholder:text-muted-foreground/30 min-h-[44px] h-10 py-2 resize-none overflow-hidden" 
+                placeholder="Consult the AI co-pilot..." 
+                className="flex-1 bg-transparent border-none focus-visible:ring-0 text-sm placeholder:text-muted-foreground/30 min-h-[40px] h-10 py-2 resize-none overflow-hidden" 
               />
               <div className="flex items-center gap-1 pr-1">
                 <button className="p-2 text-muted-foreground/40 hover:text-primary transition-colors"><Paperclip className="h-4 w-4" /></button>
@@ -380,72 +362,65 @@ export default function DashboardHomePage() {
                 <button 
                   onClick={() => handleSend()}
                   disabled={!input.trim() || isLoading}
-                  className="h-9 w-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-md active:scale-[0.95] transition-all disabled:opacity-50"
+                  className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-sm active:scale-[0.95] transition-all disabled:opacity-50"
                 >
-                  <Send className="h-4 w-4 fill-current" />
+                  <Send className="h-3.5 w-3.5 fill-current" />
                 </button>
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-center gap-3 text-[8px] font-bold text-muted-foreground/20 uppercase tracking-widest">
-              <div className="flex items-center gap-1"><ShieldCheck className="h-2.5 w-2.5" /> End-To-End Encryption Active</div>
+          <div className="flex items-center justify-center gap-3 text-[7px] font-bold text-muted-foreground/20 uppercase tracking-widest">
+              <div className="flex items-center gap-1"><ShieldCheck className="h-2 w-2" /> Encrypted Session</div>
               <div className="h-1 w-1 rounded-full bg-border" />
               <div>Identity Masked Protocol</div>
           </div>
         </div>
 
-        <div className="w-full pt-8 border-t border-border/5">
-            <div className="flex items-center justify-between mb-6 text-left">
+        <div className="w-full pt-6 border-t border-border/5">
+            <div className="flex items-center justify-between mb-4 text-left">
                 <div className="space-y-0.5">
                     <div className="flex items-center gap-2 text-primary">
-                        <Activity className="h-3.5 w-3.5" />
-                        <span className="text-[9px] font-bold uppercase tracking-widest">Live Community Stream</span>
+                        <Activity className="h-3 w-3" />
+                        <span className="text-[8px] font-bold uppercase tracking-widest">Live Registry Stream</span>
                     </div>
-                    <h3 className="text-lg font-bold tracking-tight text-foreground">Recent Transmissions</h3>
+                    <h3 className="text-base font-bold tracking-tight text-foreground">Recent Transmissions</h3>
                 </div>
-                <Button variant="ghost" size="sm" asChild className="h-8 px-3 rounded-lg font-bold text-[8px] text-primary hover:bg-primary/5 uppercase tracking-widest">
-                    <Link href="/dashboard/research-analytics">View Full Registry <ArrowRight className="ml-1.5 h-3 w-3" /></Link>
+                <Button variant="ghost" size="sm" asChild className="h-7 px-3 rounded-lg font-bold text-[8px] text-primary hover:bg-primary/5 uppercase tracking-widest">
+                    <Link href="/dashboard/research-analytics">View Registry <ArrowRight className="ml-1 h-2.5 w-2.5" /></Link>
                 </Button>
             </div>
 
-            {postsLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {[1, 2, 3].map(i => (
-                        <div key={i} className="h-32 rounded-2xl bg-muted/20 animate-pulse border border-border/5" />
-                    ))}
-                </div>
-            ) : posts.length === 0 ? (
-                <div className="py-8 bg-muted/5 rounded-2xl border-2 border-dashed border-border/5 text-center">
-                    <p className="text-[9px] font-bold text-muted-foreground opacity-20 uppercase tracking-widest">No Transmissions Registered.</p>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {posts.map((post) => (
-                        <DashboardPostCard key={post.id} post={post} />
-                    ))}
-                </div>
-            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {postsLoading ? (
+                    [1, 2, 3].map(i => <div key={i} className="h-24 rounded-lg bg-muted/20 animate-pulse" />)
+                ) : posts.length === 0 ? (
+                    <div className="col-span-full py-6 bg-muted/5 rounded-lg border border-dashed border-border/10 text-center">
+                        <p className="text-[8px] font-bold text-muted-foreground opacity-20 uppercase tracking-widest">No transmissions registered.</p>
+                    </div>
+                ) : (
+                    posts.map((post) => <DashboardPostCard key={post.id} post={post} />)
+                )}
+            </div>
         </div>
       </div>
 
-      <section className="space-y-8">
-        <div className="text-left border-l-4 border-primary pl-4 py-1">
-          <h2 className="text-[9px] font-bold text-primary mb-0.5 uppercase tracking-widest">Core Hub</h2>
-          <h3 className="text-2xl font-bold tracking-tighter text-foreground">Forensic Terminals</h3>
-          <p className="text-xs text-muted-foreground font-medium mt-0.5">Select A Tool To Initialize Forensic Audit.</p>
+      <section className="space-y-4">
+        <div className="text-left border-l-4 border-primary pl-3 py-0.5">
+          <h3 className="text-lg font-bold tracking-tight text-foreground">Forensic Terminals</h3>
+          <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">Select a hub tool to initialize audit.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {features.map((f, i) => (
             <Link key={i} href={f.href}>
-              <Card className="bg-card border-border/10 rounded-2xl h-full overflow-hidden hover:border-primary/20 transition-all cursor-pointer active:scale-95 shadow-sm hover:shadow-md">
-                <CardContent className="p-5 flex flex-col gap-3 text-left">
-                  <div className={cn("p-2 rounded-lg w-fit", f.bg, f.color)}>
-                    <f.icon className="h-4 w-4" />
+              <Card className="bg-card border-border/10 rounded-xl h-full overflow-hidden hover:border-primary/20 transition-all cursor-pointer active:scale-95 shadow-sm">
+                <CardContent className="p-4 flex flex-col gap-2 text-left">
+                  <div className={cn("p-1.5 rounded-lg w-fit", f.bg, f.color)}>
+                    <f.icon className="h-3.5 w-3.5" />
                   </div>
                   <div className="space-y-0.5">
-                    <h3 className="font-bold text-xs text-foreground tracking-tight leading-none">{f.title}</h3>
-                    <p className="text-[9px] text-muted-foreground leading-relaxed font-medium line-clamp-2">{f.desc}</p>
+                    <h3 className="font-bold text-[11px] text-foreground tracking-tight leading-none">{f.title}</h3>
+                    <p className="text-[8px] text-muted-foreground leading-tight font-medium line-clamp-2">{f.desc}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -454,31 +429,27 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
-      <div className="pt-6">
-        <Card className="bg-primary/5 border border-primary/10 rounded-3xl p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-10 relative group shadow-lg">
-          <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none grayscale">
-            <Logo className="h-64 w-64" priority={false} />
+      <Card className="bg-primary/5 border border-primary/10 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group shadow-sm">
+        <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none grayscale">
+          <Logo className="h-48 w-48" priority={false} />
+        </div>
+        <div className="space-y-4 text-left relative z-10 max-w-xl">
+          <div className="flex items-center gap-2 text-primary">
+            <ShieldCheck className="h-4 w-4" />
+            <span className="text-[8px] font-black uppercase tracking-widest">Statutory Trust</span>
           </div>
-          <div className="space-y-6 text-left relative z-10 max-w-xl">
-            <div className="flex items-center gap-3 text-primary">
-              <div className="p-2 rounded-xl bg-primary/10">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <span className="text-[9px] font-black uppercase tracking-[0.3em]">Statutory Trust</span>
-            </div>
-            <h2 className="text-2xl sm:text-4xl font-black text-foreground leading-tight tracking-tighter uppercase">Democratizing <br /> <span className="text-primary">Legal Intelligence.</span></h2>
-            <p className="text-base sm:text-lg text-muted-foreground font-medium leading-relaxed">
-              Every Forensic Report And Narration Is Encrypted Via TLS 1.3 And Is Strictly Confidential. We Do Not Train Models On Citizen Data.
-            </p>
-            <Button size="lg" className="rounded-xl font-black uppercase tracking-widest text-[10px] h-12 px-8 shadow-xl active:scale-95 transition-all shadow-primary/20" asChild>
-                <Link href="/dashboard/strength-analyzer">Start Forensic Audit <ArrowRight className="ml-2 h-4 w-4" /></Link>
-            </Button>
-          </div>
-          <div className="flex items-center justify-center p-8 bg-white/5 dark:bg-black/40 rounded-3xl border border-border/5 shadow-xl relative z-10">
-            <Activity className="h-24 w-24 text-primary opacity-20" />
-          </div>
-        </Card>
-      </div>
+          <h2 className="text-2xl font-black text-foreground leading-tight tracking-tight uppercase">Democratizing Legal Intelligence.</h2>
+          <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+            Every forensic report and narration is encrypted via TLS 1.3 and strictly confidential. We do not train models on citizen data.
+          </p>
+          <Button size="lg" className="rounded-lg font-bold uppercase tracking-widest text-[10px] h-11 px-8 shadow-md active:scale-95 transition-all shadow-primary/20" asChild>
+              <Link href="/dashboard/strength-analyzer">Start Forensic Audit <ArrowRight className="ml-2 h-3 w-3" /></Link>
+          </Button>
+        </div>
+        <div className="flex items-center justify-center p-6 bg-white/5 dark:bg-black/40 rounded-2xl border border-border/5 shadow-inner relative z-10">
+          <Activity className="h-16 w-16 text-primary opacity-20" />
+        </div>
+      </Card>
     </div>
   );
 }

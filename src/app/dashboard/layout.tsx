@@ -64,7 +64,7 @@ function Header({ userProfile }: { userProfile: any }) {
 
     return (
         <header className={cn(
-            "sticky top-0 z-[40] flex h-14 items-center gap-4 border-b px-4 sm:px-6 transition-all",
+            "sticky top-0 z-[40] flex h-12 items-center gap-4 border-b px-4 sm:px-6 transition-all",
             "bg-background/80 backdrop-blur-md border-border/10"
         )}>
             <div className="flex items-center gap-3 md:hidden">
@@ -74,7 +74,7 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 <SearchDialog>
                     <div className="w-full max-w-md cursor-pointer group transition-all">
-                        <div className="hidden md:flex items-center w-full pl-9 pr-10 h-9 font-bold text-[10px] tracking-tight text-muted-foreground rounded-lg bg-muted/30 border border-border/10 group-hover:border-primary/20 transition-all relative text-left">
+                        <div className="hidden md:flex items-center w-full pl-9 pr-10 h-8 font-bold text-[9px] tracking-tight text-muted-foreground rounded-lg bg-muted/30 border border-border/10 group-hover:border-primary/20 transition-all relative text-left uppercase">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
                             <span>Search Registry... (ctrl+k)</span>
                         </div>
@@ -89,7 +89,7 @@ function Header({ userProfile }: { userProfile: any }) {
 
             <div className="flex items-center gap-3 sm:gap-4">
                 <SosDialog>
-                    <Button variant="outline" size="sm" className="h-8 px-3 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[8px] uppercase tracking-widest gap-1.5">
+                    <Button variant="outline" size="sm" className="h-7 px-3 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[8px] uppercase tracking-widest gap-1.5 shadow-none hover:shadow-none">
                         <div className="h-1 w-1 rounded-full bg-red-500" />
                         Emergency
                     </Button>
@@ -132,18 +132,14 @@ function Header({ userProfile }: { userProfile: any }) {
                                         </div>
                                         <span className="text-[9px] font-bold text-primary/60">{planLabel}</span>
                                     </DropdownMenuItem>
-                                    
                                     <DropdownMenuSeparator className="bg-border/5 my-1" />
-                                    
                                     <DropdownMenuItem asChild className="rounded-lg h-9 px-2 focus:bg-primary/10 cursor-pointer">
                                         <Link href="/dashboard" className="flex items-center gap-2 w-full">
                                             <LayoutDashboard className="h-3.5 w-3.5 text-muted-foreground" />
                                             <span className="text-[11px] font-bold text-foreground">Terminal Home</span>
                                         </Link>
                                     </DropdownMenuItem>
-                                    
                                     <DropdownMenuSeparator className="bg-border/5 my-1" />
-                                    
                                     <DropdownMenuItem 
                                         onClick={handleLogout}
                                         className="rounded-lg h-9 px-2 focus:bg-destructive/10 cursor-pointer group"
@@ -259,9 +255,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
              {userProfile && (
                  <Link href="/dashboard/profile">
                    <div 
-                     className="w-full h-12 flex items-center gap-3 px-2 hover:bg-muted/50 rounded-xl transition-all group"
+                     className="w-full h-12 flex items-center gap-3 px-2 hover:bg-muted/50 rounded-lg transition-all group"
                    >
-                     <Avatar className="h-8 w-8 border border-primary/20 shadow-sm shrink-0">
+                     <Avatar className="h-8 w-8 border border-primary/20 shadow-sm shrink-0 rounded-lg">
                        <AvatarImage src={userProfile.photoURL} className="object-cover" />
                        <AvatarFallback className="font-black bg-primary text-primary-foreground text-[9px]">
                          {userProfile.firstName?.charAt(0)}
@@ -283,7 +279,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <SidebarInset className="bg-background relative overflow-hidden">
         <Header userProfile={userProfile} />
         <main className="flex-1 overflow-y-auto custom-scrollbar relative">
-            <div className="p-4 sm:p-6 min-h-[calc(100vh-56px)] flex flex-col">
+            <div className="p-4 sm:p-6 min-h-[calc(100vh-48px)] flex flex-col">
                 <div className="flex-1">{children}</div>
             </div>
         </main>

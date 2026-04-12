@@ -28,7 +28,7 @@ const plansData = [
     id: "free",
     name: "Citizen Basic",
     price: 0,
-    desc: "Standard Identity Enrollment.",
+    desc: "Standard identity enrollment.",
     features: ["Voice Narration (5x)", "Document Audit (5x)", "Basic Case Analytics", "Public Directory Access"],
     icon: ZapIcon,
     color: "text-blue-500",
@@ -39,7 +39,7 @@ const plansData = [
     id: "pro_20",
     name: "Professional 20",
     price: 99,
-    desc: "Essential Statutory Expansion.",
+    desc: "Essential statutory expansion.",
     features: ["Voice Narration (20x)", "Document Audit (20x)", "Extended Case Tracker", "Priority AI Ingress"],
     badge: "Popular Choice",
     icon: Crown,
@@ -51,7 +51,7 @@ const plansData = [
     id: "unlimited_monthly",
     name: "Unlimited Monthly",
     price: 599,
-    desc: "Continuous Institutional Access.",
+    desc: "Continuous institutional access.",
     features: ["Unlimited AI Forensic Scans", "Unlimited Document Audits", "Full Case Strategy Hub", "Verified Connect Ingress", "Priority Neural Support"],
     badge: "Professional Tier",
     icon: Layers,
@@ -63,7 +63,7 @@ const plansData = [
     id: "unlimited_yearly",
     name: "Institutional Annual",
     price: 4999,
-    desc: "Permanent Statutory Authority.",
+    desc: "Permanent statutory authority.",
     features: ["Everything In Unlimited", "Advanced Contract Hub", "Custom PDF Export Protocol", "Root System Access", "Institutional Branding"],
     badge: "Elite Hub",
     icon: Trophy,
@@ -214,26 +214,26 @@ export default function BillingPage() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-12 px-4 sm:px-6 text-left">
+    <div className="max-w-6xl mx-auto space-y-6 pb-8 px-4 sm:px-6 text-left">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="space-y-1 text-left">
-            <h1 className="text-2xl sm:text-3xl font-black font-headline tracking-tighter">Plans & Pricing</h1>
-            <p className="text-sm text-muted-foreground font-medium">Select your institutional clearance level.</p>
+            <h1 className="text-2xl font-black tracking-tight">Plans & Pricing</h1>
+            <p className="text-xs text-muted-foreground font-medium uppercase">Select your institutional clearance level.</p>
         </div>
         
-        <div className="flex items-center gap-3 w-full md:w-auto">
-            <div className="relative flex-1 md:w-72">
+        <div className="flex items-center gap-2 w-full md:w-auto">
+            <div className="relative flex-1 md:w-64">
                 <Input 
                     value={coupon} 
                     onChange={e => setCoupon(e.target.value)} 
-                    placeholder="Enter Coupon (e.g. NYAYA50)" 
-                    className="h-10 bg-white dark:bg-zinc-900 border-primary/10 font-bold pr-24 rounded-xl"
+                    placeholder="Enter Coupon" 
+                    className="h-9 bg-background border-border/10 font-bold pr-20 rounded-lg text-xs"
                 />
                 <Button 
                     size="sm" 
                     onClick={handleApplyCoupon}
                     disabled={applying || !coupon}
-                    className="absolute right-1 top-1 h-8 px-4 font-black text-[9px] uppercase tracking-widest rounded-lg"
+                    className="absolute right-1 top-1 h-7 px-3 font-black text-[8px] uppercase tracking-widest rounded-md"
                 >
                     {applying ? "..." : "Apply"}
                 </Button>
@@ -248,48 +248,46 @@ export default function BillingPage() {
           
           return (
             <Card key={plan.id} className={cn(
-              "h-full flex flex-col rounded-[2rem] overflow-hidden border-primary/5 shadow-xl bg-white dark:bg-zinc-900",
-              plan.badge && "border-primary/20 ring-1 ring-primary/5"
+              "h-full flex flex-col rounded-xl overflow-hidden border-border/10 shadow-sm bg-card",
+              plan.badge && "border-primary/30 ring-1 ring-primary/5"
             )}>
               {plan.badge && (
                   <div className="p-4 pb-0 flex justify-end">
-                      <Badge className="bg-primary/10 text-primary border-primary/20 font-black text-[8px] uppercase tracking-tighter px-2 py-0.5 rounded-lg">
+                      <Badge className="bg-primary/10 text-primary border-primary/20 font-black text-[8px] uppercase px-2 py-0.5 rounded-md">
                           {plan.badge}
                       </Badge>
                   </div>
               )}
 
-              <CardHeader className="p-6 text-left space-y-4">
-                <div className="space-y-2">
-                  <h3 className="text-lg font-black font-headline tracking-tighter uppercase leading-none">{plan.name}</h3>
-                  <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-black tracking-tight">₹{plan.price}</span>
-                      {plan.id !== 'free' && <span className="text-[10px] font-bold text-muted-foreground uppercase">/Period</span>}
-                  </div>
+              <CardHeader className="p-5 text-left space-y-2">
+                <h3 className="text-lg font-black tracking-tight uppercase leading-none">{plan.name}</h3>
+                <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-black tracking-tight">₹{plan.price}</span>
+                    {plan.id !== 'free' && <span className="text-[10px] font-bold text-muted-foreground uppercase">/Period</span>}
                 </div>
-                <p className="text-[10px] font-bold text-muted-foreground leading-relaxed uppercase tracking-tighter">
+                <p className="text-[9px] font-bold text-muted-foreground leading-relaxed uppercase opacity-60">
                   {plan.desc}
                 </p>
               </CardHeader>
 
-              <CardContent className="p-6 flex-grow text-left space-y-4 pt-0">
-                <div className="h-px w-full bg-primary/5" />
-                <ul className="space-y-3">
+              <CardContent className="p-5 flex-grow text-left space-y-4 pt-0">
+                <div className="h-px w-full bg-border/5" />
+                <ul className="space-y-2.5">
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-3 w-3 text-green-500 shrink-0 mt-0.5" />
                       <span className="text-[10px] font-medium text-foreground/80 leading-tight">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </CardContent>
 
-              <CardFooter className="p-6 pt-0">
+              <CardFooter className="p-5 pt-0">
                 <Button 
                   onClick={() => handleUpgrade(plan.id)}
                   disabled={isActive || isProcessing}
                   className={cn(
-                    "w-full h-12 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-md",
+                    "w-full h-10 rounded-lg font-black text-[9px] uppercase tracking-widest transition-all active:scale-95 shadow-sm",
                     isActive ? "bg-muted text-muted-foreground cursor-default shadow-none" : "bg-primary text-primary-foreground shadow-primary/20"
                   )}
                 >
@@ -302,16 +300,6 @@ export default function BillingPage() {
       </div>
 
       <div className="pt-8 text-center opacity-30">
-          <div className="flex items-center justify-center gap-4 mb-2">
-              <div className="flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                  <span className="text-[8px] font-black uppercase tracking-widest">Secure Gateway Sync</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                  <Activity className="h-3.5 w-3.5" />
-                  <span className="text-[8px] font-black uppercase tracking-widest">Institutional Ledger Active</span>
-              </div>
-          </div>
           <p className="text-[8px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // FINANCIAL PROTOCOL</p>
       </div>
     </div>
