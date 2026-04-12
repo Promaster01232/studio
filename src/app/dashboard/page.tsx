@@ -406,7 +406,7 @@ export default function DashboardHomePage() {
                           "px-5 py-4 rounded-[1.5rem] text-sm sm:text-base font-medium leading-relaxed text-left shadow-lg",
                           m.role === 'user' 
                             ? "bg-primary text-primary-foreground rounded-tr-none" 
-                            : "bg-muted/30 border border-border/10 text-foreground rounded-tl-none prose dark:prose-invert max-w-none"
+                            : "bg-muted/30 border border-border/10 text-foreground rounded-tl-none prose dark:prose-invert max-none"
                         )}>
                           {m.text}
                         </div>

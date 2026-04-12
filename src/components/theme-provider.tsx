@@ -26,15 +26,27 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   useEffect(() => {
     try {
-        const storedTheme = localStorage.getItem('theme') as Theme | null;
-        if (storedTheme) {
+      const storedTheme = localStorage.getItem('theme') as Theme | null;
+      if (storedTheme) {
         setTheme(storedTheme);
-        } else {
-            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            setTheme(systemTheme);
+      } else {
+        // Automatic Institutional Synchronisation: Detect system preference
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        setTheme(systemTheme);
+      }
+
+      // Live listener for system preference changes
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = (e: MediaQueryListEvent) => {
+        if (!localStorage.getItem('theme')) {
+          setTheme(e.matches ? 'dark' : 'light');
         }
+      };
+
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
     } catch (e) {
-        console.warn('localStorage is not available for theme preference.');
+      console.warn('LocalStorage or MatchMedia not available for theme synchronization.');
     }
   }, []);
 
@@ -46,9 +58,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
       root.classList.add('dark');
     }
     try {
-        localStorage.setItem('theme', theme);
+      localStorage.setItem('theme', theme);
     } catch (e) {
-        console.warn('localStorage is not available for theme preference.');
+      console.warn('LocalStorage not available for theme storage.');
     }
   }, [theme]);
 

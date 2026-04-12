@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -36,7 +37,7 @@
   }
  
   .dark {
-    --background: 0 0% 2%;
+    --background: 0 0% 2%; /* Deep Onyx */
     --foreground: 45 10% 98%;
     --card: 0 0% 4%;
     --card-foreground: 45 10% 98%;

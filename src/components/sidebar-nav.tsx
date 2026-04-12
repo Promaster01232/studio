@@ -49,7 +49,7 @@ const navGroups = [
     ]
   },
   {
-    label: "Ai Tools",
+    label: "AI Tools",
     items: [
       { title: "Record Voice", icon: Mic, href: "/dashboard/narrate" },
       { title: "Scan Documents", icon: FileSearch, href: "/dashboard/document-intelligence" },
@@ -92,7 +92,7 @@ const navGroups = [
 
 const adminItems = [
   { title: "Users", icon: ShieldAlert, href: "/dashboard/management-console" },
-  { title: "Verify Pros", icon: UserPlus, href: "/dashboard/advocate-verification" },
+  { title: "Verify Professionals", icon: UserPlus, href: "/dashboard/advocate-verification" },
 ];
 
 export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boolean, isElite?: boolean }) {
