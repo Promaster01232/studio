@@ -20,7 +20,6 @@ import {
   FileSignature,
   Zap,
   ArrowRight,
-  Search,
   History as HistoryIcon,
   Upload,
   User,
@@ -165,7 +164,7 @@ function DashboardPostCard({ post }: { post: Post }) {
                             <div className="flex items-center gap-3">
                                 <Avatar className="h-8 w-8 border border-primary/10 rounded-lg">
                                     <AvatarImage src={post.authorAvatar} className="object-cover" />
-                                    <AvatarFallback className="bg-primary/10 text-primary font-black text-[10px]">{post.authorName?.charAt(0)}</AvatarFallback>
+                                    <AvatarFallback className="bg-primary/10 text-primary font-bold text-[10px]">{post.authorName?.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <span className="text-[10px] font-bold text-foreground/60">By {post.authorName}</span>
                             </div>
@@ -194,7 +193,7 @@ function DashboardPostCard({ post }: { post: Post }) {
                                 <Heart className={cn("h-3 w-3", userHasLiked && "fill-current")} />
                                 <span>{post.likes}</span>
                             </button>
-                            <span className="text-[8px] font-bold text-muted-foreground opacity-40">Registry Active</span>
+                            <span className="text-[8px] font-bold text-muted-foreground opacity-40">Registry Node</span>
                         </div>
                     </CardContent>
                 </Card>
@@ -515,7 +514,7 @@ export default function DashboardHomePage() {
           {features.map((f, i) => (
             <motion.div key={i} variants={itemVariants}>
               <Link href={f.href}>
-                <Card className="bg-card border-border/10 rounded-[2rem] h-full overflow-hidden hover:border-primary/20 transition-all duration-500 group cursor-pointer active:scale-95 shadow-lg">
+                <Card className="bg-card border-border/10 rounded-[2rem] h-full overflow-hidden hover:border-primary/20 transition-all duration-500 group cursor-pointer active:scale-95 shadow-lg hover:shadow-2xl hover:-translate-y-2">
                   <CardContent className="p-6 flex flex-col gap-4 text-left">
                     <div className={cn("p-2.5 rounded-xl transition-transform group-hover:scale-110 shadow-lg w-fit", f.bg, f.color)}>
                       <f.icon className="h-5 w-5" />
@@ -550,7 +549,7 @@ export default function DashboardHomePage() {
               </div>
               <span className="text-[10px] font-black uppercase tracking-[0.4em]">Statutory Trust</span>
             </div>
-            <h2 className="text-4xl sm:text-6xl font-black text-foreground leading-[0.95] tracking-tighter uppercase">Democratizing <br /> <span className="text-primary italic">Legal Intelligence.</span></h2>
+            <h2 className="text-3xl sm:text-5xl font-black text-foreground leading-tight tracking-tighter">Democratizing <br /> <span className="text-primary">Legal Intelligence.</span></h2>
             <p className="text-lg sm:text-2xl text-muted-foreground font-medium leading-relaxed">
               Every forensic report and narration is encrypted via TLS 1.3 and is strictly confidential. We do not train models on citizen data.
             </p>
