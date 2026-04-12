@@ -4,24 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
-  MessageSquare, 
-  Upload, 
-  ShieldCheck, 
-  Zap, 
-  Activity, 
   ArrowRight, 
+  Mic, 
+  FileSearch, 
+  FileText, 
+  FileSignature, 
+  BrainCircuit, 
   Gavel, 
+  ShieldCheck, 
   Scale, 
-  Globe,
-  Sparkles,
-  FileSearch,
-  FileText,
-  FileSignature,
-  BrainCircuit,
+  Zap, 
   FileCheck,
-  Languages,
-  BookOpen,
-  Mic,
   Menu
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -41,60 +34,74 @@ import {
 
 const capabilities = [
   {
-    title: "Ai legal chat",
-    desc: "Ask about any act or section. Get an explanation with the relevant law cited.",
-    icon: MessageSquare,
-    color: "text-orange-500",
-    bg: "bg-orange-500/10",
-  },
-  {
-    title: "Document ocr",
-    desc: "Upload a court order or notice as pdf or image. Text is extracted.",
-    icon: FileSearch,
+    title: "Record voice",
+    desc: "Speak your legal problem. Get a quick word-for-word summary and analysis.",
+    icon: Mic,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
   },
   {
-    title: "Smart notes",
-    desc: "Save chats, add notes, organize into collections. Search across everything.",
-    icon: FileText,
+    title: "Scan documents",
+    desc: "Upload court orders or notices. Ai reads and identifies statutory risks.",
+    icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
   },
   {
-    title: "Case laws",
-    desc: "Responses reference supreme court and high court judgments where relevant.",
-    icon: BookOpen,
+    title: "Write documents",
+    desc: "Draft professional legal notices and complaints in any indian language.",
+    icon: FileText,
+    color: "text-orange-500",
+    bg: "bg-orange-500/10",
+  },
+  {
+    title: "Create bonds",
+    desc: "Generate legally sound bail, personal, and indemnity bonds instantly.",
+    icon: FileSignature,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
   },
   {
-    title: "Files storage",
-    desc: "Keep your documents (pdf, word, images) in one place. Encrypted cloud storage.",
-    icon: Upload,
-    color: "text-rose-500",
-    bg: "bg-rose-500/10",
+    title: "Check chance",
+    desc: "Analyze case details to see the statistical probability of a win or bail.",
+    icon: BrainCircuit,
+    color: "text-amber-500",
+    bg: "bg-amber-500/10",
   },
   {
-    title: "Multi-language",
-    desc: "Works in hindi, english, marathi, tamil, telugu, kannada, malayalam, and more.",
-    icon: Languages,
+    title: "Court helper",
+    desc: "Get prepared questions for witness cross-examination and preparation.",
+    icon: Gavel,
     color: "text-cyan-500",
     bg: "bg-cyan-500/10",
   },
   {
-    title: "Voice input",
-    desc: "Don't want to type? Speak your question. Works on mobile and desktop.",
-    icon: Mic,
+    title: "Check evidence",
+    desc: "Audit your digital and physical evidence for statutory admissibility.",
+    icon: ShieldCheck,
     color: "text-indigo-500",
     bg: "bg-indigo-500/10",
   },
   {
-    title: "Privacy first",
-    desc: "End-to-end encryption. No data sharing. No training on your conversations.",
-    icon: ShieldCheck,
-    color: "text-primary",
-    bg: "bg-primary/10",
+    title: "Bail helper",
+    desc: "Predictive modeling for bail success based on bns sections and records.",
+    icon: Scale,
+    color: "text-red-500",
+    bg: "bg-red-500/10",
+  },
+  {
+    title: "Law linker",
+    desc: "Locate specific bns sections and amendments relevant to your situation.",
+    icon: Zap,
+    color: "text-pink-500",
+    bg: "bg-pink-500/10",
+  },
+  {
+    title: "Check contract",
+    desc: "Identify unfavorable clauses and verify fairness in any legal deed.",
+    icon: FileCheck,
+    color: "text-teal-500",
+    bg: "bg-teal-500/10",
   }
 ];
 
@@ -122,7 +129,7 @@ export default function RootPage() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: 0.05,
       },
     },
   };
@@ -252,10 +259,10 @@ export default function RootPage() {
               Features
             </Badge>
             <h2 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none text-foreground">
-              What you can do with Nyaya Sahayak
+              Ten elite AI tools for legal clarity
             </h2>
             <p className="text-lg text-muted-foreground font-medium tracking-tight">
-              Eight tools, all included free. from chat to document ocr to voice input.
+              A comprehensive suite of forensic terminals synchronized with the modern Indian judicial landscape.
             </p>
           </div>
 
@@ -264,13 +271,13 @@ export default function RootPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6"
           >
             {capabilities.map((item, i) => (
               <motion.div
                 key={i}
                 variants={itemVariants}
-                whileHover={{ y: -8 }}
+                whileHover={{ y: -8, scale: 1.02 }}
                 className="group"
               >
                 <Card className="h-full bg-card border-border/10 rounded-[2rem] overflow-hidden transition-all duration-500 hover:border-primary/20 hover:shadow-3xl">
