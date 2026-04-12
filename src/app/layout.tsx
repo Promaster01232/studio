@@ -23,42 +23,42 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Nyaya Sahayak | Ai legal assistant & forensic auditor",
+    default: "Nyaya Sahayak | AI Legal Assistant & Forensic Auditor",
     template: "%s | Nyaya Sahayak"
   },
-  description: "Nyaya Sahayak provides elite ai legal assistance, bns statutory forensic scans, and automated document drafting for bharat's 1.4 billion citizens.",
+  description: "Nyaya Sahayak provides elite AI legal assistance, BNS statutory forensic scans, and automated document drafting for Bharat's 1.4 billion citizens.",
   keywords: [
-    "Ai legal assistant india", 
+    "AI Legal Assistant India", 
     "Nyaya Sahayak", 
-    "Legal ai bharat", 
-    "Bns forensic audit", 
-    "Statutory risk scanner", 
-    "Indian judicial ai", 
-    "Legal notice generator india",
-    "Bail bond generator",
-    "Case strength probability ai",
-    "Ideaspark institutional tech"
+    "Legal AI Bharat", 
+    "BNS Forensic Audit", 
+    "Statutory Risk Scanner", 
+    "Indian Judicial AI", 
+    "Legal Notice Generator India",
+    "Bail Bond Generator",
+    "Case Strength Probability AI",
+    "IdeaSpark Institutional Tech"
   ],
-  authors: [{ name: "Ideaspark" }],
-  creator: "Ideaspark",
-  publisher: "Ideaspark",
+  authors: [{ name: "IdeaSpark" }],
+  creator: "IdeaSpark",
+  publisher: "IdeaSpark",
   metadataBase: new URL('https://nyayasahayak.in'),
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Nyaya Sahayak | Your ai-powered legal co-pilot",
-    description: "Mathematically precise ai forensic audits and statutory guidance for the indian judicial landscape.",
+    title: "Nyaya Sahayak | Your AI-Powered Legal Co-Pilot",
+    description: "Mathematically precise AI forensic audits and statutory guidance for the Indian judicial landscape.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
-    images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak institutional identity" }],
+    images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Institutional Identity" }],
     locale: "en_IN",
     type: "website",
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nyaya Sahayak | Ai legal assistant for bharat',
-    description: 'Transforming legal access with institutional ai intelligence.',
+    title: 'Nyaya Sahayak | AI Legal Assistant For Bharat',
+    description: 'Transforming legal access with institutional AI intelligence.',
     images: ['/Logo.png'],
-    creator: "@Ideaspark",
+    creator: "@IdeaSpark",
   },
   icons: { 
     icon: [
@@ -89,13 +89,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     "@context": "https://schema.org",
     "@type": "LegalService",
     "name": "Nyaya Sahayak",
-    "alternateName": "Nyaya Sahayak ai",
+    "alternateName": "Nyaya Sahayak AI",
     "url": "https://nyayasahayak.in",
     "logo": "https://nyayasahayak.in/Logo.png",
-    "description": "Premium ai-driven legal assistance and forensic document auditing platform for the indian judicial system.",
+    "description": "Premium AI-driven legal assistance and forensic document auditing platform for the Indian judicial system.",
     "founder": {
       "@type": "Person",
-      "name": "Piyush singh"
+      "name": "Piyush Singh"
     },
     "address": {
       "@type": "PostalAddress",

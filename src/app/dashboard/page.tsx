@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -48,7 +49,7 @@ import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/e
 const features = [
   {
     title: "Record Voice",
-    desc: "Speak your legal problem. Get a quick word-for-word summary and forensic analysis.",
+    desc: "Speak Your Legal Problem. Get A Quick Word-For-Word Summary And Forensic Analysis.",
     icon: Mic,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
@@ -56,7 +57,7 @@ const features = [
   },
   {
     title: "Scan Documents",
-    desc: "Upload court orders or notices. AI reads and identifies statutory risks.",
+    desc: "Upload Court Orders Or Notices. AI Reads And Identifies Statutory Risks.",
     icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
@@ -64,7 +65,7 @@ const features = [
   },
   {
     title: "Write Documents",
-    desc: "Draft professional legal notices and complaints in any Indian language.",
+    desc: "Draft Professional Legal Notices And Complaints In Any Indian Language.",
     icon: FileText,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
@@ -72,7 +73,7 @@ const features = [
   },
   {
     title: "Create Bonds",
-    desc: "Generate legally sound bail, personal, and indemnity bonds instantly.",
+    desc: "Generate Legally Sound Bail, Personal, And Indemnity Bonds Instantly.",
     icon: FileSignature,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
@@ -80,7 +81,7 @@ const features = [
   },
   {
     title: "Check Chance",
-    desc: "Analyze case details to see the statistical probability of a win or bail.",
+    desc: "Analyze Case Details To See The Statistical Probability Of A Win Or Bail.",
     icon: BrainCircuit,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
@@ -94,7 +95,7 @@ const suggestions = [
   "Explain Domestic Violence Act"
 ];
 
-const TRANSience_WINDOW = 56 * 60 * 60 * 1000;
+const TRANSIENCE_WINDOW = 56 * 60 * 60 * 1000;
 
 interface Post {
     id: string;
@@ -191,7 +192,7 @@ function DashboardPostCard({ post }: { post: Post }) {
                                 <Heart className={cn("h-3 w-3", userHasLiked && "fill-current")} />
                                 <span>{post.likes}</span>
                             </button>
-                            <span className="text-[8px] font-bold text-muted-foreground opacity-40">Registry Entry</span>
+                            <span className="text-[8px] font-bold text-muted-foreground opacity-40 uppercase">Registry Entry</span>
                         </div>
                     </CardContent>
                 </Card>
@@ -247,7 +248,7 @@ export default function DashboardHomePage() {
             .map(d => ({ id: d.id, ...d.data() } as Post))
             .filter(p => {
                 const ct = p.createdAt?.toMillis() || now;
-                return (now - ct) < TRANSience_WINDOW;
+                return (now - ct) < TRANSIENCE_WINDOW;
             });
           setPosts(list);
           setPostsLoading(false);
@@ -459,9 +460,9 @@ export default function DashboardHomePage() {
               </div>
             </div>
             <div className="flex items-center justify-center gap-4 text-[9px] font-bold text-muted-foreground/20 uppercase tracking-widest">
-                <div className="flex items-center gap-1.5"><ShieldCheck className="h-3 w-3" /> End-to-end encryption active</div>
+                <div className="flex items-center gap-1.5"><ShieldCheck className="h-3 w-3" /> End-To-End Encryption Active</div>
                 <div className="h-1 w-1 rounded-full bg-border" />
-                <div>Identity masked protocol</div>
+                <div>Identity Masked Protocol</div>
             </div>
           </div>
 
@@ -554,9 +555,9 @@ export default function DashboardHomePage() {
               </div>
               <span className="text-[10px] font-black uppercase tracking-[0.4em]">Statutory Trust</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-foreground leading-tight tracking-tighter">Democratizing <br /> <span className="text-primary">Legal Intelligence.</span></h2>
+            <h2 className="text-3xl sm:text-5xl font-black text-foreground leading-tight tracking-tighter uppercase">Democratizing <br /> <span className="text-primary">Legal Intelligence.</span></h2>
             <p className="text-lg sm:text-2xl text-muted-foreground font-medium leading-relaxed">
-              Every forensic report and narration is encrypted via TLS 1.3 and is strictly confidential. We do not train models on citizen data.
+              Every Forensic Report And Narration Is Encrypted Via TLS 1.3 And Is Strictly Confidential. We Do Not Train Models On Citizen Data.
             </p>
             <Button size="xl" className="rounded-3xl font-black uppercase tracking-widest text-xs h-16 px-12 shadow-2xl active:scale-95 transition-all shadow-primary/20" asChild>
                 <Link href="/dashboard/strength-analyzer">Start Forensic Audit <ArrowRight className="ml-3 h-5 w-5" /></Link>

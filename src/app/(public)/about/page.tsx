@@ -49,7 +49,7 @@ export default function AboutPage() {
       variants={containerVariants}
       className="max-w-4xl mx-auto space-y-12 pb-16 px-6 text-left selection:bg-primary/20"
     >
-      {/* Top Navigation Node */}
+      {/* Top Navigation Point */}
       <motion.div variants={itemVariants} className="flex items-center pt-10">
         <Link 
           href="/" 
@@ -73,13 +73,13 @@ export default function AboutPage() {
         <motion.div variants={itemVariants} className="space-y-8 max-w-3xl">
           <div className="flex items-center gap-3 text-primary">
             <Target className="h-5 w-5" />
-            <span className="text-[10px] font-bold tracking-widest">Institutional Mandate</span>
+            <span className="text-[10px] font-bold tracking-widest uppercase">Institutional Mandate</span>
           </div>
           <h2 className="text-xl sm:text-3xl font-bold tracking-tight leading-tight">
             Democratizing Legal Intelligence.
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground font-medium leading-relaxed">
-            Nyaya Sahayak is built on the belief that every citizen deserves accessible legal assistance. Our mission is to bridge the gap between complex judicial protocols and citizen needs through precision AI engineering, delivering automated document drafting and personalized roadmaps that empower users to navigate the law with confidence.
+            Nyaya Sahayak Is Built On The Belief That Every Citizen Deserves Accessible Legal Assistance. Our Mission Is To Bridge The Gap Between Complex Judicial Protocols And Citizen Needs Through Precision AI Engineering, Delivering Automated Document Drafting And Personalized Roadmaps That Empower Users To Navigate The Law With Confidence.
           </p>
         </motion.div>
       </section>
@@ -95,22 +95,22 @@ export default function AboutPage() {
           {[
             {
               title: "Case Analysis",
-              desc: "Our AI engine processes complex legal narratives in milliseconds, providing precise summaries and procedural guidance.",
+              desc: "Our AI Engine Processes Complex Legal Narratives In Milliseconds, Providing Precise Summaries And Procedural Guidance.",
               icon: Gavel
             },
             {
               title: "Procedural Roadmap",
-              desc: "AI-optimized legal navigation paths that dynamically guide citizens through the complexities of the judicial system.",
+              desc: "AI-Optimized Legal Navigation Paths That Dynamically Guide Citizens Through The Complexities Of The Judicial System.",
               icon: Scale
             },
             {
               title: "Document Drafting",
-              desc: "Master legal communication with AI-driven notice generation and sophisticated document structural drafting.",
+              desc: "Master Legal Communication With AI-Driven Notice Generation And Sophisticated Document Structural Drafting.",
               icon: FileText
             },
             {
               title: "Verified Directory",
-              desc: "Access a verified registry of legal professionals, ensuring identity authenticity through multi-stage manual audits.",
+              desc: "Access A Verified Registry Of Legal Professionals, Ensuring Identity Authenticity Through Multi-Stage Manual Audits.",
               icon: Users
             }
           ].map((item, i) => (
@@ -127,13 +127,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Leadership Node */}
+      {/* Leadership Point */}
       <section className="space-y-12 pt-10">
         <div className="flex items-center gap-4">
           <div className="h-1.5 w-12 bg-primary rounded-full" />
           <div className="space-y-1">
             <h3 className="text-xl font-bold tracking-tighter">Platform Core</h3>
-            <p className="text-xs font-bold text-muted-foreground tracking-widest">Meet The Leadership</p>
+            <p className="text-xs font-bold text-muted-foreground tracking-widest uppercase">Meet The Leadership</p>
           </div>
         </div>
 
@@ -142,18 +142,18 @@ export default function AboutPage() {
             {
               name: "Hardy Pie",
               role: "Founder & Architect",
-              bio: "As the visionary and primary architect, Hardy Pie engineered the core logic and high-fidelity interfaces that power our ecosystem. With a commitment to technical excellence and precision engineering, he has dedicated thousands of hours to refining the citizen journey."
+              bio: "As The Visionary And Primary Architect, Hardy Pie Engineered The Core Logic And High-Fidelity Interfaces That Power Our Ecosystem. With A Commitment To Technical Excellence And Precision Engineering, He Has Dedicated Thousands Of Hours To Refining The Citizen Journey."
             },
             {
               name: "Piyush Singh",
               role: "CEO & Co-founder",
-              bio: "As the CEO and Co-founder, Piyush Singh steers the strategic trajectory of Nyaya Sahayak. His leadership is focused on institutional growth, strategic partnerships, and the democratization of elite legal tools."
+              bio: "As The CEO And Co-Founder, Piyush Singh Steers The Strategic Trajectory Of Nyaya Sahayak. His Leadership Is Focused On Institutional Growth, Strategic Partnerships, And The Democratization Of Elite Legal Tools."
             }
           ].map((leader, i) => (
             <motion.div key={i} variants={itemVariants} className="space-y-6 p-8 rounded-[2rem] bg-muted/20 border border-border/10 shadow-inner group hover:bg-primary/[0.02] transition-colors">
               <div className="space-y-1">
                 <h4 className="text-2xl font-bold tracking-tight group-hover:text-primary transition-colors">{leader.name}</h4>
-                <p className="text-[10px] font-bold tracking-[0.3em] text-primary">{leader.role}</p>
+                <p className="text-[10px] font-bold tracking-[0.3em] text-primary uppercase">{leader.role}</p>
               </div>
               <p className="text-sm font-medium text-muted-foreground leading-relaxed">
                 {leader.bio}
