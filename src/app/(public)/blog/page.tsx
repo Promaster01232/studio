@@ -34,45 +34,12 @@ const posts = [
     id: 1,
     title: "Nyaya Sahayak vs. ChatGPT: Which AI is better for Indian laws?",
     excerpt: "Explore the comparison chart of Nyaya Sahayak & ChatGPT for legal help in India. Discover their features, strengths, and the winner in this detailed guide.",
-    date: "6 Jan 2025",
+    date: "12/04/2026",
     readTime: "3 min read",
     category: "Nyaya Sahayak updates",
     author: "Nyaya Sahayak Team",
     image: "https://picsum.photos/seed/legalai/800/500",
     imageHint: "artificial intelligence"
-  },
-  {
-    id: 2,
-    title: "30 Tips to become a top lawyer in India",
-    excerpt: "Discover 30 expert tips to become a top lawyer in India. From mastering legal skills to building a strong reputation, find how to excel in your legal career!",
-    date: "5 Jan 2025",
-    readTime: "5 min read",
-    category: "Legal guides",
-    author: "Nyaya Sahayak Team",
-    image: "https://picsum.photos/seed/supremecourt/800/500",
-    imageHint: "supreme court"
-  },
-  {
-    id: 3,
-    title: "Understanding contempt of court in India",
-    excerpt: "Contempt of court in India: Key concepts explained. A forensic breakdown of the statutory rules and procedural impacts.",
-    date: "5 Jan 2025",
-    readTime: "3 min read",
-    category: "Legal guides",
-    author: "Nyaya Sahayak Team",
-    image: "https://picsum.photos/seed/judge/800/500",
-    imageHint: "judge gavel"
-  },
-  {
-    id: 4,
-    title: "Digital evidence under Bharatiya Sakshya Adhiniyam",
-    excerpt: "How the new BSA 2023 transforms the admissibility of electronic records. A technical guide for legal professionals.",
-    date: "2 Jan 2025",
-    readTime: "7 min read",
-    category: "Legal tech",
-    author: "Nyaya Sahayak Team",
-    image: "https://picsum.photos/seed/digital/800/500",
-    imageHint: "digital data"
   }
 ];
 
@@ -161,7 +128,7 @@ export default function BlogPage() {
       <section className="space-y-12">
         <AnimatePresence mode="popLayout">
           {filteredPosts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="flex justify-center">
               {filteredPosts.map((post, index) => (
                 <motion.div
                   key={post.id}
@@ -170,6 +137,7 @@ export default function BlogPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ delay: index * 0.1 }}
+                  className="max-w-md w-full"
                 >
                   <Card className="bg-card border-border/10 rounded-[2rem] overflow-hidden hover:border-primary/20 transition-all duration-500 group text-left h-full flex flex-col shadow-2xl">
                     <div className="relative overflow-hidden aspect-[16/10]">
