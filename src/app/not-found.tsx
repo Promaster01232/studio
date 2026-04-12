@@ -7,6 +7,7 @@ import { Home, LayoutDashboard, ShieldAlert, Zap, FileSearch, Search } from "luc
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { cn } from "@/lib/utils";
 
 export default function NotFound() {
   const errorImage = PlaceHolderImages.find(img => img.id === 'not-found-judicial');
