@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,6 @@ import {
   FileCheck,
   Menu
 } from "lucide-react";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { useState, useEffect } from "react";
@@ -36,70 +34,70 @@ import {
 const capabilities = [
   {
     title: "Record Voice",
-    desc: "Speak your legal problem. Get a quick word-for-word summary and analysis.",
+    desc: "Speak Your Legal Problem. Get A Quick Word-For-Word Summary And Analysis.",
     icon: Mic,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
   },
   {
     title: "Scan Documents",
-    desc: "Upload court orders or notices. Ai reads and identifies statutory risks.",
+    desc: "Upload Court Orders Or Notices. AI Reads And Identifies Statutory Risks.",
     icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
   },
   {
     title: "Write Documents",
-    desc: "Draft professional legal notices and complaints in any Indian language.",
+    desc: "Draft Professional Legal Notices And Complaints In Any Indian Language.",
     icon: FileText,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
   },
   {
     title: "Create Bonds",
-    desc: "Generate legally sound bail, personal, and indemnity bonds instantly.",
+    desc: "Generate Legally Sound Bail, Personal, And Indemnity Bonds Instantly.",
     icon: FileSignature,
     color: "text-purple-500",
     bg: "bg-purple-500/10",
   },
   {
     title: "Check Chance",
-    desc: "Analyze case details to see the statistical probability of a win or bail.",
+    desc: "Analyze Case Details To See The Statistical Probability Of A Win Or Bail.",
     icon: BrainCircuit,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
   },
   {
     title: "Court Helper",
-    desc: "Get prepared questions for witness cross-examination and preparation.",
+    desc: "Get Prepared Questions For Witness Cross-Examination And Preparation.",
     icon: Gavel,
     color: "text-cyan-500",
     bg: "bg-cyan-500/10",
   },
   {
     title: "Check Evidence",
-    desc: "Audit your digital and physical evidence for statutory admissibility.",
+    desc: "Audit Your Digital And Physical Evidence For Statutory Admissibility.",
     icon: ShieldCheck,
     color: "text-indigo-500",
     bg: "bg-indigo-500/10",
   },
   {
     title: "Bail Helper",
-    desc: "Predictive modeling for bail success based on BNS sections and records.",
+    desc: "Predictive Modeling For Bail Success Based On BNS Sections And Records.",
     icon: Scale,
     color: "text-red-500",
     bg: "bg-red-500/10",
   },
   {
     title: "Law Linker",
-    desc: "Locate specific BNS sections and amendments relevant to your situation.",
+    desc: "Locate Specific BNS Sections And Amendments Relevant To Your Situation.",
     icon: Zap,
     color: "text-pink-500",
     bg: "bg-pink-500/10",
   },
   {
     title: "Check Contract",
-    desc: "Identify unfavorable clauses and verify fairness in any legal deed.",
+    desc: "Identify Unfavorable Clauses And Verify Fairness In Any Legal Deed.",
     icon: FileCheck,
     color: "text-teal-500",
     bg: "bg-teal-500/10",
@@ -125,28 +123,9 @@ export default function RootPage() {
 
   if (!mounted) return null;
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 100, damping: 15 }
-    },
-  };
-
   return (
-    <div className="min-h-screen bg-background text-foreground bg-golden-animate selection:bg-primary/30 overflow-x-hidden font-body text-left">
-      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-background/40 backdrop-blur-md border-b border-border/10">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 overflow-x-hidden font-body text-left">
+      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-background border-b border-border/10">
         <div className="flex items-center gap-2">
           <Logo className="h-10 w-10 border-none bg-transparent shadow-none p-0" priority={true} />
           <span className="text-xl font-bold tracking-tighter text-foreground">Nyaya Sahayak</span>
@@ -157,7 +136,7 @@ export default function RootPage() {
             <Link 
               key={item.name} 
               href={item.href}
-              className="text-sm font-medium text-foreground/60 hover:text-primary transition-all duration-300"
+              className="text-sm font-medium text-foreground/60 hover:text-primary transition-all"
             >
               {item.name}
             </Link>
@@ -170,7 +149,7 @@ export default function RootPage() {
               <Link href="/login">Login</Link>
             </Button>
             <div className="hidden md:block">
-              <Button asChild className="bg-primary text-primary-foreground font-bold text-xs px-6 h-10 rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
+              <Button asChild className="bg-primary text-primary-foreground font-bold text-xs px-6 h-10 rounded-xl shadow-lg active:scale-95 transition-all">
                 <Link href="/register">Join Hub</Link>
               </Button>
             </div>
@@ -213,91 +192,66 @@ export default function RootPage() {
         </div>
       </nav>
 
-      <main className="pt-48 pb-20 px-4">
-        <div className="max-w-5xl mx-auto text-center space-y-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col items-center"
-          >
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-bold mb-10">
+      <main className="pt-24 pb-12 px-4">
+        <div className="max-w-5xl mx-auto text-center space-y-8">
+          <div className="flex flex-col items-center">
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-1.5 rounded-full text-[9px] font-bold mb-6">
               Platform Status: Active
             </Badge>
             
-            <h1 className="text-4xl sm:text-7xl font-bold tracking-tighter leading-[1.1] mb-8 text-foreground">
+            <h1 className="text-3xl sm:text-5xl font-bold tracking-tighter leading-tight mb-6 text-foreground">
               Your Complete <br /> <span className="text-primary">Legal Research Toolkit.</span>
             </h1>
             
-            <p className="text-lg sm:text-xl text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
-              Ai-powered chat, document analysis, voice input, and multi-language support. Everything you need to navigate Indian law with absolute confidence.
+            <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
+              AI-Powered Chat, Document Analysis, Voice Input, And Multi-Language Support. Everything You Need To Navigate Indian Law With Absolute Confidence.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4"
-          >
-            <Button asChild className="h-14 px-8 rounded-2xl bg-primary text-primary-foreground font-bold text-xs shadow-2xl shadow-primary/20 active:scale-95 transition-all">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
+            <Button asChild className="h-12 px-8 rounded-xl bg-primary text-primary-foreground font-bold text-xs shadow-lg active:scale-95 transition-all">
               <Link href="/dashboard">
                 <span className="relative z-10 flex items-center">
                   Start Your First Legal Query Free <ArrowRight className="ml-2 h-4 w-4" />
                 </span>
               </Link>
             </Button>
-          </motion.div>
+          </div>
         </div>
       </main>
 
-      <section className="py-32 px-4 sm:px-6 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
-        
-        <div className="max-w-7xl mx-auto space-y-24">
-          <div className="text-center space-y-6">
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-5 py-1.5 rounded-full text-[10px] font-bold mb-4">
+      <section className="py-16 px-4 sm:px-6 border-t border-border/10">
+        <div className="max-w-7xl mx-auto space-y-12">
+          <div className="text-center space-y-4">
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-5 py-1.5 rounded-full text-[10px] font-bold mb-2">
               Features
             </Badge>
-            <h2 className="text-4xl sm:text-6xl font-bold tracking-tighter leading-none text-foreground">
+            <h2 className="text-3xl sm:text-5xl font-bold tracking-tighter leading-none text-foreground">
               Ten Elite AI Tools For Legal Clarity
             </h2>
-            <p className="text-lg text-muted-foreground font-medium tracking-tight">
-              A comprehensive suite of forensic terminals synchronized with the modern Indian judicial landscape.
+            <p className="text-base text-muted-foreground font-medium tracking-tight">
+              A Comprehensive Suite Of Forensic Terminals Synchronized With The Modern Indian Judicial Landscape.
             </p>
           </div>
 
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6"
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {capabilities.map((item, i) => (
-              <motion.div
-                key={i}
-                variants={itemVariants}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="group"
-              >
-                <Card className="h-full bg-card border-border/10 rounded-[2rem] overflow-hidden transition-all duration-500 hover:border-primary/20 hover:shadow-3xl">
-                  <CardContent className="p-8 sm:p-10 flex flex-col h-full text-left space-y-8">
-                    <div className={cn("p-4 rounded-2xl h-fit w-fit shadow-xl border border-border/5 transition-transform group-hover:scale-110 duration-500", item.bg, item.color)}>
-                      <item.icon className="h-6 w-6" />
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-bold tracking-tight text-foreground leading-tight">{item.title}</h3>
-                      <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-                        {item.desc}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+              <Card key={i} className="h-full bg-card border-border/10 rounded-2xl overflow-hidden hover:border-primary/20 shadow-sm transition-all">
+                <CardContent className="p-6 flex flex-col h-full text-left space-y-6">
+                  <div className={cn("p-3 rounded-xl h-fit w-fit border border-border/5", item.bg, item.color)}>
+                    <item.icon className="h-5 w-5" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-bold tracking-tight text-foreground leading-tight">{item.title}</h3>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
+                      {item.desc}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 

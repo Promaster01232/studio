@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { 
   Mic, 
-  Bot, 
   StepForward, 
   Loader2, 
   Upload, 
@@ -24,7 +23,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { AudioAssistant } from "@/components/audio-assistant";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useFirestore, useAuth } from "@/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
@@ -61,8 +59,8 @@ export default function NarrateProblemPage() {
         setHasPermission(false);
         toast({
           variant: "destructive",
-          title: "Microphone denied",
-          description: "Please allow microphone access in your settings to use this feature.",
+          title: "Microphone Denied",
+          description: "Please Allow Microphone Access In Your Settings To Use This Feature.",
         });
       }
     };
@@ -104,7 +102,7 @@ export default function NarrateProblemPage() {
                 formData.append("language", language);
                 startTransition(() => formAction(formData));
             } else {
-                 toast({ variant: "destructive", title: "Too short", description: "Your recording was too short to analyze." });
+                 toast({ variant: "destructive", title: "Too Short", description: "Your Recording Was Too Short To Analyze." });
             }
             setIsRecording(false);
         };
@@ -112,7 +110,7 @@ export default function NarrateProblemPage() {
     } catch(err) {
         setIsRecording(false);
         if (timerInterval.current) clearInterval(timerInterval.current);
-        toast({ variant: "destructive", title: "Recording error", description: "Could not start audio capture." });
+        toast({ variant: "destructive", title: "Recording Error", description: "Could Not Start Audio Capture." });
     }
   };
 
@@ -143,139 +141,112 @@ export default function NarrateProblemPage() {
   };
 
   return (
-    <div className="space-y-12 max-w-6xl mx-auto pb-32 px-4 sm:px-6 text-left">
-        <motion.div 
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="max-w-3xl mx-auto"
-        >
-            <Card className="bg-[#161b22] shadow-2xl overflow-hidden rounded-[2.5rem] border-white/5">
+    <div className="space-y-8 max-w-6xl mx-auto pb-12 px-4 sm:px-6 text-left">
+        <div className="max-w-3xl mx-auto">
+            <Card className="bg-[#161b22] shadow-xl rounded-2xl overflow-hidden border-white/5">
                 <CardHeader className="bg-white/5 border-b border-white/5 p-8 text-left">
                     <div className="flex items-center gap-3 mb-2 text-primary">
-                        <Activity className="h-5 w-5 animate-pulse" />
-                        <CardTitle className="text-xl font-black tracking-tight text-left">Audio capture</CardTitle>
+                        <Activity className="h-5 w-5" />
+                        <CardTitle className="text-xl font-black tracking-tight text-left">Audio Capture</CardTitle>
                     </div>
-                    <CardDescription className="text-[10px] font-bold opacity-60">Record your narrative for a professional statutory report.</CardDescription>
+                    <CardDescription className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Record Your Narrative For A Professional Statutory Report.</CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col items-center justify-center space-y-12 pt-12 pb-12">
-                    <div className="w-full max-w-sm space-y-4 px-2 text-left">
-                        <div className="space-y-3">
-                            <Label className="text-[10px] font-bold text-gray-500 ml-1">Select language</Label>
-                            <Select value={language} onValueChange={setLanguage} disabled={isRecording || state.status === 'loading'}>
-                                <SelectTrigger className="h-12 bg-white/5 border-white/5 font-bold rounded-xl active:scale-95 transition-all text-left">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
-                                    <SelectItem value="English" className="font-bold text-xs">Simple english</SelectItem>
-                                    <SelectItem value="Hindi" className="font-bold text-xs">Hindi (Official)</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                <CardContent className="flex flex-col items-center justify-center space-y-10 py-10">
+                    <div className="w-full max-w-sm space-y-3 px-2 text-left">
+                        <Label className="text-[10px] font-bold text-gray-500 ml-1 uppercase tracking-widest">Select Language</Label>
+                        <Select value={language} onValueChange={setLanguage} disabled={isRecording || state.status === 'loading'}>
+                            <SelectTrigger className="h-12 bg-white/5 border-white/5 font-bold rounded-xl active:scale-95 transition-all text-left">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-[#161b22] border-white/5 rounded-xl">
+                                <SelectItem value="English" className="font-bold text-xs">Simple English</SelectItem>
+                                <SelectItem value="Hindi" className="font-bold text-xs">Hindi (Official)</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
 
-                    <div className="relative flex flex-col items-center gap-8">
-                        <AnimatePresence>
-                            {isRecording && (
-                                <motion.div 
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.8 }}
-                                    className="absolute -top-16 flex items-center gap-1.5"
-                                >
-                                    {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                                        <motion.div 
-                                            key={i}
-                                            animate={{ height: [8, 32, 8] }}
-                                            transition={{ repeat: Infinity, duration: 0.5, delay: i * 0.1 }}
-                                            className="w-1.5 bg-red-500 rounded-full"
-                                        />
-                                    ))}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
+                    <div className="relative flex flex-col items-center gap-6">
                         <Button
                             onClick={isRecording ? stopRecording : startRecording}
                             disabled={!hasPermission || state.status === 'loading'}
                             className={cn(
-                                "h-36 w-36 rounded-[3.5rem] shadow-3xl flex flex-col gap-3 transition-all duration-500 active:scale-90 relative group overflow-hidden",
-                                isRecording ? 'bg-red-500 hover:bg-red-600 scale-110 text-white' : 'bg-primary text-primary-foreground'
+                                "h-28 w-28 rounded-2xl shadow-2xl flex flex-col gap-2 transition-all active:scale-95 relative group overflow-hidden",
+                                isRecording ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-primary text-primary-foreground'
                             )}
                         >
-                            <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            {isRecording ? <div className="h-12 w-12 bg-white rounded-2xl animate-pulse z-10" /> : <Mic className="h-14 w-14 z-10 transition-transform group-hover:scale-110" />}
-                            <span className="text-[10px] font-bold z-10">{isRecording ? "Stop" : state.status === 'loading' ? "Syncing" : "Tap to speak"}</span>
+                            {isRecording ? <div className="h-8 w-8 bg-white rounded-lg z-10" /> : <Mic className="h-10 w-10 z-10" />}
+                            <span className="text-[9px] font-bold z-10 uppercase tracking-widest">{isRecording ? "Stop" : state.status === 'loading' ? "Syncing" : "Record"}</span>
                         </Button>
                         
-                        <div className="text-center space-y-2">
-                            <p className={cn("text-6xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-white")}>{formatTime(timer)}</p>
-                            <p className="text-[10px] text-gray-500 font-bold tracking-[0.3em]">{isRecording ? "Transmitting audio..." : state.status === 'loading' ? "Neural processing..." : "Terminal ready"}</p>
+                        <div className="text-center space-y-1">
+                            <p className={cn("text-4xl font-mono font-black tracking-tighter", isRecording ? "text-red-500" : "text-white")}>{formatTime(timer)}</p>
+                            <p className="text-[9px] text-gray-500 font-bold tracking-widest uppercase">{isRecording ? "Transmitting..." : state.status === 'loading' ? "Processing..." : "Ready"}</p>
                         </div>
                     </div>
 
-                    <div className="w-full pt-8 border-t border-white/5 text-center">
+                    <div className="w-full pt-6 border-t border-white/5 text-center">
                         <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="audio/*" className="hidden" />
-                        <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || state.status === 'loading'} className="text-[10px] font-bold text-primary/60 hover:text-primary gap-3 rounded-xl hover:bg-white/5 px-8 h-10 transition-all">
-                            <Upload className="h-4 w-4" /> Upload existing record
+                        <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isRecording || state.status === 'loading'} className="text-[9px] font-bold text-primary/60 hover:text-primary gap-2 rounded-lg hover:bg-white/5 px-6 h-9 transition-all uppercase tracking-widest">
+                            <Upload className="h-3.5 w-3.5" /> Upload Existing Record
                         </Button>
                     </div>
                 </CardContent>
             </Card>
-        </motion.div>
+        </div>
 
-        <div ref={reportRef} className="space-y-8 scroll-mt-20">
-            <div className="flex flex-col items-center gap-4 mb-4">
-                <ChevronDown className="h-8 w-8 text-primary animate-bounce opacity-20" />
-                <Badge variant="outline" className="font-bold text-[10px] bg-primary/5 px-6 py-2 rounded-full border-primary/10 shadow-sm">Statutory report</Badge>
+        <div ref={reportRef} className="space-y-6 scroll-mt-20">
+            <div className="flex flex-col items-center gap-2 mb-4">
+                <ChevronDown className="h-6 w-6 text-primary opacity-20" />
+                <Badge variant="outline" className="font-bold text-[9px] bg-primary/5 px-6 py-1.5 rounded-full border-primary/10 shadow-sm uppercase tracking-widest">Statutory Report</Badge>
             </div>
 
-            <Card className="bg-[#161b22] border-white/5 shadow-3xl rounded-[3rem] overflow-hidden relative min-h-[600px] flex flex-col">
+            <Card className="bg-[#161b22] border-white/5 shadow-2xl rounded-3xl overflow-hidden relative min-h-[500px] flex flex-col">
                 <div className="absolute inset-0 p-12 opacity-[0.02] pointer-events-none grayscale flex items-center justify-center">
-                    <Logo className="h-[600px] w-[600px] border-none p-0 bg-transparent" priority={false} />
+                    <Logo className="h-[400px] w-[400px] border-none p-0 bg-transparent" priority={false} />
                 </div>
 
                 <CardHeader className={cn(
-                    "p-8 sm:p-12 relative z-10 transition-colors duration-500 border-b border-white/5",
+                    "p-8 sm:p-10 relative z-10 border-b border-white/5",
                     state.status === 'success' ? "bg-primary text-primary-foreground" : "bg-white/5 text-white"
                 )}>
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 text-left">
-                        <div className="space-y-6 text-left flex-1 min-w-0">
-                            <div className="flex items-center gap-4">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-left">
+                        <div className="space-y-4 text-left flex-1 min-w-0">
+                            <div className="flex items-center gap-3">
                                 <div className={cn(
-                                    "flex items-center gap-3 px-4 py-1.5 rounded-full border shadow-sm",
+                                    "flex items-center gap-2 px-4 py-1.5 rounded-full border shadow-sm",
                                     state.status === 'success' ? "bg-white/10 border-white/20" : "bg-black/20 border-white/5"
                                 )}>
                                     <FileCheck className={cn("h-4 w-4", state.status === 'success' ? "text-white" : "text-primary")} />
                                     <span className={cn("text-[10px] font-bold", state.status === 'success' ? "text-white" : "text-primary")}>
-                                        {state.status === 'success' ? "Audit complete" : "System standby"}
+                                        {state.status === 'success' ? "Audit Complete" : "System Standby"}
                                     </span>
                                 </div>
                             </div>
-                            <div className="space-y-2">
-                                <CardTitle className="text-xl sm:text-3xl font-black font-headline leading-none tracking-tighter text-left">
-                                    {state.status === 'success' ? "Institutional analysis ready" : "Awaiting audio entry"}
+                            <div className="space-y-1">
+                                <CardTitle className="text-xl sm:text-2xl font-black font-headline leading-none tracking-tighter text-left uppercase">
+                                    {state.status === 'success' ? "Institutional Analysis Ready" : "Awaiting Audio Entry"}
                                 </CardTitle>
                                 <div className={cn(
-                                    "text-[11px] font-medium flex items-center gap-3",
+                                    "text-[10px] font-bold flex items-center gap-2",
                                     state.status === 'success' ? "text-white/70" : "text-gray-500"
                                 )}>
-                                    <Globe className="h-4 w-4" /> Secure statutory session active
+                                    <Globe className="h-3.5 w-3.5" /> Secure Statutory Session Active
                                 </div>
                             </div>
                         </div>
                         
                         {state.status === 'success' && (
-                            <div className="flex flex-wrap items-center gap-4 shrink-0">
+                            <div className="flex flex-wrap items-center gap-3 shrink-0">
                                 <Button 
                                     variant="secondary" 
                                     size="sm" 
                                     onClick={handleReset}
-                                    className="h-12 px-8 rounded-2xl font-bold text-xs gap-3 shadow-2xl active:scale-95"
+                                    className="h-10 px-6 rounded-xl font-bold text-[10px] gap-2 shadow-xl active:scale-95 uppercase tracking-widest"
                                 >
-                                    <PlusCircle className="h-4 w-4" /> New report
+                                    <PlusCircle className="h-3.5 w-3.5" /> New Report
                                 </Button>
                                 <AudioAssistant 
-                                    text={`Summary: ${state.data?.caseSummary}. Next steps: ${state.data?.nextActions}.`} 
+                                    text={`Summary: ${state.data?.caseSummary}. Next Steps: ${state.data?.nextActions}.`} 
                                     language={language} 
                                 />
                             </div>
@@ -284,111 +255,78 @@ export default function NarrateProblemPage() {
                 </CardHeader>
                 
                 <CardContent className="p-8 sm:p-12 flex-1 relative z-10">
-                    <AnimatePresence mode="wait">
-                        {state.status === 'loading' ? (
-                            <motion.div 
-                                key="loading"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                className="flex flex-col items-center justify-center h-full py-24 text-center gap-12"
-                            >
-                                <div className="relative w-fit mx-auto">
-                                    <Activity className="h-20 w-20 animate-spin text-primary opacity-20" />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <Activity className="h-8 w-8 text-primary animate-pulse" />
-                                    </div>
+                    {state.status === 'loading' ? (
+                        <div className="flex flex-col items-center justify-center h-full py-20 text-center gap-8">
+                            <Activity className="h-12 w-12 text-primary opacity-20" />
+                            <div className="space-y-2">
+                                <p className="font-black text-2xl tracking-tighter text-white uppercase">Synthesizing Report...</p>
+                                <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Running Forensic Audio Audit...</p>
+                            </div>
+                        </div>
+                    ) : state.status === "success" && state.data ? (
+                        <div className="space-y-10 pb-6 text-left">
+                            <div className="p-6 bg-white/5 rounded-2xl border border-white/5 italic text-sm font-medium text-gray-400 leading-relaxed shadow-inner relative overflow-hidden">
+                                <div className="absolute top-0 left-0 bottom-0 w-1 bg-blue-500"></div>
+                                <div className="flex items-center gap-2 mb-3 text-primary opacity-40">
+                                    <Fingerprint className="h-3.5 w-3.5" />
+                                    <span className="text-[9px] font-bold uppercase tracking-widest">Transcription Registry</span>
                                 </div>
-                                <div className="space-y-4">
-                                    <p className="font-black text-3xl tracking-tighter text-white">Synthesizing report...</p>
-                                    <p className="text-[10px] font-bold text-gray-500 animate-pulse">Running forensic audio audit...</p>
-                                </div>
-                            </motion.div>
-                        ) : state.status === "success" && state.data ? (
-                            <motion.div 
-                                key="success" 
-                                initial={{ opacity: 0, y: 20 }} 
-                                animate={{ opacity: 1, y: 0 }} 
-                                className="space-y-12 pb-10 text-left"
-                            >
-                                <div className="p-8 bg-white/5 rounded-[2.5rem] border border-white/5 italic text-sm sm:text-base font-medium text-gray-400 leading-relaxed shadow-inner relative overflow-hidden">
-                                    <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-blue-500"></div>
-                                    <div className="flex items-center gap-3 mb-4 text-primary opacity-40">
-                                        <Fingerprint className="h-4 w-4" />
-                                        <span className="text-[10px] font-bold">Transcription registry</span>
-                                    </div>
-                                    "{state.data.transcription}"
-                                </div>
+                                "{state.data.transcription}"
+                            </div>
 
-                                <div className="grid md:grid-cols-2 gap-8">
-                                    <Card className="p-8 rounded-[2.5rem] border-white/5 text-left bg-white/[0.02] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
-                                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary"></div>
-                                        <h3 className="text-[11px] font-bold text-primary tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <StepForward className="h-4 w-4" /> Executive summary
-                                        </h3>
-                                        <p className="text-sm sm:text-base font-black leading-relaxed tracking-tight text-white">{state.data.caseSummary}</p>
-                                    </Card>
-                                    <Card className="p-8 rounded-[2.5rem] border-white/5 text-left bg-white/[0.02] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
-                                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-green-500"></div>
-                                        <h3 className="text-[11px] font-bold text-green-600 tracking-[0.3em] mb-6 flex items-center gap-3">
-                                            <Globe className="h-4 w-4" /> Procedural path
-                                        </h3>
-                                        <p className="text-sm font-bold leading-relaxed text-gray-400">{state.data.nextActions}</p>
-                                    </Card>
-                                </div>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <Card className="p-6 rounded-2xl border border-primary/10 text-left bg-white/[0.02] shadow-sm relative overflow-hidden">
+                                    <div className="absolute top-0 left-0 bottom-0 w-1 bg-primary"></div>
+                                    <h3 className="text-[9px] font-bold text-primary tracking-widest mb-4 flex items-center gap-2 uppercase">
+                                        <StepForward className="h-3.5 w-3.5" /> Executive Summary
+                                    </h3>
+                                    <p className="text-sm sm:text-base font-black leading-relaxed tracking-tight text-white">{state.data.caseSummary}</p>
+                                </Card>
+                                <Card className="p-6 rounded-2xl border border-green-500/10 text-left bg-white/[0.02] shadow-sm relative overflow-hidden">
+                                    <div className="absolute top-0 left-0 bottom-0 w-1 bg-green-500"></div>
+                                    <h3 className="text-[9px] font-bold text-green-600 tracking-widest mb-4 flex items-center gap-2 uppercase">
+                                        <Globe className="h-3.5 w-3.5" /> Procedural Path
+                                    </h3>
+                                    <p className="text-sm font-bold leading-relaxed text-gray-400">{state.data.nextActions}</p>
+                                </Card>
+                            </div>
 
-                                <div className="space-y-6">
-                                    <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                                        <h3 className="text-[11px] font-bold text-primary tracking-[0.3em] flex items-center gap-3">
-                                            <FileSearch className="h-5 w-5" /> Forensic analysis
-                                        </h3>
-                                    </div>
-                                    <div className="p-8 sm:p-12 bg-white/[0.01] rounded-[3rem] border border-white/5 text-sm sm:text-base font-medium leading-loose whitespace-pre-line text-left shadow-xl relative overflow-hidden group">
-                                        <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
-                                            <Logo className="h-64 w-64 grayscale opacity-20" priority={false} />
-                                        </div>
-                                        <div className="prose dark:prose-invert max-w-none relative z-10 text-left">
-                                            {state.data.detailedAnalysis}
-                                        </div>
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                                    <h3 className="text-[9px] font-bold text-primary tracking-widest flex items-center gap-3 uppercase">
+                                        <FileSearch className="h-4 w-4" /> Forensic Analysis
+                                    </h3>
+                                </div>
+                                <div className="p-8 bg-white/[0.01] rounded-3xl border border-white/5 text-sm font-medium leading-relaxed whitespace-pre-line text-left shadow-lg relative overflow-hidden">
+                                    <div className="prose dark:prose-invert max-w-none relative z-10 text-left">
+                                        {state.data.detailedAnalysis}
                                     </div>
                                 </div>
-                                
-                                <div className="pt-10 mt-10 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-8 opacity-30">
-                                    <div className="flex items-center gap-4">
-                                        <div className="p-3 rounded-2xl bg-white/5 text-white">
-                                            <ShieldCheck className="h-6 w-6" />
-                                        </div>
-                                        <div className="text-left">
-                                            <p className="text-[10px] font-bold">Identity protection</p>
-                                            <p className="text-[9px] font-bold">This report record is private and encrypted.</p>
-                                        </div>
+                            </div>
+                            
+                            <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-6 opacity-30">
+                                <div className="flex items-center gap-3">
+                                    <ShieldCheck className="h-5 w-5 text-white" />
+                                    <div className="text-left">
+                                        <p className="text-[9px] font-bold uppercase tracking-widest">Identity Protection</p>
+                                        <p className="text-[8px] font-bold">This Report Record Is Private And Encrypted.</p>
                                     </div>
                                 </div>
-                            </motion.div>
-                        ) : (
-                            <motion.div 
-                                key="idle" 
-                                initial={{ opacity: 0, scale: 0.95 }} 
-                                animate={{ opacity: 1, scale: 1 }}
-                                className="flex flex-col items-center justify-center py-32 text-center gap-12"
-                            >
-                                <div className="relative">
-                                    <div className="absolute -inset-8 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
-                                    <div className="p-12 rounded-[2.5rem] bg-white/5 border border-white/5 relative z-10 transition-transform group-hover:scale-110 duration-700">
-                                        <Mic className="h-24 w-24 text-primary opacity-20" />
-                                    </div>
-                                </div>
-                                <div className="space-y-4 max-sm px-6 text-center">
-                                    <h3 className="font-black text-2xl tracking-tighter text-white">System standby</h3>
-                                    <p className="text-[11px] text-gray-500 font-bold leading-relaxed italic opacity-40">
-                                        Initialize the terminal by recording or uploading your case narration.
-                                    </p>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center py-20 text-center gap-10">
+                            <Mic className="h-16 w-16 text-primary opacity-10" />
+                            <div className="space-y-4 max-sm px-6 text-center">
+                                <h3 className="font-black text-xl tracking-tighter text-white leading-none uppercase">System Standby</h3>
+                                <p className="text-[10px] text-gray-500 font-bold tracking-widest leading-relaxed italic opacity-40 uppercase">
+                                    Initialize The Terminal By Recording Or Uploading Your Case Narration.
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </CardContent>
-                <div className="h-3 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+                <div className="h-2 w-full bg-white/5"></div>
             </Card>
         </div>
     </div>

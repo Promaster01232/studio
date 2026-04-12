@@ -12,17 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { 
   LogOut, 
-  Loader2, 
   Search, 
-  Zap, 
   Moon, 
-  Globe, 
-  ChevronRight,
-  Settings,
   LayoutDashboard,
   Crown,
-  User as UserIcon,
-  ShieldAlert,
   Activity
 } from "lucide-react";
 import { Logo } from "@/components/logo";
@@ -35,7 +28,6 @@ import { useAuth, useFirestore } from "@/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
 import { SearchDialog } from "@/components/search-dialog";
-import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { onSnapshot, doc } from "firebase/firestore";
 import { FloatingHub } from "@/components/floating-hub";
@@ -43,7 +35,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -72,85 +63,81 @@ function Header({ userProfile }: { userProfile: any }) {
 
     return (
         <header className={cn(
-            "sticky top-0 z-[40] flex h-16 items-center gap-4 border-b px-4 sm:px-6 transition-all",
+            "sticky top-0 z-[40] flex h-14 items-center gap-4 border-b px-4 sm:px-6 transition-all",
             "bg-background/80 backdrop-blur-md border-border/10"
         )}>
             <div className="flex items-center gap-3 md:hidden">
-                <SidebarTrigger className="h-9 w-9 rounded-xl hover:bg-primary/5 border border-primary/5 text-foreground" />
+                <SidebarTrigger className="h-8 w-8 rounded-lg hover:bg-primary/5 border border-primary/5 text-foreground" />
             </div>
             
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 <SearchDialog>
                     <div className="w-full max-w-md cursor-pointer group transition-all">
-                        <div className="hidden md:flex items-center w-full pl-10 pr-12 h-10 font-bold text-[11px] tracking-tight text-muted-foreground rounded-xl bg-muted/30 border border-border/10 group-hover:border-primary/20 transition-all relative text-left">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                            <span>Search Chats, Docs, Notes... (ctrl+k)</span>
+                        <div className="hidden md:flex items-center w-full pl-9 pr-10 h-9 font-bold text-[10px] tracking-tight text-muted-foreground rounded-lg bg-muted/30 border border-border/10 group-hover:border-primary/20 transition-all relative text-left">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                            <span>Search Registry... (ctrl+k)</span>
                         </div>
                         <div className="md:hidden">
-                            <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-border/10 bg-muted/30">
-                                <Search className="h-4 w-4 text-muted-foreground" />
+                            <Button variant="outline" size="icon" className="h-8 w-8 rounded-lg border-border/10 bg-muted/30">
+                                <Search className="h-3.5 w-3.5 text-muted-foreground" />
                             </Button>
                         </div>
                     </div>
                 </SearchDialog>
             </div>
 
-            <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-3 sm:gap-4">
                 <SosDialog>
-                    <Button variant="outline" size="sm" className="h-9 px-4 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[9px] uppercase tracking-widest gap-2">
-                        <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                        Emergency Access
+                    <Button variant="outline" size="sm" className="h-8 px-3 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[8px] uppercase tracking-widest gap-1.5">
+                        <div className="h-1 w-1 rounded-full bg-red-500" />
+                        Emergency
                     </Button>
                 </SosDialog>
 
-                <div className="flex items-center gap-4 text-muted-foreground">
+                <div className="flex items-center gap-3 text-muted-foreground">
                     <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="hover:text-primary transition-colors">
-                        <Moon className="h-4 w-4" />
+                        <Moon className="h-3.5 w-3.5" />
                     </button>
                 </div>
 
-                {!userProfile ? (
-                    <Button asChild size="sm" className="h-9 px-5 font-bold text-[10px] rounded-xl shadow-lg active:scale-95 transition-all">
-                        <Link href="/login">Sign In</Link>
-                    </Button>
-                ) : (
-                    <div className="flex items-center gap-2 border-l border-border/10 pl-4">
+                {userProfile && (
+                    <div className="flex items-center gap-2 border-l border-border/10 pl-3">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <button className="outline-none active:scale-95 transition-transform">
-                                    <Avatar className="h-8 w-8 border-2 border-primary/20 shadow-sm cursor-pointer">
+                                    <Avatar className="h-7 w-7 border border-primary/20 shadow-sm cursor-pointer">
                                         <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                                        <AvatarFallback className="font-bold bg-primary text-primary-foreground text-[10px]">
+                                        <AvatarFallback className="font-bold bg-primary text-primary-foreground text-[9px]">
                                             {userProfile.firstName?.charAt(0)?.toLowerCase() || "p"}
                                         </AvatarFallback>
                                     </Avatar>
                                 </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-64 p-2 rounded-2xl shadow-2xl glass border-border/10 mt-2">
-                                <div className="p-4 space-y-1 text-left">
-                                    <p className="font-bold text-sm tracking-tight text-foreground">
+                            <DropdownMenuContent align="end" className="w-56 p-1.5 rounded-xl shadow-xl glass border-border/10 mt-2">
+                                <div className="p-3 space-y-0.5 text-left">
+                                    <p className="font-bold text-xs tracking-tight text-foreground">
                                         {userProfile.firstName} {userProfile.lastName}
                                     </p>
-                                    <p className="text-[10px] font-medium text-muted-foreground truncate">
+                                    <p className="text-[9px] font-medium text-muted-foreground truncate">
                                         {userProfile.email}
                                     </p>
                                 </div>
                                 <DropdownMenuSeparator className="bg-border/5" />
-                                <div className="p-2">
-                                    <DropdownMenuItem className="rounded-xl h-10 px-3 flex items-center justify-between group focus:bg-primary/10 cursor-pointer">
-                                        <div className="flex items-center gap-3">
-                                            <Crown className="h-4 w-4 text-primary" />
-                                            <span className="text-xs font-bold text-foreground">Clearance</span>
+                                <div className="p-1">
+                                    <DropdownMenuItem className="rounded-lg h-9 px-2 flex items-center justify-between group focus:bg-primary/10 cursor-pointer">
+                                        <div className="flex items-center gap-2">
+                                            <Crown className="h-3.5 w-3.5 text-primary" />
+                                            <span className="text-[11px] font-bold text-foreground">Clearance</span>
                                         </div>
-                                        <span className="text-[10px] font-bold text-primary/60">{planLabel}</span>
+                                        <span className="text-[9px] font-bold text-primary/60">{planLabel}</span>
                                     </DropdownMenuItem>
                                     
                                     <DropdownMenuSeparator className="bg-border/5 my-1" />
                                     
-                                    <DropdownMenuItem asChild className="rounded-xl h-10 px-3 focus:bg-primary/10 cursor-pointer">
-                                        <Link href="/dashboard" className="flex items-center gap-3 w-full">
-                                            <LayoutDashboard className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                            <span className="text-xs font-bold text-foreground">Terminal Home</span>
+                                    <DropdownMenuItem asChild className="rounded-lg h-9 px-2 focus:bg-primary/10 cursor-pointer">
+                                        <Link href="/dashboard" className="flex items-center gap-2 w-full">
+                                            <LayoutDashboard className="h-3.5 w-3.5 text-muted-foreground" />
+                                            <span className="text-[11px] font-bold text-foreground">Terminal Home</span>
                                         </Link>
                                     </DropdownMenuItem>
                                     
@@ -158,11 +145,11 @@ function Header({ userProfile }: { userProfile: any }) {
                                     
                                     <DropdownMenuItem 
                                         onClick={handleLogout}
-                                        className="rounded-xl h-10 px-3 focus:bg-destructive/10 cursor-pointer group"
+                                        className="rounded-lg h-9 px-2 focus:bg-destructive/10 cursor-pointer group"
                                     >
-                                        <div className="flex items-center gap-3 w-full text-destructive">
-                                            <LogOut className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                                            <span className="text-xs font-bold uppercase tracking-widest">Terminate Session</span>
+                                        <div className="flex items-center gap-2 w-full text-destructive">
+                                            <LogOut className="h-3.5 w-3.5" />
+                                            <span className="text-[11px] font-bold uppercase tracking-widest">Terminate Session</span>
                                         </div>
                                     </DropdownMenuItem>
                                 </div>
@@ -177,7 +164,6 @@ function Header({ userProfile }: { userProfile: any }) {
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const [isMounted, setIsMounted] = useState(false);
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
@@ -186,10 +172,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [profileLoading, setProfileLoading] = useState(true);
   
   const profileUnsubscribeRef = useRef<(() => void) | null>(null);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -233,7 +215,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!profileLoading) {
         if (!auth.currentUser) {
-            // STRICT INGRESS: Without login, no user can access any part of the dashboard.
             if (pathname.startsWith('/dashboard')) {
                 router.replace('/login');
             }
@@ -249,10 +230,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   if (profileLoading || (!auth.currentUser && pathname.startsWith('/dashboard'))) {
       return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
-            <div className="relative">
-                <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                <Activity className="absolute inset-0 h-10 w-10 text-primary opacity-40 animate-pulse" />
-            </div>
+            <Activity className="h-8 w-8 text-primary opacity-20" />
         </div>
       );
   }
@@ -260,83 +238,51 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon" className="border-r border-border/10 bg-sidebar">
-        <SidebarHeader className="p-6 mb-2">
-          <Link href="/dashboard" className="flex items-center gap-3 group transition-all">
-            <div className="p-1 rounded-lg bg-primary/10">
-                <Logo className="h-8 w-8 border-none shadow-none p-0 bg-transparent" priority={true} />
-            </div>
+        <SidebarHeader className="p-4 mb-1">
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <Logo className="h-7 w-7 border-none shadow-none p-0 bg-transparent" priority={true} />
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
-              <span className="text-xl font-black font-headline tracking-tighter text-foreground leading-none">
+              <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none">
                   Nyaya Sahayak
               </span>
-              <span className="text-[8px] font-bold text-primary/60 tracking-widest mt-1">Legal Intelligence</span>
+              <span className="text-[7px] font-bold text-primary/60 tracking-widest mt-0.5">Legal Intelligence</span>
             </div>
           </Link>
         </SidebarHeader>
-        <SidebarContent className="pt-2 px-2">
+        <SidebarContent className="pt-1 px-2">
           <SidebarNav isAdmin={isAdmin} isElite={isElite} />
         </SidebarContent>
-        <SidebarFooter className="p-4 border-t border-border/10">
-           <AnimatePresence mode="wait">
-             {userProfile ? (
-               <motion.div
-                 initial={{ opacity: 0 }}
-                 animate={{ opacity: 1 }}
-                 exit={{ opacity: 0 }}
-               >
+        <SidebarFooter className="p-3 border-t border-border/10">
+             {userProfile && (
                  <Link href="/dashboard/profile">
-                   <Button 
-                     variant="ghost" 
-                     className="w-full h-14 justify-start items-center gap-3 px-2 hover:bg-muted/50 rounded-2xl transition-all group"
+                   <div 
+                     className="w-full h-12 flex items-center gap-3 px-2 hover:bg-muted/50 rounded-xl transition-all group"
                    >
-                     <Avatar className="h-9 w-9 border-2 border-primary/20 shadow-sm shrink-0">
+                     <Avatar className="h-8 w-8 border border-primary/20 shadow-sm shrink-0">
                        <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                       <AvatarFallback className="font-black bg-primary text-primary-foreground text-[10px]">
+                       <AvatarFallback className="font-black bg-primary text-primary-foreground text-[9px]">
                          {userProfile.firstName?.charAt(0)}
                        </AvatarFallback>
                      </Avatar>
                      <div className="flex flex-col items-start overflow-hidden group-data-[state=collapsed]:hidden">
-                       <span className="text-[11px] font-black text-foreground truncate w-full">
+                       <span className="text-[10px] font-black text-foreground truncate w-full">
                          {userProfile.firstName} {userProfile.lastName}
                        </span>
-                       <span className="text-[9px] font-bold text-muted-foreground truncate w-full">
+                       <span className="text-[8px] font-bold text-muted-foreground truncate w-full">
                          Registry Point Active
                        </span>
                      </div>
-                     <ChevronRight className="ml-auto h-3 w-3 text-muted-foreground group-hover:text-primary transition-all group-data-[state=collapsed]:hidden" />
-                   </Button>
+                   </div>
                  </Link>
-               </motion.div>
-             ) : (
-               <Button 
-                 variant="ghost" 
-                 onClick={() => router.push('/dashboard')}
-                 className="w-full justify-start items-center gap-3 h-11 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all"
-               >
-                 <ChevronRight className="h-4 w-4 rotate-180" />
-                 <span className="font-bold text-[11px] tracking-tight group-data-[state=collapsed]:hidden">Collapse Terminal</span>
-               </Button>
              )}
-           </AnimatePresence>
         </SidebarFooter>
       </Sidebar>
-      <SidebarInset className="bg-background relative overflow-hidden bg-golden-animate">
+      <SidebarInset className="bg-background relative overflow-hidden">
         <Header userProfile={userProfile} />
         <main className="flex-1 overflow-y-auto custom-scrollbar relative">
-            <AnimatePresence mode="wait">
-                {isMounted ? (
-                    <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-4 sm:p-8 min-h-[calc(100vh-64px)] flex flex-col">
-                        <div className="flex-1">{children}</div>
-                    </motion.div>
-                ) : (
-                    <div className="flex h-full items-center justify-center">
-                        <div className="relative">
-                            <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                            <Activity className="absolute inset-0 h-10 w-10 text-primary opacity-40 animate-pulse" />
-                        </div>
-                    </div>
-                )}
-            </AnimatePresence>
+            <div className="p-4 sm:p-6 min-h-[calc(100vh-56px)] flex flex-col">
+                <div className="flex-1">{children}</div>
+            </div>
         </main>
         <FloatingHub />
       </SidebarInset>
