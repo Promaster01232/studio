@@ -41,11 +41,11 @@ export default function Loading() {
           <div className="flex items-center gap-2 px-4 py-1 rounded-full bg-primary/5 border border-primary/10">
             <ShieldCheck className="h-3.5 w-3.5 text-primary animate-pulse" />
             <h3 className="text-sm font-black tracking-tight text-foreground uppercase">
-              Authorizing Terminal
+              Authorizing terminal
             </h3>
           </div>
           <p className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground/30">
-            Registry Syncing // Ingress Active
+            Registry syncing // Ingress active
           </p>
         </div>
       </div>

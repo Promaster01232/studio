@@ -31,11 +31,11 @@ export default function Loading() {
         <div className="flex items-center gap-2 px-4 py-1 rounded-full bg-primary/5 border border-primary/10">
           <Activity className="h-3 w-3 text-primary animate-pulse" />
           <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">
-            Syncing Node
+            Syncing node
           </span>
         </div>
         <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground/40">
-          Establishing Secure Ingress
+          Establishing secure ingress
         </p>
       </div>
     </div>
