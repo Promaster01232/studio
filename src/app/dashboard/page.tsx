@@ -265,7 +265,6 @@ export default function DashboardHomePage() {
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-12 px-4 sm:px-6">
       
-      {/* Welcome Header */}
       <div className="w-full bg-[#f0f4ff] dark:bg-card border border-blue-100/50 dark:border-border/10 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-4 text-left">
           <Avatar className="h-14 w-14 border-2 border-white dark:border-zinc-800 shadow-lg rounded-full">
@@ -304,7 +303,6 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
-      {/* Central Hub Ingress */}
       <div className="w-full max-w-4xl mx-auto bg-card rounded-2xl p-6 sm:p-8 border border-border/10 shadow-lg text-center flex flex-col items-center gap-6">
         {messages.length === 0 ? (
           <div className="space-y-6 w-full">
@@ -396,7 +394,6 @@ export default function DashboardHomePage() {
           </div>
         </div>
 
-        {/* Community Stream Ingress */}
         <div className="w-full pt-8 border-t border-border/5">
             <div className="flex items-center justify-between mb-6 text-left">
                 <div className="space-y-0.5">
@@ -431,7 +428,6 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
-      {/* Feature Matrix */}
       <section className="space-y-8">
         <div className="text-left border-l-4 border-primary pl-4 py-1">
           <h2 className="text-[9px] font-bold text-primary mb-0.5 uppercase tracking-widest">Core Hub</h2>
@@ -458,7 +454,6 @@ export default function DashboardHomePage() {
         </div>
       </section>
 
-      {/* Professional Synergy Hub */}
       <div className="pt-6">
         <Card className="bg-primary/5 border border-primary/10 rounded-3xl p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-10 relative group shadow-lg">
           <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none grayscale">

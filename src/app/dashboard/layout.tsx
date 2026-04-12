@@ -16,7 +16,8 @@ import {
   Moon, 
   LayoutDashboard,
   Crown,
-  Activity
+  Activity,
+  ShieldAlert
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
@@ -231,8 +232,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
             <div className="relative">
-                <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                <Activity className="absolute inset-0 h-10 w-10 text-primary opacity-40 animate-pulse" />
+                <Activity className="h-10 w-10 text-primary opacity-20" />
             </div>
         </div>
       );

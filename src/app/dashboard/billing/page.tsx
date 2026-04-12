@@ -28,7 +28,7 @@ const plansData = [
     id: "free",
     name: "Citizen Basic",
     price: 0,
-    desc: "Standard identity enrollment.",
+    desc: "Standard Identity Enrollment.",
     features: ["Voice Narration (5x)", "Document Audit (5x)", "Basic Case Analytics", "Public Directory Access"],
     icon: ZapIcon,
     color: "text-blue-500",
@@ -39,7 +39,7 @@ const plansData = [
     id: "pro_20",
     name: "Professional 20",
     price: 99,
-    desc: "Essential statutory expansion.",
+    desc: "Essential Statutory Expansion.",
     features: ["Voice Narration (20x)", "Document Audit (20x)", "Extended Case Tracker", "Priority AI Ingress"],
     badge: "Popular Choice",
     icon: Crown,
@@ -51,7 +51,7 @@ const plansData = [
     id: "unlimited_monthly",
     name: "Unlimited Monthly",
     price: 599,
-    desc: "Continuous institutional access.",
+    desc: "Continuous Institutional Access.",
     features: ["Unlimited AI Forensic Scans", "Unlimited Document Audits", "Full Case Strategy Hub", "Verified Connect Ingress", "Priority Neural Support"],
     badge: "Professional Tier",
     icon: Layers,
@@ -63,7 +63,7 @@ const plansData = [
     id: "unlimited_yearly",
     name: "Institutional Annual",
     price: 4999,
-    desc: "Permanent statutory authority.",
+    desc: "Permanent Statutory Authority.",
     features: ["Everything In Unlimited", "Advanced Contract Hub", "Custom PDF Export Protocol", "Root System Access", "Institutional Branding"],
     badge: "Elite Hub",
     icon: Trophy,
@@ -129,7 +129,6 @@ export default function BillingPage() {
         status: "CAPTURED"
     };
 
-    // Update User Subscription
     setDoc(userDocRef, { subscriptionType: planId }, { merge: true })
         .catch(async (err) => {
             const permissionError = new FirestorePermissionError({
@@ -140,7 +139,6 @@ export default function BillingPage() {
             errorEmitter.emit('permission-error', permissionError);
         });
 
-    // Record Transaction
     addDoc(transCol, transactionData)
         .catch(async (err) => {
             const permissionError = new FirestorePermissionError({
@@ -166,7 +164,7 @@ export default function BillingPage() {
     setProcessingId(planId);
 
     const options = {
-      key: "rzp_test_NyayaSahayakKey", // Placeholder Key
+      key: "rzp_test_NyayaSahayakKey",
       amount: plan.price * 100,
       currency: "INR",
       name: "Nyaya Sahayak",
@@ -211,7 +209,7 @@ export default function BillingPage() {
 
   if (loading) return (
     <div className="flex h-[70vh] items-center justify-center">
-      <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
+      <Activity className="h-10 w-10 text-primary opacity-20" />
     </div>
   );
 
@@ -237,7 +235,7 @@ export default function BillingPage() {
                     disabled={applying || !coupon}
                     className="absolute right-1 top-1 h-8 px-4 font-black text-[9px] uppercase tracking-widest rounded-lg"
                 >
-                    {applying ? <Loader2 className="h-3 w-3 animate-spin" /> : "Apply"}
+                    {applying ? "..." : "Apply"}
                 </Button>
             </div>
         </div>
@@ -295,7 +293,7 @@ export default function BillingPage() {
                     isActive ? "bg-muted text-muted-foreground cursor-default shadow-none" : "bg-primary text-primary-foreground shadow-primary/20"
                   )}
                 >
-                  {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "Active Clearance" : "Initialize Upgrade"}
+                  {isProcessing ? "..." : isActive ? "Active Clearance" : "Initialize Upgrade"}
                 </Button>
               </CardFooter>
             </Card>
