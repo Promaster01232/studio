@@ -38,7 +38,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { onSnapshot, doc } from "firebase/firestore";
 import { FloatingHub } from "@/components/floating-hub";
-import { WelcomeModal } from "@/components/welcome-modal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -324,7 +323,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 {isMounted && (!profileLoading || pathname === '/create-profile') ? (
                     <motion.div key="dashboard-content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="p-4 sm:p-8 min-h-[calc(100vh-64px)] flex flex-col">
                         <div className="flex-1">{children}</div>
-                        <WelcomeModal />
                     </motion.div>
                 ) : (
                     <div className="flex h-full items-center justify-center">
