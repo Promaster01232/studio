@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -26,7 +25,6 @@ import {
   Plus,
   Loader2,
   Activity,
-  MoreVertical,
   Heart,
   Layers,
   Bot,
@@ -154,12 +152,12 @@ function DashboardPostCard({ post }: { post: Post }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ y: -4 }}
-            className="group"
+            className="group h-full"
         >
-            <Link href={`/dashboard/profile/${post.authorUid}`}>
+            <Link href={`/dashboard/profile/${post.authorUid}`} className="h-full block">
                 <Card className="bg-card border-border/10 rounded-3xl overflow-hidden hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-xl group active:scale-[0.98] text-left h-full relative">
                     <div className={cn("absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-opacity", config.gradient)}></div>
-                    <CardContent className="p-6 space-y-4">
+                    <CardContent className="p-6 space-y-4 flex flex-col h-full">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <Avatar className="h-8 w-8 border border-primary/10 rounded-lg">
@@ -173,7 +171,7 @@ function DashboardPostCard({ post }: { post: Post }) {
                             </Badge>
                         </div>
                         
-                        <div className="space-y-1">
+                        <div className="space-y-1 flex-grow">
                             <h4 className="font-bold text-sm tracking-tight text-foreground line-clamp-1 group-hover:text-primary transition-colors">
                                 {post.title}
                             </h4>
@@ -389,37 +387,40 @@ export default function DashboardHomePage() {
                 key="chat-history"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="w-full h-[400px] flex flex-col"
+                className="w-full h-[450px] flex flex-col"
               >
                 <ScrollArea className="flex-1 pr-4" viewportRef={scrollRef}>
                   <div className="space-y-6 pb-4">
                     {messages.map((m, i) => (
                       <motion.div 
                         key={i}
-                        initial={{ opacity: 0, x: m.role === 'user' ? 20 : -20 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, y: 10, x: m.role === 'user' ? 20 : -20 }}
+                        animate={{ opacity: 1, y: 0, x: 0 }}
                         className={cn(
-                          "flex flex-col max-w-[85%] space-y-1.5",
+                          "flex flex-col max-w-[90%] space-y-1.5",
                           m.role === 'user' ? "ml-auto items-end" : "items-start"
                         )}
                       >
                         <div className={cn(
-                          "px-5 py-3 rounded-2xl text-sm sm:text-base font-medium leading-relaxed text-left shadow-lg",
+                          "px-5 py-4 rounded-[1.5rem] text-sm sm:text-base font-medium leading-relaxed text-left shadow-lg",
                           m.role === 'user' 
                             ? "bg-primary text-primary-foreground rounded-tr-none" 
-                            : "bg-muted/30 border border-border/10 text-foreground rounded-tl-none prose dark:prose-invert max-none"
+                            : "bg-muted/30 border border-border/10 text-foreground rounded-tl-none prose dark:prose-invert max-w-none"
                         )}>
                           {m.text}
                         </div>
-                        <span className="text-[8px] font-bold text-muted-foreground/40 px-1">
-                          {m.role === 'ai' ? 'Nyaya Sahayak' : 'Registry Node'}
+                        <span className="text-[8px] font-bold text-muted-foreground/40 px-2 uppercase tracking-widest">
+                          {m.role === 'ai' ? 'Nyaya Sahayak Terminal' : 'Citizen Registry Node'}
                         </span>
                       </motion.div>
                     ))}
                     {isLoading && (
-                      <div className="flex gap-3 items-center text-primary/40 p-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-[10px] font-bold animate-pulse">Neural Ingress...</span>
+                      <div className="flex gap-3 items-center text-primary/40 p-4">
+                        <div className="relative">
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                            <Activity className="absolute inset-0 h-5 w-5 animate-pulse" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">Neural Ingress In Progress...</span>
                       </div>
                     )}
                   </div>
@@ -441,7 +442,7 @@ export default function DashboardHomePage() {
                       handleSend();
                     }
                   }}
-                  placeholder="Ask Anything About The Law..." 
+                  placeholder="Consult The Forensic AI Co-Pilot..." 
                   className="flex-1 bg-transparent border-none focus-visible:ring-0 text-foreground text-lg placeholder:text-muted-foreground/30 min-h-[48px] h-10 py-2 resize-none overflow-hidden" 
                 />
                 <div className="flex items-center gap-2 pr-2">
@@ -457,7 +458,11 @@ export default function DashboardHomePage() {
                 </div>
               </div>
             </div>
-            <p className="text-[10px] font-bold text-muted-foreground/20 tracking-wide">Free To Use. Your Conversations Are Private.</p>
+            <div className="flex items-center justify-center gap-4 text-[9px] font-bold text-muted-foreground/20 uppercase tracking-widest">
+                <div className="flex items-center gap-1.5"><ShieldCheck className="h-3 w-3" /> End-to-end encryption active</div>
+                <div className="h-1 w-1 rounded-full bg-border" />
+                <div>Identity masked protocol</div>
+            </div>
           </div>
 
           {/* Community Stream Node */}
@@ -466,11 +471,11 @@ export default function DashboardHomePage() {
                   <div className="space-y-1">
                       <div className="flex items-center gap-2 text-primary">
                           <Activity className="h-4 w-4 animate-pulse" />
-                          <span className="text-[10px] font-bold">Live Community Stream</span>
+                          <span className="text-[10px] font-bold uppercase tracking-widest">Live Community Stream</span>
                       </div>
                       <h3 className="text-xl font-bold tracking-tight text-foreground">Recent Transmissions</h3>
                   </div>
-                  <Button variant="ghost" size="sm" asChild className="h-9 px-4 rounded-xl font-bold text-[9px] text-primary hover:bg-primary/5">
+                  <Button variant="ghost" size="sm" asChild className="h-9 px-4 rounded-xl font-bold text-[9px] text-primary hover:bg-primary/5 uppercase tracking-widest">
                       <Link href="/dashboard/research-analytics">View Full Registry <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
                   </Button>
               </div>
@@ -483,7 +488,7 @@ export default function DashboardHomePage() {
                   </div>
               ) : posts.length === 0 ? (
                   <div className="py-12 bg-muted/5 rounded-[2rem] border-2 border-dashed border-border/5 text-center">
-                      <p className="text-[10px] font-bold text-muted-foreground opacity-20">No Transmissions Registered In This Node.</p>
+                      <p className="text-[10px] font-bold text-muted-foreground opacity-20 uppercase tracking-widest">No Transmissions Registered In This Node.</p>
                   </div>
               ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -499,8 +504,8 @@ export default function DashboardHomePage() {
       {/* Feature Matrix */}
       <section className="space-y-12">
         <div className="text-left border-l-4 border-primary pl-6 py-2">
-          <h2 className="text-[10px] font-bold text-primary mb-1">Core Hub</h2>
-          <h3 className="text-3xl font-bold tracking-tighter text-foreground">AI Terminals</h3>
+          <h2 className="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest">Core Hub</h2>
+          <h3 className="text-3xl font-bold tracking-tighter text-foreground">Forensic Terminals</h3>
           <p className="text-sm text-muted-foreground font-medium mt-1">Select A Tool To Initialize Forensic Audit.</p>
         </div>
 

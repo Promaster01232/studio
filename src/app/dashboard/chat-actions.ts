@@ -1,4 +1,3 @@
-
 'use server';
 
 import { generalChat } from "@/ai/flows/general-chat";
@@ -36,15 +35,15 @@ export async function getGeneralAiResponseAction(query: string, context?: string
       console.warn("[AI CHAT HUB] Neural Satiation - Activating Guaranteed Report Fallback");
       return { 
         success: true, 
-        response: `### SMALL REPORT (PRELIMINARY)
+        response: `### 1. Preliminary Report
 Your query regarding "${query}" has been successfully registered in our local registry node.
 
-### FULL FORENSIC DOSSIER (STANDBY)
-To ensure 100% statutory precision during this period of high hub traffic, our primary neural engine is currently performing an background audit.
+### 2. Forensic Status: Standby
+To ensure 100% statutory precision during this period of high hub traffic, our primary neural engine is currently performing a background audit.
 
-**Recommended Procedural Steps:**
-1. **Voice Narration**: Use the "Record voice" tool for a detailed audio-to-statute analysis.
-2. **Document Scan**: Access the "Scan documents" terminal for any physical instruments related to this matter.
+### 3. Recommended Procedural Steps
+1. **Voice Narration**: Use the "Record Voice" tool for a detailed audio-to-statute analysis.
+2. **Document Scan**: Access the "Scan Documents" terminal for any physical instruments related to this matter.
 3. **Lawyer Connect**: Consult our verified directory for professional strategy.
 
 *The AI co-pilot will be fully synchronized for complex threading in a few moments.*`
