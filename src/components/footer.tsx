@@ -36,7 +36,7 @@ export function Footer() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-10">
           {/* Brand identity node */}
           <div className="lg:col-span-4 space-y-8">
-            <Link href="/" className="flex items-center gap-3 active:scale-95 transition-all group">
+            <Link href="https://nyayasahayak.in" className="flex items-center gap-3 active:scale-95 transition-all group">
               <Logo className="h-10 w-10 shadow-none border-none p-0 bg-transparent" priority={false} />
               <div className="flex flex-col">
                 <span className="text-2xl font-black tracking-tighter text-foreground font-headline leading-none">Nyaya sahayak</span>

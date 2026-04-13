@@ -12,9 +12,6 @@ import {
   BrainCircuit, 
   Gavel, 
   ShieldCheck, 
-  Scale, 
-  Zap, 
-  FileCheck,
   Menu
 } from "lucide-react";
 import Link from "next/link";
@@ -91,10 +88,10 @@ export default function RootPage() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 overflow-x-hidden font-body text-left">
       <nav className="fixed top-0 w-full z-50 px-6 py-3 flex justify-between items-center bg-background/80 backdrop-blur-md border-b border-border/10">
-        <div className="flex items-center gap-2">
+        <Link href="https://nyayasahayak.in" className="flex items-center gap-3 active:scale-95 transition-all">
           <Logo className="h-8 w-8 border-none bg-transparent shadow-none p-0" priority={true} />
           <span className="text-lg font-bold tracking-tight text-foreground">Nyaya Sahayak</span>
-        </div>
+        </Link>
         
         <div className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
@@ -155,7 +152,7 @@ export default function RootPage() {
         </div>
       </nav>
 
-      <main className="pt-24 pb-12 px-4">
+      <main className="pt-12 pb-12 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <div className="flex flex-col items-center">
             <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3 py-1 rounded-full text-[9px] font-bold mb-4">

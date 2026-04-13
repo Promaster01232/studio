@@ -16,9 +16,7 @@ import {
   Moon, 
   LayoutDashboard,
   Crown,
-  Activity,
   Zap,
-  ArrowRight
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
@@ -239,7 +237,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
             <div className="relative">
-                <Activity className="h-10 w-10 text-primary opacity-20" />
+                <ShieldCheck className="h-10 w-10 text-primary opacity-20" />
             </div>
         </div>
       );
@@ -249,7 +247,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <SidebarProvider>
       <Sidebar collapsible="icon" className="border-r border-border/10 bg-sidebar">
         <SidebarHeader className="p-4 mb-1">
-          <Link href="/dashboard" className="flex items-center gap-3">
+          <Link href="https://nyayasahayak.in" className="flex items-center gap-3">
             <Logo className="h-7 w-7 border-none shadow-none p-0 bg-transparent" priority={true} />
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
               <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none">

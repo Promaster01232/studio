@@ -37,7 +37,7 @@ export function PublicHeader() {
   return (
     <header className="sticky top-0 z-[100] w-full border-b bg-background/40 backdrop-blur-md border-border/10">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 active:scale-95 transition-all">
+        <Link href="https://nyayasahayak.in" className="flex items-center gap-3 active:scale-95 transition-all">
           <Logo className="h-8 w-8 shadow-none border-none p-0 bg-transparent" priority={true} />
           <span className="text-xl font-black tracking-tight text-foreground font-headline">
             Nyaya Sahayak
