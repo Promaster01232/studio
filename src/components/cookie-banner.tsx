@@ -20,9 +20,14 @@ export function CookieBanner() {
 
   if (!mounted || !isVisible) return null;
 
+  const handleAccept = () => {
+    localStorage.setItem('cookie-consent', 'true');
+    setIsVisible(false);
+  };
+
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-background/95 backdrop-blur-3xl p-4 sm:p-6">
-      <div className="max-w-2xl w-full bg-card border border-primary/10 shadow-[0_0_100px_rgba(0,0,0,0.2)] rounded-[2.5rem] overflow-hidden relative">
+      <div className="max-w-2xl w-full bg-card border border-primary/10 shadow-3xl rounded-[2.5rem] overflow-hidden relative text-left">
         <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
           <Logo className="h-48 w-48 grayscale" priority={false} />
         </div>
@@ -41,7 +46,7 @@ export function CookieBanner() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 text-left">
             <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
               To Initialize Your Secure Ingress To The <span className="text-foreground font-black">Nyaya Sahayak</span> Terminal, You Must Acknowledge Our Privacy Protocols. We Use Essential Cookies To Manage Your Forensic Identity And Statutory Registry Sync.
             </p>
@@ -81,9 +86,4 @@ export function CookieBanner() {
       </div>
     </div>
   );
-
-  function handleAccept() {
-    localStorage.setItem('cookie-consent', 'true');
-    setIsVisible(false);
-  }
 }

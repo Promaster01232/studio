@@ -17,6 +17,8 @@ import {
   LayoutDashboard,
   Crown,
   Zap,
+  ShieldCheck,
+  Activity
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
@@ -63,10 +65,7 @@ function Header({ userProfile }: { userProfile: any }) {
     const planLabel = isAdmin ? "Root Authority" : (isFree ? "Citizen Basic" : "Professional Access");
 
     return (
-        <header className={cn(
-            "sticky top-0 z-[40] flex h-12 items-center gap-4 border-b px-4 sm:px-6 transition-all",
-            "bg-background/80 backdrop-blur-md border-border/10"
-        )}>
+        <header className="sticky top-0 z-[40] flex h-12 items-center gap-4 border-b px-4 sm:px-6 bg-background/80 backdrop-blur-md border-border/10">
             <div className="flex items-center gap-3 md:hidden">
                 <SidebarTrigger className="h-8 w-8 rounded-lg hover:bg-primary/5 border border-primary/5 text-foreground" />
             </div>
@@ -98,7 +97,7 @@ function Header({ userProfile }: { userProfile: any }) {
                 )}
 
                 <SosDialog>
-                    <Button variant="outline" size="sm" className="h-7 px-3 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[8px] uppercase tracking-widest gap-1.5 shadow-none hover:shadow-none">
+                    <Button variant="outline" size="sm" className="h-7 px-3 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[8px] uppercase tracking-widest gap-1.5">
                         <div className="h-1 w-1 rounded-full bg-red-500" />
                         Emergency
                     </Button>

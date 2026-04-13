@@ -159,7 +159,7 @@ export default function RootPage() {
               Platform Status: Active
             </Badge>
             
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-2 text-foreground">
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-2 text-foreground uppercase">
               Complete Legal Research Toolkit.
             </h1>
             
@@ -181,7 +181,7 @@ export default function RootPage() {
       <section className="py-12 px-4 sm:px-6 border-t border-border/10">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="text-center space-y-1">
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground uppercase">
               Elite AI Forensic Tools
             </h2>
             <p className="text-sm text-muted-foreground font-medium">
