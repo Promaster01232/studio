@@ -5,7 +5,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/language-provider";
 import { FirebaseClientProvider } from "@/firebase/client-provider";
 import { Inter } from 'next/font/google';
-import { CookieBanner } from "@/components/cookie-banner";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -102,7 +101,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <LanguageProvider>
             <FirebaseClientProvider>
               {children}
-              <CookieBanner />
             </FirebaseClientProvider>
             <Toaster />
           </LanguageProvider>

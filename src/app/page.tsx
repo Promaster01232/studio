@@ -152,18 +152,18 @@ export default function RootPage() {
         </div>
       </nav>
 
-      <main className="pt-24 pb-12 px-4">
+      <main className="pt-12 pb-12 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <div className="flex flex-col items-center">
             <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3 py-1 rounded-full text-[9px] font-bold mb-4">
               Platform Status: Active
             </Badge>
             
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-2 text-foreground">
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-2 text-foreground text-left sm:text-center">
               Complete legal research toolkit.
             </h1>
             
-            <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed text-left sm:text-center">
               AI-Powered chat, document analysis, and voice input. Navigate indian law with absolute confidence at https://nyayasahayak.in.
             </p>
           </div>

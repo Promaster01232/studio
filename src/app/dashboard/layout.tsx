@@ -292,11 +292,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
              )}
         </SidebarFooter>
       </Sidebar>
-      <SidebarInset className="bg-background relative overflow-hidden">
+      <SidebarInset className="bg-background relative overflow-hidden text-left">
         <Header userProfile={userProfile} />
-        <main className="flex-1 overflow-y-auto custom-scrollbar relative">
-            <div className="p-4 sm:p-6 min-h-[calc(100vh-48px)] flex flex-col">
-                <div className="flex-1">{children}</div>
+        <main className="flex-1 overflow-y-auto custom-scrollbar relative text-left">
+            <div className="p-4 sm:p-6 min-h-[calc(100vh-48px)] flex flex-col text-left">
+                <div className="flex-1 text-left">{children}</div>
             </div>
         </main>
         <FloatingHub />

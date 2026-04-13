@@ -328,7 +328,7 @@ export default function DashboardHomePage() {
 
         <div className="flex items-center gap-2">
           {isFree && !isAdmin && (
-              <Button asChild size="sm" className="h-8 px-4 rounded-lg bg-amber-500 text-white font-bold text-[10px] gap-2 shadow-sm active:scale-95 transition-all">
+              <Button asChild size="sm" className="h-8 px-4 rounded-lg bg-primary text-white font-bold text-[10px] gap-2 shadow-sm active:scale-95 transition-all">
                   <Link href="/dashboard/billing">
                       <Zap className="h-3 w-3 fill-current" /> Upgrade Hub
                   </Link>
