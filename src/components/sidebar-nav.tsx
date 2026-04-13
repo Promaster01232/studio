@@ -38,7 +38,19 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { cn } from "@/lib/utils";
 
-const navGroups = [
+interface NavItem {
+  title: string;
+  icon: any;
+  href: string;
+  isElite?: boolean;
+}
+
+interface NavGroup {
+  label: string;
+  items: NavItem[];
+}
+
+const navGroups: NavGroup[] = [
   {
     label: "Home",
     items: [
@@ -54,10 +66,11 @@ const navGroups = [
       { title: "Create Bonds", icon: FileSignature, href: "/dashboard/bond-generator" },
       { title: "Check Chance", icon: BrainCircuit, href: "/dashboard/strength-analyzer" },
       { title: "Court Helper", icon: Gavel, href: "/dashboard/court-assistant" },
-      { title: "Check Evidence", icon: ShieldCheck, href: "/dashboard/evidence-audit" },
-      { title: "Bail Helper", icon: Scale, href: "/dashboard/bail-estimator" },
-      { title: "Law Linker", icon: Zap, href: "/dashboard/statutory-linker" },
-      { title: "Check Contract", icon: FileCheck, href: "/dashboard/contract-auditor" },
+      // Elite Features (Visible only after upgrade)
+      { title: "Check Evidence", icon: ShieldCheck, href: "/dashboard/evidence-audit", isElite: true },
+      { title: "Bail Helper", icon: Scale, href: "/dashboard/bail-estimator", isElite: true },
+      { title: "Law Linker", icon: Zap, href: "/dashboard/statutory-linker", isElite: true },
+      { title: "Check Contract", icon: FileCheck, href: "/dashboard/contract-auditor", isElite: true },
     ]
   },
   {
@@ -100,54 +113,61 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
   };
 
   return (
-    <div className="space-y-6">
-      {navGroups.map((group) => (
-        <SidebarGroup key={group.label} className="p-0 text-left">
-          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-[0.1em] text-primary/40 mb-2 text-left">
-            {group.label}
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="gap-1 px-2">
-              {group.items.map((item) => {
-                const active = isActive(item.href);
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={active}
-                      tooltip={item.title}
-                      className={cn(
-                        "h-10 px-3 transition-all duration-300 rounded-xl group/btn",
-                        active 
-                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 font-bold" 
-                          : "text-gray-400 hover:bg-white/5 hover:text-white"
-                      )}
-                    >
-                      <Link href={item.href} className="flex items-center gap-3">
-                        <item.icon className={cn(
-                          "h-4 w-4 shrink-0 transition-transform group-hover/btn:scale-110",
-                          active ? "text-primary-foreground" : "text-gray-500 group-hover/btn:text-primary"
-                        )} />
-                        <span className="text-[11px] font-bold tracking-tight truncate">
-                          {item.title}
-                        </span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      ))}
+    <div className="space-y-4">
+      {navGroups.map((group) => {
+        // Filter out elite items if the user is not elite
+        const visibleItems = group.items.filter(item => !item.isElite || isElite);
+        
+        if (visibleItems.length === 0) return null;
+
+        return (
+          <SidebarGroup key={group.label} className="p-0 text-left">
+            <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-tight text-primary/40 mb-1 text-left">
+              {group.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-0.5 px-2">
+                {visibleItems.map((item) => {
+                  const active = isActive(item.href);
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={active}
+                        tooltip={item.title}
+                        className={cn(
+                          "h-9 px-3 transition-colors rounded-lg group/btn",
+                          active 
+                            ? "bg-primary text-primary-foreground shadow-sm font-bold" 
+                            : "text-muted-foreground hover:bg-primary/5 hover:text-primary"
+                        )}
+                      >
+                        <Link href={item.href} className="flex items-center gap-3">
+                          <item.icon className={cn(
+                            "h-4 w-4 shrink-0",
+                            active ? "text-primary-foreground" : "text-muted-foreground group-hover/btn:text-primary"
+                          )} />
+                          <span className="text-[11px] font-bold tracking-tight truncate">
+                            {item.title}
+                          </span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        );
+      })}
 
       {isAdmin && (
-        <SidebarGroup className="p-0 border-t border-white/5 pt-6 mt-6 text-left">
-          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-[0.1em] text-red-500/60 mb-2 text-left">
+        <SidebarGroup className="p-0 border-t border-border/5 pt-4 mt-4 text-left">
+          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-tight text-red-500/60 mb-1 text-left">
             Admin Registry
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1 px-2">
+            <SidebarMenu className="gap-0.5 px-2">
               {adminItems.map((item) => {
                 const active = isActive(item.href);
                 return (
@@ -156,10 +176,10 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                       asChild
                       isActive={active}
                       className={cn(
-                        "h-10 px-3 transition-all duration-300 rounded-xl",
+                        "h-9 px-3 transition-colors rounded-lg",
                         active 
-                          ? "bg-red-600 text-white shadow-lg shadow-red-600/20" 
-                          : "text-gray-400 hover:bg-red-500/5 hover:text-red-400"
+                          ? "bg-red-600 text-white shadow-sm" 
+                          : "text-muted-foreground hover:bg-red-500/5 hover:text-red-600"
                       )}
                     >
                       <Link href={item.href} className="flex items-center gap-3">

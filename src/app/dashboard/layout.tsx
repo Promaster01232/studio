@@ -65,7 +65,7 @@ function Header({ userProfile }: { userProfile: any }) {
     const planLabel = isAdmin ? "Root Authority" : (isFree ? "Citizen Basic" : "Professional Access");
 
     return (
-        <header className="sticky top-0 z-[40] flex h-12 items-center gap-4 border-b px-4 sm:px-6 bg-background/80 backdrop-blur-md border-border/10">
+        <header className="sticky top-0 z-[40] flex h-12 items-center gap-4 border-b px-4 bg-background/80 backdrop-blur-md border-border/10">
             <div className="flex items-center gap-3 md:hidden">
                 <SidebarTrigger className="h-8 w-8 rounded-lg hover:bg-primary/5 border border-primary/5 text-foreground" />
             </div>
@@ -114,9 +114,9 @@ function Header({ userProfile }: { userProfile: any }) {
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <button className="outline-none active:scale-95 transition-transform">
-                                    <Avatar className="h-7 w-7 border border-primary/20 shadow-sm cursor-pointer">
+                                    <Avatar className="h-7 w-7 border border-primary/20 shadow-sm cursor-pointer rounded-lg">
                                         <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                                        <AvatarFallback className="font-bold bg-primary text-primary-foreground text-[9px]">
+                                        <AvatarFallback className="font-black bg-primary text-primary-foreground text-[9px]">
                                             {userProfile.firstName?.charAt(0)?.toLowerCase() || "p"}
                                         </AvatarFallback>
                                     </Avatar>
@@ -124,7 +124,7 @@ function Header({ userProfile }: { userProfile: any }) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56 p-1.5 rounded-xl shadow-xl glass border-border/10 mt-2">
                                 <div className="p-3 space-y-0.5 text-left">
-                                    <p className="font-bold text-xs tracking-tight text-foreground">
+                                    <p className="font-bold text-xs tracking-tight text-foreground uppercase">
                                         {userProfile.firstName} {userProfile.lastName}
                                     </p>
                                     <p className="text-[9px] font-medium text-muted-foreground truncate">
@@ -231,6 +231,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
   const isFree = !userProfile?.subscriptionType || userProfile?.subscriptionType === 'free';
+  const isElite = !isFree || isAdmin;
 
   if (profileLoading || (!auth.currentUser && pathname.startsWith('/dashboard'))) {
       return (
@@ -257,7 +258,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </Link>
         </SidebarHeader>
         <SidebarContent className="pt-1 px-2">
-          <SidebarNav isAdmin={isAdmin} isElite={!isFree || isAdmin} />
+          <SidebarNav isAdmin={isAdmin} isElite={isElite} />
         </SidebarContent>
         <SidebarFooter className="p-3 border-t border-border/10">
              {isFree && !isAdmin && (
@@ -279,10 +280,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                        </AvatarFallback>
                      </Avatar>
                      <div className="flex flex-col items-start overflow-hidden group-data-[state=collapsed]:hidden">
-                       <span className="text-[10px] font-black text-foreground truncate w-full">
+                       <span className="text-[10px] font-black text-foreground truncate w-full uppercase">
                          {userProfile.firstName} {userProfile.lastName}
                        </span>
-                       <span className="text-[8px] font-bold text-muted-foreground truncate w-full">
+                       <span className="text-[8px] font-bold text-muted-foreground truncate w-full uppercase">
                          Registry Point Active
                        </span>
                      </div>
