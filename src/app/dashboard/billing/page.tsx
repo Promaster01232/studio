@@ -12,7 +12,8 @@ import {
   ZapIcon,
   Layers,
   Trophy,
-  Activity
+  Activity,
+  Ticket
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -80,6 +81,7 @@ export default function BillingPage() {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [coupon, setCoupon] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
   const [applying, setApplying] = useState(false);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
@@ -112,7 +114,26 @@ export default function BillingPage() {
     return () => unsub();
   }, [auth, firestore]);
 
-  const handlePaymentSuccess = async (planId: string, paymentId: string) => {
+  const getDiscountedPrice = (planId: string, originalPrice: number) => {
+    if (!appliedCoupon) return originalPrice;
+    
+    if (appliedCoupon === 'PIYUSH11') {
+      return originalPrice > 0 ? 1 : 0;
+    }
+    
+    if (appliedCoupon === 'NYAYASER') {
+      if (planId === 'unlimited_yearly') {
+        return Math.floor(originalPrice * 0.7); // 30% off
+      }
+      if (planId === 'pro_20' || planId === 'unlimited_monthly') {
+        return Math.floor(originalPrice * 0.8); // 20% off
+      }
+    }
+    
+    return originalPrice;
+  };
+
+  const handlePaymentSuccess = async (planId: string, paymentId: string, amount: number) => {
     if (!auth.currentUser) return;
     
     const userDocRef = doc(firestore, "users", auth.currentUser.uid);
@@ -123,13 +144,17 @@ export default function BillingPage() {
         userEmail: auth.currentUser.email,
         userName: `${profile?.firstName} ${profile?.lastName}`,
         planId: planId,
-        amount: plansData.find(p => p.id === planId)?.price || 0,
+        amount: amount,
         paymentId: paymentId,
         createdAt: serverTimestamp(),
-        status: "CAPTURED"
+        status: "CAPTURED",
+        couponUsed: appliedCoupon || null
     };
 
-    setDoc(userDocRef, { subscriptionType: planId }, { merge: true })
+    setDoc(userDocRef, { 
+      subscriptionType: planId,
+      updatedAt: serverTimestamp() 
+    }, { merge: true })
         .catch(async (err) => {
             const permissionError = new FirestorePermissionError({
                 path: userDocRef.path,
@@ -149,29 +174,30 @@ export default function BillingPage() {
             errorEmitter.emit('permission-error', permissionError);
         });
 
-    toast({ title: "Payment Successful", description: `Your account has been upgraded to ${planId.replace('_', ' ')}.` });
+    toast({ title: "Payment Successful", description: `Your account has been upgraded to ${planId.replace('_', ' ')} clearance.` });
   };
 
   const handleUpgrade = (planId: string) => {
     if (planId === "free" && (!profile?.subscriptionType || profile?.subscriptionType === 'free')) {
-        toast({ title: "Current Plan", description: "You are already using the basic registry tier." });
+        toast({ title: "Current Plan", description: "You are already using the standard citizen tier." });
         return;
     }
 
     const plan = plansData.find(p => p.id === planId);
     if (!plan) return;
 
+    const finalPrice = getDiscountedPrice(planId, plan.price);
     setProcessingId(planId);
 
     const options = {
       key: "rzp_test_NyayaSahayakKey",
-      amount: plan.price * 100,
+      amount: finalPrice * 100,
       currency: "INR",
       name: "Nyaya Sahayak",
       description: `Upgrade to ${plan.name}`,
       image: "/Logo.png",
       handler: function (response: any) {
-        handlePaymentSuccess(planId, response.razorpay_payment_id);
+        handlePaymentSuccess(planId, response.razorpay_payment_id, finalPrice);
         setProcessingId(null);
       },
       prefill: {
@@ -193,51 +219,74 @@ export default function BillingPage() {
         const rzp = new (window as any).Razorpay(options);
         rzp.open();
     } else {
-        toast({ variant: "destructive", title: "Gateway Error", description: "Payment hub is temporarily unreachable." });
+        toast({ variant: "destructive", title: "Gateway Error", description: "The secure payment hub is temporarily unreachable." });
         setProcessingId(null);
     }
   };
 
   const handleApplyCoupon = () => {
-      if (!coupon) return;
+      const code = coupon.trim().toUpperCase();
+      if (!code) return;
+      
       setApplying(true);
       setTimeout(() => {
           setApplying(false);
-          toast({ variant: "destructive", title: "Invalid Protocol", description: "This coupon code has expired or is invalid." });
-      }, 1000);
+          if (code === 'PIYUSH11' || code === 'NYAYASER') {
+              setAppliedCoupon(code);
+              toast({ title: "Protocol Activated", description: `The coupon code ${code} has been applied to the registry.` });
+          } else {
+              toast({ variant: "destructive", title: "Invalid Protocol", description: "This coupon code is not recognized by the system." });
+          }
+      }, 800);
+  };
+
+  const handleRemoveCoupon = () => {
+      setAppliedCoupon(null);
+      setCoupon("");
+      toast({ title: "Protocol Removed", description: "Prices have been reset to statutory standard." });
   };
 
   if (loading) return (
-    <div className="flex h-[70vh] items-center justify-center">
+    <div className="flex h-[60vh] items-center justify-center">
       <Activity className="h-10 w-10 text-primary opacity-20" />
     </div>
   );
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-8 px-4 sm:px-6 text-left">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <div className="max-w-6xl mx-auto space-y-6 pb-12 px-2 sm:px-4 text-left">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-border/5 pb-6">
         <div className="space-y-1 text-left">
-            <h1 className="text-2xl font-black tracking-tight">Plans & Pricing</h1>
-            <p className="text-xs text-muted-foreground font-medium uppercase">Select your institutional clearance level.</p>
+            <h1 className="text-2xl font-black tracking-tight">Statutory Plans & Pricing</h1>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Select your institutional clearance level for elite AI assistance.</p>
         </div>
         
-        <div className="flex items-center gap-2 w-full md:w-auto">
-            <div className="relative flex-1 md:w-64">
-                <Input 
-                    value={coupon} 
-                    onChange={e => setCoupon(e.target.value)} 
-                    placeholder="Enter Coupon" 
-                    className="h-9 bg-background border-border/10 font-bold pr-20 rounded-lg text-xs"
-                />
-                <Button 
-                    size="sm" 
-                    onClick={handleApplyCoupon}
-                    disabled={applying || !coupon}
-                    className="absolute right-1 top-1 h-7 px-3 font-black text-[8px] uppercase tracking-widest rounded-md"
-                >
-                    {applying ? "..." : "Apply"}
-                </Button>
-            </div>
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+            {appliedCoupon ? (
+                <div className="flex items-center gap-2 bg-green-500/5 border border-green-500/20 px-4 py-2 rounded-xl">
+                    <Ticket className="h-4 w-4 text-green-600" />
+                    <span className="text-[10px] font-black uppercase text-green-600">Active: {appliedCoupon}</span>
+                    <button onClick={handleRemoveCoupon} className="ml-2 text-muted-foreground hover:text-destructive transition-colors">
+                        <Zap className="h-3 w-3 fill-current rotate-180" />
+                    </button>
+                </div>
+            ) : (
+                <div className="relative flex-1 md:w-64">
+                    <Input 
+                        value={coupon} 
+                        onChange={e => setCoupon(e.target.value)} 
+                        placeholder="Enter Promo Code" 
+                        className="h-10 bg-background border-border/10 font-bold pr-20 rounded-xl text-xs"
+                    />
+                    <Button 
+                        size="sm" 
+                        onClick={handleApplyCoupon}
+                        disabled={applying || !coupon}
+                        className="absolute right-1 top-1 h-8 px-4 font-black text-[9px] uppercase tracking-widest rounded-lg"
+                    >
+                        {applying ? "..." : "Apply"}
+                    </Button>
+                </div>
+            )}
         </div>
       </div>
 
@@ -245,53 +294,62 @@ export default function BillingPage() {
         {plansData.map((plan) => {
           const isActive = profile?.subscriptionType === plan.id || (plan.id === 'free' && (!profile?.subscriptionType || profile?.subscriptionType === 'free'));
           const isProcessing = processingId === plan.id;
+          const originalPrice = plan.price;
+          const currentPrice = getDiscountedPrice(plan.id, originalPrice);
+          const hasDiscount = appliedCoupon && originalPrice > 0 && currentPrice < originalPrice;
           
           return (
             <Card key={plan.id} className={cn(
-              "h-full flex flex-col rounded-xl overflow-hidden border-border/10 shadow-sm bg-card",
-              plan.badge && "border-primary/30 ring-1 ring-primary/5"
+              "h-full flex flex-col rounded-[1.5rem] overflow-hidden border-border/10 shadow-sm bg-card transition-all",
+              plan.badge && "border-primary/20 ring-1 ring-primary/5",
+              isActive && "opacity-80"
             )}>
               {plan.badge && (
                   <div className="p-4 pb-0 flex justify-end">
-                      <Badge className="bg-primary/10 text-primary border-primary/20 font-black text-[8px] uppercase px-2 py-0.5 rounded-md">
+                      <Badge className="bg-primary/10 text-primary border-primary/20 font-black text-[8px] uppercase px-3 py-1 rounded-lg">
                           {plan.badge}
                       </Badge>
                   </div>
               )}
 
-              <CardHeader className="p-5 text-left space-y-2">
-                <h3 className="text-lg font-black tracking-tight uppercase leading-none">{plan.name}</h3>
-                <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-black tracking-tight">₹{plan.price}</span>
-                    {plan.id !== 'free' && <span className="text-[10px] font-bold text-muted-foreground uppercase">/Period</span>}
+              <CardHeader className="p-6 text-left space-y-3">
+                <h3 className="text-xl font-black tracking-tight uppercase leading-none">{plan.name}</h3>
+                <div className="flex flex-col">
+                    <div className="flex items-baseline gap-2">
+                        <span className="text-3xl font-black tracking-tighter">₹{currentPrice}</span>
+                        {plan.id !== 'free' && <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">/ Period</span>}
+                    </div>
+                    {hasDiscount && (
+                        <p className="text-[10px] font-bold text-muted-foreground line-through opacity-40">Statutory: ₹{originalPrice}</p>
+                    )}
                 </div>
-                <p className="text-[9px] font-bold text-muted-foreground leading-relaxed uppercase opacity-60">
+                <p className="text-[10px] font-bold text-muted-foreground leading-relaxed uppercase opacity-60">
                   {plan.desc}
                 </p>
               </CardHeader>
 
-              <CardContent className="p-5 flex-grow text-left space-y-4 pt-0">
+              <CardContent className="p-6 flex-grow text-left space-y-5 pt-0">
                 <div className="h-px w-full bg-border/5" />
-                <ul className="space-y-2.5">
+                <ul className="space-y-3">
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-3 w-3 text-green-500 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0 mt-0.5" />
                       <span className="text-[10px] font-medium text-foreground/80 leading-tight">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </CardContent>
 
-              <CardFooter className="p-5 pt-0">
+              <CardFooter className="p-6 pt-0">
                 <Button 
                   onClick={() => handleUpgrade(plan.id)}
                   disabled={isActive || isProcessing}
                   className={cn(
-                    "w-full h-10 rounded-lg font-black text-[9px] uppercase tracking-widest transition-all active:scale-95 shadow-sm",
+                    "w-full h-12 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-sm",
                     isActive ? "bg-muted text-muted-foreground cursor-default shadow-none" : "bg-primary text-primary-foreground shadow-primary/20"
                   )}
                 >
-                  {isProcessing ? "..." : isActive ? "Active Clearance" : "Initialize Upgrade"}
+                  {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : isActive ? "Active Clearance" : "Initialize Upgrade"}
                 </Button>
               </CardFooter>
             </Card>
@@ -299,8 +357,18 @@ export default function BillingPage() {
         })}
       </div>
 
-      <div className="pt-8 text-center opacity-30">
-          <p className="text-[8px] font-black uppercase tracking-[0.5em] text-muted-foreground">NYAYASAHAYAK.IN // FINANCIAL PROTOCOL</p>
+      <div className="pt-12 text-center opacity-30">
+          <div className="flex items-center justify-center gap-6 mb-4">
+              <div className="flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4" />
+                  <span className="text-[9px] font-black uppercase tracking-widest">Secure Gateway Sync</span>
+              </div>
+              <div className="flex items-center gap-2">
+                  <Activity className="h-4 w-4" />
+                  <span className="text-[9px] font-black uppercase tracking-widest">Institutional Ledger</span>
+              </div>
+          </div>
+          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-muted-foreground">NYAYASAHAYAK.IN // FINANCIAL PROTOCOL // 2026</p>
       </div>
     </div>
   );
