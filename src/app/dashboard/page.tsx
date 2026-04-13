@@ -176,7 +176,7 @@ function DashboardPostCard({ post }: { post: Post }) {
     return (
         <Link href={`/dashboard/profile/${post.authorUid}`} className="h-full block">
             <Card className="bg-card border-border/10 rounded-xl overflow-hidden hover:border-primary/30 transition-all shadow-sm active:scale-[0.98] text-left h-full">
-                <CardContent className="p-4 space-y-2 flex flex-col h-full">
+                <CardContent className="p-4 space-y-2 flex flex-col h-full text-left">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <Avatar className="h-6 w-6 border border-primary/10 rounded-lg">
@@ -190,11 +190,11 @@ function DashboardPostCard({ post }: { post: Post }) {
                         </Badge>
                     </div>
                     
-                    <div className="space-y-1 flex-grow">
-                        <h4 className="font-bold text-xs tracking-tight text-foreground line-clamp-1">
+                    <div className="space-y-1 flex-grow text-left">
+                        <h4 className="font-bold text-xs tracking-tight text-foreground line-clamp-1 text-left">
                             {post.title}
                         </h4>
-                        <p className="text-[9px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
+                        <p className="text-[9px] text-muted-foreground font-medium leading-relaxed line-clamp-2 text-left">
                             {post.content}
                         </p>
                     </div>
@@ -301,7 +301,7 @@ export default function DashboardHomePage() {
   const visibleFeatures = features.filter(f => !f.isElite || isElite);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-4 pb-8 px-4 sm:px-6">
+    <div className="max-w-5xl mx-auto space-y-4 pb-8 px-4 sm:px-6 text-left">
       <div className="w-full bg-card border border-border/10 rounded-xl p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 text-left">
         <div className="flex items-center gap-4 text-left">
           <Avatar className="h-10 w-10 border border-border/10 shadow-sm rounded-full">
@@ -345,7 +345,7 @@ export default function DashboardHomePage() {
       <div className="w-full bg-card rounded-xl p-6 border border-border/10 shadow-sm text-center flex flex-col items-center gap-6">
         {messages.length === 0 ? (
           <div className="space-y-4 w-full">
-            <h1 className="text-xl font-black text-foreground tracking-tight leading-none uppercase">
+            <h1 className="text-xl font-black text-foreground tracking-tight leading-none uppercase text-center">
               How Can I Assist Your Research?
             </h1>
             <div className="flex flex-wrap items-center justify-center gap-2">
@@ -425,20 +425,20 @@ export default function DashboardHomePage() {
             </div>
           </div>
           <div className="flex items-center justify-center gap-3 text-[7px] font-bold text-muted-foreground/20 uppercase tracking-widest">
-              <div className="flex items-center gap-1"><ShieldCheck className="h-2 w-2" /> Encrypted Session</div>
+              <div className="flex items-center gap-1 text-center"><ShieldCheck className="h-2 w-2" /> Encrypted Session</div>
               <div className="h-1 w-1 rounded-full bg-border" />
-              <div>Identity Masked Protocol</div>
+              <div className="text-center">Identity Masked Protocol</div>
           </div>
         </div>
 
         <div className="w-full pt-4 border-t border-border/5">
             <div className="flex items-center justify-between mb-3 text-left">
-                <div className="space-y-0.5">
-                    <div className="flex items-center gap-2 text-primary">
+                <div className="space-y-0.5 text-left">
+                    <div className="flex items-center gap-2 text-primary text-left">
                         <Activity className="h-3 w-3" />
                         <span className="text-[8px] font-bold uppercase tracking-widest">Live Registry Stream</span>
                     </div>
-                    <h3 className="text-sm font-bold tracking-tight text-foreground">Recent Transmissions</h3>
+                    <h3 className="text-sm font-bold tracking-tight text-foreground text-left">Recent Transmissions</h3>
                 </div>
                 <Button variant="ghost" size="sm" asChild className="h-6 px-2 rounded-lg font-bold text-[8px] text-primary hover:bg-primary/5 uppercase tracking-widest">
                     <Link href="/dashboard/research-analytics">View Registry <ArrowRight className="ml-1 h-2 w-2" /></Link>
@@ -459,10 +459,10 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
-      <section className="space-y-3">
+      <section className="space-y-3 text-left">
         <div className="text-left border-l-2 border-primary pl-3 py-0.5">
-          <h3 className="text-base font-bold tracking-tight text-foreground">Forensic Terminals</h3>
-          <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tight">Select a hub tool to initialize audit.</p>
+          <h3 className="text-base font-bold tracking-tight text-foreground text-left">Forensic Terminals</h3>
+          <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tight text-left">Select a hub tool to initialize audit.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
@@ -473,9 +473,9 @@ export default function DashboardHomePage() {
                   <div className={cn("p-1.5 rounded-lg w-fit", f.bg, f.color)}>
                     <f.icon className="h-3.5 w-3.5" />
                   </div>
-                  <div className="space-y-0.5">
-                    <h3 className="font-bold text-[10px] text-foreground tracking-tight leading-none">{f.title}</h3>
-                    <p className="text-[8px] text-muted-foreground leading-tight font-medium line-clamp-2">{f.desc}</p>
+                  <div className="space-y-0.5 text-left">
+                    <h3 className="font-bold text-[10px] text-foreground tracking-tight leading-none text-left">{f.title}</h3>
+                    <p className="text-[8px] text-muted-foreground leading-tight font-medium line-clamp-2 text-left">{f.desc}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -489,12 +489,12 @@ export default function DashboardHomePage() {
           <Logo className="h-32 w-32" priority={false} />
         </div>
         <div className="space-y-3 text-left relative z-10 max-w-xl">
-          <div className="flex items-center gap-2 text-primary">
+          <div className="flex items-center gap-2 text-primary text-left">
             <ShieldCheck className="h-3 w-3" />
             <span className="text-[8px] font-black uppercase tracking-widest">Statutory Trust</span>
           </div>
-          <h2 className="text-xl font-black text-foreground leading-tight tracking-tight uppercase">Democratizing Legal Intelligence.</h2>
-          <p className="text-xs text-muted-foreground font-medium leading-relaxed">
+          <h2 className="text-xl font-black text-foreground leading-tight tracking-tight uppercase text-left">Democratizing Legal Intelligence.</h2>
+          <p className="text-xs text-muted-foreground font-medium leading-relaxed text-left">
             Every forensic report and narration is encrypted via TLS 1.3 and is strictly confidential. We do not train models on citizen data.
           </p>
           <Button size="sm" className="rounded-lg font-bold text-[9px] h-9 px-6 shadow-sm active:scale-95 transition-all shadow-primary/20" asChild>

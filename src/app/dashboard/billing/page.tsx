@@ -195,7 +195,7 @@ export default function BillingPage() {
       currency: "INR",
       name: "Nyaya Sahayak",
       description: `Upgrade to ${plan.name}`,
-      image: "/Logo.png",
+      image: "https://nyayasahayak.in/Logo.png",
       handler: function (response: any) {
         handlePaymentSuccess(planId, response.razorpay_payment_id, finalPrice);
         setProcessingId(null);
@@ -254,13 +254,13 @@ export default function BillingPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-12 px-2 sm:px-4 text-left">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-border/5 pb-6">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-border/5 pb-6 text-left">
         <div className="space-y-1 text-left">
-            <h1 className="text-2xl font-black tracking-tight">Statutory Plans & Pricing</h1>
-            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Select your institutional clearance level for elite AI assistance.</p>
+            <h1 className="text-2xl font-black tracking-tight text-left">Statutory Plans & Pricing</h1>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest text-left">Select your institutional clearance level for elite AI assistance.</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto text-left">
             {appliedCoupon ? (
                 <div className="flex items-center gap-2 bg-green-500/5 border border-green-500/20 px-4 py-2 rounded-xl">
                     <Ticket className="h-4 w-4 text-green-600" />
@@ -270,7 +270,7 @@ export default function BillingPage() {
                     </button>
                 </div>
             ) : (
-                <div className="relative flex-1 md:w-64">
+                <div className="relative flex-1 md:w-64 text-left">
                     <Input 
                         value={coupon} 
                         onChange={e => setCoupon(e.target.value)} 
@@ -290,7 +290,7 @@ export default function BillingPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch text-left">
         {plansData.map((plan) => {
           const isActive = profile?.subscriptionType === plan.id || (plan.id === 'free' && (!profile?.subscriptionType || profile?.subscriptionType === 'free'));
           const isProcessing = processingId === plan.id;
@@ -300,7 +300,7 @@ export default function BillingPage() {
           
           return (
             <Card key={plan.id} className={cn(
-              "h-full flex flex-col rounded-[1.5rem] overflow-hidden border-border/10 shadow-sm bg-card transition-all",
+              "h-full flex flex-col rounded-[1.5rem] overflow-hidden border-border/10 shadow-sm bg-card transition-all text-left",
               plan.badge && "border-primary/20 ring-1 ring-primary/5",
               isActive && "opacity-80"
             )}>
@@ -313,28 +313,28 @@ export default function BillingPage() {
               )}
 
               <CardHeader className="p-6 text-left space-y-3">
-                <h3 className="text-xl font-black tracking-tight uppercase leading-none">{plan.name}</h3>
-                <div className="flex flex-col">
-                    <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-black tracking-tighter">₹{currentPrice}</span>
-                        {plan.id !== 'free' && <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">/ Period</span>}
+                <h3 className="text-xl font-black tracking-tight uppercase leading-none text-left">{plan.name}</h3>
+                <div className="flex flex-col text-left">
+                    <div className="flex items-baseline gap-2 text-left">
+                        <span className="text-3xl font-black tracking-tighter text-left">₹{currentPrice}</span>
+                        {plan.id !== 'free' && <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-left">/ Period</span>}
                     </div>
                     {hasDiscount && (
-                        <p className="text-[10px] font-bold text-muted-foreground line-through opacity-40">Statutory: ₹{originalPrice}</p>
+                        <p className="text-[10px] font-bold text-muted-foreground line-through opacity-40 text-left">Statutory: ₹{originalPrice}</p>
                     )}
                 </div>
-                <p className="text-[10px] font-bold text-muted-foreground leading-relaxed uppercase opacity-60">
+                <p className="text-[10px] font-bold text-muted-foreground leading-relaxed uppercase opacity-60 text-left">
                   {plan.desc}
                 </p>
               </CardHeader>
 
               <CardContent className="p-6 flex-grow text-left space-y-5 pt-0">
                 <div className="h-px w-full bg-border/5" />
-                <ul className="space-y-3">
+                <ul className="space-y-3 text-left">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2">
+                    <li key={i} className="flex items-start gap-2 text-left">
                       <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0 mt-0.5" />
-                      <span className="text-[10px] font-medium text-foreground/80 leading-tight">{feature}</span>
+                      <span className="text-[10px] font-medium text-foreground/80 leading-tight text-left">{feature}</span>
                     </li>
                   ))}
                 </ul>

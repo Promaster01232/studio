@@ -133,7 +133,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                 </div>
                                 <DropdownMenuSeparator className="bg-border/5" />
                                 <div className="p-1">
-                                    <DropdownMenuItem className="rounded-lg h-9 px-2 flex items-center justify-between group focus:bg-primary/10 cursor-pointer">
+                                    <DropdownMenuItem className="rounded-lg h-9 px-2 flex items-center justify-between group focus:bg-primary/10 cursor-pointer text-left">
                                         <div className="flex items-center gap-2">
                                             <Crown className="h-3.5 w-3.5 text-primary" />
                                             <span className="text-[11px] font-bold text-foreground">Clearance</span>
@@ -142,7 +142,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator className="bg-border/5 my-1" />
                                     <DropdownMenuItem asChild className="rounded-lg h-9 px-2 focus:bg-primary/10 cursor-pointer">
-                                        <Link href="/dashboard" className="flex items-center gap-2 w-full">
+                                        <Link href="/dashboard" className="flex items-center gap-2 w-full text-left">
                                             <LayoutDashboard className="h-3.5 w-3.5 text-muted-foreground" />
                                             <span className="text-[11px] font-bold text-foreground">Terminal Home</span>
                                         </Link>
@@ -150,7 +150,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                     <DropdownMenuSeparator className="bg-border/5 my-1" />
                                     <DropdownMenuItem 
                                         onClick={handleLogout}
-                                        className="rounded-lg h-9 px-2 focus:bg-destructive/10 cursor-pointer group"
+                                        className="rounded-lg h-9 px-2 focus:bg-destructive/10 cursor-pointer group text-left"
                                     >
                                         <div className="flex items-center gap-2 w-full text-destructive">
                                             <LogOut className="h-3.5 w-3.5" />
@@ -247,7 +247,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <SidebarProvider>
       <Sidebar collapsible="icon" className="border-r border-border/10 bg-sidebar">
         <SidebarHeader className="p-4 mb-1">
-          <Link href="https://nyayasahayak.in" className="flex items-center gap-3">
+          <Link href="https://nyayasahayak.in" className="flex items-center gap-3 text-left">
             <Logo className="h-7 w-7 border-none shadow-none p-0 bg-transparent" priority={true} />
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
               <span className="text-lg font-bold font-headline tracking-tighter text-foreground leading-none">
@@ -279,7 +279,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                          {userProfile.firstName?.charAt(0)}
                        </AvatarFallback>
                      </Avatar>
-                     <div className="flex flex-col items-start overflow-hidden group-data-[state=collapsed]:hidden">
+                     <div className="flex flex-col items-start overflow-hidden group-data-[state=collapsed]:hidden text-left">
                        <span className="text-[10px] font-bold text-foreground truncate w-full">
                          {userProfile.firstName} {userProfile.lastName}
                        </span>

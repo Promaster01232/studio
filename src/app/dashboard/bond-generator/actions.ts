@@ -1,4 +1,3 @@
-
 "use server";
 
 import { generateBondDocument, type GenerateBondDocumentOutput } from "@/ai/flows/generate-bond-document";
@@ -21,8 +20,8 @@ function generateDeterministicBond(type: string, lang: string): GenerateBondDocu
     const isHindi = lang.toLowerCase().includes('hindi');
     return {
         document: isHindi 
-            ? `[संस्थागत रिकॉर्ड - स्थानीय नोड]\n\nप्रकार: ${type}\nभाषा: हिन्दी\n\nयह एक स्थानीय रूप से उत्पन्न वैधानिक दस्तावेज है क्योंकि मुख्य न्यूरल हब वर्तमान में व्यस्त है। यह आपके द्वारा प्रदान किए गए विवरणों पर आधारित है और कानूनी समीक्षा के लिए तैयार है।\n\n[यहाँ ${type} का विस्तृत प्रारूप होगा...]`
-            : `[INSTITUTIONAL RECORD - LOCAL NODE]\n\nTYPE: ${type}\nLANGUAGE: ${lang}\n\nThis is a locally generated statutory document because the primary neural hub is currently at capacity. It has been constructed based on your provided inputs and is ready for professional review.\n\n[Drafting ${type} structure based on provided statutory nodes...]`
+            ? `[संस्थागत रिकॉर्ड - स्थानीय हब]\n\nप्रकार: ${type}\nभाषा: हिन्दी\n\nयह एक स्थानीय रूप से उत्पन्न वैधानिक दस्तावेज है क्योंकि मुख्य न्यूरल हब वर्तमान में व्यस्त है। यह आपके द्वारा प्रदान किए गए विवरणों पर आधारित है और कानूनी समीक्षा के लिए तैयार है।\n\n[यहाँ ${type} का विस्तृत प्रारूप होगा...]`
+            : `[INSTITUTIONAL RECORD - LOCAL HUB]\n\nTYPE: ${type}\nLANGUAGE: ${lang}\n\nThis is a locally generated statutory document because the primary neural hub is currently at capacity. It has been constructed based on your provided inputs and is ready for professional review.\n\n[Drafting ${type} structure based on provided statutory registry...]`
     };
 }
 
@@ -327,7 +326,7 @@ export async function generateBondAction(
         error.message?.toLowerCase().includes('limit');
       
       if (retries > 0 && isTransient) {
-        console.warn(`[AI SUCCESS NODE] Hub Saturation. Retry ${25 - retries}/25...`);
+        console.warn(`[AI SUCCESS HUB] Hub Saturation. Retry ${25 - retries}/25...`);
         await new Promise(resolve => setTimeout(resolve, delay));
         delay = Math.min(delay + 1000, 15000);
         retries--;
@@ -335,7 +334,7 @@ export async function generateBondAction(
       }
       
       // FINAL FALLBACK: Always give the report
-      console.warn("[AI BOND NODE] Neural Satiation - Activating Guaranteed Report Fallback");
+      console.warn("[AI BOND HUB] Neural Satiation - Activating Guaranteed Report Fallback");
       return { 
         status: "success", 
         data: generateDeterministicBond(bondType, language), 

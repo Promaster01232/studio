@@ -113,7 +113,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-left">
       {navGroups.map((group) => {
         // Institutional Filter: Hide elite modules from non-upgraded citizens
         const visibleItems = group.items.filter(item => !item.isElite || isElite);
@@ -125,8 +125,8 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
             <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-tight text-primary/40 mb-1 text-left uppercase">
               {group.label}
             </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu className="gap-0.5 px-2">
+            <SidebarGroupContent className="text-left">
+              <SidebarMenu className="gap-0.5 px-2 text-left">
                 {visibleItems.map((item) => {
                   const active = isActive(item.href);
                   return (
@@ -136,18 +136,18 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                         isActive={active}
                         tooltip={item.title}
                         className={cn(
-                          "h-9 px-3 transition-colors rounded-lg group/btn",
+                          "h-9 px-3 transition-colors rounded-lg group/btn text-left",
                           active 
                             ? "bg-primary text-primary-foreground shadow-sm font-bold" 
                             : "text-muted-foreground hover:bg-primary/5 hover:text-primary"
                         )}
                       >
-                        <Link href={item.href} className="flex items-center gap-3">
+                        <Link href={item.href} className="flex items-center gap-3 text-left">
                           <item.icon className={cn(
                             "h-4 w-4 shrink-0",
                             active ? "text-primary-foreground" : "text-muted-foreground group-hover/btn:text-primary"
                           )} />
-                          <span className="text-[11px] font-bold tracking-tight truncate">
+                          <span className="text-[11px] font-bold tracking-tight truncate text-left">
                             {item.title}
                           </span>
                         </Link>
@@ -166,8 +166,8 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
           <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-tight text-red-500/60 mb-1 text-left uppercase">
             Admin Registry
           </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="gap-0.5 px-2">
+          <SidebarGroupContent className="text-left">
+            <SidebarMenu className="gap-0.5 px-2 text-left">
               {adminItems.map((item) => {
                 const active = isActive(item.href);
                 return (
@@ -176,15 +176,15 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                       asChild
                       isActive={active}
                       className={cn(
-                        "h-9 px-3 transition-colors rounded-lg",
+                        "h-9 px-3 transition-colors rounded-lg text-left",
                         active 
                           ? "bg-red-600 text-white shadow-sm" 
                           : "text-muted-foreground hover:bg-red-500/5 hover:text-red-600"
                       )}
                     >
-                      <Link href={item.href} className="flex items-center gap-3">
+                      <Link href={item.href} className="flex items-center gap-3 text-left">
                         <item.icon className="h-4 w-4" />
-                        <span className="text-[11px] font-bold tracking-tight">{item.title}</span>
+                        <span className="text-[11px] font-bold tracking-tight text-left">{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

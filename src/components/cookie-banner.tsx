@@ -42,26 +42,26 @@ export function CookieBanner() {
                 <Activity className="h-3 w-3" />
                 <span className="text-[9px] font-bold uppercase tracking-widest">Privacy Protocol 2025</span>
               </div>
-              <h2 className="text-2xl font-black font-headline tracking-tighter text-foreground uppercase leading-none">Statutory Consent Required</h2>
+              <h2 className="text-2xl font-black font-headline tracking-tighter text-foreground uppercase leading-none text-left">Statutory Consent Required</h2>
             </div>
           </div>
 
           <div className="space-y-6 text-left">
-            <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+            <p className="text-sm text-muted-foreground font-medium leading-relaxed text-left">
               To Initialize Your Secure Ingress To The <span className="text-foreground font-black">Nyaya Sahayak</span> Terminal, You Must Acknowledge Our Privacy Protocols. We Use Essential Cookies To Manage Your Forensic Identity And Statutory Registry Sync.
             </p>
             
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border/10">
                 <Lock className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                <div>
+                <div className="text-left">
                   <p className="text-[9px] font-bold uppercase tracking-widest">Secure Sessions</p>
                   <p className="text-[8px] font-medium text-muted-foreground">Maintains your authenticated registry connection.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border/10">
                 <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                <div>
+                <div className="text-left">
                   <p className="text-[9px] font-bold uppercase tracking-widest">Identity Sync</p>
                   <p className="text-[8px] font-medium text-muted-foreground">Ensures correct mapping of analytical reports.</p>
                 </div>

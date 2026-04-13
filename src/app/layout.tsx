@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     description: "Mathematically precise AI forensic audits and statutory guidance for the indian judicial landscape.",
     url: "https://nyayasahayak.in",
     siteName: "Nyaya Sahayak",
-    images: [{ url: "/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Identity" }],
+    images: [{ url: "https://nyayasahayak.in/Logo.png", width: 1200, height: 1200, alt: "Nyaya Sahayak Identity" }],
     locale: "en_IN",
     type: "website",
   },
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Nyaya Sahayak | Elite AI Legal Assistant',
     description: 'Transforming legal access with institutional AI intelligence and BNS compliance audits.',
-    images: ['/Logo.png'],
+    images: ['https://nyayasahayak.in/Logo.png'],
     creator: "@IdeaSpark",
   },
   icons: { 
