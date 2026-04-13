@@ -34,7 +34,7 @@ export function CookieBanner() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-center sm:justify-start gap-2 text-primary">
-                <Activity className="h-3.5 w-3.5 animate-pulse" />
+                <Activity className="h-3.5 w-3.5" />
                 <span className="text-[10px] font-black uppercase tracking-[0.3em]">Privacy Protocol 2025</span>
               </div>
               <h2 className="text-3xl font-black font-headline tracking-tighter text-foreground uppercase leading-none">Statutory Consent Required</h2>

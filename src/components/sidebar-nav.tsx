@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -32,14 +31,12 @@ import {
   CreditCard,
   Headset,
   ShieldAlert,
-  UserPlus,
-  ChevronRight
+  UserPlus
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 
 const navGroups = [
   {
@@ -105,8 +102,8 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
   return (
     <div className="space-y-6">
       {navGroups.map((group) => (
-        <SidebarGroup key={group.label} className="p-0">
-          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-[0.1em] text-primary/40 mb-2">
+        <SidebarGroup key={group.label} className="p-0 text-left">
+          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-[0.1em] text-primary/40 mb-2 text-left">
             {group.label}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -126,7 +123,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                           : "text-gray-400 hover:bg-white/5 hover:text-white"
                       )}
                     >
-                      <Link href={item.href}>
+                      <Link href={item.href} className="flex items-center gap-3">
                         <item.icon className={cn(
                           "h-4 w-4 shrink-0 transition-transform group-hover/btn:scale-110",
                           active ? "text-primary-foreground" : "text-gray-500 group-hover/btn:text-primary"
@@ -134,12 +131,6 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                         <span className="text-[11px] font-bold tracking-tight truncate">
                           {item.title}
                         </span>
-                        {active && (
-                          <motion.div 
-                            layoutId="active-pill"
-                            className="ml-auto h-1 w-1 rounded-full bg-white"
-                          />
-                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -151,8 +142,8 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
       ))}
 
       {isAdmin && (
-        <SidebarGroup className="p-0 border-t border-white/5 pt-6 mt-6">
-          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-[0.1em] text-red-500/60 mb-2">
+        <SidebarGroup className="p-0 border-t border-white/5 pt-6 mt-6 text-left">
+          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-[0.1em] text-red-500/60 mb-2 text-left">
             Admin Registry
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -171,7 +162,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
                           : "text-gray-400 hover:bg-red-500/5 hover:text-red-400"
                       )}
                     >
-                      <Link href={item.href}>
+                      <Link href={item.href} className="flex items-center gap-3">
                         <item.icon className="h-4 w-4" />
                         <span className="text-[11px] font-bold tracking-tight">{item.title}</span>
                       </Link>

@@ -252,9 +252,11 @@ export default function DashboardHomePage() {
     }
   };
 
+  const isFree = !userProfile?.subscriptionType || userProfile?.subscriptionType === 'free';
+
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-8 px-4 sm:px-6">
-      <div className="w-full bg-card border border-border/10 rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="w-full bg-card border border-border/10 rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 text-left">
         <div className="flex items-center gap-4 text-left">
           <Avatar className="h-12 w-12 border-2 border-background shadow-md rounded-full">
             <AvatarImage src={userProfile?.photoURL} className="object-cover" />
@@ -262,7 +264,7 @@ export default function DashboardHomePage() {
               {userProfile?.firstName?.charAt(0) || <User className="h-5 w-5" />}
             </AvatarFallback>
           </Avatar>
-          <div className="space-y-0.5">
+          <div className="space-y-0.5 text-left">
             <h2 className="text-xl font-bold tracking-tight text-foreground leading-none">
               {greeting}, {userProfile?.firstName || 'There'}!
             </h2>
@@ -273,6 +275,13 @@ export default function DashboardHomePage() {
         </div>
 
         <div className="flex items-center gap-2">
+          {isFree && (
+              <Button asChild size="sm" className="h-9 px-4 rounded-lg bg-amber-500 text-white font-bold text-xs gap-2 shadow-lg shadow-amber-500/20 active:scale-95 transition-all">
+                  <Link href="/dashboard/billing">
+                      <Zap className="h-4 w-4 fill-current" /> Upgrade Hub
+                  </Link>
+              </Button>
+          )}
           <Button variant="outline" className="h-9 px-4 rounded-lg border-border/10 bg-background font-bold text-xs gap-2" asChild>
             <Link href="/dashboard/document-intelligence">
               <Upload className="h-4 w-4" /> Upload

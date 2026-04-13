@@ -17,7 +17,8 @@ import {
   LayoutDashboard,
   Crown,
   Activity,
-  Zap
+  Zap,
+  ArrowRight
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
@@ -232,7 +233,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, [auth.currentUser, profileLoading, pathname, router, userProfile]);
 
   const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
-  const isElite = isAdmin || userProfile?.subscriptionType?.startsWith('unlimited');
+  const isFree = !userProfile?.subscriptionType || userProfile?.subscriptionType === 'free';
 
   if (profileLoading || (!auth.currentUser && pathname.startsWith('/dashboard'))) {
       return (
@@ -259,9 +260,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </Link>
         </SidebarHeader>
         <SidebarContent className="pt-1 px-2">
-          <SidebarNav isAdmin={isAdmin} isElite={isElite} />
+          <SidebarNav isAdmin={isAdmin} isElite={!isFree || isAdmin} />
         </SidebarContent>
         <SidebarFooter className="p-3 border-t border-border/10">
+             {isFree && !isAdmin && (
+                 <div className="mb-2 group-data-[state=collapsed]:hidden">
+                     <Button asChild className="w-full h-9 rounded-xl bg-primary text-primary-foreground font-black text-[9px] uppercase tracking-widest shadow-lg shadow-primary/20">
+                         <Link href="/dashboard/billing">Upgrade Hub</Link>
+                     </Button>
+                 </div>
+             )}
              {userProfile && (
                  <Link href="/dashboard/profile">
                    <div 
