@@ -295,7 +295,7 @@ export default function DashboardHomePage() {
   };
 
   const isFree = !userProfile?.subscriptionType || userProfile?.subscriptionType === 'free';
-  const isAdmin = userProfile?.email && (['enterspaceindia@gmail.com', 'piyushkumrsingh23399@gmail.com', 'nyayasahayakhelp@gmail.com'].includes(userProfile.email.toLowerCase()));
+  const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
   const isElite = !isFree || isAdmin;
 
   const visibleFeatures = features.filter(f => !f.isElite || isElite);
@@ -321,21 +321,21 @@ export default function DashboardHomePage() {
         </div>
 
         <div className="flex items-center gap-2">
-          {isFree && (
-              <Button asChild size="sm" className="h-8 px-4 rounded-lg bg-amber-500 text-white font-bold text-[10px] uppercase tracking-tight gap-2 shadow-sm active:scale-95 transition-all">
+          {isFree && !isAdmin && (
+              <Button asChild size="sm" className="h-8 px-4 rounded-lg bg-amber-500 text-white font-bold text-[10px] gap-2 shadow-sm active:scale-95 transition-all">
                   <Link href="/dashboard/billing">
                       <Zap className="h-3 w-3 fill-current" /> Upgrade Hub
                   </Link>
               </Button>
           )}
-          <Button variant="outline" className="h-8 px-4 rounded-lg border-border/10 bg-background font-bold text-[10px] uppercase tracking-tight gap-2" asChild>
+          <Button variant="outline" className="h-8 px-4 rounded-lg border-border/10 bg-background font-bold text-[10px] gap-2" asChild>
             <Link href="/dashboard/document-intelligence">
               <Upload className="h-3 w-3" /> Upload
             </Link>
           </Button>
           <Button 
             onClick={() => setMessages([])}
-            className="h-8 px-4 rounded-lg bg-primary text-primary-foreground font-bold text-[10px] uppercase tracking-tight gap-2 shadow-sm active:scale-95"
+            className="h-8 px-4 rounded-lg bg-primary text-primary-foreground font-bold text-[10px] gap-2 shadow-sm active:scale-95"
           >
             <Sparkles className="h-3 w-3" /> New Chat
           </Button>
@@ -346,14 +346,14 @@ export default function DashboardHomePage() {
         {messages.length === 0 ? (
           <div className="space-y-4 w-full">
             <h1 className="text-xl font-black text-foreground tracking-tight leading-none uppercase">
-              How can I assist your research?
+              How Can I Assist Your Research?
             </h1>
             <div className="flex flex-wrap items-center justify-center gap-2">
               {suggestions.map((s, i) => (
                 <button
                   key={i}
                   onClick={() => handleSend(s)}
-                  className="px-3 py-1.5 rounded-full bg-muted/30 border border-border/10 text-muted-foreground hover:bg-muted/50 hover:text-primary transition-all text-[9px] font-bold uppercase"
+                  className="px-3 py-1.5 rounded-full bg-muted/30 border border-border/10 text-muted-foreground hover:bg-muted/50 hover:text-primary transition-all text-[9px] font-bold"
                 >
                   {s}
                 </button>
@@ -396,7 +396,7 @@ export default function DashboardHomePage() {
           </div>
         )}
 
-        <div className="w-full space-y-2">
+        <div className="w-full space-y-2 text-left">
           <div className="relative">
             <div className="flex items-center gap-3 p-1.5 bg-background/50 rounded-xl border border-border/10">
               <Textarea 
@@ -438,7 +438,7 @@ export default function DashboardHomePage() {
                         <Activity className="h-3 w-3" />
                         <span className="text-[8px] font-bold uppercase tracking-widest">Live Registry Stream</span>
                     </div>
-                    <h3 className="text-sm font-bold tracking-tight text-foreground uppercase">Recent Transmissions</h3>
+                    <h3 className="text-sm font-bold tracking-tight text-foreground">Recent Transmissions</h3>
                 </div>
                 <Button variant="ghost" size="sm" asChild className="h-6 px-2 rounded-lg font-bold text-[8px] text-primary hover:bg-primary/5 uppercase tracking-widest">
                     <Link href="/dashboard/research-analytics">View Registry <ArrowRight className="ml-1 h-2 w-2" /></Link>
@@ -461,7 +461,7 @@ export default function DashboardHomePage() {
 
       <section className="space-y-3">
         <div className="text-left border-l-2 border-primary pl-3 py-0.5">
-          <h3 className="text-base font-bold tracking-tight text-foreground uppercase">Forensic Terminals</h3>
+          <h3 className="text-base font-bold tracking-tight text-foreground">Forensic Terminals</h3>
           <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tight">Select a hub tool to initialize audit.</p>
         </div>
 
@@ -474,7 +474,7 @@ export default function DashboardHomePage() {
                     <f.icon className="h-3.5 w-3.5" />
                   </div>
                   <div className="space-y-0.5">
-                    <h3 className="font-bold text-[10px] text-foreground tracking-tight leading-none uppercase">{f.title}</h3>
+                    <h3 className="font-bold text-[10px] text-foreground tracking-tight leading-none">{f.title}</h3>
                     <p className="text-[8px] text-muted-foreground leading-tight font-medium line-clamp-2">{f.desc}</p>
                   </div>
                 </CardContent>
@@ -493,11 +493,11 @@ export default function DashboardHomePage() {
             <ShieldCheck className="h-3 w-3" />
             <span className="text-[8px] font-black uppercase tracking-widest">Statutory Trust</span>
           </div>
-          <h2 className="text-xl font-black text-foreground leading-tight tracking-tight uppercase">Democratizing legal intelligence.</h2>
+          <h2 className="text-xl font-black text-foreground leading-tight tracking-tight uppercase">Democratizing Legal Intelligence.</h2>
           <p className="text-xs text-muted-foreground font-medium leading-relaxed">
             Every forensic report and narration is encrypted via TLS 1.3 and is strictly confidential. We do not train models on citizen data.
           </p>
-          <Button size="sm" className="rounded-lg font-bold uppercase tracking-widest text-[9px] h-9 px-6 shadow-sm active:scale-95 transition-all shadow-primary/20" asChild>
+          <Button size="sm" className="rounded-lg font-bold text-[9px] h-9 px-6 shadow-sm active:scale-95 transition-all shadow-primary/20" asChild>
               <Link href="/dashboard/strength-analyzer">Start Forensic Audit <ArrowRight className="ml-1.5 h-3 w-3" /></Link>
           </Button>
         </div>

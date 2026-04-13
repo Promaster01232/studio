@@ -122,7 +122,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
 
         return (
           <SidebarGroup key={group.label} className="p-0 text-left">
-            <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-tight text-primary/40 mb-1 text-left">
+            <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-tight text-primary/40 mb-1 text-left uppercase">
               {group.label}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -163,7 +163,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
 
       {isAdmin && (
         <SidebarGroup className="p-0 border-t border-border/5 pt-4 mt-4 text-left">
-          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-tight text-red-500/60 mb-1 text-left">
+          <SidebarGroupLabel className="px-4 text-[9px] font-bold tracking-tight text-red-500/60 mb-1 text-left uppercase">
             Admin Registry
           </SidebarGroupLabel>
           <SidebarGroupContent>

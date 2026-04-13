@@ -40,7 +40,7 @@ export function CookieBanner() {
             <div className="space-y-1">
               <div className="flex items-center justify-center sm:justify-start gap-2 text-primary">
                 <Activity className="h-3 w-3" />
-                <span className="text-[9px] font-black uppercase tracking-widest">Privacy Protocol 2025</span>
+                <span className="text-[9px] font-bold uppercase tracking-widest">Privacy Protocol 2025</span>
               </div>
               <h2 className="text-2xl font-black font-headline tracking-tighter text-foreground uppercase leading-none">Statutory Consent Required</h2>
             </div>
@@ -55,14 +55,14 @@ export function CookieBanner() {
               <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border/10">
                 <Lock className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest">Secure Sessions</p>
+                  <p className="text-[9px] font-bold uppercase tracking-widest">Secure Sessions</p>
                   <p className="text-[8px] font-medium text-muted-foreground">Maintains your authenticated registry connection.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border/10">
                 <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest">Identity Sync</p>
+                  <p className="text-[9px] font-bold uppercase tracking-widest">Identity Sync</p>
                   <p className="text-[8px] font-medium text-muted-foreground">Ensures correct mapping of analytical reports.</p>
                 </div>
               </div>
@@ -72,11 +72,11 @@ export function CookieBanner() {
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
             <Button 
               onClick={handleAccept} 
-              className="w-full sm:w-auto h-12 px-10 rounded-xl bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition-all"
+              className="w-full sm:w-auto h-12 px-10 rounded-xl bg-primary text-primary-foreground font-bold text-[10px] shadow-xl active:scale-95 transition-all"
             >
               Accept All Protocols
             </Button>
-            <Button variant="ghost" asChild className="text-[9px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors">
+            <Button variant="ghost" asChild className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors">
               <Link href="/dashboard/cookie-policy">Review Detailed Policy</Link>
             </Button>
           </div>

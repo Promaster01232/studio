@@ -88,7 +88,7 @@ function Header({ userProfile }: { userProfile: any }) {
 
             <div className="flex items-center gap-3 sm:gap-4">
                 {isFree && !isAdmin && (
-                    <Button asChild size="sm" className="h-8 px-4 rounded-lg bg-primary text-primary-foreground font-black text-[9px] uppercase tracking-widest gap-2 shadow-lg shadow-primary/20 hidden sm:flex">
+                    <Button asChild size="sm" className="h-8 px-4 rounded-lg bg-primary text-primary-foreground font-bold text-[9px] gap-2 shadow-lg shadow-primary/20 hidden sm:flex">
                         <Link href="/dashboard/billing">
                             <Zap className="h-3 w-3 fill-current" />
                             Upgrade Plan
@@ -97,7 +97,7 @@ function Header({ userProfile }: { userProfile: any }) {
                 )}
 
                 <SosDialog>
-                    <Button variant="outline" size="sm" className="h-7 px-3 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[8px] uppercase tracking-widest gap-1.5">
+                    <Button variant="outline" size="sm" className="h-7 px-3 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[8px] gap-1.5">
                         <div className="h-1 w-1 rounded-full bg-red-500" />
                         Emergency
                     </Button>
@@ -116,7 +116,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                 <button className="outline-none active:scale-95 transition-transform">
                                     <Avatar className="h-7 w-7 border border-primary/20 shadow-sm cursor-pointer rounded-lg">
                                         <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                                        <AvatarFallback className="font-black bg-primary text-primary-foreground text-[9px]">
+                                        <AvatarFallback className="font-bold bg-primary text-primary-foreground text-[9px]">
                                             {userProfile.firstName?.charAt(0)?.toLowerCase() || "p"}
                                         </AvatarFallback>
                                     </Avatar>
@@ -124,7 +124,7 @@ function Header({ userProfile }: { userProfile: any }) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56 p-1.5 rounded-xl shadow-xl glass border-border/10 mt-2">
                                 <div className="p-3 space-y-0.5 text-left">
-                                    <p className="font-bold text-xs tracking-tight text-foreground uppercase">
+                                    <p className="font-bold text-xs tracking-tight text-foreground">
                                         {userProfile.firstName} {userProfile.lastName}
                                     </p>
                                     <p className="text-[9px] font-medium text-muted-foreground truncate">
@@ -154,7 +154,7 @@ function Header({ userProfile }: { userProfile: any }) {
                                     >
                                         <div className="flex items-center gap-2 w-full text-destructive">
                                             <LogOut className="h-3.5 w-3.5" />
-                                            <span className="text-[11px] font-bold uppercase tracking-widest">Terminate Session</span>
+                                            <span className="text-[11px] font-bold">Terminate Session</span>
                                         </div>
                                     </DropdownMenuItem>
                                 </div>
@@ -250,7 +250,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <Link href="https://nyayasahayak.in" className="flex items-center gap-3">
             <Logo className="h-7 w-7 border-none shadow-none p-0 bg-transparent" priority={true} />
             <div className="flex flex-col group-data-[state=collapsed]:hidden text-left min-w-0">
-              <span className="text-lg font-black font-headline tracking-tighter text-foreground leading-none">
+              <span className="text-lg font-bold font-headline tracking-tighter text-foreground leading-none">
                   Nyaya Sahayak
               </span>
               <span className="text-[7px] font-bold text-primary/60 tracking-widest mt-0.5">Legal Intelligence</span>
@@ -263,7 +263,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <SidebarFooter className="p-3 border-t border-border/10">
              {isFree && !isAdmin && (
                  <div className="mb-2 group-data-[state=collapsed]:hidden">
-                     <Button asChild className="w-full h-9 rounded-xl bg-primary text-primary-foreground font-black text-[9px] uppercase tracking-widest shadow-lg shadow-primary/20">
+                     <Button asChild className="w-full h-9 rounded-xl bg-primary text-primary-foreground font-bold text-[9px] shadow-lg shadow-primary/20">
                          <Link href="/dashboard/billing">Upgrade Hub</Link>
                      </Button>
                  </div>
@@ -275,15 +275,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                    >
                      <Avatar className="h-8 w-8 border border-primary/20 shadow-sm shrink-0 rounded-lg">
                        <AvatarImage src={userProfile.photoURL} className="object-cover" />
-                       <AvatarFallback className="font-black bg-primary text-primary-foreground text-[9px]">
+                       <AvatarFallback className="font-bold bg-primary text-primary-foreground text-[9px]">
                          {userProfile.firstName?.charAt(0)}
                        </AvatarFallback>
                      </Avatar>
                      <div className="flex flex-col items-start overflow-hidden group-data-[state=collapsed]:hidden">
-                       <span className="text-[10px] font-black text-foreground truncate w-full uppercase">
+                       <span className="text-[10px] font-bold text-foreground truncate w-full">
                          {userProfile.firstName} {userProfile.lastName}
                        </span>
-                       <span className="text-[8px] font-bold text-muted-foreground truncate w-full uppercase">
+                       <span className="text-[8px] font-bold text-muted-foreground truncate w-full">
                          Registry Point Active
                        </span>
                      </div>
