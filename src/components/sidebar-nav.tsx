@@ -66,7 +66,7 @@ const navGroups: NavGroup[] = [
       { title: "Create Bonds", icon: FileSignature, href: "/dashboard/bond-generator" },
       { title: "Check Chance", icon: BrainCircuit, href: "/dashboard/strength-analyzer" },
       { title: "Court Helper", icon: Gavel, href: "/dashboard/court-assistant" },
-      // Elite Features (Visible only after upgrade)
+      // Elite Features (Activated upon upgrade)
       { title: "Check Evidence", icon: ShieldCheck, href: "/dashboard/evidence-audit", isElite: true },
       { title: "Bail Helper", icon: Scale, href: "/dashboard/bail-estimator", isElite: true },
       { title: "Law Linker", icon: Zap, href: "/dashboard/statutory-linker", isElite: true },
@@ -115,7 +115,7 @@ export function SidebarNav({ isAdmin = false, isElite = false }: { isAdmin?: boo
   return (
     <div className="space-y-4">
       {navGroups.map((group) => {
-        // Filter out elite items if the user is not elite
+        // Institutional Filter: Hide elite modules from non-upgraded citizens
         const visibleItems = group.items.filter(item => !item.isElite || isElite);
         
         if (visibleItems.length === 0) return null;

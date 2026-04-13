@@ -75,7 +75,7 @@ function Header({ userProfile }: { userProfile: any }) {
                     <div className="w-full max-w-md cursor-pointer group transition-all">
                         <div className="hidden md:flex items-center w-full pl-9 pr-10 h-8 font-bold text-[9px] tracking-tight text-muted-foreground rounded-lg bg-muted/30 border border-border/10 group-hover:border-primary/20 transition-all relative text-left">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
-                            <span>Search Registry... (ctrl+k)</span>
+                            <span>Search Registry...</span>
                         </div>
                         <div className="md:hidden">
                             <Button variant="outline" size="icon" className="h-8 w-8 rounded-lg border-border/10 bg-muted/30">

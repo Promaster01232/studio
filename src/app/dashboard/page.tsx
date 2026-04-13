@@ -25,7 +25,8 @@ import {
   Layers,
   Bot,
   Newspaper,
-  ChevronDown
+  ChevronDown,
+  Scale
 } from "lucide-react";
 import { useAuth, useFirestore } from "@/firebase";
 import { collection, query, orderBy, onSnapshot, Timestamp, doc, updateDoc, increment, arrayUnion, arrayRemove, limit } from "firebase/firestore";
