@@ -41,6 +41,12 @@ import { Logo } from "@/components/logo";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
+const ADMIN_EMAILS = [
+  'enterspaceindia@gmail.com', 
+  'piyushkumrsingh23399@gmail.com',
+  'nyayasahayakhelp@gmail.com'
+];
+
 const features = [
   {
     title: "Record Voice",
@@ -486,7 +492,7 @@ export default function DashboardHomePage() {
 
       <Card className="bg-primary/5 border border-primary/10 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group shadow-sm">
         <div className="absolute top-0 right-0 p-4 opacity-[0.02] pointer-events-none grayscale">
-          <Logo className="h-32 w-32" priority={false} />
+          <Logo className="h-32 w-32 priority={false}" />
         </div>
         <div className="space-y-3 text-left relative z-10 max-w-xl">
           <div className="flex items-center gap-2 text-primary text-left">

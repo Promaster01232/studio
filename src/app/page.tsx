@@ -38,7 +38,7 @@ const capabilities = [
   },
   {
     title: "Scan Documents",
-    desc: "Upload court orders or notices. AI reads and identifies statutory risks.",
+    desc: "AI identifies statutory risks in legal papers.",
     icon: FileSearch,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
@@ -87,7 +87,7 @@ export default function RootPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 overflow-x-hidden font-body text-left">
-      <nav className="fixed top-0 w-full z-50 px-6 py-3 flex justify-between items-center bg-background/80 backdrop-blur-md border-b border-border/10">
+      <nav className="fixed top-0 w-full z-50 px-6 py-2 flex justify-between items-center bg-background/80 backdrop-blur-md border-b border-border/10">
         <Link href="https://nyayasahayak.in" className="flex items-center gap-3 active:scale-95 transition-all">
           <Logo className="h-8 w-8 border-none bg-transparent shadow-none p-0" priority={true} />
           <span className="text-lg font-bold tracking-tight text-foreground">Nyaya Sahayak</span>
@@ -98,7 +98,7 @@ export default function RootPage() {
             <Link 
               key={item.name} 
               href={item.href}
-              className="text-xs font-bold text-foreground/60 hover:text-primary transition-all"
+              className="text-[11px] font-bold text-foreground/60 hover:text-primary transition-all"
             >
               {item.name}
             </Link>
@@ -106,11 +106,11 @@ export default function RootPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" asChild className="text-xs font-bold hover:bg-primary/5 text-foreground h-9 px-4">
+          <Button variant="ghost" asChild className="text-[11px] font-bold hover:bg-primary/5 text-foreground h-8 px-4">
             <Link href="/login">Login</Link>
           </Button>
           <div className="hidden md:block">
-            <Button asChild className="bg-primary text-primary-foreground font-bold text-xs px-5 h-9 rounded-lg shadow-md active:scale-95 transition-all">
+            <Button asChild className="bg-primary text-primary-foreground font-bold text-[11px] px-5 h-8 rounded-lg shadow-md active:scale-95 transition-all">
               <Link href="/register">Join Hub</Link>
             </Button>
           </div>
@@ -118,7 +118,7 @@ export default function RootPage() {
           <div className="md:hidden">
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/5 rounded-lg h-9 w-9">
+                <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/5 rounded-lg h-8 w-8">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
@@ -133,7 +133,7 @@ export default function RootPage() {
                       key={item.name} 
                       href={item.href}
                       onClick={() => setIsMenuOpen(false)}
-                      className="text-left text-base font-bold text-foreground/60 hover:text-primary transition-all"
+                      className="text-left text-sm font-bold text-foreground/60 hover:text-primary transition-all"
                     >
                       {item.name}
                     </Link>
@@ -152,15 +152,15 @@ export default function RootPage() {
         </div>
       </nav>
 
-      <main className="pt-12 pb-12 px-4">
+      <main className="pt-24 pb-12 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <div className="flex flex-col items-center">
             <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3 py-1 rounded-full text-[9px] font-bold mb-4">
               Platform Status: Active
             </Badge>
             
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-2 text-foreground uppercase">
-              Complete Legal Research Toolkit.
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-2 text-foreground">
+              Complete legal research toolkit.
             </h1>
             
             <p className="text-sm sm:text-base text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
@@ -181,7 +181,7 @@ export default function RootPage() {
       <section className="py-12 px-4 sm:px-6 border-t border-border/10">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="text-center space-y-1">
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground uppercase">
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
               Elite AI Forensic Tools
             </h2>
             <p className="text-sm text-muted-foreground font-medium">
@@ -197,7 +197,7 @@ export default function RootPage() {
                     <item.icon className="h-4 w-4" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="text-base font-bold tracking-tight text-foreground leading-tight">{item.title}</h3>
+                    <h3 className="text-sm font-bold tracking-tight text-foreground leading-tight">{item.title}</h3>
                     <p className="text-[10px] text-muted-foreground leading-relaxed font-medium">
                       {item.desc}
                     </p>
