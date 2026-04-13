@@ -17,7 +17,7 @@ import {
   LayoutDashboard,
   Crown,
   Activity,
-  ShieldAlert
+  Zap
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { ReactNode, useEffect, useState, useRef } from "react";
@@ -60,7 +60,8 @@ function Header({ userProfile }: { userProfile: any }) {
     };
 
     const isAdmin = userProfile?.email && (ADMIN_EMAILS.includes(userProfile.email.toLowerCase()) || !!userProfile?.isAdmin);
-    const planLabel = isAdmin ? "Root Authority" : (userProfile?.subscriptionType === 'free' || !userProfile?.subscriptionType ? "Citizen Basic" : "Professional Access");
+    const isFree = !userProfile?.subscriptionType || userProfile?.subscriptionType === 'free';
+    const planLabel = isAdmin ? "Root Authority" : (isFree ? "Citizen Basic" : "Professional Access");
 
     return (
         <header className={cn(
@@ -74,7 +75,7 @@ function Header({ userProfile }: { userProfile: any }) {
             <div className="flex-1 flex items-center justify-end md:justify-start">
                 <SearchDialog>
                     <div className="w-full max-w-md cursor-pointer group transition-all">
-                        <div className="hidden md:flex items-center w-full pl-9 pr-10 h-8 font-bold text-[9px] tracking-tight text-muted-foreground rounded-lg bg-muted/30 border border-border/10 group-hover:border-primary/20 transition-all relative text-left uppercase">
+                        <div className="hidden md:flex items-center w-full pl-9 pr-10 h-8 font-bold text-[9px] tracking-tight text-muted-foreground rounded-lg bg-muted/30 border border-border/10 group-hover:border-primary/20 transition-all relative text-left">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
                             <span>Search Registry... (ctrl+k)</span>
                         </div>
@@ -88,6 +89,15 @@ function Header({ userProfile }: { userProfile: any }) {
             </div>
 
             <div className="flex items-center gap-3 sm:gap-4">
+                {isFree && !isAdmin && (
+                    <Button asChild size="sm" className="h-8 px-4 rounded-lg bg-primary text-primary-foreground font-black text-[9px] uppercase tracking-widest gap-2 shadow-lg shadow-primary/20 hidden sm:flex">
+                        <Link href="/dashboard/billing">
+                            <Zap className="h-3 w-3 fill-current" />
+                            Upgrade Plan
+                        </Link>
+                    </Button>
+                )}
+
                 <SosDialog>
                     <Button variant="outline" size="sm" className="h-7 px-3 rounded-full border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-500 font-bold text-[8px] uppercase tracking-widest gap-1.5 shadow-none hover:shadow-none">
                         <div className="h-1 w-1 rounded-full bg-red-500" />

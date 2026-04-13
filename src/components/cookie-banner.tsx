@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Cookie } from 'lucide-react';
+import { Cookie, ShieldCheck, Activity, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Logo } from '@/components/logo';
 
 export function CookieBanner() {
   const [isVisible, setIsVisible] = useState(false);
@@ -12,52 +12,74 @@ export function CookieBanner() {
 
   useEffect(() => {
     setMounted(true);
-    // Check if consent has already been given
     const consent = localStorage.getItem('cookie-consent');
     if (!consent) {
-      // Small delay to ensure smooth entry after hydration
-      const timer = setTimeout(() => setIsVisible(true), 1000);
-      return () => clearTimeout(timer);
+      setIsVisible(true);
     }
   }, []);
 
-  // Avoid hydration mismatch with client-side only visibility
-  if (!mounted) return null;
+  if (!mounted || !isVisible) return null;
 
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-0 left-0 right-0 z-[200] border-t border-primary/10 bg-background/95 backdrop-blur-xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] py-3 sm:py-2.5 px-4 sm:px-6"
-        >
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="shrink-0 p-1.5 bg-sky-500/10 rounded-lg">
-                <Cookie className="h-5 w-5 text-sky-500" />
-              </div>
-              <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed font-medium max-w-4xl text-center sm:text-left">
-                We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies. Read our{' '}
-                <Link href="/dashboard/cookie-policy" className="text-primary hover:underline font-bold underline decoration-primary/20 underline-offset-4">
-                  Cookie Policy
-                </Link>.
-              </p>
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-background/95 backdrop-blur-3xl p-4 sm:p-6">
+      <div className="max-w-2xl w-full bg-card border border-primary/10 shadow-[0_0_100px_rgba(0,0,0,0.2)] rounded-[2.5rem] overflow-hidden relative">
+        <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
+          <Logo className="h-48 w-48 grayscale" priority={false} />
+        </div>
+        
+        <div className="p-8 sm:p-12 space-y-10 relative z-10 text-center sm:text-left">
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <div className="shrink-0 p-5 bg-primary/10 rounded-2xl shadow-xl border border-primary/20">
+              <Cookie className="h-10 w-10 text-primary" />
             </div>
-            <div className="shrink-0 w-full sm:w-auto">
-              <Button 
-                onClick={handleAccept} 
-                className="bg-sky-500 hover:bg-sky-600 text-white font-bold h-9 sm:h-8 px-6 text-[11px] rounded-lg transition-all active:scale-95 w-full sm:w-auto shadow-lg shadow-sky-500/20"
-              >
-                Accept All
-              </Button>
+            <div className="space-y-2">
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-primary">
+                <Activity className="h-3.5 w-3.5 animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Privacy Protocol 2025</span>
+              </div>
+              <h2 className="text-3xl font-black font-headline tracking-tighter text-foreground uppercase leading-none">Statutory Consent Required</h2>
             </div>
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+
+          <div className="space-y-6">
+            <p className="text-sm sm:text-lg text-muted-foreground font-medium leading-relaxed">
+              To Initialize Your Secure Ingress To The <span className="text-foreground font-black">Nyaya Sahayak</span> Terminal, You Must Acknowledge Our Privacy Protocols. We Use Essential Cookies To Manage Your Forensic Identity And Statutory Registry Sync.
+            </p>
+            
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border/10">
+                <Lock className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest">Secure Sessions</p>
+                  <p className="text-[9px] font-medium text-muted-foreground">Maintains your authenticated registry connection.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border/10">
+                <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest">Identity Sync</p>
+                  <p className="text-[9px] font-medium text-muted-foreground">Ensures correct mapping of analytical reports.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
+            <Button 
+              onClick={handleAccept} 
+              className="w-full sm:w-auto h-14 px-10 rounded-2xl bg-primary text-primary-foreground font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/20 active:scale-95 transition-all"
+            >
+              Accept All Protocols
+            </Button>
+            <Button variant="ghost" asChild className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors">
+              <Link href="/dashboard/cookie-policy">Review Detailed Policy</Link>
+            </Button>
+          </div>
+        </div>
+        
+        <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-blue-400"></div>
+      </div>
+    </div>
   );
 
   function handleAccept() {

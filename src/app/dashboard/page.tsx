@@ -84,9 +84,9 @@ const features = [
 ];
 
 const suggestions = [
-  "What are tenant rights in india?",
+  "What are tenant rights in India?",
   "How to file a consumer complaint?",
-  "Explain domestic violence act"
+  "Explain Domestic Violence Act"
 ];
 
 const TRANSIENCE_WINDOW = 56 * 60 * 60 * 1000;
@@ -291,7 +291,7 @@ export default function DashboardHomePage() {
         {messages.length === 0 ? (
           <div className="space-y-4 w-full">
             <h1 className="text-2xl font-black text-foreground tracking-tight leading-none">
-              Hello, How Can I Help You?
+              Hello, how can I help you?
             </h1>
             <div className="flex flex-wrap items-center justify-center gap-2">
               {suggestions.map((s, i) => (
@@ -438,9 +438,9 @@ export default function DashboardHomePage() {
             <ShieldCheck className="h-4 w-4" />
             <span className="text-[8px] font-black uppercase tracking-widest">Statutory Trust</span>
           </div>
-          <h2 className="text-2xl font-black text-foreground leading-tight tracking-tight uppercase">Democratizing Legal Intelligence.</h2>
+          <h2 className="text-2xl font-black text-foreground leading-tight tracking-tight uppercase">Democratizing legal intelligence.</h2>
           <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-            Every forensic report and narration is encrypted via TLS 1.3 and strictly confidential. We do not train models on citizen data.
+            Every forensic report and narration is encrypted via TLS 1.3 and is strictly confidential. We do not train models on citizen data.
           </p>
           <Button size="lg" className="rounded-lg font-bold uppercase tracking-widest text-[10px] h-11 px-8 shadow-md active:scale-95 transition-all shadow-primary/20" asChild>
               <Link href="/dashboard/strength-analyzer">Start Forensic Audit <ArrowRight className="ml-2 h-3 w-3" /></Link>
